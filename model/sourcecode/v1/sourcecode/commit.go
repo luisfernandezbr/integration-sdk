@@ -46,6 +46,7 @@ type Commit struct {
 
 	// custom types
 
+	RepoID       string `json:"repo_id" yaml:"repo_id"`
 	Sha          string `json:"sha" yaml:"sha"`
 	Message      string `json:"message" yaml:"message"`
 	URL          string `json:"url" yaml:"url"`
@@ -119,6 +120,7 @@ func (o *Commit) ToMap() map[string]interface{} {
 		"ref_type":      o.RefType,
 		"customer_id":   o.CustomerID,
 		"hashcode":      o.Hash(),
+		"repo_id":       o.RepoID,
 		"sha":           o.Sha,
 		"message":       o.Message,
 		"url":           o.URL,
@@ -145,6 +147,12 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	}
+	if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = val
+	} else {
+		val := kv["repo_id"]
+		o.RepoID = fmt.Sprintf("%v", val)
 	}
 	if val, ok := kv["sha"].(string); ok {
 		o.Sha = val
@@ -217,6 +225,7 @@ func (o *Commit) Hash() string {
 		args = append(args, o.GetID())
 		args = append(args, o.GetRefID())
 		args = append(args, o.RefType)
+		args = append(args, o.RepoID)
 		args = append(args, o.Sha)
 		args = append(args, o.Message)
 		args = append(args, o.URL)
@@ -258,6 +267,10 @@ func CreateCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "repo_id",
 				"type": "string",
 			},
 			map[string]interface{}{

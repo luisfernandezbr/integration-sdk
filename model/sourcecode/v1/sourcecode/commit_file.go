@@ -48,6 +48,7 @@ type CommitFile struct {
 	// custom types
 
 	CommitID          string  `json:"commit_id" yaml:"commit_id"`
+	RepoID            string  `json:"repo_id" yaml:"repo_id"`
 	Filename          string  `json:"filename" yaml:"filename"`
 	Additions         int64   `json:"additions" yaml:"additions"`
 	Deletions         int64   `json:"deletions" yaml:"deletions"`
@@ -127,6 +128,7 @@ func (o *CommitFile) ToMap() map[string]interface{} {
 		"customer_id":        o.CustomerID,
 		"hashcode":           o.Hash(),
 		"commit_id":          o.CommitID,
+		"repo_id":            o.RepoID,
 		"filename":           o.Filename,
 		"additions":          o.Additions,
 		"deletions":          o.Deletions,
@@ -165,6 +167,12 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 	} else {
 		val := kv["commit_id"]
 		o.CommitID = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = val
+	} else {
+		val := kv["repo_id"]
+		o.RepoID = fmt.Sprintf("%v", val)
 	}
 	if val, ok := kv["filename"].(string); ok {
 		o.Filename = val
@@ -276,6 +284,7 @@ func (o *CommitFile) Hash() string {
 		args = append(args, o.GetRefID())
 		args = append(args, o.RefType)
 		args = append(args, o.CommitID)
+		args = append(args, o.RepoID)
 		args = append(args, o.Filename)
 		args = append(args, o.Additions)
 		args = append(args, o.Deletions)
@@ -327,6 +336,10 @@ func CreateCommitFileAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commit_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "repo_id",
 				"type": "string",
 			},
 			map[string]interface{}{

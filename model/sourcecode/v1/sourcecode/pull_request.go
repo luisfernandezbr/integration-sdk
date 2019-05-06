@@ -46,6 +46,7 @@ type PullRequest struct {
 
 	// custom types
 
+	RepoID      string `json:"repo_id" yaml:"repo_id"`
 	Title       string `json:"title" yaml:"title"`
 	Description string `json:"description" yaml:"description"`
 	URL         string `json:"url" yaml:"url"`
@@ -116,6 +117,7 @@ func (o *PullRequest) ToMap() map[string]interface{} {
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
+		"repo_id":     o.RepoID,
 		"title":       o.Title,
 		"description": o.Description,
 		"url":         o.URL,
@@ -140,6 +142,12 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	}
+	if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = val
+	} else {
+		val := kv["repo_id"]
+		o.RepoID = fmt.Sprintf("%v", val)
 	}
 	if val, ok := kv["title"].(string); ok {
 		o.Title = val
@@ -204,6 +212,7 @@ func (o *PullRequest) Hash() string {
 		args = append(args, o.GetID())
 		args = append(args, o.GetRefID())
 		args = append(args, o.RefType)
+		args = append(args, o.RepoID)
 		args = append(args, o.Title)
 		args = append(args, o.Description)
 		args = append(args, o.URL)
@@ -243,6 +252,10 @@ func CreatePullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "repo_id",
 				"type": "string",
 			},
 			map[string]interface{}{

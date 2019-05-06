@@ -14,6 +14,9 @@ models:
   commit:
     description: the commit is a specific change in a repo
     columns:
+      - name: repo_id
+        description: the unique id for the repo
+        type: string
       - name: sha
         description: the unique sha for the commit
         type: string
@@ -51,6 +54,9 @@ models:
     columns:
       - name: commit_id
         description: the unique id for the commit
+        type: string
+      - name: repo_id
+        description: the unique id for the repo
         type: string
       - name: filename
         description: the filename
@@ -104,6 +110,9 @@ models:
   pull_request:
     description: the pull request for a given repo
     columns:
+      - name: repo_id
+        description: the unique id for the repo
+        type: string
       - name: title
         description: the title of the pull request
         type: string

@@ -9,6 +9,7 @@ var commitMap = map[string][]string{
 	"customer_id":   []string{"$.customer_id"},
 	"ref_id":        []string{"$.id", "$.sha"},
 	"ref_type":      []string{"github"},
+	"repo_id":       []string{"$.repo_id"},
 	"sha":           []string{"$.sha", "$.id"},
 	"message":       []string{"$.commit.message"},
 	"url":           []string{"$.html_url"},
@@ -23,6 +24,7 @@ var commitMap = map[string][]string{
 
 var commitFileMap = map[string][]string{
 	"customer_id":     []string{"$.customer_id"},
+	"repo_id":         []string{"$.repo_id"},
 	"ref_id":          []string{"hash($.customer_id, $.id, $.filename)"},
 	"ref_type":        []string{"github"},
 	"commit_id":       []string{"$.id"},
@@ -73,6 +75,6 @@ func ConvertCommitFiles(kv map[string]interface{}) ([]*sourcecode.CommitFile, er
 
 // LoadCommitAndCommitDetailMap will load the appropriate files and merge them into a single
 // map for commit and commit detail
-func LoadCommitAndCommitDetailMap(dir string, customerid string) (map[string]map[string]interface{}, error) {
-	return util.JoinTable(dir, "commit", "$.id", "commit_detail", "$.id", map[string]interface{}{"customer_id": customerid})
+func LoadCommitAndCommitDetailMap(dir string, repoid string, customerid string) (map[string]map[string]interface{}, error) {
+	return util.JoinTable(dir, "commit", "$.id", "commit_detail", "$.id", map[string]interface{}{"customer_id": customerid, "repo_id": repoid})
 }
