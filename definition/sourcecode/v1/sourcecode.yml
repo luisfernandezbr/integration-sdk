@@ -1,0 +1,132 @@
+name: sourcecode
+version: 1
+description: the system which contains source code
+models:
+  repo:
+    description: the repo holds source code
+    columns:
+      - name: name
+        description: the name of the repo
+        type: string
+      - name: url
+        description: the url to the repo home page
+        type: string
+  commit:
+    description: the commit is a specific change in a repo
+    columns:
+      - name: sha
+        description: the unique sha for the commit
+        type: string
+        refid: true
+      - name: message
+        description: the commit message
+        type: string
+      - name: url
+        description: the url to the commit detail
+        type: string
+      - name: created_ts
+        description: the timestamp in UTC that the commit was created
+        type: int
+        timestamp: true
+      - name: branch
+        description: the branch that the commit was made to
+        type: string
+      - name: additions
+        description: the number of additions for the commit
+        type: int
+      - name: deletions
+        description: the number of deletions for the commit
+        type: int
+      - name: files_changed
+        description: the number of files changed for the commit
+        type: int
+      - name: author_ref_id
+        description: the author ref_id in the source system
+        type: string
+      - name: ordinal
+        description: the order of the commit in the commit stream
+        type: int
+  commit_file:
+    description: the file change for a specific commit
+    columns:
+      - name: commit_id
+        description: the unique id for the commit
+        type: string
+      - name: filename
+        description: the filename
+        type: string
+      - name: additions
+        description: the number of additions for the commit file
+        type: int
+      - name: deletions
+        description: the number of deletions for the commit file
+        type: int
+      - name: status
+        description: the status of the change
+        type: string
+      - name: binary
+        description: indicates if the file was detected to be a binary file
+        type: boolean
+      - name: language
+        description: the language that was detected for the file
+        type: string
+      - name: excluded
+        description: if the file was excluded from processing
+        type: boolean
+      - name: excluded_reason
+        description: if the file was excluded, the reason
+        type: string
+      - name: ordinal
+        description: the order value for the file in the change set
+        type: int
+      - name: loc
+        description: the number of lines in the file
+        type: int
+      - name: sloc
+        description: the number of source lines in the file
+        type: int
+      - name: blanks
+        description: the number of blank lines in the file
+        type: int
+      - name: comments
+        description: the number of comment lines in the file
+        type: int
+      - name: complexity
+        description: the complexity value for the file change
+        type: int
+      - name: license
+        description: the license which was detected for the file
+        type: string
+        optional: true
+      - name: license_confidence
+        description: the license confidence from the detection engine
+        type: float
+  pull_request:
+    description: the pull request for a given repo
+    columns:
+      - name: title
+        description: the title of the pull request
+        type: string
+      - name: description
+        description: the description of the pull request
+        type: string
+      - name: url
+        description: the url to the pull request home page
+        type: string
+      - name: created_ts
+        description: the timestamp in UTC that the pull request was created
+        type: int
+      - name: merged_ts
+        description: the timestamp in UTC that the pull request was merged
+        type: int
+        optional: true
+      - name: closed_ts
+        description: the timestamp in UTC that the pull request was closed
+        type: int
+        optional: true
+      - name: status
+        description: the status of the pull request
+        type: string
+      - name: user_ref_id
+        description: the user ref_id in the source system
+        type: string

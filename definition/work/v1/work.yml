@@ -1,0 +1,32 @@
+name: work
+version: 1
+description: the system which contains project work
+models:
+  project:
+    description: the project holds work
+    columns:
+      - name: name
+        description: the name of the project
+        type: string
+      - name: identifier
+        description: the common identifier for the project
+        type: string
+      - name: url
+        description: the url to the project home page
+        type: string
+  issue:
+    description: the issue is a specific work item for a project
+    columns:
+      - name: title
+        description: the issue title
+        type: string
+      - name: identifier
+        description: the common identifier for the issue
+        type: string
+      - name: url
+        description: the url to the issue page
+        type: string
+      - name: created_ts
+        description: the timestamp in UTC that the issue was created
+        type: int
+        timestamp: true
