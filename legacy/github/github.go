@@ -1,13 +1,18 @@
 package github
 
 import (
+	"regexp"
+
+	"github.com/pinpt/go-common/fileutil"
+
 	"github.com/pinpt/integration-sdk/model/sourcecode/v1/sourcecode"
 	"github.com/pinpt/integration-sdk/util"
 )
 
 var commitMap = map[string][]string{
+	"id":            []string{"hash($.customer_id, $.sha, $.branch)"},
 	"customer_id":   []string{"$.customer_id"},
-	"ref_id":        []string{"$.id", "$.sha"},
+	"ref_id":        []string{"$.sha"},
 	"ref_type":      []string{"github"},
 	"repo_id":       []string{"$.repo_id"},
 	"sha":           []string{"$.sha", "$.id"},
@@ -23,11 +28,12 @@ var commitMap = map[string][]string{
 }
 
 var commitFileMap = map[string][]string{
+	"id":              []string{"hash($.customer_id, $.sha, $.branch, $.filename)"},
 	"customer_id":     []string{"$.customer_id"},
 	"repo_id":         []string{"$.repo_id"},
-	"ref_id":          []string{"hash($.customer_id, $.id, $.filename)"},
+	"ref_id":          []string{"$.sha"},
 	"ref_type":        []string{"github"},
-	"commit_id":       []string{"$.id"},
+	"commit_id":       []string{"hash($.customer_id, $.sha, $.branch)"},
 	"filename":        []string{"$.filename"},
 	"language":        []string{"$.language"},
 	"additions":       []string{"$.additions"},
@@ -42,6 +48,25 @@ var commitFileMap = map[string][]string{
 	"complexity":      []string{"$.complexity"},
 	"excluded":        []string{"$.excluded"},
 	"excluded_reason": []string{"$.excluded_reason"},
+}
+
+var changelogMap = map[string][]string{
+	"id":            []string{"hash($.customer_id, $.sha, $.filename, $.user_id, $.date)"},
+	"customer_id":   []string{"$.customer_id"},
+	"repo_id":       []string{"$.repo_id"},
+	"ref_id":        []string{"$.sha"},
+	"ref_type":      []string{"github"},
+	"sha":           []string{"$.sha"},
+	"filename":      []string{"$.filename"},
+	"language":      []string{"$.language"},
+	"blanks":        []string{"$.blanks"},
+	"comments":      []string{"$.comments"},
+	"loc":           []string{"$.loc"},
+	"sloc":          []string{"$.sloc"},
+	"ordinal":       []string{"$.ordinal"},
+	"complexity":    []string{"$.complexity"},
+	"author_ref_id": []string{"hash($.customer_id, $.user_id)"},
+	"date_ts":       []string{"$.date"},
 }
 
 // ConvertCommit will convert a legacy commit hashmap to a new sourcecode.Commit
@@ -73,8 +98,36 @@ func ConvertCommitFiles(kv map[string]interface{}) ([]*sourcecode.CommitFile, er
 	return commitfiles, nil
 }
 
+// ConvertChangelog will convert a legacy commit activity into a changelog
+func ConvertChangelog(kv map[string]interface{}) (*sourcecode.Changelog, error) {
+	var changelog sourcecode.Changelog
+	if err := util.CreateObject(&changelog, kv, changelogMap); err != nil {
+		return nil, err
+	}
+	return &changelog, nil
+}
+
 // LoadCommitAndCommitDetailMap will load the appropriate files and merge them into a single
 // map for commit and commit detail
 func LoadCommitAndCommitDetailMap(dir string, repoid string, customerid string) (map[string]map[string]interface{}, error) {
 	return util.JoinTable(dir, "commit", "$.id", "commit_detail", "$.id", map[string]interface{}{"customer_id": customerid, "repo_id": repoid})
+}
+
+// LoadChangelog will load the commit activity table and return
+func LoadChangelog(dir string, repoid string, customerid string) (map[string]map[string]interface{}, error) {
+	res := make(map[string]map[string]interface{})
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("commit_activity\\.json(\\.gz)?$"))
+	if err != nil {
+		return nil, err
+	}
+	for _, file := range files {
+		if err := util.StreamToMap(file, "$.id", res, true); err != nil {
+			return nil, err
+		}
+	}
+	for _, kv := range res {
+		kv["customer_id"] = customerid
+		kv["repo_id"] = repoid
+	}
+	return res, nil
 }

@@ -107,6 +107,46 @@ models:
       - name: license_confidence
         description: the license confidence from the detection engine
         type: float
+  changelog:
+    description: the change log for each commit in a repo
+    columns:
+      - name: repo_id
+        description: the unique id for the repo
+        type: string
+      - name: filename
+        description: the filename
+        type: string
+      - name: language
+        description: the detected language
+        type: string
+      - name: loc
+        description: the count of lines in the file
+        type: int
+      - name: sloc
+        description: the count of source lines in the file based on language rules
+        type: int
+      - name: blanks
+        description: the count of blank lines in the file
+        type: int
+      - name: comments
+        description: the count of comment lines in the file based on language rules
+        type: int
+      - name: complexity
+        description: the cyclomatic complexity for the change
+        type: int
+      - name: date_ts
+        description: the date of the change
+        type: int
+        timestamp: true
+      - name: author_ref_id
+        description: the author ref_id in the source system
+        type: string
+      - name: ordinal
+        description: the order of the commit in the commit stream
+        type: int
+      - name: sha
+        description: the commit SHA
+        type: string
   pull_request:
     description: the pull request for a given repo
     columns:
