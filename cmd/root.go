@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pinpt/go-common/log"
 	"github.com/spf13/cobra"
 )
 
@@ -23,4 +24,9 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+// in case we need to add something to the logs
+func newCommandLogger(cmd *cobra.Command, opts ...log.WithLogOptions) log.LoggerCloser {
+	return log.NewCommandLogger(cmd, opts...)
 }
