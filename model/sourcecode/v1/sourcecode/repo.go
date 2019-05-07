@@ -15,8 +15,6 @@ import (
 	"regexp"
 	"strings"
 
-	cluster "github.com/bsm/sarama-cluster"
-	kafka "github.com/dangkaka/go-kafka-avro"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -442,7 +440,7 @@ func CreateRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- e
 }
 
 // CreateRepoProducer will stream data from the channel
-func CreateRepoProducer(producer *util.KafkaProducer, ch chan Repo, errors chan<- error) <-chan bool {
+func CreateRepoProducer(producer util.Producer, ch chan Repo, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -458,37 +456,34 @@ func CreateRepoProducer(producer *util.KafkaProducer, ch chan Repo, errors chan<
 }
 
 // CreateRepoConsumer will stream data from the default topic into the provided channel
-func CreateRepoConsumer(kafkaServers []string, schemaRegistryServers []string, topic string, consumerGroupID string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateRepoConsumerForTopic(kafkaServers, schemaRegistryServers, RepoDefaultTopic, consumerGroupID, ch, errors)
+func CreateRepoConsumer(factory util.ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
+	return CreateRepoConsumerForTopic(factory, RepoDefaultTopic, ch, errors)
 }
 
 // CreateRepoConsumerForTopic will stream data from the topic into the provided channel
-func CreateRepoConsumerForTopic(kafkaServers []string, schemaRegistryServers []string, topic string, consumerGroupID string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateRepoConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		consumerCallbacks := kafka.ConsumerCallbacks{
-			OnDataReceived: func(msg kafka.Message) {
+		callback := util.ConsumerCallback{
+			OnDataReceived: func(key []byte, value []byte) error {
 				var object Repo
-				if err := json.Unmarshal([]byte(msg.Value), &object); err != nil {
-					errors <- fmt.Errorf("error unmarshaling json data into Repo: %s", err)
-					return
+				if err := json.Unmarshal(value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into Repo: %s", err)
 				}
 				ch <- object
+				return nil
 			},
-			OnError: func(err error) {
+			OnErrorReceived: func(err error) {
 				errors <- err
 			},
-			OnNotification: func(notification *cluster.Notification) {
-			},
 		}
-		consumer, err := kafka.NewAvroConsumer(kafkaServers, schemaRegistryServers, topic, consumerGroupID, consumerCallbacks)
+		consumer, err := factory.CreateConsumer(topic, callback)
 		if err != nil {
 			errors <- err
 			return
 		}
-		go consumer.Consume()
 		select {
 		case <-closed:
 			consumer.Close()

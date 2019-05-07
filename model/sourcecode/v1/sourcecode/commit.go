@@ -15,8 +15,6 @@ import (
 	"regexp"
 	"strings"
 
-	cluster "github.com/bsm/sarama-cluster"
-	kafka "github.com/dangkaka/go-kafka-avro"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -599,7 +597,7 @@ func CreateCommitOutputStream(stream io.WriteCloser, ch chan Commit, errors chan
 }
 
 // CreateCommitProducer will stream data from the channel
-func CreateCommitProducer(producer *util.KafkaProducer, ch chan Commit, errors chan<- error) <-chan bool {
+func CreateCommitProducer(producer util.Producer, ch chan Commit, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -615,37 +613,34 @@ func CreateCommitProducer(producer *util.KafkaProducer, ch chan Commit, errors c
 }
 
 // CreateCommitConsumer will stream data from the default topic into the provided channel
-func CreateCommitConsumer(kafkaServers []string, schemaRegistryServers []string, topic string, consumerGroupID string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateCommitConsumerForTopic(kafkaServers, schemaRegistryServers, CommitDefaultTopic, consumerGroupID, ch, errors)
+func CreateCommitConsumer(factory util.ConsumerFactory, topic string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
+	return CreateCommitConsumerForTopic(factory, CommitDefaultTopic, ch, errors)
 }
 
 // CreateCommitConsumerForTopic will stream data from the topic into the provided channel
-func CreateCommitConsumerForTopic(kafkaServers []string, schemaRegistryServers []string, topic string, consumerGroupID string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		consumerCallbacks := kafka.ConsumerCallbacks{
-			OnDataReceived: func(msg kafka.Message) {
+		callback := util.ConsumerCallback{
+			OnDataReceived: func(key []byte, value []byte) error {
 				var object Commit
-				if err := json.Unmarshal([]byte(msg.Value), &object); err != nil {
-					errors <- fmt.Errorf("error unmarshaling json data into Commit: %s", err)
-					return
+				if err := json.Unmarshal(value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into Commit: %s", err)
 				}
 				ch <- object
+				return nil
 			},
-			OnError: func(err error) {
+			OnErrorReceived: func(err error) {
 				errors <- err
 			},
-			OnNotification: func(notification *cluster.Notification) {
-			},
 		}
-		consumer, err := kafka.NewAvroConsumer(kafkaServers, schemaRegistryServers, topic, consumerGroupID, consumerCallbacks)
+		consumer, err := factory.CreateConsumer(topic, callback)
 		if err != nil {
 			errors <- err
 			return
 		}
-		go consumer.Consume()
 		select {
 		case <-closed:
 			consumer.Close()

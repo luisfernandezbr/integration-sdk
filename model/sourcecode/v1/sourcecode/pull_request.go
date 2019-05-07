@@ -15,8 +15,6 @@ import (
 	"regexp"
 	"strings"
 
-	cluster "github.com/bsm/sarama-cluster"
-	kafka "github.com/dangkaka/go-kafka-avro"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -566,7 +564,7 @@ func CreatePullRequestOutputStream(stream io.WriteCloser, ch chan PullRequest, e
 }
 
 // CreatePullRequestProducer will stream data from the channel
-func CreatePullRequestProducer(producer *util.KafkaProducer, ch chan PullRequest, errors chan<- error) <-chan bool {
+func CreatePullRequestProducer(producer util.Producer, ch chan PullRequest, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -582,37 +580,34 @@ func CreatePullRequestProducer(producer *util.KafkaProducer, ch chan PullRequest
 }
 
 // CreatePullRequestConsumer will stream data from the default topic into the provided channel
-func CreatePullRequestConsumer(kafkaServers []string, schemaRegistryServers []string, topic string, consumerGroupID string, ch chan PullRequest, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreatePullRequestConsumerForTopic(kafkaServers, schemaRegistryServers, PullRequestDefaultTopic, consumerGroupID, ch, errors)
+func CreatePullRequestConsumer(factory util.ConsumerFactory, topic string, ch chan PullRequest, errors chan<- error) (<-chan bool, chan<- bool) {
+	return CreatePullRequestConsumerForTopic(factory, PullRequestDefaultTopic, ch, errors)
 }
 
 // CreatePullRequestConsumerForTopic will stream data from the topic into the provided channel
-func CreatePullRequestConsumerForTopic(kafkaServers []string, schemaRegistryServers []string, topic string, consumerGroupID string, ch chan PullRequest, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreatePullRequestConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan PullRequest, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		consumerCallbacks := kafka.ConsumerCallbacks{
-			OnDataReceived: func(msg kafka.Message) {
+		callback := util.ConsumerCallback{
+			OnDataReceived: func(key []byte, value []byte) error {
 				var object PullRequest
-				if err := json.Unmarshal([]byte(msg.Value), &object); err != nil {
-					errors <- fmt.Errorf("error unmarshaling json data into PullRequest: %s", err)
-					return
+				if err := json.Unmarshal(value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into PullRequest: %s", err)
 				}
 				ch <- object
+				return nil
 			},
-			OnError: func(err error) {
+			OnErrorReceived: func(err error) {
 				errors <- err
 			},
-			OnNotification: func(notification *cluster.Notification) {
-			},
 		}
-		consumer, err := kafka.NewAvroConsumer(kafkaServers, schemaRegistryServers, topic, consumerGroupID, consumerCallbacks)
+		consumer, err := factory.CreateConsumer(topic, callback)
 		if err != nil {
 			errors <- err
 			return
 		}
-		go consumer.Consume()
 		select {
 		case <-closed:
 			consumer.Close()
