@@ -14,6 +14,15 @@ models:
       - name: url
         description: the url to the project home page
         type: string
+  field_types:
+    description: user defined fields
+    columns:
+      - name: name
+        description: the name of the field
+        type: string
+      - name: key
+        description: key of the field
+        type: string
   issue:
     description: the issue is a specific work item for a project
     columns:
@@ -23,6 +32,9 @@ models:
       - name: identifier
         description: the common identifier for the issue
         type: string
+      - name: project_id
+        description: unique project id
+        type: string       
       - name: url
         description: the url to the issue page
         type: string
@@ -30,66 +42,90 @@ models:
         description: the timestamp in UTC that the issue was created
         type: int
         timestamp: true
-      - name: ref_creator_user_id
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: updated_ts
+        description: the timestamp in UTC that the issue was updated
+        type: int
+        timestamp: true
+      - name: planned_start_ts
+        description: the timestamp in UTC that the issue was planned to start
+        type: int
+        timestamp: true
+      - name: planned_end_ts
+        description: the timestamp in UTC that the issue was planned to end
+        type: int
+        timestamp: true
+      - name: due_date
+        description: due date of the issue
         type: string
-      - name: ref_reporter_user_id
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        type: string
-      - name: ref_assignee_user_id
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        type: string
-      - name: key
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: priority_name
+        description: name of the priority
         type: string
       - name: issue_type
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        type: string
-      - name: project_id
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        type: string
-      - name: labels
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-        type: string
-      - name: parent_id
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        description: type of issue
         type: string
       - name: status
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        description: status of issue
         type: string
-      - name: resolution
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: creator
+        description: user id of the creator
         type: string
-      - name: duedate
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: reporter
+        description: user id of the reporter
         type: string
-      # - name: custom_fields
-      #   description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-      #   type: string
-      - name: issuetype_id
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: assignee
+        description: user id of the assignee
         type: string
-      - name: combo
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: author
+        description: user id of the author
         type: string
-      - name: comp
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: type_name
+        description: type of issue
         type: string
-      - name: active
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: tags
+        description: labels in the issue
         type: string
-      - name: username
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: parent
+        description: parent ussue id, if any
         type: string
-      - name: displayname
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: resolution_name
+        description: resolution name
         type: string
-      - name: email
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  changelog:
+    description: change log
+    columns:
+      - name: issue_id
+        description: id of the issue
         type: string
-      - name: avatar_url
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: created_ts          
+        description: the timestamp in UTC when this change was created
+        type: int
+        timestamp: true
+      - name: ordinal
+        description: so we can order correctly in queries since dates could be equal
+        type: int
+      - name: user_id
+        description: id of the user of this change
         type: string
-      - name: priority_id
-        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      - name: user_active
+        description: wether this user is active
+        type: boolean
+      - name: field
+        description: name of the field that was changed
         type: string
+      - name: field_type
+        description: type of the field that was changed
+        type: string
+      - name: from
+        description: id of the change from 
+        type: string
+      - name: from_string
+        description: name of the change from
+        type: string
+      - name: to
+        description: id of the change to
+        type: string
+      - name: to_string
+        description: name of the change to
+        type: string
+
+

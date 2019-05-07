@@ -44,30 +44,26 @@ type Issue struct {
 
 	// custom types
 
-	Title             string `json:"title" yaml:"title"`
-	Identifier        string `json:"identifier" yaml:"identifier"`
-	URL               string `json:"url" yaml:"url"`
-	CreatedAt         int64  `json:"created_ts" yaml:"created_ts"`
-	RefCreatorUserID  string `json:"ref_creator_user_id" yaml:"ref_creator_user_id"`
-	RefReporterUserID string `json:"ref_reporter_user_id" yaml:"ref_reporter_user_id"`
-	RefAssigneeUserID string `json:"ref_assignee_user_id" yaml:"ref_assignee_user_id"`
-	Key               string `json:"key" yaml:"key"`
-	IssueType         string `json:"issue_type" yaml:"issue_type"`
-	ProjectID         string `json:"project_id" yaml:"project_id"`
-	Labels            string `json:"labels" yaml:"labels"`
-	ParentID          string `json:"parent_id" yaml:"parent_id"`
-	Status            string `json:"status" yaml:"status"`
-	Resolution        string `json:"resolution" yaml:"resolution"`
-	Duedate           string `json:"duedate" yaml:"duedate"`
-	IssuetypeID       string `json:"issuetype_id" yaml:"issuetype_id"`
-	Combo             string `json:"combo" yaml:"combo"`
-	Comp              string `json:"comp" yaml:"comp"`
-	Active            string `json:"active" yaml:"active"`
-	Username          string `json:"username" yaml:"username"`
-	Displayname       string `json:"displayname" yaml:"displayname"`
-	Email             string `json:"email" yaml:"email"`
-	AvatarURL         string `json:"avatar_url" yaml:"avatar_url"`
-	PriorityID        string `json:"priority_id" yaml:"priority_id"`
+	Title          string `json:"title" yaml:"title"`
+	Identifier     string `json:"identifier" yaml:"identifier"`
+	ProjectID      string `json:"project_id" yaml:"project_id"`
+	URL            string `json:"url" yaml:"url"`
+	CreatedAt      int64  `json:"created_ts" yaml:"created_ts"`
+	UpdatedAt      int64  `json:"updated_ts" yaml:"updated_ts"`
+	PlannedStartAt int64  `json:"planned_start_ts" yaml:"planned_start_ts"`
+	PlannedEndAt   int64  `json:"planned_end_ts" yaml:"planned_end_ts"`
+	DueDate        string `json:"due_date" yaml:"due_date"`
+	PriorityName   string `json:"priority_name" yaml:"priority_name"`
+	IssueType      string `json:"issue_type" yaml:"issue_type"`
+	Status         string `json:"status" yaml:"status"`
+	Creator        string `json:"creator" yaml:"creator"`
+	Reporter       string `json:"reporter" yaml:"reporter"`
+	Assignee       string `json:"assignee" yaml:"assignee"`
+	Author         string `json:"author" yaml:"author"`
+	TypeName       string `json:"type_name" yaml:"type_name"`
+	Tags           string `json:"tags" yaml:"tags"`
+	Parent         string `json:"parent" yaml:"parent"`
+	ResolutionName string `json:"resolution_name" yaml:"resolution_name"`
 }
 
 // String returns a string representation of Issue
@@ -125,35 +121,31 @@ func (o *Issue) IsEqual(other *Issue) bool {
 // ToMap returns the object as a map
 func (o *Issue) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":                   o.GetID(),
-		"ref_id":               o.GetRefID(),
-		"ref_type":             o.RefType,
-		"customer_id":          o.CustomerID,
-		"hashcode":             o.Hash(),
-		"title":                o.Title,
-		"identifier":           o.Identifier,
-		"url":                  o.URL,
-		"created_ts":           o.CreatedAt,
-		"ref_creator_user_id":  o.RefCreatorUserID,
-		"ref_reporter_user_id": o.RefReporterUserID,
-		"ref_assignee_user_id": o.RefAssigneeUserID,
-		"key":                  o.Key,
-		"issue_type":           o.IssueType,
-		"project_id":           o.ProjectID,
-		"labels":               o.Labels,
-		"parent_id":            o.ParentID,
-		"status":               o.Status,
-		"resolution":           o.Resolution,
-		"duedate":              o.Duedate,
-		"issuetype_id":         o.IssuetypeID,
-		"combo":                o.Combo,
-		"comp":                 o.Comp,
-		"active":               o.Active,
-		"username":             o.Username,
-		"displayname":          o.Displayname,
-		"email":                o.Email,
-		"avatar_url":           o.AvatarURL,
-		"priority_id":          o.PriorityID,
+		"id":               o.GetID(),
+		"ref_id":           o.GetRefID(),
+		"ref_type":         o.RefType,
+		"customer_id":      o.CustomerID,
+		"hashcode":         o.Hash(),
+		"title":            o.Title,
+		"identifier":       o.Identifier,
+		"project_id":       o.ProjectID,
+		"url":              o.URL,
+		"created_ts":       o.CreatedAt,
+		"updated_ts":       o.UpdatedAt,
+		"planned_start_ts": o.PlannedStartAt,
+		"planned_end_ts":   o.PlannedEndAt,
+		"due_date":         o.DueDate,
+		"priority_name":    o.PriorityName,
+		"issue_type":       o.IssueType,
+		"status":           o.Status,
+		"creator":          o.Creator,
+		"reporter":         o.Reporter,
+		"assignee":         o.Assignee,
+		"author":           o.Author,
+		"type_name":        o.TypeName,
+		"tags":             o.Tags,
+		"parent":           o.Parent,
+		"resolution_name":  o.ResolutionName,
 	}
 }
 
@@ -191,6 +183,16 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.Identifier = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = val
+	} else {
+		val := kv["project_id"]
+		if val == nil {
+			o.ProjectID = ""
+		} else {
+			o.ProjectID = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -211,44 +213,54 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.CreatedAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["ref_creator_user_id"].(string); ok {
-		o.RefCreatorUserID = val
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
 	} else {
-		val := kv["ref_creator_user_id"]
+		val := kv["updated_ts"]
 		if val == nil {
-			o.RefCreatorUserID = ""
+			o.UpdatedAt = number.ToInt64Any(nil)
 		} else {
-			o.RefCreatorUserID = fmt.Sprintf("%v", val)
+			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["ref_reporter_user_id"].(string); ok {
-		o.RefReporterUserID = val
+	if val, ok := kv["planned_start_ts"].(int64); ok {
+		o.PlannedStartAt = val
 	} else {
-		val := kv["ref_reporter_user_id"]
+		val := kv["planned_start_ts"]
 		if val == nil {
-			o.RefReporterUserID = ""
+			o.PlannedStartAt = number.ToInt64Any(nil)
 		} else {
-			o.RefReporterUserID = fmt.Sprintf("%v", val)
+			o.PlannedStartAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["ref_assignee_user_id"].(string); ok {
-		o.RefAssigneeUserID = val
+	if val, ok := kv["planned_end_ts"].(int64); ok {
+		o.PlannedEndAt = val
 	} else {
-		val := kv["ref_assignee_user_id"]
+		val := kv["planned_end_ts"]
 		if val == nil {
-			o.RefAssigneeUserID = ""
+			o.PlannedEndAt = number.ToInt64Any(nil)
 		} else {
-			o.RefAssigneeUserID = fmt.Sprintf("%v", val)
+			o.PlannedEndAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["key"].(string); ok {
-		o.Key = val
+	if val, ok := kv["due_date"].(string); ok {
+		o.DueDate = val
 	} else {
-		val := kv["key"]
+		val := kv["due_date"]
 		if val == nil {
-			o.Key = ""
+			o.DueDate = ""
 		} else {
-			o.Key = fmt.Sprintf("%v", val)
+			o.DueDate = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["priority_name"].(string); ok {
+		o.PriorityName = val
+	} else {
+		val := kv["priority_name"]
+		if val == nil {
+			o.PriorityName = ""
+		} else {
+			o.PriorityName = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["issue_type"].(string); ok {
@@ -261,36 +273,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.IssueType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["project_id"].(string); ok {
-		o.ProjectID = val
-	} else {
-		val := kv["project_id"]
-		if val == nil {
-			o.ProjectID = ""
-		} else {
-			o.ProjectID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["labels"].(string); ok {
-		o.Labels = val
-	} else {
-		val := kv["labels"]
-		if val == nil {
-			o.Labels = ""
-		} else {
-			o.Labels = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["parent_id"].(string); ok {
-		o.ParentID = val
-	} else {
-		val := kv["parent_id"]
-		if val == nil {
-			o.ParentID = ""
-		} else {
-			o.ParentID = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["status"].(string); ok {
 		o.Status = val
 	} else {
@@ -301,114 +283,84 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.Status = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["resolution"].(string); ok {
-		o.Resolution = val
+	if val, ok := kv["creator"].(string); ok {
+		o.Creator = val
 	} else {
-		val := kv["resolution"]
+		val := kv["creator"]
 		if val == nil {
-			o.Resolution = ""
+			o.Creator = ""
 		} else {
-			o.Resolution = fmt.Sprintf("%v", val)
+			o.Creator = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["duedate"].(string); ok {
-		o.Duedate = val
+	if val, ok := kv["reporter"].(string); ok {
+		o.Reporter = val
 	} else {
-		val := kv["duedate"]
+		val := kv["reporter"]
 		if val == nil {
-			o.Duedate = ""
+			o.Reporter = ""
 		} else {
-			o.Duedate = fmt.Sprintf("%v", val)
+			o.Reporter = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["issuetype_id"].(string); ok {
-		o.IssuetypeID = val
+	if val, ok := kv["assignee"].(string); ok {
+		o.Assignee = val
 	} else {
-		val := kv["issuetype_id"]
+		val := kv["assignee"]
 		if val == nil {
-			o.IssuetypeID = ""
+			o.Assignee = ""
 		} else {
-			o.IssuetypeID = fmt.Sprintf("%v", val)
+			o.Assignee = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["combo"].(string); ok {
-		o.Combo = val
+	if val, ok := kv["author"].(string); ok {
+		o.Author = val
 	} else {
-		val := kv["combo"]
+		val := kv["author"]
 		if val == nil {
-			o.Combo = ""
+			o.Author = ""
 		} else {
-			o.Combo = fmt.Sprintf("%v", val)
+			o.Author = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["comp"].(string); ok {
-		o.Comp = val
+	if val, ok := kv["type_name"].(string); ok {
+		o.TypeName = val
 	} else {
-		val := kv["comp"]
+		val := kv["type_name"]
 		if val == nil {
-			o.Comp = ""
+			o.TypeName = ""
 		} else {
-			o.Comp = fmt.Sprintf("%v", val)
+			o.TypeName = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["active"].(string); ok {
-		o.Active = val
+	if val, ok := kv["tags"].(string); ok {
+		o.Tags = val
 	} else {
-		val := kv["active"]
+		val := kv["tags"]
 		if val == nil {
-			o.Active = ""
+			o.Tags = ""
 		} else {
-			o.Active = fmt.Sprintf("%v", val)
+			o.Tags = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["username"].(string); ok {
-		o.Username = val
+	if val, ok := kv["parent"].(string); ok {
+		o.Parent = val
 	} else {
-		val := kv["username"]
+		val := kv["parent"]
 		if val == nil {
-			o.Username = ""
+			o.Parent = ""
 		} else {
-			o.Username = fmt.Sprintf("%v", val)
+			o.Parent = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["displayname"].(string); ok {
-		o.Displayname = val
+	if val, ok := kv["resolution_name"].(string); ok {
+		o.ResolutionName = val
 	} else {
-		val := kv["displayname"]
+		val := kv["resolution_name"]
 		if val == nil {
-			o.Displayname = ""
+			o.ResolutionName = ""
 		} else {
-			o.Displayname = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["email"].(string); ok {
-		o.Email = val
-	} else {
-		val := kv["email"]
-		if val == nil {
-			o.Email = ""
-		} else {
-			o.Email = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["avatar_url"].(string); ok {
-		o.AvatarURL = val
-	} else {
-		val := kv["avatar_url"]
-		if val == nil {
-			o.AvatarURL = ""
-		} else {
-			o.AvatarURL = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["priority_id"].(string); ok {
-		o.PriorityID = val
-	} else {
-		val := kv["priority_id"]
-		if val == nil {
-			o.PriorityID = ""
-		} else {
-			o.PriorityID = fmt.Sprintf("%v", val)
+			o.ResolutionName = fmt.Sprintf("%v", val)
 		}
 	}
 	// make sure that these have values if empty
@@ -424,28 +376,24 @@ func (o *Issue) Hash() string {
 		args = append(args, o.RefType)
 		args = append(args, o.Title)
 		args = append(args, o.Identifier)
+		args = append(args, o.ProjectID)
 		args = append(args, o.URL)
 		args = append(args, o.CreatedAt)
-		args = append(args, o.RefCreatorUserID)
-		args = append(args, o.RefReporterUserID)
-		args = append(args, o.RefAssigneeUserID)
-		args = append(args, o.Key)
+		args = append(args, o.UpdatedAt)
+		args = append(args, o.PlannedStartAt)
+		args = append(args, o.PlannedEndAt)
+		args = append(args, o.DueDate)
+		args = append(args, o.PriorityName)
 		args = append(args, o.IssueType)
-		args = append(args, o.ProjectID)
-		args = append(args, o.Labels)
-		args = append(args, o.ParentID)
 		args = append(args, o.Status)
-		args = append(args, o.Resolution)
-		args = append(args, o.Duedate)
-		args = append(args, o.IssuetypeID)
-		args = append(args, o.Combo)
-		args = append(args, o.Comp)
-		args = append(args, o.Active)
-		args = append(args, o.Username)
-		args = append(args, o.Displayname)
-		args = append(args, o.Email)
-		args = append(args, o.AvatarURL)
-		args = append(args, o.PriorityID)
+		args = append(args, o.Creator)
+		args = append(args, o.Reporter)
+		args = append(args, o.Assignee)
+		args = append(args, o.Author)
+		args = append(args, o.TypeName)
+		args = append(args, o.Tags)
+		args = append(args, o.Parent)
+		args = append(args, o.ResolutionName)
 		o.Hashcode = hash.Values(args...)
 	}
 	return o.Hashcode
@@ -488,6 +436,10 @@ func CreateIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "project_id",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "url",
 				"type": "string",
 			},
@@ -496,19 +448,23 @@ func CreateIssueAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "ref_creator_user_id",
+				"name": "updated_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "planned_start_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "planned_end_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "due_date",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_reporter_user_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_assignee_user_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "key",
+				"name": "priority_name",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -516,63 +472,39 @@ func CreateIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "project_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "labels",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "parent_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "status",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "resolution",
+				"name": "creator",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "duedate",
+				"name": "reporter",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "issuetype_id",
+				"name": "assignee",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "combo",
+				"name": "author",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "comp",
+				"name": "type_name",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "active",
+				"name": "tags",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "username",
+				"name": "parent",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "displayname",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "email",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "avatar_url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "priority_id",
+				"name": "resolution_name",
 				"type": "string",
 			},
 		},
@@ -591,6 +523,9 @@ func CreateIssueKQLStreamSQL() string {
 	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", IssueDefaultStream))
 	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", IssueDefaultTopic))
 	builder.WriteString(", TIMESTAMP='created_ts'")
+	builder.WriteString(", TIMESTAMP='updated_ts'")
+	builder.WriteString(", TIMESTAMP='planned_start_ts'")
+	builder.WriteString(", TIMESTAMP='planned_end_ts'")
 	builder.WriteString(");")
 	return builder.String()
 }
@@ -601,6 +536,9 @@ func CreateIssueKQLTableSQL() string {
 	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", IssueDefaultTable))
 	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", IssueDefaultTopic))
 	builder.WriteString(", TIMESTAMP='created_ts'")
+	builder.WriteString(", TIMESTAMP='updated_ts'")
+	builder.WriteString(", TIMESTAMP='planned_start_ts'")
+	builder.WriteString(", TIMESTAMP='planned_end_ts'")
 	builder.WriteString(");")
 	return builder.String()
 }
