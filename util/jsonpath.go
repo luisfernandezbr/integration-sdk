@@ -73,4 +73,11 @@ func init() {
 		}
 		return 0, nil
 	})
+	RegisterAction("concat", func(args ...interface{}) (interface{}, error) {
+		var res string
+		for _, e := range args {
+			res = res + fmt.Sprint(e)
+		}
+		return res, nil
+	})
 }

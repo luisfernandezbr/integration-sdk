@@ -46,10 +46,30 @@ type Issue struct {
 
 	// custom types
 
-	Title      string `json:"title" yaml:"title"`
-	Identifier string `json:"identifier" yaml:"identifier"`
-	URL        string `json:"url" yaml:"url"`
-	CreatedAt  int64  `json:"created_ts" yaml:"created_ts"`
+	Title             string `json:"title" yaml:"title"`
+	Identifier        string `json:"identifier" yaml:"identifier"`
+	URL               string `json:"url" yaml:"url"`
+	CreatedAt         int64  `json:"created_ts" yaml:"created_ts"`
+	RefCreatorUserID  string `json:"ref_creator_user_id" yaml:"ref_creator_user_id"`
+	RefReporterUserID string `json:"ref_reporter_user_id" yaml:"ref_reporter_user_id"`
+	RefAssigneeUserID string `json:"ref_assignee_user_id" yaml:"ref_assignee_user_id"`
+	Key               string `json:"key" yaml:"key"`
+	IssueType         string `json:"issue_type" yaml:"issue_type"`
+	ProjectID         string `json:"project_id" yaml:"project_id"`
+	Labels            string `json:"labels" yaml:"labels"`
+	ParentID          string `json:"parent_id" yaml:"parent_id"`
+	Status            string `json:"status" yaml:"status"`
+	Resolution        string `json:"resolution" yaml:"resolution"`
+	Duedate           string `json:"duedate" yaml:"duedate"`
+	IssuetypeID       string `json:"issuetype_id" yaml:"issuetype_id"`
+	Combo             string `json:"combo" yaml:"combo"`
+	Comp              string `json:"comp" yaml:"comp"`
+	Active            string `json:"active" yaml:"active"`
+	Username          string `json:"username" yaml:"username"`
+	Displayname       string `json:"displayname" yaml:"displayname"`
+	Email             string `json:"email" yaml:"email"`
+	AvatarURL         string `json:"avatar_url" yaml:"avatar_url"`
+	PriorityID        string `json:"priority_id" yaml:"priority_id"`
 }
 
 // String returns a string representation of Issue
@@ -107,15 +127,35 @@ func (o *Issue) IsEqual(other *Issue) bool {
 // ToMap returns the object as a map
 func (o *Issue) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"title":       o.Title,
-		"identifier":  o.Identifier,
-		"url":         o.URL,
-		"created_ts":  o.CreatedAt,
+		"id":                   o.GetID(),
+		"ref_id":               o.GetRefID(),
+		"ref_type":             o.RefType,
+		"customer_id":          o.CustomerID,
+		"hashcode":             o.Hash(),
+		"title":                o.Title,
+		"identifier":           o.Identifier,
+		"url":                  o.URL,
+		"created_ts":           o.CreatedAt,
+		"ref_creator_user_id":  o.RefCreatorUserID,
+		"ref_reporter_user_id": o.RefReporterUserID,
+		"ref_assignee_user_id": o.RefAssigneeUserID,
+		"key":          o.Key,
+		"issue_type":   o.IssueType,
+		"project_id":   o.ProjectID,
+		"labels":       o.Labels,
+		"parent_id":    o.ParentID,
+		"status":       o.Status,
+		"resolution":   o.Resolution,
+		"duedate":      o.Duedate,
+		"issuetype_id": o.IssuetypeID,
+		"combo":        o.Combo,
+		"comp":         o.Comp,
+		"active":       o.Active,
+		"username":     o.Username,
+		"displayname":  o.Displayname,
+		"email":        o.Email,
+		"avatar_url":   o.AvatarURL,
+		"priority_id":  o.PriorityID,
 	}
 }
 
@@ -157,6 +197,126 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		val := kv["created_ts"]
 		o.CreatedAt = number.ToInt64Any(val)
 	}
+	if val, ok := kv["ref_creator_user_id"].(string); ok {
+		o.RefCreatorUserID = val
+	} else {
+		val := kv["ref_creator_user_id"]
+		o.RefCreatorUserID = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["ref_reporter_user_id"].(string); ok {
+		o.RefReporterUserID = val
+	} else {
+		val := kv["ref_reporter_user_id"]
+		o.RefReporterUserID = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["ref_assignee_user_id"].(string); ok {
+		o.RefAssigneeUserID = val
+	} else {
+		val := kv["ref_assignee_user_id"]
+		o.RefAssigneeUserID = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["key"].(string); ok {
+		o.Key = val
+	} else {
+		val := kv["key"]
+		o.Key = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["issue_type"].(string); ok {
+		o.IssueType = val
+	} else {
+		val := kv["issue_type"]
+		o.IssueType = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = val
+	} else {
+		val := kv["project_id"]
+		o.ProjectID = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["labels"].(string); ok {
+		o.Labels = val
+	} else {
+		val := kv["labels"]
+		o.Labels = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["parent_id"].(string); ok {
+		o.ParentID = val
+	} else {
+		val := kv["parent_id"]
+		o.ParentID = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["status"].(string); ok {
+		o.Status = val
+	} else {
+		val := kv["status"]
+		o.Status = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["resolution"].(string); ok {
+		o.Resolution = val
+	} else {
+		val := kv["resolution"]
+		o.Resolution = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["duedate"].(string); ok {
+		o.Duedate = val
+	} else {
+		val := kv["duedate"]
+		o.Duedate = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["issuetype_id"].(string); ok {
+		o.IssuetypeID = val
+	} else {
+		val := kv["issuetype_id"]
+		o.IssuetypeID = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["combo"].(string); ok {
+		o.Combo = val
+	} else {
+		val := kv["combo"]
+		o.Combo = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["comp"].(string); ok {
+		o.Comp = val
+	} else {
+		val := kv["comp"]
+		o.Comp = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["active"].(string); ok {
+		o.Active = val
+	} else {
+		val := kv["active"]
+		o.Active = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["username"].(string); ok {
+		o.Username = val
+	} else {
+		val := kv["username"]
+		o.Username = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["displayname"].(string); ok {
+		o.Displayname = val
+	} else {
+		val := kv["displayname"]
+		o.Displayname = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["email"].(string); ok {
+		o.Email = val
+	} else {
+		val := kv["email"]
+		o.Email = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["avatar_url"].(string); ok {
+		o.AvatarURL = val
+	} else {
+		val := kv["avatar_url"]
+		o.AvatarURL = fmt.Sprintf("%v", val)
+	}
+	if val, ok := kv["priority_id"].(string); ok {
+		o.PriorityID = val
+	} else {
+		val := kv["priority_id"]
+		o.PriorityID = fmt.Sprintf("%v", val)
+	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -172,6 +332,26 @@ func (o *Issue) Hash() string {
 		args = append(args, o.Identifier)
 		args = append(args, o.URL)
 		args = append(args, o.CreatedAt)
+		args = append(args, o.RefCreatorUserID)
+		args = append(args, o.RefReporterUserID)
+		args = append(args, o.RefAssigneeUserID)
+		args = append(args, o.Key)
+		args = append(args, o.IssueType)
+		args = append(args, o.ProjectID)
+		args = append(args, o.Labels)
+		args = append(args, o.ParentID)
+		args = append(args, o.Status)
+		args = append(args, o.Resolution)
+		args = append(args, o.Duedate)
+		args = append(args, o.IssuetypeID)
+		args = append(args, o.Combo)
+		args = append(args, o.Comp)
+		args = append(args, o.Active)
+		args = append(args, o.Username)
+		args = append(args, o.Displayname)
+		args = append(args, o.Email)
+		args = append(args, o.AvatarURL)
+		args = append(args, o.PriorityID)
 		o.Hashcode = hash.Values(args...)
 	}
 	return o.Hashcode
@@ -220,6 +400,86 @@ func CreateIssueAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "created_ts",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "ref_creator_user_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_reporter_user_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_assignee_user_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "key",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "issue_type",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "project_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "labels",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "parent_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "status",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "resolution",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "duedate",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "issuetype_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "combo",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "comp",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "active",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "username",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "displayname",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "email",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "avatar_url",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "priority_id",
+				"type": "string",
 			},
 		},
 	}

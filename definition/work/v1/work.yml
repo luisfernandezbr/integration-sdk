@@ -30,3 +30,66 @@ models:
         description: the timestamp in UTC that the issue was created
         type: int
         timestamp: true
+      - name: ref_creator_user_id
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: ref_reporter_user_id
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: ref_assignee_user_id
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: key
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: issue_type
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: project_id
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: labels
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: parent_id
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: status
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: resolution
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: duedate
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      # - name: custom_fields
+      #   description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+      #   type: string
+      - name: issuetype_id
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: combo
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: comp
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: active
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: username
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: displayname
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: email
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: avatar_url
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string
+      - name: priority_id
+        description: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        type: string

@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/jhaynie/go-gator/orm"
 	"github.com/oliveagle/jsonpath"
@@ -117,7 +118,10 @@ func CreateObject(object Object, kv map[string]interface{}, mapping map[string][
 			lasterr = nil
 			res, err := invokeAction(v, kv)
 			if err != nil {
-				lasterr = err
+				if !strings.Contains(err.Error(), "not found in object") {
+					// this is the case where an object value might be null and not found
+					lasterr = err
+				}
 				continue
 			}
 			newkv[k] = res
