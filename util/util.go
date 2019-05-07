@@ -7,9 +7,11 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/jhaynie/go-gator/orm"
 	"github.com/oliveagle/jsonpath"
+	"github.com/pinpt/go-common/fileutil"
 )
 
 // StreamToMap will stream a file into results
@@ -71,11 +73,23 @@ func StreamToMap(fp string, keypath string, results map[string]map[string]interf
 // JoinTable will join 2 tables from dir into a map of joined maps
 func JoinTable(dir string, fromtable string, frompath string, totable string, topath string, kv map[string]interface{}) (map[string]map[string]interface{}, error) {
 	results := make(map[string]map[string]interface{})
-	if err := StreamToMap(filepath.Join(dir, fromtable+".json.gz"), frompath, results, true); err != nil {
+	fromfile, err := fileutil.FindFiles(dir, regexp.MustCompile(fromtable+"\\.json(\\.gz)?$"))
+	if err != nil {
 		return nil, err
 	}
-	if err := StreamToMap(filepath.Join(dir, totable+".json.gz"), topath, results, false); err != nil {
+	tofile, err := fileutil.FindFiles(dir, regexp.MustCompile(totable+"\\.json(\\.gz)?$"))
+	if err != nil {
 		return nil, err
+	}
+	if len(fromfile) == 1 {
+		if err := StreamToMap(fromfile[0], frompath, results, true); err != nil {
+			return nil, err
+		}
+	}
+	if len(tofile) == 1 {
+		if err := StreamToMap(tofile[0], topath, results, false); err != nil {
+			return nil, err
+		}
 	}
 	if kv != nil {
 		for _, val := range results {
