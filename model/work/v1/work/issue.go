@@ -26,13 +26,13 @@ import (
 )
 
 // IssueDefaultTopic is the default topic name
-const IssueDefaultTopic = "work.Issue.topic"
+const IssueDefaultTopic = "work-Issue-topic"
 
 // IssueDefaultStream is the default stream name
-const IssueDefaultStream = "work.Issue.topicstream"
+const IssueDefaultStream = "work-Issue-stream"
 
 // IssueDefaultTable is the default table name
-const IssueDefaultTable = "work.Issue"
+const IssueDefaultTable = "work-Issue"
 
 // Issue the issue is a specific work item for a project
 type Issue struct {

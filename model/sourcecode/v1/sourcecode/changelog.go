@@ -26,13 +26,13 @@ import (
 )
 
 // ChangelogDefaultTopic is the default topic name
-const ChangelogDefaultTopic = "sourcecode.Changelog.topic"
+const ChangelogDefaultTopic = "sourcecode-Changelog-topic"
 
 // ChangelogDefaultStream is the default stream name
-const ChangelogDefaultStream = "sourcecode.Changelog.topicstream"
+const ChangelogDefaultStream = "sourcecode-Changelog-stream"
 
 // ChangelogDefaultTable is the default table name
-const ChangelogDefaultTable = "sourcecode.Changelog"
+const ChangelogDefaultTable = "sourcecode-Changelog"
 
 // Changelog the change log for each commit in a repo
 type Changelog struct {

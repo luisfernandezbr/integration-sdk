@@ -26,13 +26,13 @@ import (
 )
 
 // PullRequestDefaultTopic is the default topic name
-const PullRequestDefaultTopic = "sourcecode.PullRequest.topic"
+const PullRequestDefaultTopic = "sourcecode-PullRequest-topic"
 
 // PullRequestDefaultStream is the default stream name
-const PullRequestDefaultStream = "sourcecode.PullRequest.topicstream"
+const PullRequestDefaultStream = "sourcecode-PullRequest-stream"
 
 // PullRequestDefaultTable is the default table name
-const PullRequestDefaultTable = "sourcecode.PullRequest"
+const PullRequestDefaultTable = "sourcecode-PullRequest"
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {

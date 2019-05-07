@@ -26,13 +26,13 @@ import (
 )
 
 // CommitDefaultTopic is the default topic name
-const CommitDefaultTopic = "sourcecode.Commit.topic"
+const CommitDefaultTopic = "sourcecode-Commit-topic"
 
 // CommitDefaultStream is the default stream name
-const CommitDefaultStream = "sourcecode.Commit.topicstream"
+const CommitDefaultStream = "sourcecode-Commit-stream"
 
 // CommitDefaultTable is the default table name
-const CommitDefaultTable = "sourcecode.Commit"
+const CommitDefaultTable = "sourcecode-Commit"
 
 // Commit the commit is a specific change in a repo
 type Commit struct {
