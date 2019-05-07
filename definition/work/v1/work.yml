@@ -14,7 +14,7 @@ models:
       - name: url
         description: the url to the project home page
         type: string
-  field_types:
+  field_type:
     description: user defined fields
     columns:
       - name: name
@@ -45,15 +45,12 @@ models:
       - name: updated_ts
         description: the timestamp in UTC that the issue was updated
         type: int
-        timestamp: true
       - name: planned_start_ts
         description: the timestamp in UTC that the issue was planned to start
         type: int
-        timestamp: true
       - name: planned_end_ts
         description: the timestamp in UTC that the issue was planned to end
         type: int
-        timestamp: true
       - name: due_date
         description: due date of the issue
         type: string

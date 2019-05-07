@@ -16,9 +16,9 @@ func GenerateKQL(dir string) error {
 	builder.WriteString("\n")
 	builder.WriteString(CreateChangelogKQLTableSQL())
 	builder.WriteString("\n")
-	builder.WriteString(CreateFieldTypesKQLStreamSQL())
+	builder.WriteString(CreateFieldTypeKQLStreamSQL())
 	builder.WriteString("\n")
-	builder.WriteString(CreateFieldTypesKQLTableSQL())
+	builder.WriteString(CreateFieldTypeKQLTableSQL())
 	builder.WriteString("\n")
 	builder.WriteString(CreateIssueKQLStreamSQL())
 	builder.WriteString("\n")
@@ -36,7 +36,7 @@ func GenerateAvroSchemaSpec(dir string) error {
 	if err := ioutil.WriteFile(filepath.Join(dir, "work.v1.Changelog.avro"), []byte(CreateChangelogAvroSchemaSpec()), 0644); err != nil {
 		return err
 	}
-	if err := ioutil.WriteFile(filepath.Join(dir, "work.v1.FieldTypes.avro"), []byte(CreateFieldTypesAvroSchemaSpec()), 0644); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(dir, "work.v1.FieldType.avro"), []byte(CreateFieldTypeAvroSchemaSpec()), 0644); err != nil {
 		return err
 	}
 	if err := ioutil.WriteFile(filepath.Join(dir, "work.v1.Issue.avro"), []byte(CreateIssueAvroSchemaSpec()), 0644); err != nil {
