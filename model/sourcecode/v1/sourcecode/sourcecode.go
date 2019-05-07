@@ -32,7 +32,7 @@ func GenerateKQL(dir string) error {
 	builder.WriteString("\n")
 	builder.WriteString(CreateRepoKQLTableSQL())
 	builder.WriteString("\n")
-	return ioutil.WriteFile(filepath.Join(dir, "sourcecode.v1.sql"), []byte(builder.String()), 0644)
+	return ioutil.WriteFile(filepath.Join(dir, "sourcecode.v1.ksql"), []byte(builder.String()), 0644)
 }
 
 // GenerateAvroSchemaSpec will generate the Avro schema to directory for each model

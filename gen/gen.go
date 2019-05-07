@@ -31,7 +31,7 @@ func GenerateKQL(dir string) error {
 	builder.WriteString(Create{{ proper $colkey }}KQLTableSQL())
 	builder.WriteString("\n")
 {{ end -}}
-	return ioutil.WriteFile(filepath.Join(dir,  "{{ $schema.Name }}.v{{ $schema.Version }}.sql"), []byte(builder.String()), 0644)
+	return ioutil.WriteFile(filepath.Join(dir,  "{{ $schema.Name }}.v{{ $schema.Version }}.ksql"), []byte(builder.String()), 0644)
 }
 
 // GenerateAvroSchemaSpec will generate the Avro schema to directory for each model
