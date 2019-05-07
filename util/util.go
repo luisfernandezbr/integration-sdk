@@ -45,7 +45,7 @@ func StreamToMap(fp string, keypath string, results map[string]map[string]interf
 		if err != nil {
 			return err
 		}
-		keystr := key.(string)
+		keystr := fmt.Sprintf("%v", key)
 		if insert {
 			results[keystr] = kv
 			keys[keystr] = true
