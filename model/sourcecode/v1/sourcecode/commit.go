@@ -8,6 +8,7 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -562,7 +563,7 @@ func CreateCommitProducer(producer *util.KafkaProducer, ch chan Commit, errors c
 		ctx := context.Background()
 		for item := range ch {
 			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
-				errors <- fmt.Error("error sending %s. %v", item, err)
+				errors <- fmt.Errorf("error sending %s. %v", item, err)
 			}
 		}
 	}()
