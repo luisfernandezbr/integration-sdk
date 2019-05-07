@@ -442,7 +442,7 @@ func CreateRepoProducer(producer *util.KafkaProducer, ch chan Repo, errors chan<
 		ctx := context.Background()
 		for item := range ch {
 			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item, err)
+				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}
 	}()
