@@ -8,7 +8,6 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -139,23 +138,23 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"ref_creator_user_id":  o.RefCreatorUserID,
 		"ref_reporter_user_id": o.RefReporterUserID,
 		"ref_assignee_user_id": o.RefAssigneeUserID,
-		"key":          o.Key,
-		"issue_type":   o.IssueType,
-		"project_id":   o.ProjectID,
-		"labels":       o.Labels,
-		"parent_id":    o.ParentID,
-		"status":       o.Status,
-		"resolution":   o.Resolution,
-		"duedate":      o.Duedate,
-		"issuetype_id": o.IssuetypeID,
-		"combo":        o.Combo,
-		"comp":         o.Comp,
-		"active":       o.Active,
-		"username":     o.Username,
-		"displayname":  o.Displayname,
-		"email":        o.Email,
-		"avatar_url":   o.AvatarURL,
-		"priority_id":  o.PriorityID,
+		"key":                  o.Key,
+		"issue_type":           o.IssueType,
+		"project_id":           o.ProjectID,
+		"labels":               o.Labels,
+		"parent_id":            o.ParentID,
+		"status":               o.Status,
+		"resolution":           o.Resolution,
+		"duedate":              o.Duedate,
+		"issuetype_id":         o.IssuetypeID,
+		"combo":                o.Combo,
+		"comp":                 o.Comp,
+		"active":               o.Active,
+		"username":             o.Username,
+		"displayname":          o.Displayname,
+		"email":                o.Email,
+		"avatar_url":           o.AvatarURL,
+		"priority_id":          o.PriorityID,
 	}
 }
 
@@ -731,7 +730,7 @@ func CreateIssueProducer(producer *util.KafkaProducer, ch chan Issue, errors cha
 		ctx := context.Background()
 		for item := range ch {
 			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
-				errors <- err
+				errors <- fmt.Error("error sending %s. %v", item, err)
 			}
 		}
 	}()

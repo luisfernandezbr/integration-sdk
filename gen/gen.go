@@ -472,7 +472,7 @@ func Create{{ $name }}Producer(producer *util.KafkaProducer, ch chan {{ $name }}
 		ctx := context.Background()
 		for item := range ch {
 			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
-				errors <- err
+				errors <- fmt.Error("error sending %s. %v", item, err)
 			}
 		}
 	}()

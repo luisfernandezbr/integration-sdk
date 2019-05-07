@@ -8,7 +8,6 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -455,7 +454,7 @@ func CreateProjectProducer(producer *util.KafkaProducer, ch chan Project, errors
 		ctx := context.Background()
 		for item := range ch {
 			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
-				errors <- err
+				errors <- fmt.Error("error sending %s. %v", item, err)
 			}
 		}
 	}()
