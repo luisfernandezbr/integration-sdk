@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/pinpt/go-common/fileutil"
@@ -42,9 +43,22 @@ var generateCmd = &cobra.Command{
 			if err := schema.DecodeYAML(of); err != nil {
 				log.Fatal(logger, "error parsing "+file, "err", err)
 			}
+			log.Info(logger, "generating schema", "schema", schema.Name)
+			fn := filepath.Join(outdir, schema.Name, "v"+strconv.Itoa(schema.Version), schema.Name, schema.Name+".go")
+			if err := os.MkdirAll(filepath.Dir(fn), 0777); err != nil {
+				log.Fatal(logger, "error creaing dir", "fn", fn, "err", err)
+			}
+			wf, err := os.Create(fn)
+			if err != nil {
+				log.Fatal(logger, "error creating "+fn, "err", err)
+			}
+			defer wf.Close()
+			if err := gen.Generate(schema, wf); err != nil {
+				log.Fatal(logger, "error generating "+fn, "err", err)
+			}
 			for name := range schema.Models {
 				startedgen := time.Now()
-				log.Info(logger, "generating schema", "schema", name)
+				log.Info(logger, "generating model", "model", name)
 				fn := schema.GetSchemaFilePath(outdir, name)
 				if err := os.MkdirAll(filepath.Dir(fn), 0777); err != nil {
 					log.Fatal(logger, "error creaing dir", "fn", fn, "err", err)
@@ -54,7 +68,7 @@ var generateCmd = &cobra.Command{
 					log.Fatal(logger, "error creating "+fn, "err", err)
 				}
 				defer wf.Close()
-				if err := gen.Generate(schema, name, wf); err != nil {
+				if err := gen.GenerateModel(schema, name, wf); err != nil {
 					log.Fatal(logger, "error generating "+fn, "err", err)
 				}
 				log.Info(logger, "done generating", "schema", name, "duration", time.Since(startedgen))

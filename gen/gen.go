@@ -15,6 +15,39 @@ import (
 	"golang.org/x/tools/imports"
 )
 
+var inittmpl = `// DO NOT EDIT -- generated code
+
+// Package {{ .schema.Name }} - {{ .schema.Description }}
+package {{ .schema.Name }}
+
+{{ $schema := .schema -}}
+
+// GenerateKQL will generate SQL statements for all models into file in directory
+func GenerateKQL(dir string) error {
+	var builder strings.Builder
+{{ range $colkey, $colvalue := .schema.Models -}}
+	builder.WriteString(Create{{ proper $colkey }}KQLStreamSQL())
+	builder.WriteString("\n")
+	builder.WriteString(Create{{ proper $colkey }}KQLTableSQL())
+	builder.WriteString("\n")
+{{ end -}}
+	return ioutil.WriteFile(filepath.Join(dir,  "{{ $schema.Name }}.v{{ $schema.Version }}.sql"), []byte(builder.String()), 0644)
+}
+
+// GenerateAvroSchemaSpec will generate the Avro schema to directory for each model
+func GenerateAvroSchemaSpec(dir string) error {
+{{ range $colkey, $colvalue := .schema.Models -}}
+	if err := ioutil.WriteFile(filepath.Join(dir,  "{{ $schema.Name }}.v{{ $schema.Version }}.{{  proper $colkey }}.avro"), []byte(Create{{ proper $colkey }}AvroSchemaSpec()), 0644); err != nil {
+		return err
+	}
+{{ end -}}
+	return nil
+}
+
+func init() {
+}
+`
+
 var codetmpl = `// DO NOT EDIT -- generated code
 
 // Package {{ .schema.Name }} - {{ .schema.Description }}
@@ -537,17 +570,55 @@ func pretty(expr string) (string, error) {
 	return buf.String(), nil
 }
 
-// Generate a set of schemas
-func Generate(schema Schema, model string, w io.Writer) error {
+// Generate any setup files
+func Generate(schema Schema, w io.Writer) error {
 	var err error
 	tmpl := template.New("schema")
-	tmpl = tmpl.Funcs(template.FuncMap{
+	tmpl = tmpl.Funcs(getFuncs())
+	tmpl, err = tmpl.Parse(inittmpl)
+	if err != nil {
+		return err
+	}
+	var buf strings.Builder
+	if err := tmpl.Execute(&buf, map[string]interface{}{
+		"schema": schema,
+	}); err != nil {
+		return err
+	}
+	// fmt.Println(html.UnescapeString(buf.String()))
+	sbuf, err := pretty(html.UnescapeString(buf.String()))
+	if err != nil {
+		return err
+	}
+	options := &imports.Options{
+		TabWidth:  8,
+		TabIndent: true,
+		Comments:  true,
+		Fragment:  true,
+	}
+	nbuf, err := imports.Process("init.go", []byte(sbuf), options)
+	if err != nil {
+		return err
+	}
+	if _, err := w.Write(nbuf); err != nil {
+		return err
+	}
+	return nil
+}
+
+// ModelName returns a formatted model name
+func ModelName(val string) string {
+	val = snaker.SnakeToCamel(val)
+	return strings.ToUpper(val[0:1]) + val[1:]
+}
+
+func getFuncs() template.FuncMap {
+	return template.FuncMap{
 		"proper": func(val string) string {
 			if strings.HasSuffix(val, "_ts") {
 				val = strings.Replace(val, "_ts", "At", 1)
 			}
-			val = snaker.SnakeToCamel(val)
-			return strings.ToUpper(val[0:1]) + val[1:]
+			return ModelName(val)
 		},
 		"tick": func(val string) template.HTML {
 			return template.HTML("`" + val + "`")
@@ -635,7 +706,14 @@ func Generate(schema Schema, model string, w io.Writer) error {
 			}
 			return template.HTML(string(val))
 		},
-	})
+	}
+}
+
+// GenerateModel a set of schemas
+func GenerateModel(schema Schema, model string, w io.Writer) error {
+	var err error
+	tmpl := template.New("model")
+	tmpl = tmpl.Funcs(getFuncs())
 	tmpl, err = tmpl.Parse(codetmpl)
 	if err != nil {
 		return err
@@ -659,7 +737,7 @@ func Generate(schema Schema, model string, w io.Writer) error {
 		Comments:  true,
 		Fragment:  true,
 	}
-	nbuf, err := imports.Process("filename.go", []byte(sbuf), options)
+	nbuf, err := imports.Process(model+".go", []byte(sbuf), options)
 	if err != nil {
 		return err
 	}
