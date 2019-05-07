@@ -360,7 +360,7 @@ func CreateCommitFileAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "binary",
-				"type": "bool",
+				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "language",
@@ -368,7 +368,7 @@ func CreateCommitFileAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "excluded",
-				"type": "bool",
+				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "excluded_reason",

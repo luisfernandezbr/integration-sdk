@@ -668,7 +668,7 @@ func getFuncs() template.FuncMap {
 			case StringColumnType:
 				val = "string"
 			case BooleanColumnType:
-				val = "bool"
+				val = "boolean"
 			case IntColumnType, LongColumnType:
 				val = "long"
 			case DoubleColumnType:
