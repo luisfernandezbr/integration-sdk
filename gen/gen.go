@@ -61,13 +61,13 @@ import (
 
 {{ $name := proper .modelname -}}
 // {{ $name }}DefaultTopic is the default topic name
-const {{ $name }}DefaultTopic = "{{ .schema.Name }}-{{ $name }}-topic"
+const {{ $name }}DefaultTopic = "{{ .schema.Name }}_{{ $name }}_topic"
 
 // {{ $name }}DefaultStream is the default stream name
-const {{ $name }}DefaultStream = "{{ .schema.Name }}-{{ $name }}-stream"
+const {{ $name }}DefaultStream = "{{ .schema.Name }}_{{ $name }}_stream"
 
 // {{ $name }}DefaultTable is the default table name
-const {{ $name }}DefaultTable = "{{ .schema.Name }}-{{ $name }}"
+const {{ $name }}DefaultTable = "{{ .schema.Name }}_{{ $name }}"
 
 // {{ $name }} {{ .model.Description }}
 type {{ $name }} struct {

@@ -25,13 +25,13 @@ import (
 )
 
 // ProjectDefaultTopic is the default topic name
-const ProjectDefaultTopic = "work-Project-topic"
+const ProjectDefaultTopic = "work_Project_topic"
 
 // ProjectDefaultStream is the default stream name
-const ProjectDefaultStream = "work-Project-stream"
+const ProjectDefaultStream = "work_Project_stream"
 
 // ProjectDefaultTable is the default table name
-const ProjectDefaultTable = "work-Project"
+const ProjectDefaultTable = "work_Project"
 
 // Project the project holds work
 type Project struct {

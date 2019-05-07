@@ -25,13 +25,13 @@ import (
 )
 
 // RepoDefaultTopic is the default topic name
-const RepoDefaultTopic = "sourcecode-Repo-topic"
+const RepoDefaultTopic = "sourcecode_Repo_topic"
 
 // RepoDefaultStream is the default stream name
-const RepoDefaultStream = "sourcecode-Repo-stream"
+const RepoDefaultStream = "sourcecode_Repo_stream"
 
 // RepoDefaultTable is the default table name
-const RepoDefaultTable = "sourcecode-Repo"
+const RepoDefaultTable = "sourcecode_Repo"
 
 // Repo the repo holds source code
 type Repo struct {

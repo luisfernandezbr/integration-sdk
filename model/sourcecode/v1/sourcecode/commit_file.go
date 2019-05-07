@@ -27,13 +27,13 @@ import (
 )
 
 // CommitFileDefaultTopic is the default topic name
-const CommitFileDefaultTopic = "sourcecode-CommitFile-topic"
+const CommitFileDefaultTopic = "sourcecode_CommitFile_topic"
 
 // CommitFileDefaultStream is the default stream name
-const CommitFileDefaultStream = "sourcecode-CommitFile-stream"
+const CommitFileDefaultStream = "sourcecode_CommitFile_stream"
 
 // CommitFileDefaultTable is the default table name
-const CommitFileDefaultTable = "sourcecode-CommitFile"
+const CommitFileDefaultTable = "sourcecode_CommitFile"
 
 // CommitFile the file change for a specific commit
 type CommitFile struct {
