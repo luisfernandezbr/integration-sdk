@@ -1,8 +1,10 @@
 package util
 
 import (
-	"fmt"
 	"testing"
+	"time"
+
+	"github.com/pinpt/go-common/datetime"
 
 	"github.com/oliveagle/jsonpath"
 	"github.com/stretchr/testify/assert"
@@ -20,6 +22,13 @@ func TestInvokeActionEpoch(t *testing.T) {
 	result, err := invokeAction("epoch($.date)", map[string]interface{}{"date": "2019-01-23T22:09:58Z"})
 	assert.NoError(err)
 	assert.Equal(int64(1548281398000), result)
+	result, err = invokeAction(`epoch($.date, "2006-01-02T15:04:05Z")`, map[string]interface{}{"date": "2019-01-23T22:09:58Z"})
+	assert.NoError(err)
+	assert.Equal(int64(1548281398000), result)
+	result, err = invokeAction(`epoch()`, map[string]interface{}{})
+	assert.NoError(err)
+	assert.NotNil(result)
+	assert.WithinDuration(time.Now(), datetime.DateFromEpoch(result.(int64)), time.Millisecond)
 }
 
 func TestInvokeActionString(t *testing.T) {
@@ -53,7 +62,9 @@ func TestInvokeActionNoAction(t *testing.T) {
 func TestJSONPathWithNil(t *testing.T) {
 	assert := assert.New(t)
 	val, err := jsonpath.JsonPathLookup(map[string]interface{}{}, "$.foo")
-	fmt.Println("val", val, "err", err)
+	assert.True(isJSONPathNotFound(err))
+	assert.True(isJSONPathNil(val))
+	val, err = jsonpath.JsonPathLookup(map[string]interface{}{}, "$.foo.bar")
 	assert.True(isJSONPathNotFound(err))
 	assert.True(isJSONPathNil(val))
 }

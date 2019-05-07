@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/oliveagle/jsonpath"
 	"github.com/pinpt/go-common/datetime"
@@ -24,11 +25,12 @@ func RegisterAction(name string, action Action) {
 }
 
 func isJSONPathNil(val interface{}) bool {
-	return val == nil || val == "<nil>"
+	return val == nil
 }
 
 func isJSONPathNotFound(err error) bool {
-	return strings.Contains(err.Error(), "not found in object")
+	return strings.Contains(err.Error(), "not found in object") ||
+		strings.Contains(err.Error(), "get attribute from null object")
 }
 
 func invokeAction(val string, o interface{}) (interface{}, error) {
@@ -41,19 +43,21 @@ func invokeAction(val string, o interface{}) (interface{}, error) {
 		}
 		args := []interface{}{}
 		if len(tok) > 2 {
-			for _, arg := range strings.Split(tok[2], ",") {
-				arg = strings.TrimSpace(arg)
-				if arg[0:1] != "@" && arg[0:1] != "$" {
-					args = append(args, arg)
-				} else {
-					val, err := jsonpath.JsonPathLookup(o, arg)
-					if err != nil && !isJSONPathNotFound(err) {
-						return nil, fmt.Errorf("error fetching json path: %v. %v", arg, err)
+			if tok[2] != "" {
+				for _, arg := range strings.Split(tok[2], ",") {
+					arg = strings.TrimSpace(arg)
+					if arg[0:1] != "@" && arg[0:1] != "$" {
+						args = append(args, arg)
+					} else {
+						val, err := jsonpath.JsonPathLookup(o, arg)
+						if err != nil && !isJSONPathNotFound(err) {
+							return nil, fmt.Errorf("error fetching json path: %v. %v", arg, err)
+						}
+						if isJSONPathNil(val) {
+							val = nil
+						}
+						args = append(args, val)
 					}
-					if isJSONPathNil(val) {
-						val = nil
-					}
-					args = append(args, val)
 				}
 			}
 		}
@@ -72,9 +76,27 @@ func invokeAction(val string, o interface{}) (interface{}, error) {
 	return newval, nil
 }
 
+func dequote(val string) string {
+	if val[0:1] == `"` || val[0:1] == `'` {
+		return val[1 : len(val)-1]
+	}
+	return val
+}
+
+type actionFunc func(customerid string, val ...interface{}) (interface{}, error)
+
 func init() {
 	RegisterAction("epoch", func(args ...interface{}) (interface{}, error) {
-		return datetime.ISODateToEpoch(args[0].(string))
+		if len(args) == 0 {
+			return datetime.EpochNow(), nil
+		} else if len(args) == 1 {
+			return datetime.ISODateToEpoch(args[0].(string))
+		}
+		tv, err := time.Parse(dequote(args[1].(string)), args[0].(string))
+		if err != nil {
+			return nil, err
+		}
+		return datetime.TimeToEpoch(tv), nil
 	})
 	RegisterAction("hash", func(args ...interface{}) (interface{}, error) {
 		return hash.Values(args...), nil

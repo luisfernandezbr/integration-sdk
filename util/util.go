@@ -10,8 +10,6 @@ import (
 
 	"github.com/jhaynie/go-gator/orm"
 	"github.com/oliveagle/jsonpath"
-	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/hash"
 )
 
 // StreamToMap will stream a file into results
@@ -92,20 +90,6 @@ func JoinTable(dir string, fromtable string, frompath string, totable string, to
 // Object is a schema model object interface
 type Object interface {
 	FromMap(kv map[string]interface{})
-}
-
-type actionFunc func(customerid string, val interface{}) (interface{}, error)
-
-var actionMap = map[string]actionFunc{
-	"epoch()": func(customerid string, val interface{}) (interface{}, error) {
-		return datetime.ISODateToEpoch(val.(string))
-	},
-	"hash()": func(customerid string, val interface{}) (interface{}, error) {
-		return hash.Values(customerid, val), nil
-	},
-	"string()": func(customerid string, val interface{}) (interface{}, error) {
-		return fmt.Sprintf("%v", val), nil
-	},
 }
 
 // CreateObject will create a new model object from kv
