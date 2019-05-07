@@ -132,13 +132,21 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 		o.Name = val
 	} else {
 		val := kv["name"]
-		o.Name = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Name = ""
+		} else {
+			o.Name = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
 		val := kv["url"]
-		o.URL = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.URL = ""
+		} else {
+			o.URL = fmt.Sprintf("%v", val)
+		}
 	}
 	// make sure that these have values if empty
 	o.setDefaults()

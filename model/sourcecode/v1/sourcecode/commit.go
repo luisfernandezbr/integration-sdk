@@ -152,67 +152,111 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		o.RepoID = val
 	} else {
 		val := kv["repo_id"]
-		o.RepoID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.RepoID = ""
+		} else {
+			o.RepoID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["sha"].(string); ok {
 		o.Sha = val
 	} else {
 		val := kv["sha"]
-		o.Sha = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Sha = ""
+		} else {
+			o.Sha = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
 		val := kv["message"]
-		o.Message = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Message = ""
+		} else {
+			o.Message = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
 		val := kv["url"]
-		o.URL = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.URL = ""
+		} else {
+			o.URL = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
 		val := kv["created_ts"]
-		o.CreatedAt = number.ToInt64Any(val)
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			o.CreatedAt = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["branch"].(string); ok {
 		o.Branch = val
 	} else {
 		val := kv["branch"]
-		o.Branch = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Branch = ""
+		} else {
+			o.Branch = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["additions"].(int64); ok {
 		o.Additions = val
 	} else {
 		val := kv["additions"]
-		o.Additions = number.ToInt64Any(val)
+		if val == nil {
+			o.Additions = number.ToInt64Any(nil)
+		} else {
+			o.Additions = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["deletions"].(int64); ok {
 		o.Deletions = val
 	} else {
 		val := kv["deletions"]
-		o.Deletions = number.ToInt64Any(val)
+		if val == nil {
+			o.Deletions = number.ToInt64Any(nil)
+		} else {
+			o.Deletions = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["files_changed"].(int64); ok {
 		o.FilesChanged = val
 	} else {
 		val := kv["files_changed"]
-		o.FilesChanged = number.ToInt64Any(val)
+		if val == nil {
+			o.FilesChanged = number.ToInt64Any(nil)
+		} else {
+			o.FilesChanged = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["author_ref_id"].(string); ok {
 		o.AuthorRefID = val
 	} else {
 		val := kv["author_ref_id"]
-		o.AuthorRefID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.AuthorRefID = ""
+		} else {
+			o.AuthorRefID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["ordinal"].(int64); ok {
 		o.Ordinal = val
 	} else {
 		val := kv["ordinal"]
-		o.Ordinal = number.ToInt64Any(val)
+		if val == nil {
+			o.Ordinal = number.ToInt64Any(nil)
+		} else {
+			o.Ordinal = number.ToInt64Any(val)
+		}
 	}
 	// make sure that these have values if empty
 	o.setDefaults()

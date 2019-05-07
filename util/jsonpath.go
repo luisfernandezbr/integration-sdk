@@ -23,6 +23,14 @@ func RegisterAction(name string, action Action) {
 	actions[name] = action
 }
 
+func isJSONPathNil(val interface{}) bool {
+	return val == nil || val == "<nil>"
+}
+
+func isJSONPathNotFound(err error) bool {
+	return strings.Contains(err.Error(), "not found in object")
+}
+
 func invokeAction(val string, o interface{}) (interface{}, error) {
 	tok := actionRe.FindStringSubmatch(val)
 	if tok != nil && len(tok) > 1 {
@@ -39,8 +47,11 @@ func invokeAction(val string, o interface{}) (interface{}, error) {
 					args = append(args, arg)
 				} else {
 					val, err := jsonpath.JsonPathLookup(o, arg)
-					if err != nil {
+					if err != nil && !isJSONPathNotFound(err) {
 						return nil, fmt.Errorf("error fetching json path: %v. %v", arg, err)
+					}
+					if isJSONPathNil(val) {
+						val = nil
 					}
 					args = append(args, val)
 				}
@@ -51,7 +62,14 @@ func invokeAction(val string, o interface{}) (interface{}, error) {
 	if val[0:1] != "@" && val[0:1] != "$" {
 		return val, nil
 	}
-	return jsonpath.JsonPathLookup(o, val)
+	newval, err := jsonpath.JsonPathLookup(o, val)
+	if err != nil && !isJSONPathNotFound(err) {
+		return nil, err
+	}
+	if isJSONPathNil(val) {
+		return nil, nil
+	}
+	return newval, nil
 }
 
 func init() {

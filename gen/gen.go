@@ -179,14 +179,22 @@ func (o *{{ $name }}) FromMap(kv map[string]interface{}) {
 		o.{{ proper $colvalue.Name }} = &val
 	} else {
 		val := kv["{{ $colvalue.Name }}"]
-		o.{{ proper $colvalue.Name }} = {{ gotypeconv $colvalue "val" }}
+		if val == nil {
+			o.{{ proper $colvalue.Name }} = {{ gotypeconvempty $colvalue }}
+		} else {
+			o.{{ proper $colvalue.Name }} = {{ gotypeconv $colvalue "val" }}
+		}
 	}
 {{ else -}}
 	if val, ok := kv["{{ $colvalue.Name }}"].({{ gotype $colvalue.Type $colvalue.Optional }}); ok {
 		o.{{ proper $colvalue.Name }} = val
 	} else {
 		val := kv["{{ $colvalue.Name }}"]
-		o.{{ proper $colvalue.Name }} = {{ gotypeconv $colvalue "val" }}
+		if val == nil {
+			o.{{ proper $colvalue.Name }} = {{ gotypeconvempty $colvalue }}
+		} else {
+			o.{{ proper $colvalue.Name }} = {{ gotypeconv $colvalue "val" }}
+		}
 	}
 {{ end -}}
 {{ end -}}
@@ -631,6 +639,35 @@ func getFuncs() template.FuncMap {
 		},
 		"tag": func(val string) template.HTML {
 			return template.HTML("`json:" + `"` + val + `"` + " yaml:" + `"` + val + `"` + "`")
+		},
+		"gotypeconvempty": func(val Column) template.HTML {
+			str := `""`
+			switch val.Type {
+			case StringColumnType:
+				if val.Optional {
+					str = "pstrings.Pointer(" + str + ")"
+				}
+			case BooleanColumnType:
+				str = `number.ToBoolAny(nil)`
+				if val.Optional {
+					str = "number.BoolPointer(" + str + ")"
+				}
+			case IntColumnType, LongColumnType:
+				str = `number.ToInt64Any(nil)`
+				if val.Optional {
+					str = "number.Int64Pointer(" + str + ")"
+				}
+			case DoubleColumnType, FloatColumnType:
+				str = `number.ToFloat64Any(nil)`
+				if val.Optional {
+					str = "number.Float64Pointer(" + str + ")"
+				}
+			case NullColumnType, BytesColumnType:
+				str = `nil`
+			default:
+				panic("unusure of the type specified for column type value: " + val.Type)
+			}
+			return template.HTML(str)
 		},
 		"gotypeconv": func(val Column, name string) template.HTML {
 			str := `""`

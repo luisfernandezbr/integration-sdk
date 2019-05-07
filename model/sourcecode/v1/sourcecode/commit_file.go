@@ -166,97 +166,161 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		o.CommitID = val
 	} else {
 		val := kv["commit_id"]
-		o.CommitID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.CommitID = ""
+		} else {
+			o.CommitID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["repo_id"].(string); ok {
 		o.RepoID = val
 	} else {
 		val := kv["repo_id"]
-		o.RepoID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.RepoID = ""
+		} else {
+			o.RepoID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["filename"].(string); ok {
 		o.Filename = val
 	} else {
 		val := kv["filename"]
-		o.Filename = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Filename = ""
+		} else {
+			o.Filename = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["additions"].(int64); ok {
 		o.Additions = val
 	} else {
 		val := kv["additions"]
-		o.Additions = number.ToInt64Any(val)
+		if val == nil {
+			o.Additions = number.ToInt64Any(nil)
+		} else {
+			o.Additions = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["deletions"].(int64); ok {
 		o.Deletions = val
 	} else {
 		val := kv["deletions"]
-		o.Deletions = number.ToInt64Any(val)
+		if val == nil {
+			o.Deletions = number.ToInt64Any(nil)
+		} else {
+			o.Deletions = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["status"].(string); ok {
 		o.Status = val
 	} else {
 		val := kv["status"]
-		o.Status = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Status = ""
+		} else {
+			o.Status = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["binary"].(bool); ok {
 		o.Binary = val
 	} else {
 		val := kv["binary"]
-		o.Binary = number.ToBoolAny(val)
+		if val == nil {
+			o.Binary = number.ToBoolAny(nil)
+		} else {
+			o.Binary = number.ToBoolAny(val)
+		}
 	}
 	if val, ok := kv["language"].(string); ok {
 		o.Language = val
 	} else {
 		val := kv["language"]
-		o.Language = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Language = ""
+		} else {
+			o.Language = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["excluded"].(bool); ok {
 		o.Excluded = val
 	} else {
 		val := kv["excluded"]
-		o.Excluded = number.ToBoolAny(val)
+		if val == nil {
+			o.Excluded = number.ToBoolAny(nil)
+		} else {
+			o.Excluded = number.ToBoolAny(val)
+		}
 	}
 	if val, ok := kv["excluded_reason"].(string); ok {
 		o.ExcludedReason = val
 	} else {
 		val := kv["excluded_reason"]
-		o.ExcludedReason = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.ExcludedReason = ""
+		} else {
+			o.ExcludedReason = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["ordinal"].(int64); ok {
 		o.Ordinal = val
 	} else {
 		val := kv["ordinal"]
-		o.Ordinal = number.ToInt64Any(val)
+		if val == nil {
+			o.Ordinal = number.ToInt64Any(nil)
+		} else {
+			o.Ordinal = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["loc"].(int64); ok {
 		o.Loc = val
 	} else {
 		val := kv["loc"]
-		o.Loc = number.ToInt64Any(val)
+		if val == nil {
+			o.Loc = number.ToInt64Any(nil)
+		} else {
+			o.Loc = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["sloc"].(int64); ok {
 		o.Sloc = val
 	} else {
 		val := kv["sloc"]
-		o.Sloc = number.ToInt64Any(val)
+		if val == nil {
+			o.Sloc = number.ToInt64Any(nil)
+		} else {
+			o.Sloc = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["blanks"].(int64); ok {
 		o.Blanks = val
 	} else {
 		val := kv["blanks"]
-		o.Blanks = number.ToInt64Any(val)
+		if val == nil {
+			o.Blanks = number.ToInt64Any(nil)
+		} else {
+			o.Blanks = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["comments"].(int64); ok {
 		o.Comments = val
 	} else {
 		val := kv["comments"]
-		o.Comments = number.ToInt64Any(val)
+		if val == nil {
+			o.Comments = number.ToInt64Any(nil)
+		} else {
+			o.Comments = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["complexity"].(int64); ok {
 		o.Complexity = val
 	} else {
 		val := kv["complexity"]
-		o.Complexity = number.ToInt64Any(val)
+		if val == nil {
+			o.Complexity = number.ToInt64Any(nil)
+		} else {
+			o.Complexity = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["license"].(*string); ok {
 		o.License = val
@@ -264,13 +328,21 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		o.License = &val
 	} else {
 		val := kv["license"]
-		o.License = pstrings.Pointer(fmt.Sprintf("%v", val))
+		if val == nil {
+			o.License = pstrings.Pointer("")
+		} else {
+			o.License = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
 	}
 	if val, ok := kv["license_confidence"].(float64); ok {
 		o.LicenseConfidence = val
 	} else {
 		val := kv["license_confidence"]
-		o.LicenseConfidence = number.ToFloat64Any(val)
+		if val == nil {
+			o.LicenseConfidence = number.ToFloat64Any(nil)
+		} else {
+			o.LicenseConfidence = number.ToFloat64Any(val)
+		}
 	}
 	// make sure that these have values if empty
 	o.setDefaults()

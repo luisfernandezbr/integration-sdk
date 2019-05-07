@@ -147,31 +147,51 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		o.RepoID = val
 	} else {
 		val := kv["repo_id"]
-		o.RepoID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.RepoID = ""
+		} else {
+			o.RepoID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["title"].(string); ok {
 		o.Title = val
 	} else {
 		val := kv["title"]
-		o.Title = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Title = ""
+		} else {
+			o.Title = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["description"].(string); ok {
 		o.Description = val
 	} else {
 		val := kv["description"]
-		o.Description = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Description = ""
+		} else {
+			o.Description = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
 		val := kv["url"]
-		o.URL = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.URL = ""
+		} else {
+			o.URL = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
 		val := kv["created_ts"]
-		o.CreatedAt = number.ToInt64Any(val)
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			o.CreatedAt = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["merged_ts"].(*int64); ok {
 		o.MergedAt = val
@@ -179,7 +199,11 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		o.MergedAt = &val
 	} else {
 		val := kv["merged_ts"]
-		o.MergedAt = number.Int64Pointer(number.ToInt64Any(val))
+		if val == nil {
+			o.MergedAt = number.Int64Pointer(number.ToInt64Any(nil))
+		} else {
+			o.MergedAt = number.Int64Pointer(number.ToInt64Any(val))
+		}
 	}
 	if val, ok := kv["closed_ts"].(*int64); ok {
 		o.ClosedAt = val
@@ -187,19 +211,31 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		o.ClosedAt = &val
 	} else {
 		val := kv["closed_ts"]
-		o.ClosedAt = number.Int64Pointer(number.ToInt64Any(val))
+		if val == nil {
+			o.ClosedAt = number.Int64Pointer(number.ToInt64Any(nil))
+		} else {
+			o.ClosedAt = number.Int64Pointer(number.ToInt64Any(val))
+		}
 	}
 	if val, ok := kv["status"].(string); ok {
 		o.Status = val
 	} else {
 		val := kv["status"]
-		o.Status = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Status = ""
+		} else {
+			o.Status = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["user_ref_id"].(string); ok {
 		o.UserRefID = val
 	} else {
 		val := kv["user_ref_id"]
-		o.UserRefID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.UserRefID = ""
+		} else {
+			o.UserRefID = fmt.Sprintf("%v", val)
+		}
 	}
 	// make sure that these have values if empty
 	o.setDefaults()

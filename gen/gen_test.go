@@ -33,5 +33,5 @@ func TestGenerate(t *testing.T) {
 		},
 	}
 	var out strings.Builder
-	assert.NoError(Generate(schema, "project", &out))
+	assert.NoError(GenerateModel(schema, "project", &out))
 }

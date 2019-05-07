@@ -1,8 +1,10 @@
 package util
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/oliveagle/jsonpath"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -46,4 +48,12 @@ func TestInvokeActionNoAction(t *testing.T) {
 	result, err := invokeAction("$.foo", map[string]interface{}{"foo": "bar"})
 	assert.NoError(err)
 	assert.Equal("bar", result)
+}
+
+func TestJSONPathWithNil(t *testing.T) {
+	assert := assert.New(t)
+	val, err := jsonpath.JsonPathLookup(map[string]interface{}{}, "$.foo")
+	fmt.Println("val", val, "err", err)
+	assert.True(isJSONPathNotFound(err))
+	assert.True(isJSONPathNil(val))
 }

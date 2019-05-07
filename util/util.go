@@ -7,7 +7,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/jhaynie/go-gator/orm"
 	"github.com/oliveagle/jsonpath"
@@ -113,21 +112,12 @@ var actionMap = map[string]actionFunc{
 func CreateObject(object Object, kv map[string]interface{}, mapping map[string][]string) error {
 	newkv := make(map[string]interface{})
 	for k, vals := range mapping {
-		var lasterr error
 		for _, v := range vals {
-			lasterr = nil
 			res, err := invokeAction(v, kv)
 			if err != nil {
-				if !strings.Contains(err.Error(), "not found in object") {
-					// this is the case where an object value might be null and not found
-					lasterr = err
-				}
-				continue
+				return err
 			}
 			newkv[k] = res
-		}
-		if lasterr != nil {
-			return lasterr
 		}
 	}
 	object.FromMap(newkv)

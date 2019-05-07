@@ -153,73 +153,121 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		o.RepoID = val
 	} else {
 		val := kv["repo_id"]
-		o.RepoID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.RepoID = ""
+		} else {
+			o.RepoID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["filename"].(string); ok {
 		o.Filename = val
 	} else {
 		val := kv["filename"]
-		o.Filename = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Filename = ""
+		} else {
+			o.Filename = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["language"].(string); ok {
 		o.Language = val
 	} else {
 		val := kv["language"]
-		o.Language = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Language = ""
+		} else {
+			o.Language = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["loc"].(int64); ok {
 		o.Loc = val
 	} else {
 		val := kv["loc"]
-		o.Loc = number.ToInt64Any(val)
+		if val == nil {
+			o.Loc = number.ToInt64Any(nil)
+		} else {
+			o.Loc = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["sloc"].(int64); ok {
 		o.Sloc = val
 	} else {
 		val := kv["sloc"]
-		o.Sloc = number.ToInt64Any(val)
+		if val == nil {
+			o.Sloc = number.ToInt64Any(nil)
+		} else {
+			o.Sloc = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["blanks"].(int64); ok {
 		o.Blanks = val
 	} else {
 		val := kv["blanks"]
-		o.Blanks = number.ToInt64Any(val)
+		if val == nil {
+			o.Blanks = number.ToInt64Any(nil)
+		} else {
+			o.Blanks = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["comments"].(int64); ok {
 		o.Comments = val
 	} else {
 		val := kv["comments"]
-		o.Comments = number.ToInt64Any(val)
+		if val == nil {
+			o.Comments = number.ToInt64Any(nil)
+		} else {
+			o.Comments = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["complexity"].(int64); ok {
 		o.Complexity = val
 	} else {
 		val := kv["complexity"]
-		o.Complexity = number.ToInt64Any(val)
+		if val == nil {
+			o.Complexity = number.ToInt64Any(nil)
+		} else {
+			o.Complexity = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["date_ts"].(int64); ok {
 		o.DateAt = val
 	} else {
 		val := kv["date_ts"]
-		o.DateAt = number.ToInt64Any(val)
+		if val == nil {
+			o.DateAt = number.ToInt64Any(nil)
+		} else {
+			o.DateAt = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["author_ref_id"].(string); ok {
 		o.AuthorRefID = val
 	} else {
 		val := kv["author_ref_id"]
-		o.AuthorRefID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.AuthorRefID = ""
+		} else {
+			o.AuthorRefID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["ordinal"].(int64); ok {
 		o.Ordinal = val
 	} else {
 		val := kv["ordinal"]
-		o.Ordinal = number.ToInt64Any(val)
+		if val == nil {
+			o.Ordinal = number.ToInt64Any(nil)
+		} else {
+			o.Ordinal = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["sha"].(string); ok {
 		o.Sha = val
 	} else {
 		val := kv["sha"]
-		o.Sha = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Sha = ""
+		} else {
+			o.Sha = fmt.Sprintf("%v", val)
+		}
 	}
 	// make sure that these have values if empty
 	o.setDefaults()

@@ -177,145 +177,241 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		o.Title = val
 	} else {
 		val := kv["title"]
-		o.Title = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Title = ""
+		} else {
+			o.Title = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["identifier"].(string); ok {
 		o.Identifier = val
 	} else {
 		val := kv["identifier"]
-		o.Identifier = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Identifier = ""
+		} else {
+			o.Identifier = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
 		val := kv["url"]
-		o.URL = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.URL = ""
+		} else {
+			o.URL = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
 		val := kv["created_ts"]
-		o.CreatedAt = number.ToInt64Any(val)
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			o.CreatedAt = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["ref_creator_user_id"].(string); ok {
 		o.RefCreatorUserID = val
 	} else {
 		val := kv["ref_creator_user_id"]
-		o.RefCreatorUserID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.RefCreatorUserID = ""
+		} else {
+			o.RefCreatorUserID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["ref_reporter_user_id"].(string); ok {
 		o.RefReporterUserID = val
 	} else {
 		val := kv["ref_reporter_user_id"]
-		o.RefReporterUserID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.RefReporterUserID = ""
+		} else {
+			o.RefReporterUserID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["ref_assignee_user_id"].(string); ok {
 		o.RefAssigneeUserID = val
 	} else {
 		val := kv["ref_assignee_user_id"]
-		o.RefAssigneeUserID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.RefAssigneeUserID = ""
+		} else {
+			o.RefAssigneeUserID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["key"].(string); ok {
 		o.Key = val
 	} else {
 		val := kv["key"]
-		o.Key = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Key = ""
+		} else {
+			o.Key = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["issue_type"].(string); ok {
 		o.IssueType = val
 	} else {
 		val := kv["issue_type"]
-		o.IssueType = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.IssueType = ""
+		} else {
+			o.IssueType = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["project_id"].(string); ok {
 		o.ProjectID = val
 	} else {
 		val := kv["project_id"]
-		o.ProjectID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.ProjectID = ""
+		} else {
+			o.ProjectID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["labels"].(string); ok {
 		o.Labels = val
 	} else {
 		val := kv["labels"]
-		o.Labels = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Labels = ""
+		} else {
+			o.Labels = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["parent_id"].(string); ok {
 		o.ParentID = val
 	} else {
 		val := kv["parent_id"]
-		o.ParentID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.ParentID = ""
+		} else {
+			o.ParentID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["status"].(string); ok {
 		o.Status = val
 	} else {
 		val := kv["status"]
-		o.Status = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Status = ""
+		} else {
+			o.Status = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["resolution"].(string); ok {
 		o.Resolution = val
 	} else {
 		val := kv["resolution"]
-		o.Resolution = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Resolution = ""
+		} else {
+			o.Resolution = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["duedate"].(string); ok {
 		o.Duedate = val
 	} else {
 		val := kv["duedate"]
-		o.Duedate = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Duedate = ""
+		} else {
+			o.Duedate = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["issuetype_id"].(string); ok {
 		o.IssuetypeID = val
 	} else {
 		val := kv["issuetype_id"]
-		o.IssuetypeID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.IssuetypeID = ""
+		} else {
+			o.IssuetypeID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["combo"].(string); ok {
 		o.Combo = val
 	} else {
 		val := kv["combo"]
-		o.Combo = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Combo = ""
+		} else {
+			o.Combo = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["comp"].(string); ok {
 		o.Comp = val
 	} else {
 		val := kv["comp"]
-		o.Comp = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Comp = ""
+		} else {
+			o.Comp = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["active"].(string); ok {
 		o.Active = val
 	} else {
 		val := kv["active"]
-		o.Active = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Active = ""
+		} else {
+			o.Active = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["username"].(string); ok {
 		o.Username = val
 	} else {
 		val := kv["username"]
-		o.Username = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Username = ""
+		} else {
+			o.Username = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["displayname"].(string); ok {
 		o.Displayname = val
 	} else {
 		val := kv["displayname"]
-		o.Displayname = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Displayname = ""
+		} else {
+			o.Displayname = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["email"].(string); ok {
 		o.Email = val
 	} else {
 		val := kv["email"]
-		o.Email = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.Email = ""
+		} else {
+			o.Email = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["avatar_url"].(string); ok {
 		o.AvatarURL = val
 	} else {
 		val := kv["avatar_url"]
-		o.AvatarURL = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.AvatarURL = ""
+		} else {
+			o.AvatarURL = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["priority_id"].(string); ok {
 		o.PriorityID = val
 	} else {
 		val := kv["priority_id"]
-		o.PriorityID = fmt.Sprintf("%v", val)
+		if val == nil {
+			o.PriorityID = ""
+		} else {
+			o.PriorityID = fmt.Sprintf("%v", val)
+		}
 	}
 	// make sure that these have values if empty
 	o.setDefaults()
