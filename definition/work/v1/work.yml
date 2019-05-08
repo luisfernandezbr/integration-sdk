@@ -103,9 +103,6 @@ models:
       - name: user_id
         description: id of the user of this change
         type: string
-      - name: user_active
-        description: wether this user is active
-        type: boolean
       - name: field
         description: name of the field that was changed
         type: string
@@ -124,5 +121,28 @@ models:
       - name: to_string
         description: name of the change to
         type: string
-
-
+  user:
+    description: user details
+    columns:
+      - name: name
+        description: the name of the field
+        type: string
+      - name: email
+        description: key of the field
+        type: string
+      - name: user_id
+        description: user id
+        type: string
+      - name: active
+        description: wether this user is active
+        type: boolean
+      - name: created_ts
+        description: when the user was created, timestamp in UTC
+        type: int
+        timestamp: true
+      - name: deleted_ts
+        description: when the user was deleted, timestamp in UTC
+        type: int
+      - name: location
+        description: physical location of the user
+        type: string

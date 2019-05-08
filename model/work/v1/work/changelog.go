@@ -48,7 +48,6 @@ type Changelog struct {
 	CreatedAt  int64  `json:"created_ts" yaml:"created_ts"`
 	Ordinal    int64  `json:"ordinal" yaml:"ordinal"`
 	UserID     string `json:"user_id" yaml:"user_id"`
-	UserActive bool   `json:"user_active" yaml:"user_active"`
 	Field      string `json:"field" yaml:"field"`
 	FieldType  string `json:"field_type" yaml:"field_type"`
 	From       string `json:"from" yaml:"from"`
@@ -121,7 +120,6 @@ func (o *Changelog) ToMap() map[string]interface{} {
 		"created_ts":  o.CreatedAt,
 		"ordinal":     o.Ordinal,
 		"user_id":     o.UserID,
-		"user_active": o.UserActive,
 		"field":       o.Field,
 		"field_type":  o.FieldType,
 		"from":        o.From,
@@ -183,16 +181,6 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 			o.UserID = ""
 		} else {
 			o.UserID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["user_active"].(bool); ok {
-		o.UserActive = val
-	} else {
-		val := kv["user_active"]
-		if val == nil {
-			o.UserActive = number.ToBoolAny(nil)
-		} else {
-			o.UserActive = number.ToBoolAny(val)
 		}
 	}
 	if val, ok := kv["field"].(string); ok {
@@ -270,7 +258,6 @@ func (o *Changelog) Hash() string {
 		args = append(args, o.CreatedAt)
 		args = append(args, o.Ordinal)
 		args = append(args, o.UserID)
-		args = append(args, o.UserActive)
 		args = append(args, o.Field)
 		args = append(args, o.FieldType)
 		args = append(args, o.From)
@@ -325,10 +312,6 @@ func CreateChangelogAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "user_id",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "user_active",
-				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "field",
