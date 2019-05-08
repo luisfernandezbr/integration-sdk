@@ -44,7 +44,7 @@ var generateCmd = &cobra.Command{
 				log.Fatal(logger, "error parsing "+file, "err", err)
 			}
 			log.Info(logger, "generating schema", "schema", schema.Name)
-			fn := filepath.Join(outdir, schema.Name, "v"+strconv.Itoa(schema.Version), schema.Name, schema.Name+".go")
+			fn := filepath.Join(outdir, schema.Name, "v"+strconv.Itoa(schema.Version), schema.Name, "init.go")
 			if err := os.MkdirAll(filepath.Dir(fn), 0777); err != nil {
 				log.Fatal(logger, "error creaing dir", "fn", fn, "err", err)
 			}
