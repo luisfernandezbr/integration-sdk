@@ -146,3 +146,25 @@ models:
       - name: location
         description: physical location of the user
         type: string
+  sprint:
+    description: sprint details
+    columns:
+      - name: name
+        description: the name of the field
+        type: string
+      - name: identifier
+        description: the common identifier for the sprint
+        type: string
+      - name: status
+        description: status of the sprint
+        type: string
+      - name: started_ts
+        description: the timestamp in UTC that the sprint was started
+        type: int
+        timestamp: true
+      - name: ended_ts
+        description: the timestamp in UTC that the sprint was ended
+        type: int
+      - name: completed_ts
+        description: the timestamp in UTC that the sprint was completed
+        type: int

@@ -102,7 +102,7 @@ func init() {
 		return hash.Values(args...), nil
 	})
 	RegisterAction("string", func(args ...interface{}) (interface{}, error) {
-		return fmt.Sprintf("%s", args[0]), nil
+		return fmt.Sprint(args[0]), nil
 	})
 	RegisterAction("len", func(args ...interface{}) (interface{}, error) {
 		if val, ok := args[0].([]interface{}); ok {

@@ -28,6 +28,10 @@ func GenerateKQL(dir string) error {
 	builder.WriteString("\n")
 	builder.WriteString(CreateProjectKQLTableSQL())
 	builder.WriteString("\n")
+	builder.WriteString(CreateSprintKQLStreamSQL())
+	builder.WriteString("\n")
+	builder.WriteString(CreateSprintKQLTableSQL())
+	builder.WriteString("\n")
 	builder.WriteString(CreateUserKQLStreamSQL())
 	builder.WriteString("\n")
 	builder.WriteString(CreateUserKQLTableSQL())
@@ -47,6 +51,9 @@ func GenerateAvroSchemaSpec(dir string) error {
 		return err
 	}
 	if err := ioutil.WriteFile(filepath.Join(dir, "work.v1.Project.avro"), []byte(CreateProjectAvroSchemaSpec()), 0644); err != nil {
+		return err
+	}
+	if err := ioutil.WriteFile(filepath.Join(dir, "work.v1.Sprint.avro"), []byte(CreateSprintAvroSchemaSpec()), 0644); err != nil {
 		return err
 	}
 	if err := ioutil.WriteFile(filepath.Join(dir, "work.v1.User.avro"), []byte(CreateUserAvroSchemaSpec()), 0644); err != nil {
