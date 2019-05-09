@@ -32,6 +32,9 @@ func TestInvokeActionEpoch(t *testing.T) {
 	result, err = invokeAction(`epoch($.date, "2006-01-02T15:04:05Z")`, map[string]interface{}{})
 	assert.NoError(err)
 	assert.Equal(int64(0), result)
+	result, err = invokeAction(`epoch($.date, "2006-01-02T15:04:05Z")`, map[string]interface{}{"date": ""})
+	assert.NoError(err)
+	assert.Equal(int64(0), result)
 }
 
 func TestInvokeActionString(t *testing.T) {

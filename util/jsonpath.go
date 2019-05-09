@@ -92,7 +92,7 @@ func init() {
 		} else if len(args) == 1 {
 			return datetime.ISODateToEpoch(args[0].(string))
 		}
-		if args[0] == nil { // no date
+		if args[0] == nil || args[0] == "" { // no date
 			return int64(0), nil
 		}
 		tv, err := time.Parse(dequote(args[1].(string)), args[0].(string))
