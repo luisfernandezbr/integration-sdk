@@ -474,7 +474,7 @@ func CreateIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name":  "tags",
-				"type":  "list",
+				"type":  "array",
 				"items": "string",
 			},
 			map[string]interface{}{
