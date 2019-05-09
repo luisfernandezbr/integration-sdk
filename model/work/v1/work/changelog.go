@@ -249,23 +249,21 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *Changelog) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.IssueID)
-		args = append(args, o.CreatedAt)
-		args = append(args, o.Ordinal)
-		args = append(args, o.UserID)
-		args = append(args, o.Field)
-		args = append(args, o.FieldType)
-		args = append(args, o.From)
-		args = append(args, o.FromString)
-		args = append(args, o.To)
-		args = append(args, o.ToString)
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.IssueID)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.Ordinal)
+	args = append(args, o.UserID)
+	args = append(args, o.Field)
+	args = append(args, o.FieldType)
+	args = append(args, o.From)
+	args = append(args, o.FromString)
+	args = append(args, o.To)
+	args = append(args, o.ToString)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 

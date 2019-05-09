@@ -51,41 +51,38 @@ models:
       - name: planned_end_ts
         description: the timestamp in UTC that the issue was planned to end
         type: int
-      - name: due_date
+      - name: due_date_ts
         description: due date of the issue
+        type: int
+      - name: priority
+        description: priority of the issue
         type: string
-      - name: priority_name
-        description: name of the priority
-        type: string
-      - name: issue_type
+      - name: type
         description: type of issue
         type: string
       - name: status
-        description: status of issue
+        description: status of the issue
         type: string
-      - name: creator
+      - name: creator_ref_id
         description: user id of the creator
         type: string
-      - name: reporter
+      - name: reporter_ref_id
         description: user id of the reporter
         type: string
-      - name: assignee
+      - name: assignee_ref_id
         description: user id of the assignee
         type: string
-      - name: author
+      - name: author_ref_id
         description: user id of the author
         type: string
-      - name: type_name
-        description: type of issue
-        type: string
       - name: tags
-        description: labels in the issue
+        description: tags on the issue
         type: string
-      - name: parent
+      - name: parent_id
         description: parent ussue id, if any
         type: string
-      - name: resolution_name
-        description: resolution name
+      - name: resolution
+        description: resolution of the issue
         type: string
   changelog:
     description: change log

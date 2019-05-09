@@ -273,25 +273,23 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *Changelog) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.RepoID)
-		args = append(args, o.Filename)
-		args = append(args, o.Language)
-		args = append(args, o.Loc)
-		args = append(args, o.Sloc)
-		args = append(args, o.Blanks)
-		args = append(args, o.Comments)
-		args = append(args, o.Complexity)
-		args = append(args, o.DateAt)
-		args = append(args, o.AuthorRefID)
-		args = append(args, o.Ordinal)
-		args = append(args, o.Sha)
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.RepoID)
+	args = append(args, o.Filename)
+	args = append(args, o.Language)
+	args = append(args, o.Loc)
+	args = append(args, o.Sloc)
+	args = append(args, o.Blanks)
+	args = append(args, o.Comments)
+	args = append(args, o.Complexity)
+	args = append(args, o.DateAt)
+	args = append(args, o.AuthorRefID)
+	args = append(args, o.Ordinal)
+	args = append(args, o.Sha)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 

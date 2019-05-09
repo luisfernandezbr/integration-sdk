@@ -52,18 +52,17 @@ type Issue struct {
 	UpdatedAt      int64  `json:"updated_ts" yaml:"updated_ts"`
 	PlannedStartAt int64  `json:"planned_start_ts" yaml:"planned_start_ts"`
 	PlannedEndAt   int64  `json:"planned_end_ts" yaml:"planned_end_ts"`
-	DueDate        string `json:"due_date" yaml:"due_date"`
-	PriorityName   string `json:"priority_name" yaml:"priority_name"`
-	IssueType      string `json:"issue_type" yaml:"issue_type"`
+	DueDateAt      int64  `json:"due_date_ts" yaml:"due_date_ts"`
+	Priority       string `json:"priority" yaml:"priority"`
+	Type           string `json:"type" yaml:"type"`
 	Status         string `json:"status" yaml:"status"`
-	Creator        string `json:"creator" yaml:"creator"`
-	Reporter       string `json:"reporter" yaml:"reporter"`
-	Assignee       string `json:"assignee" yaml:"assignee"`
-	Author         string `json:"author" yaml:"author"`
-	TypeName       string `json:"type_name" yaml:"type_name"`
+	CreatorRefID   string `json:"creator_ref_id" yaml:"creator_ref_id"`
+	ReporterRefID  string `json:"reporter_ref_id" yaml:"reporter_ref_id"`
+	AssigneeRefID  string `json:"assignee_ref_id" yaml:"assignee_ref_id"`
+	AuthorRefID    string `json:"author_ref_id" yaml:"author_ref_id"`
 	Tags           string `json:"tags" yaml:"tags"`
-	Parent         string `json:"parent" yaml:"parent"`
-	ResolutionName string `json:"resolution_name" yaml:"resolution_name"`
+	ParentID       string `json:"parent_id" yaml:"parent_id"`
+	Resolution     string `json:"resolution" yaml:"resolution"`
 }
 
 // String returns a string representation of Issue
@@ -134,18 +133,17 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"updated_ts":       o.UpdatedAt,
 		"planned_start_ts": o.PlannedStartAt,
 		"planned_end_ts":   o.PlannedEndAt,
-		"due_date":         o.DueDate,
-		"priority_name":    o.PriorityName,
-		"issue_type":       o.IssueType,
+		"due_date_ts":      o.DueDateAt,
+		"priority":         o.Priority,
+		"type":             o.Type,
 		"status":           o.Status,
-		"creator":          o.Creator,
-		"reporter":         o.Reporter,
-		"assignee":         o.Assignee,
-		"author":           o.Author,
-		"type_name":        o.TypeName,
+		"creator_ref_id":   o.CreatorRefID,
+		"reporter_ref_id":  o.ReporterRefID,
+		"assignee_ref_id":  o.AssigneeRefID,
+		"author_ref_id":    o.AuthorRefID,
 		"tags":             o.Tags,
-		"parent":           o.Parent,
-		"resolution_name":  o.ResolutionName,
+		"parent_id":        o.ParentID,
+		"resolution":       o.Resolution,
 	}
 }
 
@@ -243,34 +241,34 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.PlannedEndAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["due_date"].(string); ok {
-		o.DueDate = val
+	if val, ok := kv["due_date_ts"].(int64); ok {
+		o.DueDateAt = val
 	} else {
-		val := kv["due_date"]
+		val := kv["due_date_ts"]
 		if val == nil {
-			o.DueDate = ""
+			o.DueDateAt = number.ToInt64Any(nil)
 		} else {
-			o.DueDate = fmt.Sprintf("%v", val)
+			o.DueDateAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["priority_name"].(string); ok {
-		o.PriorityName = val
+	if val, ok := kv["priority"].(string); ok {
+		o.Priority = val
 	} else {
-		val := kv["priority_name"]
+		val := kv["priority"]
 		if val == nil {
-			o.PriorityName = ""
+			o.Priority = ""
 		} else {
-			o.PriorityName = fmt.Sprintf("%v", val)
+			o.Priority = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["issue_type"].(string); ok {
-		o.IssueType = val
+	if val, ok := kv["type"].(string); ok {
+		o.Type = val
 	} else {
-		val := kv["issue_type"]
+		val := kv["type"]
 		if val == nil {
-			o.IssueType = ""
+			o.Type = ""
 		} else {
-			o.IssueType = fmt.Sprintf("%v", val)
+			o.Type = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["status"].(string); ok {
@@ -283,54 +281,44 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.Status = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["creator"].(string); ok {
-		o.Creator = val
+	if val, ok := kv["creator_ref_id"].(string); ok {
+		o.CreatorRefID = val
 	} else {
-		val := kv["creator"]
+		val := kv["creator_ref_id"]
 		if val == nil {
-			o.Creator = ""
+			o.CreatorRefID = ""
 		} else {
-			o.Creator = fmt.Sprintf("%v", val)
+			o.CreatorRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["reporter"].(string); ok {
-		o.Reporter = val
+	if val, ok := kv["reporter_ref_id"].(string); ok {
+		o.ReporterRefID = val
 	} else {
-		val := kv["reporter"]
+		val := kv["reporter_ref_id"]
 		if val == nil {
-			o.Reporter = ""
+			o.ReporterRefID = ""
 		} else {
-			o.Reporter = fmt.Sprintf("%v", val)
+			o.ReporterRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["assignee"].(string); ok {
-		o.Assignee = val
+	if val, ok := kv["assignee_ref_id"].(string); ok {
+		o.AssigneeRefID = val
 	} else {
-		val := kv["assignee"]
+		val := kv["assignee_ref_id"]
 		if val == nil {
-			o.Assignee = ""
+			o.AssigneeRefID = ""
 		} else {
-			o.Assignee = fmt.Sprintf("%v", val)
+			o.AssigneeRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["author"].(string); ok {
-		o.Author = val
+	if val, ok := kv["author_ref_id"].(string); ok {
+		o.AuthorRefID = val
 	} else {
-		val := kv["author"]
+		val := kv["author_ref_id"]
 		if val == nil {
-			o.Author = ""
+			o.AuthorRefID = ""
 		} else {
-			o.Author = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["type_name"].(string); ok {
-		o.TypeName = val
-	} else {
-		val := kv["type_name"]
-		if val == nil {
-			o.TypeName = ""
-		} else {
-			o.TypeName = fmt.Sprintf("%v", val)
+			o.AuthorRefID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["tags"].(string); ok {
@@ -343,24 +331,24 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.Tags = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["parent"].(string); ok {
-		o.Parent = val
+	if val, ok := kv["parent_id"].(string); ok {
+		o.ParentID = val
 	} else {
-		val := kv["parent"]
+		val := kv["parent_id"]
 		if val == nil {
-			o.Parent = ""
+			o.ParentID = ""
 		} else {
-			o.Parent = fmt.Sprintf("%v", val)
+			o.ParentID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["resolution_name"].(string); ok {
-		o.ResolutionName = val
+	if val, ok := kv["resolution"].(string); ok {
+		o.Resolution = val
 	} else {
-		val := kv["resolution_name"]
+		val := kv["resolution"]
 		if val == nil {
-			o.ResolutionName = ""
+			o.Resolution = ""
 		} else {
-			o.ResolutionName = fmt.Sprintf("%v", val)
+			o.Resolution = fmt.Sprintf("%v", val)
 		}
 	}
 	// make sure that these have values if empty
@@ -369,33 +357,30 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *Issue) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.Title)
-		args = append(args, o.Identifier)
-		args = append(args, o.ProjectID)
-		args = append(args, o.URL)
-		args = append(args, o.CreatedAt)
-		args = append(args, o.UpdatedAt)
-		args = append(args, o.PlannedStartAt)
-		args = append(args, o.PlannedEndAt)
-		args = append(args, o.DueDate)
-		args = append(args, o.PriorityName)
-		args = append(args, o.IssueType)
-		args = append(args, o.Status)
-		args = append(args, o.Creator)
-		args = append(args, o.Reporter)
-		args = append(args, o.Assignee)
-		args = append(args, o.Author)
-		args = append(args, o.TypeName)
-		args = append(args, o.Tags)
-		args = append(args, o.Parent)
-		args = append(args, o.ResolutionName)
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.Title)
+	args = append(args, o.Identifier)
+	args = append(args, o.ProjectID)
+	args = append(args, o.URL)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.UpdatedAt)
+	args = append(args, o.PlannedStartAt)
+	args = append(args, o.PlannedEndAt)
+	args = append(args, o.DueDateAt)
+	args = append(args, o.Priority)
+	args = append(args, o.Type)
+	args = append(args, o.Status)
+	args = append(args, o.CreatorRefID)
+	args = append(args, o.ReporterRefID)
+	args = append(args, o.AssigneeRefID)
+	args = append(args, o.AuthorRefID)
+	args = append(args, o.Tags)
+	args = append(args, o.ParentID)
+	args = append(args, o.Resolution)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
@@ -460,15 +445,15 @@ func CreateIssueAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "due_date",
+				"name": "due_date_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "priority",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "priority_name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "issue_type",
+				"name": "type",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -476,23 +461,19 @@ func CreateIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "creator",
+				"name": "creator_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "reporter",
+				"name": "reporter_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "assignee",
+				"name": "assignee_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "author",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type_name",
+				"name": "author_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -500,11 +481,11 @@ func CreateIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "parent",
+				"name": "parent_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "resolution_name",
+				"name": "resolution",
 				"type": "string",
 			},
 		},

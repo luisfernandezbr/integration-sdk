@@ -241,22 +241,20 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *PullRequest) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.RepoID)
-		args = append(args, o.Title)
-		args = append(args, o.Description)
-		args = append(args, o.URL)
-		args = append(args, o.CreatedAt)
-		args = append(args, o.MergedAt)
-		args = append(args, o.ClosedAt)
-		args = append(args, o.Status)
-		args = append(args, o.UserRefID)
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.RepoID)
+	args = append(args, o.Title)
+	args = append(args, o.Description)
+	args = append(args, o.URL)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.MergedAt)
+	args = append(args, o.ClosedAt)
+	args = append(args, o.Status)
+	args = append(args, o.UserRefID)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 

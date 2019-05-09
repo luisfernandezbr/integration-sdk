@@ -262,24 +262,22 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *Commit) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.RepoID)
-		args = append(args, o.Sha)
-		args = append(args, o.Message)
-		args = append(args, o.URL)
-		args = append(args, o.CreatedAt)
-		args = append(args, o.Branch)
-		args = append(args, o.Additions)
-		args = append(args, o.Deletions)
-		args = append(args, o.FilesChanged)
-		args = append(args, o.AuthorRefID)
-		args = append(args, o.Ordinal)
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.RepoID)
+	args = append(args, o.Sha)
+	args = append(args, o.Message)
+	args = append(args, o.URL)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.Branch)
+	args = append(args, o.Additions)
+	args = append(args, o.Deletions)
+	args = append(args, o.FilesChanged)
+	args = append(args, o.AuthorRefID)
+	args = append(args, o.Ordinal)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 

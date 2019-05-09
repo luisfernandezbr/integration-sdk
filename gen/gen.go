@@ -204,16 +204,14 @@ func (o *{{ $name }}) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *{{ $name }}) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-	{{ range $colkey, $colvalue := .model.Columns -}}
-		args = append(args, o.{{ proper $colvalue.Name }})
-	{{ end -}}	
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+{{ range $colkey, $colvalue := .model.Columns -}}
+	args = append(args, o.{{ proper $colvalue.Name }})
+{{ end -}}
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 

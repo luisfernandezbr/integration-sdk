@@ -201,19 +201,17 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *Sprint) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.Name)
-		args = append(args, o.Identifier)
-		args = append(args, o.Status)
-		args = append(args, o.StartedAt)
-		args = append(args, o.EndedAt)
-		args = append(args, o.CompletedAt)
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.Name)
+	args = append(args, o.Identifier)
+	args = append(args, o.Status)
+	args = append(args, o.StartedAt)
+	args = append(args, o.EndedAt)
+	args = append(args, o.CompletedAt)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 

@@ -164,16 +164,14 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *Project) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.Name)
-		args = append(args, o.Identifier)
-		args = append(args, o.URL)
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.Name)
+	args = append(args, o.Identifier)
+	args = append(args, o.URL)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 

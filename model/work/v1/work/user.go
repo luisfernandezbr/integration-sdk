@@ -213,20 +213,18 @@ func (o *User) FromMap(kv map[string]interface{}) {
 
 // Hash will return a hashcode for the object
 func (o *User) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.Name)
-		args = append(args, o.Email)
-		args = append(args, o.UserID)
-		args = append(args, o.Active)
-		args = append(args, o.CreatedAt)
-		args = append(args, o.DeletedAt)
-		args = append(args, o.Location)
-		o.Hashcode = hash.Values(args...)
-	}
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.Name)
+	args = append(args, o.Email)
+	args = append(args, o.UserID)
+	args = append(args, o.Active)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.DeletedAt)
+	args = append(args, o.Location)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
