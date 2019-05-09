@@ -77,3 +77,22 @@ func TestJSONPathWithNil(t *testing.T) {
 	assert.True(isJSONPathNotFound(err))
 	assert.True(isJSONPathNil(val))
 }
+
+func TestCoalesce(t *testing.T) {
+	assert := assert.New(t)
+	result, err := invokeAction("coalesce($.a, $b)", map[string]interface{}{"a": "bar"})
+	assert.NoError(err)
+	assert.Equal("bar", result)
+	result, err = invokeAction("coalesce($.a, $b)", map[string]interface{}{"b": "bar"})
+	assert.NoError(err)
+	assert.Equal("bar", result)
+	result, err = invokeAction("coalesce($.a, $b, bar)", map[string]interface{}{"c": "bar"})
+	assert.NoError(err)
+	assert.Equal("bar", result)
+	result, err = invokeAction("coalesce($.a, $b, foo)", map[string]interface{}{"a": 0, "b": "bar"})
+	assert.NoError(err)
+	assert.Equal("bar", result)
+	result, err = invokeAction("coalesce($.a, $b)", map[string]interface{}{})
+	assert.NoError(err)
+	assert.Nil(result)
+}

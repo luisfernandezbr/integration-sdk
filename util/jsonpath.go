@@ -123,4 +123,15 @@ func init() {
 		}
 		return res, nil
 	})
+	RegisterAction("coalesce", func(args ...interface{}) (interface{}, error) {
+		var res interface{}
+		for _, v := range args {
+			if v == nil || v == 0 || v == "" {
+				continue
+			}
+			res = v
+			break
+		}
+		return res, nil
+	})
 }
