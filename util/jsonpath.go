@@ -95,11 +95,16 @@ func init() {
 		if args[0] == nil || args[0] == "" { // no date
 			return int64(0), nil
 		}
-		tv, err := time.Parse(dequote(args[1].(string)), args[0].(string))
-		if err != nil {
-			return nil, err
+		var lasterr error
+		// allow multiple formats
+		for _, tf := range args[1:] {
+			tv, err := time.Parse(dequote(tf.(string)), args[0].(string))
+			if err == nil {
+				return datetime.TimeToEpoch(tv), nil
+			}
+			lasterr = err
 		}
-		return datetime.TimeToEpoch(tv), nil
+		return nil, lasterr
 	})
 	RegisterAction("hash", func(args ...interface{}) (interface{}, error) {
 		return hash.Values(args...), nil
