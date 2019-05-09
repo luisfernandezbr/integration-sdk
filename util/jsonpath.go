@@ -95,6 +95,9 @@ func init() {
 			}
 			return datetime.ISODateToEpoch(args[0].(string))
 		}
+		if args[0] == nil || args[0] == "" { // no date
+			return int64(0), nil
+		}
 		var lasterr error
 		// allow multiple formats
 		for _, tf := range args[1:] {
