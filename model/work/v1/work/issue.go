@@ -44,25 +44,25 @@ type Issue struct {
 
 	// custom types
 
-	Title          string `json:"title" yaml:"title"`
-	Identifier     string `json:"identifier" yaml:"identifier"`
-	ProjectID      string `json:"project_id" yaml:"project_id"`
-	URL            string `json:"url" yaml:"url"`
-	CreatedAt      int64  `json:"created_ts" yaml:"created_ts"`
-	UpdatedAt      int64  `json:"updated_ts" yaml:"updated_ts"`
-	PlannedStartAt int64  `json:"planned_start_ts" yaml:"planned_start_ts"`
-	PlannedEndAt   int64  `json:"planned_end_ts" yaml:"planned_end_ts"`
-	DueDateAt      int64  `json:"due_date_ts" yaml:"due_date_ts"`
-	Priority       string `json:"priority" yaml:"priority"`
-	Type           string `json:"type" yaml:"type"`
-	Status         string `json:"status" yaml:"status"`
-	CreatorRefID   string `json:"creator_ref_id" yaml:"creator_ref_id"`
-	ReporterRefID  string `json:"reporter_ref_id" yaml:"reporter_ref_id"`
-	AssigneeRefID  string `json:"assignee_ref_id" yaml:"assignee_ref_id"`
-	AuthorRefID    string `json:"author_ref_id" yaml:"author_ref_id"`
-	Tags           string `json:"tags" yaml:"tags"`
-	ParentID       string `json:"parent_id" yaml:"parent_id"`
-	Resolution     string `json:"resolution" yaml:"resolution"`
+	Title          string   `json:"title" yaml:"title"`
+	Identifier     string   `json:"identifier" yaml:"identifier"`
+	ProjectID      string   `json:"project_id" yaml:"project_id"`
+	URL            string   `json:"url" yaml:"url"`
+	CreatedAt      int64    `json:"created_ts" yaml:"created_ts"`
+	UpdatedAt      int64    `json:"updated_ts" yaml:"updated_ts"`
+	PlannedStartAt int64    `json:"planned_start_ts" yaml:"planned_start_ts"`
+	PlannedEndAt   int64    `json:"planned_end_ts" yaml:"planned_end_ts"`
+	DueDateAt      int64    `json:"due_date_ts" yaml:"due_date_ts"`
+	Priority       string   `json:"priority" yaml:"priority"`
+	Type           string   `json:"type" yaml:"type"`
+	Status         string   `json:"status" yaml:"status"`
+	CreatorRefID   string   `json:"creator_ref_id" yaml:"creator_ref_id"`
+	ReporterRefID  string   `json:"reporter_ref_id" yaml:"reporter_ref_id"`
+	AssigneeRefID  string   `json:"assignee_ref_id" yaml:"assignee_ref_id"`
+	AuthorRefID    string   `json:"author_ref_id" yaml:"author_ref_id"`
+	Tags           []string `json:"tags" yaml:"tags"`
+	ParentID       string   `json:"parent_id" yaml:"parent_id"`
+	Resolution     string   `json:"resolution" yaml:"resolution"`
 }
 
 // String returns a string representation of Issue
@@ -321,15 +321,11 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.AuthorRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["tags"].(string); ok {
-		o.Tags = val
+	val := kv["tags"]
+	if val == nil {
+		o.Tags = []string{}
 	} else {
-		val := kv["tags"]
-		if val == nil {
-			o.Tags = ""
-		} else {
-			o.Tags = fmt.Sprintf("%v", val)
-		}
+		o.Tags = append(o.Tags, fmt.Sprintf("%v", val))
 	}
 	if val, ok := kv["parent_id"].(string); ok {
 		o.ParentID = val
@@ -477,8 +473,9 @@ func CreateIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "tags",
-				"type": "string",
+				"name":  "tags",
+				"type":  "list",
+				"items": "string",
 			},
 			map[string]interface{}{
 				"name": "parent_id",

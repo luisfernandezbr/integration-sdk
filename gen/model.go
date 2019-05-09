@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"path/filepath"
+	"strings"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -39,12 +40,16 @@ type Column struct {
 	Optional    bool
 	Timestamp   bool
 	RefID       bool
+
+	// internal
+	IsArray bool
+	IsMap   bool
 }
 
 // Model in the schema
 type Model struct {
 	Description string
-	Columns     []Column
+	Columns     []*Column
 }
 
 // Schema is the schema for a particular domain
@@ -55,9 +60,40 @@ type Schema struct {
 	Models      map[string]Model
 }
 
+func isArray(val string) (bool, string) {
+	if strings.HasPrefix(val, "Array<") {
+		return true, val[6 : len(val)-1]
+	}
+	return false, val
+}
+
+func isMap(val string) (bool, string) {
+	if strings.HasPrefix(val, "Map<") {
+		return true, val[4 : len(val)-1]
+	}
+	return false, val
+}
+
 // DecodeYAML will decode the schema from reader as yaml
 func (s *Schema) DecodeYAML(r io.Reader) error {
-	return yaml.NewDecoder(r).Decode(s)
+	if err := yaml.NewDecoder(r).Decode(s); err != nil {
+		return err
+	}
+	for _, m := range s.Models {
+		for _, col := range m.Columns {
+			ok, t := isArray(string(col.Type))
+			if ok {
+				col.IsArray = true
+				col.Type = ColumnType(t)
+			}
+			ok, t = isMap(string(col.Type))
+			if ok {
+				col.IsMap = true
+				col.Type = ColumnType(t)
+			}
+		}
+	}
+	return nil
 }
 
 // EncodeYAML will encode the schema to the writer as yaml

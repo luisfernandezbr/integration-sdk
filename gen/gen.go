@@ -82,7 +82,7 @@ type {{ $name }} struct {
 	// custom types
 
 {{ range $colkey, $colvalue := .model.Columns -}}
-	{{ proper $colvalue.Name }} {{ gotype $colvalue.Type $colvalue.Optional }} {{ tag $colvalue.Name }}
+	{{ proper $colvalue.Name }} {{ gotype $colvalue $colvalue.Optional }} {{ tag $colvalue.Name }}
 {{ end -}}
 }
 
@@ -172,30 +172,49 @@ func (o *{{ $name }}) FromMap(kv map[string]interface{}) {
 		o.CustomerID = val
 	}
 {{ range $colkey, $colvalue := .model.Columns -}}
+{{ $k := proper $colvalue.Name -}}
+{{ if $colvalue.IsMap -}}
+	val := kv["{{ $colvalue.Name }}"]
+	if val == nil {
+		o.{{ $k }} = {{ gotypeconvempty $colvalue }}
+	} else {
+		o.{{ $k }} = {{ gotypeconv $colvalue "val" $k }}
+	}
+{{ else -}}
+{{ if $colvalue.IsArray -}}
+	val := kv["{{ $colvalue.Name }}"]
+	if val == nil {
+		o.{{ $k }} = {{ gotypeconvempty $colvalue }}
+	} else {
+		o.{{ $k }} = {{ gotypeconv $colvalue "val" $k }}
+	}
+{{ else -}}
 {{ if $colvalue.Optional -}}
-	if val, ok := kv["{{ $colvalue.Name }}"].({{ gotype $colvalue.Type true }}); ok {
-		o.{{ proper $colvalue.Name }} = val
-	} else if val, ok := kv["{{ $colvalue.Name }}"].({{ gotype $colvalue.Type false }}); ok {
-		o.{{ proper $colvalue.Name }} = &val
+	if val, ok := kv["{{ $colvalue.Name }}"].({{ gotype $colvalue true }}); ok {
+		o.{{ $k }} = val
+	} else if val, ok := kv["{{ $colvalue.Name }}"].({{ gotype $colvalue false }}); ok {
+		o.{{ $k }} = &val
 	} else {
 		val := kv["{{ $colvalue.Name }}"]
 		if val == nil {
-			o.{{ proper $colvalue.Name }} = {{ gotypeconvempty $colvalue }}
+			o.{{ $k }} = {{ gotypeconvempty $colvalue  }}
 		} else {
-			o.{{ proper $colvalue.Name }} = {{ gotypeconv $colvalue "val" }}
+			o.{{ $k }} = {{ gotypeconv $colvalue "val" $k }}
 		}
 	}
 {{ else -}}
-	if val, ok := kv["{{ $colvalue.Name }}"].({{ gotype $colvalue.Type $colvalue.Optional }}); ok {
-		o.{{ proper $colvalue.Name }} = val
+	if val, ok := kv["{{ $colvalue.Name }}"].({{ gotype $colvalue $colvalue.Optional }}); ok {
+		o.{{ $k }} = val
 	} else {
 		val := kv["{{ $colvalue.Name }}"]
 		if val == nil {
-			o.{{ proper $colvalue.Name }} = {{ gotypeconvempty $colvalue }}
+			o.{{ $k }} = {{ gotypeconvempty $colvalue }}
 		} else {
-			o.{{ proper $colvalue.Name }} = {{ gotypeconv $colvalue "val" }}
+			o.{{ $k }} = {{ gotypeconv $colvalue "val" $k }}
 		}
 	}
+{{ end -}}
+{{ end -}}
 {{ end -}}
 {{ end -}}
 	// make sure that these have values if empty
@@ -248,6 +267,12 @@ func Create{{ $name }}AvroSchemaSpec() string {
 				"name": "{{ $colvalue.Name }}",
 				{{ if $colvalue.Optional -}}
 				"type": []string{"null", "{{ avrotype $colvalue }}"},
+				{{ else if $colvalue.IsArray -}}
+				"type": "list",
+				"items": "{{ avrotype $colvalue }}",
+				{{ else if $colvalue.IsMap -}}
+				"type": "map",
+				"values": "{{ avrotype $colvalue }}",
 				{{ else -}}
 				"type": "{{ avrotype $colvalue }}",
 				{{ end -}}
@@ -662,11 +687,17 @@ func getFuncs() template.FuncMap {
 			default:
 				panic("unusure of the type specified for column type value: " + val.Type)
 			}
+			if val.IsArray {
+				str = "[]" + string(val.Type) + "{}"
+			} else if val.IsMap {
+				str = "map[string]" + string(val.Type) + "{}"
+			}
 			return template.HTML(str)
 		},
-		"gotypeconv": func(val Column, name string) template.HTML {
+		"gotypeconv": func(val Column, name string, prop string) template.HTML {
 			str := `""`
-			switch val.Type {
+			valtype := val.Type
+			switch valtype {
 			case StringColumnType:
 				str = fmt.Sprintf(`fmt.Sprintf("%%v",%s)`, name)
 				if val.Optional {
@@ -690,7 +721,12 @@ func getFuncs() template.FuncMap {
 			case NullColumnType:
 			case BytesColumnType:
 			default:
-				panic("unusure of the type specified for column type value: " + val.Type)
+				panic("unusure of the type specified for column type value: " + valtype)
+			}
+			if val.IsArray {
+				str = "append(o." + prop + ", " + str + ")"
+			} else if val.IsMap {
+				str = "val.(map[string]" + string(valtype) + ")"
 			}
 			return template.HTML(str)
 		},
@@ -716,8 +752,9 @@ func getFuncs() template.FuncMap {
 			}
 			return template.HTML(string(val))
 		},
-		"gotype": func(val ColumnType, optional bool) template.HTML {
-			switch val {
+		"gotype": func(col Column, optional bool) template.HTML {
+			var val string
+			switch col.Type {
 			case StringColumnType:
 				val = "string"
 			case BooleanColumnType:
@@ -731,10 +768,15 @@ func getFuncs() template.FuncMap {
 			case BytesColumnType:
 				val = "[]byte"
 			default:
-				panic("unusure of the type specified for column type value: " + val)
+				panic("unusure of the type specified for column type value: " + col.Type)
 			}
 			if optional {
 				return template.HTML("*" + string(val))
+			}
+			if col.IsArray {
+				val = "[]" + string(col.Type)
+			} else if col.IsMap {
+				val = "map[string]" + string(col.Type)
 			}
 			return template.HTML(string(val))
 		},

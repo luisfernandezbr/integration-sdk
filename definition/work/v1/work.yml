@@ -77,7 +77,7 @@ models:
         type: string
       - name: tags
         description: tags on the issue
-        type: string
+        type: Array<string>
       - name: parent_id
         description: parent ussue id, if any
         type: string
