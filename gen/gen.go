@@ -268,9 +268,9 @@ func Create{{ $name }}AvroSchemaSpec() string {
 				{{ if $colvalue.Optional -}}
 				"type": []string{"null", "{{ avrotype $colvalue }}"},
 				{{ else if $colvalue.IsArray -}}
-				"type": { "type": "array", "items": "{{ avrotype $colvalue }}" },
+				"type": map[string]string{ "type": "array", "items": "{{ avrotype $colvalue }}" },
 				{{ else if $colvalue.IsMap -}}
-				"type": { "type": "map", "values": "{{ avrotype $colvalue }}" },
+				"type": map[string]string{ "type": "map", "values": "{{ avrotype $colvalue }}" },
 				{{ else -}}
 				"type": "{{ avrotype $colvalue }}",
 				{{ end -}}
