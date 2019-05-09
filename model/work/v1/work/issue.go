@@ -503,7 +503,7 @@ func CreateIssueKQLStreamSQL() string {
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", IssueDefaultStream))
 	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", IssueDefaultTopic))
-	builder.WriteString(", TIMESTAMP='created_ts'")
+	builder.WriteString(", TIMESTAMP='updated_ts'")
 	builder.WriteString(");")
 	return builder.String()
 }
@@ -513,7 +513,7 @@ func CreateIssueKQLTableSQL() string {
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", IssueDefaultTable))
 	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", IssueDefaultTopic))
-	builder.WriteString(", TIMESTAMP='created_ts'")
+	builder.WriteString(", TIMESTAMP='updated_ts'")
 	builder.WriteString(");")
 	return builder.String()
 }
