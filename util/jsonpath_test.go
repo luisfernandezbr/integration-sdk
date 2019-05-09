@@ -54,6 +54,16 @@ func TestInvokeActionHash(t *testing.T) {
 	assert.Equal("22d9859cacf7a9c6", result)
 }
 
+func TestInvokeActionHashIf(t *testing.T) {
+	assert := assert.New(t)
+	result, err := invokeAction("hash_if($.foo, $.date, $.id)", map[string]interface{}{"date": 1548281398000, "id": "234"})
+	assert.NoError(err)
+	assert.Nil(result)
+	result, err = invokeAction("hash_if($.date, $.date, $.id, 1)", map[string]interface{}{"date": 1548281398000, "id": "234"})
+	assert.NoError(err)
+	assert.Equal("22d9859cacf7a9c6", result)
+}
+
 func TestInvokeActionStringStaticArg(t *testing.T) {
 	assert := assert.New(t)
 	result, err := invokeAction("string(1548281398000)", map[string]interface{}{})

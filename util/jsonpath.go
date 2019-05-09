@@ -104,6 +104,12 @@ func init() {
 	RegisterAction("hash", func(args ...interface{}) (interface{}, error) {
 		return hash.Values(args...), nil
 	})
+	RegisterAction("hash_if", func(args ...interface{}) (interface{}, error) {
+		if len(args) == 0 || args[0] == nil || args[0] == "" || args[0] == 0 || args[0] == int64(0) {
+			return nil, nil
+		}
+		return hash.Values(args[1:]...), nil
+	})
 	RegisterAction("string", func(args ...interface{}) (interface{}, error) {
 		return fmt.Sprint(args[0]), nil
 	})
@@ -126,7 +132,7 @@ func init() {
 	RegisterAction("coalesce", func(args ...interface{}) (interface{}, error) {
 		var res interface{}
 		for _, v := range args {
-			if v == nil || v == 0 || v == "" {
+			if v == nil || v == 0 || v == int64(0) || v == "" {
 				continue
 			}
 			res = v
