@@ -116,6 +116,16 @@ func init() {
 		return hash.Values(args[1:]...), nil
 	})
 	RegisterAction("string", func(args ...interface{}) (interface{}, error) {
+		switch a := args[0].(type) {
+		case float64:
+			// check if it's a whole number
+			if a == float64(int64(a)) {
+				return fmt.Sprintf("%.f", a), nil
+			}
+			return fmt.Sprintf("%f", a), nil
+		case int64:
+			return fmt.Sprintf("%d", a), nil
+		}
 		return fmt.Sprint(args[0]), nil
 	})
 	RegisterAction("len", func(args ...interface{}) (interface{}, error) {
