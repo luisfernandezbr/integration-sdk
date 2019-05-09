@@ -90,10 +90,10 @@ func init() {
 		if len(args) == 0 {
 			return datetime.EpochNow(), nil
 		} else if len(args) == 1 {
+			if args[0] == nil || args[0] == "" { // no date
+				return int64(0), nil
+			}
 			return datetime.ISODateToEpoch(args[0].(string))
-		}
-		if args[0] == nil || args[0] == "" { // no date
-			return int64(0), nil
 		}
 		var lasterr error
 		// allow multiple formats
