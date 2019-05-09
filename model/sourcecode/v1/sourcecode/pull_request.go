@@ -49,8 +49,9 @@ type PullRequest struct {
 	Description string `json:"description" yaml:"description"`
 	URL         string `json:"url" yaml:"url"`
 	CreatedAt   int64  `json:"created_ts" yaml:"created_ts"`
-	MergedAt    *int64 `json:"merged_ts" yaml:"merged_ts"`
-	ClosedAt    *int64 `json:"closed_ts" yaml:"closed_ts"`
+	MergedAt    int64  `json:"merged_ts" yaml:"merged_ts"`
+	ClosedAt    int64  `json:"closed_ts" yaml:"closed_ts"`
+	UpdatedAt   int64  `json:"updated_ts" yaml:"updated_ts"`
 	Status      string `json:"status" yaml:"status"`
 	UserRefID   string `json:"user_ref_id" yaml:"user_ref_id"`
 }
@@ -122,6 +123,7 @@ func (o *PullRequest) ToMap() map[string]interface{} {
 		"created_ts":  o.CreatedAt,
 		"merged_ts":   o.MergedAt,
 		"closed_ts":   o.ClosedAt,
+		"updated_ts":  o.UpdatedAt,
 		"status":      o.Status,
 		"user_ref_id": o.UserRefID,
 	}
@@ -191,28 +193,34 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.CreatedAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["merged_ts"].(*int64); ok {
+	if val, ok := kv["merged_ts"].(int64); ok {
 		o.MergedAt = val
-	} else if val, ok := kv["merged_ts"].(int64); ok {
-		o.MergedAt = &val
 	} else {
 		val := kv["merged_ts"]
 		if val == nil {
-			o.MergedAt = number.Int64Pointer(number.ToInt64Any(nil))
+			o.MergedAt = number.ToInt64Any(nil)
 		} else {
-			o.MergedAt = number.Int64Pointer(number.ToInt64Any(val))
+			o.MergedAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["closed_ts"].(*int64); ok {
+	if val, ok := kv["closed_ts"].(int64); ok {
 		o.ClosedAt = val
-	} else if val, ok := kv["closed_ts"].(int64); ok {
-		o.ClosedAt = &val
 	} else {
 		val := kv["closed_ts"]
 		if val == nil {
-			o.ClosedAt = number.Int64Pointer(number.ToInt64Any(nil))
+			o.ClosedAt = number.ToInt64Any(nil)
 		} else {
-			o.ClosedAt = number.Int64Pointer(number.ToInt64Any(val))
+			o.ClosedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		val := kv["updated_ts"]
+		if val == nil {
+			o.UpdatedAt = number.ToInt64Any(nil)
+		} else {
+			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["status"].(string); ok {
@@ -252,6 +260,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.CreatedAt)
 	args = append(args, o.MergedAt)
 	args = append(args, o.ClosedAt)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.Status)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
@@ -308,11 +317,15 @@ func CreatePullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "merged_ts",
-				"type": []string{"null", "long"},
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "closed_ts",
-				"type": []string{"null", "long"},
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "status",
@@ -337,6 +350,7 @@ func CreatePullRequestKQLStreamSQL() string {
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", PullRequestDefaultStream))
 	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", PullRequestDefaultTopic))
+	builder.WriteString(", TIMESTAMP='updated_ts'")
 	builder.WriteString(");")
 	return builder.String()
 }
@@ -346,6 +360,7 @@ func CreatePullRequestKQLTableSQL() string {
 	var builder strings.Builder
 	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", PullRequestDefaultTable))
 	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", PullRequestDefaultTopic))
+	builder.WriteString(", TIMESTAMP='updated_ts'")
 	builder.WriteString(");")
 	return builder.String()
 }

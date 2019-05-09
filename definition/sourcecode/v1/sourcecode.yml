@@ -168,11 +168,13 @@ models:
       - name: merged_ts
         description: the timestamp in UTC that the pull request was merged
         type: int
-        optional: true
       - name: closed_ts
         description: the timestamp in UTC that the pull request was closed
         type: int
-        optional: true
+      - name: updated_ts
+        description: the timestamp in UTC that the pull request was closed
+        type: int
+        timestamp: true
       - name: status
         description: the status of the pull request
         type: string
