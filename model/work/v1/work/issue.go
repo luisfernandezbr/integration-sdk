@@ -321,11 +321,10 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.AuthorRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	val := kv["tags"]
-	if val == nil {
-		o.Tags = []string{}
-	} else {
+	if val := kv["tags"]; val != nil {
 		o.Tags = append(o.Tags, fmt.Sprintf("%v", val))
+	} else {
+		o.Tags = []string{}
 	}
 	if val, ok := kv["parent_id"].(string); ok {
 		o.ParentID = val

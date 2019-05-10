@@ -174,19 +174,17 @@ func (o *{{ $name }}) FromMap(kv map[string]interface{}) {
 {{ range $colkey, $colvalue := .model.Columns -}}
 {{ $k := proper $colvalue.Name -}}
 {{ if $colvalue.IsMap -}}
-	val := kv["{{ $colvalue.Name }}"]
-	if val == nil {
-		o.{{ $k }} = {{ gotypeconvempty $colvalue }}
-	} else {
+	if val := kv["{{ $colvalue.Name }}"]; val != nil {
 		o.{{ $k }} = {{ gotypeconv $colvalue "val" $k }}
+	} else {
+		o.{{ $k }} = {{ gotypeconvempty $colvalue }}
 	}
 {{ else -}}
 {{ if $colvalue.IsArray -}}
-	val := kv["{{ $colvalue.Name }}"]
-	if val == nil {
-		o.{{ $k }} = {{ gotypeconvempty $colvalue }}
-	} else {
+	if val := kv["{{ $colvalue.Name }}"]; val != nil {
 		o.{{ $k }} = {{ gotypeconv $colvalue "val" $k }}
+	} else {
+		o.{{ $k }} = {{ gotypeconvempty $colvalue }}
 	}
 {{ else -}}
 {{ if $colvalue.Optional -}}

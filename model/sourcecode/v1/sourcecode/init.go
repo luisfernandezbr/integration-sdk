@@ -12,6 +12,10 @@ import (
 // GenerateKQL will generate SQL statements for all models into file in directory
 func GenerateKQL(dir string) error {
 	var builder strings.Builder
+	builder.WriteString(CreateBranchKQLStreamSQL())
+	builder.WriteString("\n")
+	builder.WriteString(CreateBranchKQLTableSQL())
+	builder.WriteString("\n")
 	builder.WriteString(CreateChangelogKQLStreamSQL())
 	builder.WriteString("\n")
 	builder.WriteString(CreateChangelogKQLTableSQL())
@@ -37,6 +41,9 @@ func GenerateKQL(dir string) error {
 
 // GenerateAvroSchemaSpec will generate the Avro schema to directory for each model
 func GenerateAvroSchemaSpec(dir string) error {
+	if err := ioutil.WriteFile(filepath.Join(dir, "sourcecode.v1.Branch.avro"), []byte(CreateBranchAvroSchemaSpec()), 0644); err != nil {
+		return err
+	}
 	if err := ioutil.WriteFile(filepath.Join(dir, "sourcecode.v1.Changelog.avro"), []byte(CreateChangelogAvroSchemaSpec()), 0644); err != nil {
 		return err
 	}
