@@ -181,3 +181,34 @@ models:
       - name: user_ref_id
         description: the user ref_id in the source system
         type: string
+  branch:
+    description: git repo's branch
+    columns:
+      - name: name
+        description: name of the branch
+        type: string
+      - name: is_default
+        description: wether is the default branch or not
+        type: boolean
+      - name: is_merged
+        description: wether it has been merged
+        type: boolean
+      - name: merge_commit
+        description: commit from the merge
+        type: boolean
+      - name: branched_from_commits
+        description: branched from commits
+        type: Array<string>
+      - name: commits
+        description: list of commits in this branch
+        type: Array<string>
+      - name: behind_default_count
+        description: behind default count
+        type: int
+      - name: ahead_default_count
+        description: ahead default count
+        type: int
+      - name: repo_id
+        description: the unique id for the repo
+        type: string
+       
