@@ -3,8 +3,14 @@ package gen
 import (
 	"fmt"
 	"io"
+	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
+
+	"github.com/serenize/snaker"
+
+	"github.com/pinpt/go-common/fileutil"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -50,6 +56,7 @@ type Column struct {
 type Model struct {
 	Description string
 	Columns     []*Column
+	Extends     []string
 }
 
 // Schema is the schema for a particular domain
@@ -72,6 +79,72 @@ func isMap(val string) (bool, string) {
 		return true, val[4 : len(val)-1]
 	}
 	return false, val
+}
+
+func camel(val string) string {
+	return snaker.SnakeToCamel(strings.ToUpper(val[0:1]) + val[1:])
+}
+
+// Name of the model
+func (m *Model) Name(s *Schema, name string) string {
+	return fmt.Sprintf("%s.v%v.%s", s.Name, s.Version, name)
+}
+
+// Resolve any extends schema
+func (s *Schema) Resolve(dirs []string) error {
+	for mn, m := range s.Models {
+		if m.Extends != nil && len(m.Extends) > 0 {
+			for _, name := range m.Extends {
+				var found bool
+				// first we search our current model
+				for cmname, cm := range s.Models {
+					if name == cmname || name == cm.Name(s, camel(cmname)) {
+						m.Columns = append(m.Columns, cm.Columns...)
+						found = true
+						break
+					}
+				}
+				if found {
+					break
+				}
+				for _, dir := range dirs {
+					files, err := fileutil.FindFiles(dir, regexp.MustCompile("\\.y[a]?ml$"))
+					if err != nil {
+						return err
+					}
+					if len(files) > 0 {
+						for _, fp := range files {
+							rel, _ := filepath.Abs(fp)
+							of, err := os.Open(rel)
+							if err != nil {
+								return fmt.Errorf("error opening: %v. %v", rel, err)
+							}
+							defer of.Close()
+							ns := &Schema{}
+							if err := ns.DecodeYAML(of); err != nil {
+								return fmt.Errorf("error decoding: %v. %v", rel, err)
+							}
+							for cmname, cm := range ns.Models {
+								if name == cmname || name == cm.Name(ns, camel(cmname)) {
+									m.Columns = append(m.Columns, cm.Columns...)
+									s.Models[mn] = m
+									found = true
+									break
+								}
+							}
+							if found {
+								break
+							}
+						}
+						if found {
+							break
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
 }
 
 // DecodeYAML will decode the schema from reader as yaml

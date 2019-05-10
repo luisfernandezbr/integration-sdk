@@ -33,6 +33,12 @@ var generateCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(logger, "error finding yaml files in path", "path", absdir, "err", err)
 		}
+		includesval, _ := cmd.Flags().GetStringSlice("include")
+		includes := []string{absdir}
+		for _, i := range includesval {
+			f, _ := filepath.Abs(i)
+			includes = append(includes, f)
+		}
 		for _, file := range files {
 			of, err := os.Open(file)
 			if err != nil {
@@ -42,6 +48,9 @@ var generateCmd = &cobra.Command{
 			var schema gen.Schema
 			if err := schema.DecodeYAML(of); err != nil {
 				log.Fatal(logger, "error parsing "+file, "err", err)
+			}
+			if err := schema.Resolve(includes); err != nil {
+				log.Fatal(logger, "error resolving "+file, "err", err)
 			}
 			log.Info(logger, "generating schema", "schema", schema.Name)
 			fn := filepath.Join(outdir, schema.Name, "v"+strconv.Itoa(schema.Version), schema.Name, "init.go")
@@ -80,4 +89,5 @@ var generateCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(generateCmd)
+	generateCmd.Flags().StringSlice("include", []string{}, "additional include directory when resolving extends")
 }
