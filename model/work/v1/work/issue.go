@@ -322,7 +322,15 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 	if val := kv["tags"]; val != nil {
-		o.Tags = append(o.Tags, fmt.Sprintf("%v", val))
+		if a, ok := val.([]interface{}); ok {
+			var arr []string
+			for _, b := range a {
+				arr = append(arr, b.(string))
+			}
+			o.Tags = arr
+		} else {
+			o.Tags = []string{}
+		}
 	} else {
 		o.Tags = []string{}
 	}

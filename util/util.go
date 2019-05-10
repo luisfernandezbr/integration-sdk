@@ -130,15 +130,3 @@ func CloneMap(kv map[string]interface{}) map[string]interface{} {
 	}
 	return newkv
 }
-
-// StringArray returns an array of strings from a value, never returns null
-func StringArray(o interface{}) []string {
-	if a, ok := o.([]interface{}); ok {
-		var arr []string
-		for _, b := range a {
-			arr = append(arr, fmt.Sprint(b))
-		}
-		return arr
-	}
-	return []string{}
-}

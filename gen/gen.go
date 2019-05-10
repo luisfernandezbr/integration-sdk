@@ -182,7 +182,15 @@ func (o *{{ $name }}) FromMap(kv map[string]interface{}) {
 {{ else -}}
 {{ if $colvalue.IsArray -}}
 	if val := kv["{{ $colvalue.Name }}"]; val != nil {
-		o.{{ $k }} = {{ gotypeconv $colvalue "val" $k }}
+		if a, ok := val.([]interface{}); ok {
+			var arr []{{ arraytype $colvalue }}
+			for _, b := range a {
+				arr = append(arr, b.({{ arraytype $colvalue }}))
+			}
+			o.{{ $k }}  = arr
+		} else {
+			o.{{ $k }}  = {{ gotypeconvempty $colvalue }}
+		}
 	} else {
 		o.{{ $k }} = {{ gotypeconvempty $colvalue }}
 	}
@@ -747,6 +755,9 @@ func getFuncs() template.FuncMap {
 				panic("unusure of the type specified for column type value: " + val)
 			}
 			return template.HTML(string(val))
+		},
+		"arraytype": func(val Column) template.HTML {
+			return template.HTML(string(val.Type))
 		},
 		"gotype": func(col Column, optional bool) template.HTML {
 			var val string
