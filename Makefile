@@ -15,6 +15,10 @@ all: help
 
 generate:
 	@go run main.go generate $(BASEDIR)/definition $(BASEDIR)/model
+	@rm -rf ../pipeline/vendor/github.com/pinpt/integration-sdk/util/
+	@rm -rf ../pipeline/vendor/github.com/pinpt/integration-sdk/model/
+	@cp -r model ../pipeline/vendor/github.com/pinpt/integration-sdk/
+	@cp -r util ../pipeline/vendor/github.com/pinpt/integration-sdk/
 
 dependencies: install-dep
 	@rm -rf $(BASEDIR)/.vendor-new $(BASEDIR)/vendor
