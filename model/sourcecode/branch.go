@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 
 	"github.com/linkedin/goavro"
@@ -206,20 +207,46 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 	if val := kv["branched_from_commits"]; val != nil {
+		na := make([]string, 0)
 		if a, ok := val.([]string); ok {
-			o.BranchedFromCommits = append(o.BranchedFromCommits, a...)
+			na = append(na, a...)
 		} else {
-			o.BranchedFromCommits = append(o.BranchedFromCommits, fmt.Sprintf("%v", val))
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						panic("unsupported type for branched_from_commits field entry: " + reflect.TypeOf(ae).String())
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for branched_from_commits field")
+			}
 		}
+		o.BranchedFromCommits = na
 	} else {
 		o.BranchedFromCommits = []string{}
 	}
 	if val := kv["commits"]; val != nil {
+		na := make([]string, 0)
 		if a, ok := val.([]string); ok {
-			o.Commits = append(o.Commits, a...)
+			na = append(na, a...)
 		} else {
-			o.Commits = append(o.Commits, fmt.Sprintf("%v", val))
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						panic("unsupported type for commits field entry: " + reflect.TypeOf(ae).String())
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for commits field")
+			}
 		}
+		o.Commits = na
 	} else {
 		o.Commits = []string{}
 	}

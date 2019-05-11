@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 
 	"github.com/linkedin/goavro"
@@ -356,11 +357,24 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 	if val := kv["tags"]; val != nil {
+		na := make([]string, 0)
 		if a, ok := val.([]string); ok {
-			o.Tags = append(o.Tags, a...)
+			na = append(na, a...)
 		} else {
-			o.Tags = append(o.Tags, fmt.Sprintf("%v", val))
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						panic("unsupported type for tags field entry: " + reflect.TypeOf(ae).String())
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for tags field")
+			}
 		}
+		o.Tags = na
 	} else {
 		o.Tags = []string{}
 	}

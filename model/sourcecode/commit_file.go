@@ -501,7 +501,7 @@ func CreateCommitFileAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name":    "license",
-				"type":    []string{"null", "string"},
+				"type":    []interface{}{"null", "string"},
 				"default": nil,
 			},
 			map[string]interface{}{
