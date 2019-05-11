@@ -25,7 +25,7 @@ type ConsumerCallback struct {
 // Consumer will create a consumer for receiving events
 type Consumer interface {
 	// Close will stop listening for events
-	Close()
+	Close() error
 }
 
 // ConsumerFactory is for creating consumers
