@@ -206,12 +206,20 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 	if val := kv["branched_from_commits"]; val != nil {
-		o.BranchedFromCommits = append(o.BranchedFromCommits, fmt.Sprintf("%v", val))
+		if a, ok := val.([]string); ok {
+			o.BranchedFromCommits = append(o.BranchedFromCommits, a...)
+		} else {
+			o.BranchedFromCommits = append(o.BranchedFromCommits, fmt.Sprintf("%v", val))
+		}
 	} else {
 		o.BranchedFromCommits = []string{}
 	}
 	if val := kv["commits"]; val != nil {
-		o.Commits = append(o.Commits, fmt.Sprintf("%v", val))
+		if a, ok := val.([]string); ok {
+			o.Commits = append(o.Commits, a...)
+		} else {
+			o.Commits = append(o.Commits, fmt.Sprintf("%v", val))
+		}
 	} else {
 		o.Commits = []string{}
 	}
