@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -36,7 +35,7 @@ const IssueDefaultTable = "work_Issue"
 type Issue struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"issue_id" yaml:"issue_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -44,30 +43,49 @@ type Issue struct {
 
 	// custom types
 
-	Title          string   `json:"title" yaml:"title"`
-	Identifier     string   `json:"identifier" yaml:"identifier"`
-	ProjectID      string   `json:"project_id" yaml:"project_id"`
-	URL            string   `json:"url" yaml:"url"`
-	CreatedAt      int64    `json:"created_ts" yaml:"created_ts"`
-	UpdatedAt      int64    `json:"updated_ts" yaml:"updated_ts"`
-	PlannedStartAt int64    `json:"planned_start_ts" yaml:"planned_start_ts"`
-	PlannedEndAt   int64    `json:"planned_end_ts" yaml:"planned_end_ts"`
-	DueDateAt      int64    `json:"due_date_ts" yaml:"due_date_ts"`
-	Priority       string   `json:"priority" yaml:"priority"`
-	Type           string   `json:"type" yaml:"type"`
-	Status         string   `json:"status" yaml:"status"`
-	CreatorRefID   string   `json:"creator_ref_id" yaml:"creator_ref_id"`
-	ReporterRefID  string   `json:"reporter_ref_id" yaml:"reporter_ref_id"`
-	AssigneeRefID  string   `json:"assignee_ref_id" yaml:"assignee_ref_id"`
-	AuthorRefID    string   `json:"author_ref_id" yaml:"author_ref_id"`
-	Tags           []string `json:"tags" yaml:"tags"`
-	ParentID       string   `json:"parent_id" yaml:"parent_id"`
-	Resolution     string   `json:"resolution" yaml:"resolution"`
+	// Title the issue title
+	Title string `json:"title" yaml:"title"`
+	// Identifier the common identifier for the issue
+	Identifier string `json:"identifier" yaml:"identifier"`
+	// ProjectID unique project id
+	ProjectID string `json:"project_id" yaml:"project_id"`
+	// URL the url to the issue page
+	URL string `json:"url" yaml:"url"`
+	// CreatedAt the timestamp in UTC that the issue was created
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	// UpdatedAt the timestamp in UTC that the issue was updated
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts"`
+	// PlannedStartAt the timestamp in UTC that the issue was planned to start
+	PlannedStartAt int64 `json:"planned_start_ts" yaml:"planned_start_ts"`
+	// PlannedEndAt the timestamp in UTC that the issue was planned to end
+	PlannedEndAt int64 `json:"planned_end_ts" yaml:"planned_end_ts"`
+	// DueDateAt due date of the issue
+	DueDateAt int64 `json:"due_date_ts" yaml:"due_date_ts"`
+	// Priority priority of the issue
+	Priority string `json:"priority" yaml:"priority"`
+	// Type type of issue
+	Type string `json:"type" yaml:"type"`
+	// Status status of the issue
+	Status string `json:"status" yaml:"status"`
+	// CreatorRefID user id of the creator
+	CreatorRefID string `json:"creator_ref_id" yaml:"creator_ref_id"`
+	// ReporterRefID user id of the reporter
+	ReporterRefID string `json:"reporter_ref_id" yaml:"reporter_ref_id"`
+	// AssigneeRefID user id of the assignee
+	AssigneeRefID string `json:"assignee_ref_id" yaml:"assignee_ref_id"`
+	// AuthorRefID user id of the author
+	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id"`
+	// Tags tags on the issue
+	Tags []string `json:"tags" yaml:"tags"`
+	// ParentID parent ussue id, if any
+	ParentID string `json:"parent_id" yaml:"parent_id"`
+	// Resolution resolution of the issue
+	Resolution string `json:"resolution" yaml:"resolution"`
 }
 
 // String returns a string representation of Issue
 func (o *Issue) String() string {
-	return fmt.Sprintf("work.v1.Issue<%s>", o.ID)
+	return fmt.Sprintf("work.Issue<%s>", o.ID)
 }
 
 func (o *Issue) setDefaults() {
@@ -107,6 +125,22 @@ func (o *Issue) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecIssue *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Issue) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecIssue == nil {
+		c, err := CreateIssueAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecIssue = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecIssue.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecIssue, err
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *Issue) Stringify() string {
 	return pjson.Stringify(o)
@@ -120,7 +154,7 @@ func (o *Issue) IsEqual(other *Issue) bool {
 // ToMap returns the object as a map
 func (o *Issue) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":               o.GetID(),
+		"issue_id":         o.GetID(),
 		"ref_id":           o.GetRefID(),
 		"ref_type":         o.RefType,
 		"customer_id":      o.CustomerID,
@@ -149,7 +183,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Issue) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+	if val, ok := kv["issue_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -322,15 +356,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 	if val := kv["tags"]; val != nil {
-		if a, ok := val.([]interface{}); ok {
-			var arr []string
-			for _, b := range a {
-				arr = append(arr, b.(string))
-			}
-			o.Tags = arr
-		} else {
-			o.Tags = []string{}
-		}
+		o.Tags = append(o.Tags, fmt.Sprintf("%v", val))
 	} else {
 		o.Tags = []string{}
 	}
@@ -391,12 +417,12 @@ func (o *Issue) Hash() string {
 func CreateIssueAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "work.v1",
+		"namespace":    "work",
 		"name":         "Issue",
-		"connect.name": "work.v1.Issue",
+		"connect.name": "work.Issue",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "issue_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -481,7 +507,10 @@ func CreateIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]string{"type": "array", "items": "string"},
+				"type": map[string]interface{}{
+					"type":  "array",
+					"items": "string",
+				},
 			},
 			map[string]interface{}{
 				"name": "parent_id",
@@ -499,26 +528,6 @@ func CreateIssueAvroSchemaSpec() string {
 // CreateIssueAvroSchema creates the avro schema for Issue
 func CreateIssueAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(CreateIssueAvroSchemaSpec())
-}
-
-// CreateIssueKQLStreamSQL creates KQL Stream SQL for Issue
-func CreateIssueKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", IssueDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", IssueDefaultTopic))
-	builder.WriteString(", TIMESTAMP='updated_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// CreateIssueKQLTableSQL creates KQL Table SQL for Issue
-func CreateIssueKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", IssueDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", IssueDefaultTopic))
-	builder.WriteString(", TIMESTAMP='updated_ts'")
-	builder.WriteString(");")
-	return builder.String()
 }
 
 // TransformIssueFunc is a function for transforming Issue during processing
@@ -572,7 +581,7 @@ func CreateIssuePipe(input io.ReadCloser, output io.WriteCloser, errors chan err
 
 // CreateIssueInputStreamDir creates a channel for reading Issue as JSON newlines from a directory of files
 func CreateIssueInputStreamDir(dir string, errors chan<- error, transforms ...TransformIssueFunc) (chan Issue, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/v1/issue\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/issue\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan Issue)
@@ -672,7 +681,7 @@ func CreateIssueInputStream(stream io.ReadCloser, errors chan<- error, transform
 
 // CreateIssueOutputStreamDir will output json newlines from channel and save in dir
 func CreateIssueOutputStreamDir(dir string, ch chan Issue, errors chan<- error, transforms ...TransformIssueFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/v1/issue\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/work/issue\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -737,10 +746,14 @@ func CreateIssueProducer(producer util.Producer, ch chan Issue, errors chan<- er
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateIssueAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}

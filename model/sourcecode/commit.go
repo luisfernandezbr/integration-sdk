@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -36,7 +35,7 @@ const CommitDefaultTable = "sourcecode_Commit"
 type Commit struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"commit_id" yaml:"commit_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -44,22 +43,33 @@ type Commit struct {
 
 	// custom types
 
-	RepoID       string `json:"repo_id" yaml:"repo_id"`
-	Sha          string `json:"sha" yaml:"sha"`
-	Message      string `json:"message" yaml:"message"`
-	URL          string `json:"url" yaml:"url"`
-	CreatedAt    int64  `json:"created_ts" yaml:"created_ts"`
-	Branch       string `json:"branch" yaml:"branch"`
-	Additions    int64  `json:"additions" yaml:"additions"`
-	Deletions    int64  `json:"deletions" yaml:"deletions"`
-	FilesChanged int64  `json:"files_changed" yaml:"files_changed"`
-	AuthorRefID  string `json:"author_ref_id" yaml:"author_ref_id"`
-	Ordinal      int64  `json:"ordinal" yaml:"ordinal"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" yaml:"repo_id"`
+	// Sha the unique sha for the commit
+	Sha string `json:"sha" yaml:"sha"`
+	// Message the commit message
+	Message string `json:"message" yaml:"message"`
+	// URL the url to the commit detail
+	URL string `json:"url" yaml:"url"`
+	// CreatedAt the timestamp in UTC that the commit was created
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	// Branch the branch that the commit was made to
+	Branch string `json:"branch" yaml:"branch"`
+	// Additions the number of additions for the commit
+	Additions int64 `json:"additions" yaml:"additions"`
+	// Deletions the number of deletions for the commit
+	Deletions int64 `json:"deletions" yaml:"deletions"`
+	// FilesChanged the number of files changed for the commit
+	FilesChanged int64 `json:"files_changed" yaml:"files_changed"`
+	// AuthorRefID the author ref_id in the source system
+	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id"`
+	// Ordinal the order of the commit in the commit stream
+	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
 }
 
 // String returns a string representation of Commit
 func (o *Commit) String() string {
-	return fmt.Sprintf("sourcecode.v1.Commit<%s>", o.ID)
+	return fmt.Sprintf("sourcecode.Commit<%s>", o.ID)
 }
 
 func (o *Commit) setDefaults() {
@@ -100,6 +110,22 @@ func (o *Commit) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecCommit *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Commit) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecCommit == nil {
+		c, err := CreateCommitAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecCommit = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecCommit.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecCommit, err
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *Commit) Stringify() string {
 	return pjson.Stringify(o)
@@ -113,7 +139,7 @@ func (o *Commit) IsEqual(other *Commit) bool {
 // ToMap returns the object as a map
 func (o *Commit) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":            o.GetID(),
+		"commit_id":     o.GetID(),
 		"ref_id":        o.GetRefID(),
 		"ref_type":      o.RefType,
 		"customer_id":   o.CustomerID,
@@ -134,7 +160,7 @@ func (o *Commit) ToMap() map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Commit) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+	if val, ok := kv["commit_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -285,12 +311,12 @@ func (o *Commit) Hash() string {
 func CreateCommitAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "sourcecode.v1",
+		"namespace":    "sourcecode",
 		"name":         "Commit",
-		"connect.name": "sourcecode.v1.Commit",
+		"connect.name": "sourcecode.Commit",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "commit_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -363,26 +389,6 @@ func CreateCommitAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(CreateCommitAvroSchemaSpec())
 }
 
-// CreateCommitKQLStreamSQL creates KQL Stream SQL for Commit
-func CreateCommitKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", CommitDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", CommitDefaultTopic))
-	builder.WriteString(", TIMESTAMP='created_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// CreateCommitKQLTableSQL creates KQL Table SQL for Commit
-func CreateCommitKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", CommitDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", CommitDefaultTopic))
-	builder.WriteString(", TIMESTAMP='created_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
 // TransformCommitFunc is a function for transforming Commit during processing
 type TransformCommitFunc func(input *Commit) (*Commit, error)
 
@@ -434,7 +440,7 @@ func CreateCommitPipe(input io.ReadCloser, output io.WriteCloser, errors chan er
 
 // CreateCommitInputStreamDir creates a channel for reading Commit as JSON newlines from a directory of files
 func CreateCommitInputStreamDir(dir string, errors chan<- error, transforms ...TransformCommitFunc) (chan Commit, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/v1/commit\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/commit\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan Commit)
@@ -534,7 +540,7 @@ func CreateCommitInputStream(stream io.ReadCloser, errors chan<- error, transfor
 
 // CreateCommitOutputStreamDir will output json newlines from channel and save in dir
 func CreateCommitOutputStreamDir(dir string, ch chan Commit, errors chan<- error, transforms ...TransformCommitFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/v1/commit\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/sourcecode/commit\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -599,10 +605,14 @@ func CreateCommitProducer(producer util.Producer, ch chan Commit, errors chan<- 
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateCommitAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}

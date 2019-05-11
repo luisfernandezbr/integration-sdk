@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -36,7 +35,7 @@ const PullRequestDefaultTable = "sourcecode_PullRequest"
 type PullRequest struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"pull_request_id" yaml:"pull_request_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -44,21 +43,31 @@ type PullRequest struct {
 
 	// custom types
 
-	RepoID      string `json:"repo_id" yaml:"repo_id"`
-	Title       string `json:"title" yaml:"title"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" yaml:"repo_id"`
+	// Title the title of the pull request
+	Title string `json:"title" yaml:"title"`
+	// Description the description of the pull request
 	Description string `json:"description" yaml:"description"`
-	URL         string `json:"url" yaml:"url"`
-	CreatedAt   int64  `json:"created_ts" yaml:"created_ts"`
-	MergedAt    int64  `json:"merged_ts" yaml:"merged_ts"`
-	ClosedAt    int64  `json:"closed_ts" yaml:"closed_ts"`
-	UpdatedAt   int64  `json:"updated_ts" yaml:"updated_ts"`
-	Status      string `json:"status" yaml:"status"`
-	UserRefID   string `json:"user_ref_id" yaml:"user_ref_id"`
+	// URL the url to the pull request home page
+	URL string `json:"url" yaml:"url"`
+	// CreatedAt the timestamp in UTC that the pull request was created
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	// MergedAt the timestamp in UTC that the pull request was merged
+	MergedAt int64 `json:"merged_ts" yaml:"merged_ts"`
+	// ClosedAt the timestamp in UTC that the pull request was closed
+	ClosedAt int64 `json:"closed_ts" yaml:"closed_ts"`
+	// UpdatedAt the timestamp in UTC that the pull request was closed
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts"`
+	// Status the status of the pull request
+	Status string `json:"status" yaml:"status"`
+	// UserRefID the user ref_id in the source system
+	UserRefID string `json:"user_ref_id" yaml:"user_ref_id"`
 }
 
 // String returns a string representation of PullRequest
 func (o *PullRequest) String() string {
-	return fmt.Sprintf("sourcecode.v1.PullRequest<%s>", o.ID)
+	return fmt.Sprintf("sourcecode.PullRequest<%s>", o.ID)
 }
 
 func (o *PullRequest) setDefaults() {
@@ -98,6 +107,22 @@ func (o *PullRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecPullRequest *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *PullRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecPullRequest == nil {
+		c, err := CreatePullRequestAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecPullRequest = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecPullRequest.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecPullRequest, err
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *PullRequest) Stringify() string {
 	return pjson.Stringify(o)
@@ -111,27 +136,27 @@ func (o *PullRequest) IsEqual(other *PullRequest) bool {
 // ToMap returns the object as a map
 func (o *PullRequest) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"repo_id":     o.RepoID,
-		"title":       o.Title,
-		"description": o.Description,
-		"url":         o.URL,
-		"created_ts":  o.CreatedAt,
-		"merged_ts":   o.MergedAt,
-		"closed_ts":   o.ClosedAt,
-		"updated_ts":  o.UpdatedAt,
-		"status":      o.Status,
-		"user_ref_id": o.UserRefID,
+		"pull_request_id": o.GetID(),
+		"ref_id":          o.GetRefID(),
+		"ref_type":        o.RefType,
+		"customer_id":     o.CustomerID,
+		"hashcode":        o.Hash(),
+		"repo_id":         o.RepoID,
+		"title":           o.Title,
+		"description":     o.Description,
+		"url":             o.URL,
+		"created_ts":      o.CreatedAt,
+		"merged_ts":       o.MergedAt,
+		"closed_ts":       o.ClosedAt,
+		"updated_ts":      o.UpdatedAt,
+		"status":          o.Status,
+		"user_ref_id":     o.UserRefID,
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequest) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+	if val, ok := kv["pull_request_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -271,12 +296,12 @@ func (o *PullRequest) Hash() string {
 func CreatePullRequestAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "sourcecode.v1",
+		"namespace":    "sourcecode",
 		"name":         "PullRequest",
-		"connect.name": "sourcecode.v1.PullRequest",
+		"connect.name": "sourcecode.PullRequest",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "pull_request_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -345,26 +370,6 @@ func CreatePullRequestAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(CreatePullRequestAvroSchemaSpec())
 }
 
-// CreatePullRequestKQLStreamSQL creates KQL Stream SQL for PullRequest
-func CreatePullRequestKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", PullRequestDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", PullRequestDefaultTopic))
-	builder.WriteString(", TIMESTAMP='updated_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// CreatePullRequestKQLTableSQL creates KQL Table SQL for PullRequest
-func CreatePullRequestKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", PullRequestDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", PullRequestDefaultTopic))
-	builder.WriteString(", TIMESTAMP='updated_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
 // TransformPullRequestFunc is a function for transforming PullRequest during processing
 type TransformPullRequestFunc func(input *PullRequest) (*PullRequest, error)
 
@@ -416,7 +421,7 @@ func CreatePullRequestPipe(input io.ReadCloser, output io.WriteCloser, errors ch
 
 // CreatePullRequestInputStreamDir creates a channel for reading PullRequest as JSON newlines from a directory of files
 func CreatePullRequestInputStreamDir(dir string, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/v1/pull_request\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/pull_request\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan PullRequest)
@@ -516,7 +521,7 @@ func CreatePullRequestInputStream(stream io.ReadCloser, errors chan<- error, tra
 
 // CreatePullRequestOutputStreamDir will output json newlines from channel and save in dir
 func CreatePullRequestOutputStreamDir(dir string, ch chan PullRequest, errors chan<- error, transforms ...TransformPullRequestFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/v1/pull_request\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/sourcecode/pull_request\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -581,10 +586,14 @@ func CreatePullRequestProducer(producer util.Producer, ch chan PullRequest, erro
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreatePullRequestAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}

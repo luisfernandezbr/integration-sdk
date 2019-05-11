@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -32,11 +31,11 @@ const BranchDefaultStream = "sourcecode_Branch_stream"
 // BranchDefaultTable is the default table name
 const BranchDefaultTable = "sourcecode_Branch"
 
-// Branch git repo's branch
+// Branch git branches
 type Branch struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"branch_id" yaml:"branch_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -44,20 +43,29 @@ type Branch struct {
 
 	// custom types
 
-	Name                string   `json:"name" yaml:"name"`
-	IsDefault           bool     `json:"is_default" yaml:"is_default"`
-	IsMerged            bool     `json:"is_merged" yaml:"is_merged"`
-	MergeCommit         bool     `json:"merge_commit" yaml:"merge_commit"`
+	// Name name of the branch
+	Name string `json:"name" yaml:"name"`
+	// Default wether is the default branch or not
+	Default bool `json:"default" yaml:"default"`
+	// Merged wether it has been merged
+	Merged bool `json:"merged" yaml:"merged"`
+	// MergeCommit commit from the merge
+	MergeCommit bool `json:"merge_commit" yaml:"merge_commit"`
+	// BranchedFromCommits branched from commits
 	BranchedFromCommits []string `json:"branched_from_commits" yaml:"branched_from_commits"`
-	Commits             []string `json:"commits" yaml:"commits"`
-	BehindDefaultCount  int64    `json:"behind_default_count" yaml:"behind_default_count"`
-	AheadDefaultCount   int64    `json:"ahead_default_count" yaml:"ahead_default_count"`
-	RepoID              string   `json:"repo_id" yaml:"repo_id"`
+	// Commits list of commits on this branch
+	Commits []string `json:"commits" yaml:"commits"`
+	// BehindDefaultCount behind default count
+	BehindDefaultCount int64 `json:"behind_default_count" yaml:"behind_default_count"`
+	// AheadDefaultCount ahead default count
+	AheadDefaultCount int64 `json:"ahead_default_count" yaml:"ahead_default_count"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" yaml:"repo_id"`
 }
 
 // String returns a string representation of Branch
 func (o *Branch) String() string {
-	return fmt.Sprintf("sourcecode.v1.Branch<%s>", o.ID)
+	return fmt.Sprintf("sourcecode.Branch<%s>", o.ID)
 }
 
 func (o *Branch) setDefaults() {
@@ -97,6 +105,22 @@ func (o *Branch) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecBranch *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Branch) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecBranch == nil {
+		c, err := CreateBranchAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecBranch = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecBranch.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecBranch, err
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *Branch) Stringify() string {
 	return pjson.Stringify(o)
@@ -110,14 +134,14 @@ func (o *Branch) IsEqual(other *Branch) bool {
 // ToMap returns the object as a map
 func (o *Branch) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":                    o.GetID(),
+		"branch_id":             o.GetID(),
 		"ref_id":                o.GetRefID(),
 		"ref_type":              o.RefType,
 		"customer_id":           o.CustomerID,
 		"hashcode":              o.Hash(),
 		"name":                  o.Name,
-		"is_default":            o.IsDefault,
-		"is_merged":             o.IsMerged,
+		"default":               o.Default,
+		"merged":                o.Merged,
 		"merge_commit":          o.MergeCommit,
 		"branched_from_commits": o.BranchedFromCommits,
 		"commits":               o.Commits,
@@ -129,7 +153,7 @@ func (o *Branch) ToMap() map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Branch) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+	if val, ok := kv["branch_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -151,24 +175,24 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["is_default"].(bool); ok {
-		o.IsDefault = val
+	if val, ok := kv["default"].(bool); ok {
+		o.Default = val
 	} else {
-		val := kv["is_default"]
+		val := kv["default"]
 		if val == nil {
-			o.IsDefault = number.ToBoolAny(nil)
+			o.Default = number.ToBoolAny(nil)
 		} else {
-			o.IsDefault = number.ToBoolAny(val)
+			o.Default = number.ToBoolAny(val)
 		}
 	}
-	if val, ok := kv["is_merged"].(bool); ok {
-		o.IsMerged = val
+	if val, ok := kv["merged"].(bool); ok {
+		o.Merged = val
 	} else {
-		val := kv["is_merged"]
+		val := kv["merged"]
 		if val == nil {
-			o.IsMerged = number.ToBoolAny(nil)
+			o.Merged = number.ToBoolAny(nil)
 		} else {
-			o.IsMerged = number.ToBoolAny(val)
+			o.Merged = number.ToBoolAny(val)
 		}
 	}
 	if val, ok := kv["merge_commit"].(bool); ok {
@@ -182,28 +206,12 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 	if val := kv["branched_from_commits"]; val != nil {
-		if a, ok := val.([]interface{}); ok {
-			var arr []string
-			for _, b := range a {
-				arr = append(arr, b.(string))
-			}
-			o.BranchedFromCommits = arr
-		} else {
-			o.BranchedFromCommits = []string{}
-		}
+		o.BranchedFromCommits = append(o.BranchedFromCommits, fmt.Sprintf("%v", val))
 	} else {
 		o.BranchedFromCommits = []string{}
 	}
 	if val := kv["commits"]; val != nil {
-		if a, ok := val.([]interface{}); ok {
-			var arr []string
-			for _, b := range a {
-				arr = append(arr, b.(string))
-			}
-			o.Commits = arr
-		} else {
-			o.Commits = []string{}
-		}
+		o.Commits = append(o.Commits, fmt.Sprintf("%v", val))
 	} else {
 		o.Commits = []string{}
 	}
@@ -248,8 +256,8 @@ func (o *Branch) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.Name)
-	args = append(args, o.IsDefault)
-	args = append(args, o.IsMerged)
+	args = append(args, o.Default)
+	args = append(args, o.Merged)
 	args = append(args, o.MergeCommit)
 	args = append(args, o.BranchedFromCommits)
 	args = append(args, o.Commits)
@@ -264,12 +272,12 @@ func (o *Branch) Hash() string {
 func CreateBranchAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "sourcecode.v1",
+		"namespace":    "sourcecode",
 		"name":         "Branch",
-		"connect.name": "sourcecode.v1.Branch",
+		"connect.name": "sourcecode.Branch",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "branch_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -293,11 +301,11 @@ func CreateBranchAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "is_default",
+				"name": "default",
 				"type": "boolean",
 			},
 			map[string]interface{}{
-				"name": "is_merged",
+				"name": "merged",
 				"type": "boolean",
 			},
 			map[string]interface{}{
@@ -306,11 +314,17 @@ func CreateBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]string{"type": "array", "items": "string"},
+				"type": map[string]interface{}{
+					"type":  "array",
+					"items": "string",
+				},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]string{"type": "array", "items": "string"},
+				"type": map[string]interface{}{
+					"type":  "array",
+					"items": "string",
+				},
 			},
 			map[string]interface{}{
 				"name": "behind_default_count",
@@ -332,24 +346,6 @@ func CreateBranchAvroSchemaSpec() string {
 // CreateBranchAvroSchema creates the avro schema for Branch
 func CreateBranchAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(CreateBranchAvroSchemaSpec())
-}
-
-// CreateBranchKQLStreamSQL creates KQL Stream SQL for Branch
-func CreateBranchKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", BranchDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", BranchDefaultTopic))
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// CreateBranchKQLTableSQL creates KQL Table SQL for Branch
-func CreateBranchKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", BranchDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", BranchDefaultTopic))
-	builder.WriteString(");")
-	return builder.String()
 }
 
 // TransformBranchFunc is a function for transforming Branch during processing
@@ -403,7 +399,7 @@ func CreateBranchPipe(input io.ReadCloser, output io.WriteCloser, errors chan er
 
 // CreateBranchInputStreamDir creates a channel for reading Branch as JSON newlines from a directory of files
 func CreateBranchInputStreamDir(dir string, errors chan<- error, transforms ...TransformBranchFunc) (chan Branch, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/v1/branch\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/branch\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan Branch)
@@ -503,7 +499,7 @@ func CreateBranchInputStream(stream io.ReadCloser, errors chan<- error, transfor
 
 // CreateBranchOutputStreamDir will output json newlines from channel and save in dir
 func CreateBranchOutputStreamDir(dir string, ch chan Branch, errors chan<- error, transforms ...TransformBranchFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/v1/branch\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/sourcecode/branch\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -568,10 +564,14 @@ func CreateBranchProducer(producer util.Producer, ch chan Branch, errors chan<- 
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateBranchAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}

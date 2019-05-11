@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -23,20 +22,20 @@ import (
 	"github.com/pinpt/integration-sdk/util"
 )
 
-// SprintsDefaultTopic is the default topic name
-const SprintsDefaultTopic = "work_Sprints_topic"
+// SprintDefaultTopic is the default topic name
+const SprintDefaultTopic = "work_Sprint_topic"
 
-// SprintsDefaultStream is the default stream name
-const SprintsDefaultStream = "work_Sprints_stream"
+// SprintDefaultStream is the default stream name
+const SprintDefaultStream = "work_Sprint_stream"
 
-// SprintsDefaultTable is the default table name
-const SprintsDefaultTable = "work_Sprints"
+// SprintDefaultTable is the default table name
+const SprintDefaultTable = "work_Sprint"
 
-// Sprints sprint details
-type Sprints struct {
+// Sprint sprint details
+type Sprint struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"sprint_id" yaml:"sprint_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -44,46 +43,52 @@ type Sprints struct {
 
 	// custom types
 
-	Name        string `json:"name" yaml:"name"`
-	Identifier  string `json:"identifier" yaml:"identifier"`
-	Status      string `json:"status" yaml:"status"`
-	StartedAt   int64  `json:"started_ts" yaml:"started_ts"`
-	EndedAt     int64  `json:"ended_ts" yaml:"ended_ts"`
-	CompletedAt int64  `json:"completed_ts" yaml:"completed_ts"`
+	// Name the name of the field
+	Name string `json:"name" yaml:"name"`
+	// Identifier the common identifier for the sprint
+	Identifier string `json:"identifier" yaml:"identifier"`
+	// Status status of the sprint
+	Status string `json:"status" yaml:"status"`
+	// StartedAt the timestamp in UTC that the sprint was started
+	StartedAt int64 `json:"started_ts" yaml:"started_ts"`
+	// EndedAt the timestamp in UTC that the sprint was ended
+	EndedAt int64 `json:"ended_ts" yaml:"ended_ts"`
+	// CompletedAt the timestamp in UTC that the sprint was completed
+	CompletedAt int64 `json:"completed_ts" yaml:"completed_ts"`
 }
 
-// String returns a string representation of Sprints
-func (o *Sprints) String() string {
-	return fmt.Sprintf("work.v1.Sprints<%s>", o.ID)
+// String returns a string representation of Sprint
+func (o *Sprint) String() string {
+	return fmt.Sprintf("work.Sprint<%s>", o.ID)
 }
 
-func (o *Sprints) setDefaults() {
+func (o *Sprint) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *Sprints) GetID() string {
+func (o *Sprint) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Sprints", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("Sprint", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetRefID returns the RefID for the object
-func (o *Sprints) GetRefID() string {
+func (o *Sprint) GetRefID() string {
 	return o.RefID
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Sprints) MarshalJSON() ([]byte, error) {
+func (o *Sprint) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Sprints) UnmarshalJSON(data []byte) error {
+func (o *Sprint) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -94,20 +99,36 @@ func (o *Sprints) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecSprint *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Sprint) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecSprint == nil {
+		c, err := CreateSprintAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecSprint = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecSprint.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecSprint, err
+}
+
 // Stringify returns the object in JSON format as a string
-func (o *Sprints) Stringify() string {
+func (o *Sprint) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Sprints objects are equal
-func (o *Sprints) IsEqual(other *Sprints) bool {
+// IsEqual returns true if the two Sprint objects are equal
+func (o *Sprint) IsEqual(other *Sprint) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Sprints) ToMap() map[string]interface{} {
+func (o *Sprint) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":           o.GetID(),
+		"sprint_id":    o.GetID(),
 		"ref_id":       o.GetRefID(),
 		"ref_type":     o.RefType,
 		"customer_id":  o.CustomerID,
@@ -122,8 +143,8 @@ func (o *Sprints) ToMap() map[string]interface{} {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Sprints) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+func (o *Sprint) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["sprint_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -200,33 +221,31 @@ func (o *Sprints) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Sprints) Hash() string {
-	if o.Hashcode == "" {
-		args := make([]interface{}, 0)
-		args = append(args, o.GetID())
-		args = append(args, o.GetRefID())
-		args = append(args, o.RefType)
-		args = append(args, o.Name)
-		args = append(args, o.Identifier)
-		args = append(args, o.Status)
-		args = append(args, o.StartedAt)
-		args = append(args, o.EndedAt)
-		args = append(args, o.CompletedAt)
-		o.Hashcode = hash.Values(args...)
-	}
+func (o *Sprint) Hash() string {
+	args := make([]interface{}, 0)
+	args = append(args, o.GetID())
+	args = append(args, o.GetRefID())
+	args = append(args, o.RefType)
+	args = append(args, o.Name)
+	args = append(args, o.Identifier)
+	args = append(args, o.Status)
+	args = append(args, o.StartedAt)
+	args = append(args, o.EndedAt)
+	args = append(args, o.CompletedAt)
+	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// CreateSprintsAvroSchemaSpec creates the avro schema specification for Sprints
-func CreateSprintsAvroSchemaSpec() string {
+// CreateSprintAvroSchemaSpec creates the avro schema specification for Sprint
+func CreateSprintAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "work.v1",
-		"name":         "Sprints",
-		"connect.name": "work.v1.Sprints",
+		"namespace":    "work",
+		"name":         "Sprint",
+		"connect.name": "work.Sprint",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "sprint_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -274,45 +293,25 @@ func CreateSprintsAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateSprintsAvroSchema creates the avro schema for Sprints
-func CreateSprintsAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateSprintsAvroSchemaSpec())
+// CreateSprintAvroSchema creates the avro schema for Sprint
+func CreateSprintAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(CreateSprintAvroSchemaSpec())
 }
 
-// CreateSprintsKQLStreamSQL creates KQL Stream SQL for Sprints
-func CreateSprintsKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", SprintsDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", SprintsDefaultTopic))
-	builder.WriteString(", TIMESTAMP='started_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
+// TransformSprintFunc is a function for transforming Sprint during processing
+type TransformSprintFunc func(input *Sprint) (*Sprint, error)
 
-// CreateSprintsKQLTableSQL creates KQL Table SQL for Sprints
-func CreateSprintsKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", SprintsDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", SprintsDefaultTopic))
-	builder.WriteString(", TIMESTAMP='started_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// TransformSprintsFunc is a function for transforming Sprints during processing
-type TransformSprintsFunc func(input *Sprints) (*Sprints, error)
-
-// CreateSprintsPipe creates a pipe for processing Sprints items
-func CreateSprintsPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformSprintsFunc) <-chan bool {
+// CreateSprintPipe creates a pipe for processing Sprint items
+func CreateSprintPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformSprintFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateSprintsInputStream(input, errors)
-	var stream chan Sprints
+	inch, indone := CreateSprintInputStream(input, errors)
+	var stream chan Sprint
 	if len(transforms) > 0 {
-		stream = make(chan Sprints, 1000)
+		stream = make(chan Sprint, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateSprintsOutputStream(output, stream, errors)
+	outdone := CreateSprintOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -348,12 +347,12 @@ func CreateSprintsPipe(input io.ReadCloser, output io.WriteCloser, errors chan e
 	return done
 }
 
-// CreateSprintsInputStreamDir creates a channel for reading Sprints as JSON newlines from a directory of files
-func CreateSprintsInputStreamDir(dir string, errors chan<- error, transforms ...TransformSprintsFunc) (chan Sprints, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/v1/sprints\\.json(\\.gz)?$"))
+// CreateSprintInputStreamDir creates a channel for reading Sprint as JSON newlines from a directory of files
+func CreateSprintInputStreamDir(dir string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/sprint\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Sprints)
+		ch := make(chan Sprint)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -361,16 +360,16 @@ func CreateSprintsInputStreamDir(dir string, errors chan<- error, transforms ...
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for sprints")
-		ch := make(chan Sprints)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for sprint")
+		ch := make(chan Sprint)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateSprintsInputStreamFile(files[0], errors, transforms...)
+		return CreateSprintInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Sprints)
+		ch := make(chan Sprint)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -378,12 +377,12 @@ func CreateSprintsInputStreamDir(dir string, errors chan<- error, transforms ...
 	}
 }
 
-// CreateSprintsInputStreamFile creates an channel for reading Sprints as JSON newlines from filename
-func CreateSprintsInputStreamFile(filename string, errors chan<- error, transforms ...TransformSprintsFunc) (chan Sprints, <-chan bool) {
+// CreateSprintInputStreamFile creates an channel for reading Sprint as JSON newlines from filename
+func CreateSprintInputStreamFile(filename string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Sprints)
+		ch := make(chan Sprint)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -395,7 +394,7 @@ func CreateSprintsInputStreamFile(filename string, errors chan<- error, transfor
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Sprints)
+			ch := make(chan Sprint)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -403,13 +402,13 @@ func CreateSprintsInputStreamFile(filename string, errors chan<- error, transfor
 		}
 		f = gz
 	}
-	return CreateSprintsInputStream(f, errors, transforms...)
+	return CreateSprintInputStream(f, errors, transforms...)
 }
 
-// CreateSprintsInputStream creates an channel for reading Sprints as JSON newlines from stream
-func CreateSprintsInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformSprintsFunc) (chan Sprints, <-chan bool) {
+// CreateSprintInputStream creates an channel for reading Sprint as JSON newlines from stream
+func CreateSprintInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Sprints, 1000)
+	ch := make(chan Sprint, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -422,7 +421,7 @@ func CreateSprintsInputStream(stream io.ReadCloser, errors chan<- error, transfo
 				errors <- err
 				return
 			}
-			var item Sprints
+			var item Sprint
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -448,9 +447,9 @@ func CreateSprintsInputStream(stream io.ReadCloser, errors chan<- error, transfo
 	return ch, done
 }
 
-// CreateSprintsOutputStreamDir will output json newlines from channel and save in dir
-func CreateSprintsOutputStreamDir(dir string, ch chan Sprints, errors chan<- error, transforms ...TransformSprintsFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/v1/sprints\\.json(\\.gz)?$")
+// CreateSprintOutputStreamDir will output json newlines from channel and save in dir
+func CreateSprintOutputStreamDir(dir string, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
+	fp := filepath.Join(dir, "/work/sprint\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -466,11 +465,11 @@ func CreateSprintsOutputStreamDir(dir string, ch chan Sprints, errors chan<- err
 		done <- true
 		return done
 	}
-	return CreateSprintsOutputStream(gz, ch, errors, transforms...)
+	return CreateSprintOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateSprintsOutputStream will output json newlines from channel to the stream
-func CreateSprintsOutputStream(stream io.WriteCloser, ch chan Sprints, errors chan<- error, transforms ...TransformSprintsFunc) <-chan bool {
+// CreateSprintOutputStream will output json newlines from channel to the stream
+func CreateSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -510,15 +509,19 @@ func CreateSprintsOutputStream(stream io.WriteCloser, ch chan Sprints, errors ch
 	return done
 }
 
-// CreateSprintsProducer will stream data from the channel
-func CreateSprintsProducer(producer util.Producer, ch chan Sprints, errors chan<- error) <-chan bool {
+// CreateSprintProducer will stream data from the channel
+func CreateSprintProducer(producer util.Producer, ch chan Sprint, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateSprintsAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}
@@ -526,22 +529,22 @@ func CreateSprintsProducer(producer util.Producer, ch chan Sprints, errors chan<
 	return done
 }
 
-// CreateSprintsConsumer will stream data from the default topic into the provided channel
-func CreateSprintsConsumer(factory util.ConsumerFactory, topic string, ch chan Sprints, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateSprintsConsumerForTopic(factory, SprintsDefaultTopic, ch, errors)
+// CreateSprintConsumer will stream data from the default topic into the provided channel
+func CreateSprintConsumer(factory util.ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
+	return CreateSprintConsumerForTopic(factory, SprintDefaultTopic, ch, errors)
 }
 
-// CreateSprintsConsumerForTopic will stream data from the topic into the provided channel
-func CreateSprintsConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Sprints, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreateSprintConsumerForTopic will stream data from the topic into the provided channel
+func CreateSprintConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := util.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
-				var object Sprints
+				var object Sprint
 				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into Sprints: %s", err)
+					return fmt.Errorf("error unmarshaling json data into Sprint: %s", err)
 				}
 				ch <- object
 				return nil

@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -35,7 +34,7 @@ const FieldTypeDefaultTable = "work_FieldType"
 type FieldType struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"field_type_id" yaml:"field_type_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -43,13 +42,15 @@ type FieldType struct {
 
 	// custom types
 
+	// Name the name of the field
 	Name string `json:"name" yaml:"name"`
-	Key  string `json:"key" yaml:"key"`
+	// Key key of the field
+	Key string `json:"key" yaml:"key"`
 }
 
 // String returns a string representation of FieldType
 func (o *FieldType) String() string {
-	return fmt.Sprintf("work.v1.FieldType<%s>", o.ID)
+	return fmt.Sprintf("work.FieldType<%s>", o.ID)
 }
 
 func (o *FieldType) setDefaults() {
@@ -89,6 +90,22 @@ func (o *FieldType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecFieldType *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *FieldType) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecFieldType == nil {
+		c, err := CreateFieldTypeAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecFieldType = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecFieldType.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecFieldType, err
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *FieldType) Stringify() string {
 	return pjson.Stringify(o)
@@ -102,19 +119,19 @@ func (o *FieldType) IsEqual(other *FieldType) bool {
 // ToMap returns the object as a map
 func (o *FieldType) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"name":        o.Name,
-		"key":         o.Key,
+		"field_type_id": o.GetID(),
+		"ref_id":        o.GetRefID(),
+		"ref_type":      o.RefType,
+		"customer_id":   o.CustomerID,
+		"hashcode":      o.Hash(),
+		"name":          o.Name,
+		"key":           o.Key,
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *FieldType) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+	if val, ok := kv["field_type_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -166,12 +183,12 @@ func (o *FieldType) Hash() string {
 func CreateFieldTypeAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "work.v1",
+		"namespace":    "work",
 		"name":         "FieldType",
-		"connect.name": "work.v1.FieldType",
+		"connect.name": "work.FieldType",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "field_type_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -206,24 +223,6 @@ func CreateFieldTypeAvroSchemaSpec() string {
 // CreateFieldTypeAvroSchema creates the avro schema for FieldType
 func CreateFieldTypeAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(CreateFieldTypeAvroSchemaSpec())
-}
-
-// CreateFieldTypeKQLStreamSQL creates KQL Stream SQL for FieldType
-func CreateFieldTypeKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", FieldTypeDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", FieldTypeDefaultTopic))
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// CreateFieldTypeKQLTableSQL creates KQL Table SQL for FieldType
-func CreateFieldTypeKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", FieldTypeDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", FieldTypeDefaultTopic))
-	builder.WriteString(");")
-	return builder.String()
 }
 
 // TransformFieldTypeFunc is a function for transforming FieldType during processing
@@ -277,7 +276,7 @@ func CreateFieldTypePipe(input io.ReadCloser, output io.WriteCloser, errors chan
 
 // CreateFieldTypeInputStreamDir creates a channel for reading FieldType as JSON newlines from a directory of files
 func CreateFieldTypeInputStreamDir(dir string, errors chan<- error, transforms ...TransformFieldTypeFunc) (chan FieldType, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/v1/field_type\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/field_type\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan FieldType)
@@ -377,7 +376,7 @@ func CreateFieldTypeInputStream(stream io.ReadCloser, errors chan<- error, trans
 
 // CreateFieldTypeOutputStreamDir will output json newlines from channel and save in dir
 func CreateFieldTypeOutputStreamDir(dir string, ch chan FieldType, errors chan<- error, transforms ...TransformFieldTypeFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/v1/field_type\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/work/field_type\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -442,10 +441,14 @@ func CreateFieldTypeProducer(producer util.Producer, ch chan FieldType, errors c
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateFieldTypeAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}

@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -37,7 +36,7 @@ const CommitFileDefaultTable = "sourcecode_CommitFile"
 type CommitFile struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"commit_file_id" yaml:"commit_file_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -45,29 +44,47 @@ type CommitFile struct {
 
 	// custom types
 
-	CommitID          string  `json:"commit_id" yaml:"commit_id"`
-	RepoID            string  `json:"repo_id" yaml:"repo_id"`
-	Filename          string  `json:"filename" yaml:"filename"`
-	Additions         int64   `json:"additions" yaml:"additions"`
-	Deletions         int64   `json:"deletions" yaml:"deletions"`
-	Status            string  `json:"status" yaml:"status"`
-	Binary            bool    `json:"binary" yaml:"binary"`
-	Language          string  `json:"language" yaml:"language"`
-	Excluded          bool    `json:"excluded" yaml:"excluded"`
-	ExcludedReason    string  `json:"excluded_reason" yaml:"excluded_reason"`
-	Ordinal           int64   `json:"ordinal" yaml:"ordinal"`
-	Loc               int64   `json:"loc" yaml:"loc"`
-	Sloc              int64   `json:"sloc" yaml:"sloc"`
-	Blanks            int64   `json:"blanks" yaml:"blanks"`
-	Comments          int64   `json:"comments" yaml:"comments"`
-	Complexity        int64   `json:"complexity" yaml:"complexity"`
-	License           *string `json:"license" yaml:"license"`
+	// CommitID the unique id for the commit
+	CommitID string `json:"commit_id" yaml:"commit_id"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" yaml:"repo_id"`
+	// Filename the filename
+	Filename string `json:"filename" yaml:"filename"`
+	// Additions the number of additions for the commit file
+	Additions int64 `json:"additions" yaml:"additions"`
+	// Deletions the number of deletions for the commit file
+	Deletions int64 `json:"deletions" yaml:"deletions"`
+	// Status the status of the change
+	Status string `json:"status" yaml:"status"`
+	// Binary indicates if the file was detected to be a binary file
+	Binary bool `json:"binary" yaml:"binary"`
+	// Language the language that was detected for the file
+	Language string `json:"language" yaml:"language"`
+	// Excluded if the file was excluded from processing
+	Excluded bool `json:"excluded" yaml:"excluded"`
+	// ExcludedReason if the file was excluded, the reason
+	ExcludedReason string `json:"excluded_reason" yaml:"excluded_reason"`
+	// Ordinal the order value for the file in the change set
+	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
+	// Loc the number of lines in the file
+	Loc int64 `json:"loc" yaml:"loc"`
+	// Sloc the number of source lines in the file
+	Sloc int64 `json:"sloc" yaml:"sloc"`
+	// Blanks the number of blank lines in the file
+	Blanks int64 `json:"blanks" yaml:"blanks"`
+	// Comments the number of comment lines in the file
+	Comments int64 `json:"comments" yaml:"comments"`
+	// Complexity the complexity value for the file change
+	Complexity int64 `json:"complexity" yaml:"complexity"`
+	// License the license which was detected for the file
+	License *string `json:"license" yaml:"license"`
+	// LicenseConfidence the license confidence from the detection engine
 	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence"`
 }
 
 // String returns a string representation of CommitFile
 func (o *CommitFile) String() string {
-	return fmt.Sprintf("sourcecode.v1.CommitFile<%s>", o.ID)
+	return fmt.Sprintf("sourcecode.CommitFile<%s>", o.ID)
 }
 
 func (o *CommitFile) setDefaults() {
@@ -107,6 +124,22 @@ func (o *CommitFile) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecCommitFile *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *CommitFile) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecCommitFile == nil {
+		c, err := CreateCommitFileAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecCommitFile = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecCommitFile.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecCommitFile, err
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *CommitFile) Stringify() string {
 	return pjson.Stringify(o)
@@ -120,7 +153,7 @@ func (o *CommitFile) IsEqual(other *CommitFile) bool {
 // ToMap returns the object as a map
 func (o *CommitFile) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":                 o.GetID(),
+		"commit_file_id":     o.GetID(),
 		"ref_id":             o.GetRefID(),
 		"ref_type":           o.RefType,
 		"customer_id":        o.CustomerID,
@@ -148,7 +181,7 @@ func (o *CommitFile) ToMap() map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *CommitFile) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+	if val, ok := kv["commit_file_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -378,12 +411,12 @@ func (o *CommitFile) Hash() string {
 func CreateCommitFileAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "sourcecode.v1",
+		"namespace":    "sourcecode",
 		"name":         "CommitFile",
-		"connect.name": "sourcecode.v1.CommitFile",
+		"connect.name": "sourcecode.CommitFile",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "commit_file_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -467,8 +500,9 @@ func CreateCommitFileAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "license",
-				"type": []string{"null", "string"},
+				"name":    "license",
+				"type":    []string{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
 				"name": "license_confidence",
@@ -482,24 +516,6 @@ func CreateCommitFileAvroSchemaSpec() string {
 // CreateCommitFileAvroSchema creates the avro schema for CommitFile
 func CreateCommitFileAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(CreateCommitFileAvroSchemaSpec())
-}
-
-// CreateCommitFileKQLStreamSQL creates KQL Stream SQL for CommitFile
-func CreateCommitFileKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", CommitFileDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", CommitFileDefaultTopic))
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// CreateCommitFileKQLTableSQL creates KQL Table SQL for CommitFile
-func CreateCommitFileKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", CommitFileDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", CommitFileDefaultTopic))
-	builder.WriteString(");")
-	return builder.String()
 }
 
 // TransformCommitFileFunc is a function for transforming CommitFile during processing
@@ -553,7 +569,7 @@ func CreateCommitFilePipe(input io.ReadCloser, output io.WriteCloser, errors cha
 
 // CreateCommitFileInputStreamDir creates a channel for reading CommitFile as JSON newlines from a directory of files
 func CreateCommitFileInputStreamDir(dir string, errors chan<- error, transforms ...TransformCommitFileFunc) (chan CommitFile, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/v1/commit_file\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/commit_file\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan CommitFile)
@@ -653,7 +669,7 @@ func CreateCommitFileInputStream(stream io.ReadCloser, errors chan<- error, tran
 
 // CreateCommitFileOutputStreamDir will output json newlines from channel and save in dir
 func CreateCommitFileOutputStreamDir(dir string, ch chan CommitFile, errors chan<- error, transforms ...TransformCommitFileFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/v1/commit_file\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/sourcecode/commit_file\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -718,10 +734,14 @@ func CreateCommitFileProducer(producer util.Producer, ch chan CommitFile, errors
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateCommitFileAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}

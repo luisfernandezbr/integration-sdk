@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -36,7 +35,7 @@ const ChangelogDefaultTable = "sourcecode_Changelog"
 type Changelog struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"changelog_id" yaml:"changelog_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -44,23 +43,35 @@ type Changelog struct {
 
 	// custom types
 
-	RepoID      string `json:"repo_id" yaml:"repo_id"`
-	Filename    string `json:"filename" yaml:"filename"`
-	Language    string `json:"language" yaml:"language"`
-	Loc         int64  `json:"loc" yaml:"loc"`
-	Sloc        int64  `json:"sloc" yaml:"sloc"`
-	Blanks      int64  `json:"blanks" yaml:"blanks"`
-	Comments    int64  `json:"comments" yaml:"comments"`
-	Complexity  int64  `json:"complexity" yaml:"complexity"`
-	DateAt      int64  `json:"date_ts" yaml:"date_ts"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" yaml:"repo_id"`
+	// Filename the filename
+	Filename string `json:"filename" yaml:"filename"`
+	// Language the detected language
+	Language string `json:"language" yaml:"language"`
+	// Loc the count of lines in the file
+	Loc int64 `json:"loc" yaml:"loc"`
+	// Sloc the count of source lines in the file based on language rules
+	Sloc int64 `json:"sloc" yaml:"sloc"`
+	// Blanks the count of blank lines in the file
+	Blanks int64 `json:"blanks" yaml:"blanks"`
+	// Comments the count of comment lines in the file based on language rules
+	Comments int64 `json:"comments" yaml:"comments"`
+	// Complexity the cyclomatic complexity for the change
+	Complexity int64 `json:"complexity" yaml:"complexity"`
+	// DateAt the date of the change
+	DateAt int64 `json:"date_ts" yaml:"date_ts"`
+	// AuthorRefID the author ref_id in the source system
 	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id"`
-	Ordinal     int64  `json:"ordinal" yaml:"ordinal"`
-	Sha         string `json:"sha" yaml:"sha"`
+	// Ordinal the order of the commit in the commit stream
+	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
+	// Sha the commit SHA
+	Sha string `json:"sha" yaml:"sha"`
 }
 
 // String returns a string representation of Changelog
 func (o *Changelog) String() string {
-	return fmt.Sprintf("sourcecode.v1.Changelog<%s>", o.ID)
+	return fmt.Sprintf("sourcecode.Changelog<%s>", o.ID)
 }
 
 func (o *Changelog) setDefaults() {
@@ -100,6 +111,22 @@ func (o *Changelog) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecChangelog *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Changelog) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecChangelog == nil {
+		c, err := CreateChangelogAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecChangelog = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecChangelog.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecChangelog, err
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *Changelog) Stringify() string {
 	return pjson.Stringify(o)
@@ -113,7 +140,7 @@ func (o *Changelog) IsEqual(other *Changelog) bool {
 // ToMap returns the object as a map
 func (o *Changelog) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":            o.GetID(),
+		"changelog_id":  o.GetID(),
 		"ref_id":        o.GetRefID(),
 		"ref_type":      o.RefType,
 		"customer_id":   o.CustomerID,
@@ -135,7 +162,7 @@ func (o *Changelog) ToMap() map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Changelog) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+	if val, ok := kv["changelog_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -297,12 +324,12 @@ func (o *Changelog) Hash() string {
 func CreateChangelogAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "sourcecode.v1",
+		"namespace":    "sourcecode",
 		"name":         "Changelog",
-		"connect.name": "sourcecode.v1.Changelog",
+		"connect.name": "sourcecode.Changelog",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "changelog_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -379,26 +406,6 @@ func CreateChangelogAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(CreateChangelogAvroSchemaSpec())
 }
 
-// CreateChangelogKQLStreamSQL creates KQL Stream SQL for Changelog
-func CreateChangelogKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", ChangelogDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", ChangelogDefaultTopic))
-	builder.WriteString(", TIMESTAMP='date_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// CreateChangelogKQLTableSQL creates KQL Table SQL for Changelog
-func CreateChangelogKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", ChangelogDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", ChangelogDefaultTopic))
-	builder.WriteString(", TIMESTAMP='date_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
 // TransformChangelogFunc is a function for transforming Changelog during processing
 type TransformChangelogFunc func(input *Changelog) (*Changelog, error)
 
@@ -450,7 +457,7 @@ func CreateChangelogPipe(input io.ReadCloser, output io.WriteCloser, errors chan
 
 // CreateChangelogInputStreamDir creates a channel for reading Changelog as JSON newlines from a directory of files
 func CreateChangelogInputStreamDir(dir string, errors chan<- error, transforms ...TransformChangelogFunc) (chan Changelog, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/v1/changelog\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/changelog\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan Changelog)
@@ -550,7 +557,7 @@ func CreateChangelogInputStream(stream io.ReadCloser, errors chan<- error, trans
 
 // CreateChangelogOutputStreamDir will output json newlines from channel and save in dir
 func CreateChangelogOutputStreamDir(dir string, ch chan Changelog, errors chan<- error, transforms ...TransformChangelogFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/v1/changelog\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/sourcecode/changelog\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -615,10 +622,14 @@ func CreateChangelogProducer(producer util.Producer, ch chan Changelog, errors c
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateChangelogAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}

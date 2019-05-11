@@ -127,9 +127,6 @@ models:
       - name: email
         description: key of the field
         type: string
-      - name: user_id
-        description: user id
-        type: string
       - name: active
         description: wether this user is active
         type: boolean

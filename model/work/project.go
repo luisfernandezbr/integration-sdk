@@ -1,7 +1,7 @@
 // DO NOT EDIT -- generated code
 
-// Package sourcecode - the system which contains source code
-package sourcecode
+// Package work - the system which contains project work
+package work
 
 import (
 	"bufio"
@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -22,20 +21,20 @@ import (
 	"github.com/pinpt/integration-sdk/util"
 )
 
-// RepoDefaultTopic is the default topic name
-const RepoDefaultTopic = "sourcecode_Repo_topic"
+// ProjectDefaultTopic is the default topic name
+const ProjectDefaultTopic = "work_Project_topic"
 
-// RepoDefaultStream is the default stream name
-const RepoDefaultStream = "sourcecode_Repo_stream"
+// ProjectDefaultStream is the default stream name
+const ProjectDefaultStream = "work_Project_stream"
 
-// RepoDefaultTable is the default table name
-const RepoDefaultTable = "sourcecode_Repo"
+// ProjectDefaultTable is the default table name
+const ProjectDefaultTable = "work_Project"
 
-// Repo the repo holds source code
-type Repo struct {
+// Project the project holds work
+type Project struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"project_id" yaml:"project_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -43,42 +42,46 @@ type Repo struct {
 
 	// custom types
 
+	// Name the name of the project
 	Name string `json:"name" yaml:"name"`
-	URL  string `json:"url" yaml:"url"`
+	// Identifier the common identifier for the project
+	Identifier string `json:"identifier" yaml:"identifier"`
+	// URL the url to the project home page
+	URL string `json:"url" yaml:"url"`
 }
 
-// String returns a string representation of Repo
-func (o *Repo) String() string {
-	return fmt.Sprintf("sourcecode.v1.Repo<%s>", o.ID)
+// String returns a string representation of Project
+func (o *Project) String() string {
+	return fmt.Sprintf("work.Project<%s>", o.ID)
 }
 
-func (o *Repo) setDefaults() {
+func (o *Project) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *Repo) GetID() string {
+func (o *Project) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Repo", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("Project", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetRefID returns the RefID for the object
-func (o *Repo) GetRefID() string {
+func (o *Project) GetRefID() string {
 	return o.RefID
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Repo) MarshalJSON() ([]byte, error) {
+func (o *Project) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Repo) UnmarshalJSON(data []byte) error {
+func (o *Project) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -89,32 +92,49 @@ func (o *Repo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecProject *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Project) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecProject == nil {
+		c, err := CreateProjectAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecProject = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecProject.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecProject, err
+}
+
 // Stringify returns the object in JSON format as a string
-func (o *Repo) Stringify() string {
+func (o *Project) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Repo objects are equal
-func (o *Repo) IsEqual(other *Repo) bool {
+// IsEqual returns true if the two Project objects are equal
+func (o *Project) IsEqual(other *Project) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Repo) ToMap() map[string]interface{} {
+func (o *Project) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":          o.GetID(),
+		"project_id":  o.GetID(),
 		"ref_id":      o.GetRefID(),
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
 		"name":        o.Name,
+		"identifier":  o.Identifier,
 		"url":         o.URL,
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Repo) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+func (o *Project) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["project_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -136,6 +156,16 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
+	} else {
+		val := kv["identifier"]
+		if val == nil {
+			o.Identifier = ""
+		} else {
+			o.Identifier = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -151,27 +181,28 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Repo) Hash() string {
+func (o *Project) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.Name)
+	args = append(args, o.Identifier)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// CreateRepoAvroSchemaSpec creates the avro schema specification for Repo
-func CreateRepoAvroSchemaSpec() string {
+// CreateProjectAvroSchemaSpec creates the avro schema specification for Project
+func CreateProjectAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "sourcecode.v1",
-		"name":         "Repo",
-		"connect.name": "sourcecode.v1.Repo",
+		"namespace":    "work",
+		"name":         "Project",
+		"connect.name": "work.Project",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "project_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -195,6 +226,10 @@ func CreateRepoAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "identifier",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "url",
 				"type": "string",
 			},
@@ -203,43 +238,25 @@ func CreateRepoAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateRepoAvroSchema creates the avro schema for Repo
-func CreateRepoAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateRepoAvroSchemaSpec())
+// CreateProjectAvroSchema creates the avro schema for Project
+func CreateProjectAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(CreateProjectAvroSchemaSpec())
 }
 
-// CreateRepoKQLStreamSQL creates KQL Stream SQL for Repo
-func CreateRepoKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", RepoDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", RepoDefaultTopic))
-	builder.WriteString(");")
-	return builder.String()
-}
+// TransformProjectFunc is a function for transforming Project during processing
+type TransformProjectFunc func(input *Project) (*Project, error)
 
-// CreateRepoKQLTableSQL creates KQL Table SQL for Repo
-func CreateRepoKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", RepoDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", RepoDefaultTopic))
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// TransformRepoFunc is a function for transforming Repo during processing
-type TransformRepoFunc func(input *Repo) (*Repo, error)
-
-// CreateRepoPipe creates a pipe for processing Repo items
-func CreateRepoPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformRepoFunc) <-chan bool {
+// CreateProjectPipe creates a pipe for processing Project items
+func CreateProjectPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformProjectFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateRepoInputStream(input, errors)
-	var stream chan Repo
+	inch, indone := CreateProjectInputStream(input, errors)
+	var stream chan Project
 	if len(transforms) > 0 {
-		stream = make(chan Repo, 1000)
+		stream = make(chan Project, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateRepoOutputStream(output, stream, errors)
+	outdone := CreateProjectOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -275,12 +292,12 @@ func CreateRepoPipe(input io.ReadCloser, output io.WriteCloser, errors chan erro
 	return done
 }
 
-// CreateRepoInputStreamDir creates a channel for reading Repo as JSON newlines from a directory of files
-func CreateRepoInputStreamDir(dir string, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/v1/repo\\.json(\\.gz)?$"))
+// CreateProjectInputStreamDir creates a channel for reading Project as JSON newlines from a directory of files
+func CreateProjectInputStreamDir(dir string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/project\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Repo)
+		ch := make(chan Project)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -288,16 +305,16 @@ func CreateRepoInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for repo")
-		ch := make(chan Repo)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for project")
+		ch := make(chan Project)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateRepoInputStreamFile(files[0], errors, transforms...)
+		return CreateProjectInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Repo)
+		ch := make(chan Project)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -305,12 +322,12 @@ func CreateRepoInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 }
 
-// CreateRepoInputStreamFile creates an channel for reading Repo as JSON newlines from filename
-func CreateRepoInputStreamFile(filename string, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
+// CreateProjectInputStreamFile creates an channel for reading Project as JSON newlines from filename
+func CreateProjectInputStreamFile(filename string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Repo)
+		ch := make(chan Project)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -322,7 +339,7 @@ func CreateRepoInputStreamFile(filename string, errors chan<- error, transforms 
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Repo)
+			ch := make(chan Project)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -330,13 +347,13 @@ func CreateRepoInputStreamFile(filename string, errors chan<- error, transforms 
 		}
 		f = gz
 	}
-	return CreateRepoInputStream(f, errors, transforms...)
+	return CreateProjectInputStream(f, errors, transforms...)
 }
 
-// CreateRepoInputStream creates an channel for reading Repo as JSON newlines from stream
-func CreateRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
+// CreateProjectInputStream creates an channel for reading Project as JSON newlines from stream
+func CreateProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Repo, 1000)
+	ch := make(chan Project, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -349,7 +366,7 @@ func CreateRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms
 				errors <- err
 				return
 			}
-			var item Repo
+			var item Project
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -375,9 +392,9 @@ func CreateRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms
 	return ch, done
 }
 
-// CreateRepoOutputStreamDir will output json newlines from channel and save in dir
-func CreateRepoOutputStreamDir(dir string, ch chan Repo, errors chan<- error, transforms ...TransformRepoFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/v1/repo\\.json(\\.gz)?$")
+// CreateProjectOutputStreamDir will output json newlines from channel and save in dir
+func CreateProjectOutputStreamDir(dir string, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
+	fp := filepath.Join(dir, "/work/project\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -393,11 +410,11 @@ func CreateRepoOutputStreamDir(dir string, ch chan Repo, errors chan<- error, tr
 		done <- true
 		return done
 	}
-	return CreateRepoOutputStream(gz, ch, errors, transforms...)
+	return CreateProjectOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateRepoOutputStream will output json newlines from channel to the stream
-func CreateRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- error, transforms ...TransformRepoFunc) <-chan bool {
+// CreateProjectOutputStream will output json newlines from channel to the stream
+func CreateProjectOutputStream(stream io.WriteCloser, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -437,15 +454,19 @@ func CreateRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- e
 	return done
 }
 
-// CreateRepoProducer will stream data from the channel
-func CreateRepoProducer(producer util.Producer, ch chan Repo, errors chan<- error) <-chan bool {
+// CreateProjectProducer will stream data from the channel
+func CreateProjectProducer(producer util.Producer, ch chan Project, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateRepoAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}
@@ -453,22 +474,22 @@ func CreateRepoProducer(producer util.Producer, ch chan Repo, errors chan<- erro
 	return done
 }
 
-// CreateRepoConsumer will stream data from the default topic into the provided channel
-func CreateRepoConsumer(factory util.ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateRepoConsumerForTopic(factory, RepoDefaultTopic, ch, errors)
+// CreateProjectConsumer will stream data from the default topic into the provided channel
+func CreateProjectConsumer(factory util.ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
+	return CreateProjectConsumerForTopic(factory, ProjectDefaultTopic, ch, errors)
 }
 
-// CreateRepoConsumerForTopic will stream data from the topic into the provided channel
-func CreateRepoConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreateProjectConsumerForTopic will stream data from the topic into the provided channel
+func CreateProjectConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := util.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
-				var object Repo
+				var object Project
 				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into Repo: %s", err)
+					return fmt.Errorf("error unmarshaling json data into Project: %s", err)
 				}
 				ch <- object
 				return nil

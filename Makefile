@@ -14,11 +14,12 @@ COMMITSHA ?= $(shell git rev-parse HEAD)
 all: help
 
 generate:
-	@go run main.go generate $(BASEDIR)/definition $(BASEDIR)/model
-	@rm -rf ../pipeline/vendor/github.com/pinpt/integration-sdk/util/
-	@rm -rf ../pipeline/vendor/github.com/pinpt/integration-sdk/model/
-	@cp -r model ../pipeline/vendor/github.com/pinpt/integration-sdk/
-	@cp -r util ../pipeline/vendor/github.com/pinpt/integration-sdk/
+	@cd $(GOPATH)/src/github.com/pinpt/schemagen && go run main.go golang $(BASEDIR)/definition $(BASEDIR)/model && \
+	[ -d $(GOPATH)/src/github.com/pinpt/pipeline/vendor ] && \
+	rm -rf $(GOPATH)/src/github.com/pinpt/pipeline/vendor/github.com/pinpt/integration-sdk/util && \
+	rm -rf $(GOPATH)/src/github.com/pinpt/pipeline/vendor/github.com/pinpt/integration-sdk/model && \
+	cp -r $(BASEDIR)/model $(GOPATH)/src/github.com/pinpt/pipeline/vendor/github.com/pinpt/integration-sdk && \
+	cp -r $(BASEDIR)/util $(GOPATH)/src/github.com/pinpt/pipeline/vendor/github.com/pinpt/integration-sdk || exit 0
 
 dependencies: install-dep
 	@rm -rf $(BASEDIR)/.vendor-new $(BASEDIR)/vendor

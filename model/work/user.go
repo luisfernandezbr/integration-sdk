@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -36,7 +35,7 @@ const UserDefaultTable = "work_User"
 type User struct {
 	// built in types
 
-	ID         string `json:"id" yaml:"id"`
+	ID         string `json:"user_id" yaml:"user_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -44,18 +43,23 @@ type User struct {
 
 	// custom types
 
-	Name      string `json:"name" yaml:"name"`
-	Email     string `json:"email" yaml:"email"`
-	UserID    string `json:"user_id" yaml:"user_id"`
-	Active    bool   `json:"active" yaml:"active"`
-	CreatedAt int64  `json:"created_ts" yaml:"created_ts"`
-	DeletedAt int64  `json:"deleted_ts" yaml:"deleted_ts"`
-	Location  string `json:"location" yaml:"location"`
+	// Name the name of the field
+	Name string `json:"name" yaml:"name"`
+	// Email key of the field
+	Email string `json:"email" yaml:"email"`
+	// Active wether this user is active
+	Active bool `json:"active" yaml:"active"`
+	// CreatedAt when the user was created, timestamp in UTC
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	// DeletedAt when the user was deleted, timestamp in UTC
+	DeletedAt int64 `json:"deleted_ts" yaml:"deleted_ts"`
+	// Location physical location of the user
+	Location string `json:"location" yaml:"location"`
 }
 
 // String returns a string representation of User
 func (o *User) String() string {
-	return fmt.Sprintf("work.v1.User<%s>", o.ID)
+	return fmt.Sprintf("work.User<%s>", o.ID)
 }
 
 func (o *User) setDefaults() {
@@ -95,6 +99,22 @@ func (o *User) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+var cachedCodecUser *goavro.Codec
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *User) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecUser == nil {
+		c, err := CreateUserAvroSchema()
+		if err != nil {
+			return nil, nil, err
+		}
+		cachedCodecUser = c
+	}
+	// Convert native Go form to binary Avro data
+	buf, err := cachedCodecUser.BinaryFromNative(nil, o.ToMap())
+	return buf, cachedCodecUser, err
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *User) Stringify() string {
 	return pjson.Stringify(o)
@@ -108,14 +128,13 @@ func (o *User) IsEqual(other *User) bool {
 // ToMap returns the object as a map
 func (o *User) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"id":          o.GetID(),
+		"user_id":     o.GetID(),
 		"ref_id":      o.GetRefID(),
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
 		"name":        o.Name,
 		"email":       o.Email,
-		"user_id":     o.UserID,
 		"active":      o.Active,
 		"created_ts":  o.CreatedAt,
 		"deleted_ts":  o.DeletedAt,
@@ -125,7 +144,7 @@ func (o *User) ToMap() map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *User) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["id"].(string); ok {
+	if val, ok := kv["user_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -155,16 +174,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Email = ""
 		} else {
 			o.Email = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["user_id"].(string); ok {
-		o.UserID = val
-	} else {
-		val := kv["user_id"]
-		if val == nil {
-			o.UserID = ""
-		} else {
-			o.UserID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["active"].(bool); ok {
@@ -219,7 +228,6 @@ func (o *User) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.Name)
 	args = append(args, o.Email)
-	args = append(args, o.UserID)
 	args = append(args, o.Active)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.DeletedAt)
@@ -232,12 +240,12 @@ func (o *User) Hash() string {
 func CreateUserAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "work.v1",
+		"namespace":    "work",
 		"name":         "User",
-		"connect.name": "work.v1.User",
+		"connect.name": "work.User",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
+				"name": "user_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -265,10 +273,6 @@ func CreateUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "user_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "active",
 				"type": "boolean",
 			},
@@ -292,26 +296,6 @@ func CreateUserAvroSchemaSpec() string {
 // CreateUserAvroSchema creates the avro schema for User
 func CreateUserAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(CreateUserAvroSchemaSpec())
-}
-
-// CreateUserKQLStreamSQL creates KQL Stream SQL for User
-func CreateUserKQLStreamSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE STREAM %s ", UserDefaultStream))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", UserDefaultTopic))
-	builder.WriteString(", TIMESTAMP='created_ts'")
-	builder.WriteString(");")
-	return builder.String()
-}
-
-// CreateUserKQLTableSQL creates KQL Table SQL for User
-func CreateUserKQLTableSQL() string {
-	var builder strings.Builder
-	builder.WriteString(fmt.Sprintf("CREATE TABLE %s ", UserDefaultTable))
-	builder.WriteString(fmt.Sprintf("WITH (KAFKA_TOPIC='%s', VALUE_FORMAT='AVRO', KEY='id'", UserDefaultTopic))
-	builder.WriteString(", TIMESTAMP='created_ts'")
-	builder.WriteString(");")
-	return builder.String()
 }
 
 // TransformUserFunc is a function for transforming User during processing
@@ -365,7 +349,7 @@ func CreateUserPipe(input io.ReadCloser, output io.WriteCloser, errors chan erro
 
 // CreateUserInputStreamDir creates a channel for reading User as JSON newlines from a directory of files
 func CreateUserInputStreamDir(dir string, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/v1/user\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/user\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan User)
@@ -465,7 +449,7 @@ func CreateUserInputStream(stream io.ReadCloser, errors chan<- error, transforms
 
 // CreateUserOutputStreamDir will output json newlines from channel and save in dir
 func CreateUserOutputStreamDir(dir string, ch chan User, errors chan<- error, transforms ...TransformUserFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/v1/user\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/work/user\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -530,10 +514,14 @@ func CreateUserProducer(producer util.Producer, ch chan User, errors chan<- erro
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		schemaspec := CreateUserAvroSchemaSpec()
 		ctx := context.Background()
 		for item := range ch {
-			if err := producer.Send(ctx, schemaspec, []byte(item.ID), []byte(item.Stringify())); err != nil {
+			binary, codec, err := item.ToAvroBinary()
+			if err != nil {
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				return
+			}
+			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
 				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
 			}
 		}

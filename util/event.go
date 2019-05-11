@@ -1,11 +1,15 @@
 package util
 
-import "context"
+import (
+	"context"
+
+	"github.com/linkedin/goavro"
+)
 
 // Producer will emit events to consumers
 type Producer interface {
 	// Send will send the event
-	Send(ctx context.Context, schema string, key []byte, value []byte) error
+	Send(ctx context.Context, codec *goavro.Codec, key []byte, value []byte) error
 	// Close will close the producer
 	Close() error
 }
