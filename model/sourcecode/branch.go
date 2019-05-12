@@ -64,6 +64,62 @@ type Branch struct {
 	RepoID string `json:"repo_id" yaml:"repo_id"`
 }
 
+func toBranchObject(o interface{}, isavro bool) interface{} {
+	if o == nil {
+		return nil
+	}
+	switch o.(type) {
+	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		return o
+	case *string:
+		return *(o.(*string))
+	case *int:
+		return *(o.(*int))
+	case *int8:
+		return *(o.(*int8))
+	case *int16:
+		return *(o.(*int16))
+	case *int32:
+		return *(o.(*int32))
+	case *int64:
+		return *(o.(*int64))
+	case *float32:
+		return *(o.(*float32))
+	case *float64:
+		return *(o.(*float64))
+	case *bool:
+		return *(o.(*bool))
+	case map[string]interface{}:
+		return o
+	case *map[string]interface{}:
+		return *(o.(*interface{}))
+	case *Branch:
+		val := o.(*Branch)
+		return val.ToMap()
+	case Branch:
+		val := o.(Branch)
+		return val.ToMap()
+	case []string, []int64, []float64, []bool:
+		return o
+	case *[]string:
+		return (*(o.(*[]string)))
+	case *[]int64:
+		return (*(o.(*[]int64)))
+	case *[]float64:
+		return (*(o.(*[]float64)))
+	case *[]bool:
+		return (*(o.(*[]bool)))
+	case []interface{}:
+		a := o.([]interface{})
+		arr := make([]interface{}, 0)
+		for _, av := range a {
+			arr = append(arr, toBranchObject(av, isavro))
+		}
+		return arr
+	}
+	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
+}
+
 // String returns a string representation of Branch
 func (o *Branch) String() string {
 	return fmt.Sprintf("sourcecode.Branch<%s>", o.ID)
@@ -117,8 +173,14 @@ func (o *Branch) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecBranch = c
 	}
+	kv := o.ToMap(true)
+	jbuf, _ := json.Marshal(kv)
+	native, _, err := cachedCodecBranch.NativeFromTextual(jbuf)
+	if err != nil {
+		return nil, nil, err
+	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecBranch.BinaryFromNative(nil, o.ToMap())
+	buf, err := cachedCodecBranch.BinaryFromNative(nil, native)
 	return buf, cachedCodecBranch, err
 }
 
@@ -133,22 +195,26 @@ func (o *Branch) IsEqual(other *Branch) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Branch) ToMap() map[string]interface{} {
+func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
 	return map[string]interface{}{
 		"branch_id":             o.GetID(),
 		"ref_id":                o.GetRefID(),
 		"ref_type":              o.RefType,
 		"customer_id":           o.CustomerID,
 		"hashcode":              o.Hash(),
-		"name":                  o.Name,
-		"default":               o.Default,
-		"merged":                o.Merged,
-		"merge_commit":          o.MergeCommit,
-		"branched_from_commits": o.BranchedFromCommits,
-		"commits":               o.Commits,
-		"behind_default_count":  o.BehindDefaultCount,
-		"ahead_default_count":   o.AheadDefaultCount,
-		"repo_id":               o.RepoID,
+		"name":                  toBranchObject(o.Name, isavro),
+		"default":               toBranchObject(o.Default, isavro),
+		"merged":                toBranchObject(o.Merged, isavro),
+		"merge_commit":          toBranchObject(o.MergeCommit, isavro),
+		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro),
+		"commits":               toBranchObject(o.Commits, isavro),
+		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro),
+		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro),
+		"repo_id":               toBranchObject(o.RepoID, isavro),
 	}
 }
 

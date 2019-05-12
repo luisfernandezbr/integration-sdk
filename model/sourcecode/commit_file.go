@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 
 	"github.com/linkedin/goavro"
@@ -82,6 +83,62 @@ type CommitFile struct {
 	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence"`
 }
 
+func toCommitFileObject(o interface{}, isavro bool) interface{} {
+	if o == nil {
+		return nil
+	}
+	switch o.(type) {
+	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		return o
+	case *string:
+		return *(o.(*string))
+	case *int:
+		return *(o.(*int))
+	case *int8:
+		return *(o.(*int8))
+	case *int16:
+		return *(o.(*int16))
+	case *int32:
+		return *(o.(*int32))
+	case *int64:
+		return *(o.(*int64))
+	case *float32:
+		return *(o.(*float32))
+	case *float64:
+		return *(o.(*float64))
+	case *bool:
+		return *(o.(*bool))
+	case map[string]interface{}:
+		return o
+	case *map[string]interface{}:
+		return *(o.(*interface{}))
+	case *CommitFile:
+		val := o.(*CommitFile)
+		return val.ToMap()
+	case CommitFile:
+		val := o.(CommitFile)
+		return val.ToMap()
+	case []string, []int64, []float64, []bool:
+		return o
+	case *[]string:
+		return (*(o.(*[]string)))
+	case *[]int64:
+		return (*(o.(*[]int64)))
+	case *[]float64:
+		return (*(o.(*[]float64)))
+	case *[]bool:
+		return (*(o.(*[]bool)))
+	case []interface{}:
+		a := o.([]interface{})
+		arr := make([]interface{}, 0)
+		for _, av := range a {
+			arr = append(arr, toCommitFileObject(av, isavro))
+		}
+		return arr
+	}
+	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
+}
+
 // String returns a string representation of CommitFile
 func (o *CommitFile) String() string {
 	return fmt.Sprintf("sourcecode.CommitFile<%s>", o.ID)
@@ -135,8 +192,14 @@ func (o *CommitFile) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecCommitFile = c
 	}
+	kv := o.ToMap(true)
+	jbuf, _ := json.Marshal(kv)
+	native, _, err := cachedCodecCommitFile.NativeFromTextual(jbuf)
+	if err != nil {
+		return nil, nil, err
+	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecCommitFile.BinaryFromNative(nil, o.ToMap())
+	buf, err := cachedCodecCommitFile.BinaryFromNative(nil, native)
 	return buf, cachedCodecCommitFile, err
 }
 
@@ -151,31 +214,35 @@ func (o *CommitFile) IsEqual(other *CommitFile) bool {
 }
 
 // ToMap returns the object as a map
-func (o *CommitFile) ToMap() map[string]interface{} {
+func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
 	return map[string]interface{}{
 		"commit_file_id":     o.GetID(),
 		"ref_id":             o.GetRefID(),
 		"ref_type":           o.RefType,
 		"customer_id":        o.CustomerID,
 		"hashcode":           o.Hash(),
-		"commit_id":          o.CommitID,
-		"repo_id":            o.RepoID,
-		"filename":           o.Filename,
-		"additions":          o.Additions,
-		"deletions":          o.Deletions,
-		"status":             o.Status,
-		"binary":             o.Binary,
-		"language":           o.Language,
-		"excluded":           o.Excluded,
-		"excluded_reason":    o.ExcludedReason,
-		"ordinal":            o.Ordinal,
-		"loc":                o.Loc,
-		"sloc":               o.Sloc,
-		"blanks":             o.Blanks,
-		"comments":           o.Comments,
-		"complexity":         o.Complexity,
-		"license":            o.License,
-		"license_confidence": o.LicenseConfidence,
+		"commit_id":          toCommitFileObject(o.CommitID, isavro),
+		"repo_id":            toCommitFileObject(o.RepoID, isavro),
+		"filename":           toCommitFileObject(o.Filename, isavro),
+		"additions":          toCommitFileObject(o.Additions, isavro),
+		"deletions":          toCommitFileObject(o.Deletions, isavro),
+		"status":             toCommitFileObject(o.Status, isavro),
+		"binary":             toCommitFileObject(o.Binary, isavro),
+		"language":           toCommitFileObject(o.Language, isavro),
+		"excluded":           toCommitFileObject(o.Excluded, isavro),
+		"excluded_reason":    toCommitFileObject(o.ExcludedReason, isavro),
+		"ordinal":            toCommitFileObject(o.Ordinal, isavro),
+		"loc":                toCommitFileObject(o.Loc, isavro),
+		"sloc":               toCommitFileObject(o.Sloc, isavro),
+		"blanks":             toCommitFileObject(o.Blanks, isavro),
+		"comments":           toCommitFileObject(o.Comments, isavro),
+		"complexity":         toCommitFileObject(o.Complexity, isavro),
+		"license":            toCommitFileObject(o.License, isavro),
+		"license_confidence": toCommitFileObject(o.LicenseConfidence, isavro),
 	}
 }
 

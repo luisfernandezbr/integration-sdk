@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 
 	"github.com/linkedin/goavro"
@@ -65,6 +66,62 @@ type Commit struct {
 	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id"`
 	// Ordinal the order of the commit in the commit stream
 	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
+}
+
+func toCommitObject(o interface{}, isavro bool) interface{} {
+	if o == nil {
+		return nil
+	}
+	switch o.(type) {
+	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		return o
+	case *string:
+		return *(o.(*string))
+	case *int:
+		return *(o.(*int))
+	case *int8:
+		return *(o.(*int8))
+	case *int16:
+		return *(o.(*int16))
+	case *int32:
+		return *(o.(*int32))
+	case *int64:
+		return *(o.(*int64))
+	case *float32:
+		return *(o.(*float32))
+	case *float64:
+		return *(o.(*float64))
+	case *bool:
+		return *(o.(*bool))
+	case map[string]interface{}:
+		return o
+	case *map[string]interface{}:
+		return *(o.(*interface{}))
+	case *Commit:
+		val := o.(*Commit)
+		return val.ToMap()
+	case Commit:
+		val := o.(Commit)
+		return val.ToMap()
+	case []string, []int64, []float64, []bool:
+		return o
+	case *[]string:
+		return (*(o.(*[]string)))
+	case *[]int64:
+		return (*(o.(*[]int64)))
+	case *[]float64:
+		return (*(o.(*[]float64)))
+	case *[]bool:
+		return (*(o.(*[]bool)))
+	case []interface{}:
+		a := o.([]interface{})
+		arr := make([]interface{}, 0)
+		for _, av := range a {
+			arr = append(arr, toCommitObject(av, isavro))
+		}
+		return arr
+	}
+	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Commit
@@ -121,8 +178,14 @@ func (o *Commit) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecCommit = c
 	}
+	kv := o.ToMap(true)
+	jbuf, _ := json.Marshal(kv)
+	native, _, err := cachedCodecCommit.NativeFromTextual(jbuf)
+	if err != nil {
+		return nil, nil, err
+	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecCommit.BinaryFromNative(nil, o.ToMap())
+	buf, err := cachedCodecCommit.BinaryFromNative(nil, native)
 	return buf, cachedCodecCommit, err
 }
 
@@ -137,24 +200,28 @@ func (o *Commit) IsEqual(other *Commit) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Commit) ToMap() map[string]interface{} {
+func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
 	return map[string]interface{}{
 		"commit_id":     o.GetID(),
 		"ref_id":        o.GetRefID(),
 		"ref_type":      o.RefType,
 		"customer_id":   o.CustomerID,
 		"hashcode":      o.Hash(),
-		"repo_id":       o.RepoID,
-		"sha":           o.Sha,
-		"message":       o.Message,
-		"url":           o.URL,
-		"created_ts":    o.CreatedAt,
-		"branch":        o.Branch,
-		"additions":     o.Additions,
-		"deletions":     o.Deletions,
-		"files_changed": o.FilesChanged,
-		"author_ref_id": o.AuthorRefID,
-		"ordinal":       o.Ordinal,
+		"repo_id":       toCommitObject(o.RepoID, isavro),
+		"sha":           toCommitObject(o.Sha, isavro),
+		"message":       toCommitObject(o.Message, isavro),
+		"url":           toCommitObject(o.URL, isavro),
+		"created_ts":    toCommitObject(o.CreatedAt, isavro),
+		"branch":        toCommitObject(o.Branch, isavro),
+		"additions":     toCommitObject(o.Additions, isavro),
+		"deletions":     toCommitObject(o.Deletions, isavro),
+		"files_changed": toCommitObject(o.FilesChanged, isavro),
+		"author_ref_id": toCommitObject(o.AuthorRefID, isavro),
+		"ordinal":       toCommitObject(o.Ordinal, isavro),
 	}
 }
 

@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 
 	"github.com/linkedin/goavro"
@@ -69,6 +70,62 @@ type Changelog struct {
 	Sha string `json:"sha" yaml:"sha"`
 }
 
+func toChangelogObject(o interface{}, isavro bool) interface{} {
+	if o == nil {
+		return nil
+	}
+	switch o.(type) {
+	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		return o
+	case *string:
+		return *(o.(*string))
+	case *int:
+		return *(o.(*int))
+	case *int8:
+		return *(o.(*int8))
+	case *int16:
+		return *(o.(*int16))
+	case *int32:
+		return *(o.(*int32))
+	case *int64:
+		return *(o.(*int64))
+	case *float32:
+		return *(o.(*float32))
+	case *float64:
+		return *(o.(*float64))
+	case *bool:
+		return *(o.(*bool))
+	case map[string]interface{}:
+		return o
+	case *map[string]interface{}:
+		return *(o.(*interface{}))
+	case *Changelog:
+		val := o.(*Changelog)
+		return val.ToMap()
+	case Changelog:
+		val := o.(Changelog)
+		return val.ToMap()
+	case []string, []int64, []float64, []bool:
+		return o
+	case *[]string:
+		return (*(o.(*[]string)))
+	case *[]int64:
+		return (*(o.(*[]int64)))
+	case *[]float64:
+		return (*(o.(*[]float64)))
+	case *[]bool:
+		return (*(o.(*[]bool)))
+	case []interface{}:
+		a := o.([]interface{})
+		arr := make([]interface{}, 0)
+		for _, av := range a {
+			arr = append(arr, toChangelogObject(av, isavro))
+		}
+		return arr
+	}
+	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
+}
+
 // String returns a string representation of Changelog
 func (o *Changelog) String() string {
 	return fmt.Sprintf("sourcecode.Changelog<%s>", o.ID)
@@ -122,8 +179,14 @@ func (o *Changelog) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecChangelog = c
 	}
+	kv := o.ToMap(true)
+	jbuf, _ := json.Marshal(kv)
+	native, _, err := cachedCodecChangelog.NativeFromTextual(jbuf)
+	if err != nil {
+		return nil, nil, err
+	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecChangelog.BinaryFromNative(nil, o.ToMap())
+	buf, err := cachedCodecChangelog.BinaryFromNative(nil, native)
 	return buf, cachedCodecChangelog, err
 }
 
@@ -138,25 +201,29 @@ func (o *Changelog) IsEqual(other *Changelog) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Changelog) ToMap() map[string]interface{} {
+func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
 	return map[string]interface{}{
 		"changelog_id":  o.GetID(),
 		"ref_id":        o.GetRefID(),
 		"ref_type":      o.RefType,
 		"customer_id":   o.CustomerID,
 		"hashcode":      o.Hash(),
-		"repo_id":       o.RepoID,
-		"filename":      o.Filename,
-		"language":      o.Language,
-		"loc":           o.Loc,
-		"sloc":          o.Sloc,
-		"blanks":        o.Blanks,
-		"comments":      o.Comments,
-		"complexity":    o.Complexity,
-		"date_ts":       o.DateAt,
-		"author_ref_id": o.AuthorRefID,
-		"ordinal":       o.Ordinal,
-		"sha":           o.Sha,
+		"repo_id":       toChangelogObject(o.RepoID, isavro),
+		"filename":      toChangelogObject(o.Filename, isavro),
+		"language":      toChangelogObject(o.Language, isavro),
+		"loc":           toChangelogObject(o.Loc, isavro),
+		"sloc":          toChangelogObject(o.Sloc, isavro),
+		"blanks":        toChangelogObject(o.Blanks, isavro),
+		"comments":      toChangelogObject(o.Comments, isavro),
+		"complexity":    toChangelogObject(o.Complexity, isavro),
+		"date_ts":       toChangelogObject(o.DateAt, isavro),
+		"author_ref_id": toChangelogObject(o.AuthorRefID, isavro),
+		"ordinal":       toChangelogObject(o.Ordinal, isavro),
+		"sha":           toChangelogObject(o.Sha, isavro),
 	}
 }
 

@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 
 	"github.com/linkedin/goavro"
@@ -55,6 +56,62 @@ type User struct {
 	DeletedAt int64 `json:"deleted_ts" yaml:"deleted_ts"`
 	// Location physical location of the user
 	Location string `json:"location" yaml:"location"`
+}
+
+func toUserObject(o interface{}, isavro bool) interface{} {
+	if o == nil {
+		return nil
+	}
+	switch o.(type) {
+	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		return o
+	case *string:
+		return *(o.(*string))
+	case *int:
+		return *(o.(*int))
+	case *int8:
+		return *(o.(*int8))
+	case *int16:
+		return *(o.(*int16))
+	case *int32:
+		return *(o.(*int32))
+	case *int64:
+		return *(o.(*int64))
+	case *float32:
+		return *(o.(*float32))
+	case *float64:
+		return *(o.(*float64))
+	case *bool:
+		return *(o.(*bool))
+	case map[string]interface{}:
+		return o
+	case *map[string]interface{}:
+		return *(o.(*interface{}))
+	case *User:
+		val := o.(*User)
+		return val.ToMap()
+	case User:
+		val := o.(User)
+		return val.ToMap()
+	case []string, []int64, []float64, []bool:
+		return o
+	case *[]string:
+		return (*(o.(*[]string)))
+	case *[]int64:
+		return (*(o.(*[]int64)))
+	case *[]float64:
+		return (*(o.(*[]float64)))
+	case *[]bool:
+		return (*(o.(*[]bool)))
+	case []interface{}:
+		a := o.([]interface{})
+		arr := make([]interface{}, 0)
+		for _, av := range a {
+			arr = append(arr, toUserObject(av, isavro))
+		}
+		return arr
+	}
+	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of User
@@ -110,8 +167,14 @@ func (o *User) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecUser = c
 	}
+	kv := o.ToMap(true)
+	jbuf, _ := json.Marshal(kv)
+	native, _, err := cachedCodecUser.NativeFromTextual(jbuf)
+	if err != nil {
+		return nil, nil, err
+	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecUser.BinaryFromNative(nil, o.ToMap())
+	buf, err := cachedCodecUser.BinaryFromNative(nil, native)
 	return buf, cachedCodecUser, err
 }
 
@@ -126,19 +189,23 @@ func (o *User) IsEqual(other *User) bool {
 }
 
 // ToMap returns the object as a map
-func (o *User) ToMap() map[string]interface{} {
+func (o *User) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
 	return map[string]interface{}{
 		"user_id":     o.GetID(),
 		"ref_id":      o.GetRefID(),
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
-		"name":        o.Name,
-		"email":       o.Email,
-		"active":      o.Active,
-		"created_ts":  o.CreatedAt,
-		"deleted_ts":  o.DeletedAt,
-		"location":    o.Location,
+		"name":        toUserObject(o.Name, isavro),
+		"email":       toUserObject(o.Email, isavro),
+		"active":      toUserObject(o.Active, isavro),
+		"created_ts":  toUserObject(o.CreatedAt, isavro),
+		"deleted_ts":  toUserObject(o.DeletedAt, isavro),
+		"location":    toUserObject(o.Location, isavro),
 	}
 }
 

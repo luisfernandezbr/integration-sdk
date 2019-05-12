@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 
 	"github.com/linkedin/goavro"
@@ -55,6 +56,62 @@ type Sprint struct {
 	EndedAt int64 `json:"ended_ts" yaml:"ended_ts"`
 	// CompletedAt the timestamp in UTC that the sprint was completed
 	CompletedAt int64 `json:"completed_ts" yaml:"completed_ts"`
+}
+
+func toSprintObject(o interface{}, isavro bool) interface{} {
+	if o == nil {
+		return nil
+	}
+	switch o.(type) {
+	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		return o
+	case *string:
+		return *(o.(*string))
+	case *int:
+		return *(o.(*int))
+	case *int8:
+		return *(o.(*int8))
+	case *int16:
+		return *(o.(*int16))
+	case *int32:
+		return *(o.(*int32))
+	case *int64:
+		return *(o.(*int64))
+	case *float32:
+		return *(o.(*float32))
+	case *float64:
+		return *(o.(*float64))
+	case *bool:
+		return *(o.(*bool))
+	case map[string]interface{}:
+		return o
+	case *map[string]interface{}:
+		return *(o.(*interface{}))
+	case *Sprint:
+		val := o.(*Sprint)
+		return val.ToMap()
+	case Sprint:
+		val := o.(Sprint)
+		return val.ToMap()
+	case []string, []int64, []float64, []bool:
+		return o
+	case *[]string:
+		return (*(o.(*[]string)))
+	case *[]int64:
+		return (*(o.(*[]int64)))
+	case *[]float64:
+		return (*(o.(*[]float64)))
+	case *[]bool:
+		return (*(o.(*[]bool)))
+	case []interface{}:
+		a := o.([]interface{})
+		arr := make([]interface{}, 0)
+		for _, av := range a {
+			arr = append(arr, toSprintObject(av, isavro))
+		}
+		return arr
+	}
+	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Sprint
@@ -110,8 +167,14 @@ func (o *Sprint) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecSprint = c
 	}
+	kv := o.ToMap(true)
+	jbuf, _ := json.Marshal(kv)
+	native, _, err := cachedCodecSprint.NativeFromTextual(jbuf)
+	if err != nil {
+		return nil, nil, err
+	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecSprint.BinaryFromNative(nil, o.ToMap())
+	buf, err := cachedCodecSprint.BinaryFromNative(nil, native)
 	return buf, cachedCodecSprint, err
 }
 
@@ -126,19 +189,23 @@ func (o *Sprint) IsEqual(other *Sprint) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Sprint) ToMap() map[string]interface{} {
+func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
 	return map[string]interface{}{
 		"sprint_id":    o.GetID(),
 		"ref_id":       o.GetRefID(),
 		"ref_type":     o.RefType,
 		"customer_id":  o.CustomerID,
 		"hashcode":     o.Hash(),
-		"name":         o.Name,
-		"identifier":   o.Identifier,
-		"status":       o.Status,
-		"started_ts":   o.StartedAt,
-		"ended_ts":     o.EndedAt,
-		"completed_ts": o.CompletedAt,
+		"name":         toSprintObject(o.Name, isavro),
+		"identifier":   toSprintObject(o.Identifier, isavro),
+		"status":       toSprintObject(o.Status, isavro),
+		"started_ts":   toSprintObject(o.StartedAt, isavro),
+		"ended_ts":     toSprintObject(o.EndedAt, isavro),
+		"completed_ts": toSprintObject(o.CompletedAt, isavro),
 	}
 }
 
