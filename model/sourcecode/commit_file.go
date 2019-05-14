@@ -20,7 +20,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 	"github.com/pinpt/integration-sdk/util"
 )
 
@@ -45,6 +44,8 @@ type CommitFile struct {
 
 	// custom types
 
+	// CreatedAt the timestamp in UTC that the commit was created
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
 	// CommitID the unique id for the commit
 	CommitID string `json:"commit_id" yaml:"commit_id"`
 	// RepoID the unique id for the repo
@@ -78,7 +79,7 @@ type CommitFile struct {
 	// Complexity the complexity value for the file change
 	Complexity int64 `json:"complexity" yaml:"complexity"`
 	// License the license which was detected for the file
-	License *string `json:"license" yaml:"license"`
+	License string `json:"license" yaml:"license"`
 	// LicenseConfidence the license confidence from the detection engine
 	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence"`
 }
@@ -211,6 +212,7 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":           o.RefType,
 		"customer_id":        o.CustomerID,
 		"hashcode":           o.Hash(),
+		"created_ts":         toCommitFileObject(o.CreatedAt, isavro),
 		"commit_id":          toCommitFileObject(o.CommitID, isavro),
 		"repo_id":            toCommitFileObject(o.RepoID, isavro),
 		"filename":           toCommitFileObject(o.Filename, isavro),
@@ -245,6 +247,16 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	}
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else {
+		val := kv["created_ts"]
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			o.CreatedAt = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["commit_id"].(string); ok {
 		o.CommitID = val
@@ -406,16 +418,14 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 			o.Complexity = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["license"].(*string); ok {
+	if val, ok := kv["license"].(string); ok {
 		o.License = val
-	} else if val, ok := kv["license"].(string); ok {
-		o.License = &val
 	} else {
 		val := kv["license"]
 		if val == nil {
-			o.License = pstrings.Pointer("")
+			o.License = ""
 		} else {
-			o.License = pstrings.Pointer(fmt.Sprintf("%v", val))
+			o.License = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["license_confidence"].(float64); ok {
@@ -438,6 +448,7 @@ func (o *CommitFile) Hash() string {
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
+	args = append(args, o.CreatedAt)
 	args = append(args, o.CommitID)
 	args = append(args, o.RepoID)
 	args = append(args, o.Filename)
@@ -487,6 +498,10 @@ func CreateCommitFileAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "commit_id",
@@ -553,9 +568,8 @@ func CreateCommitFileAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name":    "license",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
+				"name": "license",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "license_confidence",

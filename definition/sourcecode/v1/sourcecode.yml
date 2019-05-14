@@ -52,6 +52,10 @@ models:
   commit_file:
     description: the file change for a specific commit
     columns:
+      - name: created_ts
+        description: the timestamp in UTC that the commit was created
+        type: int
+        timestamp: true
       - name: commit_id
         description: the unique id for the commit
         type: string
@@ -103,7 +107,6 @@ models:
       - name: license
         description: the license which was detected for the file
         type: string
-        optional: true
       - name: license_confidence
         description: the license confidence from the detection engine
         type: float
