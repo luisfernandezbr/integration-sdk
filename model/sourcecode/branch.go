@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -68,37 +69,21 @@ func toBranchObject(o interface{}, isavro bool) interface{} {
 	if o == nil {
 		return nil
 	}
-	switch o.(type) {
+	switch v := o.(type) {
+	case nil:
+		return nil
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		return o
-	case *string:
-		return *(o.(*string))
-	case *int:
-		return *(o.(*int))
-	case *int8:
-		return *(o.(*int8))
-	case *int16:
-		return *(o.(*int16))
-	case *int32:
-		return *(o.(*int32))
-	case *int64:
-		return *(o.(*int64))
-	case *float32:
-		return *(o.(*float32))
-	case *float64:
-		return *(o.(*float64))
-	case *bool:
-		return *(o.(*bool))
+		return v
+	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+		return v
 	case map[string]interface{}:
 		return o
 	case *map[string]interface{}:
-		return *(o.(*interface{}))
+		return v
 	case *Branch:
-		val := o.(*Branch)
-		return val.ToMap()
+		return v.ToMap()
 	case Branch:
-		val := o.(Branch)
-		return val.ToMap()
+		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
 	case *[]string:
@@ -200,6 +185,14 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 	if len(avro) > 0 && avro[0] {
 		isavro = true
 	}
+	if isavro {
+		if o.BranchedFromCommits == nil {
+			o.BranchedFromCommits = make([]string, 0)
+		}
+		if o.Commits == nil {
+			o.Commits = make([]string, 0)
+		}
+	}
 	return map[string]interface{}{
 		"branch_id":             o.GetID(),
 		"ref_id":                o.GetRefID(),
@@ -285,6 +278,10 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 						panic("unsupported type for branched_from_commits field entry: " + reflect.TypeOf(ae).String())
 					}
 				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
 				panic("unsupported type for branched_from_commits field")
@@ -293,6 +290,9 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		o.BranchedFromCommits = na
 	} else {
 		o.BranchedFromCommits = []string{}
+	}
+	if o.BranchedFromCommits == nil {
+		o.BranchedFromCommits = make([]string, 0)
 	}
 	if val := kv["commits"]; val != nil {
 		na := make([]string, 0)
@@ -307,6 +307,10 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 						panic("unsupported type for commits field entry: " + reflect.TypeOf(ae).String())
 					}
 				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
 				panic("unsupported type for commits field")
@@ -315,6 +319,9 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		o.Commits = na
 	} else {
 		o.Commits = []string{}
+	}
+	if o.Commits == nil {
+		o.Commits = make([]string, 0)
 	}
 	if val, ok := kv["behind_default_count"].(int64); ok {
 		o.BehindDefaultCount = val

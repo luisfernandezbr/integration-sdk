@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
@@ -88,37 +89,21 @@ func toIssueObject(o interface{}, isavro bool) interface{} {
 	if o == nil {
 		return nil
 	}
-	switch o.(type) {
+	switch v := o.(type) {
+	case nil:
+		return nil
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		return o
-	case *string:
-		return *(o.(*string))
-	case *int:
-		return *(o.(*int))
-	case *int8:
-		return *(o.(*int8))
-	case *int16:
-		return *(o.(*int16))
-	case *int32:
-		return *(o.(*int32))
-	case *int64:
-		return *(o.(*int64))
-	case *float32:
-		return *(o.(*float32))
-	case *float64:
-		return *(o.(*float64))
-	case *bool:
-		return *(o.(*bool))
+		return v
+	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+		return v
 	case map[string]interface{}:
 		return o
 	case *map[string]interface{}:
-		return *(o.(*interface{}))
+		return v
 	case *Issue:
-		val := o.(*Issue)
-		return val.ToMap()
+		return v.ToMap()
 	case Issue:
-		val := o.(Issue)
-		return val.ToMap()
+		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
 	case *[]string:
@@ -219,6 +204,11 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
+	}
+	if isavro {
+		if o.Tags == nil {
+			o.Tags = make([]string, 0)
+		}
 	}
 	return map[string]interface{}{
 		"issue_id":         o.GetID(),
@@ -435,6 +425,10 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 						panic("unsupported type for tags field entry: " + reflect.TypeOf(ae).String())
 					}
 				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
 				panic("unsupported type for tags field")
@@ -443,6 +437,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		o.Tags = na
 	} else {
 		o.Tags = []string{}
+	}
+	if o.Tags == nil {
+		o.Tags = make([]string, 0)
 	}
 	if val, ok := kv["parent_id"].(string); ok {
 		o.ParentID = val
