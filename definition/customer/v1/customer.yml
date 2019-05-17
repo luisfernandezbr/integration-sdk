@@ -1,0 +1,106 @@
+name: customer
+version: 1
+description: customer specific data
+models:
+  cost_center:
+    description: blah blah blah
+    columns:
+      - name: name
+        description: blah blah
+        type: string
+      - name: description
+        description: blah blah
+        type: string
+      - name: cost
+        description: blah blah
+        type: float
+  repo_mapping:
+    description: blah blah blah
+    columns:
+      - name: repo_id
+        description: blah blah
+        type: string
+  team:
+    description: blah blah blah
+    columns:
+      - name: name
+        description: blah blah
+        type: string
+      - name: users
+        description: blah blah
+        type: Array<string>
+  user_location: 
+    description: blah blah blah
+    columns:
+      - name: user_id
+        description: _
+        type: string
+      - name: location
+        description: _
+        type: string
+      - name: region
+        description: _
+        type: string
+      - name: location_id
+        description: _
+        type: string
+      - name: region_id
+        description: _
+        type: string
+  user_mapping: 
+    description: blah blah blah
+    columns:
+      - name: user_id
+        description: _
+        type: string
+  user: 
+    description: blah blah blah
+    columns:
+    - name: name
+      description: _
+      type: string
+    - name: email
+      description: _
+      type: string
+    - name: title
+      description: _
+      type: string
+    - name: location
+      description: _
+      type: string
+    - name: avatar_url
+      description: _
+      type: string
+    - name: employee_id
+      description: _
+      type: string
+    - name: manager_id
+      description: _
+      type: string
+    - name: active
+      description: _
+      type: boolean
+    - name: trackable
+      description: _
+      type: boolean
+    - name: created_ts
+      description: _
+      type: int
+    - name: updated_ts
+      description: _
+      type: int
+    - name: deleted_ts
+      description: _
+      type: int
+    - name: hired_ts
+      description: _
+      type: int
+    - name: terminated_ts
+      description: _
+      type: int
+    - name: cost_center_id
+      description: _
+      type: string
+    - name: role_ids
+      description: _
+      type: Array<string>
