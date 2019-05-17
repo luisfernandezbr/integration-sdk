@@ -19,12 +19,16 @@ models:
         type: int
         timestamp: true
       - name: project_id
-        description: th the project id
+        description: the the project id
         type: string
+        relation:
+          kind: parent
+          type: codequality.Project
+          description: the Project that this metric is associated with
+          name: project
       - name: value
         description: the value of the metric
         type: string
       - name: name
         description: the metric name
         type: string
-

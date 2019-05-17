@@ -17,6 +17,11 @@ models:
       - name: repo_id
         description: the unique id for the repo
         type: string
+        relation:
+          kind: parent
+          type: sourcecode.Repo
+          description: the Repo that this commit is associated with
+          name: repo
       - name: sha
         description: the unique sha for the commit
         type: string
@@ -55,9 +60,19 @@ models:
       - name: commit_id
         description: the unique id for the commit
         type: string
+        relation:
+          kind: parent
+          type: sourcecode.Commit
+          description: the Commit that this file is associated with
+          name: commit
       - name: repo_id
         description: the unique id for the repo
         type: string
+        relation:
+          kind: parent
+          type: sourcecode.Repo
+          description: the Repo that this file is associated with
+          name: repo
       - name: filename
         description: the filename
         type: string
@@ -113,6 +128,11 @@ models:
       - name: repo_id
         description: the unique id for the repo
         type: string
+        relation:
+          kind: parent
+          type: sourcecode.Repo
+          description: the Repo that this branch is associated with
+          name: repo
       - name: filename
         description: the filename
         type: string
@@ -153,6 +173,11 @@ models:
       - name: repo_id
         description: the unique id for the repo
         type: string
+        relation:
+          kind: parent
+          type: sourcecode.Repo
+          description: the Repo that this branch is associated with
+          name: repo
       - name: title
         description: the title of the pull request
         type: string
@@ -211,4 +236,8 @@ models:
       - name: repo_id
         description: the unique id for the repo
         type: string
-       
+        relation:
+          kind: parent
+          type: sourcecode.Repo
+          description: the Repo that this branch is associated with
+          name: repo

@@ -34,7 +34,12 @@ models:
         type: string
       - name: project_id
         description: unique project id
-        type: string       
+        type: string
+        relation:
+          kind: parent
+          type: work.Project
+          description: the project for this issue
+          name: project
       - name: url
         description: the url to the issue page
         type: string
@@ -79,8 +84,13 @@ models:
         description: tags on the issue
         type: Array<string>
       - name: parent_id
-        description: parent ussue id, if any
+        description: parent issue id, if any
         type: string
+        relation:
+          kind: parent
+          type: work.Issue
+          description: the parent for this issue
+          name: parent
       - name: resolution
         description: resolution of the issue
         type: string
@@ -90,7 +100,7 @@ models:
       - name: issue_id
         description: id of the issue
         type: string
-      - name: created_ts          
+      - name: created_ts
         description: the timestamp in UTC when this change was created
         type: int
         timestamp: true
@@ -107,7 +117,7 @@ models:
         description: type of the field that was changed
         type: string
       - name: from
-        description: id of the change from 
+        description: id of the change from
         type: string
       - name: from_string
         description: name of the change from
