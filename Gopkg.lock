@@ -139,7 +139,7 @@
   revision = "2e52cf6e685269ed8aefec6390f3cac3ef74e730"
 
 [[projects]]
-  digest = "1:260ec9315e09d030d0842532edef6fef03792faade4cdee4e627c5421bf92c44"
+  digest = "1:af61aa5de1ac4d1fee990adcf86b385beaa578e52a27eac6d2ab2a64f364d102"
   name = "github.com/pinpt/go-common"
   packages = [
     "datetime",
@@ -153,8 +153,8 @@
     "term",
   ]
   pruneopts = "UT"
-  revision = "0a2291de791ab8d1f438ede17440a8ee156014df"
-  version = "5.3.3"
+  revision = "8807d15463a9541d5d0f5b581e089ed98b120a6d"
+  version = "5.4.0"
 
 [[projects]]
   digest = "1:0028cb19b2e4c3112225cd871870f2d9cf49b9b4276531f03438a88e94be86fe"
@@ -163,14 +163,6 @@
   pruneopts = "UT"
   revision = "792786c7400a136282c1664665ae0a8db921c6c2"
   version = "v1.0.0"
-
-[[projects]]
-  branch = "master"
-  digest = "1:efa124a0ca36a35cc1a1b472cb0fa2be1e7d9fd1db0f8bc9a042e42e4c6405aa"
-  name = "github.com/serenize/snaker"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "a683aaf2d516deecd70cad0c72e3ca773ecfcef0"
 
 [[projects]]
   digest = "1:645cabccbb4fa8aab25a956cbcbdf6a6845ca736b2c64e197ca7cbb9d210b939"
@@ -205,40 +197,12 @@
   revision = "ca7f33d4116e3a1f9425755d6a44e7ed9b4c97df"
 
 [[projects]]
-  branch = "master"
-  digest = "1:93f3f17886abf8d17ff07ece88d6e1974226f5638d216041bd2234ca03ef848c"
-  name = "golang.org/x/tools"
-  packages = [
-    "go/ast/astutil",
-    "go/gcexportdata",
-    "go/internal/gcimporter",
-    "go/internal/packagesdriver",
-    "go/packages",
-    "go/types/typeutil",
-    "imports",
-    "internal/fastwalk",
-    "internal/gopathwalk",
-    "internal/module",
-    "internal/semver",
-  ]
-  pruneopts = "UT"
-  revision = "2d16b83fe98cd1bed9e2ce9fdc86bd438d14aab7"
-
-[[projects]]
   digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
   name = "google.golang.org/appengine"
   packages = ["cloudsql"]
   pruneopts = "UT"
   revision = "54a98f90d1c46b7731eb8fb305d2a321c30ef610"
   version = "v1.5.0"
-
-[[projects]]
-  digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
-  name = "gopkg.in/yaml.v2"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
-  version = "v2.2.2"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -254,11 +218,8 @@
     "github.com/pinpt/go-common/log",
     "github.com/pinpt/go-common/number",
     "github.com/pinpt/go-common/strings",
-    "github.com/serenize/snaker",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",
-    "golang.org/x/tools/imports",
-    "gopkg.in/yaml.v2",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1
