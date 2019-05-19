@@ -32,7 +32,7 @@ const CostCenterDefaultStream = "customer_CostCenter_stream"
 // CostCenterDefaultTable is the default table name
 const CostCenterDefaultTable = "customer_CostCenter"
 
-// CostCenter blah blah blah
+// CostCenter a cost center represents information about users and their cost
 type CostCenter struct {
 	// built in types
 
@@ -44,11 +44,11 @@ type CostCenter struct {
 
 	// custom types
 
-	// Name blah blah
+	// Name the name of the cost center
 	Name string `json:"name" yaml:"name"`
-	// Description blah blah
+	// Description the description for the cost center
 	Description string `json:"description" yaml:"description"`
-	// Cost blah blah
+	// Cost the cost value of the cost center
 	Cost float64 `json:"cost" yaml:"cost"`
 }
 
@@ -106,8 +106,8 @@ func (o *CostCenter) setDefaults() {
 // GetID returns the ID for the object
 func (o *CostCenter) GetID() string {
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("CostCenter", o.CustomerID, o.RefType, o.GetRefID())
+		// set the id from the spec provided in the model
+		o.ID = hash.Values(o.CustomerID, o.Name)
 	}
 	return o.ID
 }
@@ -245,6 +245,47 @@ func (o *CostCenter) Hash() string {
 	args = append(args, o.Cost)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// CreateCostCenter creates a new CostCenter in the database
+func CreateCostCenter(ctx context.Context, db Db, o *CostCenter) error {
+	return db.Create(ctx, o.ToMap())
+}
+
+// DeleteCostCenter deletes a CostCenter in the database
+func DeleteCostCenter(ctx context.Context, db Db, o *CostCenter) error {
+	return db.Delete(ctx, o.GetID())
+}
+
+// UpdateCostCenter updates a CostCenter in the database
+func UpdateCostCenter(ctx context.Context, db Db, o *CostCenter) error {
+	return db.Update(ctx, o.GetID(), o.ToMap())
+}
+
+// FindCostCenter returns a CostCenter from the database
+func FindCostCenter(ctx context.Context, db Db, id string) (*CostCenter, error) {
+	kv, err := db.FindOne(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	var result CostCenter
+	result.FromMap(kv)
+	return &result, nil
+}
+
+// FindCostCenters returns all CostCenter from the database matching keys
+func FindCostCenters(ctx context.Context, db Db, kv map[string]interface{}) ([]*CostCenter, error) {
+	res, err := db.Find(ctx, kv)
+	if err != nil {
+		return nil, err
+	}
+	arr := make([]*CostCenter, 0)
+	for _, kv := range res {
+		var result CostCenter
+		result.FromMap(kv)
+		arr = append(arr, &result)
+	}
+	return arr, nil
 }
 
 // CreateCostCenterAvroSchemaSpec creates the avro schema specification for CostCenter

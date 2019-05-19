@@ -20,7 +20,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
+	number "github.com/pinpt/go-common/number"
 	"github.com/pinpt/integration-sdk/util"
 )
 
@@ -79,7 +79,7 @@ type Issue struct {
 	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id"`
 	// Tags tags on the issue
 	Tags []string `json:"tags" yaml:"tags"`
-	// ParentID parent ussue id, if any
+	// ParentID parent issue id, if any
 	ParentID string `json:"parent_id" yaml:"parent_id"`
 	// Resolution resolution of the issue
 	Resolution string `json:"resolution" yaml:"resolution"`

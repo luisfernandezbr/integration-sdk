@@ -14,12 +14,12 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	pstrings "github.com/pinpt/go-common/strings"
 	"github.com/pinpt/integration-sdk/util"
 )
 
@@ -32,7 +32,7 @@ const TeamDefaultStream = "customer_Team_stream"
 // TeamDefaultTable is the default table name
 const TeamDefaultTable = "customer_Team"
 
-// Team blah blah blah
+// Team a team is a grouping of one or more users
 type Team struct {
 	// built in types
 
@@ -44,10 +44,10 @@ type Team struct {
 
 	// custom types
 
-	// Name blah blah
+	// Name the name of the team
 	Name string `json:"name" yaml:"name"`
-	// Users blah blah
-	Users []string `json:"users" yaml:"users"`
+	// ParentID the parent id of the team
+	ParentID *string `json:"parent_id" yaml:"parent_id"`
 }
 
 func toTeamObject(o interface{}, isavro bool) interface{} {
@@ -104,8 +104,8 @@ func (o *Team) setDefaults() {
 // GetID returns the ID for the object
 func (o *Team) GetID() string {
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Team", o.CustomerID, o.RefType, o.GetRefID())
+		// set the id from the spec provided in the model
+		o.ID = hash.Values(o.CustomerID, o.Name)
 	}
 	return o.ID
 }
@@ -171,9 +171,6 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
-		if o.Users == nil {
-			o.Users = make([]string, 0)
-		}
 	}
 	return map[string]interface{}{
 		"team_id":     o.GetID(),
@@ -182,7 +179,7 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
 		"name":        toTeamObject(o.Name, isavro),
-		"users":       toTeamObject(o.Users, isavro),
+		"parent_id":   toTeamObject(o.ParentID, isavro),
 	}
 }
 
@@ -210,34 +207,17 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
-	if val := kv["users"]; val != nil {
-		na := make([]string, 0)
-		if a, ok := val.([]string); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						panic("unsupported type for users field entry: " + reflect.TypeOf(ae).String())
-					}
-				}
-			} else if s, ok := val.(string); ok {
-				for _, sv := range strings.Split(s, ",") {
-					na = append(na, strings.TrimSpace(sv))
-				}
-			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for users field")
-			}
-		}
-		o.Users = na
+	if val, ok := kv["parent_id"].(*string); ok {
+		o.ParentID = val
+	} else if val, ok := kv["parent_id"].(string); ok {
+		o.ParentID = &val
 	} else {
-		o.Users = []string{}
-	}
-	if o.Users == nil {
-		o.Users = make([]string, 0)
+		val := kv["parent_id"]
+		if val == nil {
+			o.ParentID = pstrings.Pointer("")
+		} else {
+			o.ParentID = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
 	}
 	// make sure that these have values if empty
 	o.setDefaults()
@@ -250,9 +230,50 @@ func (o *Team) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.Name)
-	args = append(args, o.Users)
+	args = append(args, o.ParentID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// CreateTeam creates a new Team in the database
+func CreateTeam(ctx context.Context, db Db, o *Team) error {
+	return db.Create(ctx, o.ToMap())
+}
+
+// DeleteTeam deletes a Team in the database
+func DeleteTeam(ctx context.Context, db Db, o *Team) error {
+	return db.Delete(ctx, o.GetID())
+}
+
+// UpdateTeam updates a Team in the database
+func UpdateTeam(ctx context.Context, db Db, o *Team) error {
+	return db.Update(ctx, o.GetID(), o.ToMap())
+}
+
+// FindTeam returns a Team from the database
+func FindTeam(ctx context.Context, db Db, id string) (*Team, error) {
+	kv, err := db.FindOne(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	var result Team
+	result.FromMap(kv)
+	return &result, nil
+}
+
+// FindTeams returns all Team from the database matching keys
+func FindTeams(ctx context.Context, db Db, kv map[string]interface{}) ([]*Team, error) {
+	res, err := db.Find(ctx, kv)
+	if err != nil {
+		return nil, err
+	}
+	arr := make([]*Team, 0)
+	for _, kv := range res {
+		var result Team
+		result.FromMap(kv)
+		arr = append(arr, &result)
+	}
+	return arr, nil
 }
 
 // CreateTeamAvroSchemaSpec creates the avro schema specification for Team
@@ -288,11 +309,9 @@ func CreateTeamAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "users",
-				"type": map[string]interface{}{
-					"type":  "array",
-					"items": "string",
-				},
+				"name":    "parent_id",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 		},
 	}

@@ -14,13 +14,13 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
-	"strings"
 
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 	"github.com/pinpt/integration-sdk/util"
 )
 
@@ -33,7 +33,7 @@ const UserDefaultStream = "customer_User_stream"
 // UserDefaultTable is the default table name
 const UserDefaultTable = "customer_User"
 
-// User blah blah blah
+// User the customer's user record
 type User struct {
 	// built in types
 
@@ -45,38 +45,36 @@ type User struct {
 
 	// custom types
 
-	// Name _
+	// Name name of the user
 	Name string `json:"name" yaml:"name"`
-	// Email _
+	// Email the email of the user
 	Email string `json:"email" yaml:"email"`
-	// Title _
-	Title string `json:"title" yaml:"title"`
-	// Location _
-	Location string `json:"location" yaml:"location"`
-	// AvatarURL _
-	AvatarURL string `json:"avatar_url" yaml:"avatar_url"`
-	// EmployeeID _
-	EmployeeID string `json:"employee_id" yaml:"employee_id"`
-	// ManagerID _
-	ManagerID string `json:"manager_id" yaml:"manager_id"`
-	// Active _
+	// Title the title of the user
+	Title *string `json:"title" yaml:"title"`
+	// Location the location of the user
+	Location *string `json:"location" yaml:"location"`
+	// AvatarURL the user avatar url
+	AvatarURL *string `json:"avatar_url" yaml:"avatar_url"`
+	// ManagerID the manager user id
+	ManagerID *string `json:"manager_id" yaml:"manager_id"`
+	// Active if true, the user is active and able to login
 	Active bool `json:"active" yaml:"active"`
-	// Trackable _
+	// Trackable if true, the user is trackable in the pinpoint system
 	Trackable bool `json:"trackable" yaml:"trackable"`
-	// CreatedAt _
+	// CreatedAt when the user was created in epoch timestamp
 	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
-	// UpdatedAt _
+	// UpdatedAt when the user record was updated in epoch timestamp
 	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts"`
-	// DeletedAt _
-	DeletedAt int64 `json:"deleted_ts" yaml:"deleted_ts"`
-	// HiredAt _
-	HiredAt int64 `json:"hired_ts" yaml:"hired_ts"`
-	// TerminatedAt _
-	TerminatedAt int64 `json:"terminated_ts" yaml:"terminated_ts"`
-	// CostCenterID _
-	CostCenterID string `json:"cost_center_id" yaml:"cost_center_id"`
-	// RoleIds _
-	RoleIds []string `json:"role_ids" yaml:"role_ids"`
+	// DeletedAt when the user record was deleted in epoch timestamp
+	DeletedAt *int64 `json:"deleted_ts" yaml:"deleted_ts"`
+	// HiredAt when the user was hired in epoch timestamp
+	HiredAt *int64 `json:"hired_ts" yaml:"hired_ts"`
+	// TerminatedAt when the user was terminated in epoch timestamp
+	TerminatedAt *int64 `json:"terminated_ts" yaml:"terminated_ts"`
+	// CostCenterID the id of the cost center
+	CostCenterID *string `json:"cost_center_id" yaml:"cost_center_id"`
+	// TeamID the team id that the user is part of
+	TeamID *string `json:"team_id" yaml:"team_id"`
 }
 
 func toUserObject(o interface{}, isavro bool) interface{} {
@@ -133,8 +131,8 @@ func (o *User) setDefaults() {
 // GetID returns the ID for the object
 func (o *User) GetID() string {
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("User", o.CustomerID, o.RefType, o.GetRefID())
+		// set the id from the spec provided in the model
+		o.ID = hash.Values(o.CustomerID, o.Email)
 	}
 	return o.ID
 }
@@ -200,9 +198,6 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
-		if o.RoleIds == nil {
-			o.RoleIds = make([]string, 0)
-		}
 	}
 	return map[string]interface{}{
 		"user_id":        o.GetID(),
@@ -215,7 +210,6 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"title":          toUserObject(o.Title, isavro),
 		"location":       toUserObject(o.Location, isavro),
 		"avatar_url":     toUserObject(o.AvatarURL, isavro),
-		"employee_id":    toUserObject(o.EmployeeID, isavro),
 		"manager_id":     toUserObject(o.ManagerID, isavro),
 		"active":         toUserObject(o.Active, isavro),
 		"trackable":      toUserObject(o.Trackable, isavro),
@@ -225,7 +219,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"hired_ts":       toUserObject(o.HiredAt, isavro),
 		"terminated_ts":  toUserObject(o.TerminatedAt, isavro),
 		"cost_center_id": toUserObject(o.CostCenterID, isavro),
-		"role_ids":       toUserObject(o.RoleIds, isavro),
+		"team_id":        toUserObject(o.TeamID, isavro),
 	}
 }
 
@@ -263,54 +257,52 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Email = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["title"].(string); ok {
+	if val, ok := kv["title"].(*string); ok {
 		o.Title = val
+	} else if val, ok := kv["title"].(string); ok {
+		o.Title = &val
 	} else {
 		val := kv["title"]
 		if val == nil {
-			o.Title = ""
+			o.Title = pstrings.Pointer("")
 		} else {
-			o.Title = fmt.Sprintf("%v", val)
+			o.Title = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["location"].(string); ok {
+	if val, ok := kv["location"].(*string); ok {
 		o.Location = val
+	} else if val, ok := kv["location"].(string); ok {
+		o.Location = &val
 	} else {
 		val := kv["location"]
 		if val == nil {
-			o.Location = ""
+			o.Location = pstrings.Pointer("")
 		} else {
-			o.Location = fmt.Sprintf("%v", val)
+			o.Location = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["avatar_url"].(string); ok {
+	if val, ok := kv["avatar_url"].(*string); ok {
 		o.AvatarURL = val
+	} else if val, ok := kv["avatar_url"].(string); ok {
+		o.AvatarURL = &val
 	} else {
 		val := kv["avatar_url"]
 		if val == nil {
-			o.AvatarURL = ""
+			o.AvatarURL = pstrings.Pointer("")
 		} else {
-			o.AvatarURL = fmt.Sprintf("%v", val)
+			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["employee_id"].(string); ok {
-		o.EmployeeID = val
-	} else {
-		val := kv["employee_id"]
-		if val == nil {
-			o.EmployeeID = ""
-		} else {
-			o.EmployeeID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["manager_id"].(string); ok {
+	if val, ok := kv["manager_id"].(*string); ok {
 		o.ManagerID = val
+	} else if val, ok := kv["manager_id"].(string); ok {
+		o.ManagerID = &val
 	} else {
 		val := kv["manager_id"]
 		if val == nil {
-			o.ManagerID = ""
+			o.ManagerID = pstrings.Pointer("")
 		} else {
-			o.ManagerID = fmt.Sprintf("%v", val)
+			o.ManagerID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
 	if val, ok := kv["active"].(bool); ok {
@@ -353,74 +345,65 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["deleted_ts"].(int64); ok {
+	if val, ok := kv["deleted_ts"].(*int64); ok {
 		o.DeletedAt = val
+	} else if val, ok := kv["deleted_ts"].(int64); ok {
+		o.DeletedAt = &val
 	} else {
 		val := kv["deleted_ts"]
 		if val == nil {
-			o.DeletedAt = number.ToInt64Any(nil)
+			o.DeletedAt = number.Int64Pointer(number.ToInt64Any(nil))
 		} else {
-			o.DeletedAt = number.ToInt64Any(val)
+			o.DeletedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
 	}
-	if val, ok := kv["hired_ts"].(int64); ok {
+	if val, ok := kv["hired_ts"].(*int64); ok {
 		o.HiredAt = val
+	} else if val, ok := kv["hired_ts"].(int64); ok {
+		o.HiredAt = &val
 	} else {
 		val := kv["hired_ts"]
 		if val == nil {
-			o.HiredAt = number.ToInt64Any(nil)
+			o.HiredAt = number.Int64Pointer(number.ToInt64Any(nil))
 		} else {
-			o.HiredAt = number.ToInt64Any(val)
+			o.HiredAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
 	}
-	if val, ok := kv["terminated_ts"].(int64); ok {
+	if val, ok := kv["terminated_ts"].(*int64); ok {
 		o.TerminatedAt = val
+	} else if val, ok := kv["terminated_ts"].(int64); ok {
+		o.TerminatedAt = &val
 	} else {
 		val := kv["terminated_ts"]
 		if val == nil {
-			o.TerminatedAt = number.ToInt64Any(nil)
+			o.TerminatedAt = number.Int64Pointer(number.ToInt64Any(nil))
 		} else {
-			o.TerminatedAt = number.ToInt64Any(val)
+			o.TerminatedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
 	}
-	if val, ok := kv["cost_center_id"].(string); ok {
+	if val, ok := kv["cost_center_id"].(*string); ok {
 		o.CostCenterID = val
+	} else if val, ok := kv["cost_center_id"].(string); ok {
+		o.CostCenterID = &val
 	} else {
 		val := kv["cost_center_id"]
 		if val == nil {
-			o.CostCenterID = ""
+			o.CostCenterID = pstrings.Pointer("")
 		} else {
-			o.CostCenterID = fmt.Sprintf("%v", val)
+			o.CostCenterID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val := kv["role_ids"]; val != nil {
-		na := make([]string, 0)
-		if a, ok := val.([]string); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
-					}
-				}
-			} else if s, ok := val.(string); ok {
-				for _, sv := range strings.Split(s, ",") {
-					na = append(na, strings.TrimSpace(sv))
-				}
-			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for role_ids field")
-			}
-		}
-		o.RoleIds = na
+	if val, ok := kv["team_id"].(*string); ok {
+		o.TeamID = val
+	} else if val, ok := kv["team_id"].(string); ok {
+		o.TeamID = &val
 	} else {
-		o.RoleIds = []string{}
-	}
-	if o.RoleIds == nil {
-		o.RoleIds = make([]string, 0)
+		val := kv["team_id"]
+		if val == nil {
+			o.TeamID = pstrings.Pointer("")
+		} else {
+			o.TeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
 	}
 	// make sure that these have values if empty
 	o.setDefaults()
@@ -437,7 +420,6 @@ func (o *User) Hash() string {
 	args = append(args, o.Title)
 	args = append(args, o.Location)
 	args = append(args, o.AvatarURL)
-	args = append(args, o.EmployeeID)
 	args = append(args, o.ManagerID)
 	args = append(args, o.Active)
 	args = append(args, o.Trackable)
@@ -447,9 +429,50 @@ func (o *User) Hash() string {
 	args = append(args, o.HiredAt)
 	args = append(args, o.TerminatedAt)
 	args = append(args, o.CostCenterID)
-	args = append(args, o.RoleIds)
+	args = append(args, o.TeamID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// CreateUser creates a new User in the database
+func CreateUser(ctx context.Context, db Db, o *User) error {
+	return db.Create(ctx, o.ToMap())
+}
+
+// DeleteUser deletes a User in the database
+func DeleteUser(ctx context.Context, db Db, o *User) error {
+	return db.Delete(ctx, o.GetID())
+}
+
+// UpdateUser updates a User in the database
+func UpdateUser(ctx context.Context, db Db, o *User) error {
+	return db.Update(ctx, o.GetID(), o.ToMap())
+}
+
+// FindUser returns a User from the database
+func FindUser(ctx context.Context, db Db, id string) (*User, error) {
+	kv, err := db.FindOne(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	var result User
+	result.FromMap(kv)
+	return &result, nil
+}
+
+// FindUsers returns all User from the database matching keys
+func FindUsers(ctx context.Context, db Db, kv map[string]interface{}) ([]*User, error) {
+	res, err := db.Find(ctx, kv)
+	if err != nil {
+		return nil, err
+	}
+	arr := make([]*User, 0)
+	for _, kv := range res {
+		var result User
+		result.FromMap(kv)
+		arr = append(arr, &result)
+	}
+	return arr, nil
 }
 
 // CreateUserAvroSchemaSpec creates the avro schema specification for User
@@ -489,24 +512,24 @@ func CreateUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "title",
-				"type": "string",
+				"name":    "title",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "location",
-				"type": "string",
+				"name":    "location",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "avatar_url",
-				"type": "string",
+				"name":    "avatar_url",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "employee_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "manager_id",
-				"type": "string",
+				"name":    "manager_id",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
 				"name": "active",
@@ -525,27 +548,29 @@ func CreateUserAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "deleted_ts",
-				"type": "long",
+				"name":    "deleted_ts",
+				"type":    []interface{}{"null", "long"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "hired_ts",
-				"type": "long",
+				"name":    "hired_ts",
+				"type":    []interface{}{"null", "long"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "terminated_ts",
-				"type": "long",
+				"name":    "terminated_ts",
+				"type":    []interface{}{"null", "long"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "cost_center_id",
-				"type": "string",
+				"name":    "cost_center_id",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "role_ids",
-				"type": map[string]interface{}{
-					"type":  "array",
-					"items": "string",
-				},
+				"name":    "team_id",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 		},
 	}

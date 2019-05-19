@@ -19,7 +19,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
+	number "github.com/pinpt/go-common/number"
 	"github.com/pinpt/integration-sdk/util"
 )
 
@@ -46,7 +46,7 @@ type Metric struct {
 
 	// DateAt the name of the project
 	DateAt int64 `json:"date_ts" yaml:"date_ts"`
-	// ProjectID th the project id
+	// ProjectID the the project id
 	ProjectID string `json:"project_id" yaml:"project_id"`
 	// Value the value of the metric
 	Value string `json:"value" yaml:"value"`

@@ -3,104 +3,115 @@ version: 1
 description: customer specific data
 models:
   cost_center:
-    description: blah blah blah
+    description: a cost center represents information about users and their cost
+    mutable: true
+    idgen:
+      - customer_id
+      - name
     columns:
       - name: name
-        description: blah blah
+        description: the name of the cost center
         type: string
       - name: description
-        description: blah blah
+        description: the description for the cost center
         type: string
       - name: cost
-        description: blah blah
+        description: the cost value of the cost center
         type: float
-  repo_mapping:
-    description: blah blah blah
-    columns:
-      - name: repo_id
-        description: blah blah
-        type: string
   team:
-    description: blah blah blah
+    description: a team is a grouping of one or more users
+    mutable: true
+    idgen:
+      - customer_id
+      - name
     columns:
       - name: name
-        description: blah blah
+        description: the name of the team
         type: string
-      - name: users
-        description: blah blah
-        type: Array<string>
-  user_location: 
-    description: blah blah blah
-    columns:
-      - name: user_id
-        description: _
+      - name: parent_id
+        description: the parent id of the team
         type: string
-      - name: location
-        description: _
-        type: string
-      - name: region
-        description: _
-        type: string
-      - name: location_id
-        description: _
-        type: string
-      - name: region_id
-        description: _
-        type: string
-  user_mapping: 
-    description: blah blah blah
-    columns:
-      - name: user_id
-        description: _
-        type: string
+        optional: true
+        relation:
+          kind: parent
+          type: customer.Team
+          description: the Team that this user is related to
+          name: parent
   user: 
-    description: blah blah blah
+    description: the customer's user record
+    mutable: true
+    idgen:
+      - customer_id
+      - email
     columns:
     - name: name
-      description: _
+      description: name of the user
       type: string
     - name: email
-      description: _
+      description: the email of the user
       type: string
     - name: title
-      description: _
+      description: the title of the user
       type: string
+      optional: true
     - name: location
-      description: _
+      description: the location of the user
       type: string
+      optional: true
     - name: avatar_url
-      description: _
+      description: the user avatar url
       type: string
-    - name: employee_id
-      description: _
-      type: string
+      optional: true
     - name: manager_id
-      description: _
+      description: the manager user id
       type: string
+      optional: true
+      relation:
+        kind: parent
+        type: customer.User
+        description: the User that this user reports to
+        name: manager
     - name: active
-      description: _
+      description: if true, the user is active and able to login
       type: boolean
+      default: false
     - name: trackable
-      description: _
+      description: if true, the user is trackable in the pinpoint system
       type: boolean
+      default: true
     - name: created_ts
-      description: _
+      description: when the user was created in epoch timestamp
       type: int
     - name: updated_ts
-      description: _
+      description: when the user record was updated in epoch timestamp
       type: int
     - name: deleted_ts
-      description: _
+      description: when the user record was deleted in epoch timestamp
       type: int
+      optional: true
     - name: hired_ts
-      description: _
+      description: when the user was hired in epoch timestamp
       type: int
+      optional: true
     - name: terminated_ts
-      description: _
+      description: when the user was terminated in epoch timestamp
       type: int
+      optional: true
     - name: cost_center_id
-      description: _
+      description: the id of the cost center
       type: string
-    - name: role_ids
-      description: _
-      type: Array<string>
+      optional: true
+      relation:
+        kind: parent
+        type: customer.CostCenter
+        description: the Cost Center that this user is related to
+        name: repo
+    - name: team_id
+      description: the team id that the user is part of
+      type: string
+      optional: true
+      relation:
+        kind: parent
+        type: customer.Team
+        description: the Team that this user is related to
+        name: team
