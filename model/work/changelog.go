@@ -41,7 +41,6 @@ type Changelog struct {
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
-
 	// custom types
 
 	// IssueID id of the issue
@@ -331,6 +330,7 @@ func (o *Changelog) Hash() string {
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
+	args = append(args, o.CustomerID)
 	args = append(args, o.IssueID)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.Ordinal)

@@ -41,7 +41,6 @@ type Commit struct {
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
-
 	// custom types
 
 	// RepoID the unique id for the repo
@@ -345,6 +344,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
+	args = append(args, o.CustomerID)
 	args = append(args, o.RepoID)
 	args = append(args, o.Sha)
 	args = append(args, o.Message)

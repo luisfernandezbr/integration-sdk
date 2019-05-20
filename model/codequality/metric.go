@@ -41,7 +41,6 @@ type Metric struct {
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
-
 	// custom types
 
 	// DateAt the name of the project
@@ -253,6 +252,7 @@ func (o *Metric) Hash() string {
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
+	args = append(args, o.CustomerID)
 	args = append(args, o.DateAt)
 	args = append(args, o.ProjectID)
 	args = append(args, o.Value)

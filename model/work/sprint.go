@@ -41,7 +41,6 @@ type Sprint struct {
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
-
 	// custom types
 
 	// Name the name of the field
@@ -279,6 +278,7 @@ func (o *Sprint) Hash() string {
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
+	args = append(args, o.CustomerID)
 	args = append(args, o.Name)
 	args = append(args, o.Identifier)
 	args = append(args, o.Status)

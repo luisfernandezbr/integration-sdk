@@ -40,7 +40,6 @@ type Project struct {
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
-
 	// custom types
 
 	// Key the name key of the project
@@ -226,6 +225,7 @@ func (o *Project) Hash() string {
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
+	args = append(args, o.CustomerID)
 	args = append(args, o.Key)
 	args = append(args, o.Name)
 	o.Hashcode = hash.Values(args...)
