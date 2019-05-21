@@ -15,10 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
-	"github.com/pinpt/go-common/fileutil"
-	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // RepoDefaultTopic is the default topic name
