@@ -15,7 +15,6 @@ import (
 	"reflect"
 	"regexp"
 
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -42,8 +41,8 @@ type Project struct {
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
 	// custom types
 
-	// Key the name key of the project
-	Key string `json:"key" yaml:"key"`
+	// Identifier the common identifier of the project
+	Identifier string `json:"identifier" yaml:"identifier"`
 	// Name the name of the project
 	Name string `json:"name" yaml:"name"`
 }
@@ -176,7 +175,7 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
-		"key":         toProjectObject(o.Key, isavro),
+		"identifier":  toProjectObject(o.Identifier, isavro),
 		"name":        toProjectObject(o.Name, isavro),
 	}
 }
@@ -195,14 +194,14 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
-	if val, ok := kv["key"].(string); ok {
-		o.Key = val
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
 	} else {
-		val := kv["key"]
+		val := kv["identifier"]
 		if val == nil {
-			o.Key = ""
+			o.Identifier = ""
 		} else {
-			o.Key = fmt.Sprintf("%v", val)
+			o.Identifier = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["name"].(string); ok {
@@ -226,7 +225,7 @@ func (o *Project) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Key)
+	args = append(args, o.Identifier)
 	args = append(args, o.Name)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -261,7 +260,7 @@ func CreateProjectAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "key",
+				"name": "identifier",
 				"type": "string",
 			},
 			map[string]interface{}{

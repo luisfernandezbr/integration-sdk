@@ -15,27 +15,26 @@ import (
 	"reflect"
 	"regexp"
 
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/integration-sdk/util"
 )
 
-// FieldTypeDefaultTopic is the default topic name
-const FieldTypeDefaultTopic = "work_FieldType_topic"
+// CustomFieldDefaultTopic is the default topic name
+const CustomFieldDefaultTopic = "work_CustomField_topic"
 
-// FieldTypeDefaultStream is the default stream name
-const FieldTypeDefaultStream = "work_FieldType_stream"
+// CustomFieldDefaultStream is the default stream name
+const CustomFieldDefaultStream = "work_CustomField_stream"
 
-// FieldTypeDefaultTable is the default table name
-const FieldTypeDefaultTable = "work_FieldType"
+// CustomFieldDefaultTable is the default table name
+const CustomFieldDefaultTable = "work_CustomField"
 
-// FieldType user defined fields
-type FieldType struct {
+// CustomField user defined fields
+type CustomField struct {
 	// built in types
 
-	ID         string `json:"field_type_id" yaml:"field_type_id"`
+	ID         string `json:"custom_field_id" yaml:"custom_field_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
@@ -48,7 +47,7 @@ type FieldType struct {
 	Key string `json:"key" yaml:"key"`
 }
 
-func toFieldTypeObject(o interface{}, isavro bool) interface{} {
+func toCustomFieldObject(o interface{}, isavro bool) interface{} {
 	if o == nil {
 		return nil
 	}
@@ -63,9 +62,9 @@ func toFieldTypeObject(o interface{}, isavro bool) interface{} {
 		return o
 	case *map[string]interface{}:
 		return v
-	case *FieldType:
+	case *CustomField:
 		return v.ToMap()
-	case FieldType:
+	case CustomField:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -81,45 +80,45 @@ func toFieldTypeObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toFieldTypeObject(av, isavro))
+			arr = append(arr, toCustomFieldObject(av, isavro))
 		}
 		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of FieldType
-func (o *FieldType) String() string {
-	return fmt.Sprintf("work.FieldType<%s>", o.ID)
+// String returns a string representation of CustomField
+func (o *CustomField) String() string {
+	return fmt.Sprintf("work.CustomField<%s>", o.ID)
 }
 
-func (o *FieldType) setDefaults() {
+func (o *CustomField) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *FieldType) GetID() string {
+func (o *CustomField) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("FieldType", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("CustomField", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetRefID returns the RefID for the object
-func (o *FieldType) GetRefID() string {
+func (o *CustomField) GetRefID() string {
 	return o.RefID
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *FieldType) MarshalJSON() ([]byte, error) {
+func (o *CustomField) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *FieldType) UnmarshalJSON(data []byte) error {
+func (o *CustomField) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -130,40 +129,40 @@ func (o *FieldType) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecFieldType *goavro.Codec
+var cachedCodecCustomField *goavro.Codec
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *FieldType) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	if cachedCodecFieldType == nil {
-		c, err := CreateFieldTypeAvroSchema()
+func (o *CustomField) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecCustomField == nil {
+		c, err := CreateCustomFieldAvroSchema()
 		if err != nil {
 			return nil, nil, err
 		}
-		cachedCodecFieldType = c
+		cachedCodecCustomField = c
 	}
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
-	native, _, err := cachedCodecFieldType.NativeFromTextual(jbuf)
+	native, _, err := cachedCodecCustomField.NativeFromTextual(jbuf)
 	if err != nil {
 		return nil, nil, err
 	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecFieldType.BinaryFromNative(nil, native)
-	return buf, cachedCodecFieldType, err
+	buf, err := cachedCodecCustomField.BinaryFromNative(nil, native)
+	return buf, cachedCodecCustomField, err
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *FieldType) Stringify() string {
+func (o *CustomField) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two FieldType objects are equal
-func (o *FieldType) IsEqual(other *FieldType) bool {
+// IsEqual returns true if the two CustomField objects are equal
+func (o *CustomField) IsEqual(other *CustomField) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *FieldType) ToMap(avro ...bool) map[string]interface{} {
+func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -171,19 +170,19 @@ func (o *FieldType) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"field_type_id": o.GetID(),
-		"ref_id":        o.GetRefID(),
-		"ref_type":      o.RefType,
-		"customer_id":   o.CustomerID,
-		"hashcode":      o.Hash(),
-		"name":          toFieldTypeObject(o.Name, isavro),
-		"key":           toFieldTypeObject(o.Key, isavro),
+		"custom_field_id": o.GetID(),
+		"ref_id":          o.GetRefID(),
+		"ref_type":        o.RefType,
+		"customer_id":     o.CustomerID,
+		"hashcode":        o.Hash(),
+		"name":            toCustomFieldObject(o.Name, isavro),
+		"key":             toCustomFieldObject(o.Key, isavro),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *FieldType) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["field_type_id"].(string); ok {
+func (o *CustomField) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["custom_field_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -220,7 +219,7 @@ func (o *FieldType) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *FieldType) Hash() string {
+func (o *CustomField) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
@@ -232,16 +231,16 @@ func (o *FieldType) Hash() string {
 	return o.Hashcode
 }
 
-// CreateFieldTypeAvroSchemaSpec creates the avro schema specification for FieldType
-func CreateFieldTypeAvroSchemaSpec() string {
+// CreateCustomFieldAvroSchemaSpec creates the avro schema specification for CustomField
+func CreateCustomFieldAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "work",
-		"name":         "FieldType",
-		"connect.name": "work.FieldType",
+		"name":         "CustomField",
+		"connect.name": "work.CustomField",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "field_type_id",
+				"name": "custom_field_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -273,25 +272,25 @@ func CreateFieldTypeAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateFieldTypeAvroSchema creates the avro schema for FieldType
-func CreateFieldTypeAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateFieldTypeAvroSchemaSpec())
+// CreateCustomFieldAvroSchema creates the avro schema for CustomField
+func CreateCustomFieldAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(CreateCustomFieldAvroSchemaSpec())
 }
 
-// TransformFieldTypeFunc is a function for transforming FieldType during processing
-type TransformFieldTypeFunc func(input *FieldType) (*FieldType, error)
+// TransformCustomFieldFunc is a function for transforming CustomField during processing
+type TransformCustomFieldFunc func(input *CustomField) (*CustomField, error)
 
-// CreateFieldTypePipe creates a pipe for processing FieldType items
-func CreateFieldTypePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformFieldTypeFunc) <-chan bool {
+// CreateCustomFieldPipe creates a pipe for processing CustomField items
+func CreateCustomFieldPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCustomFieldFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateFieldTypeInputStream(input, errors)
-	var stream chan FieldType
+	inch, indone := CreateCustomFieldInputStream(input, errors)
+	var stream chan CustomField
 	if len(transforms) > 0 {
-		stream = make(chan FieldType, 1000)
+		stream = make(chan CustomField, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateFieldTypeOutputStream(output, stream, errors)
+	outdone := CreateCustomFieldOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -327,12 +326,12 @@ func CreateFieldTypePipe(input io.ReadCloser, output io.WriteCloser, errors chan
 	return done
 }
 
-// CreateFieldTypeInputStreamDir creates a channel for reading FieldType as JSON newlines from a directory of files
-func CreateFieldTypeInputStreamDir(dir string, errors chan<- error, transforms ...TransformFieldTypeFunc) (chan FieldType, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/field_type\\.json(\\.gz)?$"))
+// CreateCustomFieldInputStreamDir creates a channel for reading CustomField as JSON newlines from a directory of files
+func CreateCustomFieldInputStreamDir(dir string, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/custom_field\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan FieldType)
+		ch := make(chan CustomField)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -340,16 +339,16 @@ func CreateFieldTypeInputStreamDir(dir string, errors chan<- error, transforms .
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for field_type")
-		ch := make(chan FieldType)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for custom_field")
+		ch := make(chan CustomField)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateFieldTypeInputStreamFile(files[0], errors, transforms...)
+		return CreateCustomFieldInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan FieldType)
+		ch := make(chan CustomField)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -357,12 +356,12 @@ func CreateFieldTypeInputStreamDir(dir string, errors chan<- error, transforms .
 	}
 }
 
-// CreateFieldTypeInputStreamFile creates an channel for reading FieldType as JSON newlines from filename
-func CreateFieldTypeInputStreamFile(filename string, errors chan<- error, transforms ...TransformFieldTypeFunc) (chan FieldType, <-chan bool) {
+// CreateCustomFieldInputStreamFile creates an channel for reading CustomField as JSON newlines from filename
+func CreateCustomFieldInputStreamFile(filename string, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan FieldType)
+		ch := make(chan CustomField)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -374,7 +373,7 @@ func CreateFieldTypeInputStreamFile(filename string, errors chan<- error, transf
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan FieldType)
+			ch := make(chan CustomField)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -382,13 +381,13 @@ func CreateFieldTypeInputStreamFile(filename string, errors chan<- error, transf
 		}
 		f = gz
 	}
-	return CreateFieldTypeInputStream(f, errors, transforms...)
+	return CreateCustomFieldInputStream(f, errors, transforms...)
 }
 
-// CreateFieldTypeInputStream creates an channel for reading FieldType as JSON newlines from stream
-func CreateFieldTypeInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformFieldTypeFunc) (chan FieldType, <-chan bool) {
+// CreateCustomFieldInputStream creates an channel for reading CustomField as JSON newlines from stream
+func CreateCustomFieldInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan FieldType, 1000)
+	ch := make(chan CustomField, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -401,7 +400,7 @@ func CreateFieldTypeInputStream(stream io.ReadCloser, errors chan<- error, trans
 				errors <- err
 				return
 			}
-			var item FieldType
+			var item CustomField
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -427,9 +426,9 @@ func CreateFieldTypeInputStream(stream io.ReadCloser, errors chan<- error, trans
 	return ch, done
 }
 
-// CreateFieldTypeOutputStreamDir will output json newlines from channel and save in dir
-func CreateFieldTypeOutputStreamDir(dir string, ch chan FieldType, errors chan<- error, transforms ...TransformFieldTypeFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/field_type\\.json(\\.gz)?$")
+// CreateCustomFieldOutputStreamDir will output json newlines from channel and save in dir
+func CreateCustomFieldOutputStreamDir(dir string, ch chan CustomField, errors chan<- error, transforms ...TransformCustomFieldFunc) <-chan bool {
+	fp := filepath.Join(dir, "/work/custom_field\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -445,11 +444,11 @@ func CreateFieldTypeOutputStreamDir(dir string, ch chan FieldType, errors chan<-
 		done <- true
 		return done
 	}
-	return CreateFieldTypeOutputStream(gz, ch, errors, transforms...)
+	return CreateCustomFieldOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateFieldTypeOutputStream will output json newlines from channel to the stream
-func CreateFieldTypeOutputStream(stream io.WriteCloser, ch chan FieldType, errors chan<- error, transforms ...TransformFieldTypeFunc) <-chan bool {
+// CreateCustomFieldOutputStream will output json newlines from channel to the stream
+func CreateCustomFieldOutputStream(stream io.WriteCloser, ch chan CustomField, errors chan<- error, transforms ...TransformCustomFieldFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -489,8 +488,8 @@ func CreateFieldTypeOutputStream(stream io.WriteCloser, ch chan FieldType, error
 	return done
 }
 
-// CreateFieldTypeProducer will stream data from the channel
-func CreateFieldTypeProducer(producer util.Producer, ch chan FieldType, errors chan<- error) <-chan bool {
+// CreateCustomFieldProducer will stream data from the channel
+func CreateCustomFieldProducer(producer util.Producer, ch chan CustomField, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -509,22 +508,22 @@ func CreateFieldTypeProducer(producer util.Producer, ch chan FieldType, errors c
 	return done
 }
 
-// CreateFieldTypeConsumer will stream data from the default topic into the provided channel
-func CreateFieldTypeConsumer(factory util.ConsumerFactory, topic string, ch chan FieldType, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateFieldTypeConsumerForTopic(factory, FieldTypeDefaultTopic, ch, errors)
+// CreateCustomFieldConsumer will stream data from the default topic into the provided channel
+func CreateCustomFieldConsumer(factory util.ConsumerFactory, topic string, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
+	return CreateCustomFieldConsumerForTopic(factory, CustomFieldDefaultTopic, ch, errors)
 }
 
-// CreateFieldTypeConsumerForTopic will stream data from the topic into the provided channel
-func CreateFieldTypeConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan FieldType, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreateCustomFieldConsumerForTopic will stream data from the topic into the provided channel
+func CreateCustomFieldConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := util.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
-				var object FieldType
+				var object CustomField
 				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into FieldType: %s", err)
+					return fmt.Errorf("error unmarshaling json data into CustomField: %s", err)
 				}
 				ch <- object
 				return nil

@@ -1,7 +1,7 @@
 // DO NOT EDIT -- generated code
 
-// Package work - the system which contains project work
-package work
+// Package sourcecode - the system which contains source code
+package sourcecode
 
 import (
 	"bufio"
@@ -18,45 +18,39 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	number "github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 	"github.com/pinpt/integration-sdk/util"
 )
 
-// SprintDefaultTopic is the default topic name
-const SprintDefaultTopic = "work_Sprint_topic"
+// UserDefaultTopic is the default topic name
+const UserDefaultTopic = "sourcecode_User_topic"
 
-// SprintDefaultStream is the default stream name
-const SprintDefaultStream = "work_Sprint_stream"
+// UserDefaultStream is the default stream name
+const UserDefaultStream = "sourcecode_User_stream"
 
-// SprintDefaultTable is the default table name
-const SprintDefaultTable = "work_Sprint"
+// UserDefaultTable is the default table name
+const UserDefaultTable = "sourcecode_User"
 
-// Sprint sprint details
-type Sprint struct {
+// User the source code user
+type User struct {
 	// built in types
 
-	ID         string `json:"sprint_id" yaml:"sprint_id"`
+	ID         string `json:"user_id" yaml:"user_id"`
 	RefID      string `json:"ref_id" yaml:"ref_id"`
 	RefType    string `json:"ref_type" yaml:"ref_type"`
 	CustomerID string `json:"customer_id" yaml:"customer_id"`
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
 	// custom types
 
-	// Name the name of the field
+	// Name the name of the user
 	Name string `json:"name" yaml:"name"`
-	// Identifier the common identifier for the sprint
-	Identifier string `json:"identifier" yaml:"identifier"`
-	// Status status of the sprint
-	Status string `json:"status" yaml:"status"`
-	// StartedAt the timestamp in UTC that the sprint was started
-	StartedAt int64 `json:"started_ts" yaml:"started_ts"`
-	// EndedAt the timestamp in UTC that the sprint was ended
-	EndedAt *int64 `json:"ended_ts" yaml:"ended_ts"`
-	// CompletedAt the timestamp in UTC that the sprint was completed
-	CompletedAt *int64 `json:"completed_ts" yaml:"completed_ts"`
+	// AvatarURL the url to users avatar
+	AvatarURL *string `json:"avatar_url" yaml:"avatar_url"`
+	// Email the email for the user
+	Email *string `json:"email" yaml:"email"`
 }
 
-func toSprintObject(o interface{}, isavro bool) interface{} {
+func toUserObject(o interface{}, isavro bool) interface{} {
 	if o == nil {
 		return nil
 	}
@@ -71,9 +65,9 @@ func toSprintObject(o interface{}, isavro bool) interface{} {
 		return o
 	case *map[string]interface{}:
 		return v
-	case *Sprint:
+	case *User:
 		return v.ToMap()
-	case Sprint:
+	case User:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -89,45 +83,45 @@ func toSprintObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toSprintObject(av, isavro))
+			arr = append(arr, toUserObject(av, isavro))
 		}
 		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of Sprint
-func (o *Sprint) String() string {
-	return fmt.Sprintf("work.Sprint<%s>", o.ID)
+// String returns a string representation of User
+func (o *User) String() string {
+	return fmt.Sprintf("sourcecode.User<%s>", o.ID)
 }
 
-func (o *Sprint) setDefaults() {
+func (o *User) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *Sprint) GetID() string {
+func (o *User) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Sprint", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("User", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetRefID returns the RefID for the object
-func (o *Sprint) GetRefID() string {
+func (o *User) GetRefID() string {
 	return o.RefID
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Sprint) MarshalJSON() ([]byte, error) {
+func (o *User) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Sprint) UnmarshalJSON(data []byte) error {
+func (o *User) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -138,40 +132,40 @@ func (o *Sprint) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecSprint *goavro.Codec
+var cachedCodecUser *goavro.Codec
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Sprint) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	if cachedCodecSprint == nil {
-		c, err := CreateSprintAvroSchema()
+func (o *User) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+	if cachedCodecUser == nil {
+		c, err := CreateUserAvroSchema()
 		if err != nil {
 			return nil, nil, err
 		}
-		cachedCodecSprint = c
+		cachedCodecUser = c
 	}
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
-	native, _, err := cachedCodecSprint.NativeFromTextual(jbuf)
+	native, _, err := cachedCodecUser.NativeFromTextual(jbuf)
 	if err != nil {
 		return nil, nil, err
 	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecSprint.BinaryFromNative(nil, native)
-	return buf, cachedCodecSprint, err
+	buf, err := cachedCodecUser.BinaryFromNative(nil, native)
+	return buf, cachedCodecUser, err
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Sprint) Stringify() string {
+func (o *User) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Sprint objects are equal
-func (o *Sprint) IsEqual(other *Sprint) bool {
+// IsEqual returns true if the two User objects are equal
+func (o *User) IsEqual(other *User) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
+func (o *User) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -179,23 +173,20 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"sprint_id":    o.GetID(),
-		"ref_id":       o.GetRefID(),
-		"ref_type":     o.RefType,
-		"customer_id":  o.CustomerID,
-		"hashcode":     o.Hash(),
-		"name":         toSprintObject(o.Name, isavro),
-		"identifier":   toSprintObject(o.Identifier, isavro),
-		"status":       toSprintObject(o.Status, isavro),
-		"started_ts":   toSprintObject(o.StartedAt, isavro),
-		"ended_ts":     toSprintObject(o.EndedAt, isavro),
-		"completed_ts": toSprintObject(o.CompletedAt, isavro),
+		"user_id":     o.GetID(),
+		"ref_id":      o.GetRefID(),
+		"ref_type":    o.RefType,
+		"customer_id": o.CustomerID,
+		"hashcode":    o.Hash(),
+		"name":        toUserObject(o.Name, isavro),
+		"avatar_url":  toUserObject(o.AvatarURL, isavro),
+		"email":       toUserObject(o.Email, isavro),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Sprint) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["sprint_id"].(string); ok {
+func (o *User) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["user_id"].(string); ok {
 		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -217,58 +208,28 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["identifier"].(string); ok {
-		o.Identifier = val
+	if val, ok := kv["avatar_url"].(*string); ok {
+		o.AvatarURL = val
+	} else if val, ok := kv["avatar_url"].(string); ok {
+		o.AvatarURL = &val
 	} else {
-		val := kv["identifier"]
+		val := kv["avatar_url"]
 		if val == nil {
-			o.Identifier = ""
+			o.AvatarURL = pstrings.Pointer("")
 		} else {
-			o.Identifier = fmt.Sprintf("%v", val)
+			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["status"].(string); ok {
-		o.Status = val
+	if val, ok := kv["email"].(*string); ok {
+		o.Email = val
+	} else if val, ok := kv["email"].(string); ok {
+		o.Email = &val
 	} else {
-		val := kv["status"]
+		val := kv["email"]
 		if val == nil {
-			o.Status = ""
+			o.Email = pstrings.Pointer("")
 		} else {
-			o.Status = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["started_ts"].(int64); ok {
-		o.StartedAt = val
-	} else {
-		val := kv["started_ts"]
-		if val == nil {
-			o.StartedAt = number.ToInt64Any(nil)
-		} else {
-			o.StartedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["ended_ts"].(*int64); ok {
-		o.EndedAt = val
-	} else if val, ok := kv["ended_ts"].(int64); ok {
-		o.EndedAt = &val
-	} else {
-		val := kv["ended_ts"]
-		if val == nil {
-			o.EndedAt = number.Int64Pointer(number.ToInt64Any(nil))
-		} else {
-			o.EndedAt = number.Int64Pointer(number.ToInt64Any(val))
-		}
-	}
-	if val, ok := kv["completed_ts"].(*int64); ok {
-		o.CompletedAt = val
-	} else if val, ok := kv["completed_ts"].(int64); ok {
-		o.CompletedAt = &val
-	} else {
-		val := kv["completed_ts"]
-		if val == nil {
-			o.CompletedAt = number.Int64Pointer(number.ToInt64Any(nil))
-		} else {
-			o.CompletedAt = number.Int64Pointer(number.ToInt64Any(val))
+			o.Email = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
 	// make sure that these have values if empty
@@ -276,32 +237,29 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Sprint) Hash() string {
+func (o *User) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Name)
-	args = append(args, o.Identifier)
-	args = append(args, o.Status)
-	args = append(args, o.StartedAt)
-	args = append(args, o.EndedAt)
-	args = append(args, o.CompletedAt)
+	args = append(args, o.AvatarURL)
+	args = append(args, o.Email)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// CreateSprintAvroSchemaSpec creates the avro schema specification for Sprint
-func CreateSprintAvroSchemaSpec() string {
+// CreateUserAvroSchemaSpec creates the avro schema specification for User
+func CreateUserAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "work",
-		"name":         "Sprint",
-		"connect.name": "work.Sprint",
+		"namespace":    "sourcecode",
+		"name":         "User",
+		"connect.name": "sourcecode.User",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "sprint_id",
+				"name": "user_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -325,25 +283,13 @@ func CreateSprintAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "identifier",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "status",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "started_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name":    "ended_ts",
-				"type":    []interface{}{"null", "long"},
+				"name":    "avatar_url",
+				"type":    []interface{}{"null", "string"},
 				"default": nil,
 			},
 			map[string]interface{}{
-				"name":    "completed_ts",
-				"type":    []interface{}{"null", "long"},
+				"name":    "email",
+				"type":    []interface{}{"null", "string"},
 				"default": nil,
 			},
 		},
@@ -351,25 +297,25 @@ func CreateSprintAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateSprintAvroSchema creates the avro schema for Sprint
-func CreateSprintAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateSprintAvroSchemaSpec())
+// CreateUserAvroSchema creates the avro schema for User
+func CreateUserAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(CreateUserAvroSchemaSpec())
 }
 
-// TransformSprintFunc is a function for transforming Sprint during processing
-type TransformSprintFunc func(input *Sprint) (*Sprint, error)
+// TransformUserFunc is a function for transforming User during processing
+type TransformUserFunc func(input *User) (*User, error)
 
-// CreateSprintPipe creates a pipe for processing Sprint items
-func CreateSprintPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformSprintFunc) <-chan bool {
+// CreateUserPipe creates a pipe for processing User items
+func CreateUserPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformUserFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateSprintInputStream(input, errors)
-	var stream chan Sprint
+	inch, indone := CreateUserInputStream(input, errors)
+	var stream chan User
 	if len(transforms) > 0 {
-		stream = make(chan Sprint, 1000)
+		stream = make(chan User, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateSprintOutputStream(output, stream, errors)
+	outdone := CreateUserOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -405,12 +351,12 @@ func CreateSprintPipe(input io.ReadCloser, output io.WriteCloser, errors chan er
 	return done
 }
 
-// CreateSprintInputStreamDir creates a channel for reading Sprint as JSON newlines from a directory of files
-func CreateSprintInputStreamDir(dir string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/sprint\\.json(\\.gz)?$"))
+// CreateUserInputStreamDir creates a channel for reading User as JSON newlines from a directory of files
+func CreateUserInputStreamDir(dir string, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/user\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Sprint)
+		ch := make(chan User)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -418,16 +364,16 @@ func CreateSprintInputStreamDir(dir string, errors chan<- error, transforms ...T
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for sprint")
-		ch := make(chan Sprint)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for user")
+		ch := make(chan User)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateSprintInputStreamFile(files[0], errors, transforms...)
+		return CreateUserInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Sprint)
+		ch := make(chan User)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -435,12 +381,12 @@ func CreateSprintInputStreamDir(dir string, errors chan<- error, transforms ...T
 	}
 }
 
-// CreateSprintInputStreamFile creates an channel for reading Sprint as JSON newlines from filename
-func CreateSprintInputStreamFile(filename string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
+// CreateUserInputStreamFile creates an channel for reading User as JSON newlines from filename
+func CreateUserInputStreamFile(filename string, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Sprint)
+		ch := make(chan User)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -452,7 +398,7 @@ func CreateSprintInputStreamFile(filename string, errors chan<- error, transform
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Sprint)
+			ch := make(chan User)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -460,13 +406,13 @@ func CreateSprintInputStreamFile(filename string, errors chan<- error, transform
 		}
 		f = gz
 	}
-	return CreateSprintInputStream(f, errors, transforms...)
+	return CreateUserInputStream(f, errors, transforms...)
 }
 
-// CreateSprintInputStream creates an channel for reading Sprint as JSON newlines from stream
-func CreateSprintInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
+// CreateUserInputStream creates an channel for reading User as JSON newlines from stream
+func CreateUserInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Sprint, 1000)
+	ch := make(chan User, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -479,7 +425,7 @@ func CreateSprintInputStream(stream io.ReadCloser, errors chan<- error, transfor
 				errors <- err
 				return
 			}
-			var item Sprint
+			var item User
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -505,9 +451,9 @@ func CreateSprintInputStream(stream io.ReadCloser, errors chan<- error, transfor
 	return ch, done
 }
 
-// CreateSprintOutputStreamDir will output json newlines from channel and save in dir
-func CreateSprintOutputStreamDir(dir string, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/sprint\\.json(\\.gz)?$")
+// CreateUserOutputStreamDir will output json newlines from channel and save in dir
+func CreateUserOutputStreamDir(dir string, ch chan User, errors chan<- error, transforms ...TransformUserFunc) <-chan bool {
+	fp := filepath.Join(dir, "/sourcecode/user\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -523,11 +469,11 @@ func CreateSprintOutputStreamDir(dir string, ch chan Sprint, errors chan<- error
 		done <- true
 		return done
 	}
-	return CreateSprintOutputStream(gz, ch, errors, transforms...)
+	return CreateUserOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateSprintOutputStream will output json newlines from channel to the stream
-func CreateSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
+// CreateUserOutputStream will output json newlines from channel to the stream
+func CreateUserOutputStream(stream io.WriteCloser, ch chan User, errors chan<- error, transforms ...TransformUserFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -567,8 +513,8 @@ func CreateSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan
 	return done
 }
 
-// CreateSprintProducer will stream data from the channel
-func CreateSprintProducer(producer util.Producer, ch chan Sprint, errors chan<- error) <-chan bool {
+// CreateUserProducer will stream data from the channel
+func CreateUserProducer(producer util.Producer, ch chan User, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -587,22 +533,22 @@ func CreateSprintProducer(producer util.Producer, ch chan Sprint, errors chan<- 
 	return done
 }
 
-// CreateSprintConsumer will stream data from the default topic into the provided channel
-func CreateSprintConsumer(factory util.ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateSprintConsumerForTopic(factory, SprintDefaultTopic, ch, errors)
+// CreateUserConsumer will stream data from the default topic into the provided channel
+func CreateUserConsumer(factory util.ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
+	return CreateUserConsumerForTopic(factory, UserDefaultTopic, ch, errors)
 }
 
-// CreateSprintConsumerForTopic will stream data from the topic into the provided channel
-func CreateSprintConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreateUserConsumerForTopic will stream data from the topic into the provided channel
+func CreateUserConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := util.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
-				var object Sprint
+				var object User
 				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into Sprint: %s", err)
+					return fmt.Errorf("error unmarshaling json data into User: %s", err)
 				}
 				ch <- object
 				return nil

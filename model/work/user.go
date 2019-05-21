@@ -15,11 +15,10 @@ import (
 	"reflect"
 	"regexp"
 
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	number "github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 	"github.com/pinpt/integration-sdk/util"
 )
 
@@ -32,7 +31,7 @@ const UserDefaultStream = "work_User_stream"
 // UserDefaultTable is the default table name
 const UserDefaultTable = "work_User"
 
-// User user details
+// User the work user
 type User struct {
 	// built in types
 
@@ -43,18 +42,12 @@ type User struct {
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
 	// custom types
 
-	// Name the name of the field
+	// Name the name of the user
 	Name string `json:"name" yaml:"name"`
-	// Email key of the field
-	Email string `json:"email" yaml:"email"`
-	// Active wether this user is active
-	Active bool `json:"active" yaml:"active"`
-	// CreatedAt when the user was created, timestamp in UTC
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
-	// DeletedAt when the user was deleted, timestamp in UTC
-	DeletedAt int64 `json:"deleted_ts" yaml:"deleted_ts"`
-	// Location physical location of the user
-	Location string `json:"location" yaml:"location"`
+	// AvatarURL the url to users avatar
+	AvatarURL *string `json:"avatar_url" yaml:"avatar_url"`
+	// Email the email for the user
+	Email *string `json:"email" yaml:"email"`
 }
 
 func toUserObject(o interface{}, isavro bool) interface{} {
@@ -186,11 +179,8 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
 		"name":        toUserObject(o.Name, isavro),
+		"avatar_url":  toUserObject(o.AvatarURL, isavro),
 		"email":       toUserObject(o.Email, isavro),
-		"active":      toUserObject(o.Active, isavro),
-		"created_ts":  toUserObject(o.CreatedAt, isavro),
-		"deleted_ts":  toUserObject(o.DeletedAt, isavro),
-		"location":    toUserObject(o.Location, isavro),
 	}
 }
 
@@ -218,54 +208,28 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["email"].(string); ok {
+	if val, ok := kv["avatar_url"].(*string); ok {
+		o.AvatarURL = val
+	} else if val, ok := kv["avatar_url"].(string); ok {
+		o.AvatarURL = &val
+	} else {
+		val := kv["avatar_url"]
+		if val == nil {
+			o.AvatarURL = pstrings.Pointer("")
+		} else {
+			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["email"].(*string); ok {
 		o.Email = val
+	} else if val, ok := kv["email"].(string); ok {
+		o.Email = &val
 	} else {
 		val := kv["email"]
 		if val == nil {
-			o.Email = ""
+			o.Email = pstrings.Pointer("")
 		} else {
-			o.Email = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["active"].(bool); ok {
-		o.Active = val
-	} else {
-		val := kv["active"]
-		if val == nil {
-			o.Active = number.ToBoolAny(nil)
-		} else {
-			o.Active = number.ToBoolAny(val)
-		}
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			o.CreatedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["deleted_ts"].(int64); ok {
-		o.DeletedAt = val
-	} else {
-		val := kv["deleted_ts"]
-		if val == nil {
-			o.DeletedAt = number.ToInt64Any(nil)
-		} else {
-			o.DeletedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["location"].(string); ok {
-		o.Location = val
-	} else {
-		val := kv["location"]
-		if val == nil {
-			o.Location = ""
-		} else {
-			o.Location = fmt.Sprintf("%v", val)
+			o.Email = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
 	// make sure that these have values if empty
@@ -280,11 +244,8 @@ func (o *User) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Name)
+	args = append(args, o.AvatarURL)
 	args = append(args, o.Email)
-	args = append(args, o.Active)
-	args = append(args, o.CreatedAt)
-	args = append(args, o.DeletedAt)
-	args = append(args, o.Location)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -322,24 +283,14 @@ func CreateUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "email",
-				"type": "string",
+				"name":    "avatar_url",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "active",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "deleted_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "location",
-				"type": "string",
+				"name":    "email",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 		},
 	}

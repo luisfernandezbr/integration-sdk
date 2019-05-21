@@ -15,7 +15,6 @@ import (
 	"reflect"
 	"regexp"
 
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -32,7 +31,7 @@ const MetricDefaultStream = "codequality_Metric_stream"
 // MetricDefaultTable is the default table name
 const MetricDefaultTable = "codequality_Metric"
 
-// Metric project information
+// Metric individual metric details
 type Metric struct {
 	// built in types
 
@@ -43,14 +42,14 @@ type Metric struct {
 	Hashcode   string `json:"hashcode" yaml:"hashcode"`
 	// custom types
 
-	// DateAt the name of the project
+	// DateAt the date when the metric was created
 	DateAt int64 `json:"date_ts" yaml:"date_ts"`
 	// ProjectID the the project id
 	ProjectID string `json:"project_id" yaml:"project_id"`
-	// Value the value of the metric
-	Value string `json:"value" yaml:"value"`
 	// Name the metric name
 	Name string `json:"name" yaml:"name"`
+	// Value the value of the metric
+	Value string `json:"value" yaml:"value"`
 }
 
 func toMetricObject(o interface{}, isavro bool) interface{} {
@@ -183,8 +182,8 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 		"hashcode":    o.Hash(),
 		"date_ts":     toMetricObject(o.DateAt, isavro),
 		"project_id":  toMetricObject(o.ProjectID, isavro),
-		"value":       toMetricObject(o.Value, isavro),
 		"name":        toMetricObject(o.Name, isavro),
+		"value":       toMetricObject(o.Value, isavro),
 	}
 }
 
@@ -222,16 +221,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			o.ProjectID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["value"].(string); ok {
-		o.Value = val
-	} else {
-		val := kv["value"]
-		if val == nil {
-			o.Value = ""
-		} else {
-			o.Value = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -240,6 +229,16 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			o.Name = ""
 		} else {
 			o.Name = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["value"].(string); ok {
+		o.Value = val
+	} else {
+		val := kv["value"]
+		if val == nil {
+			o.Value = ""
+		} else {
+			o.Value = fmt.Sprintf("%v", val)
 		}
 	}
 	// make sure that these have values if empty
@@ -255,8 +254,8 @@ func (o *Metric) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.DateAt)
 	args = append(args, o.ProjectID)
-	args = append(args, o.Value)
 	args = append(args, o.Name)
+	args = append(args, o.Value)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -298,11 +297,11 @@ func CreateMetricAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "value",
+				"name": "name",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "name",
+				"name": "value",
 				"type": "string",
 			},
 		},
