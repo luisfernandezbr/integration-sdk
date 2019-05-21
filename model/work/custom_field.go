@@ -15,7 +15,10 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/pinpt/go-common/fileutil"
+	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/integration-sdk/util"
 )
 
 // CustomFieldDefaultTopic is the default topic name

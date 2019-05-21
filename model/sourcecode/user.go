@@ -15,8 +15,11 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/pinpt/go-common/fileutil"
+	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
+	"github.com/pinpt/integration-sdk/util"
 )
 
 // UserDefaultTopic is the default topic name
