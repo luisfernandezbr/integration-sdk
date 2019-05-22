@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
