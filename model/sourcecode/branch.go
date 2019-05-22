@@ -63,16 +63,105 @@ type Branch struct {
 	RepoID string `json:"repo_id" yaml:"repo_id"`
 }
 
-func toBranchObject(o interface{}, isavro bool) interface{} {
+func toBranchObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toBranchObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return nil
+		return toBranchObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return nil
+		return toBranchObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		if isavro && isoptional {
+			return goavro.Union(avrotype, v)
+		}
 		return v
-	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+	case *string:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int8:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int16:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *bool:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
 		return v
 	case map[string]interface{}:
 		return o
@@ -96,7 +185,7 @@ func toBranchObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toBranchObject(av, isavro))
+			arr = append(arr, toBranchObject(av, isavro, false, ""))
 		}
 		return arr
 	}
@@ -197,15 +286,15 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":              o.RefType,
 		"customer_id":           o.CustomerID,
 		"hashcode":              o.Hash(),
-		"name":                  toBranchObject(o.Name, isavro),
-		"default":               toBranchObject(o.Default, isavro),
-		"merged":                toBranchObject(o.Merged, isavro),
-		"merge_commit":          toBranchObject(o.MergeCommit, isavro),
-		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro),
-		"commits":               toBranchObject(o.Commits, isavro),
-		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro),
-		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro),
-		"repo_id":               toBranchObject(o.RepoID, isavro),
+		"name":                  toBranchObject(o.Name, isavro, false, "string"),
+		"default":               toBranchObject(o.Default, isavro, false, "boolean"),
+		"merged":                toBranchObject(o.Merged, isavro, false, "boolean"),
+		"merge_commit":          toBranchObject(o.MergeCommit, isavro, false, "boolean"),
+		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro, false, "string"),
+		"commits":               toBranchObject(o.Commits, isavro, false, "string"),
+		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
+		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
+		"repo_id":               toBranchObject(o.RepoID, isavro, false, "string"),
 	}
 }
 

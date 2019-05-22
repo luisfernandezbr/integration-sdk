@@ -68,16 +68,105 @@ type Changelog struct {
 	Sha string `json:"sha" yaml:"sha"`
 }
 
-func toChangelogObject(o interface{}, isavro bool) interface{} {
+func toChangelogObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return nil
+		return toChangelogObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return nil
+		return toChangelogObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		if isavro && isoptional {
+			return goavro.Union(avrotype, v)
+		}
 		return v
-	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+	case *string:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int8:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int16:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *bool:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
 		return v
 	case map[string]interface{}:
 		return o
@@ -101,7 +190,7 @@ func toChangelogObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toChangelogObject(av, isavro))
+			arr = append(arr, toChangelogObject(av, isavro, false, ""))
 		}
 		return arr
 	}
@@ -196,18 +285,18 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":      o.RefType,
 		"customer_id":   o.CustomerID,
 		"hashcode":      o.Hash(),
-		"repo_id":       toChangelogObject(o.RepoID, isavro),
-		"filename":      toChangelogObject(o.Filename, isavro),
-		"language":      toChangelogObject(o.Language, isavro),
-		"loc":           toChangelogObject(o.Loc, isavro),
-		"sloc":          toChangelogObject(o.Sloc, isavro),
-		"blanks":        toChangelogObject(o.Blanks, isavro),
-		"comments":      toChangelogObject(o.Comments, isavro),
-		"complexity":    toChangelogObject(o.Complexity, isavro),
-		"date_ts":       toChangelogObject(o.DateAt, isavro),
-		"author_ref_id": toChangelogObject(o.AuthorRefID, isavro),
-		"ordinal":       toChangelogObject(o.Ordinal, isavro),
-		"sha":           toChangelogObject(o.Sha, isavro),
+		"repo_id":       toChangelogObject(o.RepoID, isavro, false, "string"),
+		"filename":      toChangelogObject(o.Filename, isavro, false, "string"),
+		"language":      toChangelogObject(o.Language, isavro, false, "string"),
+		"loc":           toChangelogObject(o.Loc, isavro, false, "long"),
+		"sloc":          toChangelogObject(o.Sloc, isavro, false, "long"),
+		"blanks":        toChangelogObject(o.Blanks, isavro, false, "long"),
+		"comments":      toChangelogObject(o.Comments, isavro, false, "long"),
+		"complexity":    toChangelogObject(o.Complexity, isavro, false, "long"),
+		"date_ts":       toChangelogObject(o.DateAt, isavro, false, "long"),
+		"author_ref_id": toChangelogObject(o.AuthorRefID, isavro, false, "string"),
+		"ordinal":       toChangelogObject(o.Ordinal, isavro, false, "long"),
+		"sha":           toChangelogObject(o.Sha, isavro, false, "string"),
 	}
 }
 

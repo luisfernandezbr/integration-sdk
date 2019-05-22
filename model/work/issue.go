@@ -83,16 +83,105 @@ type Issue struct {
 	Resolution string `json:"resolution" yaml:"resolution"`
 }
 
-func toIssueObject(o interface{}, isavro bool) interface{} {
+func toIssueObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return nil
+		return toIssueObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return nil
+		return toIssueObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		if isavro && isoptional {
+			return goavro.Union(avrotype, v)
+		}
 		return v
-	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+	case *string:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int8:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int16:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *bool:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
 		return v
 	case map[string]interface{}:
 		return o
@@ -116,7 +205,7 @@ func toIssueObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toIssueObject(av, isavro))
+			arr = append(arr, toIssueObject(av, isavro, false, ""))
 		}
 		return arr
 	}
@@ -214,25 +303,25 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":         o.RefType,
 		"customer_id":      o.CustomerID,
 		"hashcode":         o.Hash(),
-		"title":            toIssueObject(o.Title, isavro),
-		"identifier":       toIssueObject(o.Identifier, isavro),
-		"project_id":       toIssueObject(o.ProjectID, isavro),
-		"url":              toIssueObject(o.URL, isavro),
-		"created_ts":       toIssueObject(o.CreatedAt, isavro),
-		"updated_ts":       toIssueObject(o.UpdatedAt, isavro),
-		"planned_start_ts": toIssueObject(o.PlannedStartAt, isavro),
-		"planned_end_ts":   toIssueObject(o.PlannedEndAt, isavro),
-		"due_date_ts":      toIssueObject(o.DueDateAt, isavro),
-		"priority":         toIssueObject(o.Priority, isavro),
-		"type":             toIssueObject(o.Type, isavro),
-		"status":           toIssueObject(o.Status, isavro),
-		"creator_ref_id":   toIssueObject(o.CreatorRefID, isavro),
-		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro),
-		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro),
-		"author_ref_id":    toIssueObject(o.AuthorRefID, isavro),
-		"tags":             toIssueObject(o.Tags, isavro),
-		"parent_id":        toIssueObject(o.ParentID, isavro),
-		"resolution":       toIssueObject(o.Resolution, isavro),
+		"title":            toIssueObject(o.Title, isavro, false, "string"),
+		"identifier":       toIssueObject(o.Identifier, isavro, false, "string"),
+		"project_id":       toIssueObject(o.ProjectID, isavro, false, "string"),
+		"url":              toIssueObject(o.URL, isavro, false, "string"),
+		"created_ts":       toIssueObject(o.CreatedAt, isavro, false, "long"),
+		"updated_ts":       toIssueObject(o.UpdatedAt, isavro, false, "long"),
+		"planned_start_ts": toIssueObject(o.PlannedStartAt, isavro, false, "long"),
+		"planned_end_ts":   toIssueObject(o.PlannedEndAt, isavro, false, "long"),
+		"due_date_ts":      toIssueObject(o.DueDateAt, isavro, false, "long"),
+		"priority":         toIssueObject(o.Priority, isavro, false, "string"),
+		"type":             toIssueObject(o.Type, isavro, false, "string"),
+		"status":           toIssueObject(o.Status, isavro, false, "string"),
+		"creator_ref_id":   toIssueObject(o.CreatorRefID, isavro, false, "string"),
+		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro, false, "string"),
+		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro, false, "string"),
+		"author_ref_id":    toIssueObject(o.AuthorRefID, isavro, false, "string"),
+		"tags":             toIssueObject(o.Tags, isavro, false, "string"),
+		"parent_id":        toIssueObject(o.ParentID, isavro, false, "string"),
+		"resolution":       toIssueObject(o.Resolution, isavro, false, "string"),
 	}
 }
 

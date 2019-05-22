@@ -75,16 +75,105 @@ type User struct {
 	TeamID *string `json:"team_id" yaml:"team_id"`
 }
 
-func toUserObject(o interface{}, isavro bool) interface{} {
+func toUserObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return nil
+		return toUserObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return nil
+		return toUserObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		if isavro && isoptional {
+			return goavro.Union(avrotype, v)
+		}
 		return v
-	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+	case *string:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int8:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int16:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *bool:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
 		return v
 	case map[string]interface{}:
 		return o
@@ -108,7 +197,7 @@ func toUserObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toUserObject(av, isavro))
+			arr = append(arr, toUserObject(av, isavro, false, ""))
 		}
 		return arr
 	}
@@ -203,21 +292,21 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":       o.RefType,
 		"customer_id":    o.CustomerID,
 		"hashcode":       o.Hash(),
-		"name":           toUserObject(o.Name, isavro),
-		"email":          toUserObject(o.Email, isavro),
-		"title":          toUserObject(o.Title, isavro),
-		"location":       toUserObject(o.Location, isavro),
-		"avatar_url":     toUserObject(o.AvatarURL, isavro),
-		"manager_id":     toUserObject(o.ManagerID, isavro),
-		"active":         toUserObject(o.Active, isavro),
-		"trackable":      toUserObject(o.Trackable, isavro),
-		"created_ts":     toUserObject(o.CreatedAt, isavro),
-		"updated_ts":     toUserObject(o.UpdatedAt, isavro),
-		"deleted_ts":     toUserObject(o.DeletedAt, isavro),
-		"hired_ts":       toUserObject(o.HiredAt, isavro),
-		"terminated_ts":  toUserObject(o.TerminatedAt, isavro),
-		"cost_center_id": toUserObject(o.CostCenterID, isavro),
-		"team_id":        toUserObject(o.TeamID, isavro),
+		"name":           toUserObject(o.Name, isavro, false, "string"),
+		"email":          toUserObject(o.Email, isavro, false, "string"),
+		"title":          toUserObject(o.Title, isavro, true, "string"),
+		"location":       toUserObject(o.Location, isavro, true, "string"),
+		"avatar_url":     toUserObject(o.AvatarURL, isavro, true, "string"),
+		"manager_id":     toUserObject(o.ManagerID, isavro, true, "string"),
+		"active":         toUserObject(o.Active, isavro, false, "boolean"),
+		"trackable":      toUserObject(o.Trackable, isavro, false, "boolean"),
+		"created_ts":     toUserObject(o.CreatedAt, isavro, false, "long"),
+		"updated_ts":     toUserObject(o.UpdatedAt, isavro, false, "long"),
+		"deleted_ts":     toUserObject(o.DeletedAt, isavro, true, "long"),
+		"hired_ts":       toUserObject(o.HiredAt, isavro, true, "long"),
+		"terminated_ts":  toUserObject(o.TerminatedAt, isavro, true, "long"),
+		"cost_center_id": toUserObject(o.CostCenterID, isavro, true, "string"),
+		"team_id":        toUserObject(o.TeamID, isavro, true, "string"),
 	}
 }
 

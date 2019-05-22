@@ -49,16 +49,105 @@ type Project struct {
 	URL string `json:"url" yaml:"url"`
 }
 
-func toProjectObject(o interface{}, isavro bool) interface{} {
+func toProjectObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return nil
+		return toProjectObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return nil
+		return toProjectObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		if isavro && isoptional {
+			return goavro.Union(avrotype, v)
+		}
 		return v
-	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+	case *string:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int8:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int16:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *bool:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
 		return v
 	case map[string]interface{}:
 		return o
@@ -82,7 +171,7 @@ func toProjectObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toProjectObject(av, isavro))
+			arr = append(arr, toProjectObject(av, isavro, false, ""))
 		}
 		return arr
 	}
@@ -177,9 +266,9 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
-		"name":        toProjectObject(o.Name, isavro),
-		"identifier":  toProjectObject(o.Identifier, isavro),
-		"url":         toProjectObject(o.URL, isavro),
+		"name":        toProjectObject(o.Name, isavro, false, "string"),
+		"identifier":  toProjectObject(o.Identifier, isavro, false, "string"),
+		"url":         toProjectObject(o.URL, isavro, false, "string"),
 	}
 }
 

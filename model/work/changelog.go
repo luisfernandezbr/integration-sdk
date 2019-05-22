@@ -64,16 +64,105 @@ type Changelog struct {
 	ToString string `json:"to_string" yaml:"to_string"`
 }
 
-func toChangelogObject(o interface{}, isavro bool) interface{} {
+func toChangelogObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return nil
+		return toChangelogObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return nil
+		return toChangelogObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		if isavro && isoptional {
+			return goavro.Union(avrotype, v)
+		}
 		return v
-	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+	case *string:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int8:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int16:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *bool:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
 		return v
 	case map[string]interface{}:
 		return o
@@ -97,7 +186,7 @@ func toChangelogObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toChangelogObject(av, isavro))
+			arr = append(arr, toChangelogObject(av, isavro, false, ""))
 		}
 		return arr
 	}
@@ -192,16 +281,16 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":     o.RefType,
 		"customer_id":  o.CustomerID,
 		"hashcode":     o.Hash(),
-		"issue_id":     toChangelogObject(o.IssueID, isavro),
-		"created_ts":   toChangelogObject(o.CreatedAt, isavro),
-		"ordinal":      toChangelogObject(o.Ordinal, isavro),
-		"user_id":      toChangelogObject(o.UserID, isavro),
-		"field":        toChangelogObject(o.Field, isavro),
-		"field_type":   toChangelogObject(o.FieldType, isavro),
-		"from":         toChangelogObject(o.From, isavro),
-		"from_string":  toChangelogObject(o.FromString, isavro),
-		"to":           toChangelogObject(o.To, isavro),
-		"to_string":    toChangelogObject(o.ToString, isavro),
+		"issue_id":     toChangelogObject(o.IssueID, isavro, false, "string"),
+		"created_ts":   toChangelogObject(o.CreatedAt, isavro, false, "long"),
+		"ordinal":      toChangelogObject(o.Ordinal, isavro, false, "long"),
+		"user_id":      toChangelogObject(o.UserID, isavro, false, "string"),
+		"field":        toChangelogObject(o.Field, isavro, false, "string"),
+		"field_type":   toChangelogObject(o.FieldType, isavro, false, "string"),
+		"from":         toChangelogObject(o.From, isavro, false, "string"),
+		"from_string":  toChangelogObject(o.FromString, isavro, false, "string"),
+		"to":           toChangelogObject(o.To, isavro, false, "string"),
+		"to_string":    toChangelogObject(o.ToString, isavro, false, "string"),
 	}
 }
 

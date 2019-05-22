@@ -82,16 +82,105 @@ type CommitFile struct {
 	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence"`
 }
 
-func toCommitFileObject(o interface{}, isavro bool) interface{} {
+func toCommitFileObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return nil
+		return toCommitFileObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return nil
+		return toCommitFileObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		if isavro && isoptional {
+			return goavro.Union(avrotype, v)
+		}
 		return v
-	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+	case *string:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int8:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int16:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *bool:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
 		return v
 	case map[string]interface{}:
 		return o
@@ -115,7 +204,7 @@ func toCommitFileObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toCommitFileObject(av, isavro))
+			arr = append(arr, toCommitFileObject(av, isavro, false, ""))
 		}
 		return arr
 	}
@@ -210,25 +299,25 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":           o.RefType,
 		"customer_id":        o.CustomerID,
 		"hashcode":           o.Hash(),
-		"created_ts":         toCommitFileObject(o.CreatedAt, isavro),
-		"commit_id":          toCommitFileObject(o.CommitID, isavro),
-		"repo_id":            toCommitFileObject(o.RepoID, isavro),
-		"filename":           toCommitFileObject(o.Filename, isavro),
-		"additions":          toCommitFileObject(o.Additions, isavro),
-		"deletions":          toCommitFileObject(o.Deletions, isavro),
-		"status":             toCommitFileObject(o.Status, isavro),
-		"binary":             toCommitFileObject(o.Binary, isavro),
-		"language":           toCommitFileObject(o.Language, isavro),
-		"excluded":           toCommitFileObject(o.Excluded, isavro),
-		"excluded_reason":    toCommitFileObject(o.ExcludedReason, isavro),
-		"ordinal":            toCommitFileObject(o.Ordinal, isavro),
-		"loc":                toCommitFileObject(o.Loc, isavro),
-		"sloc":               toCommitFileObject(o.Sloc, isavro),
-		"blanks":             toCommitFileObject(o.Blanks, isavro),
-		"comments":           toCommitFileObject(o.Comments, isavro),
-		"complexity":         toCommitFileObject(o.Complexity, isavro),
-		"license":            toCommitFileObject(o.License, isavro),
-		"license_confidence": toCommitFileObject(o.LicenseConfidence, isavro),
+		"created_ts":         toCommitFileObject(o.CreatedAt, isavro, false, "long"),
+		"commit_id":          toCommitFileObject(o.CommitID, isavro, false, "string"),
+		"repo_id":            toCommitFileObject(o.RepoID, isavro, false, "string"),
+		"filename":           toCommitFileObject(o.Filename, isavro, false, "string"),
+		"additions":          toCommitFileObject(o.Additions, isavro, false, "long"),
+		"deletions":          toCommitFileObject(o.Deletions, isavro, false, "long"),
+		"status":             toCommitFileObject(o.Status, isavro, false, "string"),
+		"binary":             toCommitFileObject(o.Binary, isavro, false, "boolean"),
+		"language":           toCommitFileObject(o.Language, isavro, false, "string"),
+		"excluded":           toCommitFileObject(o.Excluded, isavro, false, "boolean"),
+		"excluded_reason":    toCommitFileObject(o.ExcludedReason, isavro, false, "string"),
+		"ordinal":            toCommitFileObject(o.Ordinal, isavro, false, "long"),
+		"loc":                toCommitFileObject(o.Loc, isavro, false, "long"),
+		"sloc":               toCommitFileObject(o.Sloc, isavro, false, "long"),
+		"blanks":             toCommitFileObject(o.Blanks, isavro, false, "long"),
+		"comments":           toCommitFileObject(o.Comments, isavro, false, "long"),
+		"complexity":         toCommitFileObject(o.Complexity, isavro, false, "long"),
+		"license":            toCommitFileObject(o.License, isavro, false, "string"),
+		"license_confidence": toCommitFileObject(o.LicenseConfidence, isavro, false, "float"),
 	}
 }
 

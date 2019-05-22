@@ -66,16 +66,105 @@ type Commit struct {
 	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
 }
 
-func toCommitObject(o interface{}, isavro bool) interface{} {
+func toCommitObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return nil
+		return toCommitObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return nil
+		return toCommitObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
+		if isavro && isoptional {
+			return goavro.Union(avrotype, v)
+		}
 		return v
-	case *string, *int, *int8, *int16, *int32, *int64, *float32, *float64, *bool:
+	case *string:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int8:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int16:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *int64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float32:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *float64:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
+		return v
+	case *bool:
+		if isavro && isoptional {
+			if v == nil {
+				return toSprintObjectNil(isavro, isoptional)
+			}
+			pv := *v
+			return goavro.Union(avrotype, pv)
+		}
 		return v
 	case map[string]interface{}:
 		return o
@@ -99,7 +188,7 @@ func toCommitObject(o interface{}, isavro bool) interface{} {
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toCommitObject(av, isavro))
+			arr = append(arr, toCommitObject(av, isavro, false, ""))
 		}
 		return arr
 	}
@@ -195,17 +284,17 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":      o.RefType,
 		"customer_id":   o.CustomerID,
 		"hashcode":      o.Hash(),
-		"repo_id":       toCommitObject(o.RepoID, isavro),
-		"sha":           toCommitObject(o.Sha, isavro),
-		"message":       toCommitObject(o.Message, isavro),
-		"url":           toCommitObject(o.URL, isavro),
-		"created_ts":    toCommitObject(o.CreatedAt, isavro),
-		"branch":        toCommitObject(o.Branch, isavro),
-		"additions":     toCommitObject(o.Additions, isavro),
-		"deletions":     toCommitObject(o.Deletions, isavro),
-		"files_changed": toCommitObject(o.FilesChanged, isavro),
-		"author_ref_id": toCommitObject(o.AuthorRefID, isavro),
-		"ordinal":       toCommitObject(o.Ordinal, isavro),
+		"repo_id":       toCommitObject(o.RepoID, isavro, false, "string"),
+		"sha":           toCommitObject(o.Sha, isavro, false, "string"),
+		"message":       toCommitObject(o.Message, isavro, false, "string"),
+		"url":           toCommitObject(o.URL, isavro, false, "string"),
+		"created_ts":    toCommitObject(o.CreatedAt, isavro, false, "long"),
+		"branch":        toCommitObject(o.Branch, isavro, false, "string"),
+		"additions":     toCommitObject(o.Additions, isavro, false, "long"),
+		"deletions":     toCommitObject(o.Deletions, isavro, false, "long"),
+		"files_changed": toCommitObject(o.FilesChanged, isavro, false, "long"),
+		"author_ref_id": toCommitObject(o.AuthorRefID, isavro, false, "string"),
+		"ordinal":       toCommitObject(o.Ordinal, isavro, false, "long"),
 	}
 }
 
