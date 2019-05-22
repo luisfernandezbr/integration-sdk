@@ -104,7 +104,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -113,7 +113,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -122,7 +122,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -131,7 +131,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -140,7 +140,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -149,7 +149,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -158,7 +158,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -167,7 +167,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -176,7 +176,7 @@ func toCommitFileObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toCommitFileObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)

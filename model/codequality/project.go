@@ -69,7 +69,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -78,7 +78,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -87,7 +87,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -96,7 +96,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -105,7 +105,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -114,7 +114,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -123,7 +123,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -132,7 +132,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -141,7 +141,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toProjectObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)

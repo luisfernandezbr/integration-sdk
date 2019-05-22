@@ -86,7 +86,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -95,7 +95,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -104,7 +104,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -113,7 +113,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -122,7 +122,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -131,7 +131,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -140,7 +140,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -149,7 +149,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -158,7 +158,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toPullRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)

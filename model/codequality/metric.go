@@ -74,7 +74,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -83,7 +83,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -92,7 +92,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -101,7 +101,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -110,7 +110,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -119,7 +119,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -128,7 +128,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -137,7 +137,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -146,7 +146,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toMetricObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)

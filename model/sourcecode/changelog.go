@@ -90,7 +90,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -99,7 +99,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -108,7 +108,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -117,7 +117,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -126,7 +126,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -135,7 +135,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -144,7 +144,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -153,7 +153,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -162,7 +162,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
+				return toChangelogObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
