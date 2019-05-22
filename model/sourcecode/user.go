@@ -20,7 +20,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // UserDefaultTopic is the default topic name
@@ -515,7 +514,7 @@ func CreateUserOutputStream(stream io.WriteCloser, ch chan User, errors chan<- e
 }
 
 // CreateUserProducer will stream data from the channel
-func CreateUserProducer(producer util.Producer, ch chan User, errors chan<- error) <-chan bool {
+func CreateUserProducer(producer Producer, ch chan User, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -535,17 +534,17 @@ func CreateUserProducer(producer util.Producer, ch chan User, errors chan<- erro
 }
 
 // CreateUserConsumer will stream data from the default topic into the provided channel
-func CreateUserConsumer(factory util.ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateUserConsumer(factory ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateUserConsumerForTopic(factory, UserDefaultTopic, ch, errors)
 }
 
 // CreateUserConsumerForTopic will stream data from the topic into the provided channel
-func CreateUserConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateUserConsumerForTopic(factory ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object User
 				if err := json.Unmarshal(value, &object); err != nil {

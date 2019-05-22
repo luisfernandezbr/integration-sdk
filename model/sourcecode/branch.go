@@ -21,7 +21,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // BranchDefaultTopic is the default topic name
@@ -668,7 +667,7 @@ func CreateBranchOutputStream(stream io.WriteCloser, ch chan Branch, errors chan
 }
 
 // CreateBranchProducer will stream data from the channel
-func CreateBranchProducer(producer util.Producer, ch chan Branch, errors chan<- error) <-chan bool {
+func CreateBranchProducer(producer Producer, ch chan Branch, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -688,17 +687,17 @@ func CreateBranchProducer(producer util.Producer, ch chan Branch, errors chan<- 
 }
 
 // CreateBranchConsumer will stream data from the default topic into the provided channel
-func CreateBranchConsumer(factory util.ConsumerFactory, topic string, ch chan Branch, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateBranchConsumer(factory ConsumerFactory, topic string, ch chan Branch, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateBranchConsumerForTopic(factory, BranchDefaultTopic, ch, errors)
 }
 
 // CreateBranchConsumerForTopic will stream data from the topic into the provided channel
-func CreateBranchConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Branch, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateBranchConsumerForTopic(factory ConsumerFactory, topic string, ch chan Branch, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object Branch
 				if err := json.Unmarshal(value, &object); err != nil {

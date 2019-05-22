@@ -19,7 +19,6 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // RepoDefaultTopic is the default topic name
@@ -490,7 +489,7 @@ func CreateRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- e
 }
 
 // CreateRepoProducer will stream data from the channel
-func CreateRepoProducer(producer util.Producer, ch chan Repo, errors chan<- error) <-chan bool {
+func CreateRepoProducer(producer Producer, ch chan Repo, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -510,17 +509,17 @@ func CreateRepoProducer(producer util.Producer, ch chan Repo, errors chan<- erro
 }
 
 // CreateRepoConsumer will stream data from the default topic into the provided channel
-func CreateRepoConsumer(factory util.ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateRepoConsumer(factory ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateRepoConsumerForTopic(factory, RepoDefaultTopic, ch, errors)
 }
 
 // CreateRepoConsumerForTopic will stream data from the topic into the provided channel
-func CreateRepoConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateRepoConsumerForTopic(factory ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object Repo
 				if err := json.Unmarshal(value, &object); err != nil {

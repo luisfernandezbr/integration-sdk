@@ -20,7 +20,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // MetricDefaultTopic is the default topic name
@@ -527,7 +526,7 @@ func CreateMetricOutputStream(stream io.WriteCloser, ch chan Metric, errors chan
 }
 
 // CreateMetricProducer will stream data from the channel
-func CreateMetricProducer(producer util.Producer, ch chan Metric, errors chan<- error) <-chan bool {
+func CreateMetricProducer(producer Producer, ch chan Metric, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -547,17 +546,17 @@ func CreateMetricProducer(producer util.Producer, ch chan Metric, errors chan<- 
 }
 
 // CreateMetricConsumer will stream data from the default topic into the provided channel
-func CreateMetricConsumer(factory util.ConsumerFactory, topic string, ch chan Metric, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateMetricConsumer(factory ConsumerFactory, topic string, ch chan Metric, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateMetricConsumerForTopic(factory, MetricDefaultTopic, ch, errors)
 }
 
 // CreateMetricConsumerForTopic will stream data from the topic into the provided channel
-func CreateMetricConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Metric, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateMetricConsumerForTopic(factory ConsumerFactory, topic string, ch chan Metric, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object Metric
 				if err := json.Unmarshal(value, &object); err != nil {

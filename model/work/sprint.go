@@ -20,7 +20,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // SprintDefaultTopic is the default topic name
@@ -569,7 +568,7 @@ func CreateSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan
 }
 
 // CreateSprintProducer will stream data from the channel
-func CreateSprintProducer(producer util.Producer, ch chan Sprint, errors chan<- error) <-chan bool {
+func CreateSprintProducer(producer Producer, ch chan Sprint, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -589,17 +588,17 @@ func CreateSprintProducer(producer util.Producer, ch chan Sprint, errors chan<- 
 }
 
 // CreateSprintConsumer will stream data from the default topic into the provided channel
-func CreateSprintConsumer(factory util.ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateSprintConsumer(factory ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateSprintConsumerForTopic(factory, SprintDefaultTopic, ch, errors)
 }
 
 // CreateSprintConsumerForTopic will stream data from the topic into the provided channel
-func CreateSprintConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateSprintConsumerForTopic(factory ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object Sprint
 				if err := json.Unmarshal(value, &object); err != nil {

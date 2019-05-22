@@ -20,7 +20,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // TeamDefaultTopic is the default topic name
@@ -535,7 +534,7 @@ func CreateTeamOutputStream(stream io.WriteCloser, ch chan Team, errors chan<- e
 }
 
 // CreateTeamProducer will stream data from the channel
-func CreateTeamProducer(producer util.Producer, ch chan Team, errors chan<- error) <-chan bool {
+func CreateTeamProducer(producer Producer, ch chan Team, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -555,17 +554,17 @@ func CreateTeamProducer(producer util.Producer, ch chan Team, errors chan<- erro
 }
 
 // CreateTeamConsumer will stream data from the default topic into the provided channel
-func CreateTeamConsumer(factory util.ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateTeamConsumer(factory ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateTeamConsumerForTopic(factory, TeamDefaultTopic, ch, errors)
 }
 
 // CreateTeamConsumerForTopic will stream data from the topic into the provided channel
-func CreateTeamConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateTeamConsumerForTopic(factory ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object Team
 				if err := json.Unmarshal(value, &object); err != nil {

@@ -20,7 +20,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // CostCenterDefaultTopic is the default topic name
@@ -550,7 +549,7 @@ func CreateCostCenterOutputStream(stream io.WriteCloser, ch chan CostCenter, err
 }
 
 // CreateCostCenterProducer will stream data from the channel
-func CreateCostCenterProducer(producer util.Producer, ch chan CostCenter, errors chan<- error) <-chan bool {
+func CreateCostCenterProducer(producer Producer, ch chan CostCenter, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -570,17 +569,17 @@ func CreateCostCenterProducer(producer util.Producer, ch chan CostCenter, errors
 }
 
 // CreateCostCenterConsumer will stream data from the default topic into the provided channel
-func CreateCostCenterConsumer(factory util.ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCostCenterConsumer(factory ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCostCenterConsumerForTopic(factory, CostCenterDefaultTopic, ch, errors)
 }
 
 // CreateCostCenterConsumerForTopic will stream data from the topic into the provided channel
-func CreateCostCenterConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCostCenterConsumerForTopic(factory ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object CostCenter
 				if err := json.Unmarshal(value, &object); err != nil {

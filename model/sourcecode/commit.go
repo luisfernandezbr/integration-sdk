@@ -20,7 +20,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // CommitDefaultTopic is the default topic name
@@ -654,7 +653,7 @@ func CreateCommitOutputStream(stream io.WriteCloser, ch chan Commit, errors chan
 }
 
 // CreateCommitProducer will stream data from the channel
-func CreateCommitProducer(producer util.Producer, ch chan Commit, errors chan<- error) <-chan bool {
+func CreateCommitProducer(producer Producer, ch chan Commit, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -674,17 +673,17 @@ func CreateCommitProducer(producer util.Producer, ch chan Commit, errors chan<- 
 }
 
 // CreateCommitConsumer will stream data from the default topic into the provided channel
-func CreateCommitConsumer(factory util.ConsumerFactory, topic string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitConsumer(factory ConsumerFactory, topic string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCommitConsumerForTopic(factory, CommitDefaultTopic, ch, errors)
 }
 
 // CreateCommitConsumerForTopic will stream data from the topic into the provided channel
-func CreateCommitConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitConsumerForTopic(factory ConsumerFactory, topic string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object Commit
 				if err := json.Unmarshal(value, &object); err != nil {

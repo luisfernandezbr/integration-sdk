@@ -20,7 +20,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/integration-sdk/util"
 )
 
 // CommitFileDefaultTopic is the default topic name
@@ -797,7 +796,7 @@ func CreateCommitFileOutputStream(stream io.WriteCloser, ch chan CommitFile, err
 }
 
 // CreateCommitFileProducer will stream data from the channel
-func CreateCommitFileProducer(producer util.Producer, ch chan CommitFile, errors chan<- error) <-chan bool {
+func CreateCommitFileProducer(producer Producer, ch chan CommitFile, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -817,17 +816,17 @@ func CreateCommitFileProducer(producer util.Producer, ch chan CommitFile, errors
 }
 
 // CreateCommitFileConsumer will stream data from the default topic into the provided channel
-func CreateCommitFileConsumer(factory util.ConsumerFactory, topic string, ch chan CommitFile, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitFileConsumer(factory ConsumerFactory, topic string, ch chan CommitFile, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCommitFileConsumerForTopic(factory, CommitFileDefaultTopic, ch, errors)
 }
 
 // CreateCommitFileConsumerForTopic will stream data from the topic into the provided channel
-func CreateCommitFileConsumerForTopic(factory util.ConsumerFactory, topic string, ch chan CommitFile, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitFileConsumerForTopic(factory ConsumerFactory, topic string, ch chan CommitFile, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := util.ConsumerCallback{
+		callback := ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object CommitFile
 				if err := json.Unmarshal(value, &object); err != nil {
