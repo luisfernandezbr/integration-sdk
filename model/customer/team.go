@@ -674,12 +674,12 @@ func CreateTeamProducer(producer datamodel.Producer, ch chan Team, errors chan<-
 }
 
 // CreateTeamConsumer will stream data from the default topic into the provided channel
-func CreateTeamConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateTeamConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateTeamConsumerForTopic(factory, TeamTopic, ch, errors)
 }
 
 // CreateTeamConsumerForTopic will stream data from the topic into the provided channel
-func CreateTeamConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateTeamConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {

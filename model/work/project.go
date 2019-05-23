@@ -647,12 +647,12 @@ func CreateProjectProducer(producer datamodel.Producer, ch chan Project, errors 
 }
 
 // CreateProjectConsumer will stream data from the default topic into the provided channel
-func CreateProjectConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateProjectConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateProjectConsumerForTopic(factory, ProjectTopic, ch, errors)
 }
 
 // CreateProjectConsumerForTopic will stream data from the topic into the provided channel
-func CreateProjectConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateProjectConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {

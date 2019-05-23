@@ -793,12 +793,12 @@ func CreateCommitProducer(producer datamodel.Producer, ch chan Commit, errors ch
 }
 
 // CreateCommitConsumer will stream data from the default topic into the provided channel
-func CreateCommitConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCommitConsumerForTopic(factory, CommitTopic, ch, errors)
 }
 
 // CreateCommitConsumerForTopic will stream data from the topic into the provided channel
-func CreateCommitConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Commit, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {

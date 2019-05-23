@@ -936,12 +936,12 @@ func CreateCommitFileProducer(producer datamodel.Producer, ch chan CommitFile, e
 }
 
 // CreateCommitFileConsumer will stream data from the default topic into the provided channel
-func CreateCommitFileConsumer(factory datamodel.ConsumerFactory, topic string, ch chan CommitFile, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitFileConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CommitFile, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCommitFileConsumerForTopic(factory, CommitFileTopic, ch, errors)
 }
 
 // CreateCommitFileConsumerForTopic will stream data from the topic into the provided channel
-func CreateCommitFileConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan CommitFile, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitFileConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CommitFile, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {

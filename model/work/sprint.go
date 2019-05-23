@@ -708,12 +708,12 @@ func CreateSprintProducer(producer datamodel.Producer, ch chan Sprint, errors ch
 }
 
 // CreateSprintConsumer will stream data from the default topic into the provided channel
-func CreateSprintConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateSprintConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateSprintConsumerForTopic(factory, SprintTopic, ch, errors)
 }
 
 // CreateSprintConsumerForTopic will stream data from the topic into the provided channel
-func CreateSprintConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateSprintConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {

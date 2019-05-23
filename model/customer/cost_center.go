@@ -689,12 +689,12 @@ func CreateCostCenterProducer(producer datamodel.Producer, ch chan CostCenter, e
 }
 
 // CreateCostCenterConsumer will stream data from the default topic into the provided channel
-func CreateCostCenterConsumer(factory datamodel.ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCostCenterConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCostCenterConsumerForTopic(factory, CostCenterTopic, ch, errors)
 }
 
 // CreateCostCenterConsumerForTopic will stream data from the topic into the provided channel
-func CreateCostCenterConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCostCenterConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {

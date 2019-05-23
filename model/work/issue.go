@@ -962,12 +962,12 @@ func CreateIssueProducer(producer datamodel.Producer, ch chan Issue, errors chan
 }
 
 // CreateIssueConsumer will stream data from the default topic into the provided channel
-func CreateIssueConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Issue, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateIssueConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Issue, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateIssueConsumerForTopic(factory, IssueTopic, ch, errors)
 }
 
 // CreateIssueConsumerForTopic will stream data from the topic into the provided channel
-func CreateIssueConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan Issue, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateIssueConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Issue, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {

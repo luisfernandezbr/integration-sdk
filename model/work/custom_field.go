@@ -629,12 +629,12 @@ func CreateCustomFieldProducer(producer datamodel.Producer, ch chan CustomField,
 }
 
 // CreateCustomFieldConsumer will stream data from the default topic into the provided channel
-func CreateCustomFieldConsumer(factory datamodel.ConsumerFactory, topic string, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCustomFieldConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCustomFieldConsumerForTopic(factory, CustomFieldTopic, ch, errors)
 }
 
 // CreateCustomFieldConsumerForTopic will stream data from the topic into the provided channel
-func CreateCustomFieldConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCustomFieldConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
