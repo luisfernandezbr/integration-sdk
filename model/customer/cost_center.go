@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// CostCenterDefaultTopic is the default topic name
-const CostCenterDefaultTopic = "customer_CostCenter_topic"
+// CostCenterTopic is the default topic name
+const CostCenterTopic datamodel.TopicNameType = "customer_CostCenter_topic"
 
-// CostCenterDefaultStream is the default stream name
-const CostCenterDefaultStream = "customer_CostCenter_stream"
+// CostCenterStream is the default stream name
+const CostCenterStream datamodel.TopicNameType = "customer_CostCenter_stream"
 
-// CostCenterDefaultTable is the default table name
-const CostCenterDefaultTable = "customer_CostCenter"
+// CostCenterTable is the default table name
+const CostCenterTable datamodel.TopicNameType = "customer_CostCenter"
+
+// CostCenterModelName is the model name
+const CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
 
 // CostCenter a cost center represents information about users and their cost
 type CostCenter struct {
@@ -50,6 +54,9 @@ type CostCenter struct {
 	// Cost the cost value of the cost center
 	Cost float64 `json:"cost" yaml:"cost" faker:"salary"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*CostCenter)(nil)
 
 func toCostCenterObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// MetricDefaultTopic is the default topic name
-const MetricDefaultTopic = "codequality_Metric_topic"
+// MetricTopic is the default topic name
+const MetricTopic datamodel.TopicNameType = "codequality_Metric_topic"
 
-// MetricDefaultStream is the default stream name
-const MetricDefaultStream = "codequality_Metric_stream"
+// MetricStream is the default stream name
+const MetricStream datamodel.TopicNameType = "codequality_Metric_stream"
 
-// MetricDefaultTable is the default table name
-const MetricDefaultTable = "codequality_Metric"
+// MetricTable is the default table name
+const MetricTable datamodel.TopicNameType = "codequality_Metric"
+
+// MetricModelName is the model name
+const MetricModelName datamodel.ModelNameType = "codequality.Metric"
 
 // Metric individual metric details
 type Metric struct {
@@ -52,6 +56,9 @@ type Metric struct {
 	// Value the value of the metric
 	Value string `json:"value" yaml:"value" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Metric)(nil)
 
 func toMetricObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

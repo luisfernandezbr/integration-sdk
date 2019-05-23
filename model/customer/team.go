@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// TeamDefaultTopic is the default topic name
-const TeamDefaultTopic = "customer_Team_topic"
+// TeamTopic is the default topic name
+const TeamTopic datamodel.TopicNameType = "customer_Team_topic"
 
-// TeamDefaultStream is the default stream name
-const TeamDefaultStream = "customer_Team_stream"
+// TeamStream is the default stream name
+const TeamStream datamodel.TopicNameType = "customer_Team_stream"
 
-// TeamDefaultTable is the default table name
-const TeamDefaultTable = "customer_Team"
+// TeamTable is the default table name
+const TeamTable datamodel.TopicNameType = "customer_Team"
+
+// TeamModelName is the model name
+const TeamModelName datamodel.ModelNameType = "customer.Team"
 
 // Team a team is a grouping of one or more users
 type Team struct {
@@ -48,6 +52,9 @@ type Team struct {
 	// ParentID the parent id of the team
 	ParentID *string `json:"parent_id" yaml:"parent_id" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Team)(nil)
 
 func toTeamObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

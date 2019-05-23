@@ -22,16 +22,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// IssueDefaultTopic is the default topic name
-const IssueDefaultTopic = "work_Issue_topic"
+// IssueTopic is the default topic name
+const IssueTopic datamodel.TopicNameType = "work_Issue_topic"
 
-// IssueDefaultStream is the default stream name
-const IssueDefaultStream = "work_Issue_stream"
+// IssueStream is the default stream name
+const IssueStream datamodel.TopicNameType = "work_Issue_stream"
 
-// IssueDefaultTable is the default table name
-const IssueDefaultTable = "work_Issue"
+// IssueTable is the default table name
+const IssueTable datamodel.TopicNameType = "work_Issue"
+
+// IssueModelName is the model name
+const IssueModelName datamodel.ModelNameType = "work.Issue"
 
 // Issue the issue is a specific work item for a project
 type Issue struct {
@@ -83,6 +87,9 @@ type Issue struct {
 	// Resolution resolution of the issue
 	Resolution string `json:"resolution" yaml:"resolution" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Issue)(nil)
 
 func toIssueObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

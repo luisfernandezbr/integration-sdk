@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// SprintDefaultTopic is the default topic name
-const SprintDefaultTopic = "work_Sprint_topic"
+// SprintTopic is the default topic name
+const SprintTopic datamodel.TopicNameType = "work_Sprint_topic"
 
-// SprintDefaultStream is the default stream name
-const SprintDefaultStream = "work_Sprint_stream"
+// SprintStream is the default stream name
+const SprintStream datamodel.TopicNameType = "work_Sprint_stream"
 
-// SprintDefaultTable is the default table name
-const SprintDefaultTable = "work_Sprint"
+// SprintTable is the default table name
+const SprintTable datamodel.TopicNameType = "work_Sprint"
+
+// SprintModelName is the model name
+const SprintModelName datamodel.ModelNameType = "work.Sprint"
 
 // Sprint sprint details
 type Sprint struct {
@@ -56,6 +60,9 @@ type Sprint struct {
 	// CompletedAt the timestamp in UTC that the sprint was completed
 	CompletedAt *int64 `json:"completed_ts" yaml:"completed_ts" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Sprint)(nil)
 
 func toSprintObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

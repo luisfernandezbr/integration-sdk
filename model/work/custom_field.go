@@ -20,16 +20,20 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// CustomFieldDefaultTopic is the default topic name
-const CustomFieldDefaultTopic = "work_CustomField_topic"
+// CustomFieldTopic is the default topic name
+const CustomFieldTopic datamodel.TopicNameType = "work_CustomField_topic"
 
-// CustomFieldDefaultStream is the default stream name
-const CustomFieldDefaultStream = "work_CustomField_stream"
+// CustomFieldStream is the default stream name
+const CustomFieldStream datamodel.TopicNameType = "work_CustomField_stream"
 
-// CustomFieldDefaultTable is the default table name
-const CustomFieldDefaultTable = "work_CustomField"
+// CustomFieldTable is the default table name
+const CustomFieldTable datamodel.TopicNameType = "work_CustomField"
+
+// CustomFieldModelName is the model name
+const CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
 
 // CustomField user defined fields
 type CustomField struct {
@@ -47,6 +51,9 @@ type CustomField struct {
 	// Key key of the field
 	Key string `json:"key" yaml:"key" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*CustomField)(nil)
 
 func toCustomFieldObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

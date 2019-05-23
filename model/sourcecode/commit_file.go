@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// CommitFileDefaultTopic is the default topic name
-const CommitFileDefaultTopic = "sourcecode_CommitFile_topic"
+// CommitFileTopic is the default topic name
+const CommitFileTopic datamodel.TopicNameType = "sourcecode_CommitFile_topic"
 
-// CommitFileDefaultStream is the default stream name
-const CommitFileDefaultStream = "sourcecode_CommitFile_stream"
+// CommitFileStream is the default stream name
+const CommitFileStream datamodel.TopicNameType = "sourcecode_CommitFile_stream"
 
-// CommitFileDefaultTable is the default table name
-const CommitFileDefaultTable = "sourcecode_CommitFile"
+// CommitFileTable is the default table name
+const CommitFileTable datamodel.TopicNameType = "sourcecode_CommitFile"
+
+// CommitFileModelName is the model name
+const CommitFileModelName datamodel.ModelNameType = "sourcecode.CommitFile"
 
 // CommitFile the file change for a specific commit
 type CommitFile struct {
@@ -82,6 +86,9 @@ type CommitFile struct {
 	// LicenseConfidence the license confidence from the detection engine
 	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*CommitFile)(nil)
 
 func toCommitFileObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

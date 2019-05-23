@@ -20,16 +20,20 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// ProjectDefaultTopic is the default topic name
-const ProjectDefaultTopic = "work_Project_topic"
+// ProjectTopic is the default topic name
+const ProjectTopic datamodel.TopicNameType = "work_Project_topic"
 
-// ProjectDefaultStream is the default stream name
-const ProjectDefaultStream = "work_Project_stream"
+// ProjectStream is the default stream name
+const ProjectStream datamodel.TopicNameType = "work_Project_stream"
 
-// ProjectDefaultTable is the default table name
-const ProjectDefaultTable = "work_Project"
+// ProjectTable is the default table name
+const ProjectTable datamodel.TopicNameType = "work_Project"
+
+// ProjectModelName is the model name
+const ProjectModelName datamodel.ModelNameType = "work.Project"
 
 // Project the project holds work
 type Project struct {
@@ -49,6 +53,9 @@ type Project struct {
 	// URL the url to the project home page
 	URL string `json:"url" yaml:"url" faker:"url"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Project)(nil)
 
 func toProjectObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

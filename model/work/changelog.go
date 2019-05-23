@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// ChangelogDefaultTopic is the default topic name
-const ChangelogDefaultTopic = "work_Changelog_topic"
+// ChangelogTopic is the default topic name
+const ChangelogTopic datamodel.TopicNameType = "work_Changelog_topic"
 
-// ChangelogDefaultStream is the default stream name
-const ChangelogDefaultStream = "work_Changelog_stream"
+// ChangelogStream is the default stream name
+const ChangelogStream datamodel.TopicNameType = "work_Changelog_stream"
 
-// ChangelogDefaultTable is the default table name
-const ChangelogDefaultTable = "work_Changelog"
+// ChangelogTable is the default table name
+const ChangelogTable datamodel.TopicNameType = "work_Changelog"
+
+// ChangelogModelName is the model name
+const ChangelogModelName datamodel.ModelNameType = "work.Changelog"
 
 // Changelog change log
 type Changelog struct {
@@ -64,6 +68,9 @@ type Changelog struct {
 	// ToString name of the change to
 	ToString string `json:"to_string" yaml:"to_string" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Changelog)(nil)
 
 func toChangelogObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

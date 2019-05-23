@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// PullRequestDefaultTopic is the default topic name
-const PullRequestDefaultTopic = "sourcecode_PullRequest_topic"
+// PullRequestTopic is the default topic name
+const PullRequestTopic datamodel.TopicNameType = "sourcecode_PullRequest_topic"
 
-// PullRequestDefaultStream is the default stream name
-const PullRequestDefaultStream = "sourcecode_PullRequest_stream"
+// PullRequestStream is the default stream name
+const PullRequestStream datamodel.TopicNameType = "sourcecode_PullRequest_stream"
 
-// PullRequestDefaultTable is the default table name
-const PullRequestDefaultTable = "sourcecode_PullRequest"
+// PullRequestTable is the default table name
+const PullRequestTable datamodel.TopicNameType = "sourcecode_PullRequest"
+
+// PullRequestModelName is the model name
+const PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
@@ -64,6 +68,9 @@ type PullRequest struct {
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*PullRequest)(nil)
 
 func toPullRequestObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

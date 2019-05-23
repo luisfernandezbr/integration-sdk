@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// CommitDefaultTopic is the default topic name
-const CommitDefaultTopic = "sourcecode_Commit_topic"
+// CommitTopic is the default topic name
+const CommitTopic datamodel.TopicNameType = "sourcecode_Commit_topic"
 
-// CommitDefaultStream is the default stream name
-const CommitDefaultStream = "sourcecode_Commit_stream"
+// CommitStream is the default stream name
+const CommitStream datamodel.TopicNameType = "sourcecode_Commit_stream"
 
-// CommitDefaultTable is the default table name
-const CommitDefaultTable = "sourcecode_Commit"
+// CommitTable is the default table name
+const CommitTable datamodel.TopicNameType = "sourcecode_Commit"
+
+// CommitModelName is the model name
+const CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
 
 // Commit the commit is a specific change in a repo
 type Commit struct {
@@ -66,6 +70,9 @@ type Commit struct {
 	// Ordinal the order of the commit in the commit stream
 	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Commit)(nil)
 
 func toCommitObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

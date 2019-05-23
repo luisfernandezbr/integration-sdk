@@ -22,16 +22,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// BranchDefaultTopic is the default topic name
-const BranchDefaultTopic = "sourcecode_Branch_topic"
+// BranchTopic is the default topic name
+const BranchTopic datamodel.TopicNameType = "sourcecode_Branch_topic"
 
-// BranchDefaultStream is the default stream name
-const BranchDefaultStream = "sourcecode_Branch_stream"
+// BranchStream is the default stream name
+const BranchStream datamodel.TopicNameType = "sourcecode_Branch_stream"
 
-// BranchDefaultTable is the default table name
-const BranchDefaultTable = "sourcecode_Branch"
+// BranchTable is the default table name
+const BranchTable datamodel.TopicNameType = "sourcecode_Branch"
+
+// BranchModelName is the model name
+const BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
 
 // Branch git branches
 type Branch struct {
@@ -63,6 +67,9 @@ type Branch struct {
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Branch)(nil)
 
 func toBranchObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

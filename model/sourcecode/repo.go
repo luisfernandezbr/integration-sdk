@@ -20,16 +20,20 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// RepoDefaultTopic is the default topic name
-const RepoDefaultTopic = "sourcecode_Repo_topic"
+// RepoTopic is the default topic name
+const RepoTopic datamodel.TopicNameType = "sourcecode_Repo_topic"
 
-// RepoDefaultStream is the default stream name
-const RepoDefaultStream = "sourcecode_Repo_stream"
+// RepoStream is the default stream name
+const RepoStream datamodel.TopicNameType = "sourcecode_Repo_stream"
 
-// RepoDefaultTable is the default table name
-const RepoDefaultTable = "sourcecode_Repo"
+// RepoTable is the default table name
+const RepoTable datamodel.TopicNameType = "sourcecode_Repo"
+
+// RepoModelName is the model name
+const RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
 
 // Repo the repo holds source code
 type Repo struct {
@@ -47,6 +51,9 @@ type Repo struct {
 	// URL the url to the repo home page
 	URL string `json:"url" yaml:"url" faker:"url"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*Repo)(nil)
 
 func toRepoObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {

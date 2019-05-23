@@ -21,16 +21,20 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
+	datamodel "github.com/pinpt/go-datamodel"
 )
 
-// UserDefaultTopic is the default topic name
-const UserDefaultTopic = "sourcecode_User_topic"
+// UserTopic is the default topic name
+const UserTopic datamodel.TopicNameType = "sourcecode_User_topic"
 
-// UserDefaultStream is the default stream name
-const UserDefaultStream = "sourcecode_User_stream"
+// UserStream is the default stream name
+const UserStream datamodel.TopicNameType = "sourcecode_User_stream"
 
-// UserDefaultTable is the default table name
-const UserDefaultTable = "sourcecode_User"
+// UserTable is the default table name
+const UserTable datamodel.TopicNameType = "sourcecode_User"
+
+// UserModelName is the model name
+const UserModelName datamodel.ModelNameType = "sourcecode.User"
 
 // User the source code user
 type User struct {
@@ -50,6 +54,9 @@ type User struct {
 	// Email the email for the user
 	Email *string `json:"email" yaml:"email" faker:"email"`
 }
+
+// ensure that this type implements the data model interface
+var _ datamodel.Model = (*User)(nil)
 
 func toUserObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
