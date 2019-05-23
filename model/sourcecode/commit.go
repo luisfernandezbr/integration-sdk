@@ -69,6 +69,24 @@ type Commit struct {
 	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Ordinal the order of the commit in the commit stream
 	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
+	// ID the commmit id
+	ID string `json:"id" yaml:"id" faker:"-"`
+	// Loc the number of lines in the commit
+	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
+	// Sloc the number of source lines in the commit
+	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
+	// Comments the number of comment lines in the commit
+	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
+	// Blanks the number of blank lines in the commit
+	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
+	// Size the size of all files in the commit
+	Size int64 `json:"size" yaml:"size" faker:"-"`
+	// Complexity the complexity value for the change
+	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
+	// GpgSigned if the commit was signed
+	GpgSigned bool `json:"gpg_signed" yaml:"gpg_signed" faker:"-"`
+	// Excluded if the commit was excluded
+	Excluded bool `json:"excluded" yaml:"excluded" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -326,6 +344,15 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"files_changed": toCommitObject(o.FilesChanged, isavro, false, "long"),
 		"author_ref_id": toCommitObject(o.AuthorRefID, isavro, false, "string"),
 		"ordinal":       toCommitObject(o.Ordinal, isavro, false, "long"),
+		"id":            toCommitObject(o.ID, isavro, false, "string"),
+		"loc":           toCommitObject(o.Loc, isavro, false, "long"),
+		"sloc":          toCommitObject(o.Sloc, isavro, false, "long"),
+		"comments":      toCommitObject(o.Comments, isavro, false, "long"),
+		"blanks":        toCommitObject(o.Blanks, isavro, false, "long"),
+		"size":          toCommitObject(o.Size, isavro, false, "long"),
+		"complexity":    toCommitObject(o.Complexity, isavro, false, "long"),
+		"gpg_signed":    toCommitObject(o.GpgSigned, isavro, false, "boolean"),
+		"excluded":      toCommitObject(o.Excluded, isavro, false, "boolean"),
 	}
 }
 
@@ -453,6 +480,96 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.Ordinal = number.ToInt64Any(val)
 		}
 	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["loc"].(int64); ok {
+		o.Loc = val
+	} else {
+		val := kv["loc"]
+		if val == nil {
+			o.Loc = number.ToInt64Any(nil)
+		} else {
+			o.Loc = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["sloc"].(int64); ok {
+		o.Sloc = val
+	} else {
+		val := kv["sloc"]
+		if val == nil {
+			o.Sloc = number.ToInt64Any(nil)
+		} else {
+			o.Sloc = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["comments"].(int64); ok {
+		o.Comments = val
+	} else {
+		val := kv["comments"]
+		if val == nil {
+			o.Comments = number.ToInt64Any(nil)
+		} else {
+			o.Comments = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["blanks"].(int64); ok {
+		o.Blanks = val
+	} else {
+		val := kv["blanks"]
+		if val == nil {
+			o.Blanks = number.ToInt64Any(nil)
+		} else {
+			o.Blanks = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["size"].(int64); ok {
+		o.Size = val
+	} else {
+		val := kv["size"]
+		if val == nil {
+			o.Size = number.ToInt64Any(nil)
+		} else {
+			o.Size = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["complexity"].(int64); ok {
+		o.Complexity = val
+	} else {
+		val := kv["complexity"]
+		if val == nil {
+			o.Complexity = number.ToInt64Any(nil)
+		} else {
+			o.Complexity = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["gpg_signed"].(bool); ok {
+		o.GpgSigned = val
+	} else {
+		val := kv["gpg_signed"]
+		if val == nil {
+			o.GpgSigned = number.ToBoolAny(nil)
+		} else {
+			o.GpgSigned = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["excluded"].(bool); ok {
+		o.Excluded = val
+	} else {
+		val := kv["excluded"]
+		if val == nil {
+			o.Excluded = number.ToBoolAny(nil)
+		} else {
+			o.Excluded = number.ToBoolAny(val)
+		}
+	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -475,6 +592,15 @@ func (o *Commit) Hash() string {
 	args = append(args, o.FilesChanged)
 	args = append(args, o.AuthorRefID)
 	args = append(args, o.Ordinal)
+	args = append(args, o.ID)
+	args = append(args, o.Loc)
+	args = append(args, o.Sloc)
+	args = append(args, o.Comments)
+	args = append(args, o.Blanks)
+	args = append(args, o.Size)
+	args = append(args, o.Complexity)
+	args = append(args, o.GpgSigned)
+	args = append(args, o.Excluded)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -550,6 +676,42 @@ func CreateCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ordinal",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "loc",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "sloc",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "comments",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "blanks",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "size",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "complexity",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "gpg_signed",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "excluded",
+				"type": "boolean",
 			},
 		},
 	}

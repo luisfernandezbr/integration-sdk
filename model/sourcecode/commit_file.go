@@ -85,6 +85,16 @@ type CommitFile struct {
 	License string `json:"license" yaml:"license" faker:"-"`
 	// LicenseConfidence the license confidence from the detection engine
 	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence" faker:"-"`
+	// Renamed if the file was renamed
+	Renamed bool `json:"renamed" yaml:"renamed" faker:"-"`
+	// RenamedFrom the original file name
+	RenamedFrom string `json:"renamed_from" yaml:"renamed_from" faker:"-"`
+	// RenamedTo the final file name
+	RenamedTo string `json:"renamed_to" yaml:"renamed_to" faker:"-"`
+	// Size the size of the file
+	Size int64 `json:"size" yaml:"size" faker:"-"`
+	// SkippedReason the reason why the file was skipped
+	SkippedReason string `json:"skipped_reason" yaml:"skipped_reason" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -349,6 +359,11 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 		"complexity":         toCommitFileObject(o.Complexity, isavro, false, "long"),
 		"license":            toCommitFileObject(o.License, isavro, false, "string"),
 		"license_confidence": toCommitFileObject(o.LicenseConfidence, isavro, false, "float"),
+		"renamed":            toCommitFileObject(o.Renamed, isavro, false, "boolean"),
+		"renamed_from":       toCommitFileObject(o.RenamedFrom, isavro, false, "string"),
+		"renamed_to":         toCommitFileObject(o.RenamedTo, isavro, false, "string"),
+		"size":               toCommitFileObject(o.Size, isavro, false, "long"),
+		"skipped_reason":     toCommitFileObject(o.SkippedReason, isavro, false, "string"),
 	}
 }
 
@@ -556,6 +571,56 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 			o.LicenseConfidence = number.ToFloat64Any(val)
 		}
 	}
+	if val, ok := kv["renamed"].(bool); ok {
+		o.Renamed = val
+	} else {
+		val := kv["renamed"]
+		if val == nil {
+			o.Renamed = number.ToBoolAny(nil)
+		} else {
+			o.Renamed = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["renamed_from"].(string); ok {
+		o.RenamedFrom = val
+	} else {
+		val := kv["renamed_from"]
+		if val == nil {
+			o.RenamedFrom = ""
+		} else {
+			o.RenamedFrom = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["renamed_to"].(string); ok {
+		o.RenamedTo = val
+	} else {
+		val := kv["renamed_to"]
+		if val == nil {
+			o.RenamedTo = ""
+		} else {
+			o.RenamedTo = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["size"].(int64); ok {
+		o.Size = val
+	} else {
+		val := kv["size"]
+		if val == nil {
+			o.Size = number.ToInt64Any(nil)
+		} else {
+			o.Size = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["skipped_reason"].(string); ok {
+		o.SkippedReason = val
+	} else {
+		val := kv["skipped_reason"]
+		if val == nil {
+			o.SkippedReason = ""
+		} else {
+			o.SkippedReason = fmt.Sprintf("%v", val)
+		}
+	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -586,6 +651,11 @@ func (o *CommitFile) Hash() string {
 	args = append(args, o.Complexity)
 	args = append(args, o.License)
 	args = append(args, o.LicenseConfidence)
+	args = append(args, o.Renamed)
+	args = append(args, o.RenamedFrom)
+	args = append(args, o.RenamedTo)
+	args = append(args, o.Size)
+	args = append(args, o.SkippedReason)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -693,6 +763,26 @@ func CreateCommitFileAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "license_confidence",
 				"type": "float",
+			},
+			map[string]interface{}{
+				"name": "renamed",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "renamed_from",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "renamed_to",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "size",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "skipped_reason",
+				"type": "string",
 			},
 		},
 	}
