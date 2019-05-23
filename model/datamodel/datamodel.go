@@ -3,6 +3,8 @@
 package datamodel
 
 import (
+	"context"
+
 	"github.com/linkedin/goavro"
 )
 

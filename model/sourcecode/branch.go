@@ -808,7 +808,7 @@ func CreateBranchProducer(producer datamodel.Producer, ch chan Branch, errors ch
 
 // CreateBranchConsumer will stream data from the default topic into the provided channel
 func CreateBranchConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Branch, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateBranchConsumerForTopic(factory, BranchDefaultTopic, ch, errors)
+	return CreateBranchConsumerForTopic(factory, BranchTopic, ch, errors)
 }
 
 // CreateBranchConsumerForTopic will stream data from the topic into the provided channel

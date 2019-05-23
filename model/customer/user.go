@@ -934,7 +934,7 @@ func CreateUserProducer(producer datamodel.Producer, ch chan User, errors chan<-
 
 // CreateUserConsumer will stream data from the default topic into the provided channel
 func CreateUserConsumer(factory datamodel.ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateUserConsumerForTopic(factory, UserDefaultTopic, ch, errors)
+	return CreateUserConsumerForTopic(factory, UserTopic, ch, errors)
 }
 
 // CreateUserConsumerForTopic will stream data from the topic into the provided channel

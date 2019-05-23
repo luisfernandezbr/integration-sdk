@@ -667,7 +667,7 @@ func CreateMetricProducer(producer datamodel.Producer, ch chan Metric, errors ch
 
 // CreateMetricConsumer will stream data from the default topic into the provided channel
 func CreateMetricConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Metric, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateMetricConsumerForTopic(factory, MetricDefaultTopic, ch, errors)
+	return CreateMetricConsumerForTopic(factory, MetricTopic, ch, errors)
 }
 
 // CreateMetricConsumerForTopic will stream data from the topic into the provided channel

@@ -775,7 +775,7 @@ func CreateChangelogProducer(producer datamodel.Producer, ch chan Changelog, err
 
 // CreateChangelogConsumer will stream data from the default topic into the provided channel
 func CreateChangelogConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Changelog, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateChangelogConsumerForTopic(factory, ChangelogDefaultTopic, ch, errors)
+	return CreateChangelogConsumerForTopic(factory, ChangelogTopic, ch, errors)
 }
 
 // CreateChangelogConsumerForTopic will stream data from the topic into the provided channel

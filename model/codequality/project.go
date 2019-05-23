@@ -630,7 +630,7 @@ func CreateProjectProducer(producer datamodel.Producer, ch chan Project, errors 
 
 // CreateProjectConsumer will stream data from the default topic into the provided channel
 func CreateProjectConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateProjectConsumerForTopic(factory, ProjectDefaultTopic, ch, errors)
+	return CreateProjectConsumerForTopic(factory, ProjectTopic, ch, errors)
 }
 
 // CreateProjectConsumerForTopic will stream data from the topic into the provided channel

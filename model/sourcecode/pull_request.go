@@ -775,7 +775,7 @@ func CreatePullRequestProducer(producer datamodel.Producer, ch chan PullRequest,
 
 // CreatePullRequestConsumer will stream data from the default topic into the provided channel
 func CreatePullRequestConsumer(factory datamodel.ConsumerFactory, topic string, ch chan PullRequest, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreatePullRequestConsumerForTopic(factory, PullRequestDefaultTopic, ch, errors)
+	return CreatePullRequestConsumerForTopic(factory, PullRequestTopic, ch, errors)
 }
 
 // CreatePullRequestConsumerForTopic will stream data from the topic into the provided channel

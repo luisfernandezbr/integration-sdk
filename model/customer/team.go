@@ -675,7 +675,7 @@ func CreateTeamProducer(producer datamodel.Producer, ch chan Team, errors chan<-
 
 // CreateTeamConsumer will stream data from the default topic into the provided channel
 func CreateTeamConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateTeamConsumerForTopic(factory, TeamDefaultTopic, ch, errors)
+	return CreateTeamConsumerForTopic(factory, TeamTopic, ch, errors)
 }
 
 // CreateTeamConsumerForTopic will stream data from the topic into the provided channel

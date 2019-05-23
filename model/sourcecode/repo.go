@@ -630,7 +630,7 @@ func CreateRepoProducer(producer datamodel.Producer, ch chan Repo, errors chan<-
 
 // CreateRepoConsumer will stream data from the default topic into the provided channel
 func CreateRepoConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Repo, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateRepoConsumerForTopic(factory, RepoDefaultTopic, ch, errors)
+	return CreateRepoConsumerForTopic(factory, RepoTopic, ch, errors)
 }
 
 // CreateRepoConsumerForTopic will stream data from the topic into the provided channel
