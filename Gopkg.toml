@@ -24,26 +24,13 @@
 #   go-tests = true
 #   unused-packages = true
 
-
-[[constraint]]
-  name = "github.com/jhaynie/go-gator"
-  version = "2.2.0"
-
-[[constraint]]
-  name = "github.com/pinpt/go-common"
-  version = "5.4.0"
-
-[[constraint]]
-  name = "github.com/spf13/cobra"
-  version = "0.0.3"
-
-[[constraint]]
-  name = "github.com/stretchr/testify"
-  version = "1.3.0"
-
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  name = "github.com/pinpt/go-common"
+  version = "5.5.0"
 
 [[constraint]]
   name = "github.com/linkedin/goavro"
