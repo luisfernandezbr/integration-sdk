@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -34,17 +35,17 @@ const RepoDefaultTable = "sourcecode_Repo"
 type Repo struct {
 	// built in types
 
-	ID         string `json:"repo_id" yaml:"repo_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"repo_id" yaml:"repo_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// Name the name of the repo
-	Name string `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name" faker:"repo"`
 	// URL the url to the repo home page
-	URL string `json:"url" yaml:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 }
 
 func toRepoObjectNil(isavro bool, isoptional bool) interface{} {
@@ -199,6 +200,29 @@ func (o *Repo) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Repo) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Repo
+func (o *Repo) Clone() *Repo {
+	c := new(Repo)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Repo) Anon() *Repo {
+	c := new(Repo)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

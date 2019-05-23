@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -34,17 +35,17 @@ const ProjectDefaultTable = "codequality_Project"
 type Project struct {
 	// built in types
 
-	ID         string `json:"project_id" yaml:"project_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"project_id" yaml:"project_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// Identifier the common identifier of the project
-	Identifier string `json:"identifier" yaml:"identifier"`
+	Identifier string `json:"identifier" yaml:"identifier" faker:"-"`
 	// Name the name of the project
-	Name string `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 }
 
 func toProjectObjectNil(isavro bool, isoptional bool) interface{} {
@@ -199,6 +200,29 @@ func (o *Project) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Project) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Project
+func (o *Project) Clone() *Project {
+	c := new(Project)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Project) Anon() *Project {
+	c := new(Project)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,37 +36,37 @@ const ChangelogDefaultTable = "sourcecode_Changelog"
 type Changelog struct {
 	// built in types
 
-	ID         string `json:"changelog_id" yaml:"changelog_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"changelog_id" yaml:"changelog_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// Filename the filename
-	Filename string `json:"filename" yaml:"filename"`
+	Filename string `json:"filename" yaml:"filename" faker:"-"`
 	// Language the detected language
-	Language string `json:"language" yaml:"language"`
+	Language string `json:"language" yaml:"language" faker:"-"`
 	// Loc the count of lines in the file
-	Loc int64 `json:"loc" yaml:"loc"`
+	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
 	// Sloc the count of source lines in the file based on language rules
-	Sloc int64 `json:"sloc" yaml:"sloc"`
+	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
 	// Blanks the count of blank lines in the file
-	Blanks int64 `json:"blanks" yaml:"blanks"`
+	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
 	// Comments the count of comment lines in the file based on language rules
-	Comments int64 `json:"comments" yaml:"comments"`
+	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
 	// Complexity the cyclomatic complexity for the change
-	Complexity int64 `json:"complexity" yaml:"complexity"`
+	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
 	// DateAt the date of the change
-	DateAt int64 `json:"date_ts" yaml:"date_ts"`
+	DateAt int64 `json:"date_ts" yaml:"date_ts" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
-	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id"`
+	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Ordinal the order of the commit in the commit stream
-	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
+	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
 	// Sha the commit SHA
-	Sha string `json:"sha" yaml:"sha"`
+	Sha string `json:"sha" yaml:"sha" faker:"-"`
 }
 
 func toChangelogObjectNil(isavro bool, isoptional bool) interface{} {
@@ -220,6 +221,29 @@ func (o *Changelog) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Changelog) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Changelog
+func (o *Changelog) Clone() *Changelog {
+	c := new(Changelog)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Changelog) Anon() *Changelog {
+	c := new(Changelog)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

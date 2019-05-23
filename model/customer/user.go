@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -36,43 +37,43 @@ const UserDefaultTable = "customer_User"
 type User struct {
 	// built in types
 
-	ID         string `json:"user_id" yaml:"user_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"user_id" yaml:"user_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// Name name of the user
-	Name string `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name" faker:"person"`
 	// Email the email of the user
-	Email string `json:"email" yaml:"email"`
+	Email string `json:"email" yaml:"email" faker:"email"`
 	// Title the title of the user
-	Title *string `json:"title" yaml:"title"`
+	Title *string `json:"title" yaml:"title" faker:"jobtitle"`
 	// Location the location of the user
-	Location *string `json:"location" yaml:"location"`
+	Location *string `json:"location" yaml:"location" faker:"location"`
 	// AvatarURL the user avatar url
-	AvatarURL *string `json:"avatar_url" yaml:"avatar_url"`
+	AvatarURL *string `json:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// ManagerID the manager user id
-	ManagerID *string `json:"manager_id" yaml:"manager_id"`
+	ManagerID *string `json:"manager_id" yaml:"manager_id" faker:"-"`
 	// Active if true, the user is active and able to login
-	Active bool `json:"active" yaml:"active"`
+	Active bool `json:"active" yaml:"active" faker:"-"`
 	// Trackable if true, the user is trackable in the pinpoint system
-	Trackable bool `json:"trackable" yaml:"trackable"`
+	Trackable bool `json:"trackable" yaml:"trackable" faker:"-"`
 	// CreatedAt when the user was created in epoch timestamp
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
 	// UpdatedAt when the user record was updated in epoch timestamp
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// DeletedAt when the user record was deleted in epoch timestamp
-	DeletedAt *int64 `json:"deleted_ts" yaml:"deleted_ts"`
+	DeletedAt *int64 `json:"deleted_ts" yaml:"deleted_ts" faker:"-"`
 	// HiredAt when the user was hired in epoch timestamp
-	HiredAt *int64 `json:"hired_ts" yaml:"hired_ts"`
+	HiredAt *int64 `json:"hired_ts" yaml:"hired_ts" faker:"-"`
 	// TerminatedAt when the user was terminated in epoch timestamp
-	TerminatedAt *int64 `json:"terminated_ts" yaml:"terminated_ts"`
+	TerminatedAt *int64 `json:"terminated_ts" yaml:"terminated_ts" faker:"-"`
 	// CostCenterID the id of the cost center
-	CostCenterID *string `json:"cost_center_id" yaml:"cost_center_id"`
+	CostCenterID *string `json:"cost_center_id" yaml:"cost_center_id" faker:"-"`
 	// TeamID the team id that the user is part of
-	TeamID *string `json:"team_id" yaml:"team_id"`
+	TeamID *string `json:"team_id" yaml:"team_id" faker:"-"`
 }
 
 func toUserObjectNil(isavro bool, isoptional bool) interface{} {
@@ -227,6 +228,29 @@ func (o *User) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *User) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of User
+func (o *User) Clone() *User {
+	c := new(User)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *User) Anon() *User {
+	c := new(User)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

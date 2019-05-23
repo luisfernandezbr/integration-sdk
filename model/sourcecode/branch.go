@@ -16,6 +16,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -36,31 +37,31 @@ const BranchDefaultTable = "sourcecode_Branch"
 type Branch struct {
 	// built in types
 
-	ID         string `json:"branch_id" yaml:"branch_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"branch_id" yaml:"branch_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// Name name of the branch
-	Name string `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 	// Default wether is the default branch or not
-	Default bool `json:"default" yaml:"default"`
+	Default bool `json:"default" yaml:"default" faker:"-"`
 	// Merged wether it has been merged
-	Merged bool `json:"merged" yaml:"merged"`
+	Merged bool `json:"merged" yaml:"merged" faker:"-"`
 	// MergeCommit commit from the merge
-	MergeCommit bool `json:"merge_commit" yaml:"merge_commit"`
+	MergeCommit bool `json:"merge_commit" yaml:"merge_commit" faker:"-"`
 	// BranchedFromCommits branched from commits
-	BranchedFromCommits []string `json:"branched_from_commits" yaml:"branched_from_commits"`
+	BranchedFromCommits []string `json:"branched_from_commits" yaml:"branched_from_commits" faker:"-"`
 	// Commits list of commits on this branch
-	Commits []string `json:"commits" yaml:"commits"`
+	Commits []string `json:"commits" yaml:"commits" faker:"-"`
 	// BehindDefaultCount behind default count
-	BehindDefaultCount int64 `json:"behind_default_count" yaml:"behind_default_count"`
+	BehindDefaultCount int64 `json:"behind_default_count" yaml:"behind_default_count" faker:"-"`
 	// AheadDefaultCount ahead default count
-	AheadDefaultCount int64 `json:"ahead_default_count" yaml:"ahead_default_count"`
+	AheadDefaultCount int64 `json:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 }
 
 func toBranchObjectNil(isavro bool, isoptional bool) interface{} {
@@ -215,6 +216,29 @@ func (o *Branch) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Branch) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Branch
+func (o *Branch) Clone() *Branch {
+	c := new(Branch)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Branch) Anon() *Branch {
+	c := new(Branch)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

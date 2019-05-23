@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,33 +36,33 @@ const ChangelogDefaultTable = "work_Changelog"
 type Changelog struct {
 	// built in types
 
-	ID         string `json:"changelog_id" yaml:"changelog_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"changelog_id" yaml:"changelog_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// IssueID id of the issue
-	IssueID string `json:"issue_id" yaml:"issue_id"`
+	IssueID string `json:"issue_id" yaml:"issue_id" faker:"-"`
 	// CreatedAt the timestamp in UTC when this change was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
 	// Ordinal so we can order correctly in queries since dates could be equal
-	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
+	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
 	// UserID id of the user of this change
-	UserID string `json:"user_id" yaml:"user_id"`
+	UserID string `json:"user_id" yaml:"user_id" faker:"-"`
 	// Field name of the field that was changed
-	Field string `json:"field" yaml:"field"`
+	Field string `json:"field" yaml:"field" faker:"-"`
 	// FieldType type of the field that was changed
-	FieldType string `json:"field_type" yaml:"field_type"`
+	FieldType string `json:"field_type" yaml:"field_type" faker:"-"`
 	// From id of the change from
-	From string `json:"from" yaml:"from"`
+	From string `json:"from" yaml:"from" faker:"-"`
 	// FromString name of the change from
-	FromString string `json:"from_string" yaml:"from_string"`
+	FromString string `json:"from_string" yaml:"from_string" faker:"-"`
 	// To id of the change to
-	To string `json:"to" yaml:"to"`
+	To string `json:"to" yaml:"to" faker:"-"`
 	// ToString name of the change to
-	ToString string `json:"to_string" yaml:"to_string"`
+	ToString string `json:"to_string" yaml:"to_string" faker:"-"`
 }
 
 func toChangelogObjectNil(isavro bool, isoptional bool) interface{} {
@@ -216,6 +217,29 @@ func (o *Changelog) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Changelog) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Changelog
+func (o *Changelog) Clone() *Changelog {
+	c := new(Changelog)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Changelog) Anon() *Changelog {
+	c := new(Changelog)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

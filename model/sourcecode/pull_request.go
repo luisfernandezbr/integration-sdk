@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,33 +36,33 @@ const PullRequestDefaultTable = "sourcecode_PullRequest"
 type PullRequest struct {
 	// built in types
 
-	ID         string `json:"pull_request_id" yaml:"pull_request_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// Title the title of the pull request
-	Title string `json:"title" yaml:"title"`
+	Title string `json:"title" yaml:"title" faker:"commit_message"`
 	// Description the description of the pull request
-	Description string `json:"description" yaml:"description"`
+	Description string `json:"description" yaml:"description" faker:"-"`
 	// URL the url to the pull request home page
-	URL string `json:"url" yaml:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 	// CreatedAt the timestamp in UTC that the pull request was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
 	// MergedAt the timestamp in UTC that the pull request was merged
-	MergedAt int64 `json:"merged_ts" yaml:"merged_ts"`
+	MergedAt int64 `json:"merged_ts" yaml:"merged_ts" faker:"-"`
 	// ClosedAt the timestamp in UTC that the pull request was closed
-	ClosedAt int64 `json:"closed_ts" yaml:"closed_ts"`
+	ClosedAt int64 `json:"closed_ts" yaml:"closed_ts" faker:"-"`
 	// UpdatedAt the timestamp in UTC that the pull request was closed
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Status the status of the pull request
-	Status string `json:"status" yaml:"status"`
+	Status string `json:"status" yaml:"status" faker:"-"`
 	// UserRefID the user ref_id in the source system
-	UserRefID string `json:"user_ref_id" yaml:"user_ref_id"`
+	UserRefID string `json:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 }
 
 func toPullRequestObjectNil(isavro bool, isoptional bool) interface{} {
@@ -216,6 +217,29 @@ func (o *PullRequest) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *PullRequest) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of PullRequest
+func (o *PullRequest) Clone() *PullRequest {
+	c := new(PullRequest)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *PullRequest) Anon() *PullRequest {
+	c := new(PullRequest)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

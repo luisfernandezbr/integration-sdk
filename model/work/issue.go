@@ -16,6 +16,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -36,51 +37,51 @@ const IssueDefaultTable = "work_Issue"
 type Issue struct {
 	// built in types
 
-	ID         string `json:"issue_id" yaml:"issue_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"issue_id" yaml:"issue_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// Title the issue title
-	Title string `json:"title" yaml:"title"`
+	Title string `json:"title" yaml:"title" faker:"issue_title"`
 	// Identifier the common identifier for the issue
-	Identifier string `json:"identifier" yaml:"identifier"`
+	Identifier string `json:"identifier" yaml:"identifier" faker:"issue_id"`
 	// ProjectID unique project id
-	ProjectID string `json:"project_id" yaml:"project_id"`
+	ProjectID string `json:"project_id" yaml:"project_id" faker:"-"`
 	// URL the url to the issue page
-	URL string `json:"url" yaml:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 	// CreatedAt the timestamp in UTC that the issue was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
 	// UpdatedAt the timestamp in UTC that the issue was updated
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// PlannedStartAt the timestamp in UTC that the issue was planned to start
-	PlannedStartAt int64 `json:"planned_start_ts" yaml:"planned_start_ts"`
+	PlannedStartAt int64 `json:"planned_start_ts" yaml:"planned_start_ts" faker:"-"`
 	// PlannedEndAt the timestamp in UTC that the issue was planned to end
-	PlannedEndAt int64 `json:"planned_end_ts" yaml:"planned_end_ts"`
+	PlannedEndAt int64 `json:"planned_end_ts" yaml:"planned_end_ts" faker:"-"`
 	// DueDateAt due date of the issue
-	DueDateAt int64 `json:"due_date_ts" yaml:"due_date_ts"`
+	DueDateAt int64 `json:"due_date_ts" yaml:"due_date_ts" faker:"-"`
 	// Priority priority of the issue
-	Priority string `json:"priority" yaml:"priority"`
+	Priority string `json:"priority" yaml:"priority" faker:"-"`
 	// Type type of issue
-	Type string `json:"type" yaml:"type"`
+	Type string `json:"type" yaml:"type" faker:"-"`
 	// Status status of the issue
-	Status string `json:"status" yaml:"status"`
+	Status string `json:"status" yaml:"status" faker:"-"`
 	// CreatorRefID user id of the creator
-	CreatorRefID string `json:"creator_ref_id" yaml:"creator_ref_id"`
+	CreatorRefID string `json:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
 	// ReporterRefID user id of the reporter
-	ReporterRefID string `json:"reporter_ref_id" yaml:"reporter_ref_id"`
+	ReporterRefID string `json:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
 	// AssigneeRefID user id of the assignee
-	AssigneeRefID string `json:"assignee_ref_id" yaml:"assignee_ref_id"`
+	AssigneeRefID string `json:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
 	// AuthorRefID user id of the author
-	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id"`
+	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Tags tags on the issue
-	Tags []string `json:"tags" yaml:"tags"`
+	Tags []string `json:"tags" yaml:"tags" faker:"-"`
 	// ParentID parent issue id, if any
-	ParentID string `json:"parent_id" yaml:"parent_id"`
+	ParentID string `json:"parent_id" yaml:"parent_id" faker:"-"`
 	// Resolution resolution of the issue
-	Resolution string `json:"resolution" yaml:"resolution"`
+	Resolution string `json:"resolution" yaml:"resolution" faker:"-"`
 }
 
 func toIssueObjectNil(isavro bool, isoptional bool) interface{} {
@@ -235,6 +236,29 @@ func (o *Issue) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Issue) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Issue
+func (o *Issue) Clone() *Issue {
+	c := new(Issue)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Issue) Anon() *Issue {
+	c := new(Issue)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

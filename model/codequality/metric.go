@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,21 +36,21 @@ const MetricDefaultTable = "codequality_Metric"
 type Metric struct {
 	// built in types
 
-	ID         string `json:"metric_id" yaml:"metric_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"metric_id" yaml:"metric_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// DateAt the date when the metric was created
-	DateAt int64 `json:"date_ts" yaml:"date_ts"`
+	DateAt int64 `json:"date_ts" yaml:"date_ts" faker:"-"`
 	// ProjectID the the project id
-	ProjectID string `json:"project_id" yaml:"project_id"`
+	ProjectID string `json:"project_id" yaml:"project_id" faker:"-"`
 	// Name the metric name
-	Name string `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 	// Value the value of the metric
-	Value string `json:"value" yaml:"value"`
+	Value string `json:"value" yaml:"value" faker:"-"`
 }
 
 func toMetricObjectNil(isavro bool, isoptional bool) interface{} {
@@ -204,6 +205,29 @@ func (o *Metric) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Metric) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Metric
+func (o *Metric) Clone() *Metric {
+	c := new(Metric)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Metric) Anon() *Metric {
+	c := new(Metric)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

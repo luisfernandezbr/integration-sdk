@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,51 +36,51 @@ const CommitFileDefaultTable = "sourcecode_CommitFile"
 type CommitFile struct {
 	// built in types
 
-	ID         string `json:"commit_file_id" yaml:"commit_file_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"commit_file_id" yaml:"commit_file_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
 	// CommitID the unique id for the commit
-	CommitID string `json:"commit_id" yaml:"commit_id"`
+	CommitID string `json:"commit_id" yaml:"commit_id" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// Filename the filename
-	Filename string `json:"filename" yaml:"filename"`
+	Filename string `json:"filename" yaml:"filename" faker:"-"`
 	// Additions the number of additions for the commit file
-	Additions int64 `json:"additions" yaml:"additions"`
+	Additions int64 `json:"additions" yaml:"additions" faker:"-"`
 	// Deletions the number of deletions for the commit file
-	Deletions int64 `json:"deletions" yaml:"deletions"`
+	Deletions int64 `json:"deletions" yaml:"deletions" faker:"-"`
 	// Status the status of the change
-	Status string `json:"status" yaml:"status"`
+	Status string `json:"status" yaml:"status" faker:"-"`
 	// Binary indicates if the file was detected to be a binary file
-	Binary bool `json:"binary" yaml:"binary"`
+	Binary bool `json:"binary" yaml:"binary" faker:"-"`
 	// Language the language that was detected for the file
-	Language string `json:"language" yaml:"language"`
+	Language string `json:"language" yaml:"language" faker:"-"`
 	// Excluded if the file was excluded from processing
-	Excluded bool `json:"excluded" yaml:"excluded"`
+	Excluded bool `json:"excluded" yaml:"excluded" faker:"-"`
 	// ExcludedReason if the file was excluded, the reason
-	ExcludedReason string `json:"excluded_reason" yaml:"excluded_reason"`
+	ExcludedReason string `json:"excluded_reason" yaml:"excluded_reason" faker:"-"`
 	// Ordinal the order value for the file in the change set
-	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
+	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
 	// Loc the number of lines in the file
-	Loc int64 `json:"loc" yaml:"loc"`
+	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
 	// Sloc the number of source lines in the file
-	Sloc int64 `json:"sloc" yaml:"sloc"`
+	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
 	// Blanks the number of blank lines in the file
-	Blanks int64 `json:"blanks" yaml:"blanks"`
+	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
 	// Comments the number of comment lines in the file
-	Comments int64 `json:"comments" yaml:"comments"`
+	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
 	// Complexity the complexity value for the file change
-	Complexity int64 `json:"complexity" yaml:"complexity"`
+	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
 	// License the license which was detected for the file
-	License string `json:"license" yaml:"license"`
+	License string `json:"license" yaml:"license" faker:"-"`
 	// LicenseConfidence the license confidence from the detection engine
-	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence"`
+	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence" faker:"-"`
 }
 
 func toCommitFileObjectNil(isavro bool, isoptional bool) interface{} {
@@ -234,6 +235,29 @@ func (o *CommitFile) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *CommitFile) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of CommitFile
+func (o *CommitFile) Clone() *CommitFile {
+	c := new(CommitFile)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *CommitFile) Anon() *CommitFile {
+	c := new(CommitFile)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

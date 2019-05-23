@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,17 +36,17 @@ const TeamDefaultTable = "customer_Team"
 type Team struct {
 	// built in types
 
-	ID         string `json:"team_id" yaml:"team_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"team_id" yaml:"team_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// Name the name of the team
-	Name string `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name" faker:"team"`
 	// ParentID the parent id of the team
-	ParentID *string `json:"parent_id" yaml:"parent_id"`
+	ParentID *string `json:"parent_id" yaml:"parent_id" faker:"-"`
 }
 
 func toTeamObjectNil(isavro bool, isoptional bool) interface{} {
@@ -200,6 +201,29 @@ func (o *Team) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Team) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Team
+func (o *Team) Clone() *Team {
+	c := new(Team)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Team) Anon() *Team {
+	c := new(Team)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

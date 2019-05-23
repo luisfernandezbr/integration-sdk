@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,19 +36,19 @@ const CostCenterDefaultTable = "customer_CostCenter"
 type CostCenter struct {
 	// built in types
 
-	ID         string `json:"cost_center_id" yaml:"cost_center_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"cost_center_id" yaml:"cost_center_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// Name the name of the cost center
-	Name string `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name" faker:"costcenter"`
 	// Description the description for the cost center
-	Description string `json:"description" yaml:"description"`
+	Description string `json:"description" yaml:"description" faker:"-"`
 	// Cost the cost value of the cost center
-	Cost float64 `json:"cost" yaml:"cost"`
+	Cost float64 `json:"cost" yaml:"cost" faker:"salary"`
 }
 
 func toCostCenterObjectNil(isavro bool, isoptional bool) interface{} {
@@ -202,6 +203,29 @@ func (o *CostCenter) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *CostCenter) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of CostCenter
+func (o *CostCenter) Clone() *CostCenter {
+	c := new(CostCenter)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *CostCenter) Anon() *CostCenter {
+	c := new(CostCenter)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

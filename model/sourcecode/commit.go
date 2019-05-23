@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,35 +36,35 @@ const CommitDefaultTable = "sourcecode_Commit"
 type Commit struct {
 	// built in types
 
-	ID         string `json:"commit_id" yaml:"commit_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"commit_id" yaml:"commit_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// Sha the unique sha for the commit
-	Sha string `json:"sha" yaml:"sha"`
+	Sha string `json:"sha" yaml:"sha" faker:"sha"`
 	// Message the commit message
-	Message string `json:"message" yaml:"message"`
+	Message string `json:"message" yaml:"message" faker:"commit_message"`
 	// URL the url to the commit detail
-	URL string `json:"url" yaml:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts"`
+	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
 	// Branch the branch that the commit was made to
-	Branch string `json:"branch" yaml:"branch"`
+	Branch string `json:"branch" yaml:"branch" faker:"-"`
 	// Additions the number of additions for the commit
-	Additions int64 `json:"additions" yaml:"additions"`
+	Additions int64 `json:"additions" yaml:"additions" faker:"-"`
 	// Deletions the number of deletions for the commit
-	Deletions int64 `json:"deletions" yaml:"deletions"`
+	Deletions int64 `json:"deletions" yaml:"deletions" faker:"-"`
 	// FilesChanged the number of files changed for the commit
-	FilesChanged int64 `json:"files_changed" yaml:"files_changed"`
+	FilesChanged int64 `json:"files_changed" yaml:"files_changed" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
-	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id"`
+	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Ordinal the order of the commit in the commit stream
-	Ordinal int64 `json:"ordinal" yaml:"ordinal"`
+	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
 }
 
 func toCommitObjectNil(isavro bool, isoptional bool) interface{} {
@@ -219,6 +220,29 @@ func (o *Commit) GetID() string {
 func (o *Commit) GetRefID() string {
 	o.RefID = o.Sha
 	return o.RefID
+}
+
+// Clone returns an exact copy of Commit
+func (o *Commit) Clone() *Commit {
+	c := new(Commit)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Commit) Anon() *Commit {
+	c := new(Commit)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json

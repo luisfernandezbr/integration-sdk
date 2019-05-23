@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 
+	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -35,25 +36,25 @@ const SprintDefaultTable = "work_Sprint"
 type Sprint struct {
 	// built in types
 
-	ID         string `json:"sprint_id" yaml:"sprint_id"`
-	RefID      string `json:"ref_id" yaml:"ref_id"`
-	RefType    string `json:"ref_type" yaml:"ref_type"`
-	CustomerID string `json:"customer_id" yaml:"customer_id"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode"`
+	ID         string `json:"sprint_id" yaml:"sprint_id" faker:"-"`
+	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
 	// Name the name of the field
-	Name string `json:"name" yaml:"name"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 	// Identifier the common identifier for the sprint
-	Identifier string `json:"identifier" yaml:"identifier"`
+	Identifier string `json:"identifier" yaml:"identifier" faker:"-"`
 	// Status status of the sprint
-	Status string `json:"status" yaml:"status"`
+	Status string `json:"status" yaml:"status" faker:"-"`
 	// StartedAt the timestamp in UTC that the sprint was started
-	StartedAt int64 `json:"started_ts" yaml:"started_ts"`
+	StartedAt int64 `json:"started_ts" yaml:"started_ts" faker:"-"`
 	// EndedAt the timestamp in UTC that the sprint was ended
-	EndedAt *int64 `json:"ended_ts" yaml:"ended_ts"`
+	EndedAt *int64 `json:"ended_ts" yaml:"ended_ts" faker:"-"`
 	// CompletedAt the timestamp in UTC that the sprint was completed
-	CompletedAt *int64 `json:"completed_ts" yaml:"completed_ts"`
+	CompletedAt *int64 `json:"completed_ts" yaml:"completed_ts" faker:"-"`
 }
 
 func toSprintObjectNil(isavro bool, isoptional bool) interface{} {
@@ -208,6 +209,29 @@ func (o *Sprint) GetID() string {
 // GetRefID returns the RefID for the object
 func (o *Sprint) GetRefID() string {
 	return o.RefID
+}
+
+// Clone returns an exact copy of Sprint
+func (o *Sprint) Clone() *Sprint {
+	c := new(Sprint)
+	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Sprint) Anon() *Sprint {
+	c := new(Sprint)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
+	return c
 }
 
 // MarshalJSON returns the bytes for marshaling to json
