@@ -69,8 +69,6 @@ type Commit struct {
 	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Ordinal the order of the commit in the commit stream
 	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
-	// ID the commmit id
-	ID string `json:"id" yaml:"id" faker:"-"`
 	// Loc the number of lines in the commit
 	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
 	// Sloc the number of source lines in the commit
@@ -344,7 +342,6 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"files_changed": toCommitObject(o.FilesChanged, isavro, false, "long"),
 		"author_ref_id": toCommitObject(o.AuthorRefID, isavro, false, "string"),
 		"ordinal":       toCommitObject(o.Ordinal, isavro, false, "long"),
-		"id":            toCommitObject(o.ID, isavro, false, "string"),
 		"loc":           toCommitObject(o.Loc, isavro, false, "long"),
 		"sloc":          toCommitObject(o.Sloc, isavro, false, "long"),
 		"comments":      toCommitObject(o.Comments, isavro, false, "long"),
@@ -480,16 +477,6 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.Ordinal = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			o.ID = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["loc"].(int64); ok {
 		o.Loc = val
 	} else {
@@ -592,7 +579,6 @@ func (o *Commit) Hash() string {
 	args = append(args, o.FilesChanged)
 	args = append(args, o.AuthorRefID)
 	args = append(args, o.Ordinal)
-	args = append(args, o.ID)
 	args = append(args, o.Loc)
 	args = append(args, o.Sloc)
 	args = append(args, o.Comments)
@@ -676,10 +662,6 @@ func CreateCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ordinal",
 				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "loc",
