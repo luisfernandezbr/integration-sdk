@@ -18,14 +18,12 @@ func New(name string) interface{} {
 			return new(codequality.Metric)
 		case "codequality.Project":
 			return new(codequality.Project)
+		case "customer.CostCenter":
+			return new(customer.CostCenter)
 		case "customer.Team":
 			return new(customer.Team)
 		case "customer.User":
 			return new(customer.User)
-		case "customer.CostCenter":
-			return new(customer.CostCenter)
-		case "sourcecode.PullRequest":
-			return new(sourcecode.PullRequest)
 		case "sourcecode.Repo":
 			return new(sourcecode.Repo)
 		case "sourcecode.User":
@@ -38,6 +36,10 @@ func New(name string) interface{} {
 			return new(sourcecode.Commit)
 		case "sourcecode.CommitFile":
 			return new(sourcecode.CommitFile)
+		case "sourcecode.PullRequest":
+			return new(sourcecode.PullRequest)
+		case "work.Sprint":
+			return new(work.Sprint)
 		case "work.User":
 			return new(work.User)
 		case "work.Changelog":
@@ -48,8 +50,6 @@ func New(name string) interface{} {
 			return new(work.Issue)
 		case "work.Project":
 			return new(work.Project)
-		case "work.Sprint":
-			return new(work.Sprint)
 	}
 	panic("invalid type specific: " + name)
 }
