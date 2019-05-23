@@ -652,7 +652,7 @@ func CreateRepoConsumerForTopic(factory datamodel.ConsumerFactory, topic datamod
 				errors <- err
 			},
 		}
-		consumer, err := factory.CreateConsumer(topic, callback)
+		consumer, err := factory.CreateConsumer(string(topic), callback)
 		if err != nil {
 			errors <- err
 			return
