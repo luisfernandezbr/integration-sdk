@@ -20,7 +20,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	datamodel "github.com/pinpt/go-datamodel"
+	"github.com/pinpt/go-datamodel/datamodel"
 )
 
 // CustomFieldTopic is the default topic name
@@ -609,7 +609,7 @@ func CreateCustomFieldOutputStream(stream io.WriteCloser, ch chan CustomField, e
 }
 
 // CreateCustomFieldProducer will stream data from the channel
-func CreateCustomFieldProducer(producer Producer, ch chan CustomField, errors chan<- error) <-chan bool {
+func CreateCustomFieldProducer(producer datamodel.Producer, ch chan CustomField, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -629,17 +629,17 @@ func CreateCustomFieldProducer(producer Producer, ch chan CustomField, errors ch
 }
 
 // CreateCustomFieldConsumer will stream data from the default topic into the provided channel
-func CreateCustomFieldConsumer(factory ConsumerFactory, topic string, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCustomFieldConsumer(factory datamodel.ConsumerFactory, topic string, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCustomFieldConsumerForTopic(factory, CustomFieldDefaultTopic, ch, errors)
 }
 
 // CreateCustomFieldConsumerForTopic will stream data from the topic into the provided channel
-func CreateCustomFieldConsumerForTopic(factory ConsumerFactory, topic string, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCustomFieldConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan CustomField, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := ConsumerCallback{
+		callback := datamodel.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object CustomField
 				if err := json.Unmarshal(value, &object); err != nil {

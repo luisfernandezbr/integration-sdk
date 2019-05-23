@@ -21,7 +21,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
-	datamodel "github.com/pinpt/go-datamodel"
+	"github.com/pinpt/go-datamodel/datamodel"
 )
 
 // TeamTopic is the default topic name
@@ -355,22 +355,22 @@ func (o *Team) Hash() string {
 }
 
 // CreateTeam creates a new Team in the database
-func CreateTeam(ctx context.Context, db Db, o *Team) error {
+func CreateTeam(ctx context.Context, db datamodel.Db, o *Team) error {
 	return db.Create(ctx, o.ToMap())
 }
 
 // DeleteTeam deletes a Team in the database
-func DeleteTeam(ctx context.Context, db Db, o *Team) error {
+func DeleteTeam(ctx context.Context, db datamodel.Db, o *Team) error {
 	return db.Delete(ctx, o.GetID())
 }
 
 // UpdateTeam updates a Team in the database
-func UpdateTeam(ctx context.Context, db Db, o *Team) error {
+func UpdateTeam(ctx context.Context, db datamodel.Db, o *Team) error {
 	return db.Update(ctx, o.GetID(), o.ToMap())
 }
 
 // FindTeam returns a Team from the database
-func FindTeam(ctx context.Context, db Db, id string) (*Team, error) {
+func FindTeam(ctx context.Context, db datamodel.Db, id string) (*Team, error) {
 	kv, err := db.FindOne(ctx, id)
 	if err != nil {
 		return nil, err
@@ -381,7 +381,7 @@ func FindTeam(ctx context.Context, db Db, id string) (*Team, error) {
 }
 
 // FindTeams returns all Team from the database matching keys
-func FindTeams(ctx context.Context, db Db, kv map[string]interface{}) ([]*Team, error) {
+func FindTeams(ctx context.Context, db datamodel.Db, kv map[string]interface{}) ([]*Team, error) {
 	res, err := db.Find(ctx, kv)
 	if err != nil {
 		return nil, err
@@ -654,7 +654,7 @@ func CreateTeamOutputStream(stream io.WriteCloser, ch chan Team, errors chan<- e
 }
 
 // CreateTeamProducer will stream data from the channel
-func CreateTeamProducer(producer Producer, ch chan Team, errors chan<- error) <-chan bool {
+func CreateTeamProducer(producer datamodel.Producer, ch chan Team, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -674,17 +674,17 @@ func CreateTeamProducer(producer Producer, ch chan Team, errors chan<- error) <-
 }
 
 // CreateTeamConsumer will stream data from the default topic into the provided channel
-func CreateTeamConsumer(factory ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateTeamConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateTeamConsumerForTopic(factory, TeamDefaultTopic, ch, errors)
 }
 
 // CreateTeamConsumerForTopic will stream data from the topic into the provided channel
-func CreateTeamConsumerForTopic(factory ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateTeamConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan Team, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := ConsumerCallback{
+		callback := datamodel.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object Team
 				if err := json.Unmarshal(value, &object); err != nil {

@@ -21,7 +21,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	datamodel "github.com/pinpt/go-datamodel"
+	"github.com/pinpt/go-datamodel/datamodel"
 )
 
 // CostCenterTopic is the default topic name
@@ -367,22 +367,22 @@ func (o *CostCenter) Hash() string {
 }
 
 // CreateCostCenter creates a new CostCenter in the database
-func CreateCostCenter(ctx context.Context, db Db, o *CostCenter) error {
+func CreateCostCenter(ctx context.Context, db datamodel.Db, o *CostCenter) error {
 	return db.Create(ctx, o.ToMap())
 }
 
 // DeleteCostCenter deletes a CostCenter in the database
-func DeleteCostCenter(ctx context.Context, db Db, o *CostCenter) error {
+func DeleteCostCenter(ctx context.Context, db datamodel.Db, o *CostCenter) error {
 	return db.Delete(ctx, o.GetID())
 }
 
 // UpdateCostCenter updates a CostCenter in the database
-func UpdateCostCenter(ctx context.Context, db Db, o *CostCenter) error {
+func UpdateCostCenter(ctx context.Context, db datamodel.Db, o *CostCenter) error {
 	return db.Update(ctx, o.GetID(), o.ToMap())
 }
 
 // FindCostCenter returns a CostCenter from the database
-func FindCostCenter(ctx context.Context, db Db, id string) (*CostCenter, error) {
+func FindCostCenter(ctx context.Context, db datamodel.Db, id string) (*CostCenter, error) {
 	kv, err := db.FindOne(ctx, id)
 	if err != nil {
 		return nil, err
@@ -393,7 +393,7 @@ func FindCostCenter(ctx context.Context, db Db, id string) (*CostCenter, error) 
 }
 
 // FindCostCenters returns all CostCenter from the database matching keys
-func FindCostCenters(ctx context.Context, db Db, kv map[string]interface{}) ([]*CostCenter, error) {
+func FindCostCenters(ctx context.Context, db datamodel.Db, kv map[string]interface{}) ([]*CostCenter, error) {
 	res, err := db.Find(ctx, kv)
 	if err != nil {
 		return nil, err
@@ -669,7 +669,7 @@ func CreateCostCenterOutputStream(stream io.WriteCloser, ch chan CostCenter, err
 }
 
 // CreateCostCenterProducer will stream data from the channel
-func CreateCostCenterProducer(producer Producer, ch chan CostCenter, errors chan<- error) <-chan bool {
+func CreateCostCenterProducer(producer datamodel.Producer, ch chan CostCenter, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -689,17 +689,17 @@ func CreateCostCenterProducer(producer Producer, ch chan CostCenter, errors chan
 }
 
 // CreateCostCenterConsumer will stream data from the default topic into the provided channel
-func CreateCostCenterConsumer(factory ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCostCenterConsumer(factory datamodel.ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateCostCenterConsumerForTopic(factory, CostCenterDefaultTopic, ch, errors)
 }
 
 // CreateCostCenterConsumerForTopic will stream data from the topic into the provided channel
-func CreateCostCenterConsumerForTopic(factory ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCostCenterConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan CostCenter, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := ConsumerCallback{
+		callback := datamodel.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object CostCenter
 				if err := json.Unmarshal(value, &object); err != nil {

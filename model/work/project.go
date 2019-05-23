@@ -20,7 +20,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	datamodel "github.com/pinpt/go-datamodel"
+	"github.com/pinpt/go-datamodel/datamodel"
 )
 
 // ProjectTopic is the default topic name
@@ -627,7 +627,7 @@ func CreateProjectOutputStream(stream io.WriteCloser, ch chan Project, errors ch
 }
 
 // CreateProjectProducer will stream data from the channel
-func CreateProjectProducer(producer Producer, ch chan Project, errors chan<- error) <-chan bool {
+func CreateProjectProducer(producer datamodel.Producer, ch chan Project, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -647,17 +647,17 @@ func CreateProjectProducer(producer Producer, ch chan Project, errors chan<- err
 }
 
 // CreateProjectConsumer will stream data from the default topic into the provided channel
-func CreateProjectConsumer(factory ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateProjectConsumer(factory datamodel.ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateProjectConsumerForTopic(factory, ProjectDefaultTopic, ch, errors)
 }
 
 // CreateProjectConsumerForTopic will stream data from the topic into the provided channel
-func CreateProjectConsumerForTopic(factory ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateProjectConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan Project, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := ConsumerCallback{
+		callback := datamodel.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object Project
 				if err := json.Unmarshal(value, &object); err != nil {

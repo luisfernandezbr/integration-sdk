@@ -22,7 +22,7 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
-	datamodel "github.com/pinpt/go-datamodel"
+	"github.com/pinpt/go-datamodel/datamodel"
 )
 
 // UserTopic is the default topic name
@@ -554,22 +554,22 @@ func (o *User) Hash() string {
 }
 
 // CreateUser creates a new User in the database
-func CreateUser(ctx context.Context, db Db, o *User) error {
+func CreateUser(ctx context.Context, db datamodel.Db, o *User) error {
 	return db.Create(ctx, o.ToMap())
 }
 
 // DeleteUser deletes a User in the database
-func DeleteUser(ctx context.Context, db Db, o *User) error {
+func DeleteUser(ctx context.Context, db datamodel.Db, o *User) error {
 	return db.Delete(ctx, o.GetID())
 }
 
 // UpdateUser updates a User in the database
-func UpdateUser(ctx context.Context, db Db, o *User) error {
+func UpdateUser(ctx context.Context, db datamodel.Db, o *User) error {
 	return db.Update(ctx, o.GetID(), o.ToMap())
 }
 
 // FindUser returns a User from the database
-func FindUser(ctx context.Context, db Db, id string) (*User, error) {
+func FindUser(ctx context.Context, db datamodel.Db, id string) (*User, error) {
 	kv, err := db.FindOne(ctx, id)
 	if err != nil {
 		return nil, err
@@ -580,7 +580,7 @@ func FindUser(ctx context.Context, db Db, id string) (*User, error) {
 }
 
 // FindUsers returns all User from the database matching keys
-func FindUsers(ctx context.Context, db Db, kv map[string]interface{}) ([]*User, error) {
+func FindUsers(ctx context.Context, db datamodel.Db, kv map[string]interface{}) ([]*User, error) {
 	res, err := db.Find(ctx, kv)
 	if err != nil {
 		return nil, err
@@ -913,7 +913,7 @@ func CreateUserOutputStream(stream io.WriteCloser, ch chan User, errors chan<- e
 }
 
 // CreateUserProducer will stream data from the channel
-func CreateUserProducer(producer Producer, ch chan User, errors chan<- error) <-chan bool {
+func CreateUserProducer(producer datamodel.Producer, ch chan User, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -933,17 +933,17 @@ func CreateUserProducer(producer Producer, ch chan User, errors chan<- error) <-
 }
 
 // CreateUserConsumer will stream data from the default topic into the provided channel
-func CreateUserConsumer(factory ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateUserConsumer(factory datamodel.ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
 	return CreateUserConsumerForTopic(factory, UserDefaultTopic, ch, errors)
 }
 
 // CreateUserConsumerForTopic will stream data from the topic into the provided channel
-func CreateUserConsumerForTopic(factory ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateUserConsumerForTopic(factory datamodel.ConsumerFactory, topic string, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := ConsumerCallback{
+		callback := datamodel.ConsumerCallback{
 			OnDataReceived: func(key []byte, value []byte) error {
 				var object User
 				if err := json.Unmarshal(value, &object); err != nil {
