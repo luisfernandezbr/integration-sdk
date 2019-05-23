@@ -48,8 +48,18 @@ type ConsumerFactory interface {
 // TopicNameType is a type for the name of a topic
 type TopicNameType string
 
+// String returns the value as a string
+func (t TopicNameType) String() string {
+	return string(t)
+}
+
 // ModelNameType is a type for the model name
 type ModelNameType string
+
+// String returns the value as a string
+func (t ModelNameType) String() string {
+	return string(t)
+}
 
 // Model is a generic model interface that all our models implement
 type Model interface {
