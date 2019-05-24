@@ -17,11 +17,11 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
+	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/number"
 )
 
 // SprintTopic is the default topic name
@@ -270,8 +270,8 @@ func (o *Sprint) UnmarshalJSON(data []byte) error {
 
 var cachedCodecSprint *goavro.Codec
 
-// ToAvroBinary returns the data as Avro binary data
-func (o *Sprint) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+// GetAvroCodec returns the avro codec for this model
+func (o *Sprint) GetAvroCodec() *goavro.Codec {
 	if cachedCodecSprint == nil {
 		c, err := CreateSprintAvroSchema()
 		if err != nil {
@@ -279,15 +279,21 @@ func (o *Sprint) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecSprint = c
 	}
+	return cachedCodecSprint
+}
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Sprint) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
-	native, _, err := cachedCodecSprint.NativeFromTextual(jbuf)
+	codec := o.GetAvroCodec()
+	native, _, err := codec.NativeFromTextual(jbuf)
 	if err != nil {
 		return nil, nil, err
 	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecSprint.BinaryFromNative(nil, native)
-	return buf, cachedCodecSprint, err
+	buf, err := codec.BinaryFromNative(nil, native)
+	return buf, codec, err
 }
 
 // Stringify returns the object in JSON format as a string
@@ -697,44 +703,66 @@ func CreateSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan
 	return done
 }
 
+// SprintSendEvent is an event detail for sending data
+type SprintSendEvent struct {
+	Sprint  Sprint
+	Headers map[string]string
+}
+
 // CreateSprintProducer will stream data from the channel
-func CreateSprintProducer(producer datamodel.Producer, ch chan Sprint, errors chan<- error) <-chan bool {
+func CreateSprintProducer(producer datamodel.Producer, ch chan SprintSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.ToAvroBinary()
+			binary, codec, err := item.Sprint.ToAvroBinary()
 			if err != nil {
 				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
 				return
 			}
-			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
+			headers := map[string]string{
+				"customer_id": item.Sprint.CustomerID,
+			}
+			if item.Headers != nil {
+				for k, v := range item.Headers {
+					headers[k] = v
+				}
+			}
+			msg := event.Message{
+				Key:     item.Sprint.ID,
+				Value:   binary,
+				Codec:   codec,
+				Headers: headers,
+			}
+			if err := producer.Send(ctx, msg); err != nil {
+				errors <- fmt.Errorf("error sending %s. %v", item.Sprint.String(), err)
 			}
 		}
 	}()
 	return done
 }
 
-// CreateSprintConsumer will stream data from the default topic into the provided channel
-func CreateSprintConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateSprintConsumerForTopic(factory, SprintTopic, ch, errors)
+// SprintReceiveEvent is an event detail for receiving data
+type SprintReceiveEvent struct {
+	Sprint  Sprint
+	Message event.Message
 }
 
-// CreateSprintConsumerForTopic will stream data from the topic into the provided channel
-func CreateSprintConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Sprint, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreateSprintConsumer will stream data from the topic into the provided channel
+func CreateSprintConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan SprintReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := datamodel.ConsumerCallback{
-			OnDataReceived: func(key []byte, value []byte) error {
+			OnDataReceived: func(msg event.Message) error {
 				var object Sprint
-				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into Sprint: %s", err)
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into work.Sprint: %s", err)
 				}
-				ch <- object
+				msg.Codec = object.GetAvroCodec() // match the codec
+				ch <- SprintReceiveEvent{object, msg}
 				return nil
 			},
 			OnErrorReceived: func(err error) {

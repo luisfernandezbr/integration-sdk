@@ -18,11 +18,11 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
+	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/number"
 )
 
 // IssueTopic is the default topic name
@@ -297,8 +297,8 @@ func (o *Issue) UnmarshalJSON(data []byte) error {
 
 var cachedCodecIssue *goavro.Codec
 
-// ToAvroBinary returns the data as Avro binary data
-func (o *Issue) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+// GetAvroCodec returns the avro codec for this model
+func (o *Issue) GetAvroCodec() *goavro.Codec {
 	if cachedCodecIssue == nil {
 		c, err := CreateIssueAvroSchema()
 		if err != nil {
@@ -306,15 +306,21 @@ func (o *Issue) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecIssue = c
 	}
+	return cachedCodecIssue
+}
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Issue) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
-	native, _, err := cachedCodecIssue.NativeFromTextual(jbuf)
+	codec := o.GetAvroCodec()
+	native, _, err := codec.NativeFromTextual(jbuf)
 	if err != nil {
 		return nil, nil, err
 	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecIssue.BinaryFromNative(nil, native)
-	return buf, cachedCodecIssue, err
+	buf, err := codec.BinaryFromNative(nil, native)
+	return buf, codec, err
 }
 
 // Stringify returns the object in JSON format as a string
@@ -951,44 +957,66 @@ func CreateIssueOutputStream(stream io.WriteCloser, ch chan Issue, errors chan<-
 	return done
 }
 
+// IssueSendEvent is an event detail for sending data
+type IssueSendEvent struct {
+	Issue   Issue
+	Headers map[string]string
+}
+
 // CreateIssueProducer will stream data from the channel
-func CreateIssueProducer(producer datamodel.Producer, ch chan Issue, errors chan<- error) <-chan bool {
+func CreateIssueProducer(producer datamodel.Producer, ch chan IssueSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.ToAvroBinary()
+			binary, codec, err := item.Issue.ToAvroBinary()
 			if err != nil {
 				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
 				return
 			}
-			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
+			headers := map[string]string{
+				"customer_id": item.Issue.CustomerID,
+			}
+			if item.Headers != nil {
+				for k, v := range item.Headers {
+					headers[k] = v
+				}
+			}
+			msg := event.Message{
+				Key:     item.Issue.ID,
+				Value:   binary,
+				Codec:   codec,
+				Headers: headers,
+			}
+			if err := producer.Send(ctx, msg); err != nil {
+				errors <- fmt.Errorf("error sending %s. %v", item.Issue.String(), err)
 			}
 		}
 	}()
 	return done
 }
 
-// CreateIssueConsumer will stream data from the default topic into the provided channel
-func CreateIssueConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Issue, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateIssueConsumerForTopic(factory, IssueTopic, ch, errors)
+// IssueReceiveEvent is an event detail for receiving data
+type IssueReceiveEvent struct {
+	Issue   Issue
+	Message event.Message
 }
 
-// CreateIssueConsumerForTopic will stream data from the topic into the provided channel
-func CreateIssueConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Issue, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreateIssueConsumer will stream data from the topic into the provided channel
+func CreateIssueConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan IssueReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := datamodel.ConsumerCallback{
-			OnDataReceived: func(key []byte, value []byte) error {
+			OnDataReceived: func(msg event.Message) error {
 				var object Issue
-				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into Issue: %s", err)
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into work.Issue: %s", err)
 				}
-				ch <- object
+				msg.Codec = object.GetAvroCodec() // match the codec
+				ch <- IssueReceiveEvent{object, msg}
 				return nil
 			},
 			OnErrorReceived: func(err error) {

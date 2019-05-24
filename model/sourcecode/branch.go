@@ -18,11 +18,11 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
+	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/number"
 )
 
 // BranchTopic is the default topic name
@@ -277,8 +277,8 @@ func (o *Branch) UnmarshalJSON(data []byte) error {
 
 var cachedCodecBranch *goavro.Codec
 
-// ToAvroBinary returns the data as Avro binary data
-func (o *Branch) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+// GetAvroCodec returns the avro codec for this model
+func (o *Branch) GetAvroCodec() *goavro.Codec {
 	if cachedCodecBranch == nil {
 		c, err := CreateBranchAvroSchema()
 		if err != nil {
@@ -286,15 +286,21 @@ func (o *Branch) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecBranch = c
 	}
+	return cachedCodecBranch
+}
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *Branch) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
-	native, _, err := cachedCodecBranch.NativeFromTextual(jbuf)
+	codec := o.GetAvroCodec()
+	native, _, err := codec.NativeFromTextual(jbuf)
 	if err != nil {
 		return nil, nil, err
 	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecBranch.BinaryFromNative(nil, native)
-	return buf, cachedCodecBranch, err
+	buf, err := codec.BinaryFromNative(nil, native)
+	return buf, codec, err
 }
 
 // Stringify returns the object in JSON format as a string
@@ -796,44 +802,66 @@ func CreateBranchOutputStream(stream io.WriteCloser, ch chan Branch, errors chan
 	return done
 }
 
+// BranchSendEvent is an event detail for sending data
+type BranchSendEvent struct {
+	Branch  Branch
+	Headers map[string]string
+}
+
 // CreateBranchProducer will stream data from the channel
-func CreateBranchProducer(producer datamodel.Producer, ch chan Branch, errors chan<- error) <-chan bool {
+func CreateBranchProducer(producer datamodel.Producer, ch chan BranchSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.ToAvroBinary()
+			binary, codec, err := item.Branch.ToAvroBinary()
 			if err != nil {
 				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
 				return
 			}
-			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
+			headers := map[string]string{
+				"customer_id": item.Branch.CustomerID,
+			}
+			if item.Headers != nil {
+				for k, v := range item.Headers {
+					headers[k] = v
+				}
+			}
+			msg := event.Message{
+				Key:     item.Branch.ID,
+				Value:   binary,
+				Codec:   codec,
+				Headers: headers,
+			}
+			if err := producer.Send(ctx, msg); err != nil {
+				errors <- fmt.Errorf("error sending %s. %v", item.Branch.String(), err)
 			}
 		}
 	}()
 	return done
 }
 
-// CreateBranchConsumer will stream data from the default topic into the provided channel
-func CreateBranchConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Branch, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateBranchConsumerForTopic(factory, BranchTopic, ch, errors)
+// BranchReceiveEvent is an event detail for receiving data
+type BranchReceiveEvent struct {
+	Branch  Branch
+	Message event.Message
 }
 
-// CreateBranchConsumerForTopic will stream data from the topic into the provided channel
-func CreateBranchConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan Branch, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreateBranchConsumer will stream data from the topic into the provided channel
+func CreateBranchConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan BranchReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := datamodel.ConsumerCallback{
-			OnDataReceived: func(key []byte, value []byte) error {
+			OnDataReceived: func(msg event.Message) error {
 				var object Branch
-				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into Branch: %s", err)
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into sourcecode.Branch: %s", err)
 				}
-				ch <- object
+				msg.Codec = object.GetAvroCodec() // match the codec
+				ch <- BranchReceiveEvent{object, msg}
 				return nil
 			},
 			OnErrorReceived: func(err error) {

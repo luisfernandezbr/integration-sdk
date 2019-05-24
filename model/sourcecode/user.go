@@ -17,11 +17,11 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
+	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
-	"github.com/pinpt/go-common/datamodel"
 )
 
 // UserTopic is the default topic name
@@ -264,8 +264,8 @@ func (o *User) UnmarshalJSON(data []byte) error {
 
 var cachedCodecUser *goavro.Codec
 
-// ToAvroBinary returns the data as Avro binary data
-func (o *User) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+// GetAvroCodec returns the avro codec for this model
+func (o *User) GetAvroCodec() *goavro.Codec {
 	if cachedCodecUser == nil {
 		c, err := CreateUserAvroSchema()
 		if err != nil {
@@ -273,15 +273,21 @@ func (o *User) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecUser = c
 	}
+	return cachedCodecUser
+}
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *User) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
-	native, _, err := cachedCodecUser.NativeFromTextual(jbuf)
+	codec := o.GetAvroCodec()
+	native, _, err := codec.NativeFromTextual(jbuf)
 	if err != nil {
 		return nil, nil, err
 	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecUser.BinaryFromNative(nil, native)
-	return buf, cachedCodecUser, err
+	buf, err := codec.BinaryFromNative(nil, native)
+	return buf, codec, err
 }
 
 // Stringify returns the object in JSON format as a string
@@ -643,44 +649,66 @@ func CreateUserOutputStream(stream io.WriteCloser, ch chan User, errors chan<- e
 	return done
 }
 
+// UserSendEvent is an event detail for sending data
+type UserSendEvent struct {
+	User    User
+	Headers map[string]string
+}
+
 // CreateUserProducer will stream data from the channel
-func CreateUserProducer(producer datamodel.Producer, ch chan User, errors chan<- error) <-chan bool {
+func CreateUserProducer(producer datamodel.Producer, ch chan UserSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.ToAvroBinary()
+			binary, codec, err := item.User.ToAvroBinary()
 			if err != nil {
 				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
 				return
 			}
-			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
+			headers := map[string]string{
+				"customer_id": item.User.CustomerID,
+			}
+			if item.Headers != nil {
+				for k, v := range item.Headers {
+					headers[k] = v
+				}
+			}
+			msg := event.Message{
+				Key:     item.User.ID,
+				Value:   binary,
+				Codec:   codec,
+				Headers: headers,
+			}
+			if err := producer.Send(ctx, msg); err != nil {
+				errors <- fmt.Errorf("error sending %s. %v", item.User.String(), err)
 			}
 		}
 	}()
 	return done
 }
 
-// CreateUserConsumer will stream data from the default topic into the provided channel
-func CreateUserConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreateUserConsumerForTopic(factory, UserTopic, ch, errors)
+// UserReceiveEvent is an event detail for receiving data
+type UserReceiveEvent struct {
+	User    User
+	Message event.Message
 }
 
-// CreateUserConsumerForTopic will stream data from the topic into the provided channel
-func CreateUserConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan User, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreateUserConsumer will stream data from the topic into the provided channel
+func CreateUserConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan UserReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := datamodel.ConsumerCallback{
-			OnDataReceived: func(key []byte, value []byte) error {
+			OnDataReceived: func(msg event.Message) error {
 				var object User
-				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into User: %s", err)
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into sourcecode.User: %s", err)
 				}
-				ch <- object
+				msg.Codec = object.GetAvroCodec() // match the codec
+				ch <- UserReceiveEvent{object, msg}
 				return nil
 			},
 			OnErrorReceived: func(err error) {

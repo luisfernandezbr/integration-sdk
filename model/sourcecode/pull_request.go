@@ -17,11 +17,11 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
+	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/number"
 )
 
 // PullRequestTopic is the default topic name
@@ -278,8 +278,8 @@ func (o *PullRequest) UnmarshalJSON(data []byte) error {
 
 var cachedCodecPullRequest *goavro.Codec
 
-// ToAvroBinary returns the data as Avro binary data
-func (o *PullRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+// GetAvroCodec returns the avro codec for this model
+func (o *PullRequest) GetAvroCodec() *goavro.Codec {
 	if cachedCodecPullRequest == nil {
 		c, err := CreatePullRequestAvroSchema()
 		if err != nil {
@@ -287,15 +287,21 @@ func (o *PullRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 		}
 		cachedCodecPullRequest = c
 	}
+	return cachedCodecPullRequest
+}
+
+// ToAvroBinary returns the data as Avro binary data
+func (o *PullRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
-	native, _, err := cachedCodecPullRequest.NativeFromTextual(jbuf)
+	codec := o.GetAvroCodec()
+	native, _, err := codec.NativeFromTextual(jbuf)
 	if err != nil {
 		return nil, nil, err
 	}
 	// Convert native Go form to binary Avro data
-	buf, err := cachedCodecPullRequest.BinaryFromNative(nil, native)
-	return buf, cachedCodecPullRequest, err
+	buf, err := codec.BinaryFromNative(nil, native)
+	return buf, codec, err
 }
 
 // Stringify returns the object in JSON format as a string
@@ -763,44 +769,66 @@ func CreatePullRequestOutputStream(stream io.WriteCloser, ch chan PullRequest, e
 	return done
 }
 
+// PullRequestSendEvent is an event detail for sending data
+type PullRequestSendEvent struct {
+	PullRequest PullRequest
+	Headers     map[string]string
+}
+
 // CreatePullRequestProducer will stream data from the channel
-func CreatePullRequestProducer(producer datamodel.Producer, ch chan PullRequest, errors chan<- error) <-chan bool {
+func CreatePullRequestProducer(producer datamodel.Producer, ch chan PullRequestSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.ToAvroBinary()
+			binary, codec, err := item.PullRequest.ToAvroBinary()
 			if err != nil {
 				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
 				return
 			}
-			if err := producer.Send(ctx, codec, []byte(item.ID), binary); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.String(), err)
+			headers := map[string]string{
+				"customer_id": item.PullRequest.CustomerID,
+			}
+			if item.Headers != nil {
+				for k, v := range item.Headers {
+					headers[k] = v
+				}
+			}
+			msg := event.Message{
+				Key:     item.PullRequest.ID,
+				Value:   binary,
+				Codec:   codec,
+				Headers: headers,
+			}
+			if err := producer.Send(ctx, msg); err != nil {
+				errors <- fmt.Errorf("error sending %s. %v", item.PullRequest.String(), err)
 			}
 		}
 	}()
 	return done
 }
 
-// CreatePullRequestConsumer will stream data from the default topic into the provided channel
-func CreatePullRequestConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan PullRequest, errors chan<- error) (<-chan bool, chan<- bool) {
-	return CreatePullRequestConsumerForTopic(factory, PullRequestTopic, ch, errors)
+// PullRequestReceiveEvent is an event detail for receiving data
+type PullRequestReceiveEvent struct {
+	PullRequest PullRequest
+	Message     event.Message
 }
 
-// CreatePullRequestConsumerForTopic will stream data from the topic into the provided channel
-func CreatePullRequestConsumerForTopic(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan PullRequest, errors chan<- error) (<-chan bool, chan<- bool) {
+// CreatePullRequestConsumer will stream data from the topic into the provided channel
+func CreatePullRequestConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan PullRequestReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		callback := datamodel.ConsumerCallback{
-			OnDataReceived: func(key []byte, value []byte) error {
+			OnDataReceived: func(msg event.Message) error {
 				var object PullRequest
-				if err := json.Unmarshal(value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into PullRequest: %s", err)
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequest: %s", err)
 				}
-				ch <- object
+				msg.Codec = object.GetAvroCodec() // match the codec
+				ch <- PullRequestReceiveEvent{object, msg}
 				return nil
 			},
 			OnErrorReceived: func(err error) {
