@@ -270,7 +270,7 @@ func (o *CostCenter) GetAvroCodec() *goavro.Codec {
 	if cachedCodecCostCenter == nil {
 		c, err := CreateCostCenterAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecCostCenter = c
 	}
@@ -700,7 +700,7 @@ func CreateCostCenterProducer(producer event.Producer, ch chan CostCenterSendEve
 		for item := range ch {
 			binary, codec, err := item.CostCenter.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.CostCenter.String(), err)
 				return
 			}
 			headers := map[string]string{

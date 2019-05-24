@@ -312,7 +312,7 @@ func (o *CommitFile) GetAvroCodec() *goavro.Codec {
 	if cachedCodecCommitFile == nil {
 		c, err := CreateCommitFileAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecCommitFile = c
 	}
@@ -1037,7 +1037,7 @@ func CreateCommitFileProducer(producer event.Producer, ch chan CommitFileSendEve
 		for item := range ch {
 			binary, codec, err := item.CommitFile.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.CommitFile.String(), err)
 				return
 			}
 			headers := map[string]string{

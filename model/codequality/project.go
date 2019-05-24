@@ -267,7 +267,7 @@ func (o *Project) GetAvroCodec() *goavro.Codec {
 	if cachedCodecProject == nil {
 		c, err := CreateProjectAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecProject = c
 	}
@@ -640,7 +640,7 @@ func CreateProjectProducer(producer event.Producer, ch chan ProjectSendEvent, er
 		for item := range ch {
 			binary, codec, err := item.Project.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Project.String(), err)
 				return
 			}
 			headers := map[string]string{

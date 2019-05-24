@@ -276,7 +276,7 @@ func (o *Sprint) GetAvroCodec() *goavro.Codec {
 	if cachedCodecSprint == nil {
 		c, err := CreateSprintAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecSprint = c
 	}
@@ -719,7 +719,7 @@ func CreateSprintProducer(producer event.Producer, ch chan SprintSendEvent, erro
 		for item := range ch {
 			binary, codec, err := item.Sprint.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Sprint.String(), err)
 				return
 			}
 			headers := map[string]string{

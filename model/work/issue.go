@@ -303,7 +303,7 @@ func (o *Issue) GetAvroCodec() *goavro.Codec {
 	if cachedCodecIssue == nil {
 		c, err := CreateIssueAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecIssue = c
 	}
@@ -973,7 +973,7 @@ func CreateIssueProducer(producer event.Producer, ch chan IssueSendEvent, errors
 		for item := range ch {
 			binary, codec, err := item.Issue.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Issue.String(), err)
 				return
 			}
 			headers := map[string]string{

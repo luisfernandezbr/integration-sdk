@@ -295,7 +295,7 @@ func (o *User) GetAvroCodec() *goavro.Codec {
 	if cachedCodecUser == nil {
 		c, err := CreateUserAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecUser = c
 	}
@@ -944,7 +944,7 @@ func CreateUserProducer(producer event.Producer, ch chan UserSendEvent, errors c
 		for item := range ch {
 			binary, codec, err := item.User.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.User.String(), err)
 				return
 			}
 			headers := map[string]string{

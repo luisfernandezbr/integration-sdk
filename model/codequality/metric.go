@@ -272,7 +272,7 @@ func (o *Metric) GetAvroCodec() *goavro.Codec {
 	if cachedCodecMetric == nil {
 		c, err := CreateMetricAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecMetric = c
 	}
@@ -677,7 +677,7 @@ func CreateMetricProducer(producer event.Producer, ch chan MetricSendEvent, erro
 		for item := range ch {
 			binary, codec, err := item.Metric.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Metric.String(), err)
 				return
 			}
 			headers := map[string]string{

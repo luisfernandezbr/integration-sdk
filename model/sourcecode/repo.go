@@ -267,7 +267,7 @@ func (o *Repo) GetAvroCodec() *goavro.Codec {
 	if cachedCodecRepo == nil {
 		c, err := CreateRepoAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecRepo = c
 	}
@@ -640,7 +640,7 @@ func CreateRepoProducer(producer event.Producer, ch chan RepoSendEvent, errors c
 		for item := range ch {
 			binary, codec, err := item.Repo.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Repo.String(), err)
 				return
 			}
 			headers := map[string]string{

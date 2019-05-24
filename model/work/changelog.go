@@ -284,7 +284,7 @@ func (o *Changelog) GetAvroCodec() *goavro.Codec {
 	if cachedCodecChangelog == nil {
 		c, err := CreateChangelogAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecChangelog = c
 	}
@@ -785,7 +785,7 @@ func CreateChangelogProducer(producer event.Producer, ch chan ChangelogSendEvent
 		for item := range ch {
 			binary, codec, err := item.Changelog.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Changelog.String(), err)
 				return
 			}
 			headers := map[string]string{

@@ -267,7 +267,7 @@ func (o *CustomField) GetAvroCodec() *goavro.Codec {
 	if cachedCodecCustomField == nil {
 		c, err := CreateCustomFieldAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecCustomField = c
 	}
@@ -640,7 +640,7 @@ func CreateCustomFieldProducer(producer event.Producer, ch chan CustomFieldSendE
 		for item := range ch {
 			binary, codec, err := item.CustomField.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.CustomField.String(), err)
 				return
 			}
 			headers := map[string]string{

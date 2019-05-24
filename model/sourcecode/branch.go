@@ -283,7 +283,7 @@ func (o *Branch) GetAvroCodec() *goavro.Codec {
 	if cachedCodecBranch == nil {
 		c, err := CreateBranchAvroSchema()
 		if err != nil {
-			return nil, nil, err
+			panic(err)
 		}
 		cachedCodecBranch = c
 	}
@@ -818,7 +818,7 @@ func CreateBranchProducer(producer event.Producer, ch chan BranchSendEvent, erro
 		for item := range ch {
 			binary, codec, err := item.Branch.ToAvroBinary()
 			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.String(), err)
+				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Branch.String(), err)
 				return
 			}
 			headers := map[string]string{
