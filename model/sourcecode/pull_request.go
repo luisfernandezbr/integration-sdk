@@ -226,6 +226,16 @@ func (o *PullRequest) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *PullRequest) IsMaterialized() bool {
+	return true
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *PullRequest) MaterializedName() string {
+	return "sourcecode_pullrequest"
+}
+
 // Clone returns an exact copy of PullRequest
 func (o *PullRequest) Clone() *PullRequest {
 	c := new(PullRequest)

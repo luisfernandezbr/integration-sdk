@@ -226,6 +226,16 @@ func (o *Changelog) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *Changelog) IsMaterialized() bool {
+	return false
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *Changelog) MaterializedName() string {
+	panic("work.Changelog is not a materialized table")
+}
+
 // Clone returns an exact copy of Changelog
 func (o *Changelog) Clone() *Changelog {
 	c := new(Changelog)

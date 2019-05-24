@@ -209,6 +209,16 @@ func (o *CustomField) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *CustomField) IsMaterialized() bool {
+	return false
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *CustomField) MaterializedName() string {
+	panic("work.CustomField is not a materialized table")
+}
+
 // Clone returns an exact copy of CustomField
 func (o *CustomField) Clone() *CustomField {
 	c := new(CustomField)

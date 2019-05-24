@@ -209,6 +209,16 @@ func (o *Repo) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *Repo) IsMaterialized() bool {
+	return true
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *Repo) MaterializedName() string {
+	return "sourcecode_repo"
+}
+
 // Clone returns an exact copy of Repo
 func (o *Repo) Clone() *Repo {
 	c := new(Repo)

@@ -73,4 +73,8 @@ type Model interface {
 	ToMap(avro ...bool) map[string]interface{}
 	// FromMap sets the properties of the instance from the map
 	FromMap(kv map[string]interface{})
+	// IsMaterialized returns true if the model is materialized
+	IsMaterialized() bool
+	// MaterializedName returns the name of the materialized table
+	MaterializedName() string
 }

@@ -218,6 +218,16 @@ func (o *Sprint) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *Sprint) IsMaterialized() bool {
+	return false
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *Sprint) MaterializedName() string {
+	panic("work.Sprint is not a materialized table")
+}
+
 // Clone returns an exact copy of Sprint
 func (o *Sprint) Clone() *Sprint {
 	c := new(Sprint)

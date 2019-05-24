@@ -212,6 +212,16 @@ func (o *CostCenter) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *CostCenter) IsMaterialized() bool {
+	return true
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *CostCenter) MaterializedName() string {
+	return "customer_costcenter"
+}
+
 // Clone returns an exact copy of CostCenter
 func (o *CostCenter) Clone() *CostCenter {
 	c := new(CostCenter)

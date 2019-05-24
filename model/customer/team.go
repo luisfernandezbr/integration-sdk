@@ -210,6 +210,16 @@ func (o *Team) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *Team) IsMaterialized() bool {
+	return true
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *Team) MaterializedName() string {
+	return "customer_team"
+}
+
 // Clone returns an exact copy of Team
 func (o *Team) Clone() *Team {
 	c := new(Team)

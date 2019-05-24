@@ -245,6 +245,16 @@ func (o *Issue) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *Issue) IsMaterialized() bool {
+	return false
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *Issue) MaterializedName() string {
+	panic("work.Issue is not a materialized table")
+}
+
 // Clone returns an exact copy of Issue
 func (o *Issue) Clone() *Issue {
 	c := new(Issue)

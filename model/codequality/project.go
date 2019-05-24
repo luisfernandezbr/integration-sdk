@@ -209,6 +209,16 @@ func (o *Project) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *Project) IsMaterialized() bool {
+	return false
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *Project) MaterializedName() string {
+	panic("codequality.Project is not a materialized table")
+}
+
 // Clone returns an exact copy of Project
 func (o *Project) Clone() *Project {
 	c := new(Project)

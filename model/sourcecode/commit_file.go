@@ -254,6 +254,16 @@ func (o *CommitFile) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *CommitFile) IsMaterialized() bool {
+	return true
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *CommitFile) MaterializedName() string {
+	return "sourcecode_commitfile"
+}
+
 // Clone returns an exact copy of CommitFile
 func (o *CommitFile) Clone() *CommitFile {
 	c := new(CommitFile)

@@ -225,6 +225,16 @@ func (o *Branch) GetRefID() string {
 	return o.RefID
 }
 
+// IsMaterialized returns true if the model is materialized
+func (o *Branch) IsMaterialized() bool {
+	return true
+}
+
+// MaterializedName returns the name of the materialized table
+func (o *Branch) MaterializedName() string {
+	return "sourcecode_branch"
+}
+
 // Clone returns an exact copy of Branch
 func (o *Branch) Clone() *Branch {
 	c := new(Branch)
