@@ -22,7 +22,7 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
-	"github.com/pinpt/go-datamodel/datamodel"
+	"github.com/pinpt/go-common/datamodel"
 )
 
 // UserTopic is the default topic name

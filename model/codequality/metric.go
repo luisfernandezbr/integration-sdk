@@ -17,11 +17,11 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
+	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-datamodel/datamodel"
 )
 
 // MetricTopic is the default topic name

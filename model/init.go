@@ -7,7 +7,7 @@ import (
 
 	"github.com/pinpt/go-datamodel/codequality"
 	"github.com/pinpt/go-datamodel/customer"
-	"github.com/pinpt/go-datamodel/datamodel"
+	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-datamodel/sourcecode"
 	"github.com/pinpt/go-datamodel/work"
 )

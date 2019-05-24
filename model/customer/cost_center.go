@@ -21,7 +21,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	number "github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-datamodel/datamodel"
+	"github.com/pinpt/go-common/datamodel"
 )
 
 // CostCenterTopic is the default topic name

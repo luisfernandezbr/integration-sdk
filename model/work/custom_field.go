@@ -20,7 +20,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-datamodel/datamodel"
+	"github.com/pinpt/go-common/datamodel"
 )
 
 // CustomFieldTopic is the default topic name
