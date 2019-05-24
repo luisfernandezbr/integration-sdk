@@ -691,7 +691,7 @@ type CostCenterSendEvent struct {
 }
 
 // CreateCostCenterProducer will stream data from the channel
-func CreateCostCenterProducer(producer datamodel.Producer, ch chan CostCenterSendEvent, errors chan<- error) <-chan bool {
+func CreateCostCenterProducer(producer event.Producer, ch chan CostCenterSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -731,12 +731,12 @@ type CostCenterReceiveEvent struct {
 }
 
 // CreateCostCenterConsumer will stream data from the topic into the provided channel
-func CreateCostCenterConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CostCenterReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCostCenterConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan CostCenterReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object CostCenter
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

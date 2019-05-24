@@ -676,7 +676,7 @@ type TeamSendEvent struct {
 }
 
 // CreateTeamProducer will stream data from the channel
-func CreateTeamProducer(producer datamodel.Producer, ch chan TeamSendEvent, errors chan<- error) <-chan bool {
+func CreateTeamProducer(producer event.Producer, ch chan TeamSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -716,12 +716,12 @@ type TeamReceiveEvent struct {
 }
 
 // CreateTeamConsumer will stream data from the topic into the provided channel
-func CreateTeamConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan TeamReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateTeamConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan TeamReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object Team
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

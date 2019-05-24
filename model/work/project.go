@@ -649,7 +649,7 @@ type ProjectSendEvent struct {
 }
 
 // CreateProjectProducer will stream data from the channel
-func CreateProjectProducer(producer datamodel.Producer, ch chan ProjectSendEvent, errors chan<- error) <-chan bool {
+func CreateProjectProducer(producer event.Producer, ch chan ProjectSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -689,12 +689,12 @@ type ProjectReceiveEvent struct {
 }
 
 // CreateProjectConsumer will stream data from the topic into the provided channel
-func CreateProjectConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan ProjectReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateProjectConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan ProjectReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object Project
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

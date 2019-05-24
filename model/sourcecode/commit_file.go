@@ -1028,7 +1028,7 @@ type CommitFileSendEvent struct {
 }
 
 // CreateCommitFileProducer will stream data from the channel
-func CreateCommitFileProducer(producer datamodel.Producer, ch chan CommitFileSendEvent, errors chan<- error) <-chan bool {
+func CreateCommitFileProducer(producer event.Producer, ch chan CommitFileSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1068,12 +1068,12 @@ type CommitFileReceiveEvent struct {
 }
 
 // CreateCommitFileConsumer will stream data from the topic into the provided channel
-func CreateCommitFileConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CommitFileReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitFileConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan CommitFileReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object CommitFile
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

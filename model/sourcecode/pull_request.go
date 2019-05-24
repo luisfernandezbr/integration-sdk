@@ -776,7 +776,7 @@ type PullRequestSendEvent struct {
 }
 
 // CreatePullRequestProducer will stream data from the channel
-func CreatePullRequestProducer(producer datamodel.Producer, ch chan PullRequestSendEvent, errors chan<- error) <-chan bool {
+func CreatePullRequestProducer(producer event.Producer, ch chan PullRequestSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -816,12 +816,12 @@ type PullRequestReceiveEvent struct {
 }
 
 // CreatePullRequestConsumer will stream data from the topic into the provided channel
-func CreatePullRequestConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan PullRequestReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreatePullRequestConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan PullRequestReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object PullRequest
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

@@ -710,7 +710,7 @@ type SprintSendEvent struct {
 }
 
 // CreateSprintProducer will stream data from the channel
-func CreateSprintProducer(producer datamodel.Producer, ch chan SprintSendEvent, errors chan<- error) <-chan bool {
+func CreateSprintProducer(producer event.Producer, ch chan SprintSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -750,12 +750,12 @@ type SprintReceiveEvent struct {
 }
 
 // CreateSprintConsumer will stream data from the topic into the provided channel
-func CreateSprintConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan SprintReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateSprintConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan SprintReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object Sprint
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

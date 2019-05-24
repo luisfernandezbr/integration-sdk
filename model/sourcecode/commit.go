@@ -939,7 +939,7 @@ type CommitSendEvent struct {
 }
 
 // CreateCommitProducer will stream data from the channel
-func CreateCommitProducer(producer datamodel.Producer, ch chan CommitSendEvent, errors chan<- error) <-chan bool {
+func CreateCommitProducer(producer event.Producer, ch chan CommitSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -979,12 +979,12 @@ type CommitReceiveEvent struct {
 }
 
 // CreateCommitConsumer will stream data from the topic into the provided channel
-func CreateCommitConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CommitReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCommitConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan CommitReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object Commit
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

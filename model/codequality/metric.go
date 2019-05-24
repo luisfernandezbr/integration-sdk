@@ -668,7 +668,7 @@ type MetricSendEvent struct {
 }
 
 // CreateMetricProducer will stream data from the channel
-func CreateMetricProducer(producer datamodel.Producer, ch chan MetricSendEvent, errors chan<- error) <-chan bool {
+func CreateMetricProducer(producer event.Producer, ch chan MetricSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -708,12 +708,12 @@ type MetricReceiveEvent struct {
 }
 
 // CreateMetricConsumer will stream data from the topic into the provided channel
-func CreateMetricConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan MetricReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateMetricConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan MetricReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object Metric
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

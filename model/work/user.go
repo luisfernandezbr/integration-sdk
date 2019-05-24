@@ -656,7 +656,7 @@ type UserSendEvent struct {
 }
 
 // CreateUserProducer will stream data from the channel
-func CreateUserProducer(producer datamodel.Producer, ch chan UserSendEvent, errors chan<- error) <-chan bool {
+func CreateUserProducer(producer event.Producer, ch chan UserSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -696,12 +696,12 @@ type UserReceiveEvent struct {
 }
 
 // CreateUserConsumer will stream data from the topic into the provided channel
-func CreateUserConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan UserReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateUserConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan UserReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object User
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

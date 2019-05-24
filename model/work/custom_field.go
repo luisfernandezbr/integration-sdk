@@ -631,7 +631,7 @@ type CustomFieldSendEvent struct {
 }
 
 // CreateCustomFieldProducer will stream data from the channel
-func CreateCustomFieldProducer(producer datamodel.Producer, ch chan CustomFieldSendEvent, errors chan<- error) <-chan bool {
+func CreateCustomFieldProducer(producer event.Producer, ch chan CustomFieldSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -671,12 +671,12 @@ type CustomFieldReceiveEvent struct {
 }
 
 // CreateCustomFieldConsumer will stream data from the topic into the provided channel
-func CreateCustomFieldConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan CustomFieldReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateCustomFieldConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan CustomFieldReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object CustomField
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

@@ -631,7 +631,7 @@ type RepoSendEvent struct {
 }
 
 // CreateRepoProducer will stream data from the channel
-func CreateRepoProducer(producer datamodel.Producer, ch chan RepoSendEvent, errors chan<- error) <-chan bool {
+func CreateRepoProducer(producer event.Producer, ch chan RepoSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -671,12 +671,12 @@ type RepoReceiveEvent struct {
 }
 
 // CreateRepoConsumer will stream data from the topic into the provided channel
-func CreateRepoConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan RepoReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateRepoConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan RepoReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object Repo
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

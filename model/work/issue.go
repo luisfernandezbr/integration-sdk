@@ -964,7 +964,7 @@ type IssueSendEvent struct {
 }
 
 // CreateIssueProducer will stream data from the channel
-func CreateIssueProducer(producer datamodel.Producer, ch chan IssueSendEvent, errors chan<- error) <-chan bool {
+func CreateIssueProducer(producer event.Producer, ch chan IssueSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1004,12 +1004,12 @@ type IssueReceiveEvent struct {
 }
 
 // CreateIssueConsumer will stream data from the topic into the provided channel
-func CreateIssueConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan IssueReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateIssueConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan IssueReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object Issue
 				if err := json.Unmarshal(msg.Value, &object); err != nil {

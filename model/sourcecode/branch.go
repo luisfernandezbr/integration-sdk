@@ -809,7 +809,7 @@ type BranchSendEvent struct {
 }
 
 // CreateBranchProducer will stream data from the channel
-func CreateBranchProducer(producer datamodel.Producer, ch chan BranchSendEvent, errors chan<- error) <-chan bool {
+func CreateBranchProducer(producer event.Producer, ch chan BranchSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -849,12 +849,12 @@ type BranchReceiveEvent struct {
 }
 
 // CreateBranchConsumer will stream data from the topic into the provided channel
-func CreateBranchConsumer(factory datamodel.ConsumerFactory, topic datamodel.TopicNameType, ch chan BranchReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
+func CreateBranchConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan BranchReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
 	done := make(chan bool, 1)
 	closed := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		callback := datamodel.ConsumerCallback{
+		callback := event.ConsumerCallback{
 			OnDataReceived: func(msg event.Message) error {
 				var object Branch
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
