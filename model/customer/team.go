@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -191,6 +192,16 @@ func (o *Team) String() string {
 	return fmt.Sprintf("customer.Team<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *Team) GetTopicName() datamodel.TopicNameType {
+	return TeamTopic
+}
+
+// GetModelName returns the name of the model
+func (o *Team) GetModelName() datamodel.ModelNameType {
+	return TeamModelName
+}
+
 func (o *Team) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -219,6 +230,12 @@ func (o *Team) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *Team) MaterializedName() string {
 	return "customer_team"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Team) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of Team
@@ -266,7 +283,7 @@ var cachedCodecTeam *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *Team) GetAvroCodec() *goavro.Codec {
 	if cachedCodecTeam == nil {
-		c, err := CreateTeamAvroSchema()
+		c, err := GetTeamAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -372,48 +389,54 @@ func (o *Team) Hash() string {
 }
 
 // CreateTeam creates a new Team in the database
-func CreateTeam(ctx context.Context, db datamodel.Db, o *Team) error {
-	return db.Create(ctx, o.ToMap())
+func CreateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
+	return db.Create(ctx, o)
 }
 
 // DeleteTeam deletes a Team in the database
-func DeleteTeam(ctx context.Context, db datamodel.Db, o *Team) error {
-	return db.Delete(ctx, o.GetID())
+func DeleteTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
+	return db.Delete(ctx, o)
 }
 
 // UpdateTeam updates a Team in the database
-func UpdateTeam(ctx context.Context, db datamodel.Db, o *Team) error {
-	return db.Update(ctx, o.GetID(), o.ToMap())
+func UpdateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
+	return db.Update(ctx, o)
 }
 
 // FindTeam returns a Team from the database
-func FindTeam(ctx context.Context, db datamodel.Db, id string) (*Team, error) {
+func FindTeam(ctx context.Context, db datamodel.Storage, id string) (*Team, error) {
 	kv, err := db.FindOne(ctx, id)
 	if err != nil {
 		return nil, err
 	}
+	if kv == nil {
+		return nil, nil
+	}
 	var result Team
-	result.FromMap(kv)
+	result.FromMap(kv.ToMap())
 	return &result, nil
 }
 
 // FindTeams returns all Team from the database matching keys
-func FindTeams(ctx context.Context, db datamodel.Db, kv map[string]interface{}) ([]*Team, error) {
+func FindTeams(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*Team, error) {
 	res, err := db.Find(ctx, kv)
 	if err != nil {
 		return nil, err
 	}
-	arr := make([]*Team, 0)
-	for _, kv := range res {
-		var result Team
-		result.FromMap(kv)
-		arr = append(arr, &result)
+	if res != nil {
+		arr := make([]*Team, 0)
+		for _, kv := range res {
+			var result Team
+			result.FromMap(kv.ToMap())
+			arr = append(arr, &result)
+		}
+		return arr, nil
 	}
-	return arr, nil
+	return nil, nil
 }
 
-// CreateTeamAvroSchemaSpec creates the avro schema specification for Team
-func CreateTeamAvroSchemaSpec() string {
+// GetTeamAvroSchemaSpec creates the avro schema specification for Team
+func GetTeamAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "customer",
@@ -454,25 +477,25 @@ func CreateTeamAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateTeamAvroSchema creates the avro schema for Team
-func CreateTeamAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateTeamAvroSchemaSpec())
+// GetTeamAvroSchema creates the avro schema for Team
+func GetTeamAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetTeamAvroSchemaSpec())
 }
 
 // TransformTeamFunc is a function for transforming Team during processing
 type TransformTeamFunc func(input *Team) (*Team, error)
 
-// CreateTeamPipe creates a pipe for processing Team items
-func CreateTeamPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformTeamFunc) <-chan bool {
+// NewTeamPipe creates a pipe for processing Team items
+func NewTeamPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformTeamFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateTeamInputStream(input, errors)
+	inch, indone := NewTeamInputStream(input, errors)
 	var stream chan Team
 	if len(transforms) > 0 {
 		stream = make(chan Team, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateTeamOutputStream(output, stream, errors)
+	outdone := NewTeamOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -508,8 +531,8 @@ func CreateTeamPipe(input io.ReadCloser, output io.WriteCloser, errors chan erro
 	return done
 }
 
-// CreateTeamInputStreamDir creates a channel for reading Team as JSON newlines from a directory of files
-func CreateTeamInputStreamDir(dir string, errors chan<- error, transforms ...TransformTeamFunc) (chan Team, <-chan bool) {
+// NewTeamInputStreamDir creates a channel for reading Team as JSON newlines from a directory of files
+func NewTeamInputStreamDir(dir string, errors chan<- error, transforms ...TransformTeamFunc) (chan Team, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/customer/team\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -528,7 +551,7 @@ func CreateTeamInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateTeamInputStreamFile(files[0], errors, transforms...)
+		return NewTeamInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan Team)
 		close(ch)
@@ -538,8 +561,8 @@ func CreateTeamInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 }
 
-// CreateTeamInputStreamFile creates an channel for reading Team as JSON newlines from filename
-func CreateTeamInputStreamFile(filename string, errors chan<- error, transforms ...TransformTeamFunc) (chan Team, <-chan bool) {
+// NewTeamInputStreamFile creates an channel for reading Team as JSON newlines from filename
+func NewTeamInputStreamFile(filename string, errors chan<- error, transforms ...TransformTeamFunc) (chan Team, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -563,11 +586,11 @@ func CreateTeamInputStreamFile(filename string, errors chan<- error, transforms 
 		}
 		f = gz
 	}
-	return CreateTeamInputStream(f, errors, transforms...)
+	return NewTeamInputStream(f, errors, transforms...)
 }
 
-// CreateTeamInputStream creates an channel for reading Team as JSON newlines from stream
-func CreateTeamInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformTeamFunc) (chan Team, <-chan bool) {
+// NewTeamInputStream creates an channel for reading Team as JSON newlines from stream
+func NewTeamInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformTeamFunc) (chan Team, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan Team, 1000)
 	go func() {
@@ -608,8 +631,8 @@ func CreateTeamInputStream(stream io.ReadCloser, errors chan<- error, transforms
 	return ch, done
 }
 
-// CreateTeamOutputStreamDir will output json newlines from channel and save in dir
-func CreateTeamOutputStreamDir(dir string, ch chan Team, errors chan<- error, transforms ...TransformTeamFunc) <-chan bool {
+// NewTeamOutputStreamDir will output json newlines from channel and save in dir
+func NewTeamOutputStreamDir(dir string, ch chan Team, errors chan<- error, transforms ...TransformTeamFunc) <-chan bool {
 	fp := filepath.Join(dir, "/customer/team\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -626,11 +649,11 @@ func CreateTeamOutputStreamDir(dir string, ch chan Team, errors chan<- error, tr
 		done <- true
 		return done
 	}
-	return CreateTeamOutputStream(gz, ch, errors, transforms...)
+	return NewTeamOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateTeamOutputStream will output json newlines from channel to the stream
-func CreateTeamOutputStream(stream io.WriteCloser, ch chan Team, errors chan<- error, transforms ...TransformTeamFunc) <-chan bool {
+// NewTeamOutputStream will output json newlines from channel to the stream
+func NewTeamOutputStream(stream io.WriteCloser, ch chan Team, errors chan<- error, transforms ...TransformTeamFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -672,79 +695,201 @@ func CreateTeamOutputStream(stream io.WriteCloser, ch chan Team, errors chan<- e
 
 // TeamSendEvent is an event detail for sending data
 type TeamSendEvent struct {
-	Team    Team
-	Headers map[string]string
+	Team    *Team
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-// CreateTeamProducer will stream data from the channel
-func CreateTeamProducer(producer event.Producer, ch chan TeamSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*TeamSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *TeamSendEvent) Key() string {
+	if e.key == "" {
+		return e.Team.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *TeamSendEvent) Object() datamodel.Model {
+	return e.Team
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *TeamSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *TeamSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// TeamSendEventOpts is a function handler for setting opts
+type TeamSendEventOpts func(o *TeamSendEvent)
+
+// WithTeamSendEventKey sets the key value to a value different than the object ID
+func WithTeamSendEventKey(key string) TeamSendEventOpts {
+	return func(o *TeamSendEvent) {
+		o.key = key
+	}
+}
+
+// WithTeamSendEventTimestamp sets the timestamp value
+func WithTeamSendEventTimestamp(tv time.Time) TeamSendEventOpts {
+	return func(o *TeamSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithTeamSendEventHeader sets the timestamp value
+func WithTeamSendEventHeader(key, value string) TeamSendEventOpts {
+	return func(o *TeamSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewTeamSendEvent returns a new TeamSendEvent instance
+func NewTeamSendEvent(o *Team, opts ...TeamSendEventOpts) *TeamSendEvent {
+	res := &TeamSendEvent{
+		Team: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewTeamProducer will stream data from the channel
+func NewTeamProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.Team.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Team.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.Team.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*Team); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.Team.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.Team.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type customer.Team but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// TeamReceiveEvent is an event detail for receiving data
-type TeamReceiveEvent struct {
-	Team    Team
-	Message event.Message
+// NewTeamConsumer will stream data from the topic into the provided channel
+func NewTeamConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object Team
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into customer.Team: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &TeamReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateTeamConsumer will stream data from the topic into the provided channel
-func CreateTeamConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan TeamReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object Team
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into customer.Team: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- TeamReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// TeamReceiveEvent is an event detail for receiving data
+type TeamReceiveEvent struct {
+	Team    *Team
+	message event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*TeamReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *TeamReceiveEvent) Object() datamodel.Model {
+	return e.Team
+}
+
+// Message returns the underlying message data for the event
+func (e *TeamReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// TeamProducer implements the datamodel.ModelEventProducer
+type TeamProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*TeamProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *TeamProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *TeamProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *Team) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &TeamProducer{
+		ch:   ch,
+		done: NewTeamProducer(producer, ch, errors),
+	}
+}
+
+// TeamConsumer implements the datamodel.ModelEventConsumer
+type TeamConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*TeamConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *TeamConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *TeamConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *Team) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewTeamConsumer(consumer, ch, errors)
+	return &TeamConsumer{
+		ch: ch,
+	}
 }

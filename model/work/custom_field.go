@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -190,6 +191,16 @@ func (o *CustomField) String() string {
 	return fmt.Sprintf("work.CustomField<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *CustomField) GetTopicName() datamodel.TopicNameType {
+	return CustomFieldTopic
+}
+
+// GetModelName returns the name of the model
+func (o *CustomField) GetModelName() datamodel.ModelNameType {
+	return CustomFieldModelName
+}
+
 func (o *CustomField) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -218,6 +229,12 @@ func (o *CustomField) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *CustomField) MaterializedName() string {
 	panic("work.CustomField is not a materialized table")
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *CustomField) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of CustomField
@@ -265,7 +282,7 @@ var cachedCodecCustomField *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *CustomField) GetAvroCodec() *goavro.Codec {
 	if cachedCodecCustomField == nil {
-		c, err := CreateCustomFieldAvroSchema()
+		c, err := GetCustomFieldAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -368,8 +385,8 @@ func (o *CustomField) Hash() string {
 	return o.Hashcode
 }
 
-// CreateCustomFieldAvroSchemaSpec creates the avro schema specification for CustomField
-func CreateCustomFieldAvroSchemaSpec() string {
+// GetCustomFieldAvroSchemaSpec creates the avro schema specification for CustomField
+func GetCustomFieldAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "work",
@@ -409,25 +426,25 @@ func CreateCustomFieldAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateCustomFieldAvroSchema creates the avro schema for CustomField
-func CreateCustomFieldAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateCustomFieldAvroSchemaSpec())
+// GetCustomFieldAvroSchema creates the avro schema for CustomField
+func GetCustomFieldAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetCustomFieldAvroSchemaSpec())
 }
 
 // TransformCustomFieldFunc is a function for transforming CustomField during processing
 type TransformCustomFieldFunc func(input *CustomField) (*CustomField, error)
 
-// CreateCustomFieldPipe creates a pipe for processing CustomField items
-func CreateCustomFieldPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCustomFieldFunc) <-chan bool {
+// NewCustomFieldPipe creates a pipe for processing CustomField items
+func NewCustomFieldPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCustomFieldFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateCustomFieldInputStream(input, errors)
+	inch, indone := NewCustomFieldInputStream(input, errors)
 	var stream chan CustomField
 	if len(transforms) > 0 {
 		stream = make(chan CustomField, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateCustomFieldOutputStream(output, stream, errors)
+	outdone := NewCustomFieldOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -463,8 +480,8 @@ func CreateCustomFieldPipe(input io.ReadCloser, output io.WriteCloser, errors ch
 	return done
 }
 
-// CreateCustomFieldInputStreamDir creates a channel for reading CustomField as JSON newlines from a directory of files
-func CreateCustomFieldInputStreamDir(dir string, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
+// NewCustomFieldInputStreamDir creates a channel for reading CustomField as JSON newlines from a directory of files
+func NewCustomFieldInputStreamDir(dir string, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/custom_field\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -483,7 +500,7 @@ func CreateCustomFieldInputStreamDir(dir string, errors chan<- error, transforms
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateCustomFieldInputStreamFile(files[0], errors, transforms...)
+		return NewCustomFieldInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan CustomField)
 		close(ch)
@@ -493,8 +510,8 @@ func CreateCustomFieldInputStreamDir(dir string, errors chan<- error, transforms
 	}
 }
 
-// CreateCustomFieldInputStreamFile creates an channel for reading CustomField as JSON newlines from filename
-func CreateCustomFieldInputStreamFile(filename string, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
+// NewCustomFieldInputStreamFile creates an channel for reading CustomField as JSON newlines from filename
+func NewCustomFieldInputStreamFile(filename string, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -518,11 +535,11 @@ func CreateCustomFieldInputStreamFile(filename string, errors chan<- error, tran
 		}
 		f = gz
 	}
-	return CreateCustomFieldInputStream(f, errors, transforms...)
+	return NewCustomFieldInputStream(f, errors, transforms...)
 }
 
-// CreateCustomFieldInputStream creates an channel for reading CustomField as JSON newlines from stream
-func CreateCustomFieldInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
+// NewCustomFieldInputStream creates an channel for reading CustomField as JSON newlines from stream
+func NewCustomFieldInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCustomFieldFunc) (chan CustomField, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan CustomField, 1000)
 	go func() {
@@ -563,8 +580,8 @@ func CreateCustomFieldInputStream(stream io.ReadCloser, errors chan<- error, tra
 	return ch, done
 }
 
-// CreateCustomFieldOutputStreamDir will output json newlines from channel and save in dir
-func CreateCustomFieldOutputStreamDir(dir string, ch chan CustomField, errors chan<- error, transforms ...TransformCustomFieldFunc) <-chan bool {
+// NewCustomFieldOutputStreamDir will output json newlines from channel and save in dir
+func NewCustomFieldOutputStreamDir(dir string, ch chan CustomField, errors chan<- error, transforms ...TransformCustomFieldFunc) <-chan bool {
 	fp := filepath.Join(dir, "/work/custom_field\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -581,11 +598,11 @@ func CreateCustomFieldOutputStreamDir(dir string, ch chan CustomField, errors ch
 		done <- true
 		return done
 	}
-	return CreateCustomFieldOutputStream(gz, ch, errors, transforms...)
+	return NewCustomFieldOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateCustomFieldOutputStream will output json newlines from channel to the stream
-func CreateCustomFieldOutputStream(stream io.WriteCloser, ch chan CustomField, errors chan<- error, transforms ...TransformCustomFieldFunc) <-chan bool {
+// NewCustomFieldOutputStream will output json newlines from channel to the stream
+func NewCustomFieldOutputStream(stream io.WriteCloser, ch chan CustomField, errors chan<- error, transforms ...TransformCustomFieldFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -627,79 +644,201 @@ func CreateCustomFieldOutputStream(stream io.WriteCloser, ch chan CustomField, e
 
 // CustomFieldSendEvent is an event detail for sending data
 type CustomFieldSendEvent struct {
-	CustomField CustomField
-	Headers     map[string]string
+	CustomField *CustomField
+	headers     map[string]string
+	time        time.Time
+	key         string
 }
 
-// CreateCustomFieldProducer will stream data from the channel
-func CreateCustomFieldProducer(producer event.Producer, ch chan CustomFieldSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*CustomFieldSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *CustomFieldSendEvent) Key() string {
+	if e.key == "" {
+		return e.CustomField.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *CustomFieldSendEvent) Object() datamodel.Model {
+	return e.CustomField
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *CustomFieldSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *CustomFieldSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// CustomFieldSendEventOpts is a function handler for setting opts
+type CustomFieldSendEventOpts func(o *CustomFieldSendEvent)
+
+// WithCustomFieldSendEventKey sets the key value to a value different than the object ID
+func WithCustomFieldSendEventKey(key string) CustomFieldSendEventOpts {
+	return func(o *CustomFieldSendEvent) {
+		o.key = key
+	}
+}
+
+// WithCustomFieldSendEventTimestamp sets the timestamp value
+func WithCustomFieldSendEventTimestamp(tv time.Time) CustomFieldSendEventOpts {
+	return func(o *CustomFieldSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithCustomFieldSendEventHeader sets the timestamp value
+func WithCustomFieldSendEventHeader(key, value string) CustomFieldSendEventOpts {
+	return func(o *CustomFieldSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewCustomFieldSendEvent returns a new CustomFieldSendEvent instance
+func NewCustomFieldSendEvent(o *CustomField, opts ...CustomFieldSendEventOpts) *CustomFieldSendEvent {
+	res := &CustomFieldSendEvent{
+		CustomField: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewCustomFieldProducer will stream data from the channel
+func NewCustomFieldProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.CustomField.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.CustomField.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.CustomField.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*CustomField); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.CustomField.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.CustomField.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type work.CustomField but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// CustomFieldReceiveEvent is an event detail for receiving data
-type CustomFieldReceiveEvent struct {
-	CustomField CustomField
-	Message     event.Message
+// NewCustomFieldConsumer will stream data from the topic into the provided channel
+func NewCustomFieldConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object CustomField
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into work.CustomField: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &CustomFieldReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateCustomFieldConsumer will stream data from the topic into the provided channel
-func CreateCustomFieldConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan CustomFieldReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object CustomField
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into work.CustomField: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- CustomFieldReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// CustomFieldReceiveEvent is an event detail for receiving data
+type CustomFieldReceiveEvent struct {
+	CustomField *CustomField
+	message     event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*CustomFieldReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *CustomFieldReceiveEvent) Object() datamodel.Model {
+	return e.CustomField
+}
+
+// Message returns the underlying message data for the event
+func (e *CustomFieldReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// CustomFieldProducer implements the datamodel.ModelEventProducer
+type CustomFieldProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*CustomFieldProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *CustomFieldProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *CustomFieldProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *CustomField) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &CustomFieldProducer{
+		ch:   ch,
+		done: NewCustomFieldProducer(producer, ch, errors),
+	}
+}
+
+// CustomFieldConsumer implements the datamodel.ModelEventConsumer
+type CustomFieldConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*CustomFieldConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *CustomFieldConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *CustomFieldConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *CustomField) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewCustomFieldConsumer(consumer, ch, errors)
+	return &CustomFieldConsumer{
+		ch: ch,
+	}
 }

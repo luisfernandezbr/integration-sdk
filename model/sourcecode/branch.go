@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -206,6 +207,16 @@ func (o *Branch) String() string {
 	return fmt.Sprintf("sourcecode.Branch<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *Branch) GetTopicName() datamodel.TopicNameType {
+	return BranchTopic
+}
+
+// GetModelName returns the name of the model
+func (o *Branch) GetModelName() datamodel.ModelNameType {
+	return BranchModelName
+}
+
 func (o *Branch) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -234,6 +245,12 @@ func (o *Branch) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *Branch) MaterializedName() string {
 	return "sourcecode_branch"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Branch) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of Branch
@@ -281,7 +298,7 @@ var cachedCodecBranch *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *Branch) GetAvroCodec() *goavro.Codec {
 	if cachedCodecBranch == nil {
-		c, err := CreateBranchAvroSchema()
+		c, err := GetBranchAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -512,8 +529,8 @@ func (o *Branch) Hash() string {
 	return o.Hashcode
 }
 
-// CreateBranchAvroSchemaSpec creates the avro schema specification for Branch
-func CreateBranchAvroSchemaSpec() string {
+// GetBranchAvroSchemaSpec creates the avro schema specification for Branch
+func GetBranchAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "sourcecode",
@@ -587,25 +604,25 @@ func CreateBranchAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateBranchAvroSchema creates the avro schema for Branch
-func CreateBranchAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateBranchAvroSchemaSpec())
+// GetBranchAvroSchema creates the avro schema for Branch
+func GetBranchAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetBranchAvroSchemaSpec())
 }
 
 // TransformBranchFunc is a function for transforming Branch during processing
 type TransformBranchFunc func(input *Branch) (*Branch, error)
 
-// CreateBranchPipe creates a pipe for processing Branch items
-func CreateBranchPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformBranchFunc) <-chan bool {
+// NewBranchPipe creates a pipe for processing Branch items
+func NewBranchPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformBranchFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateBranchInputStream(input, errors)
+	inch, indone := NewBranchInputStream(input, errors)
 	var stream chan Branch
 	if len(transforms) > 0 {
 		stream = make(chan Branch, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateBranchOutputStream(output, stream, errors)
+	outdone := NewBranchOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -641,8 +658,8 @@ func CreateBranchPipe(input io.ReadCloser, output io.WriteCloser, errors chan er
 	return done
 }
 
-// CreateBranchInputStreamDir creates a channel for reading Branch as JSON newlines from a directory of files
-func CreateBranchInputStreamDir(dir string, errors chan<- error, transforms ...TransformBranchFunc) (chan Branch, <-chan bool) {
+// NewBranchInputStreamDir creates a channel for reading Branch as JSON newlines from a directory of files
+func NewBranchInputStreamDir(dir string, errors chan<- error, transforms ...TransformBranchFunc) (chan Branch, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/branch\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -661,7 +678,7 @@ func CreateBranchInputStreamDir(dir string, errors chan<- error, transforms ...T
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateBranchInputStreamFile(files[0], errors, transforms...)
+		return NewBranchInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan Branch)
 		close(ch)
@@ -671,8 +688,8 @@ func CreateBranchInputStreamDir(dir string, errors chan<- error, transforms ...T
 	}
 }
 
-// CreateBranchInputStreamFile creates an channel for reading Branch as JSON newlines from filename
-func CreateBranchInputStreamFile(filename string, errors chan<- error, transforms ...TransformBranchFunc) (chan Branch, <-chan bool) {
+// NewBranchInputStreamFile creates an channel for reading Branch as JSON newlines from filename
+func NewBranchInputStreamFile(filename string, errors chan<- error, transforms ...TransformBranchFunc) (chan Branch, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -696,11 +713,11 @@ func CreateBranchInputStreamFile(filename string, errors chan<- error, transform
 		}
 		f = gz
 	}
-	return CreateBranchInputStream(f, errors, transforms...)
+	return NewBranchInputStream(f, errors, transforms...)
 }
 
-// CreateBranchInputStream creates an channel for reading Branch as JSON newlines from stream
-func CreateBranchInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformBranchFunc) (chan Branch, <-chan bool) {
+// NewBranchInputStream creates an channel for reading Branch as JSON newlines from stream
+func NewBranchInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformBranchFunc) (chan Branch, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan Branch, 1000)
 	go func() {
@@ -741,8 +758,8 @@ func CreateBranchInputStream(stream io.ReadCloser, errors chan<- error, transfor
 	return ch, done
 }
 
-// CreateBranchOutputStreamDir will output json newlines from channel and save in dir
-func CreateBranchOutputStreamDir(dir string, ch chan Branch, errors chan<- error, transforms ...TransformBranchFunc) <-chan bool {
+// NewBranchOutputStreamDir will output json newlines from channel and save in dir
+func NewBranchOutputStreamDir(dir string, ch chan Branch, errors chan<- error, transforms ...TransformBranchFunc) <-chan bool {
 	fp := filepath.Join(dir, "/sourcecode/branch\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -759,11 +776,11 @@ func CreateBranchOutputStreamDir(dir string, ch chan Branch, errors chan<- error
 		done <- true
 		return done
 	}
-	return CreateBranchOutputStream(gz, ch, errors, transforms...)
+	return NewBranchOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateBranchOutputStream will output json newlines from channel to the stream
-func CreateBranchOutputStream(stream io.WriteCloser, ch chan Branch, errors chan<- error, transforms ...TransformBranchFunc) <-chan bool {
+// NewBranchOutputStream will output json newlines from channel to the stream
+func NewBranchOutputStream(stream io.WriteCloser, ch chan Branch, errors chan<- error, transforms ...TransformBranchFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -805,79 +822,201 @@ func CreateBranchOutputStream(stream io.WriteCloser, ch chan Branch, errors chan
 
 // BranchSendEvent is an event detail for sending data
 type BranchSendEvent struct {
-	Branch  Branch
-	Headers map[string]string
+	Branch  *Branch
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-// CreateBranchProducer will stream data from the channel
-func CreateBranchProducer(producer event.Producer, ch chan BranchSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*BranchSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *BranchSendEvent) Key() string {
+	if e.key == "" {
+		return e.Branch.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *BranchSendEvent) Object() datamodel.Model {
+	return e.Branch
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *BranchSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *BranchSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// BranchSendEventOpts is a function handler for setting opts
+type BranchSendEventOpts func(o *BranchSendEvent)
+
+// WithBranchSendEventKey sets the key value to a value different than the object ID
+func WithBranchSendEventKey(key string) BranchSendEventOpts {
+	return func(o *BranchSendEvent) {
+		o.key = key
+	}
+}
+
+// WithBranchSendEventTimestamp sets the timestamp value
+func WithBranchSendEventTimestamp(tv time.Time) BranchSendEventOpts {
+	return func(o *BranchSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithBranchSendEventHeader sets the timestamp value
+func WithBranchSendEventHeader(key, value string) BranchSendEventOpts {
+	return func(o *BranchSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewBranchSendEvent returns a new BranchSendEvent instance
+func NewBranchSendEvent(o *Branch, opts ...BranchSendEventOpts) *BranchSendEvent {
+	res := &BranchSendEvent{
+		Branch: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewBranchProducer will stream data from the channel
+func NewBranchProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.Branch.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Branch.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.Branch.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*Branch); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.Branch.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.Branch.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.Branch but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// BranchReceiveEvent is an event detail for receiving data
-type BranchReceiveEvent struct {
-	Branch  Branch
-	Message event.Message
+// NewBranchConsumer will stream data from the topic into the provided channel
+func NewBranchConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object Branch
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into sourcecode.Branch: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &BranchReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateBranchConsumer will stream data from the topic into the provided channel
-func CreateBranchConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan BranchReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object Branch
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.Branch: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- BranchReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// BranchReceiveEvent is an event detail for receiving data
+type BranchReceiveEvent struct {
+	Branch  *Branch
+	message event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*BranchReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *BranchReceiveEvent) Object() datamodel.Model {
+	return e.Branch
+}
+
+// Message returns the underlying message data for the event
+func (e *BranchReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// BranchProducer implements the datamodel.ModelEventProducer
+type BranchProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*BranchProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *BranchProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *BranchProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *Branch) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &BranchProducer{
+		ch:   ch,
+		done: NewBranchProducer(producer, ch, errors),
+	}
+}
+
+// BranchConsumer implements the datamodel.ModelEventConsumer
+type BranchConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*BranchConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *BranchConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *BranchConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *Branch) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewBranchConsumer(consumer, ch, errors)
+	return &BranchConsumer{
+		ch: ch,
+	}
 }

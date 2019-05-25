@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -199,6 +200,16 @@ func (o *Sprint) String() string {
 	return fmt.Sprintf("work.Sprint<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *Sprint) GetTopicName() datamodel.TopicNameType {
+	return SprintTopic
+}
+
+// GetModelName returns the name of the model
+func (o *Sprint) GetModelName() datamodel.ModelNameType {
+	return SprintModelName
+}
+
 func (o *Sprint) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -227,6 +238,12 @@ func (o *Sprint) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *Sprint) MaterializedName() string {
 	panic("work.Sprint is not a materialized table")
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Sprint) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of Sprint
@@ -274,7 +291,7 @@ var cachedCodecSprint *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *Sprint) GetAvroCodec() *goavro.Codec {
 	if cachedCodecSprint == nil {
-		c, err := CreateSprintAvroSchema()
+		c, err := GetSprintAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -429,8 +446,8 @@ func (o *Sprint) Hash() string {
 	return o.Hashcode
 }
 
-// CreateSprintAvroSchemaSpec creates the avro schema specification for Sprint
-func CreateSprintAvroSchemaSpec() string {
+// GetSprintAvroSchemaSpec creates the avro schema specification for Sprint
+func GetSprintAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "work",
@@ -488,25 +505,25 @@ func CreateSprintAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateSprintAvroSchema creates the avro schema for Sprint
-func CreateSprintAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateSprintAvroSchemaSpec())
+// GetSprintAvroSchema creates the avro schema for Sprint
+func GetSprintAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetSprintAvroSchemaSpec())
 }
 
 // TransformSprintFunc is a function for transforming Sprint during processing
 type TransformSprintFunc func(input *Sprint) (*Sprint, error)
 
-// CreateSprintPipe creates a pipe for processing Sprint items
-func CreateSprintPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformSprintFunc) <-chan bool {
+// NewSprintPipe creates a pipe for processing Sprint items
+func NewSprintPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformSprintFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateSprintInputStream(input, errors)
+	inch, indone := NewSprintInputStream(input, errors)
 	var stream chan Sprint
 	if len(transforms) > 0 {
 		stream = make(chan Sprint, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateSprintOutputStream(output, stream, errors)
+	outdone := NewSprintOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -542,8 +559,8 @@ func CreateSprintPipe(input io.ReadCloser, output io.WriteCloser, errors chan er
 	return done
 }
 
-// CreateSprintInputStreamDir creates a channel for reading Sprint as JSON newlines from a directory of files
-func CreateSprintInputStreamDir(dir string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
+// NewSprintInputStreamDir creates a channel for reading Sprint as JSON newlines from a directory of files
+func NewSprintInputStreamDir(dir string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/sprint\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -562,7 +579,7 @@ func CreateSprintInputStreamDir(dir string, errors chan<- error, transforms ...T
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateSprintInputStreamFile(files[0], errors, transforms...)
+		return NewSprintInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan Sprint)
 		close(ch)
@@ -572,8 +589,8 @@ func CreateSprintInputStreamDir(dir string, errors chan<- error, transforms ...T
 	}
 }
 
-// CreateSprintInputStreamFile creates an channel for reading Sprint as JSON newlines from filename
-func CreateSprintInputStreamFile(filename string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
+// NewSprintInputStreamFile creates an channel for reading Sprint as JSON newlines from filename
+func NewSprintInputStreamFile(filename string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -597,11 +614,11 @@ func CreateSprintInputStreamFile(filename string, errors chan<- error, transform
 		}
 		f = gz
 	}
-	return CreateSprintInputStream(f, errors, transforms...)
+	return NewSprintInputStream(f, errors, transforms...)
 }
 
-// CreateSprintInputStream creates an channel for reading Sprint as JSON newlines from stream
-func CreateSprintInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
+// NewSprintInputStream creates an channel for reading Sprint as JSON newlines from stream
+func NewSprintInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan Sprint, 1000)
 	go func() {
@@ -642,8 +659,8 @@ func CreateSprintInputStream(stream io.ReadCloser, errors chan<- error, transfor
 	return ch, done
 }
 
-// CreateSprintOutputStreamDir will output json newlines from channel and save in dir
-func CreateSprintOutputStreamDir(dir string, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
+// NewSprintOutputStreamDir will output json newlines from channel and save in dir
+func NewSprintOutputStreamDir(dir string, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
 	fp := filepath.Join(dir, "/work/sprint\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -660,11 +677,11 @@ func CreateSprintOutputStreamDir(dir string, ch chan Sprint, errors chan<- error
 		done <- true
 		return done
 	}
-	return CreateSprintOutputStream(gz, ch, errors, transforms...)
+	return NewSprintOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateSprintOutputStream will output json newlines from channel to the stream
-func CreateSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
+// NewSprintOutputStream will output json newlines from channel to the stream
+func NewSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -706,79 +723,201 @@ func CreateSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan
 
 // SprintSendEvent is an event detail for sending data
 type SprintSendEvent struct {
-	Sprint  Sprint
-	Headers map[string]string
+	Sprint  *Sprint
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-// CreateSprintProducer will stream data from the channel
-func CreateSprintProducer(producer event.Producer, ch chan SprintSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*SprintSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *SprintSendEvent) Key() string {
+	if e.key == "" {
+		return e.Sprint.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *SprintSendEvent) Object() datamodel.Model {
+	return e.Sprint
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *SprintSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *SprintSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// SprintSendEventOpts is a function handler for setting opts
+type SprintSendEventOpts func(o *SprintSendEvent)
+
+// WithSprintSendEventKey sets the key value to a value different than the object ID
+func WithSprintSendEventKey(key string) SprintSendEventOpts {
+	return func(o *SprintSendEvent) {
+		o.key = key
+	}
+}
+
+// WithSprintSendEventTimestamp sets the timestamp value
+func WithSprintSendEventTimestamp(tv time.Time) SprintSendEventOpts {
+	return func(o *SprintSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithSprintSendEventHeader sets the timestamp value
+func WithSprintSendEventHeader(key, value string) SprintSendEventOpts {
+	return func(o *SprintSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewSprintSendEvent returns a new SprintSendEvent instance
+func NewSprintSendEvent(o *Sprint, opts ...SprintSendEventOpts) *SprintSendEvent {
+	res := &SprintSendEvent{
+		Sprint: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewSprintProducer will stream data from the channel
+func NewSprintProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.Sprint.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Sprint.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.Sprint.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*Sprint); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.Sprint.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.Sprint.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type work.Sprint but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// SprintReceiveEvent is an event detail for receiving data
-type SprintReceiveEvent struct {
-	Sprint  Sprint
-	Message event.Message
+// NewSprintConsumer will stream data from the topic into the provided channel
+func NewSprintConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object Sprint
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into work.Sprint: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &SprintReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateSprintConsumer will stream data from the topic into the provided channel
-func CreateSprintConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan SprintReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object Sprint
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into work.Sprint: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- SprintReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// SprintReceiveEvent is an event detail for receiving data
+type SprintReceiveEvent struct {
+	Sprint  *Sprint
+	message event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*SprintReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *SprintReceiveEvent) Object() datamodel.Model {
+	return e.Sprint
+}
+
+// Message returns the underlying message data for the event
+func (e *SprintReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// SprintProducer implements the datamodel.ModelEventProducer
+type SprintProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*SprintProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *SprintProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *SprintProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *Sprint) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &SprintProducer{
+		ch:   ch,
+		done: NewSprintProducer(producer, ch, errors),
+	}
+}
+
+// SprintConsumer implements the datamodel.ModelEventConsumer
+type SprintConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*SprintConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *SprintConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *SprintConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *Sprint) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewSprintConsumer(consumer, ch, errors)
+	return &SprintConsumer{
+		ch: ch,
+	}
 }

@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -211,6 +212,16 @@ func (o *Changelog) String() string {
 	return fmt.Sprintf("sourcecode.Changelog<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *Changelog) GetTopicName() datamodel.TopicNameType {
+	return ChangelogTopic
+}
+
+// GetModelName returns the name of the model
+func (o *Changelog) GetModelName() datamodel.ModelNameType {
+	return ChangelogModelName
+}
+
 func (o *Changelog) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -239,6 +250,12 @@ func (o *Changelog) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *Changelog) MaterializedName() string {
 	return "sourcecode_changelog"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Changelog) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of Changelog
@@ -286,7 +303,7 @@ var cachedCodecChangelog *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *Changelog) GetAvroCodec() *goavro.Codec {
 	if cachedCodecChangelog == nil {
-		c, err := CreateChangelogAvroSchema()
+		c, err := GetChangelogAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -509,8 +526,8 @@ func (o *Changelog) Hash() string {
 	return o.Hashcode
 }
 
-// CreateChangelogAvroSchemaSpec creates the avro schema specification for Changelog
-func CreateChangelogAvroSchemaSpec() string {
+// GetChangelogAvroSchemaSpec creates the avro schema specification for Changelog
+func GetChangelogAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "sourcecode",
@@ -590,25 +607,25 @@ func CreateChangelogAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateChangelogAvroSchema creates the avro schema for Changelog
-func CreateChangelogAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateChangelogAvroSchemaSpec())
+// GetChangelogAvroSchema creates the avro schema for Changelog
+func GetChangelogAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetChangelogAvroSchemaSpec())
 }
 
 // TransformChangelogFunc is a function for transforming Changelog during processing
 type TransformChangelogFunc func(input *Changelog) (*Changelog, error)
 
-// CreateChangelogPipe creates a pipe for processing Changelog items
-func CreateChangelogPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformChangelogFunc) <-chan bool {
+// NewChangelogPipe creates a pipe for processing Changelog items
+func NewChangelogPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformChangelogFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateChangelogInputStream(input, errors)
+	inch, indone := NewChangelogInputStream(input, errors)
 	var stream chan Changelog
 	if len(transforms) > 0 {
 		stream = make(chan Changelog, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateChangelogOutputStream(output, stream, errors)
+	outdone := NewChangelogOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -644,8 +661,8 @@ func CreateChangelogPipe(input io.ReadCloser, output io.WriteCloser, errors chan
 	return done
 }
 
-// CreateChangelogInputStreamDir creates a channel for reading Changelog as JSON newlines from a directory of files
-func CreateChangelogInputStreamDir(dir string, errors chan<- error, transforms ...TransformChangelogFunc) (chan Changelog, <-chan bool) {
+// NewChangelogInputStreamDir creates a channel for reading Changelog as JSON newlines from a directory of files
+func NewChangelogInputStreamDir(dir string, errors chan<- error, transforms ...TransformChangelogFunc) (chan Changelog, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/changelog\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -664,7 +681,7 @@ func CreateChangelogInputStreamDir(dir string, errors chan<- error, transforms .
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateChangelogInputStreamFile(files[0], errors, transforms...)
+		return NewChangelogInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan Changelog)
 		close(ch)
@@ -674,8 +691,8 @@ func CreateChangelogInputStreamDir(dir string, errors chan<- error, transforms .
 	}
 }
 
-// CreateChangelogInputStreamFile creates an channel for reading Changelog as JSON newlines from filename
-func CreateChangelogInputStreamFile(filename string, errors chan<- error, transforms ...TransformChangelogFunc) (chan Changelog, <-chan bool) {
+// NewChangelogInputStreamFile creates an channel for reading Changelog as JSON newlines from filename
+func NewChangelogInputStreamFile(filename string, errors chan<- error, transforms ...TransformChangelogFunc) (chan Changelog, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -699,11 +716,11 @@ func CreateChangelogInputStreamFile(filename string, errors chan<- error, transf
 		}
 		f = gz
 	}
-	return CreateChangelogInputStream(f, errors, transforms...)
+	return NewChangelogInputStream(f, errors, transforms...)
 }
 
-// CreateChangelogInputStream creates an channel for reading Changelog as JSON newlines from stream
-func CreateChangelogInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformChangelogFunc) (chan Changelog, <-chan bool) {
+// NewChangelogInputStream creates an channel for reading Changelog as JSON newlines from stream
+func NewChangelogInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformChangelogFunc) (chan Changelog, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan Changelog, 1000)
 	go func() {
@@ -744,8 +761,8 @@ func CreateChangelogInputStream(stream io.ReadCloser, errors chan<- error, trans
 	return ch, done
 }
 
-// CreateChangelogOutputStreamDir will output json newlines from channel and save in dir
-func CreateChangelogOutputStreamDir(dir string, ch chan Changelog, errors chan<- error, transforms ...TransformChangelogFunc) <-chan bool {
+// NewChangelogOutputStreamDir will output json newlines from channel and save in dir
+func NewChangelogOutputStreamDir(dir string, ch chan Changelog, errors chan<- error, transforms ...TransformChangelogFunc) <-chan bool {
 	fp := filepath.Join(dir, "/sourcecode/changelog\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -762,11 +779,11 @@ func CreateChangelogOutputStreamDir(dir string, ch chan Changelog, errors chan<-
 		done <- true
 		return done
 	}
-	return CreateChangelogOutputStream(gz, ch, errors, transforms...)
+	return NewChangelogOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateChangelogOutputStream will output json newlines from channel to the stream
-func CreateChangelogOutputStream(stream io.WriteCloser, ch chan Changelog, errors chan<- error, transforms ...TransformChangelogFunc) <-chan bool {
+// NewChangelogOutputStream will output json newlines from channel to the stream
+func NewChangelogOutputStream(stream io.WriteCloser, ch chan Changelog, errors chan<- error, transforms ...TransformChangelogFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -808,79 +825,201 @@ func CreateChangelogOutputStream(stream io.WriteCloser, ch chan Changelog, error
 
 // ChangelogSendEvent is an event detail for sending data
 type ChangelogSendEvent struct {
-	Changelog Changelog
-	Headers   map[string]string
+	Changelog *Changelog
+	headers   map[string]string
+	time      time.Time
+	key       string
 }
 
-// CreateChangelogProducer will stream data from the channel
-func CreateChangelogProducer(producer event.Producer, ch chan ChangelogSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*ChangelogSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *ChangelogSendEvent) Key() string {
+	if e.key == "" {
+		return e.Changelog.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *ChangelogSendEvent) Object() datamodel.Model {
+	return e.Changelog
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *ChangelogSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *ChangelogSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// ChangelogSendEventOpts is a function handler for setting opts
+type ChangelogSendEventOpts func(o *ChangelogSendEvent)
+
+// WithChangelogSendEventKey sets the key value to a value different than the object ID
+func WithChangelogSendEventKey(key string) ChangelogSendEventOpts {
+	return func(o *ChangelogSendEvent) {
+		o.key = key
+	}
+}
+
+// WithChangelogSendEventTimestamp sets the timestamp value
+func WithChangelogSendEventTimestamp(tv time.Time) ChangelogSendEventOpts {
+	return func(o *ChangelogSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithChangelogSendEventHeader sets the timestamp value
+func WithChangelogSendEventHeader(key, value string) ChangelogSendEventOpts {
+	return func(o *ChangelogSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewChangelogSendEvent returns a new ChangelogSendEvent instance
+func NewChangelogSendEvent(o *Changelog, opts ...ChangelogSendEventOpts) *ChangelogSendEvent {
+	res := &ChangelogSendEvent{
+		Changelog: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewChangelogProducer will stream data from the channel
+func NewChangelogProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.Changelog.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Changelog.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.Changelog.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*Changelog); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.Changelog.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.Changelog.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.Changelog but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// ChangelogReceiveEvent is an event detail for receiving data
-type ChangelogReceiveEvent struct {
-	Changelog Changelog
-	Message   event.Message
+// NewChangelogConsumer will stream data from the topic into the provided channel
+func NewChangelogConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object Changelog
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into sourcecode.Changelog: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &ChangelogReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateChangelogConsumer will stream data from the topic into the provided channel
-func CreateChangelogConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan ChangelogReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object Changelog
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.Changelog: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- ChangelogReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// ChangelogReceiveEvent is an event detail for receiving data
+type ChangelogReceiveEvent struct {
+	Changelog *Changelog
+	message   event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*ChangelogReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *ChangelogReceiveEvent) Object() datamodel.Model {
+	return e.Changelog
+}
+
+// Message returns the underlying message data for the event
+func (e *ChangelogReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// ChangelogProducer implements the datamodel.ModelEventProducer
+type ChangelogProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*ChangelogProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *ChangelogProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *ChangelogProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *Changelog) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &ChangelogProducer{
+		ch:   ch,
+		done: NewChangelogProducer(producer, ch, errors),
+	}
+}
+
+// ChangelogConsumer implements the datamodel.ModelEventConsumer
+type ChangelogConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*ChangelogConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *ChangelogConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *ChangelogConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *Changelog) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewChangelogConsumer(consumer, ch, errors)
+	return &ChangelogConsumer{
+		ch: ch,
+	}
 }

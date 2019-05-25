@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -193,6 +194,16 @@ func (o *CostCenter) String() string {
 	return fmt.Sprintf("customer.CostCenter<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *CostCenter) GetTopicName() datamodel.TopicNameType {
+	return CostCenterTopic
+}
+
+// GetModelName returns the name of the model
+func (o *CostCenter) GetModelName() datamodel.ModelNameType {
+	return CostCenterModelName
+}
+
 func (o *CostCenter) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -221,6 +232,12 @@ func (o *CostCenter) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *CostCenter) MaterializedName() string {
 	return "customer_costcenter"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *CostCenter) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of CostCenter
@@ -268,7 +285,7 @@ var cachedCodecCostCenter *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *CostCenter) GetAvroCodec() *goavro.Codec {
 	if cachedCodecCostCenter == nil {
-		c, err := CreateCostCenterAvroSchema()
+		c, err := GetCostCenterAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -384,48 +401,54 @@ func (o *CostCenter) Hash() string {
 }
 
 // CreateCostCenter creates a new CostCenter in the database
-func CreateCostCenter(ctx context.Context, db datamodel.Db, o *CostCenter) error {
-	return db.Create(ctx, o.ToMap())
+func CreateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
+	return db.Create(ctx, o)
 }
 
 // DeleteCostCenter deletes a CostCenter in the database
-func DeleteCostCenter(ctx context.Context, db datamodel.Db, o *CostCenter) error {
-	return db.Delete(ctx, o.GetID())
+func DeleteCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
+	return db.Delete(ctx, o)
 }
 
 // UpdateCostCenter updates a CostCenter in the database
-func UpdateCostCenter(ctx context.Context, db datamodel.Db, o *CostCenter) error {
-	return db.Update(ctx, o.GetID(), o.ToMap())
+func UpdateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
+	return db.Update(ctx, o)
 }
 
 // FindCostCenter returns a CostCenter from the database
-func FindCostCenter(ctx context.Context, db datamodel.Db, id string) (*CostCenter, error) {
+func FindCostCenter(ctx context.Context, db datamodel.Storage, id string) (*CostCenter, error) {
 	kv, err := db.FindOne(ctx, id)
 	if err != nil {
 		return nil, err
 	}
+	if kv == nil {
+		return nil, nil
+	}
 	var result CostCenter
-	result.FromMap(kv)
+	result.FromMap(kv.ToMap())
 	return &result, nil
 }
 
 // FindCostCenters returns all CostCenter from the database matching keys
-func FindCostCenters(ctx context.Context, db datamodel.Db, kv map[string]interface{}) ([]*CostCenter, error) {
+func FindCostCenters(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*CostCenter, error) {
 	res, err := db.Find(ctx, kv)
 	if err != nil {
 		return nil, err
 	}
-	arr := make([]*CostCenter, 0)
-	for _, kv := range res {
-		var result CostCenter
-		result.FromMap(kv)
-		arr = append(arr, &result)
+	if res != nil {
+		arr := make([]*CostCenter, 0)
+		for _, kv := range res {
+			var result CostCenter
+			result.FromMap(kv.ToMap())
+			arr = append(arr, &result)
+		}
+		return arr, nil
 	}
-	return arr, nil
+	return nil, nil
 }
 
-// CreateCostCenterAvroSchemaSpec creates the avro schema specification for CostCenter
-func CreateCostCenterAvroSchemaSpec() string {
+// GetCostCenterAvroSchemaSpec creates the avro schema specification for CostCenter
+func GetCostCenterAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "customer",
@@ -469,25 +492,25 @@ func CreateCostCenterAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateCostCenterAvroSchema creates the avro schema for CostCenter
-func CreateCostCenterAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateCostCenterAvroSchemaSpec())
+// GetCostCenterAvroSchema creates the avro schema for CostCenter
+func GetCostCenterAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetCostCenterAvroSchemaSpec())
 }
 
 // TransformCostCenterFunc is a function for transforming CostCenter during processing
 type TransformCostCenterFunc func(input *CostCenter) (*CostCenter, error)
 
-// CreateCostCenterPipe creates a pipe for processing CostCenter items
-func CreateCostCenterPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCostCenterFunc) <-chan bool {
+// NewCostCenterPipe creates a pipe for processing CostCenter items
+func NewCostCenterPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCostCenterFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateCostCenterInputStream(input, errors)
+	inch, indone := NewCostCenterInputStream(input, errors)
 	var stream chan CostCenter
 	if len(transforms) > 0 {
 		stream = make(chan CostCenter, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateCostCenterOutputStream(output, stream, errors)
+	outdone := NewCostCenterOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -523,8 +546,8 @@ func CreateCostCenterPipe(input io.ReadCloser, output io.WriteCloser, errors cha
 	return done
 }
 
-// CreateCostCenterInputStreamDir creates a channel for reading CostCenter as JSON newlines from a directory of files
-func CreateCostCenterInputStreamDir(dir string, errors chan<- error, transforms ...TransformCostCenterFunc) (chan CostCenter, <-chan bool) {
+// NewCostCenterInputStreamDir creates a channel for reading CostCenter as JSON newlines from a directory of files
+func NewCostCenterInputStreamDir(dir string, errors chan<- error, transforms ...TransformCostCenterFunc) (chan CostCenter, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/customer/cost_center\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -543,7 +566,7 @@ func CreateCostCenterInputStreamDir(dir string, errors chan<- error, transforms 
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateCostCenterInputStreamFile(files[0], errors, transforms...)
+		return NewCostCenterInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan CostCenter)
 		close(ch)
@@ -553,8 +576,8 @@ func CreateCostCenterInputStreamDir(dir string, errors chan<- error, transforms 
 	}
 }
 
-// CreateCostCenterInputStreamFile creates an channel for reading CostCenter as JSON newlines from filename
-func CreateCostCenterInputStreamFile(filename string, errors chan<- error, transforms ...TransformCostCenterFunc) (chan CostCenter, <-chan bool) {
+// NewCostCenterInputStreamFile creates an channel for reading CostCenter as JSON newlines from filename
+func NewCostCenterInputStreamFile(filename string, errors chan<- error, transforms ...TransformCostCenterFunc) (chan CostCenter, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -578,11 +601,11 @@ func CreateCostCenterInputStreamFile(filename string, errors chan<- error, trans
 		}
 		f = gz
 	}
-	return CreateCostCenterInputStream(f, errors, transforms...)
+	return NewCostCenterInputStream(f, errors, transforms...)
 }
 
-// CreateCostCenterInputStream creates an channel for reading CostCenter as JSON newlines from stream
-func CreateCostCenterInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCostCenterFunc) (chan CostCenter, <-chan bool) {
+// NewCostCenterInputStream creates an channel for reading CostCenter as JSON newlines from stream
+func NewCostCenterInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCostCenterFunc) (chan CostCenter, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan CostCenter, 1000)
 	go func() {
@@ -623,8 +646,8 @@ func CreateCostCenterInputStream(stream io.ReadCloser, errors chan<- error, tran
 	return ch, done
 }
 
-// CreateCostCenterOutputStreamDir will output json newlines from channel and save in dir
-func CreateCostCenterOutputStreamDir(dir string, ch chan CostCenter, errors chan<- error, transforms ...TransformCostCenterFunc) <-chan bool {
+// NewCostCenterOutputStreamDir will output json newlines from channel and save in dir
+func NewCostCenterOutputStreamDir(dir string, ch chan CostCenter, errors chan<- error, transforms ...TransformCostCenterFunc) <-chan bool {
 	fp := filepath.Join(dir, "/customer/cost_center\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -641,11 +664,11 @@ func CreateCostCenterOutputStreamDir(dir string, ch chan CostCenter, errors chan
 		done <- true
 		return done
 	}
-	return CreateCostCenterOutputStream(gz, ch, errors, transforms...)
+	return NewCostCenterOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateCostCenterOutputStream will output json newlines from channel to the stream
-func CreateCostCenterOutputStream(stream io.WriteCloser, ch chan CostCenter, errors chan<- error, transforms ...TransformCostCenterFunc) <-chan bool {
+// NewCostCenterOutputStream will output json newlines from channel to the stream
+func NewCostCenterOutputStream(stream io.WriteCloser, ch chan CostCenter, errors chan<- error, transforms ...TransformCostCenterFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -687,79 +710,201 @@ func CreateCostCenterOutputStream(stream io.WriteCloser, ch chan CostCenter, err
 
 // CostCenterSendEvent is an event detail for sending data
 type CostCenterSendEvent struct {
-	CostCenter CostCenter
-	Headers    map[string]string
+	CostCenter *CostCenter
+	headers    map[string]string
+	time       time.Time
+	key        string
 }
 
-// CreateCostCenterProducer will stream data from the channel
-func CreateCostCenterProducer(producer event.Producer, ch chan CostCenterSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*CostCenterSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *CostCenterSendEvent) Key() string {
+	if e.key == "" {
+		return e.CostCenter.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *CostCenterSendEvent) Object() datamodel.Model {
+	return e.CostCenter
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *CostCenterSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *CostCenterSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// CostCenterSendEventOpts is a function handler for setting opts
+type CostCenterSendEventOpts func(o *CostCenterSendEvent)
+
+// WithCostCenterSendEventKey sets the key value to a value different than the object ID
+func WithCostCenterSendEventKey(key string) CostCenterSendEventOpts {
+	return func(o *CostCenterSendEvent) {
+		o.key = key
+	}
+}
+
+// WithCostCenterSendEventTimestamp sets the timestamp value
+func WithCostCenterSendEventTimestamp(tv time.Time) CostCenterSendEventOpts {
+	return func(o *CostCenterSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithCostCenterSendEventHeader sets the timestamp value
+func WithCostCenterSendEventHeader(key, value string) CostCenterSendEventOpts {
+	return func(o *CostCenterSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewCostCenterSendEvent returns a new CostCenterSendEvent instance
+func NewCostCenterSendEvent(o *CostCenter, opts ...CostCenterSendEventOpts) *CostCenterSendEvent {
+	res := &CostCenterSendEvent{
+		CostCenter: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewCostCenterProducer will stream data from the channel
+func NewCostCenterProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.CostCenter.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.CostCenter.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.CostCenter.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*CostCenter); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.CostCenter.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.CostCenter.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type customer.CostCenter but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// CostCenterReceiveEvent is an event detail for receiving data
-type CostCenterReceiveEvent struct {
-	CostCenter CostCenter
-	Message    event.Message
+// NewCostCenterConsumer will stream data from the topic into the provided channel
+func NewCostCenterConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object CostCenter
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into customer.CostCenter: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &CostCenterReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateCostCenterConsumer will stream data from the topic into the provided channel
-func CreateCostCenterConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan CostCenterReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object CostCenter
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into customer.CostCenter: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- CostCenterReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// CostCenterReceiveEvent is an event detail for receiving data
+type CostCenterReceiveEvent struct {
+	CostCenter *CostCenter
+	message    event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*CostCenterReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *CostCenterReceiveEvent) Object() datamodel.Model {
+	return e.CostCenter
+}
+
+// Message returns the underlying message data for the event
+func (e *CostCenterReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// CostCenterProducer implements the datamodel.ModelEventProducer
+type CostCenterProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*CostCenterProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *CostCenterProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *CostCenterProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *CostCenter) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &CostCenterProducer{
+		ch:   ch,
+		done: NewCostCenterProducer(producer, ch, errors),
+	}
+}
+
+// CostCenterConsumer implements the datamodel.ModelEventConsumer
+type CostCenterConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*CostCenterConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *CostCenterConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *CostCenterConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *CostCenter) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewCostCenterConsumer(consumer, ch, errors)
+	return &CostCenterConsumer{
+		ch: ch,
+	}
 }

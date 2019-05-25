@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -207,6 +208,16 @@ func (o *PullRequest) String() string {
 	return fmt.Sprintf("sourcecode.PullRequest<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *PullRequest) GetTopicName() datamodel.TopicNameType {
+	return PullRequestTopic
+}
+
+// GetModelName returns the name of the model
+func (o *PullRequest) GetModelName() datamodel.ModelNameType {
+	return PullRequestModelName
+}
+
 func (o *PullRequest) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -235,6 +246,12 @@ func (o *PullRequest) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *PullRequest) MaterializedName() string {
 	return "sourcecode_pullrequest"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *PullRequest) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of PullRequest
@@ -282,7 +299,7 @@ var cachedCodecPullRequest *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *PullRequest) GetAvroCodec() *goavro.Codec {
 	if cachedCodecPullRequest == nil {
-		c, err := CreatePullRequestAvroSchema()
+		c, err := GetPullRequestAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -481,8 +498,8 @@ func (o *PullRequest) Hash() string {
 	return o.Hashcode
 }
 
-// CreatePullRequestAvroSchemaSpec creates the avro schema specification for PullRequest
-func CreatePullRequestAvroSchemaSpec() string {
+// GetPullRequestAvroSchemaSpec creates the avro schema specification for PullRequest
+func GetPullRequestAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "sourcecode",
@@ -554,25 +571,25 @@ func CreatePullRequestAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreatePullRequestAvroSchema creates the avro schema for PullRequest
-func CreatePullRequestAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreatePullRequestAvroSchemaSpec())
+// GetPullRequestAvroSchema creates the avro schema for PullRequest
+func GetPullRequestAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetPullRequestAvroSchemaSpec())
 }
 
 // TransformPullRequestFunc is a function for transforming PullRequest during processing
 type TransformPullRequestFunc func(input *PullRequest) (*PullRequest, error)
 
-// CreatePullRequestPipe creates a pipe for processing PullRequest items
-func CreatePullRequestPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformPullRequestFunc) <-chan bool {
+// NewPullRequestPipe creates a pipe for processing PullRequest items
+func NewPullRequestPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformPullRequestFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreatePullRequestInputStream(input, errors)
+	inch, indone := NewPullRequestInputStream(input, errors)
 	var stream chan PullRequest
 	if len(transforms) > 0 {
 		stream = make(chan PullRequest, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreatePullRequestOutputStream(output, stream, errors)
+	outdone := NewPullRequestOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -608,8 +625,8 @@ func CreatePullRequestPipe(input io.ReadCloser, output io.WriteCloser, errors ch
 	return done
 }
 
-// CreatePullRequestInputStreamDir creates a channel for reading PullRequest as JSON newlines from a directory of files
-func CreatePullRequestInputStreamDir(dir string, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
+// NewPullRequestInputStreamDir creates a channel for reading PullRequest as JSON newlines from a directory of files
+func NewPullRequestInputStreamDir(dir string, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/pull_request\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -628,7 +645,7 @@ func CreatePullRequestInputStreamDir(dir string, errors chan<- error, transforms
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreatePullRequestInputStreamFile(files[0], errors, transforms...)
+		return NewPullRequestInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan PullRequest)
 		close(ch)
@@ -638,8 +655,8 @@ func CreatePullRequestInputStreamDir(dir string, errors chan<- error, transforms
 	}
 }
 
-// CreatePullRequestInputStreamFile creates an channel for reading PullRequest as JSON newlines from filename
-func CreatePullRequestInputStreamFile(filename string, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
+// NewPullRequestInputStreamFile creates an channel for reading PullRequest as JSON newlines from filename
+func NewPullRequestInputStreamFile(filename string, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -663,11 +680,11 @@ func CreatePullRequestInputStreamFile(filename string, errors chan<- error, tran
 		}
 		f = gz
 	}
-	return CreatePullRequestInputStream(f, errors, transforms...)
+	return NewPullRequestInputStream(f, errors, transforms...)
 }
 
-// CreatePullRequestInputStream creates an channel for reading PullRequest as JSON newlines from stream
-func CreatePullRequestInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
+// NewPullRequestInputStream creates an channel for reading PullRequest as JSON newlines from stream
+func NewPullRequestInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan PullRequest, 1000)
 	go func() {
@@ -708,8 +725,8 @@ func CreatePullRequestInputStream(stream io.ReadCloser, errors chan<- error, tra
 	return ch, done
 }
 
-// CreatePullRequestOutputStreamDir will output json newlines from channel and save in dir
-func CreatePullRequestOutputStreamDir(dir string, ch chan PullRequest, errors chan<- error, transforms ...TransformPullRequestFunc) <-chan bool {
+// NewPullRequestOutputStreamDir will output json newlines from channel and save in dir
+func NewPullRequestOutputStreamDir(dir string, ch chan PullRequest, errors chan<- error, transforms ...TransformPullRequestFunc) <-chan bool {
 	fp := filepath.Join(dir, "/sourcecode/pull_request\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -726,11 +743,11 @@ func CreatePullRequestOutputStreamDir(dir string, ch chan PullRequest, errors ch
 		done <- true
 		return done
 	}
-	return CreatePullRequestOutputStream(gz, ch, errors, transforms...)
+	return NewPullRequestOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreatePullRequestOutputStream will output json newlines from channel to the stream
-func CreatePullRequestOutputStream(stream io.WriteCloser, ch chan PullRequest, errors chan<- error, transforms ...TransformPullRequestFunc) <-chan bool {
+// NewPullRequestOutputStream will output json newlines from channel to the stream
+func NewPullRequestOutputStream(stream io.WriteCloser, ch chan PullRequest, errors chan<- error, transforms ...TransformPullRequestFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -772,79 +789,201 @@ func CreatePullRequestOutputStream(stream io.WriteCloser, ch chan PullRequest, e
 
 // PullRequestSendEvent is an event detail for sending data
 type PullRequestSendEvent struct {
-	PullRequest PullRequest
-	Headers     map[string]string
+	PullRequest *PullRequest
+	headers     map[string]string
+	time        time.Time
+	key         string
 }
 
-// CreatePullRequestProducer will stream data from the channel
-func CreatePullRequestProducer(producer event.Producer, ch chan PullRequestSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*PullRequestSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *PullRequestSendEvent) Key() string {
+	if e.key == "" {
+		return e.PullRequest.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *PullRequestSendEvent) Object() datamodel.Model {
+	return e.PullRequest
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *PullRequestSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *PullRequestSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// PullRequestSendEventOpts is a function handler for setting opts
+type PullRequestSendEventOpts func(o *PullRequestSendEvent)
+
+// WithPullRequestSendEventKey sets the key value to a value different than the object ID
+func WithPullRequestSendEventKey(key string) PullRequestSendEventOpts {
+	return func(o *PullRequestSendEvent) {
+		o.key = key
+	}
+}
+
+// WithPullRequestSendEventTimestamp sets the timestamp value
+func WithPullRequestSendEventTimestamp(tv time.Time) PullRequestSendEventOpts {
+	return func(o *PullRequestSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithPullRequestSendEventHeader sets the timestamp value
+func WithPullRequestSendEventHeader(key, value string) PullRequestSendEventOpts {
+	return func(o *PullRequestSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewPullRequestSendEvent returns a new PullRequestSendEvent instance
+func NewPullRequestSendEvent(o *PullRequest, opts ...PullRequestSendEventOpts) *PullRequestSendEvent {
+	res := &PullRequestSendEvent{
+		PullRequest: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewPullRequestProducer will stream data from the channel
+func NewPullRequestProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.PullRequest.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.PullRequest.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.PullRequest.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*PullRequest); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.PullRequest.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.PullRequest.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.PullRequest but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// PullRequestReceiveEvent is an event detail for receiving data
-type PullRequestReceiveEvent struct {
-	PullRequest PullRequest
-	Message     event.Message
+// NewPullRequestConsumer will stream data from the topic into the provided channel
+func NewPullRequestConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object PullRequest
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequest: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &PullRequestReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreatePullRequestConsumer will stream data from the topic into the provided channel
-func CreatePullRequestConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan PullRequestReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object PullRequest
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequest: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- PullRequestReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// PullRequestReceiveEvent is an event detail for receiving data
+type PullRequestReceiveEvent struct {
+	PullRequest *PullRequest
+	message     event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*PullRequestReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *PullRequestReceiveEvent) Object() datamodel.Model {
+	return e.PullRequest
+}
+
+// Message returns the underlying message data for the event
+func (e *PullRequestReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// PullRequestProducer implements the datamodel.ModelEventProducer
+type PullRequestProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*PullRequestProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *PullRequestProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *PullRequestProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *PullRequest) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &PullRequestProducer{
+		ch:   ch,
+		done: NewPullRequestProducer(producer, ch, errors),
+	}
+}
+
+// PullRequestConsumer implements the datamodel.ModelEventConsumer
+type PullRequestConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*PullRequestConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *PullRequestConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *PullRequestConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *PullRequest) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewPullRequestConsumer(consumer, ch, errors)
+	return &PullRequestConsumer{
+		ch: ch,
+	}
 }

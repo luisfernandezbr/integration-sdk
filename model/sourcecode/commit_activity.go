@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -213,6 +214,16 @@ func (o *CommitActivity) String() string {
 	return fmt.Sprintf("sourcecode.CommitActivity<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *CommitActivity) GetTopicName() datamodel.TopicNameType {
+	return CommitActivityTopic
+}
+
+// GetModelName returns the name of the model
+func (o *CommitActivity) GetModelName() datamodel.ModelNameType {
+	return CommitActivityModelName
+}
+
 func (o *CommitActivity) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -241,6 +252,12 @@ func (o *CommitActivity) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *CommitActivity) MaterializedName() string {
 	return "sourcecode_commitactivity"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *CommitActivity) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of CommitActivity
@@ -288,7 +305,7 @@ var cachedCodecCommitActivity *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *CommitActivity) GetAvroCodec() *goavro.Codec {
 	if cachedCodecCommitActivity == nil {
-		c, err := CreateCommitActivityAvroSchema()
+		c, err := GetCommitActivityAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -523,8 +540,8 @@ func (o *CommitActivity) Hash() string {
 	return o.Hashcode
 }
 
-// CreateCommitActivityAvroSchemaSpec creates the avro schema specification for CommitActivity
-func CreateCommitActivityAvroSchemaSpec() string {
+// GetCommitActivityAvroSchemaSpec creates the avro schema specification for CommitActivity
+func GetCommitActivityAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "sourcecode",
@@ -608,25 +625,25 @@ func CreateCommitActivityAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateCommitActivityAvroSchema creates the avro schema for CommitActivity
-func CreateCommitActivityAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateCommitActivityAvroSchemaSpec())
+// GetCommitActivityAvroSchema creates the avro schema for CommitActivity
+func GetCommitActivityAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetCommitActivityAvroSchemaSpec())
 }
 
 // TransformCommitActivityFunc is a function for transforming CommitActivity during processing
 type TransformCommitActivityFunc func(input *CommitActivity) (*CommitActivity, error)
 
-// CreateCommitActivityPipe creates a pipe for processing CommitActivity items
-func CreateCommitActivityPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCommitActivityFunc) <-chan bool {
+// NewCommitActivityPipe creates a pipe for processing CommitActivity items
+func NewCommitActivityPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCommitActivityFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateCommitActivityInputStream(input, errors)
+	inch, indone := NewCommitActivityInputStream(input, errors)
 	var stream chan CommitActivity
 	if len(transforms) > 0 {
 		stream = make(chan CommitActivity, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateCommitActivityOutputStream(output, stream, errors)
+	outdone := NewCommitActivityOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -662,8 +679,8 @@ func CreateCommitActivityPipe(input io.ReadCloser, output io.WriteCloser, errors
 	return done
 }
 
-// CreateCommitActivityInputStreamDir creates a channel for reading CommitActivity as JSON newlines from a directory of files
-func CreateCommitActivityInputStreamDir(dir string, errors chan<- error, transforms ...TransformCommitActivityFunc) (chan CommitActivity, <-chan bool) {
+// NewCommitActivityInputStreamDir creates a channel for reading CommitActivity as JSON newlines from a directory of files
+func NewCommitActivityInputStreamDir(dir string, errors chan<- error, transforms ...TransformCommitActivityFunc) (chan CommitActivity, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/commit_activity\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -682,7 +699,7 @@ func CreateCommitActivityInputStreamDir(dir string, errors chan<- error, transfo
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateCommitActivityInputStreamFile(files[0], errors, transforms...)
+		return NewCommitActivityInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan CommitActivity)
 		close(ch)
@@ -692,8 +709,8 @@ func CreateCommitActivityInputStreamDir(dir string, errors chan<- error, transfo
 	}
 }
 
-// CreateCommitActivityInputStreamFile creates an channel for reading CommitActivity as JSON newlines from filename
-func CreateCommitActivityInputStreamFile(filename string, errors chan<- error, transforms ...TransformCommitActivityFunc) (chan CommitActivity, <-chan bool) {
+// NewCommitActivityInputStreamFile creates an channel for reading CommitActivity as JSON newlines from filename
+func NewCommitActivityInputStreamFile(filename string, errors chan<- error, transforms ...TransformCommitActivityFunc) (chan CommitActivity, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -717,11 +734,11 @@ func CreateCommitActivityInputStreamFile(filename string, errors chan<- error, t
 		}
 		f = gz
 	}
-	return CreateCommitActivityInputStream(f, errors, transforms...)
+	return NewCommitActivityInputStream(f, errors, transforms...)
 }
 
-// CreateCommitActivityInputStream creates an channel for reading CommitActivity as JSON newlines from stream
-func CreateCommitActivityInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCommitActivityFunc) (chan CommitActivity, <-chan bool) {
+// NewCommitActivityInputStream creates an channel for reading CommitActivity as JSON newlines from stream
+func NewCommitActivityInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCommitActivityFunc) (chan CommitActivity, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan CommitActivity, 1000)
 	go func() {
@@ -762,8 +779,8 @@ func CreateCommitActivityInputStream(stream io.ReadCloser, errors chan<- error, 
 	return ch, done
 }
 
-// CreateCommitActivityOutputStreamDir will output json newlines from channel and save in dir
-func CreateCommitActivityOutputStreamDir(dir string, ch chan CommitActivity, errors chan<- error, transforms ...TransformCommitActivityFunc) <-chan bool {
+// NewCommitActivityOutputStreamDir will output json newlines from channel and save in dir
+func NewCommitActivityOutputStreamDir(dir string, ch chan CommitActivity, errors chan<- error, transforms ...TransformCommitActivityFunc) <-chan bool {
 	fp := filepath.Join(dir, "/sourcecode/commit_activity\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -780,11 +797,11 @@ func CreateCommitActivityOutputStreamDir(dir string, ch chan CommitActivity, err
 		done <- true
 		return done
 	}
-	return CreateCommitActivityOutputStream(gz, ch, errors, transforms...)
+	return NewCommitActivityOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateCommitActivityOutputStream will output json newlines from channel to the stream
-func CreateCommitActivityOutputStream(stream io.WriteCloser, ch chan CommitActivity, errors chan<- error, transforms ...TransformCommitActivityFunc) <-chan bool {
+// NewCommitActivityOutputStream will output json newlines from channel to the stream
+func NewCommitActivityOutputStream(stream io.WriteCloser, ch chan CommitActivity, errors chan<- error, transforms ...TransformCommitActivityFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -826,79 +843,201 @@ func CreateCommitActivityOutputStream(stream io.WriteCloser, ch chan CommitActiv
 
 // CommitActivitySendEvent is an event detail for sending data
 type CommitActivitySendEvent struct {
-	CommitActivity CommitActivity
-	Headers        map[string]string
+	CommitActivity *CommitActivity
+	headers        map[string]string
+	time           time.Time
+	key            string
 }
 
-// CreateCommitActivityProducer will stream data from the channel
-func CreateCommitActivityProducer(producer event.Producer, ch chan CommitActivitySendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*CommitActivitySendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *CommitActivitySendEvent) Key() string {
+	if e.key == "" {
+		return e.CommitActivity.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *CommitActivitySendEvent) Object() datamodel.Model {
+	return e.CommitActivity
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *CommitActivitySendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *CommitActivitySendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// CommitActivitySendEventOpts is a function handler for setting opts
+type CommitActivitySendEventOpts func(o *CommitActivitySendEvent)
+
+// WithCommitActivitySendEventKey sets the key value to a value different than the object ID
+func WithCommitActivitySendEventKey(key string) CommitActivitySendEventOpts {
+	return func(o *CommitActivitySendEvent) {
+		o.key = key
+	}
+}
+
+// WithCommitActivitySendEventTimestamp sets the timestamp value
+func WithCommitActivitySendEventTimestamp(tv time.Time) CommitActivitySendEventOpts {
+	return func(o *CommitActivitySendEvent) {
+		o.time = tv
+	}
+}
+
+// WithCommitActivitySendEventHeader sets the timestamp value
+func WithCommitActivitySendEventHeader(key, value string) CommitActivitySendEventOpts {
+	return func(o *CommitActivitySendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewCommitActivitySendEvent returns a new CommitActivitySendEvent instance
+func NewCommitActivitySendEvent(o *CommitActivity, opts ...CommitActivitySendEventOpts) *CommitActivitySendEvent {
+	res := &CommitActivitySendEvent{
+		CommitActivity: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewCommitActivityProducer will stream data from the channel
+func NewCommitActivityProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.CommitActivity.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.CommitActivity.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.CommitActivity.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*CommitActivity); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.CommitActivity.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.CommitActivity.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.CommitActivity but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// CommitActivityReceiveEvent is an event detail for receiving data
-type CommitActivityReceiveEvent struct {
-	CommitActivity CommitActivity
-	Message        event.Message
+// NewCommitActivityConsumer will stream data from the topic into the provided channel
+func NewCommitActivityConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object CommitActivity
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into sourcecode.CommitActivity: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &CommitActivityReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateCommitActivityConsumer will stream data from the topic into the provided channel
-func CreateCommitActivityConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan CommitActivityReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object CommitActivity
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.CommitActivity: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- CommitActivityReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// CommitActivityReceiveEvent is an event detail for receiving data
+type CommitActivityReceiveEvent struct {
+	CommitActivity *CommitActivity
+	message        event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*CommitActivityReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *CommitActivityReceiveEvent) Object() datamodel.Model {
+	return e.CommitActivity
+}
+
+// Message returns the underlying message data for the event
+func (e *CommitActivityReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// CommitActivityProducer implements the datamodel.ModelEventProducer
+type CommitActivityProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*CommitActivityProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *CommitActivityProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *CommitActivityProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *CommitActivity) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &CommitActivityProducer{
+		ch:   ch,
+		done: NewCommitActivityProducer(producer, ch, errors),
+	}
+}
+
+// CommitActivityConsumer implements the datamodel.ModelEventConsumer
+type CommitActivityConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*CommitActivityConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *CommitActivityConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *CommitActivityConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *CommitActivity) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewCommitActivityConsumer(consumer, ch, errors)
+	return &CommitActivityConsumer{
+		ch: ch,
+	}
 }

@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -218,6 +219,16 @@ func (o *User) String() string {
 	return fmt.Sprintf("customer.User<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *User) GetTopicName() datamodel.TopicNameType {
+	return UserTopic
+}
+
+// GetModelName returns the name of the model
+func (o *User) GetModelName() datamodel.ModelNameType {
+	return UserModelName
+}
+
 func (o *User) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -246,6 +257,12 @@ func (o *User) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *User) MaterializedName() string {
 	return "customer_user"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *User) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of User
@@ -293,7 +310,7 @@ var cachedCodecUser *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *User) GetAvroCodec() *goavro.Codec {
 	if cachedCodecUser == nil {
-		c, err := CreateUserAvroSchema()
+		c, err := GetUserAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -571,48 +588,54 @@ func (o *User) Hash() string {
 }
 
 // CreateUser creates a new User in the database
-func CreateUser(ctx context.Context, db datamodel.Db, o *User) error {
-	return db.Create(ctx, o.ToMap())
+func CreateUser(ctx context.Context, db datamodel.Storage, o *User) error {
+	return db.Create(ctx, o)
 }
 
 // DeleteUser deletes a User in the database
-func DeleteUser(ctx context.Context, db datamodel.Db, o *User) error {
-	return db.Delete(ctx, o.GetID())
+func DeleteUser(ctx context.Context, db datamodel.Storage, o *User) error {
+	return db.Delete(ctx, o)
 }
 
 // UpdateUser updates a User in the database
-func UpdateUser(ctx context.Context, db datamodel.Db, o *User) error {
-	return db.Update(ctx, o.GetID(), o.ToMap())
+func UpdateUser(ctx context.Context, db datamodel.Storage, o *User) error {
+	return db.Update(ctx, o)
 }
 
 // FindUser returns a User from the database
-func FindUser(ctx context.Context, db datamodel.Db, id string) (*User, error) {
+func FindUser(ctx context.Context, db datamodel.Storage, id string) (*User, error) {
 	kv, err := db.FindOne(ctx, id)
 	if err != nil {
 		return nil, err
 	}
+	if kv == nil {
+		return nil, nil
+	}
 	var result User
-	result.FromMap(kv)
+	result.FromMap(kv.ToMap())
 	return &result, nil
 }
 
 // FindUsers returns all User from the database matching keys
-func FindUsers(ctx context.Context, db datamodel.Db, kv map[string]interface{}) ([]*User, error) {
+func FindUsers(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*User, error) {
 	res, err := db.Find(ctx, kv)
 	if err != nil {
 		return nil, err
 	}
-	arr := make([]*User, 0)
-	for _, kv := range res {
-		var result User
-		result.FromMap(kv)
-		arr = append(arr, &result)
+	if res != nil {
+		arr := make([]*User, 0)
+		for _, kv := range res {
+			var result User
+			result.FromMap(kv.ToMap())
+			arr = append(arr, &result)
+		}
+		return arr, nil
 	}
-	return arr, nil
+	return nil, nil
 }
 
-// CreateUserAvroSchemaSpec creates the avro schema specification for User
-func CreateUserAvroSchemaSpec() string {
+// GetUserAvroSchemaSpec creates the avro schema specification for User
+func GetUserAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "customer",
@@ -713,25 +736,25 @@ func CreateUserAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateUserAvroSchema creates the avro schema for User
-func CreateUserAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateUserAvroSchemaSpec())
+// GetUserAvroSchema creates the avro schema for User
+func GetUserAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetUserAvroSchemaSpec())
 }
 
 // TransformUserFunc is a function for transforming User during processing
 type TransformUserFunc func(input *User) (*User, error)
 
-// CreateUserPipe creates a pipe for processing User items
-func CreateUserPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformUserFunc) <-chan bool {
+// NewUserPipe creates a pipe for processing User items
+func NewUserPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformUserFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateUserInputStream(input, errors)
+	inch, indone := NewUserInputStream(input, errors)
 	var stream chan User
 	if len(transforms) > 0 {
 		stream = make(chan User, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateUserOutputStream(output, stream, errors)
+	outdone := NewUserOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -767,8 +790,8 @@ func CreateUserPipe(input io.ReadCloser, output io.WriteCloser, errors chan erro
 	return done
 }
 
-// CreateUserInputStreamDir creates a channel for reading User as JSON newlines from a directory of files
-func CreateUserInputStreamDir(dir string, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
+// NewUserInputStreamDir creates a channel for reading User as JSON newlines from a directory of files
+func NewUserInputStreamDir(dir string, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/customer/user\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -787,7 +810,7 @@ func CreateUserInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateUserInputStreamFile(files[0], errors, transforms...)
+		return NewUserInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan User)
 		close(ch)
@@ -797,8 +820,8 @@ func CreateUserInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 }
 
-// CreateUserInputStreamFile creates an channel for reading User as JSON newlines from filename
-func CreateUserInputStreamFile(filename string, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
+// NewUserInputStreamFile creates an channel for reading User as JSON newlines from filename
+func NewUserInputStreamFile(filename string, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -822,11 +845,11 @@ func CreateUserInputStreamFile(filename string, errors chan<- error, transforms 
 		}
 		f = gz
 	}
-	return CreateUserInputStream(f, errors, transforms...)
+	return NewUserInputStream(f, errors, transforms...)
 }
 
-// CreateUserInputStream creates an channel for reading User as JSON newlines from stream
-func CreateUserInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
+// NewUserInputStream creates an channel for reading User as JSON newlines from stream
+func NewUserInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformUserFunc) (chan User, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan User, 1000)
 	go func() {
@@ -867,8 +890,8 @@ func CreateUserInputStream(stream io.ReadCloser, errors chan<- error, transforms
 	return ch, done
 }
 
-// CreateUserOutputStreamDir will output json newlines from channel and save in dir
-func CreateUserOutputStreamDir(dir string, ch chan User, errors chan<- error, transforms ...TransformUserFunc) <-chan bool {
+// NewUserOutputStreamDir will output json newlines from channel and save in dir
+func NewUserOutputStreamDir(dir string, ch chan User, errors chan<- error, transforms ...TransformUserFunc) <-chan bool {
 	fp := filepath.Join(dir, "/customer/user\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -885,11 +908,11 @@ func CreateUserOutputStreamDir(dir string, ch chan User, errors chan<- error, tr
 		done <- true
 		return done
 	}
-	return CreateUserOutputStream(gz, ch, errors, transforms...)
+	return NewUserOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateUserOutputStream will output json newlines from channel to the stream
-func CreateUserOutputStream(stream io.WriteCloser, ch chan User, errors chan<- error, transforms ...TransformUserFunc) <-chan bool {
+// NewUserOutputStream will output json newlines from channel to the stream
+func NewUserOutputStream(stream io.WriteCloser, ch chan User, errors chan<- error, transforms ...TransformUserFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -931,79 +954,201 @@ func CreateUserOutputStream(stream io.WriteCloser, ch chan User, errors chan<- e
 
 // UserSendEvent is an event detail for sending data
 type UserSendEvent struct {
-	User    User
-	Headers map[string]string
+	User    *User
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-// CreateUserProducer will stream data from the channel
-func CreateUserProducer(producer event.Producer, ch chan UserSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*UserSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *UserSendEvent) Key() string {
+	if e.key == "" {
+		return e.User.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *UserSendEvent) Object() datamodel.Model {
+	return e.User
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *UserSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *UserSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// UserSendEventOpts is a function handler for setting opts
+type UserSendEventOpts func(o *UserSendEvent)
+
+// WithUserSendEventKey sets the key value to a value different than the object ID
+func WithUserSendEventKey(key string) UserSendEventOpts {
+	return func(o *UserSendEvent) {
+		o.key = key
+	}
+}
+
+// WithUserSendEventTimestamp sets the timestamp value
+func WithUserSendEventTimestamp(tv time.Time) UserSendEventOpts {
+	return func(o *UserSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithUserSendEventHeader sets the timestamp value
+func WithUserSendEventHeader(key, value string) UserSendEventOpts {
+	return func(o *UserSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewUserSendEvent returns a new UserSendEvent instance
+func NewUserSendEvent(o *User, opts ...UserSendEventOpts) *UserSendEvent {
+	res := &UserSendEvent{
+		User: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewUserProducer will stream data from the channel
+func NewUserProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.User.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.User.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.User.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*User); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.User.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.User.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type customer.User but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// UserReceiveEvent is an event detail for receiving data
-type UserReceiveEvent struct {
-	User    User
-	Message event.Message
+// NewUserConsumer will stream data from the topic into the provided channel
+func NewUserConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object User
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into customer.User: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &UserReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateUserConsumer will stream data from the topic into the provided channel
-func CreateUserConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan UserReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object User
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into customer.User: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- UserReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// UserReceiveEvent is an event detail for receiving data
+type UserReceiveEvent struct {
+	User    *User
+	message event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*UserReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *UserReceiveEvent) Object() datamodel.Model {
+	return e.User
+}
+
+// Message returns the underlying message data for the event
+func (e *UserReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// UserProducer implements the datamodel.ModelEventProducer
+type UserProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*UserProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *UserProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *UserProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *User) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &UserProducer{
+		ch:   ch,
+		done: NewUserProducer(producer, ch, errors),
+	}
+}
+
+// UserConsumer implements the datamodel.ModelEventConsumer
+type UserConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*UserConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *UserConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *UserConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *User) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewUserConsumer(consumer, ch, errors)
+	return &UserConsumer{
+		ch: ch,
+	}
 }

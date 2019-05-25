@@ -15,6 +15,7 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -226,6 +227,16 @@ func (o *Issue) String() string {
 	return fmt.Sprintf("work.Issue<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *Issue) GetTopicName() datamodel.TopicNameType {
+	return IssueTopic
+}
+
+// GetModelName returns the name of the model
+func (o *Issue) GetModelName() datamodel.ModelNameType {
+	return IssueModelName
+}
+
 func (o *Issue) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -254,6 +265,12 @@ func (o *Issue) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *Issue) MaterializedName() string {
 	panic("work.Issue is not a materialized table")
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Issue) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of Issue
@@ -301,7 +318,7 @@ var cachedCodecIssue *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *Issue) GetAvroCodec() *goavro.Codec {
 	if cachedCodecIssue == nil {
-		c, err := CreateIssueAvroSchema()
+		c, err := GetIssueAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -630,8 +647,8 @@ func (o *Issue) Hash() string {
 	return o.Hashcode
 }
 
-// CreateIssueAvroSchemaSpec creates the avro schema specification for Issue
-func CreateIssueAvroSchemaSpec() string {
+// GetIssueAvroSchemaSpec creates the avro schema specification for Issue
+func GetIssueAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "work",
@@ -742,25 +759,25 @@ func CreateIssueAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateIssueAvroSchema creates the avro schema for Issue
-func CreateIssueAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateIssueAvroSchemaSpec())
+// GetIssueAvroSchema creates the avro schema for Issue
+func GetIssueAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetIssueAvroSchemaSpec())
 }
 
 // TransformIssueFunc is a function for transforming Issue during processing
 type TransformIssueFunc func(input *Issue) (*Issue, error)
 
-// CreateIssuePipe creates a pipe for processing Issue items
-func CreateIssuePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformIssueFunc) <-chan bool {
+// NewIssuePipe creates a pipe for processing Issue items
+func NewIssuePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformIssueFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateIssueInputStream(input, errors)
+	inch, indone := NewIssueInputStream(input, errors)
 	var stream chan Issue
 	if len(transforms) > 0 {
 		stream = make(chan Issue, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateIssueOutputStream(output, stream, errors)
+	outdone := NewIssueOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -796,8 +813,8 @@ func CreateIssuePipe(input io.ReadCloser, output io.WriteCloser, errors chan err
 	return done
 }
 
-// CreateIssueInputStreamDir creates a channel for reading Issue as JSON newlines from a directory of files
-func CreateIssueInputStreamDir(dir string, errors chan<- error, transforms ...TransformIssueFunc) (chan Issue, <-chan bool) {
+// NewIssueInputStreamDir creates a channel for reading Issue as JSON newlines from a directory of files
+func NewIssueInputStreamDir(dir string, errors chan<- error, transforms ...TransformIssueFunc) (chan Issue, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/issue\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -816,7 +833,7 @@ func CreateIssueInputStreamDir(dir string, errors chan<- error, transforms ...Tr
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateIssueInputStreamFile(files[0], errors, transforms...)
+		return NewIssueInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan Issue)
 		close(ch)
@@ -826,8 +843,8 @@ func CreateIssueInputStreamDir(dir string, errors chan<- error, transforms ...Tr
 	}
 }
 
-// CreateIssueInputStreamFile creates an channel for reading Issue as JSON newlines from filename
-func CreateIssueInputStreamFile(filename string, errors chan<- error, transforms ...TransformIssueFunc) (chan Issue, <-chan bool) {
+// NewIssueInputStreamFile creates an channel for reading Issue as JSON newlines from filename
+func NewIssueInputStreamFile(filename string, errors chan<- error, transforms ...TransformIssueFunc) (chan Issue, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -851,11 +868,11 @@ func CreateIssueInputStreamFile(filename string, errors chan<- error, transforms
 		}
 		f = gz
 	}
-	return CreateIssueInputStream(f, errors, transforms...)
+	return NewIssueInputStream(f, errors, transforms...)
 }
 
-// CreateIssueInputStream creates an channel for reading Issue as JSON newlines from stream
-func CreateIssueInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformIssueFunc) (chan Issue, <-chan bool) {
+// NewIssueInputStream creates an channel for reading Issue as JSON newlines from stream
+func NewIssueInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformIssueFunc) (chan Issue, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan Issue, 1000)
 	go func() {
@@ -896,8 +913,8 @@ func CreateIssueInputStream(stream io.ReadCloser, errors chan<- error, transform
 	return ch, done
 }
 
-// CreateIssueOutputStreamDir will output json newlines from channel and save in dir
-func CreateIssueOutputStreamDir(dir string, ch chan Issue, errors chan<- error, transforms ...TransformIssueFunc) <-chan bool {
+// NewIssueOutputStreamDir will output json newlines from channel and save in dir
+func NewIssueOutputStreamDir(dir string, ch chan Issue, errors chan<- error, transforms ...TransformIssueFunc) <-chan bool {
 	fp := filepath.Join(dir, "/work/issue\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -914,11 +931,11 @@ func CreateIssueOutputStreamDir(dir string, ch chan Issue, errors chan<- error, 
 		done <- true
 		return done
 	}
-	return CreateIssueOutputStream(gz, ch, errors, transforms...)
+	return NewIssueOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateIssueOutputStream will output json newlines from channel to the stream
-func CreateIssueOutputStream(stream io.WriteCloser, ch chan Issue, errors chan<- error, transforms ...TransformIssueFunc) <-chan bool {
+// NewIssueOutputStream will output json newlines from channel to the stream
+func NewIssueOutputStream(stream io.WriteCloser, ch chan Issue, errors chan<- error, transforms ...TransformIssueFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -960,79 +977,201 @@ func CreateIssueOutputStream(stream io.WriteCloser, ch chan Issue, errors chan<-
 
 // IssueSendEvent is an event detail for sending data
 type IssueSendEvent struct {
-	Issue   Issue
-	Headers map[string]string
+	Issue   *Issue
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-// CreateIssueProducer will stream data from the channel
-func CreateIssueProducer(producer event.Producer, ch chan IssueSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*IssueSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *IssueSendEvent) Key() string {
+	if e.key == "" {
+		return e.Issue.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *IssueSendEvent) Object() datamodel.Model {
+	return e.Issue
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *IssueSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *IssueSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// IssueSendEventOpts is a function handler for setting opts
+type IssueSendEventOpts func(o *IssueSendEvent)
+
+// WithIssueSendEventKey sets the key value to a value different than the object ID
+func WithIssueSendEventKey(key string) IssueSendEventOpts {
+	return func(o *IssueSendEvent) {
+		o.key = key
+	}
+}
+
+// WithIssueSendEventTimestamp sets the timestamp value
+func WithIssueSendEventTimestamp(tv time.Time) IssueSendEventOpts {
+	return func(o *IssueSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithIssueSendEventHeader sets the timestamp value
+func WithIssueSendEventHeader(key, value string) IssueSendEventOpts {
+	return func(o *IssueSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewIssueSendEvent returns a new IssueSendEvent instance
+func NewIssueSendEvent(o *Issue, opts ...IssueSendEventOpts) *IssueSendEvent {
+	res := &IssueSendEvent{
+		Issue: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewIssueProducer will stream data from the channel
+func NewIssueProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.Issue.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Issue.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.Issue.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*Issue); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.Issue.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.Issue.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type work.Issue but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// IssueReceiveEvent is an event detail for receiving data
-type IssueReceiveEvent struct {
-	Issue   Issue
-	Message event.Message
+// NewIssueConsumer will stream data from the topic into the provided channel
+func NewIssueConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object Issue
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into work.Issue: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &IssueReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateIssueConsumer will stream data from the topic into the provided channel
-func CreateIssueConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan IssueReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object Issue
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into work.Issue: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- IssueReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// IssueReceiveEvent is an event detail for receiving data
+type IssueReceiveEvent struct {
+	Issue   *Issue
+	message event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*IssueReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *IssueReceiveEvent) Object() datamodel.Model {
+	return e.Issue
+}
+
+// Message returns the underlying message data for the event
+func (e *IssueReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// IssueProducer implements the datamodel.ModelEventProducer
+type IssueProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*IssueProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *IssueProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *IssueProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *Issue) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &IssueProducer{
+		ch:   ch,
+		done: NewIssueProducer(producer, ch, errors),
+	}
+}
+
+// IssueConsumer implements the datamodel.ModelEventConsumer
+type IssueConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*IssueConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *IssueConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *IssueConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *Issue) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewIssueConsumer(consumer, ch, errors)
+	return &IssueConsumer{
+		ch: ch,
+	}
 }

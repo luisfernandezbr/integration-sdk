@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -190,6 +191,16 @@ func (o *Repo) String() string {
 	return fmt.Sprintf("sourcecode.Repo<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *Repo) GetTopicName() datamodel.TopicNameType {
+	return RepoTopic
+}
+
+// GetModelName returns the name of the model
+func (o *Repo) GetModelName() datamodel.ModelNameType {
+	return RepoModelName
+}
+
 func (o *Repo) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -218,6 +229,12 @@ func (o *Repo) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *Repo) MaterializedName() string {
 	return "sourcecode_repo"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Repo) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of Repo
@@ -265,7 +282,7 @@ var cachedCodecRepo *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *Repo) GetAvroCodec() *goavro.Codec {
 	if cachedCodecRepo == nil {
-		c, err := CreateRepoAvroSchema()
+		c, err := GetRepoAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -368,8 +385,8 @@ func (o *Repo) Hash() string {
 	return o.Hashcode
 }
 
-// CreateRepoAvroSchemaSpec creates the avro schema specification for Repo
-func CreateRepoAvroSchemaSpec() string {
+// GetRepoAvroSchemaSpec creates the avro schema specification for Repo
+func GetRepoAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "sourcecode",
@@ -409,25 +426,25 @@ func CreateRepoAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateRepoAvroSchema creates the avro schema for Repo
-func CreateRepoAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateRepoAvroSchemaSpec())
+// GetRepoAvroSchema creates the avro schema for Repo
+func GetRepoAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetRepoAvroSchemaSpec())
 }
 
 // TransformRepoFunc is a function for transforming Repo during processing
 type TransformRepoFunc func(input *Repo) (*Repo, error)
 
-// CreateRepoPipe creates a pipe for processing Repo items
-func CreateRepoPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformRepoFunc) <-chan bool {
+// NewRepoPipe creates a pipe for processing Repo items
+func NewRepoPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformRepoFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateRepoInputStream(input, errors)
+	inch, indone := NewRepoInputStream(input, errors)
 	var stream chan Repo
 	if len(transforms) > 0 {
 		stream = make(chan Repo, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateRepoOutputStream(output, stream, errors)
+	outdone := NewRepoOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -463,8 +480,8 @@ func CreateRepoPipe(input io.ReadCloser, output io.WriteCloser, errors chan erro
 	return done
 }
 
-// CreateRepoInputStreamDir creates a channel for reading Repo as JSON newlines from a directory of files
-func CreateRepoInputStreamDir(dir string, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
+// NewRepoInputStreamDir creates a channel for reading Repo as JSON newlines from a directory of files
+func NewRepoInputStreamDir(dir string, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/repo\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -483,7 +500,7 @@ func CreateRepoInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateRepoInputStreamFile(files[0], errors, transforms...)
+		return NewRepoInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan Repo)
 		close(ch)
@@ -493,8 +510,8 @@ func CreateRepoInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 }
 
-// CreateRepoInputStreamFile creates an channel for reading Repo as JSON newlines from filename
-func CreateRepoInputStreamFile(filename string, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
+// NewRepoInputStreamFile creates an channel for reading Repo as JSON newlines from filename
+func NewRepoInputStreamFile(filename string, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -518,11 +535,11 @@ func CreateRepoInputStreamFile(filename string, errors chan<- error, transforms 
 		}
 		f = gz
 	}
-	return CreateRepoInputStream(f, errors, transforms...)
+	return NewRepoInputStream(f, errors, transforms...)
 }
 
-// CreateRepoInputStream creates an channel for reading Repo as JSON newlines from stream
-func CreateRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
+// NewRepoInputStream creates an channel for reading Repo as JSON newlines from stream
+func NewRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan Repo, 1000)
 	go func() {
@@ -563,8 +580,8 @@ func CreateRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms
 	return ch, done
 }
 
-// CreateRepoOutputStreamDir will output json newlines from channel and save in dir
-func CreateRepoOutputStreamDir(dir string, ch chan Repo, errors chan<- error, transforms ...TransformRepoFunc) <-chan bool {
+// NewRepoOutputStreamDir will output json newlines from channel and save in dir
+func NewRepoOutputStreamDir(dir string, ch chan Repo, errors chan<- error, transforms ...TransformRepoFunc) <-chan bool {
 	fp := filepath.Join(dir, "/sourcecode/repo\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -581,11 +598,11 @@ func CreateRepoOutputStreamDir(dir string, ch chan Repo, errors chan<- error, tr
 		done <- true
 		return done
 	}
-	return CreateRepoOutputStream(gz, ch, errors, transforms...)
+	return NewRepoOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateRepoOutputStream will output json newlines from channel to the stream
-func CreateRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- error, transforms ...TransformRepoFunc) <-chan bool {
+// NewRepoOutputStream will output json newlines from channel to the stream
+func NewRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- error, transforms ...TransformRepoFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -627,79 +644,201 @@ func CreateRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- e
 
 // RepoSendEvent is an event detail for sending data
 type RepoSendEvent struct {
-	Repo    Repo
-	Headers map[string]string
+	Repo    *Repo
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-// CreateRepoProducer will stream data from the channel
-func CreateRepoProducer(producer event.Producer, ch chan RepoSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*RepoSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *RepoSendEvent) Key() string {
+	if e.key == "" {
+		return e.Repo.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *RepoSendEvent) Object() datamodel.Model {
+	return e.Repo
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *RepoSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *RepoSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// RepoSendEventOpts is a function handler for setting opts
+type RepoSendEventOpts func(o *RepoSendEvent)
+
+// WithRepoSendEventKey sets the key value to a value different than the object ID
+func WithRepoSendEventKey(key string) RepoSendEventOpts {
+	return func(o *RepoSendEvent) {
+		o.key = key
+	}
+}
+
+// WithRepoSendEventTimestamp sets the timestamp value
+func WithRepoSendEventTimestamp(tv time.Time) RepoSendEventOpts {
+	return func(o *RepoSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithRepoSendEventHeader sets the timestamp value
+func WithRepoSendEventHeader(key, value string) RepoSendEventOpts {
+	return func(o *RepoSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewRepoSendEvent returns a new RepoSendEvent instance
+func NewRepoSendEvent(o *Repo, opts ...RepoSendEventOpts) *RepoSendEvent {
+	res := &RepoSendEvent{
+		Repo: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewRepoProducer will stream data from the channel
+func NewRepoProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.Repo.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Repo.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.Repo.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*Repo); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.Repo.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.Repo.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.Repo but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// RepoReceiveEvent is an event detail for receiving data
-type RepoReceiveEvent struct {
-	Repo    Repo
-	Message event.Message
+// NewRepoConsumer will stream data from the topic into the provided channel
+func NewRepoConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object Repo
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into sourcecode.Repo: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &RepoReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateRepoConsumer will stream data from the topic into the provided channel
-func CreateRepoConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan RepoReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object Repo
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.Repo: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- RepoReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// RepoReceiveEvent is an event detail for receiving data
+type RepoReceiveEvent struct {
+	Repo    *Repo
+	message event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*RepoReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *RepoReceiveEvent) Object() datamodel.Model {
+	return e.Repo
+}
+
+// Message returns the underlying message data for the event
+func (e *RepoReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// RepoProducer implements the datamodel.ModelEventProducer
+type RepoProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*RepoProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *RepoProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *RepoProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *Repo) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &RepoProducer{
+		ch:   ch,
+		done: NewRepoProducer(producer, ch, errors),
+	}
+}
+
+// RepoConsumer implements the datamodel.ModelEventConsumer
+type RepoConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*RepoConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *RepoConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *RepoConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *Repo) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewRepoConsumer(consumer, ch, errors)
+	return &RepoConsumer{
+		ch: ch,
+	}
 }

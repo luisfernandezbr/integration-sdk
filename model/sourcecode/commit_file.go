@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -235,6 +236,16 @@ func (o *CommitFile) String() string {
 	return fmt.Sprintf("sourcecode.CommitFile<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *CommitFile) GetTopicName() datamodel.TopicNameType {
+	return CommitFileTopic
+}
+
+// GetModelName returns the name of the model
+func (o *CommitFile) GetModelName() datamodel.ModelNameType {
+	return CommitFileModelName
+}
+
 func (o *CommitFile) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -263,6 +274,12 @@ func (o *CommitFile) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *CommitFile) MaterializedName() string {
 	return "sourcecode_commitfile"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *CommitFile) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of CommitFile
@@ -310,7 +327,7 @@ var cachedCodecCommitFile *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *CommitFile) GetAvroCodec() *goavro.Codec {
 	if cachedCodecCommitFile == nil {
-		c, err := CreateCommitFileAvroSchema()
+		c, err := GetCommitFileAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -677,8 +694,8 @@ func (o *CommitFile) Hash() string {
 	return o.Hashcode
 }
 
-// CreateCommitFileAvroSchemaSpec creates the avro schema specification for CommitFile
-func CreateCommitFileAvroSchemaSpec() string {
+// GetCommitFileAvroSchemaSpec creates the avro schema specification for CommitFile
+func GetCommitFileAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "sourcecode",
@@ -806,25 +823,25 @@ func CreateCommitFileAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateCommitFileAvroSchema creates the avro schema for CommitFile
-func CreateCommitFileAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateCommitFileAvroSchemaSpec())
+// GetCommitFileAvroSchema creates the avro schema for CommitFile
+func GetCommitFileAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetCommitFileAvroSchemaSpec())
 }
 
 // TransformCommitFileFunc is a function for transforming CommitFile during processing
 type TransformCommitFileFunc func(input *CommitFile) (*CommitFile, error)
 
-// CreateCommitFilePipe creates a pipe for processing CommitFile items
-func CreateCommitFilePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCommitFileFunc) <-chan bool {
+// NewCommitFilePipe creates a pipe for processing CommitFile items
+func NewCommitFilePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCommitFileFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateCommitFileInputStream(input, errors)
+	inch, indone := NewCommitFileInputStream(input, errors)
 	var stream chan CommitFile
 	if len(transforms) > 0 {
 		stream = make(chan CommitFile, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateCommitFileOutputStream(output, stream, errors)
+	outdone := NewCommitFileOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -860,8 +877,8 @@ func CreateCommitFilePipe(input io.ReadCloser, output io.WriteCloser, errors cha
 	return done
 }
 
-// CreateCommitFileInputStreamDir creates a channel for reading CommitFile as JSON newlines from a directory of files
-func CreateCommitFileInputStreamDir(dir string, errors chan<- error, transforms ...TransformCommitFileFunc) (chan CommitFile, <-chan bool) {
+// NewCommitFileInputStreamDir creates a channel for reading CommitFile as JSON newlines from a directory of files
+func NewCommitFileInputStreamDir(dir string, errors chan<- error, transforms ...TransformCommitFileFunc) (chan CommitFile, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/commit_file\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -880,7 +897,7 @@ func CreateCommitFileInputStreamDir(dir string, errors chan<- error, transforms 
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateCommitFileInputStreamFile(files[0], errors, transforms...)
+		return NewCommitFileInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan CommitFile)
 		close(ch)
@@ -890,8 +907,8 @@ func CreateCommitFileInputStreamDir(dir string, errors chan<- error, transforms 
 	}
 }
 
-// CreateCommitFileInputStreamFile creates an channel for reading CommitFile as JSON newlines from filename
-func CreateCommitFileInputStreamFile(filename string, errors chan<- error, transforms ...TransformCommitFileFunc) (chan CommitFile, <-chan bool) {
+// NewCommitFileInputStreamFile creates an channel for reading CommitFile as JSON newlines from filename
+func NewCommitFileInputStreamFile(filename string, errors chan<- error, transforms ...TransformCommitFileFunc) (chan CommitFile, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -915,11 +932,11 @@ func CreateCommitFileInputStreamFile(filename string, errors chan<- error, trans
 		}
 		f = gz
 	}
-	return CreateCommitFileInputStream(f, errors, transforms...)
+	return NewCommitFileInputStream(f, errors, transforms...)
 }
 
-// CreateCommitFileInputStream creates an channel for reading CommitFile as JSON newlines from stream
-func CreateCommitFileInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCommitFileFunc) (chan CommitFile, <-chan bool) {
+// NewCommitFileInputStream creates an channel for reading CommitFile as JSON newlines from stream
+func NewCommitFileInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCommitFileFunc) (chan CommitFile, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan CommitFile, 1000)
 	go func() {
@@ -960,8 +977,8 @@ func CreateCommitFileInputStream(stream io.ReadCloser, errors chan<- error, tran
 	return ch, done
 }
 
-// CreateCommitFileOutputStreamDir will output json newlines from channel and save in dir
-func CreateCommitFileOutputStreamDir(dir string, ch chan CommitFile, errors chan<- error, transforms ...TransformCommitFileFunc) <-chan bool {
+// NewCommitFileOutputStreamDir will output json newlines from channel and save in dir
+func NewCommitFileOutputStreamDir(dir string, ch chan CommitFile, errors chan<- error, transforms ...TransformCommitFileFunc) <-chan bool {
 	fp := filepath.Join(dir, "/sourcecode/commit_file\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -978,11 +995,11 @@ func CreateCommitFileOutputStreamDir(dir string, ch chan CommitFile, errors chan
 		done <- true
 		return done
 	}
-	return CreateCommitFileOutputStream(gz, ch, errors, transforms...)
+	return NewCommitFileOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateCommitFileOutputStream will output json newlines from channel to the stream
-func CreateCommitFileOutputStream(stream io.WriteCloser, ch chan CommitFile, errors chan<- error, transforms ...TransformCommitFileFunc) <-chan bool {
+// NewCommitFileOutputStream will output json newlines from channel to the stream
+func NewCommitFileOutputStream(stream io.WriteCloser, ch chan CommitFile, errors chan<- error, transforms ...TransformCommitFileFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -1024,79 +1041,201 @@ func CreateCommitFileOutputStream(stream io.WriteCloser, ch chan CommitFile, err
 
 // CommitFileSendEvent is an event detail for sending data
 type CommitFileSendEvent struct {
-	CommitFile CommitFile
-	Headers    map[string]string
+	CommitFile *CommitFile
+	headers    map[string]string
+	time       time.Time
+	key        string
 }
 
-// CreateCommitFileProducer will stream data from the channel
-func CreateCommitFileProducer(producer event.Producer, ch chan CommitFileSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*CommitFileSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *CommitFileSendEvent) Key() string {
+	if e.key == "" {
+		return e.CommitFile.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *CommitFileSendEvent) Object() datamodel.Model {
+	return e.CommitFile
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *CommitFileSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *CommitFileSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// CommitFileSendEventOpts is a function handler for setting opts
+type CommitFileSendEventOpts func(o *CommitFileSendEvent)
+
+// WithCommitFileSendEventKey sets the key value to a value different than the object ID
+func WithCommitFileSendEventKey(key string) CommitFileSendEventOpts {
+	return func(o *CommitFileSendEvent) {
+		o.key = key
+	}
+}
+
+// WithCommitFileSendEventTimestamp sets the timestamp value
+func WithCommitFileSendEventTimestamp(tv time.Time) CommitFileSendEventOpts {
+	return func(o *CommitFileSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithCommitFileSendEventHeader sets the timestamp value
+func WithCommitFileSendEventHeader(key, value string) CommitFileSendEventOpts {
+	return func(o *CommitFileSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewCommitFileSendEvent returns a new CommitFileSendEvent instance
+func NewCommitFileSendEvent(o *CommitFile, opts ...CommitFileSendEventOpts) *CommitFileSendEvent {
+	res := &CommitFileSendEvent{
+		CommitFile: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewCommitFileProducer will stream data from the channel
+func NewCommitFileProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.CommitFile.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.CommitFile.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.CommitFile.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*CommitFile); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.CommitFile.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.CommitFile.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.CommitFile but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// CommitFileReceiveEvent is an event detail for receiving data
-type CommitFileReceiveEvent struct {
-	CommitFile CommitFile
-	Message    event.Message
+// NewCommitFileConsumer will stream data from the topic into the provided channel
+func NewCommitFileConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object CommitFile
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into sourcecode.CommitFile: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &CommitFileReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateCommitFileConsumer will stream data from the topic into the provided channel
-func CreateCommitFileConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan CommitFileReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object CommitFile
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.CommitFile: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- CommitFileReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// CommitFileReceiveEvent is an event detail for receiving data
+type CommitFileReceiveEvent struct {
+	CommitFile *CommitFile
+	message    event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*CommitFileReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *CommitFileReceiveEvent) Object() datamodel.Model {
+	return e.CommitFile
+}
+
+// Message returns the underlying message data for the event
+func (e *CommitFileReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// CommitFileProducer implements the datamodel.ModelEventProducer
+type CommitFileProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*CommitFileProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *CommitFileProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *CommitFileProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *CommitFile) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &CommitFileProducer{
+		ch:   ch,
+		done: NewCommitFileProducer(producer, ch, errors),
+	}
+}
+
+// CommitFileConsumer implements the datamodel.ModelEventConsumer
+type CommitFileConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*CommitFileConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *CommitFileConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *CommitFileConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *CommitFile) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewCommitFileConsumer(consumer, ch, errors)
+	return &CommitFileConsumer{
+		ch: ch,
+	}
 }

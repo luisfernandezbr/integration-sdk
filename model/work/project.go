@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -192,6 +193,16 @@ func (o *Project) String() string {
 	return fmt.Sprintf("work.Project<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *Project) GetTopicName() datamodel.TopicNameType {
+	return ProjectTopic
+}
+
+// GetModelName returns the name of the model
+func (o *Project) GetModelName() datamodel.ModelNameType {
+	return ProjectModelName
+}
+
 func (o *Project) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -220,6 +231,12 @@ func (o *Project) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *Project) MaterializedName() string {
 	return "work_project"
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Project) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of Project
@@ -267,7 +284,7 @@ var cachedCodecProject *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *Project) GetAvroCodec() *goavro.Codec {
 	if cachedCodecProject == nil {
-		c, err := CreateProjectAvroSchema()
+		c, err := GetProjectAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -382,8 +399,8 @@ func (o *Project) Hash() string {
 	return o.Hashcode
 }
 
-// CreateProjectAvroSchemaSpec creates the avro schema specification for Project
-func CreateProjectAvroSchemaSpec() string {
+// GetProjectAvroSchemaSpec creates the avro schema specification for Project
+func GetProjectAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "work",
@@ -427,25 +444,25 @@ func CreateProjectAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateProjectAvroSchema creates the avro schema for Project
-func CreateProjectAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateProjectAvroSchemaSpec())
+// GetProjectAvroSchema creates the avro schema for Project
+func GetProjectAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetProjectAvroSchemaSpec())
 }
 
 // TransformProjectFunc is a function for transforming Project during processing
 type TransformProjectFunc func(input *Project) (*Project, error)
 
-// CreateProjectPipe creates a pipe for processing Project items
-func CreateProjectPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformProjectFunc) <-chan bool {
+// NewProjectPipe creates a pipe for processing Project items
+func NewProjectPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformProjectFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateProjectInputStream(input, errors)
+	inch, indone := NewProjectInputStream(input, errors)
 	var stream chan Project
 	if len(transforms) > 0 {
 		stream = make(chan Project, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateProjectOutputStream(output, stream, errors)
+	outdone := NewProjectOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -481,8 +498,8 @@ func CreateProjectPipe(input io.ReadCloser, output io.WriteCloser, errors chan e
 	return done
 }
 
-// CreateProjectInputStreamDir creates a channel for reading Project as JSON newlines from a directory of files
-func CreateProjectInputStreamDir(dir string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
+// NewProjectInputStreamDir creates a channel for reading Project as JSON newlines from a directory of files
+func NewProjectInputStreamDir(dir string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/project\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -501,7 +518,7 @@ func CreateProjectInputStreamDir(dir string, errors chan<- error, transforms ...
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateProjectInputStreamFile(files[0], errors, transforms...)
+		return NewProjectInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan Project)
 		close(ch)
@@ -511,8 +528,8 @@ func CreateProjectInputStreamDir(dir string, errors chan<- error, transforms ...
 	}
 }
 
-// CreateProjectInputStreamFile creates an channel for reading Project as JSON newlines from filename
-func CreateProjectInputStreamFile(filename string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
+// NewProjectInputStreamFile creates an channel for reading Project as JSON newlines from filename
+func NewProjectInputStreamFile(filename string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -536,11 +553,11 @@ func CreateProjectInputStreamFile(filename string, errors chan<- error, transfor
 		}
 		f = gz
 	}
-	return CreateProjectInputStream(f, errors, transforms...)
+	return NewProjectInputStream(f, errors, transforms...)
 }
 
-// CreateProjectInputStream creates an channel for reading Project as JSON newlines from stream
-func CreateProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
+// NewProjectInputStream creates an channel for reading Project as JSON newlines from stream
+func NewProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan Project, 1000)
 	go func() {
@@ -581,8 +598,8 @@ func CreateProjectInputStream(stream io.ReadCloser, errors chan<- error, transfo
 	return ch, done
 }
 
-// CreateProjectOutputStreamDir will output json newlines from channel and save in dir
-func CreateProjectOutputStreamDir(dir string, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
+// NewProjectOutputStreamDir will output json newlines from channel and save in dir
+func NewProjectOutputStreamDir(dir string, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
 	fp := filepath.Join(dir, "/work/project\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -599,11 +616,11 @@ func CreateProjectOutputStreamDir(dir string, ch chan Project, errors chan<- err
 		done <- true
 		return done
 	}
-	return CreateProjectOutputStream(gz, ch, errors, transforms...)
+	return NewProjectOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateProjectOutputStream will output json newlines from channel to the stream
-func CreateProjectOutputStream(stream io.WriteCloser, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
+// NewProjectOutputStream will output json newlines from channel to the stream
+func NewProjectOutputStream(stream io.WriteCloser, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -645,79 +662,201 @@ func CreateProjectOutputStream(stream io.WriteCloser, ch chan Project, errors ch
 
 // ProjectSendEvent is an event detail for sending data
 type ProjectSendEvent struct {
-	Project Project
-	Headers map[string]string
+	Project *Project
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-// CreateProjectProducer will stream data from the channel
-func CreateProjectProducer(producer event.Producer, ch chan ProjectSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*ProjectSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *ProjectSendEvent) Key() string {
+	if e.key == "" {
+		return e.Project.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *ProjectSendEvent) Object() datamodel.Model {
+	return e.Project
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *ProjectSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *ProjectSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// ProjectSendEventOpts is a function handler for setting opts
+type ProjectSendEventOpts func(o *ProjectSendEvent)
+
+// WithProjectSendEventKey sets the key value to a value different than the object ID
+func WithProjectSendEventKey(key string) ProjectSendEventOpts {
+	return func(o *ProjectSendEvent) {
+		o.key = key
+	}
+}
+
+// WithProjectSendEventTimestamp sets the timestamp value
+func WithProjectSendEventTimestamp(tv time.Time) ProjectSendEventOpts {
+	return func(o *ProjectSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithProjectSendEventHeader sets the timestamp value
+func WithProjectSendEventHeader(key, value string) ProjectSendEventOpts {
+	return func(o *ProjectSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewProjectSendEvent returns a new ProjectSendEvent instance
+func NewProjectSendEvent(o *Project, opts ...ProjectSendEventOpts) *ProjectSendEvent {
+	res := &ProjectSendEvent{
+		Project: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewProjectProducer will stream data from the channel
+func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.Project.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Project.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.Project.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*Project); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.Project.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.Project.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type work.Project but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// ProjectReceiveEvent is an event detail for receiving data
-type ProjectReceiveEvent struct {
-	Project Project
-	Message event.Message
+// NewProjectConsumer will stream data from the topic into the provided channel
+func NewProjectConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object Project
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into work.Project: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &ProjectReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateProjectConsumer will stream data from the topic into the provided channel
-func CreateProjectConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan ProjectReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object Project
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into work.Project: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- ProjectReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// ProjectReceiveEvent is an event detail for receiving data
+type ProjectReceiveEvent struct {
+	Project *Project
+	message event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*ProjectReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *ProjectReceiveEvent) Object() datamodel.Model {
+	return e.Project
+}
+
+// Message returns the underlying message data for the event
+func (e *ProjectReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// ProjectProducer implements the datamodel.ModelEventProducer
+type ProjectProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*ProjectProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *ProjectProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *ProjectProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *Project) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &ProjectProducer{
+		ch:   ch,
+		done: NewProjectProducer(producer, ch, errors),
+	}
+}
+
+// ProjectConsumer implements the datamodel.ModelEventConsumer
+type ProjectConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*ProjectConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *ProjectConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *ProjectConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *Project) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewProjectConsumer(consumer, ch, errors)
+	return &ProjectConsumer{
+		ch: ch,
+	}
 }

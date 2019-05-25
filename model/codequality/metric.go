@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
@@ -195,6 +196,16 @@ func (o *Metric) String() string {
 	return fmt.Sprintf("codequality.Metric<%s>", o.ID)
 }
 
+// GetTopicName returns the name of the topic if evented
+func (o *Metric) GetTopicName() datamodel.TopicNameType {
+	return MetricTopic
+}
+
+// GetModelName returns the name of the model
+func (o *Metric) GetModelName() datamodel.ModelNameType {
+	return MetricModelName
+}
+
 func (o *Metric) setDefaults() {
 	o.GetID()
 	o.GetRefID()
@@ -223,6 +234,12 @@ func (o *Metric) IsMaterialized() bool {
 // MaterializedName returns the name of the materialized table
 func (o *Metric) MaterializedName() string {
 	panic("codequality.Metric is not a materialized table")
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Metric) IsEvented() bool {
+	return false
+
 }
 
 // Clone returns an exact copy of Metric
@@ -270,7 +287,7 @@ var cachedCodecMetric *goavro.Codec
 // GetAvroCodec returns the avro codec for this model
 func (o *Metric) GetAvroCodec() *goavro.Codec {
 	if cachedCodecMetric == nil {
-		c, err := CreateMetricAvroSchema()
+		c, err := GetMetricAvroSchema()
 		if err != nil {
 			panic(err)
 		}
@@ -397,8 +414,8 @@ func (o *Metric) Hash() string {
 	return o.Hashcode
 }
 
-// CreateMetricAvroSchemaSpec creates the avro schema specification for Metric
-func CreateMetricAvroSchemaSpec() string {
+// GetMetricAvroSchemaSpec creates the avro schema specification for Metric
+func GetMetricAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
 		"namespace":    "codequality",
@@ -446,25 +463,25 @@ func CreateMetricAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// CreateMetricAvroSchema creates the avro schema for Metric
-func CreateMetricAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(CreateMetricAvroSchemaSpec())
+// GetMetricAvroSchema creates the avro schema for Metric
+func GetMetricAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetMetricAvroSchemaSpec())
 }
 
 // TransformMetricFunc is a function for transforming Metric during processing
 type TransformMetricFunc func(input *Metric) (*Metric, error)
 
-// CreateMetricPipe creates a pipe for processing Metric items
-func CreateMetricPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformMetricFunc) <-chan bool {
+// NewMetricPipe creates a pipe for processing Metric items
+func NewMetricPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformMetricFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := CreateMetricInputStream(input, errors)
+	inch, indone := NewMetricInputStream(input, errors)
 	var stream chan Metric
 	if len(transforms) > 0 {
 		stream = make(chan Metric, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := CreateMetricOutputStream(output, stream, errors)
+	outdone := NewMetricOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -500,8 +517,8 @@ func CreateMetricPipe(input io.ReadCloser, output io.WriteCloser, errors chan er
 	return done
 }
 
-// CreateMetricInputStreamDir creates a channel for reading Metric as JSON newlines from a directory of files
-func CreateMetricInputStreamDir(dir string, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
+// NewMetricInputStreamDir creates a channel for reading Metric as JSON newlines from a directory of files
+func NewMetricInputStreamDir(dir string, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
 	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/codequality/metric\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
@@ -520,7 +537,7 @@ func CreateMetricInputStreamDir(dir string, errors chan<- error, transforms ...T
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return CreateMetricInputStreamFile(files[0], errors, transforms...)
+		return NewMetricInputStreamFile(files[0], errors, transforms...)
 	} else {
 		ch := make(chan Metric)
 		close(ch)
@@ -530,8 +547,8 @@ func CreateMetricInputStreamDir(dir string, errors chan<- error, transforms ...T
 	}
 }
 
-// CreateMetricInputStreamFile creates an channel for reading Metric as JSON newlines from filename
-func CreateMetricInputStreamFile(filename string, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
+// NewMetricInputStreamFile creates an channel for reading Metric as JSON newlines from filename
+func NewMetricInputStreamFile(filename string, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
@@ -555,11 +572,11 @@ func CreateMetricInputStreamFile(filename string, errors chan<- error, transform
 		}
 		f = gz
 	}
-	return CreateMetricInputStream(f, errors, transforms...)
+	return NewMetricInputStream(f, errors, transforms...)
 }
 
-// CreateMetricInputStream creates an channel for reading Metric as JSON newlines from stream
-func CreateMetricInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
+// NewMetricInputStream creates an channel for reading Metric as JSON newlines from stream
+func NewMetricInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
 	done := make(chan bool, 1)
 	ch := make(chan Metric, 1000)
 	go func() {
@@ -600,8 +617,8 @@ func CreateMetricInputStream(stream io.ReadCloser, errors chan<- error, transfor
 	return ch, done
 }
 
-// CreateMetricOutputStreamDir will output json newlines from channel and save in dir
-func CreateMetricOutputStreamDir(dir string, ch chan Metric, errors chan<- error, transforms ...TransformMetricFunc) <-chan bool {
+// NewMetricOutputStreamDir will output json newlines from channel and save in dir
+func NewMetricOutputStreamDir(dir string, ch chan Metric, errors chan<- error, transforms ...TransformMetricFunc) <-chan bool {
 	fp := filepath.Join(dir, "/codequality/metric\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
@@ -618,11 +635,11 @@ func CreateMetricOutputStreamDir(dir string, ch chan Metric, errors chan<- error
 		done <- true
 		return done
 	}
-	return CreateMetricOutputStream(gz, ch, errors, transforms...)
+	return NewMetricOutputStream(gz, ch, errors, transforms...)
 }
 
-// CreateMetricOutputStream will output json newlines from channel to the stream
-func CreateMetricOutputStream(stream io.WriteCloser, ch chan Metric, errors chan<- error, transforms ...TransformMetricFunc) <-chan bool {
+// NewMetricOutputStream will output json newlines from channel to the stream
+func NewMetricOutputStream(stream io.WriteCloser, ch chan Metric, errors chan<- error, transforms ...TransformMetricFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -664,79 +681,201 @@ func CreateMetricOutputStream(stream io.WriteCloser, ch chan Metric, errors chan
 
 // MetricSendEvent is an event detail for sending data
 type MetricSendEvent struct {
-	Metric  Metric
-	Headers map[string]string
+	Metric  *Metric
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-// CreateMetricProducer will stream data from the channel
-func CreateMetricProducer(producer event.Producer, ch chan MetricSendEvent, errors chan<- error) <-chan bool {
+var _ datamodel.ModelSendEvent = (*MetricSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *MetricSendEvent) Key() string {
+	if e.key == "" {
+		return e.Metric.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *MetricSendEvent) Object() datamodel.Model {
+	return e.Metric
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *MetricSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *MetricSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// MetricSendEventOpts is a function handler for setting opts
+type MetricSendEventOpts func(o *MetricSendEvent)
+
+// WithMetricSendEventKey sets the key value to a value different than the object ID
+func WithMetricSendEventKey(key string) MetricSendEventOpts {
+	return func(o *MetricSendEvent) {
+		o.key = key
+	}
+}
+
+// WithMetricSendEventTimestamp sets the timestamp value
+func WithMetricSendEventTimestamp(tv time.Time) MetricSendEventOpts {
+	return func(o *MetricSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithMetricSendEventHeader sets the timestamp value
+func WithMetricSendEventHeader(key, value string) MetricSendEventOpts {
+	return func(o *MetricSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewMetricSendEvent returns a new MetricSendEvent instance
+func NewMetricSendEvent(o *Metric, opts ...MetricSendEventOpts) *MetricSendEvent {
+	res := &MetricSendEvent{
+		Metric: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewMetricProducer will stream data from the channel
+func NewMetricProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			binary, codec, err := item.Metric.ToAvroBinary()
-			if err != nil {
-				errors <- fmt.Errorf("error encoding %s to avro binary data. %v", item.Metric.String(), err)
-				return
-			}
-			headers := map[string]string{
-				"customer_id": item.Metric.CustomerID,
-			}
-			if item.Headers != nil {
-				for k, v := range item.Headers {
+			if object, ok := item.Object().(*Metric); ok {
+				binary, codec, err := object.ToAvroBinary()
+				if err != nil {
+					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+					return
+				}
+				headers := map[string]string{
+					"customer_id": object.CustomerID,
+				}
+				for k, v := range item.Headers() {
 					headers[k] = v
 				}
-			}
-			msg := event.Message{
-				Key:     item.Metric.ID,
-				Value:   binary,
-				Codec:   codec,
-				Headers: headers,
-			}
-			if err := producer.Send(ctx, msg); err != nil {
-				errors <- fmt.Errorf("error sending %s. %v", item.Metric.String(), err)
+				msg := event.Message{
+					Key:     item.Key(),
+					Value:   binary,
+					Codec:   codec,
+					Headers: headers,
+				}
+				if err := producer.Send(ctx, msg); err != nil {
+					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+				}
+			} else {
+				errors <- fmt.Errorf("invalid event received. expected an object of type codequality.Metric but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// MetricReceiveEvent is an event detail for receiving data
-type MetricReceiveEvent struct {
-	Metric  Metric
-	Message event.Message
+// NewMetricConsumer will stream data from the topic into the provided channel
+func NewMetricConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(event.ConsumerCallback{
+		OnDataReceived: func(msg event.Message) error {
+			var object Metric
+			if err := json.Unmarshal(msg.Value, &object); err != nil {
+				return fmt.Errorf("error unmarshaling json data into codequality.Metric: %s", err)
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &MetricReceiveEvent{&object, msg}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+	})
 }
 
-// CreateMetricConsumer will stream data from the topic into the provided channel
-func CreateMetricConsumer(factory event.ConsumerFactory, topic datamodel.TopicNameType, ch chan MetricReceiveEvent, errors chan<- error) (<-chan bool, chan<- bool) {
-	done := make(chan bool, 1)
-	closed := make(chan bool, 1)
-	go func() {
-		defer func() { done <- true }()
-		callback := event.ConsumerCallback{
-			OnDataReceived: func(msg event.Message) error {
-				var object Metric
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into codequality.Metric: %s", err)
-				}
-				msg.Codec = object.GetAvroCodec() // match the codec
-				ch <- MetricReceiveEvent{object, msg}
-				return nil
-			},
-			OnErrorReceived: func(err error) {
-				errors <- err
-			},
-		}
-		consumer, err := factory.CreateConsumer(string(topic), callback)
-		if err != nil {
-			errors <- err
-			return
-		}
-		select {
-		case <-closed:
-			consumer.Close()
-		}
-	}()
-	return done, closed
+// MetricReceiveEvent is an event detail for receiving data
+type MetricReceiveEvent struct {
+	Metric  *Metric
+	message event.Message
+}
+
+var _ datamodel.ModelReceiveEvent = (*MetricReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *MetricReceiveEvent) Object() datamodel.Model {
+	return e.Metric
+}
+
+// Message returns the underlying message data for the event
+func (e *MetricReceiveEvent) Message() event.Message {
+	return e.message
+}
+
+// MetricProducer implements the datamodel.ModelEventProducer
+type MetricProducer struct {
+	ch   chan datamodel.ModelSendEvent
+	done <-chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*MetricProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *MetricProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *MetricProducer) Close() error {
+	close(p.ch)
+	<-p.done
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *Metric) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &MetricProducer{
+		ch:   ch,
+		done: NewMetricProducer(producer, ch, errors),
+	}
+}
+
+// MetricConsumer implements the datamodel.ModelEventConsumer
+type MetricConsumer struct {
+	ch chan datamodel.ModelReceiveEvent
+}
+
+var _ datamodel.ModelEventConsumer = (*MetricConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *MetricConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *MetricConsumer) Close() error {
+	close(c.ch)
+	return nil
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *Metric) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewMetricConsumer(consumer, ch, errors)
+	return &MetricConsumer{
+		ch: ch,
+	}
 }
