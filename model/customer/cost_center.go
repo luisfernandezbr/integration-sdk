@@ -882,6 +882,15 @@ func (o *CostCenter) NewProducerChannel(producer event.Producer, errors chan<- e
 	}
 }
 
+// NewCostCenterProducerChannel returns a channel which can be used for producing Model events
+func NewCostCenterProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &CostCenterProducer{
+		ch:   ch,
+		done: NewCostCenterProducer(producer, ch, errors),
+	}
+}
+
 // CostCenterConsumer implements the datamodel.ModelEventConsumer
 type CostCenterConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -902,6 +911,15 @@ func (c *CostCenterConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *CostCenter) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewCostCenterConsumer(consumer, ch, errors)
+	return &CostCenterConsumer{
+		ch: ch,
+	}
+}
+
+// NewCostCenterConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewCostCenterConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewCostCenterConsumer(consumer, ch, errors)
 	return &CostCenterConsumer{

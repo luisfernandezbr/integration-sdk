@@ -961,6 +961,15 @@ func (o *PullRequest) NewProducerChannel(producer event.Producer, errors chan<- 
 	}
 }
 
+// NewPullRequestProducerChannel returns a channel which can be used for producing Model events
+func NewPullRequestProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &PullRequestProducer{
+		ch:   ch,
+		done: NewPullRequestProducer(producer, ch, errors),
+	}
+}
+
 // PullRequestConsumer implements the datamodel.ModelEventConsumer
 type PullRequestConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -981,6 +990,15 @@ func (c *PullRequestConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *PullRequest) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewPullRequestConsumer(consumer, ch, errors)
+	return &PullRequestConsumer{
+		ch: ch,
+	}
+}
+
+// NewPullRequestConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewPullRequestConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewPullRequestConsumer(consumer, ch, errors)
 	return &PullRequestConsumer{

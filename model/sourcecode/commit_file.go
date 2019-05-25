@@ -1213,6 +1213,15 @@ func (o *CommitFile) NewProducerChannel(producer event.Producer, errors chan<- e
 	}
 }
 
+// NewCommitFileProducerChannel returns a channel which can be used for producing Model events
+func NewCommitFileProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &CommitFileProducer{
+		ch:   ch,
+		done: NewCommitFileProducer(producer, ch, errors),
+	}
+}
+
 // CommitFileConsumer implements the datamodel.ModelEventConsumer
 type CommitFileConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -1233,6 +1242,15 @@ func (c *CommitFileConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *CommitFile) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewCommitFileConsumer(consumer, ch, errors)
+	return &CommitFileConsumer{
+		ch: ch,
+	}
+}
+
+// NewCommitFileConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewCommitFileConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewCommitFileConsumer(consumer, ch, errors)
 	return &CommitFileConsumer{

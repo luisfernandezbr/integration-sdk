@@ -1124,6 +1124,15 @@ func (o *Commit) NewProducerChannel(producer event.Producer, errors chan<- error
 	}
 }
 
+// NewCommitProducerChannel returns a channel which can be used for producing Model events
+func NewCommitProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &CommitProducer{
+		ch:   ch,
+		done: NewCommitProducer(producer, ch, errors),
+	}
+}
+
 // CommitConsumer implements the datamodel.ModelEventConsumer
 type CommitConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -1144,6 +1153,15 @@ func (c *CommitConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Commit) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewCommitConsumer(consumer, ch, errors)
+	return &CommitConsumer{
+		ch: ch,
+	}
+}
+
+// NewCommitConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewCommitConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewCommitConsumer(consumer, ch, errors)
 	return &CommitConsumer{

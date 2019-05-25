@@ -841,6 +841,15 @@ func (o *User) NewProducerChannel(producer event.Producer, errors chan<- error) 
 	}
 }
 
+// NewUserProducerChannel returns a channel which can be used for producing Model events
+func NewUserProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &UserProducer{
+		ch:   ch,
+		done: NewUserProducer(producer, ch, errors),
+	}
+}
+
 // UserConsumer implements the datamodel.ModelEventConsumer
 type UserConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -861,6 +870,15 @@ func (c *UserConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *User) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewUserConsumer(consumer, ch, errors)
+	return &UserConsumer{
+		ch: ch,
+	}
+}
+
+// NewUserConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewUserConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewUserConsumer(consumer, ch, errors)
 	return &UserConsumer{

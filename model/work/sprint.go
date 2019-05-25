@@ -895,6 +895,15 @@ func (o *Sprint) NewProducerChannel(producer event.Producer, errors chan<- error
 	}
 }
 
+// NewSprintProducerChannel returns a channel which can be used for producing Model events
+func NewSprintProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &SprintProducer{
+		ch:   ch,
+		done: NewSprintProducer(producer, ch, errors),
+	}
+}
+
 // SprintConsumer implements the datamodel.ModelEventConsumer
 type SprintConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -915,6 +924,15 @@ func (c *SprintConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Sprint) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewSprintConsumer(consumer, ch, errors)
+	return &SprintConsumer{
+		ch: ch,
+	}
+}
+
+// NewSprintConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewSprintConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewSprintConsumer(consumer, ch, errors)
 	return &SprintConsumer{

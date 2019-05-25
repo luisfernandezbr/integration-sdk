@@ -853,6 +853,15 @@ func (o *Metric) NewProducerChannel(producer event.Producer, errors chan<- error
 	}
 }
 
+// NewMetricProducerChannel returns a channel which can be used for producing Model events
+func NewMetricProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &MetricProducer{
+		ch:   ch,
+		done: NewMetricProducer(producer, ch, errors),
+	}
+}
+
 // MetricConsumer implements the datamodel.ModelEventConsumer
 type MetricConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -873,6 +882,15 @@ func (c *MetricConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Metric) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewMetricConsumer(consumer, ch, errors)
+	return &MetricConsumer{
+		ch: ch,
+	}
+}
+
+// NewMetricConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewMetricConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewMetricConsumer(consumer, ch, errors)
 	return &MetricConsumer{

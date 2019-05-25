@@ -834,6 +834,15 @@ func (o *Project) NewProducerChannel(producer event.Producer, errors chan<- erro
 	}
 }
 
+// NewProjectProducerChannel returns a channel which can be used for producing Model events
+func NewProjectProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &ProjectProducer{
+		ch:   ch,
+		done: NewProjectProducer(producer, ch, errors),
+	}
+}
+
 // ProjectConsumer implements the datamodel.ModelEventConsumer
 type ProjectConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -854,6 +863,15 @@ func (c *ProjectConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Project) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewProjectConsumer(consumer, ch, errors)
+	return &ProjectConsumer{
+		ch: ch,
+	}
+}
+
+// NewProjectConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewProjectConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewProjectConsumer(consumer, ch, errors)
 	return &ProjectConsumer{

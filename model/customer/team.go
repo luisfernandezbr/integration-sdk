@@ -867,6 +867,15 @@ func (o *Team) NewProducerChannel(producer event.Producer, errors chan<- error) 
 	}
 }
 
+// NewTeamProducerChannel returns a channel which can be used for producing Model events
+func NewTeamProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &TeamProducer{
+		ch:   ch,
+		done: NewTeamProducer(producer, ch, errors),
+	}
+}
+
 // TeamConsumer implements the datamodel.ModelEventConsumer
 type TeamConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -887,6 +896,15 @@ func (c *TeamConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Team) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewTeamConsumer(consumer, ch, errors)
+	return &TeamConsumer{
+		ch: ch,
+	}
+}
+
+// NewTeamConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewTeamConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewTeamConsumer(consumer, ch, errors)
 	return &TeamConsumer{

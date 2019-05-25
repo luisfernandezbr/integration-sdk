@@ -994,6 +994,15 @@ func (o *Branch) NewProducerChannel(producer event.Producer, errors chan<- error
 	}
 }
 
+// NewBranchProducerChannel returns a channel which can be used for producing Model events
+func NewBranchProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &BranchProducer{
+		ch:   ch,
+		done: NewBranchProducer(producer, ch, errors),
+	}
+}
+
 // BranchConsumer implements the datamodel.ModelEventConsumer
 type BranchConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -1014,6 +1023,15 @@ func (c *BranchConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Branch) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewBranchConsumer(consumer, ch, errors)
+	return &BranchConsumer{
+		ch: ch,
+	}
+}
+
+// NewBranchConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewBranchConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewBranchConsumer(consumer, ch, errors)
 	return &BranchConsumer{

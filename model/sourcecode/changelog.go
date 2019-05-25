@@ -997,6 +997,15 @@ func (o *Changelog) NewProducerChannel(producer event.Producer, errors chan<- er
 	}
 }
 
+// NewChangelogProducerChannel returns a channel which can be used for producing Model events
+func NewChangelogProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &ChangelogProducer{
+		ch:   ch,
+		done: NewChangelogProducer(producer, ch, errors),
+	}
+}
+
 // ChangelogConsumer implements the datamodel.ModelEventConsumer
 type ChangelogConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -1017,6 +1026,15 @@ func (c *ChangelogConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Changelog) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewChangelogConsumer(consumer, ch, errors)
+	return &ChangelogConsumer{
+		ch: ch,
+	}
+}
+
+// NewChangelogConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewChangelogConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewChangelogConsumer(consumer, ch, errors)
 	return &ChangelogConsumer{

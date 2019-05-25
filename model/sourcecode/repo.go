@@ -816,6 +816,15 @@ func (o *Repo) NewProducerChannel(producer event.Producer, errors chan<- error) 
 	}
 }
 
+// NewRepoProducerChannel returns a channel which can be used for producing Model events
+func NewRepoProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &RepoProducer{
+		ch:   ch,
+		done: NewRepoProducer(producer, ch, errors),
+	}
+}
+
 // RepoConsumer implements the datamodel.ModelEventConsumer
 type RepoConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -836,6 +845,15 @@ func (c *RepoConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Repo) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewRepoConsumer(consumer, ch, errors)
+	return &RepoConsumer{
+		ch: ch,
+	}
+}
+
+// NewRepoConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewRepoConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewRepoConsumer(consumer, ch, errors)
 	return &RepoConsumer{

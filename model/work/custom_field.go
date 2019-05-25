@@ -816,6 +816,15 @@ func (o *CustomField) NewProducerChannel(producer event.Producer, errors chan<- 
 	}
 }
 
+// NewCustomFieldProducerChannel returns a channel which can be used for producing Model events
+func NewCustomFieldProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	return &CustomFieldProducer{
+		ch:   ch,
+		done: NewCustomFieldProducer(producer, ch, errors),
+	}
+}
+
 // CustomFieldConsumer implements the datamodel.ModelEventConsumer
 type CustomFieldConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
@@ -836,6 +845,15 @@ func (c *CustomFieldConsumer) Close() error {
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *CustomField) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	NewCustomFieldConsumer(consumer, ch, errors)
+	return &CustomFieldConsumer{
+		ch: ch,
+	}
+}
+
+// NewCustomFieldConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewCustomFieldConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewCustomFieldConsumer(consumer, ch, errors)
 	return &CustomFieldConsumer{
