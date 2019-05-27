@@ -231,9 +231,9 @@ func (o *Metric) IsMaterialized() bool {
 	return false
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *Metric) MaterializedName() string {
-	panic("codequality.Metric is not a materialized table")
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Metric) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -251,7 +251,7 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 

@@ -242,9 +242,12 @@ func (o *Branch) IsMaterialized() bool {
 	return true
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *Branch) MaterializedName() string {
-	return "sourcecode_branch"
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Branch) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "branch_id",
+		TableName: "sourcecode_branch",
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -262,7 +265,7 @@ func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 

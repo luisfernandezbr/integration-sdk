@@ -227,9 +227,12 @@ func (o *Team) IsMaterialized() bool {
 	return true
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *Team) MaterializedName() string {
-	return "customer_team"
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Team) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "team_id",
+		TableName: "customer_team",
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -247,7 +250,7 @@ func (o *Team) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 

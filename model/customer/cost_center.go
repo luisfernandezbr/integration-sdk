@@ -229,9 +229,12 @@ func (o *CostCenter) IsMaterialized() bool {
 	return true
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *CostCenter) MaterializedName() string {
-	return "customer_costcenter"
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *CostCenter) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "cost_center_id",
+		TableName: "customer_costcenter",
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -249,7 +252,7 @@ func (o *CostCenter) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 

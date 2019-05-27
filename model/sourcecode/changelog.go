@@ -247,9 +247,12 @@ func (o *Changelog) IsMaterialized() bool {
 	return true
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *Changelog) MaterializedName() string {
-	return "sourcecode_changelog"
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Changelog) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "changelog_id",
+		TableName: "sourcecode_changelog",
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -267,7 +270,7 @@ func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 

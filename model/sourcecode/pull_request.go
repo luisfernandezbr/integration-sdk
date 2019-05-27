@@ -243,9 +243,12 @@ func (o *PullRequest) IsMaterialized() bool {
 	return true
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *PullRequest) MaterializedName() string {
-	return "sourcecode_pullrequest"
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *PullRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "pull_request_id",
+		TableName: "sourcecode_pullrequest",
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -263,7 +266,7 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 

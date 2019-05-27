@@ -226,9 +226,12 @@ func (o *Repo) IsMaterialized() bool {
 	return true
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *Repo) MaterializedName() string {
-	return "sourcecode_repo"
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Repo) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "repo_id",
+		TableName: "sourcecode_repo",
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -246,7 +249,7 @@ func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 

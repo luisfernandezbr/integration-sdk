@@ -249,9 +249,12 @@ func (o *CommitActivity) IsMaterialized() bool {
 	return true
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *CommitActivity) MaterializedName() string {
-	return "sourcecode_commitactivity"
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *CommitActivity) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "commit_activity_id",
+		TableName: "sourcecode_commitactivity",
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -269,7 +272,7 @@ func (o *CommitActivity) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 

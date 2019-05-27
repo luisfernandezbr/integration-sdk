@@ -235,9 +235,9 @@ func (o *Sprint) IsMaterialized() bool {
 	return false
 }
 
-// MaterializedName returns the name of the materialized table
-func (o *Sprint) MaterializedName() string {
-	panic("work.Sprint is not a materialized table")
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Sprint) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -255,7 +255,7 @@ func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           1048576,
+		MaxSize:           5242880,
 	}
 }
 
