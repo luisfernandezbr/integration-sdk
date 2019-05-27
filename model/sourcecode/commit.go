@@ -269,8 +269,21 @@ func (o *Commit) MaterializedName() string {
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Commit) IsEvented() bool {
-	return false
+	return true
+}
 
+// GetTopicConfig returns the topic config object
+func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
+	duration, err := time.ParseDuration("168h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+	return &datamodel.ModelTopicConfig{
+		NumPartitions:     4,
+		ReplicationFactor: 1,
+		Retention:         duration,
+		MaxSize:           1048576,
+	}
 }
 
 // Clone returns an exact copy of Commit
