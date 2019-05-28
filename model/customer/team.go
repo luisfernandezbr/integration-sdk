@@ -421,30 +421,26 @@ func UpdateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
 
 // FindTeam returns a Team from the database
 func FindTeam(ctx context.Context, db datamodel.Storage, id string) (*Team, error) {
-	kv, err := db.FindOne(ctx, id)
+	kv, err := db.FindOne(ctx, TeamModelName, id)
 	if err != nil {
 		return nil, err
 	}
 	if kv == nil {
 		return nil, nil
 	}
-	var result Team
-	result.FromMap(kv.ToMap())
-	return &result, nil
+	return kv.(*Team), nil
 }
 
 // FindTeams returns all Team from the database matching keys
 func FindTeams(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*Team, error) {
-	res, err := db.Find(ctx, kv)
+	res, err := db.Find(ctx, TeamModelName, kv)
 	if err != nil {
 		return nil, err
 	}
 	if res != nil {
 		arr := make([]*Team, 0)
-		for _, kv := range res {
-			var result Team
-			result.FromMap(kv.ToMap())
-			arr = append(arr, &result)
+		for _, m := range res {
+			arr = append(arr, m.(*Team))
 		}
 		return arr, nil
 	}

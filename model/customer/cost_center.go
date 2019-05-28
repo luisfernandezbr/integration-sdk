@@ -433,30 +433,26 @@ func UpdateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) 
 
 // FindCostCenter returns a CostCenter from the database
 func FindCostCenter(ctx context.Context, db datamodel.Storage, id string) (*CostCenter, error) {
-	kv, err := db.FindOne(ctx, id)
+	kv, err := db.FindOne(ctx, CostCenterModelName, id)
 	if err != nil {
 		return nil, err
 	}
 	if kv == nil {
 		return nil, nil
 	}
-	var result CostCenter
-	result.FromMap(kv.ToMap())
-	return &result, nil
+	return kv.(*CostCenter), nil
 }
 
 // FindCostCenters returns all CostCenter from the database matching keys
 func FindCostCenters(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*CostCenter, error) {
-	res, err := db.Find(ctx, kv)
+	res, err := db.Find(ctx, CostCenterModelName, kv)
 	if err != nil {
 		return nil, err
 	}
 	if res != nil {
 		arr := make([]*CostCenter, 0)
-		for _, kv := range res {
-			var result CostCenter
-			result.FromMap(kv.ToMap())
-			arr = append(arr, &result)
+		for _, m := range res {
+			arr = append(arr, m.(*CostCenter))
 		}
 		return arr, nil
 	}

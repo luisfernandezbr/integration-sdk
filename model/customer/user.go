@@ -620,30 +620,26 @@ func UpdateUser(ctx context.Context, db datamodel.Storage, o *User) error {
 
 // FindUser returns a User from the database
 func FindUser(ctx context.Context, db datamodel.Storage, id string) (*User, error) {
-	kv, err := db.FindOne(ctx, id)
+	kv, err := db.FindOne(ctx, UserModelName, id)
 	if err != nil {
 		return nil, err
 	}
 	if kv == nil {
 		return nil, nil
 	}
-	var result User
-	result.FromMap(kv.ToMap())
-	return &result, nil
+	return kv.(*User), nil
 }
 
 // FindUsers returns all User from the database matching keys
 func FindUsers(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*User, error) {
-	res, err := db.Find(ctx, kv)
+	res, err := db.Find(ctx, UserModelName, kv)
 	if err != nil {
 		return nil, err
 	}
 	if res != nil {
 		arr := make([]*User, 0)
-		for _, kv := range res {
-			var result User
-			result.FromMap(kv.ToMap())
-			arr = append(arr, &result)
+		for _, m := range res {
+			arr = append(arr, m.(*User))
 		}
 		return arr, nil
 	}
