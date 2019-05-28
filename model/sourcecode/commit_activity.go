@@ -73,8 +73,6 @@ type CommitActivity struct {
 	UserID string `json:"user_id" yaml:"user_id" faker:"-"`
 	// Complexity the complexity value for the file change
 	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
-	// ComplexityWeighted the weight of the complexity
-	ComplexityWeighted float64 `json:"complexity_weighted" yaml:"complexity_weighted" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -363,24 +361,23 @@ func (o *CommitActivity) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"commit_activity_id":  o.GetID(),
-		"ref_id":              o.GetRefID(),
-		"ref_type":            o.RefType,
-		"customer_id":         o.CustomerID,
-		"hashcode":            o.Hash(),
-		"date_ts":             toCommitActivityObject(o.DateAt, isavro, false, "long"),
-		"blanks":              toCommitActivityObject(o.Blanks, isavro, false, "long"),
-		"comments":            toCommitActivityObject(o.Comments, isavro, false, "long"),
-		"filename":            toCommitActivityObject(o.Filename, isavro, false, "string"),
-		"sha":                 toCommitActivityObject(o.Sha, isavro, false, "string"),
-		"language":            toCommitActivityObject(o.Language, isavro, false, "string"),
-		"loc":                 toCommitActivityObject(o.Loc, isavro, false, "long"),
-		"ordinal":             toCommitActivityObject(o.Ordinal, isavro, false, "long"),
-		"repo_id":             toCommitActivityObject(o.RepoID, isavro, false, "string"),
-		"sloc":                toCommitActivityObject(o.Sloc, isavro, false, "long"),
-		"user_id":             toCommitActivityObject(o.UserID, isavro, false, "string"),
-		"complexity":          toCommitActivityObject(o.Complexity, isavro, false, "long"),
-		"complexity_weighted": toCommitActivityObject(o.ComplexityWeighted, isavro, false, "float"),
+		"commit_activity_id": o.GetID(),
+		"ref_id":             o.GetRefID(),
+		"ref_type":           o.RefType,
+		"customer_id":        o.CustomerID,
+		"hashcode":           o.Hash(),
+		"date_ts":            toCommitActivityObject(o.DateAt, isavro, false, "long"),
+		"blanks":             toCommitActivityObject(o.Blanks, isavro, false, "long"),
+		"comments":           toCommitActivityObject(o.Comments, isavro, false, "long"),
+		"filename":           toCommitActivityObject(o.Filename, isavro, false, "string"),
+		"sha":                toCommitActivityObject(o.Sha, isavro, false, "string"),
+		"language":           toCommitActivityObject(o.Language, isavro, false, "string"),
+		"loc":                toCommitActivityObject(o.Loc, isavro, false, "long"),
+		"ordinal":            toCommitActivityObject(o.Ordinal, isavro, false, "long"),
+		"repo_id":            toCommitActivityObject(o.RepoID, isavro, false, "string"),
+		"sloc":               toCommitActivityObject(o.Sloc, isavro, false, "long"),
+		"user_id":            toCommitActivityObject(o.UserID, isavro, false, "string"),
+		"complexity":         toCommitActivityObject(o.Complexity, isavro, false, "long"),
 	}
 }
 
@@ -518,16 +515,6 @@ func (o *CommitActivity) FromMap(kv map[string]interface{}) {
 			o.Complexity = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["complexity_weighted"].(float64); ok {
-		o.ComplexityWeighted = val
-	} else {
-		val := kv["complexity_weighted"]
-		if val == nil {
-			o.ComplexityWeighted = number.ToFloat64Any(nil)
-		} else {
-			o.ComplexityWeighted = number.ToFloat64Any(val)
-		}
-	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -551,7 +538,6 @@ func (o *CommitActivity) Hash() string {
 	args = append(args, o.Sloc)
 	args = append(args, o.UserID)
 	args = append(args, o.Complexity)
-	args = append(args, o.ComplexityWeighted)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -631,10 +617,6 @@ func GetCommitActivityAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "complexity",
 				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "complexity_weighted",
-				"type": "float",
 			},
 		},
 	}
