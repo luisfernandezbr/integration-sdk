@@ -287,14 +287,14 @@ func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of Issue
-func (o *Issue) Clone() *Issue {
+func (o *Issue) Clone() datamodel.Model {
 	c := new(Issue)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Issue) Anon() *Issue {
+func (o *Issue) Anon() datamodel.Model {
 	c := new(Issue)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -1076,6 +1076,7 @@ func NewIssueProducer(producer event.Producer, ch <-chan datamodel.ModelSendEven
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       IssueModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

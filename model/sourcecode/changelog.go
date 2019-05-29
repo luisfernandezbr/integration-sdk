@@ -249,9 +249,15 @@ func (o *Changelog) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *Changelog) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "changelog_id",
 		TableName: "sourcecode_changelog",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -275,14 +281,14 @@ func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of Changelog
-func (o *Changelog) Clone() *Changelog {
+func (o *Changelog) Clone() datamodel.Model {
 	c := new(Changelog)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Changelog) Anon() *Changelog {
+func (o *Changelog) Anon() datamodel.Model {
 	c := new(Changelog)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -927,6 +933,7 @@ func NewChangelogProducer(producer event.Producer, ch <-chan datamodel.ModelSend
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       ChangelogModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

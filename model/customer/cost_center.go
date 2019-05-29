@@ -231,9 +231,15 @@ func (o *CostCenter) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *CostCenter) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "cost_center_id",
 		TableName: "customer_costcenter",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -257,14 +263,14 @@ func (o *CostCenter) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of CostCenter
-func (o *CostCenter) Clone() *CostCenter {
+func (o *CostCenter) Clone() datamodel.Model {
 	c := new(CostCenter)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *CostCenter) Anon() *CostCenter {
+func (o *CostCenter) Anon() datamodel.Model {
 	c := new(CostCenter)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -808,6 +814,7 @@ func NewCostCenterProducer(producer event.Producer, ch <-chan datamodel.ModelSen
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       CostCenterModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

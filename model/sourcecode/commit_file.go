@@ -273,9 +273,15 @@ func (o *CommitFile) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *CommitFile) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "commit_file_id",
 		TableName: "sourcecode_commitfile",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -299,14 +305,14 @@ func (o *CommitFile) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of CommitFile
-func (o *CommitFile) Clone() *CommitFile {
+func (o *CommitFile) Clone() datamodel.Model {
 	c := new(CommitFile)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *CommitFile) Anon() *CommitFile {
+func (o *CommitFile) Anon() datamodel.Model {
 	c := new(CommitFile)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -1143,6 +1149,7 @@ func NewCommitFileProducer(producer event.Producer, ch <-chan datamodel.ModelSen
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       CommitFileModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

@@ -245,9 +245,15 @@ func (o *PullRequest) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *PullRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "pull_request_id",
 		TableName: "sourcecode_pullrequest",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -271,14 +277,14 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of PullRequest
-func (o *PullRequest) Clone() *PullRequest {
+func (o *PullRequest) Clone() datamodel.Model {
 	c := new(PullRequest)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *PullRequest) Anon() *PullRequest {
+func (o *PullRequest) Anon() datamodel.Model {
 	c := new(PullRequest)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -891,6 +897,7 @@ func NewPullRequestProducer(producer event.Producer, ch <-chan datamodel.ModelSe
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       PullRequestModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

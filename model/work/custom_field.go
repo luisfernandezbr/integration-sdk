@@ -251,14 +251,14 @@ func (o *CustomField) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of CustomField
-func (o *CustomField) Clone() *CustomField {
+func (o *CustomField) Clone() datamodel.Model {
 	c := new(CustomField)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *CustomField) Anon() *CustomField {
+func (o *CustomField) Anon() datamodel.Model {
 	c := new(CustomField)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -743,6 +743,7 @@ func NewCustomFieldProducer(producer event.Producer, ch <-chan datamodel.ModelSe
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       CustomFieldModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

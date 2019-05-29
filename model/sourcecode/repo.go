@@ -228,9 +228,15 @@ func (o *Repo) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *Repo) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "repo_id",
 		TableName: "sourcecode_repo",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -254,14 +260,14 @@ func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of Repo
-func (o *Repo) Clone() *Repo {
+func (o *Repo) Clone() datamodel.Model {
 	c := new(Repo)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Repo) Anon() *Repo {
+func (o *Repo) Anon() datamodel.Model {
 	c := new(Repo)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -746,6 +752,7 @@ func NewRepoProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       RepoModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

@@ -244,9 +244,15 @@ func (o *Branch) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *Branch) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "branch_id",
 		TableName: "sourcecode_branch",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -270,14 +276,14 @@ func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of Branch
-func (o *Branch) Clone() *Branch {
+func (o *Branch) Clone() datamodel.Model {
 	c := new(Branch)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Branch) Anon() *Branch {
+func (o *Branch) Anon() datamodel.Model {
 	c := new(Branch)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -924,6 +930,7 @@ func NewBranchProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       BranchModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

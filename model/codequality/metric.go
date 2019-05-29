@@ -256,14 +256,14 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of Metric
-func (o *Metric) Clone() *Metric {
+func (o *Metric) Clone() datamodel.Model {
 	c := new(Metric)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Metric) Anon() *Metric {
+func (o *Metric) Anon() datamodel.Model {
 	c := new(Metric)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -780,6 +780,7 @@ func NewMetricProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       MetricModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

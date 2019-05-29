@@ -249,9 +249,15 @@ func (o *CommitActivity) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *CommitActivity) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "commit_activity_id",
 		TableName: "sourcecode_commitactivity",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -275,14 +281,14 @@ func (o *CommitActivity) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of CommitActivity
-func (o *CommitActivity) Clone() *CommitActivity {
+func (o *CommitActivity) Clone() datamodel.Model {
 	c := new(CommitActivity)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *CommitActivity) Anon() *CommitActivity {
+func (o *CommitActivity) Anon() datamodel.Model {
 	c := new(CommitActivity)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -927,6 +933,7 @@ func NewCommitActivityProducer(producer event.Producer, ch <-chan datamodel.Mode
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       CommitActivityModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

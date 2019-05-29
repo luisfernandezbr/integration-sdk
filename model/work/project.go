@@ -230,9 +230,15 @@ func (o *Project) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *Project) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "project_id",
 		TableName: "work_project",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -256,14 +262,14 @@ func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of Project
-func (o *Project) Clone() *Project {
+func (o *Project) Clone() datamodel.Model {
 	c := new(Project)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Project) Anon() *Project {
+func (o *Project) Anon() datamodel.Model {
 	c := new(Project)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -764,6 +770,7 @@ func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEv
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       ProjectModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v

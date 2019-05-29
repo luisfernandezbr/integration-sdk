@@ -229,9 +229,15 @@ func (o *Team) IsMaterialized() bool {
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *Team) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "team_id",
 		TableName: "customer_team",
+		BatchSize: 5000,
+		IdleTime:  idletime,
 	}
 }
 
@@ -255,14 +261,14 @@ func (o *Team) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // Clone returns an exact copy of Team
-func (o *Team) Clone() *Team {
+func (o *Team) Clone() datamodel.Model {
 	c := new(Team)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Team) Anon() *Team {
+func (o *Team) Anon() datamodel.Model {
 	c := new(Team)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
@@ -793,6 +799,7 @@ func NewTeamProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 				}
 				headers := map[string]string{
 					"customer_id": object.CustomerID,
+					"model":       TeamModelName.String(),
 				}
 				for k, v := range item.Headers() {
 					headers[k] = v
