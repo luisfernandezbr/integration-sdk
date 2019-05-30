@@ -587,7 +587,12 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					if av, ok := ae.(string); ok {
 						na = append(na, av)
 					} else {
-						panic("unsupported type for tags field entry: " + reflect.TypeOf(ae).String())
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for tags field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
 					}
 				}
 			} else if s, ok := val.(string); ok {
