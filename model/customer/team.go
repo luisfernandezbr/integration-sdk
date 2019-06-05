@@ -41,18 +41,18 @@ const TeamModelName datamodel.ModelNameType = "customer.Team"
 // Team a team is a grouping of one or more users
 type Team struct {
 	// built in types
-
-	ID         string `json:"team_id" yaml:"team_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Name the name of the team
-	Name string `json:"name" yaml:"name" faker:"team"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"team"`
 	// ParentID the parent id of the team
-	ParentID *string `json:"parent_id" yaml:"parent_id" faker:"-"`
+	ParentID *string `json:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -214,6 +214,9 @@ func (o *Team) GetID() string {
 		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.CustomerID, o.Name)
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -361,6 +364,7 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 func (o *Team) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["team_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -412,16 +416,19 @@ func (o *Team) Hash() string {
 
 // CreateTeam creates a new Team in the database
 func CreateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
+	o.setDefaults()
 	return db.Create(ctx, o)
 }
 
 // DeleteTeam deletes a Team in the database
 func DeleteTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
+	o.setDefaults()
 	return db.Delete(ctx, o)
 }
 
 // UpdateTeam updates a Team in the database
 func UpdateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
+	o.setDefaults()
 	return db.Update(ctx, o)
 }
 

@@ -41,38 +41,38 @@ const ChangelogModelName datamodel.ModelNameType = "sourcecode.Changelog"
 // Changelog the change log for each commit in a repo
 type Changelog struct {
 	// built in types
-
-	ID         string `json:"changelog_id" yaml:"changelog_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"changelog_id" bson:"changelog_id" yaml:"changelog_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Filename the filename
-	Filename string `json:"filename" yaml:"filename" faker:"-"`
+	Filename string `json:"filename" bson:"filename" yaml:"filename" faker:"-"`
 	// Language the detected language
-	Language string `json:"language" yaml:"language" faker:"-"`
+	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
 	// Loc the count of lines in the file
-	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
+	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
 	// Sloc the count of source lines in the file based on language rules
-	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
+	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
 	// Blanks the count of blank lines in the file
-	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
+	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
 	// Comments the count of comment lines in the file based on language rules
-	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
+	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
 	// Complexity the cyclomatic complexity for the change
-	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
+	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
 	// DateAt the date of the change
-	DateAt int64 `json:"date_ts" yaml:"date_ts" faker:"-"`
+	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
-	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Ordinal the order of the commit in the commit stream
-	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
+	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
 	// Sha the commit SHA
-	Sha string `json:"sha" yaml:"sha" faker:"-"`
+	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -234,6 +234,9 @@ func (o *Changelog) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Changelog", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -391,6 +394,7 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 func (o *Changelog) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["changelog_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

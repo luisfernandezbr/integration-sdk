@@ -42,32 +42,32 @@ const BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
 // Branch git branches
 type Branch struct {
 	// built in types
-
-	ID         string `json:"branch_id" yaml:"branch_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Name name of the branch
-	Name string `json:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Default wether is the default branch or not
-	Default bool `json:"default" yaml:"default" faker:"-"`
+	Default bool `json:"default" bson:"default" yaml:"default" faker:"-"`
 	// Merged wether it has been merged
-	Merged bool `json:"merged" yaml:"merged" faker:"-"`
+	Merged bool `json:"merged" bson:"merged" yaml:"merged" faker:"-"`
 	// MergeCommit commit from the merge
-	MergeCommit bool `json:"merge_commit" yaml:"merge_commit" faker:"-"`
+	MergeCommit bool `json:"merge_commit" bson:"merge_commit" yaml:"merge_commit" faker:"-"`
 	// BranchedFromCommits branched from commits
-	BranchedFromCommits []string `json:"branched_from_commits" yaml:"branched_from_commits" faker:"-"`
+	BranchedFromCommits []string `json:"branched_from_commits" bson:"branched_from_commits" yaml:"branched_from_commits" faker:"-"`
 	// Commits list of commits on this branch
-	Commits []string `json:"commits" yaml:"commits" faker:"-"`
+	Commits []string `json:"commits" bson:"commits" yaml:"commits" faker:"-"`
 	// BehindDefaultCount behind default count
-	BehindDefaultCount int64 `json:"behind_default_count" yaml:"behind_default_count" faker:"-"`
+	BehindDefaultCount int64 `json:"behind_default_count" bson:"behind_default_count" yaml:"behind_default_count" faker:"-"`
 	// AheadDefaultCount ahead default count
-	AheadDefaultCount int64 `json:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
+	AheadDefaultCount int64 `json:"ahead_default_count" bson:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -229,6 +229,9 @@ func (o *Branch) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Branch", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -389,6 +392,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 func (o *Branch) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["branch_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

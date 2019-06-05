@@ -41,34 +41,34 @@ const PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 // PullRequest the pull request for a given repo
 type PullRequest struct {
 	// built in types
-
-	ID         string `json:"pull_request_id" yaml:"pull_request_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Title the title of the pull request
-	Title string `json:"title" yaml:"title" faker:"commit_message"`
+	Title string `json:"title" bson:"title" yaml:"title" faker:"commit_message"`
 	// Description the description of the pull request
-	Description string `json:"description" yaml:"description" faker:"-"`
+	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// URL the url to the pull request home page
-	URL string `json:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// CreatedAt the timestamp in UTC that the pull request was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// MergedAt the timestamp in UTC that the pull request was merged
-	MergedAt int64 `json:"merged_ts" yaml:"merged_ts" faker:"-"`
+	MergedAt int64 `json:"merged_ts" bson:"merged_ts" yaml:"merged_ts" faker:"-"`
 	// ClosedAt the timestamp in UTC that the pull request was closed
-	ClosedAt int64 `json:"closed_ts" yaml:"closed_ts" faker:"-"`
+	ClosedAt int64 `json:"closed_ts" bson:"closed_ts" yaml:"closed_ts" faker:"-"`
 	// UpdatedAt the timestamp in UTC that the pull request was closed
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Status the status of the pull request
-	Status string `json:"status" yaml:"status" faker:"-"`
+	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// UserRefID the user ref_id in the source system
-	UserRefID string `json:"user_ref_id" yaml:"user_ref_id" faker:"-"`
+	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -230,6 +230,9 @@ func (o *PullRequest) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("PullRequest", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -385,6 +388,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["pull_request_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

@@ -41,52 +41,52 @@ const CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
 // Commit the commit is a specific change in a repo
 type Commit struct {
 	// built in types
-
-	ID         string `json:"commit_id" yaml:"commit_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Sha the unique sha for the commit
-	Sha string `json:"sha" yaml:"sha" faker:"sha"`
+	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"sha"`
 	// Message the commit message
-	Message string `json:"message" yaml:"message" faker:"commit_message"`
+	Message string `json:"message" bson:"message" yaml:"message" faker:"commit_message"`
 	// URL the url to the commit detail
-	URL string `json:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// Branch the branch that the commit was made to
-	Branch string `json:"branch" yaml:"branch" faker:"-"`
+	Branch string `json:"branch" bson:"branch" yaml:"branch" faker:"-"`
 	// Additions the number of additions for the commit
-	Additions int64 `json:"additions" yaml:"additions" faker:"-"`
+	Additions int64 `json:"additions" bson:"additions" yaml:"additions" faker:"-"`
 	// Deletions the number of deletions for the commit
-	Deletions int64 `json:"deletions" yaml:"deletions" faker:"-"`
+	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// FilesChanged the number of files changed for the commit
-	FilesChanged int64 `json:"files_changed" yaml:"files_changed" faker:"-"`
+	FilesChanged int64 `json:"files_changed" bson:"files_changed" yaml:"files_changed" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
-	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Ordinal the order of the commit in the commit stream
-	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
+	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
 	// Loc the number of lines in the commit
-	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
+	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
 	// Sloc the number of source lines in the commit
-	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
+	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
 	// Comments the number of comment lines in the commit
-	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
+	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
 	// Blanks the number of blank lines in the commit
-	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
+	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
 	// Size the size of all files in the commit
-	Size int64 `json:"size" yaml:"size" faker:"-"`
+	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
 	// Complexity the complexity value for the change
-	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
+	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
 	// GpgSigned if the commit was signed
-	GpgSigned bool `json:"gpg_signed" yaml:"gpg_signed" faker:"-"`
+	GpgSigned bool `json:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
 	// Excluded if the commit was excluded
-	Excluded bool `json:"excluded" yaml:"excluded" faker:"-"`
+	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -247,6 +247,9 @@ func (o *Commit) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Commit", o.CustomerID, o.RefType, o.GetRefID())
+	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
 	}
 	return o.ID
 }
@@ -413,6 +416,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 func (o *Commit) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["commit_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

@@ -41,62 +41,62 @@ const CommitFileModelName datamodel.ModelNameType = "sourcecode.CommitFile"
 // CommitFile the file change for a specific commit
 type CommitFile struct {
 	// built in types
-
-	ID         string `json:"commit_file_id" yaml:"commit_file_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"commit_file_id" bson:"commit_file_id" yaml:"commit_file_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CommitID the unique id for the commit
-	CommitID string `json:"commit_id" yaml:"commit_id" faker:"-"`
+	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Filename the filename
-	Filename string `json:"filename" yaml:"filename" faker:"-"`
+	Filename string `json:"filename" bson:"filename" yaml:"filename" faker:"-"`
 	// Additions the number of additions for the commit file
-	Additions int64 `json:"additions" yaml:"additions" faker:"-"`
+	Additions int64 `json:"additions" bson:"additions" yaml:"additions" faker:"-"`
 	// Deletions the number of deletions for the commit file
-	Deletions int64 `json:"deletions" yaml:"deletions" faker:"-"`
+	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// Status the status of the change
-	Status string `json:"status" yaml:"status" faker:"-"`
+	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// Binary indicates if the file was detected to be a binary file
-	Binary bool `json:"binary" yaml:"binary" faker:"-"`
+	Binary bool `json:"binary" bson:"binary" yaml:"binary" faker:"-"`
 	// Language the language that was detected for the file
-	Language string `json:"language" yaml:"language" faker:"-"`
+	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
 	// Excluded if the file was excluded from processing
-	Excluded bool `json:"excluded" yaml:"excluded" faker:"-"`
+	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
 	// ExcludedReason if the file was excluded, the reason
-	ExcludedReason string `json:"excluded_reason" yaml:"excluded_reason" faker:"-"`
+	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
 	// Ordinal the order value for the file in the change set
-	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
+	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
 	// Loc the number of lines in the file
-	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
+	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
 	// Sloc the number of source lines in the file
-	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
+	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
 	// Blanks the number of blank lines in the file
-	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
+	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
 	// Comments the number of comment lines in the file
-	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
+	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
 	// Complexity the complexity value for the file change
-	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
+	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
 	// License the license which was detected for the file
-	License string `json:"license" yaml:"license" faker:"-"`
+	License string `json:"license" bson:"license" yaml:"license" faker:"-"`
 	// LicenseConfidence the license confidence from the detection engine
-	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence" faker:"-"`
+	LicenseConfidence float64 `json:"license_confidence" bson:"license_confidence" yaml:"license_confidence" faker:"-"`
 	// Renamed if the file was renamed
-	Renamed bool `json:"renamed" yaml:"renamed" faker:"-"`
+	Renamed bool `json:"renamed" bson:"renamed" yaml:"renamed" faker:"-"`
 	// RenamedFrom the original file name
-	RenamedFrom string `json:"renamed_from" yaml:"renamed_from" faker:"-"`
+	RenamedFrom string `json:"renamed_from" bson:"renamed_from" yaml:"renamed_from" faker:"-"`
 	// RenamedTo the final file name
-	RenamedTo string `json:"renamed_to" yaml:"renamed_to" faker:"-"`
+	RenamedTo string `json:"renamed_to" bson:"renamed_to" yaml:"renamed_to" faker:"-"`
 	// Size the size of the file
-	Size int64 `json:"size" yaml:"size" faker:"-"`
+	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
 	// SkippedReason the reason why the file was skipped
-	SkippedReason string `json:"skipped_reason" yaml:"skipped_reason" faker:"-"`
+	SkippedReason string `json:"skipped_reason" bson:"skipped_reason" yaml:"skipped_reason" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -257,6 +257,9 @@ func (o *CommitFile) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("CommitFile", o.CustomerID, o.RefType, o.GetRefID())
+	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
 	}
 	return o.ID
 }
@@ -427,6 +430,7 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 func (o *CommitFile) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["commit_file_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

@@ -41,20 +41,20 @@ const CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
 // CostCenter a cost center represents information about users and their cost
 type CostCenter struct {
 	// built in types
-
-	ID         string `json:"cost_center_id" yaml:"cost_center_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"cost_center_id" bson:"cost_center_id" yaml:"cost_center_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Name the name of the cost center
-	Name string `json:"name" yaml:"name" faker:"costcenter"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"costcenter"`
 	// Description the description for the cost center
-	Description string `json:"description" yaml:"description" faker:"-"`
+	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// Cost the cost value of the cost center
-	Cost float64 `json:"cost" yaml:"cost" faker:"salary"`
+	Cost float64 `json:"cost" bson:"cost" yaml:"cost" faker:"salary"`
 }
 
 // ensure that this type implements the data model interface
@@ -216,6 +216,9 @@ func (o *CostCenter) GetID() string {
 		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.CustomerID, o.Name)
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -364,6 +367,7 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 func (o *CostCenter) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["cost_center_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -424,16 +428,19 @@ func (o *CostCenter) Hash() string {
 
 // CreateCostCenter creates a new CostCenter in the database
 func CreateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
+	o.setDefaults()
 	return db.Create(ctx, o)
 }
 
 // DeleteCostCenter deletes a CostCenter in the database
 func DeleteCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
+	o.setDefaults()
 	return db.Delete(ctx, o)
 }
 
 // UpdateCostCenter updates a CostCenter in the database
 func UpdateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
+	o.setDefaults()
 	return db.Update(ctx, o)
 }
 

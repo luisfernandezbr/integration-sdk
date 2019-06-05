@@ -42,44 +42,44 @@ const UserModelName datamodel.ModelNameType = "customer.User"
 // User the customer's user record
 type User struct {
 	// built in types
-
-	ID         string `json:"user_id" yaml:"user_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Name name of the user
-	Name string `json:"name" yaml:"name" faker:"person"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
 	// Email the email of the user
-	Email string `json:"email" yaml:"email" faker:"email"`
+	Email string `json:"email" bson:"email" yaml:"email" faker:"email"`
 	// Title the title of the user
-	Title *string `json:"title" yaml:"title" faker:"jobtitle"`
+	Title *string `json:"title" bson:"title" yaml:"title" faker:"jobtitle"`
 	// Location the location of the user
-	Location *string `json:"location" yaml:"location" faker:"location"`
+	Location *string `json:"location" bson:"location" yaml:"location" faker:"location"`
 	// AvatarURL the user avatar url
-	AvatarURL *string `json:"avatar_url" yaml:"avatar_url" faker:"avatar"`
+	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// ManagerID the manager user id
-	ManagerID *string `json:"manager_id" yaml:"manager_id" faker:"-"`
+	ManagerID *string `json:"manager_id" bson:"manager_id" yaml:"manager_id" faker:"-"`
 	// Active if true, the user is active and able to login
-	Active bool `json:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Trackable if true, the user is trackable in the pinpoint system
-	Trackable bool `json:"trackable" yaml:"trackable" faker:"-"`
+	Trackable bool `json:"trackable" bson:"trackable" yaml:"trackable" faker:"-"`
 	// CreatedAt when the user was created in epoch timestamp
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// UpdatedAt when the user record was updated in epoch timestamp
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// DeletedAt when the user record was deleted in epoch timestamp
-	DeletedAt *int64 `json:"deleted_ts" yaml:"deleted_ts" faker:"-"`
+	DeletedAt *int64 `json:"deleted_ts" bson:"deleted_ts" yaml:"deleted_ts" faker:"-"`
 	// HiredAt when the user was hired in epoch timestamp
-	HiredAt *int64 `json:"hired_ts" yaml:"hired_ts" faker:"-"`
+	HiredAt *int64 `json:"hired_ts" bson:"hired_ts" yaml:"hired_ts" faker:"-"`
 	// TerminatedAt when the user was terminated in epoch timestamp
-	TerminatedAt *int64 `json:"terminated_ts" yaml:"terminated_ts" faker:"-"`
+	TerminatedAt *int64 `json:"terminated_ts" bson:"terminated_ts" yaml:"terminated_ts" faker:"-"`
 	// CostCenterID the id of the cost center
-	CostCenterID *string `json:"cost_center_id" yaml:"cost_center_id" faker:"-"`
+	CostCenterID *string `json:"cost_center_id" bson:"cost_center_id" yaml:"cost_center_id" faker:"-"`
 	// TeamID the team id that the user is part of
-	TeamID *string `json:"team_id" yaml:"team_id" faker:"-"`
+	TeamID *string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -241,6 +241,9 @@ func (o *User) GetID() string {
 		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.CustomerID, o.Email)
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -401,6 +404,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 func (o *User) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["user_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -611,16 +615,19 @@ func (o *User) Hash() string {
 
 // CreateUser creates a new User in the database
 func CreateUser(ctx context.Context, db datamodel.Storage, o *User) error {
+	o.setDefaults()
 	return db.Create(ctx, o)
 }
 
 // DeleteUser deletes a User in the database
 func DeleteUser(ctx context.Context, db datamodel.Storage, o *User) error {
+	o.setDefaults()
 	return db.Delete(ctx, o)
 }
 
 // UpdateUser updates a User in the database
 func UpdateUser(ctx context.Context, db datamodel.Storage, o *User) error {
+	o.setDefaults()
 	return db.Update(ctx, o)
 }
 

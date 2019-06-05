@@ -41,20 +41,20 @@ const UserModelName datamodel.ModelNameType = "work.User"
 // User the work user
 type User struct {
 	// built in types
-
-	ID         string `json:"user_id" yaml:"user_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Name the name of the user
-	Name string `json:"name" yaml:"name" faker:"person"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
 	// AvatarURL the url to users avatar
-	AvatarURL *string `json:"avatar_url" yaml:"avatar_url" faker:"avatar"`
+	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// Email the email for the user
-	Email *string `json:"email" yaml:"email" faker:"email"`
+	Email *string `json:"email" bson:"email" yaml:"email" faker:"email"`
 }
 
 // ensure that this type implements the data model interface
@@ -216,6 +216,9 @@ func (o *User) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("User", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -355,6 +358,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 func (o *User) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["user_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

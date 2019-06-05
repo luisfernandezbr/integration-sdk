@@ -41,26 +41,26 @@ const SprintModelName datamodel.ModelNameType = "work.Sprint"
 // Sprint sprint details
 type Sprint struct {
 	// built in types
-
-	ID         string `json:"sprint_id" yaml:"sprint_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"sprint_id" bson:"sprint_id" yaml:"sprint_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Name the name of the field
-	Name string `json:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Identifier the common identifier for the sprint
-	Identifier string `json:"identifier" yaml:"identifier" faker:"-"`
+	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// Status status of the sprint
-	Status string `json:"status" yaml:"status" faker:"-"`
+	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// StartedAt the timestamp in UTC that the sprint was started
-	StartedAt int64 `json:"started_ts" yaml:"started_ts" faker:"-"`
+	StartedAt int64 `json:"started_ts" bson:"started_ts" yaml:"started_ts" faker:"-"`
 	// EndedAt the timestamp in UTC that the sprint was ended
-	EndedAt *int64 `json:"ended_ts" yaml:"ended_ts" faker:"-"`
+	EndedAt *int64 `json:"ended_ts" bson:"ended_ts" yaml:"ended_ts" faker:"-"`
 	// CompletedAt the timestamp in UTC that the sprint was completed
-	CompletedAt *int64 `json:"completed_ts" yaml:"completed_ts" faker:"-"`
+	CompletedAt *int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -222,6 +222,9 @@ func (o *Sprint) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Sprint", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -364,6 +367,7 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 func (o *Sprint) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["sprint_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

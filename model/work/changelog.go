@@ -41,34 +41,34 @@ const ChangelogModelName datamodel.ModelNameType = "work.Changelog"
 // Changelog change log
 type Changelog struct {
 	// built in types
-
-	ID         string `json:"changelog_id" yaml:"changelog_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"changelog_id" bson:"changelog_id" yaml:"changelog_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// IssueID id of the issue
-	IssueID string `json:"issue_id" yaml:"issue_id" faker:"-"`
+	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
 	// CreatedAt the timestamp in UTC when this change was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// Ordinal so we can order correctly in queries since dates could be equal
-	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
+	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
 	// UserID id of the user of this change
-	UserID string `json:"user_id" yaml:"user_id" faker:"-"`
+	UserID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
 	// Field name of the field that was changed
-	Field string `json:"field" yaml:"field" faker:"-"`
+	Field string `json:"field" bson:"field" yaml:"field" faker:"-"`
 	// FieldType type of the field that was changed
-	FieldType string `json:"field_type" yaml:"field_type" faker:"-"`
+	FieldType string `json:"field_type" bson:"field_type" yaml:"field_type" faker:"-"`
 	// From id of the change from
-	From string `json:"from" yaml:"from" faker:"-"`
+	From string `json:"from" bson:"from" yaml:"from" faker:"-"`
 	// FromString name of the change from
-	FromString string `json:"from_string" yaml:"from_string" faker:"-"`
+	FromString string `json:"from_string" bson:"from_string" yaml:"from_string" faker:"-"`
 	// To id of the change to
-	To string `json:"to" yaml:"to" faker:"-"`
+	To string `json:"to" bson:"to" yaml:"to" faker:"-"`
 	// ToString name of the change to
-	ToString string `json:"to_string" yaml:"to_string" faker:"-"`
+	ToString string `json:"to_string" bson:"to_string" yaml:"to_string" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -230,6 +230,9 @@ func (o *Changelog) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Changelog", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -376,6 +379,7 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 func (o *Changelog) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["changelog_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

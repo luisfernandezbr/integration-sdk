@@ -42,52 +42,52 @@ const IssueModelName datamodel.ModelNameType = "work.Issue"
 // Issue the issue is a specific work item for a project
 type Issue struct {
 	// built in types
-
-	ID         string `json:"issue_id" yaml:"issue_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Title the issue title
-	Title string `json:"title" yaml:"title" faker:"issue_title"`
+	Title string `json:"title" bson:"title" yaml:"title" faker:"issue_title"`
 	// Identifier the common identifier for the issue
-	Identifier string `json:"identifier" yaml:"identifier" faker:"issue_id"`
+	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
 	// ProjectID unique project id
-	ProjectID string `json:"project_id" yaml:"project_id" faker:"-"`
+	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// URL the url to the issue page
-	URL string `json:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// CreatedAt the timestamp in UTC that the issue was created
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// UpdatedAt the timestamp in UTC that the issue was updated
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// PlannedStartAt the timestamp in UTC that the issue was planned to start
-	PlannedStartAt int64 `json:"planned_start_ts" yaml:"planned_start_ts" faker:"-"`
+	PlannedStartAt int64 `json:"planned_start_ts" bson:"planned_start_ts" yaml:"planned_start_ts" faker:"-"`
 	// PlannedEndAt the timestamp in UTC that the issue was planned to end
-	PlannedEndAt int64 `json:"planned_end_ts" yaml:"planned_end_ts" faker:"-"`
+	PlannedEndAt int64 `json:"planned_end_ts" bson:"planned_end_ts" yaml:"planned_end_ts" faker:"-"`
 	// DueDateAt due date of the issue
-	DueDateAt int64 `json:"due_date_ts" yaml:"due_date_ts" faker:"-"`
+	DueDateAt int64 `json:"due_date_ts" bson:"due_date_ts" yaml:"due_date_ts" faker:"-"`
 	// Priority priority of the issue
-	Priority string `json:"priority" yaml:"priority" faker:"-"`
+	Priority string `json:"priority" bson:"priority" yaml:"priority" faker:"-"`
 	// Type type of issue
-	Type string `json:"type" yaml:"type" faker:"-"`
+	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// Status status of the issue
-	Status string `json:"status" yaml:"status" faker:"-"`
+	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// CreatorRefID user id of the creator
-	CreatorRefID string `json:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
+	CreatorRefID string `json:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
 	// ReporterRefID user id of the reporter
-	ReporterRefID string `json:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
+	ReporterRefID string `json:"reporter_ref_id" bson:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
 	// AssigneeRefID user id of the assignee
-	AssigneeRefID string `json:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
+	AssigneeRefID string `json:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
 	// AuthorRefID user id of the author
-	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Tags tags on the issue
-	Tags []string `json:"tags" yaml:"tags" faker:"-"`
+	Tags []string `json:"tags" bson:"tags" yaml:"tags" faker:"-"`
 	// ParentID parent issue id, if any
-	ParentID string `json:"parent_id" yaml:"parent_id" faker:"-"`
+	ParentID string `json:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
 	// Resolution resolution of the issue
-	Resolution string `json:"resolution" yaml:"resolution" faker:"-"`
+	Resolution string `json:"resolution" bson:"resolution" yaml:"resolution" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -249,6 +249,9 @@ func (o *Issue) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Issue", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -407,6 +410,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 func (o *Issue) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["issue_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

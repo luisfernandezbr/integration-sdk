@@ -40,18 +40,18 @@ const CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
 // CustomField user defined fields
 type CustomField struct {
 	// built in types
-
-	ID         string `json:"custom_field_id" yaml:"custom_field_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"custom_field_id" bson:"custom_field_id" yaml:"custom_field_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Name the name of the field
-	Name string `json:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Key key of the field
-	Key string `json:"key" yaml:"key" faker:"-"`
+	Key string `json:"key" bson:"key" yaml:"key" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -213,6 +213,9 @@ func (o *CustomField) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("CustomField", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -351,6 +354,7 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 func (o *CustomField) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["custom_field_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val

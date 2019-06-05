@@ -40,20 +40,20 @@ const ProjectModelName datamodel.ModelNameType = "work.Project"
 // Project the project holds work
 type Project struct {
 	// built in types
-
-	ID         string `json:"project_id" yaml:"project_id" faker:"-"`
-	RefID      string `json:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	ID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	// generated and used internally, do not set
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
-
 	// Name the name of the project
-	Name string `json:"name" yaml:"name" faker:"project"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"project"`
 	// Identifier the common identifier for the project
-	Identifier string `json:"identifier" yaml:"identifier" faker:"abbreviation"`
+	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
 	// URL the url to the project home page
-	URL string `json:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 }
 
 // ensure that this type implements the data model interface
@@ -215,6 +215,9 @@ func (o *Project) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Project", o.CustomerID, o.RefType, o.GetRefID())
 	}
+	if o.MongoID == "" {
+		o.MongoID = o.ID
+	}
 	return o.ID
 }
 
@@ -363,6 +366,7 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 func (o *Project) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["project_id"].(string); ok {
 		o.ID = val
+		o.MongoID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
