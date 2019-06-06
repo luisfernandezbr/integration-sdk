@@ -50,7 +50,7 @@ type CommitFile struct {
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt string `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CommitID the unique id for the commit
 	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
 	// RepoID the unique id for the repo
@@ -399,7 +399,7 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":           o.RefType,
 		"customer_id":        o.CustomerID,
 		"hashcode":           o.Hash(),
-		"created_ts":         toCommitFileObject(o.CreatedAt, isavro, false, "long"),
+		"created_ts":         toCommitFileObject(o.CreatedAt, isavro, false, "string"),
 		"commit_id":          toCommitFileObject(o.CommitID, isavro, false, "string"),
 		"repo_id":            toCommitFileObject(o.RepoID, isavro, false, "string"),
 		"filename":           toCommitFileObject(o.Filename, isavro, false, "string"),
@@ -441,14 +441,14 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
-	if val, ok := kv["created_ts"].(int64); ok {
+	if val, ok := kv["created_ts"].(string); ok {
 		o.CreatedAt = val
 	} else {
 		val := kv["created_ts"]
 		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
+			o.CreatedAt = ""
 		} else {
-			o.CreatedAt = number.ToInt64Any(val)
+			o.CreatedAt = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["commit_id"].(string); ok {
@@ -750,7 +750,7 @@ func GetCommitFileAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_ts",
-				"type": "long",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "commit_id",
