@@ -255,6 +255,15 @@ func (o *Commit) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *Commit) GetTopicKey() string {
+	var i interface{} = o.RepoID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
 // GetRefID returns the RefID for the object
 func (o *Commit) GetRefID() string {
 	o.RefID = o.Sha
@@ -287,15 +296,17 @@ func (o *Commit) IsEvented() bool {
 
 // GetTopicConfig returns the topic config object
 func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("168h0m0s")
+	duration, err := time.ParseDuration("0s")
 	if err != nil {
-		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+		panic("Invalid topic retention duration provided: 0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		Key:               "repo_id",
+		Timestamp:         "created_ts",
+		NumPartitions:     0,
+		ReplicationFactor: 0,
 		Retention:         duration,
-		MaxSize:           5242880,
+		MaxSize:           0,
 	}
 }
 
