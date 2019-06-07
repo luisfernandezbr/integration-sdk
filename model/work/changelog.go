@@ -239,7 +239,7 @@ func (o *Changelog) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Changelog) GetTopicKey() string {
-	var i interface{} = o.IssueID
+	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -268,17 +268,17 @@ func (o *Changelog) IsEvented() bool {
 
 // GetTopicConfig returns the topic config object
 func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("0s")
+	duration, err := time.ParseDuration("168h0m0s")
 	if err != nil {
-		panic("Invalid topic retention duration provided: 0s. " + err.Error())
+		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "issue_id",
-		Timestamp:         "created_ts",
-		NumPartitions:     0,
-		ReplicationFactor: 0,
+		Key:               "changelog_id",
+		Timestamp:         "",
+		NumPartitions:     4,
+		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           0,
+		MaxSize:           5242880,
 	}
 }
 

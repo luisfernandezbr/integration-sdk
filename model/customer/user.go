@@ -288,17 +288,17 @@ func (o *User) IsEvented() bool {
 
 // GetTopicConfig returns the topic config object
 func (o *User) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("0s")
+	duration, err := time.ParseDuration("168h0m0s")
 	if err != nil {
-		panic("Invalid topic retention duration provided: 0s. " + err.Error())
+		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "user_id",
 		Timestamp:         "",
-		NumPartitions:     0,
-		ReplicationFactor: 0,
+		NumPartitions:     4,
+		ReplicationFactor: 1,
 		Retention:         duration,
-		MaxSize:           0,
+		MaxSize:           5242880,
 	}
 }
 
