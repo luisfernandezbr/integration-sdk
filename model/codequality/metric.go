@@ -262,7 +262,7 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "metric_id",
-		Timestamp:         "",
+		Timestamp:         "date_ts",
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,

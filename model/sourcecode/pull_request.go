@@ -239,7 +239,7 @@ func (o *PullRequest) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *PullRequest) GetTopicKey() string {
-	var i interface{} = o.ID
+	var i interface{} = o.RepoID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -282,8 +282,8 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "pull_request_id",
-		Timestamp:         "",
+		Key:               "repo_id",
+		Timestamp:         "updated_ts",
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,

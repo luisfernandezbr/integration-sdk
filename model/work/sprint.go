@@ -266,7 +266,7 @@ func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "sprint_id",
-		Timestamp:         "",
+		Timestamp:         "started_ts",
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,

@@ -238,7 +238,7 @@ func (o *Branch) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Branch) GetTopicKey() string {
-	var i interface{} = o.ID
+	var i interface{} = o.RepoID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -281,7 +281,7 @@ func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "branch_id",
+		Key:               "repo_id",
 		Timestamp:         "",
 		NumPartitions:     4,
 		ReplicationFactor: 1,

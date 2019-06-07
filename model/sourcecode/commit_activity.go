@@ -243,7 +243,7 @@ func (o *CommitActivity) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *CommitActivity) GetTopicKey() string {
-	var i interface{} = o.ID
+	var i interface{} = o.RepoID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -286,8 +286,8 @@ func (o *CommitActivity) GetTopicConfig() *datamodel.ModelTopicConfig {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "commit_activity_id",
-		Timestamp:         "",
+		Key:               "repo_id",
+		Timestamp:         "date_ts",
 		NumPartitions:     4,
 		ReplicationFactor: 1,
 		Retention:         duration,
