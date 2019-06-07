@@ -41,14 +41,15 @@ const MetricModelName datamodel.ModelNameType = "codequality.Metric"
 // Metric individual metric details
 type Metric struct {
 	// built in types
-	ID string `json:"metric_id" bson:"metric_id" yaml:"metric_id" faker:"-"`
-	// generated and used internally, do not set
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+
+	ID         string `json:"metric_id" bson:"metric_id" yaml:"metric_id" faker:"-"`
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
+
 	// DateAt the date when the metric was created
 	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
 	// ProjectID the the project id

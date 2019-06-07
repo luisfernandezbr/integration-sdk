@@ -41,14 +41,15 @@ const TeamModelName datamodel.ModelNameType = "customer.Team"
 // Team a team is a grouping of one or more users
 type Team struct {
 	// built in types
-	ID string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
-	// generated and used internally, do not set
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+
+	ID         string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
+
 	// Name the name of the team
 	Name string `json:"name" bson:"name" yaml:"name" faker:"team"`
 	// ParentID the parent id of the team

@@ -41,14 +41,15 @@ const CommitActivityModelName datamodel.ModelNameType = "sourcecode.CommitActivi
 // CommitActivity the file change for a specific author
 type CommitActivity struct {
 	// built in types
-	ID string `json:"commit_activity_id" bson:"commit_activity_id" yaml:"commit_activity_id" faker:"-"`
-	// generated and used internally, do not set
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+
+	ID         string `json:"commit_activity_id" bson:"commit_activity_id" yaml:"commit_activity_id" faker:"-"`
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
+
 	// DateAt the timestamp in UTC that the commit of this file was created
 	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
 	// Blanks the number of blank lines in the file

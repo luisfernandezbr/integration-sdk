@@ -40,14 +40,15 @@ const RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
 // Repo the repo holds source code
 type Repo struct {
 	// built in types
-	ID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
-	// generated and used internally, do not set
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+
+	ID         string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
+
 	// Name the name of the repo
 	Name string `json:"name" bson:"name" yaml:"name" faker:"repo"`
 	// URL the url to the repo home page

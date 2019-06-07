@@ -42,14 +42,15 @@ const BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
 // Branch git branches
 type Branch struct {
 	// built in types
-	ID string `json:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
-	// generated and used internally, do not set
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+
+	ID         string `json:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
+
 	// Name name of the branch
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Default wether is the default branch or not
@@ -380,8 +381,8 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"default":               toBranchObject(o.Default, isavro, false, "boolean"),
 		"merged":                toBranchObject(o.Merged, isavro, false, "boolean"),
 		"merge_commit":          toBranchObject(o.MergeCommit, isavro, false, "boolean"),
-		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro, false, "string"),
-		"commits":               toBranchObject(o.Commits, isavro, false, "string"),
+		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro, false, "map[items:string type:array]"),
+		"commits":               toBranchObject(o.Commits, isavro, false, "map[items:string type:array]"),
 		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
 		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
 		"repo_id":               toBranchObject(o.RepoID, isavro, false, "string"),
@@ -611,17 +612,11 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{
-					"type":  "array",
-					"items": "string",
-				},
+				"type": map[string]interface{}{"type": "array", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{
-					"type":  "array",
-					"items": "string",
-				},
+				"type": map[string]interface{}{"type": "array", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "behind_default_count",

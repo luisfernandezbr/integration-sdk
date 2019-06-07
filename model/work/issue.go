@@ -42,14 +42,15 @@ const IssueModelName datamodel.ModelNameType = "work.Issue"
 // Issue the issue is a specific work item for a project
 type Issue struct {
 	// built in types
-	ID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
-	// generated and used internally, do not set
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+
+	ID         string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
+
 	// Title the issue title
 	Title string `json:"title" bson:"title" yaml:"title" faker:"issue_title"`
 	// Identifier the common identifier for the issue
@@ -400,7 +401,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro, false, "string"),
 		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro, false, "string"),
 		"author_ref_id":    toIssueObject(o.AuthorRefID, isavro, false, "string"),
-		"tags":             toIssueObject(o.Tags, isavro, false, "string"),
+		"tags":             toIssueObject(o.Tags, isavro, false, "map[items:string type:array]"),
 		"parent_id":        toIssueObject(o.ParentID, isavro, false, "string"),
 		"resolution":       toIssueObject(o.Resolution, isavro, false, "string"),
 	}
@@ -763,10 +764,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{
-					"type":  "array",
-					"items": "string",
-				},
+				"type": map[string]interface{}{"type": "array", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",

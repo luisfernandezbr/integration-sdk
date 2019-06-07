@@ -41,14 +41,15 @@ const ChangelogModelName datamodel.ModelNameType = "work.Changelog"
 // Changelog change log
 type Changelog struct {
 	// built in types
-	ID string `json:"changelog_id" bson:"changelog_id" yaml:"changelog_id" faker:"-"`
-	// generated and used internally, do not set
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+
+	ID         string `json:"changelog_id" bson:"changelog_id" yaml:"changelog_id" faker:"-"`
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
+
 	// IssueID id of the issue
 	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
 	// CreatedAt the timestamp in UTC when this change was created

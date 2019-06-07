@@ -41,14 +41,15 @@ const PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 // PullRequest the pull request for a given repo
 type PullRequest struct {
 	// built in types
-	ID string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
-	// generated and used internally, do not set
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"`
+
+	ID         string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
+
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Title the title of the pull request
