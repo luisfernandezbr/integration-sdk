@@ -388,8 +388,8 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"default":               toBranchObject(o.Default, isavro, false, "boolean"),
 		"merged":                toBranchObject(o.Merged, isavro, false, "boolean"),
 		"merge_commit":          toBranchObject(o.MergeCommit, isavro, false, "boolean"),
-		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro, false, "map[items:string type:array]"),
-		"commits":               toBranchObject(o.Commits, isavro, false, "map[items:string type:array]"),
+		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro, false, "branched_from_commits"),
+		"commits":               toBranchObject(o.Commits, isavro, false, "commits"),
 		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
 		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
 		"repo_id":               toBranchObject(o.RepoID, isavro, false, "string"),
@@ -620,11 +620,11 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "items": "string"},
+				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "items": "string"},
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "behind_default_count",

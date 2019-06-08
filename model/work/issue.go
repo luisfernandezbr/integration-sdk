@@ -408,7 +408,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro, false, "string"),
 		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro, false, "string"),
 		"author_ref_id":    toIssueObject(o.AuthorRefID, isavro, false, "string"),
-		"tags":             toIssueObject(o.Tags, isavro, false, "map[items:string type:array]"),
+		"tags":             toIssueObject(o.Tags, isavro, false, "tags"),
 		"parent_id":        toIssueObject(o.ParentID, isavro, false, "string"),
 		"resolution":       toIssueObject(o.Resolution, isavro, false, "string"),
 	}
@@ -772,7 +772,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "tags"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",
