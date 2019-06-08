@@ -797,12 +797,15 @@ func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEv
 				if tv.IsZero() {
 					tv = object.GetTimestamp() // if not provided in the message, use the objects value
 				}
+				if tv.IsZero() {
+					tv = time.Now() // if its still zero, use the ingest time
+				}
 				msg := event.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
 					Headers:   headers,
-					Timestamp: item.Timestamp(),
+					Timestamp: tv,
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)

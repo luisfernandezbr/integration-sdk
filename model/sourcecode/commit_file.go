@@ -51,7 +51,9 @@ type CommitFile struct {
 	// custom types
 
 	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt string `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Created date in rfc3339 format
+	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// CommitID the unique id for the commit
 	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
 	// RepoID the unique id for the repo
@@ -426,7 +428,8 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":           o.RefType,
 		"customer_id":        o.CustomerID,
 		"hashcode":           o.Hash(),
-		"created_ts":         toCommitFileObject(o.CreatedAt, isavro, false, "string"),
+		"created_ts":         toCommitFileObject(o.CreatedAt, isavro, false, "long"),
+		"created":            toCommitFileObject(o.Created, isavro, false, "string"),
 		"commit_id":          toCommitFileObject(o.CommitID, isavro, false, "string"),
 		"repo_id":            toCommitFileObject(o.RepoID, isavro, false, "string"),
 		"filename":           toCommitFileObject(o.Filename, isavro, false, "string"),
@@ -469,14 +472,24 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
-	if val, ok := kv["created_ts"].(string); ok {
+	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
 		val := kv["created_ts"]
 		if val == nil {
-			o.CreatedAt = ""
+			o.CreatedAt = number.ToInt64Any(nil)
 		} else {
-			o.CreatedAt = fmt.Sprintf("%v", val)
+			o.CreatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["created"].(string); ok {
+		o.Created = val
+	} else {
+		val := kv["created"]
+		if val == nil {
+			o.Created = ""
+		} else {
+			o.Created = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["commit_id"].(string); ok {
@@ -721,6 +734,7 @@ func (o *CommitFile) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
 	args = append(args, o.CreatedAt)
+	args = append(args, o.Created)
 	args = append(args, o.CommitID)
 	args = append(args, o.RepoID)
 	args = append(args, o.Filename)
@@ -778,6 +792,10 @@ func GetCommitFileAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "created",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -1190,12 +1208,15 @@ func NewCommitFileProducer(producer event.Producer, ch <-chan datamodel.ModelSen
 				if tv.IsZero() {
 					tv = object.GetTimestamp() // if not provided in the message, use the objects value
 				}
+				if tv.IsZero() {
+					tv = time.Now() // if its still zero, use the ingest time
+				}
 				msg := event.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
 					Headers:   headers,
-					Timestamp: item.Timestamp(),
+					Timestamp: tv,
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
