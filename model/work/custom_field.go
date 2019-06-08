@@ -41,8 +41,7 @@ const CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
 type CustomField struct {
 	// built in types
 
-	ID         string `json:"custom_field_id" bson:"custom_field_id" yaml:"custom_field_id" faker:"-"`
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
+	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -214,9 +213,6 @@ func (o *CustomField) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("CustomField", o.CustomerID, o.RefType, o.GetRefID())
 	}
-	if o.MongoID == "" {
-		o.MongoID = o.ID
-	}
 	return o.ID
 }
 
@@ -256,10 +252,10 @@ func (o *CustomField) GetTopicConfig() *datamodel.ModelTopicConfig {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "custom_field_id",
+		Key:               "id",
 		Timestamp:         "",
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		NumPartitions:     8,
+		ReplicationFactor: 3,
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
@@ -352,21 +348,22 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"custom_field_id": o.GetID(),
-		"ref_id":          o.GetRefID(),
-		"ref_type":        o.RefType,
-		"customer_id":     o.CustomerID,
-		"hashcode":        o.Hash(),
-		"name":            toCustomFieldObject(o.Name, isavro, false, "string"),
-		"key":             toCustomFieldObject(o.Key, isavro, false, "string"),
+		"id":          o.GetID(),
+		"ref_id":      o.GetRefID(),
+		"ref_type":    o.RefType,
+		"customer_id": o.CustomerID,
+		"hashcode":    o.Hash(),
+		"name":        toCustomFieldObject(o.Name, isavro, false, "string"),
+		"key":         toCustomFieldObject(o.Key, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *CustomField) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["custom_field_id"].(string); ok {
+	if val, ok := kv["id"].(string); ok {
 		o.ID = val
-		o.MongoID = val
+	} else if val, ok := kv["_id"].(string); ok {
+		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -423,7 +420,7 @@ func GetCustomFieldAvroSchemaSpec() string {
 		"connect.name": "work.CustomField",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "custom_field_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{

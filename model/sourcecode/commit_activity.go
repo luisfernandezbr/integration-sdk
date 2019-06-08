@@ -42,8 +42,7 @@ const CommitActivityModelName datamodel.ModelNameType = "sourcecode.CommitActivi
 type CommitActivity struct {
 	// built in types
 
-	ID         string `json:"commit_activity_id" bson:"commit_activity_id" yaml:"commit_activity_id" faker:"-"`
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
+	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -235,9 +234,6 @@ func (o *CommitActivity) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("CommitActivity", o.CustomerID, o.RefType, o.GetRefID())
 	}
-	if o.MongoID == "" {
-		o.MongoID = o.ID
-	}
 	return o.ID
 }
 
@@ -267,7 +263,7 @@ func (o *CommitActivity) GetModelMaterializeConfig() *datamodel.ModelMaterialize
 		panic(err)
 	}
 	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "commit_activity_id",
+		KeyName:   "id",
 		TableName: "sourcecode_commitactivity",
 		BatchSize: 5000,
 		IdleTime:  idletime,
@@ -288,8 +284,8 @@ func (o *CommitActivity) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
 		Timestamp:         "date_ts",
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		NumPartitions:     8,
+		ReplicationFactor: 3,
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
@@ -382,31 +378,32 @@ func (o *CommitActivity) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"commit_activity_id": o.GetID(),
-		"ref_id":             o.GetRefID(),
-		"ref_type":           o.RefType,
-		"customer_id":        o.CustomerID,
-		"hashcode":           o.Hash(),
-		"date_ts":            toCommitActivityObject(o.DateAt, isavro, false, "long"),
-		"blanks":             toCommitActivityObject(o.Blanks, isavro, false, "long"),
-		"comments":           toCommitActivityObject(o.Comments, isavro, false, "long"),
-		"filename":           toCommitActivityObject(o.Filename, isavro, false, "string"),
-		"sha":                toCommitActivityObject(o.Sha, isavro, false, "string"),
-		"language":           toCommitActivityObject(o.Language, isavro, false, "string"),
-		"loc":                toCommitActivityObject(o.Loc, isavro, false, "long"),
-		"ordinal":            toCommitActivityObject(o.Ordinal, isavro, false, "long"),
-		"repo_id":            toCommitActivityObject(o.RepoID, isavro, false, "string"),
-		"sloc":               toCommitActivityObject(o.Sloc, isavro, false, "long"),
-		"user_id":            toCommitActivityObject(o.UserID, isavro, false, "string"),
-		"complexity":         toCommitActivityObject(o.Complexity, isavro, false, "long"),
+		"id":          o.GetID(),
+		"ref_id":      o.GetRefID(),
+		"ref_type":    o.RefType,
+		"customer_id": o.CustomerID,
+		"hashcode":    o.Hash(),
+		"date_ts":     toCommitActivityObject(o.DateAt, isavro, false, "long"),
+		"blanks":      toCommitActivityObject(o.Blanks, isavro, false, "long"),
+		"comments":    toCommitActivityObject(o.Comments, isavro, false, "long"),
+		"filename":    toCommitActivityObject(o.Filename, isavro, false, "string"),
+		"sha":         toCommitActivityObject(o.Sha, isavro, false, "string"),
+		"language":    toCommitActivityObject(o.Language, isavro, false, "string"),
+		"loc":         toCommitActivityObject(o.Loc, isavro, false, "long"),
+		"ordinal":     toCommitActivityObject(o.Ordinal, isavro, false, "long"),
+		"repo_id":     toCommitActivityObject(o.RepoID, isavro, false, "string"),
+		"sloc":        toCommitActivityObject(o.Sloc, isavro, false, "long"),
+		"user_id":     toCommitActivityObject(o.UserID, isavro, false, "string"),
+		"complexity":  toCommitActivityObject(o.Complexity, isavro, false, "long"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *CommitActivity) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["commit_activity_id"].(string); ok {
+	if val, ok := kv["id"].(string); ok {
 		o.ID = val
-		o.MongoID = val
+	} else if val, ok := kv["_id"].(string); ok {
+		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -573,7 +570,7 @@ func GetCommitActivityAvroSchemaSpec() string {
 		"connect.name": "sourcecode.CommitActivity",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "commit_activity_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{

@@ -43,8 +43,7 @@ const UserModelName datamodel.ModelNameType = "customer.User"
 type User struct {
 	// built in types
 
-	ID         string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
+	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -242,9 +241,6 @@ func (o *User) GetID() string {
 		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.CustomerID, o.Email)
 	}
-	if o.MongoID == "" {
-		o.MongoID = o.ID
-	}
 	return o.ID
 }
 
@@ -274,7 +270,7 @@ func (o *User) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 		panic(err)
 	}
 	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "user_id",
+		KeyName:   "id",
 		TableName: "customer_user",
 		BatchSize: 5000,
 		IdleTime:  idletime,
@@ -293,10 +289,10 @@ func (o *User) GetTopicConfig() *datamodel.ModelTopicConfig {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "user_id",
+		Key:               "id",
 		Timestamp:         "",
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		NumPartitions:     8,
+		ReplicationFactor: 3,
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
@@ -389,7 +385,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"user_id":        o.GetID(),
+		"id":             o.GetID(),
 		"ref_id":         o.GetRefID(),
 		"ref_type":       o.RefType,
 		"customer_id":    o.CustomerID,
@@ -414,9 +410,10 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *User) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["user_id"].(string); ok {
+	if val, ok := kv["id"].(string); ok {
 		o.ID = val
-		o.MongoID = val
+	} else if val, ok := kv["_id"].(string); ok {
+		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -680,7 +677,7 @@ func GetUserAvroSchemaSpec() string {
 		"connect.name": "customer.User",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "user_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{

@@ -42,8 +42,7 @@ const CommitFileModelName datamodel.ModelNameType = "sourcecode.CommitFile"
 type CommitFile struct {
 	// built in types
 
-	ID         string `json:"commit_file_id" bson:"commit_file_id" yaml:"commit_file_id" faker:"-"`
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
+	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -259,9 +258,6 @@ func (o *CommitFile) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("CommitFile", o.CustomerID, o.RefType, o.GetRefID())
 	}
-	if o.MongoID == "" {
-		o.MongoID = o.ID
-	}
 	return o.ID
 }
 
@@ -291,7 +287,7 @@ func (o *CommitFile) GetModelMaterializeConfig() *datamodel.ModelMaterializeConf
 		panic(err)
 	}
 	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "commit_file_id",
+		KeyName:   "id",
 		TableName: "sourcecode_commitfile",
 		BatchSize: 5000,
 		IdleTime:  idletime,
@@ -312,8 +308,8 @@ func (o *CommitFile) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
 		Timestamp:         "created_ts",
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		NumPartitions:     8,
+		ReplicationFactor: 3,
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
@@ -406,7 +402,7 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"commit_file_id":     o.GetID(),
+		"id":                 o.GetID(),
 		"ref_id":             o.GetRefID(),
 		"ref_type":           o.RefType,
 		"customer_id":        o.CustomerID,
@@ -440,9 +436,10 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *CommitFile) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["commit_file_id"].(string); ok {
+	if val, ok := kv["id"].(string); ok {
 		o.ID = val
-		o.MongoID = val
+	} else if val, ok := kv["_id"].(string); ok {
+		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -741,7 +738,7 @@ func GetCommitFileAvroSchemaSpec() string {
 		"connect.name": "sourcecode.CommitFile",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "commit_file_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{

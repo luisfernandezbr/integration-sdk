@@ -42,8 +42,7 @@ const CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
 type Commit struct {
 	// built in types
 
-	ID         string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
+	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -249,9 +248,6 @@ func (o *Commit) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Commit", o.CustomerID, o.RefType, o.GetRefID())
 	}
-	if o.MongoID == "" {
-		o.MongoID = o.ID
-	}
 	return o.ID
 }
 
@@ -282,7 +278,7 @@ func (o *Commit) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 		panic(err)
 	}
 	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "commit_id",
+		KeyName:   "id",
 		TableName: "sourcecode_commit",
 		BatchSize: 5000,
 		IdleTime:  idletime,
@@ -303,8 +299,8 @@ func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
 		Timestamp:         "created_ts",
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		NumPartitions:     8,
+		ReplicationFactor: 3,
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
@@ -397,7 +393,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"commit_id":     o.GetID(),
+		"id":            o.GetID(),
 		"ref_id":        o.GetRefID(),
 		"ref_type":      o.RefType,
 		"customer_id":   o.CustomerID,
@@ -426,9 +422,10 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Commit) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["commit_id"].(string); ok {
+	if val, ok := kv["id"].(string); ok {
 		o.ID = val
-		o.MongoID = val
+	} else if val, ok := kv["_id"].(string); ok {
+		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -672,7 +669,7 @@ func GetCommitAvroSchemaSpec() string {
 		"connect.name": "sourcecode.Commit",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "commit_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{

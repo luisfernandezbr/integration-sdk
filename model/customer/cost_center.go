@@ -42,8 +42,7 @@ const CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
 type CostCenter struct {
 	// built in types
 
-	ID         string `json:"cost_center_id" bson:"cost_center_id" yaml:"cost_center_id" faker:"-"`
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
+	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -217,9 +216,6 @@ func (o *CostCenter) GetID() string {
 		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.CustomerID, o.Name)
 	}
-	if o.MongoID == "" {
-		o.MongoID = o.ID
-	}
 	return o.ID
 }
 
@@ -249,7 +245,7 @@ func (o *CostCenter) GetModelMaterializeConfig() *datamodel.ModelMaterializeConf
 		panic(err)
 	}
 	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "cost_center_id",
+		KeyName:   "id",
 		TableName: "customer_costcenter",
 		BatchSize: 5000,
 		IdleTime:  idletime,
@@ -268,10 +264,10 @@ func (o *CostCenter) GetTopicConfig() *datamodel.ModelTopicConfig {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "cost_center_id",
+		Key:               "id",
 		Timestamp:         "",
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		NumPartitions:     8,
+		ReplicationFactor: 3,
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
@@ -364,22 +360,23 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"cost_center_id": o.GetID(),
-		"ref_id":         o.GetRefID(),
-		"ref_type":       o.RefType,
-		"customer_id":    o.CustomerID,
-		"hashcode":       o.Hash(),
-		"name":           toCostCenterObject(o.Name, isavro, false, "string"),
-		"description":    toCostCenterObject(o.Description, isavro, false, "string"),
-		"cost":           toCostCenterObject(o.Cost, isavro, false, "float"),
+		"id":          o.GetID(),
+		"ref_id":      o.GetRefID(),
+		"ref_type":    o.RefType,
+		"customer_id": o.CustomerID,
+		"hashcode":    o.Hash(),
+		"name":        toCostCenterObject(o.Name, isavro, false, "string"),
+		"description": toCostCenterObject(o.Description, isavro, false, "string"),
+		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *CostCenter) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["cost_center_id"].(string); ok {
+	if val, ok := kv["id"].(string); ok {
 		o.ID = val
-		o.MongoID = val
+	} else if val, ok := kv["_id"].(string); ok {
+		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -493,7 +490,7 @@ func GetCostCenterAvroSchemaSpec() string {
 		"connect.name": "customer.CostCenter",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "cost_center_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{

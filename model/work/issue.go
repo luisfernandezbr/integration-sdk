@@ -43,8 +43,7 @@ const IssueModelName datamodel.ModelNameType = "work.Issue"
 type Issue struct {
 	// built in types
 
-	ID         string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
+	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -250,9 +249,6 @@ func (o *Issue) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Issue", o.CustomerID, o.RefType, o.GetRefID())
 	}
-	if o.MongoID == "" {
-		o.MongoID = o.ID
-	}
 	return o.ID
 }
 
@@ -294,8 +290,8 @@ func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return &datamodel.ModelTopicConfig{
 		Key:               "project_id",
 		Timestamp:         "updated_ts",
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		NumPartitions:     8,
+		ReplicationFactor: 3,
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
@@ -391,7 +387,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		}
 	}
 	return map[string]interface{}{
-		"issue_id":         o.GetID(),
+		"id":               o.GetID(),
 		"ref_id":           o.GetRefID(),
 		"ref_type":         o.RefType,
 		"customer_id":      o.CustomerID,
@@ -420,9 +416,10 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Issue) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["issue_id"].(string); ok {
+	if val, ok := kv["id"].(string); ok {
 		o.ID = val
-		o.MongoID = val
+	} else if val, ok := kv["_id"].(string); ok {
+		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -690,7 +687,7 @@ func GetIssueAvroSchemaSpec() string {
 		"connect.name": "work.Issue",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "issue_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{

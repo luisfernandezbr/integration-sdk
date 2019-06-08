@@ -42,8 +42,7 @@ const PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 type PullRequest struct {
 	// built in types
 
-	ID         string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
-	MongoID    string `json:"_id" bson:"_id" yaml:"_id" faker:"-"` // generated and used internally, do not set
+	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -231,9 +230,6 @@ func (o *PullRequest) GetID() string {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("PullRequest", o.CustomerID, o.RefType, o.GetRefID())
 	}
-	if o.MongoID == "" {
-		o.MongoID = o.ID
-	}
 	return o.ID
 }
 
@@ -263,7 +259,7 @@ func (o *PullRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeCon
 		panic(err)
 	}
 	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "pull_request_id",
+		KeyName:   "id",
 		TableName: "sourcecode_pullrequest",
 		BatchSize: 5000,
 		IdleTime:  idletime,
@@ -284,8 +280,8 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
 		Timestamp:         "updated_ts",
-		NumPartitions:     4,
-		ReplicationFactor: 1,
+		NumPartitions:     8,
+		ReplicationFactor: 3,
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
@@ -378,29 +374,30 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"pull_request_id": o.GetID(),
-		"ref_id":          o.GetRefID(),
-		"ref_type":        o.RefType,
-		"customer_id":     o.CustomerID,
-		"hashcode":        o.Hash(),
-		"repo_id":         toPullRequestObject(o.RepoID, isavro, false, "string"),
-		"title":           toPullRequestObject(o.Title, isavro, false, "string"),
-		"description":     toPullRequestObject(o.Description, isavro, false, "string"),
-		"url":             toPullRequestObject(o.URL, isavro, false, "string"),
-		"created_ts":      toPullRequestObject(o.CreatedAt, isavro, false, "long"),
-		"merged_ts":       toPullRequestObject(o.MergedAt, isavro, false, "long"),
-		"closed_ts":       toPullRequestObject(o.ClosedAt, isavro, false, "long"),
-		"updated_ts":      toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
-		"status":          toPullRequestObject(o.Status, isavro, false, "string"),
-		"user_ref_id":     toPullRequestObject(o.UserRefID, isavro, false, "string"),
+		"id":          o.GetID(),
+		"ref_id":      o.GetRefID(),
+		"ref_type":    o.RefType,
+		"customer_id": o.CustomerID,
+		"hashcode":    o.Hash(),
+		"repo_id":     toPullRequestObject(o.RepoID, isavro, false, "string"),
+		"title":       toPullRequestObject(o.Title, isavro, false, "string"),
+		"description": toPullRequestObject(o.Description, isavro, false, "string"),
+		"url":         toPullRequestObject(o.URL, isavro, false, "string"),
+		"created_ts":  toPullRequestObject(o.CreatedAt, isavro, false, "long"),
+		"merged_ts":   toPullRequestObject(o.MergedAt, isavro, false, "long"),
+		"closed_ts":   toPullRequestObject(o.ClosedAt, isavro, false, "long"),
+		"updated_ts":  toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
+		"status":      toPullRequestObject(o.Status, isavro, false, "string"),
+		"user_ref_id": toPullRequestObject(o.UserRefID, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequest) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["pull_request_id"].(string); ok {
+	if val, ok := kv["id"].(string); ok {
 		o.ID = val
-		o.MongoID = val
+	} else if val, ok := kv["_id"].(string); ok {
+		o.ID = val
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -545,7 +542,7 @@ func GetPullRequestAvroSchemaSpec() string {
 		"connect.name": "sourcecode.PullRequest",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "pull_request_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{
