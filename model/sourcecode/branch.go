@@ -625,7 +625,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"name": "branched_from_commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",
@@ -957,11 +957,16 @@ func NewBranchProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 				for k, v := range item.Headers() {
 					headers[k] = v
 				}
+				tv := item.Timestamp()
+				if tv.IsZero() {
+					tv = object.GetTimestamp() // if not provided in the message, use the objects value
+				}
 				msg := event.Message{
-					Key:     item.Key(),
-					Value:   binary,
-					Codec:   codec,
-					Headers: headers,
+					Key:       item.Key(),
+					Value:     binary,
+					Codec:     codec,
+					Headers:   headers,
+					Timestamp: item.Timestamp(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)

@@ -775,11 +775,16 @@ func NewRepoProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 				for k, v := range item.Headers() {
 					headers[k] = v
 				}
+				tv := item.Timestamp()
+				if tv.IsZero() {
+					tv = object.GetTimestamp() // if not provided in the message, use the objects value
+				}
 				msg := event.Message{
-					Key:     item.Key(),
-					Value:   binary,
-					Codec:   codec,
-					Headers: headers,
+					Key:       item.Key(),
+					Value:     binary,
+					Codec:     codec,
+					Headers:   headers,
+					Timestamp: item.Timestamp(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
