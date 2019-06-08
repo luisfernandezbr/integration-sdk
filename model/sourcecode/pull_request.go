@@ -242,6 +242,24 @@ func (o *PullRequest) GetTopicKey() string {
 	return fmt.Sprintf("%v", i)
 }
 
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *PullRequest) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for PullRequest")
+}
+
 // GetRefID returns the RefID for the object
 func (o *PullRequest) GetRefID() string {
 	return o.RefID

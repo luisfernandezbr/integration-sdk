@@ -261,6 +261,24 @@ func (o *Issue) GetTopicKey() string {
 	return fmt.Sprintf("%v", i)
 }
 
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Issue) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Issue")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Issue) GetRefID() string {
 	return o.RefID
@@ -772,7 +790,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "tags"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",

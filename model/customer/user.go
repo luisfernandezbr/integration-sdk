@@ -253,6 +253,11 @@ func (o *User) GetTopicKey() string {
 	return fmt.Sprintf("%v", i)
 }
 
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *User) GetTimestamp() time.Time {
+	return time.Now().UTC()
+}
+
 // GetRefID returns the RefID for the object
 func (o *User) GetRefID() string {
 	return o.RefID

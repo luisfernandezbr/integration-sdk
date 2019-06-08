@@ -230,6 +230,24 @@ func (o *Metric) GetTopicKey() string {
 	return fmt.Sprintf("%v", i)
 }
 
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Metric) GetTimestamp() time.Time {
+	var dt interface{} = o.DateAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Metric")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Metric) GetRefID() string {
 	return o.RefID

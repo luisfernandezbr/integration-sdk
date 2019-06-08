@@ -228,6 +228,11 @@ func (o *CostCenter) GetTopicKey() string {
 	return fmt.Sprintf("%v", i)
 }
 
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *CostCenter) GetTimestamp() time.Time {
+	return time.Now().UTC()
+}
+
 // GetRefID returns the RefID for the object
 func (o *CostCenter) GetRefID() string {
 	return o.RefID
