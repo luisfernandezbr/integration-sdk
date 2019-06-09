@@ -273,6 +273,12 @@ func (o *Sprint) IsEvented() bool {
 	return true
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Sprint) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = SprintModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 	duration, err := time.ParseDuration("168h0m0s")
@@ -287,6 +293,11 @@ func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
+}
+
+// GetCustomerID will return the customer_id
+func (o *Sprint) GetCustomerID() string {
+	return o.CustomerID
 }
 
 // Clone returns an exact copy of Sprint
@@ -852,10 +863,8 @@ func NewSprintProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
 					return
 				}
-				headers := map[string]string{
-					"customer_id": object.CustomerID,
-					"model":       SprintModelName.String(),
-				}
+				headers := map[string]string{}
+				object.SetEventHeaders(headers)
 				for k, v := range item.Headers() {
 					headers[k] = v
 				}

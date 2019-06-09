@@ -281,6 +281,12 @@ func (o *Changelog) IsEvented() bool {
 	return true
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Changelog) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = ChangelogModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 	duration, err := time.ParseDuration("168h0m0s")
@@ -295,6 +301,11 @@ func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
+}
+
+// GetCustomerID will return the customer_id
+func (o *Changelog) GetCustomerID() string {
+	return o.CustomerID
 }
 
 // Clone returns an exact copy of Changelog
@@ -918,10 +929,8 @@ func NewChangelogProducer(producer event.Producer, ch <-chan datamodel.ModelSend
 					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
 					return
 				}
-				headers := map[string]string{
-					"customer_id": object.CustomerID,
-					"model":       ChangelogModelName.String(),
-				}
+				headers := map[string]string{}
+				object.SetEventHeaders(headers)
 				for k, v := range item.Headers() {
 					headers[k] = v
 				}

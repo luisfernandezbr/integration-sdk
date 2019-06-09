@@ -260,6 +260,12 @@ func (o *Team) IsEvented() bool {
 	return true
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Team) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = TeamModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Team) GetTopicConfig() *datamodel.ModelTopicConfig {
 	duration, err := time.ParseDuration("168h0m0s")
@@ -274,6 +280,11 @@ func (o *Team) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
+}
+
+// GetCustomerID will return the customer_id
+func (o *Team) GetCustomerID() string {
+	return o.CustomerID
 }
 
 // Clone returns an exact copy of Team
@@ -818,10 +829,8 @@ func NewTeamProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
 					return
 				}
-				headers := map[string]string{
-					"customer_id": object.CustomerID,
-					"model":       TeamModelName.String(),
-				}
+				headers := map[string]string{}
+				object.SetEventHeaders(headers)
 				for k, v := range item.Headers() {
 					headers[k] = v
 				}

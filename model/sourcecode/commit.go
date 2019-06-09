@@ -70,6 +70,8 @@ type Commit struct {
 	FilesChanged int64 `json:"files_changed" bson:"files_changed" yaml:"files_changed" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
 	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	// CommitterRefID the committer ref_id in the source system
+	CommitterRefID string `json:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
 	// Ordinal the order of the commit in the commit stream
 	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
 	// Loc the number of lines in the commit
@@ -88,6 +90,8 @@ type Commit struct {
 	GpgSigned bool `json:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
 	// Excluded if the commit was excluded
 	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	// ExcludedReason the reason the commit was excluded
+	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -300,6 +304,12 @@ func (o *Commit) IsEvented() bool {
 	return true
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Commit) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CommitModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
 	duration, err := time.ParseDuration("168h0m0s")
@@ -314,6 +324,11 @@ func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Retention:         duration,
 		MaxSize:           5242880,
 	}
+}
+
+// GetCustomerID will return the customer_id
+func (o *Commit) GetCustomerID() string {
+	return o.CustomerID
 }
 
 // Clone returns an exact copy of Commit
@@ -403,30 +418,32 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":            o.GetID(),
-		"ref_id":        o.GetRefID(),
-		"ref_type":      o.RefType,
-		"customer_id":   o.CustomerID,
-		"hashcode":      o.Hash(),
-		"repo_id":       toCommitObject(o.RepoID, isavro, false, "string"),
-		"sha":           toCommitObject(o.Sha, isavro, false, "string"),
-		"message":       toCommitObject(o.Message, isavro, false, "string"),
-		"url":           toCommitObject(o.URL, isavro, false, "string"),
-		"created_ts":    toCommitObject(o.CreatedAt, isavro, false, "long"),
-		"branch":        toCommitObject(o.Branch, isavro, false, "string"),
-		"additions":     toCommitObject(o.Additions, isavro, false, "long"),
-		"deletions":     toCommitObject(o.Deletions, isavro, false, "long"),
-		"files_changed": toCommitObject(o.FilesChanged, isavro, false, "long"),
-		"author_ref_id": toCommitObject(o.AuthorRefID, isavro, false, "string"),
-		"ordinal":       toCommitObject(o.Ordinal, isavro, false, "long"),
-		"loc":           toCommitObject(o.Loc, isavro, false, "long"),
-		"sloc":          toCommitObject(o.Sloc, isavro, false, "long"),
-		"comments":      toCommitObject(o.Comments, isavro, false, "long"),
-		"blanks":        toCommitObject(o.Blanks, isavro, false, "long"),
-		"size":          toCommitObject(o.Size, isavro, false, "long"),
-		"complexity":    toCommitObject(o.Complexity, isavro, false, "long"),
-		"gpg_signed":    toCommitObject(o.GpgSigned, isavro, false, "boolean"),
-		"excluded":      toCommitObject(o.Excluded, isavro, false, "boolean"),
+		"id":               o.GetID(),
+		"ref_id":           o.GetRefID(),
+		"ref_type":         o.RefType,
+		"customer_id":      o.CustomerID,
+		"hashcode":         o.Hash(),
+		"repo_id":          toCommitObject(o.RepoID, isavro, false, "string"),
+		"sha":              toCommitObject(o.Sha, isavro, false, "string"),
+		"message":          toCommitObject(o.Message, isavro, false, "string"),
+		"url":              toCommitObject(o.URL, isavro, false, "string"),
+		"created_ts":       toCommitObject(o.CreatedAt, isavro, false, "long"),
+		"branch":           toCommitObject(o.Branch, isavro, false, "string"),
+		"additions":        toCommitObject(o.Additions, isavro, false, "long"),
+		"deletions":        toCommitObject(o.Deletions, isavro, false, "long"),
+		"files_changed":    toCommitObject(o.FilesChanged, isavro, false, "long"),
+		"author_ref_id":    toCommitObject(o.AuthorRefID, isavro, false, "string"),
+		"committer_ref_id": toCommitObject(o.CommitterRefID, isavro, false, "string"),
+		"ordinal":          toCommitObject(o.Ordinal, isavro, false, "long"),
+		"loc":              toCommitObject(o.Loc, isavro, false, "long"),
+		"sloc":             toCommitObject(o.Sloc, isavro, false, "long"),
+		"comments":         toCommitObject(o.Comments, isavro, false, "long"),
+		"blanks":           toCommitObject(o.Blanks, isavro, false, "long"),
+		"size":             toCommitObject(o.Size, isavro, false, "long"),
+		"complexity":       toCommitObject(o.Complexity, isavro, false, "long"),
+		"gpg_signed":       toCommitObject(o.GpgSigned, isavro, false, "boolean"),
+		"excluded":         toCommitObject(o.Excluded, isavro, false, "boolean"),
+		"excluded_reason":  toCommitObject(o.ExcludedReason, isavro, false, "string"),
 	}
 }
 
@@ -546,6 +563,16 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.AuthorRefID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["committer_ref_id"].(string); ok {
+		o.CommitterRefID = val
+	} else {
+		val := kv["committer_ref_id"]
+		if val == nil {
+			o.CommitterRefID = ""
+		} else {
+			o.CommitterRefID = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["ordinal"].(int64); ok {
 		o.Ordinal = val
 	} else {
@@ -636,6 +663,16 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.Excluded = number.ToBoolAny(val)
 		}
 	}
+	if val, ok := kv["excluded_reason"].(string); ok {
+		o.ExcludedReason = val
+	} else {
+		val := kv["excluded_reason"]
+		if val == nil {
+			o.ExcludedReason = ""
+		} else {
+			o.ExcludedReason = fmt.Sprintf("%v", val)
+		}
+	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -657,6 +694,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Deletions)
 	args = append(args, o.FilesChanged)
 	args = append(args, o.AuthorRefID)
+	args = append(args, o.CommitterRefID)
 	args = append(args, o.Ordinal)
 	args = append(args, o.Loc)
 	args = append(args, o.Sloc)
@@ -666,6 +704,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Complexity)
 	args = append(args, o.GpgSigned)
 	args = append(args, o.Excluded)
+	args = append(args, o.ExcludedReason)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -739,6 +778,10 @@ func GetCommitAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "committer_ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "ordinal",
 				"type": "long",
 			},
@@ -773,6 +816,10 @@ func GetCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "excluded",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "excluded_reason",
+				"type": "string",
 			},
 		},
 	}
@@ -1081,10 +1128,8 @@ func NewCommitProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
 					return
 				}
-				headers := map[string]string{
-					"customer_id": object.CustomerID,
-					"model":       CommitModelName.String(),
-				}
+				headers := map[string]string{}
+				object.SetEventHeaders(headers)
 				for k, v := range item.Headers() {
 					headers[k] = v
 				}
