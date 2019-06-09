@@ -177,6 +177,10 @@ func toBranchObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		return o
 	case *map[string]interface{}:
 		return v
+	case map[string]string:
+		return v
+	case *map[string]string:
+		return *v
 	case *Branch:
 		return v.ToMap()
 	case Branch:
@@ -636,7 +640,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"name": "branched_from_commits", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "commits",

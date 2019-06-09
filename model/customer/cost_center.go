@@ -164,6 +164,10 @@ func toCostCenterObject(o interface{}, isavro bool, isoptional bool, avrotype st
 		return o
 	case *map[string]interface{}:
 		return v
+	case map[string]string:
+		return v
+	case *map[string]string:
+		return *v
 	case *CostCenter:
 		return v.ToMap()
 	case CostCenter:

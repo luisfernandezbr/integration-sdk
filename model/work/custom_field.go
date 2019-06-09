@@ -161,6 +161,10 @@ func toCustomFieldObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		return o
 	case *map[string]interface{}:
 		return v
+	case map[string]string:
+		return v
+	case *map[string]string:
+		return *v
 	case *CustomField:
 		return v.ToMap()
 	case CustomField:

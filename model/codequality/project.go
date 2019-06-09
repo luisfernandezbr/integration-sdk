@@ -161,6 +161,10 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		return o
 	case *map[string]interface{}:
 		return v
+	case map[string]string:
+		return v
+	case *map[string]string:
+		return *v
 	case *Project:
 		return v.ToMap()
 	case Project:

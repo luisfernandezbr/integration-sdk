@@ -183,6 +183,10 @@ func toCommitActivityObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		return o
 	case *map[string]interface{}:
 		return v
+	case map[string]string:
+		return v
+	case *map[string]string:
+		return *v
 	case *CommitActivity:
 		return v.ToMap()
 	case CommitActivity:
