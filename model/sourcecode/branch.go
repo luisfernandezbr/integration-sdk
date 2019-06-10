@@ -644,7 +644,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"name": "commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "commits"},
 			},
 			map[string]interface{}{
 				"name": "behind_default_count",
