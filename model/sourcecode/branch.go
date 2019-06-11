@@ -230,6 +230,7 @@ func (o *Branch) setDefaults() {
 // GetID returns the ID for the object
 func (o *Branch) GetID() string {
 	if o.ID == "" {
+
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Branch", o.CustomerID, o.RefType, o.GetRefID())
 	}
@@ -644,7 +645,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+				"type": map[string]interface{}{"name": "commits", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "behind_default_count",

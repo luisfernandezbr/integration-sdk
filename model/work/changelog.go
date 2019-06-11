@@ -232,6 +232,7 @@ func (o *Changelog) setDefaults() {
 // GetID returns the ID for the object
 func (o *Changelog) GetID() string {
 	if o.ID == "" {
+
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Changelog", o.CustomerID, o.RefType, o.GetRefID())
 	}

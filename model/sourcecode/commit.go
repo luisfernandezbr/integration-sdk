@@ -254,6 +254,7 @@ func (o *Commit) setDefaults() {
 // GetID returns the ID for the object
 func (o *Commit) GetID() string {
 	if o.ID == "" {
+
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Commit", o.CustomerID, o.RefType, o.GetRefID())
 	}
