@@ -23,6 +23,8 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 // ProjectTopic is the default topic name
@@ -49,11 +51,17 @@ type Project struct {
 	// custom types
 
 	// Name the name of the project
-	Name string `json:"name" bson:"name" yaml:"name" faker:"project"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Identifier the common identifier for the project
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
+	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// URL the url to the project home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	// Description the description of the project
+	Description string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
+	// Category the project category
+	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
+	// Active the status of the project
+	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -216,7 +224,6 @@ func (o *Project) setDefaults() {
 // GetID returns the ID for the object
 func (o *Project) GetID() string {
 	if o.ID == "" {
-
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Project", o.CustomerID, o.RefType, o.GetRefID())
 	}
@@ -388,6 +395,9 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 		"name":        toProjectObject(o.Name, isavro, false, "string"),
 		"identifier":  toProjectObject(o.Identifier, isavro, false, "string"),
 		"url":         toProjectObject(o.URL, isavro, false, "string"),
+		"description": toProjectObject(o.Description, isavro, false, "string"),
+		"category":    toProjectObject(o.Category, isavro, true, "string"),
+		"active":      toProjectObject(o.Active, isavro, false, "boolean"),
 	}
 }
 
@@ -437,6 +447,38 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		val := kv["description"]
+		if val == nil {
+			o.Description = ""
+		} else {
+			o.Description = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["category"].(*string); ok {
+		o.Category = val
+	} else if val, ok := kv["category"].(string); ok {
+		o.Category = &val
+	} else {
+		val := kv["category"]
+		if val == nil {
+			o.Category = pstrings.Pointer("")
+		} else {
+			o.Category = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		val := kv["active"]
+		if val == nil {
+			o.Active = number.ToBoolAny(nil)
+		} else {
+			o.Active = number.ToBoolAny(val)
+		}
+	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -451,6 +493,9 @@ func (o *Project) Hash() string {
 	args = append(args, o.Name)
 	args = append(args, o.Identifier)
 	args = append(args, o.URL)
+	args = append(args, o.Description)
+	args = append(args, o.Category)
+	args = append(args, o.Active)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -494,6 +539,19 @@ func GetProjectAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "url",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "description",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name":    "category",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "active",
+				"type": "boolean",
 			},
 		},
 	}

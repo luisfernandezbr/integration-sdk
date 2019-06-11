@@ -220,7 +220,6 @@ func (o *Metric) setDefaults() {
 // GetID returns the ID for the object
 func (o *Metric) GetID() string {
 	if o.ID == "" {
-
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Metric", o.CustomerID, o.RefType, o.GetRefID())
 	}

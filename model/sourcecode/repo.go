@@ -214,7 +214,6 @@ func (o *Repo) setDefaults() {
 // GetID returns the ID for the object
 func (o *Repo) GetID() string {
 	if o.ID == "" {
-
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Repo", o.CustomerID, o.RefType, o.GetRefID())
 	}

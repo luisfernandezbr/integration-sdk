@@ -251,7 +251,6 @@ func (o *Issue) setDefaults() {
 // GetID returns the ID for the object
 func (o *Issue) GetID() string {
 	if o.ID == "" {
-
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("Issue", o.CustomerID, o.RefType, o.GetRefID())
 	}
@@ -807,7 +806,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",
