@@ -501,6 +501,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.CommitID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.CommitID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -511,6 +514,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.RepoID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -521,6 +527,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Filename = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Filename = fmt.Sprintf("%v", val)
 		}
 	}
@@ -551,6 +560,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Status = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Status = fmt.Sprintf("%v", val)
 		}
 	}
@@ -571,6 +583,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Language = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Language = fmt.Sprintf("%v", val)
 		}
 	}
@@ -591,6 +606,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ExcludedReason = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.ExcludedReason = fmt.Sprintf("%v", val)
 		}
 	}
@@ -661,6 +679,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.License = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.License = fmt.Sprintf("%v", val)
 		}
 	}
@@ -691,6 +712,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.RenamedFrom = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.RenamedFrom = fmt.Sprintf("%v", val)
 		}
 	}
@@ -701,6 +725,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.RenamedTo = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.RenamedTo = fmt.Sprintf("%v", val)
 		}
 	}
@@ -721,6 +748,9 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.SkippedReason = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.SkippedReason = fmt.Sprintf("%v", val)
 		}
 	}

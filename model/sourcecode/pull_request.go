@@ -449,6 +449,9 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.RepoID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -459,6 +462,9 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Title = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Title = fmt.Sprintf("%v", val)
 		}
 	}
@@ -469,6 +475,9 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Description = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Description = fmt.Sprintf("%v", val)
 		}
 	}
@@ -479,6 +488,9 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.URL = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
@@ -529,6 +541,9 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Status = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Status = fmt.Sprintf("%v", val)
 		}
 	}
@@ -539,6 +554,9 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.UserRefID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.UserRefID = fmt.Sprintf("%v", val)
 		}
 	}

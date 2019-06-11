@@ -568,6 +568,9 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Date = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Date = fmt.Sprintf("%v", val)
 		}
 	}
@@ -578,6 +581,9 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.RepoID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -588,6 +594,9 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Filename = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Filename = fmt.Sprintf("%v", val)
 		}
 	}
@@ -598,6 +607,9 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Language = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Language = fmt.Sprintf("%v", val)
 		}
 	}
@@ -668,6 +680,9 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Sha = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Sha = fmt.Sprintf("%v", val)
 		}
 	}
@@ -678,6 +693,9 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.CommitID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.CommitID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -698,6 +716,9 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ExcludedReason = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.ExcludedReason = fmt.Sprintf("%v", val)
 		}
 	}
@@ -725,26 +746,20 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			switch ev {
 			case "added":
 				o.Status = 0
-				return
 			case "modified":
 				o.Status = 1
-				return
 			case "removed":
 				o.Status = 2
-				return
 			}
 		}
 		if em, ok := kv["status"].(string); ok {
 			switch em {
 			case "added":
 				o.Status = 0
-				return
 			case "modified":
 				o.Status = 1
-				return
 			case "removed":
 				o.Status = 2
-				return
 			}
 		}
 	}
@@ -916,7 +931,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the sha when this line was last changed", "type": "string", "name": "sha"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"name": "date", "doc": "the change date in RFC3339 format of this line when last changed", "type": "string"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions", "type": "record"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions", "type": "record"}},
 			},
 		},
 	}

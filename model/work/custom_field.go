@@ -401,6 +401,9 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Name = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
@@ -411,6 +414,9 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Key = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Key = fmt.Sprintf("%v", val)
 		}
 	}

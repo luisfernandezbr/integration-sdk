@@ -439,6 +439,9 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Name = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
@@ -469,6 +472,9 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.MergeCommit = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.MergeCommit = fmt.Sprintf("%v", val)
 		}
 	}
@@ -567,6 +573,9 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.RepoID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -640,7 +649,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
 			},
 			map[string]interface{}{
 				"name": "commits",

@@ -471,6 +471,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Title = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Title = fmt.Sprintf("%v", val)
 		}
 	}
@@ -481,6 +484,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Identifier = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Identifier = fmt.Sprintf("%v", val)
 		}
 	}
@@ -491,6 +497,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ProjectID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.ProjectID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -501,6 +510,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.URL = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
@@ -561,6 +573,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Priority = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Priority = fmt.Sprintf("%v", val)
 		}
 	}
@@ -571,6 +586,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Type = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Type = fmt.Sprintf("%v", val)
 		}
 	}
@@ -581,6 +599,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Status = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Status = fmt.Sprintf("%v", val)
 		}
 	}
@@ -591,6 +612,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.CreatorRefID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.CreatorRefID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -601,6 +625,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ReporterRefID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.ReporterRefID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -611,6 +638,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.AssigneeRefID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.AssigneeRefID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -621,6 +651,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.AuthorRefID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.AuthorRefID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -665,6 +698,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ParentID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.ParentID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -675,6 +711,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Resolution = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Resolution = fmt.Sprintf("%v", val)
 		}
 	}
@@ -806,7 +845,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "tags"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",

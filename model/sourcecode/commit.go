@@ -474,6 +474,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.RepoID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -484,6 +487,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Sha = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Sha = fmt.Sprintf("%v", val)
 		}
 	}
@@ -494,6 +500,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Message = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Message = fmt.Sprintf("%v", val)
 		}
 	}
@@ -504,6 +513,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.URL = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
@@ -524,6 +536,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Created = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Created = fmt.Sprintf("%v", val)
 		}
 	}
@@ -534,6 +549,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Branch = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Branch = fmt.Sprintf("%v", val)
 		}
 	}
@@ -574,6 +592,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.AuthorRefID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.AuthorRefID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -584,6 +605,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.CommitterRefID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.CommitterRefID = fmt.Sprintf("%v", val)
 		}
 	}

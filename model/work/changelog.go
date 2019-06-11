@@ -440,6 +440,9 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.IssueID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.IssueID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -470,6 +473,9 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.UserID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.UserID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -480,6 +486,9 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Field = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Field = fmt.Sprintf("%v", val)
 		}
 	}
@@ -490,6 +499,9 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.FieldType = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.FieldType = fmt.Sprintf("%v", val)
 		}
 	}
@@ -500,6 +512,9 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.From = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.From = fmt.Sprintf("%v", val)
 		}
 	}
@@ -510,6 +525,9 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.FromString = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.FromString = fmt.Sprintf("%v", val)
 		}
 	}
@@ -520,6 +538,9 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.To = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.To = fmt.Sprintf("%v", val)
 		}
 	}
@@ -530,6 +551,9 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ToString = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.ToString = fmt.Sprintf("%v", val)
 		}
 	}

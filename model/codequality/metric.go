@@ -432,6 +432,9 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ProjectID = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.ProjectID = fmt.Sprintf("%v", val)
 		}
 	}
@@ -442,6 +445,9 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Name = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
@@ -452,6 +458,9 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Value = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Value = fmt.Sprintf("%v", val)
 		}
 	}

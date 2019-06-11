@@ -410,6 +410,9 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Name = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
@@ -420,6 +423,9 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.URL = ""
 		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
 			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
