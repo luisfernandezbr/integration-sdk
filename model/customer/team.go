@@ -423,6 +423,10 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ParentID = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.ParentID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}

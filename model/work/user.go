@@ -417,6 +417,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.AvatarURL = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
@@ -429,6 +433,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Email = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.Email = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}

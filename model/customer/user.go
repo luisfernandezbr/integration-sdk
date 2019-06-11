@@ -473,6 +473,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Title = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.Title = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
@@ -485,6 +489,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Location = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.Location = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
@@ -497,6 +505,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.AvatarURL = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
@@ -509,6 +521,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.ManagerID = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.ManagerID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
@@ -561,6 +577,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.DeletedAt = number.Int64Pointer(number.ToInt64Any(nil))
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["int64"]
+			}
 			o.DeletedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
 	}
@@ -573,6 +593,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.HiredAt = number.Int64Pointer(number.ToInt64Any(nil))
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["int64"]
+			}
 			o.HiredAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
 	}
@@ -585,6 +609,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.TerminatedAt = number.Int64Pointer(number.ToInt64Any(nil))
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["int64"]
+			}
 			o.TerminatedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
 	}
@@ -597,6 +625,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.CostCenterID = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.CostCenterID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
@@ -609,6 +641,10 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.TeamID = pstrings.Pointer("")
 		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
 			o.TeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
