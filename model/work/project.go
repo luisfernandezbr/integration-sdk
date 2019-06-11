@@ -51,9 +51,9 @@ type Project struct {
 	// custom types
 
 	// Name the name of the project
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"project"`
 	// Identifier the common identifier for the project
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
 	// URL the url to the project home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Description the description of the project
