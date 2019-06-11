@@ -135,8 +135,10 @@ type Blame struct {
 	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
 	// CommitID the commit ID
 	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
-	// Skipped if the result was skipped
-	Skipped bool `json:"skipped" bson:"skipped" yaml:"skipped" faker:"-"`
+	// Excluded if the result was excluded
+	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	// ExcludedReason why the result was excluded
+	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
 	// License if a license was detected in the file, what was the license SPDX
 	License *string `json:"license" bson:"license" yaml:"license" faker:"-"`
 	// Status the status of the change
@@ -507,28 +509,29 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 		}
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"date_ts":     toBlameObject(o.DateAt, isavro, false, "long"),
-		"date":        toBlameObject(o.Date, isavro, false, "string"),
-		"repo_id":     toBlameObject(o.RepoID, isavro, false, "string"),
-		"filename":    toBlameObject(o.Filename, isavro, false, "string"),
-		"language":    toBlameObject(o.Language, isavro, false, "string"),
-		"size":        toBlameObject(o.Size, isavro, false, "long"),
-		"loc":         toBlameObject(o.Loc, isavro, false, "long"),
-		"sloc":        toBlameObject(o.Sloc, isavro, false, "long"),
-		"blanks":      toBlameObject(o.Blanks, isavro, false, "long"),
-		"comments":    toBlameObject(o.Comments, isavro, false, "long"),
-		"complexity":  toBlameObject(o.Complexity, isavro, false, "long"),
-		"sha":         toBlameObject(o.Sha, isavro, false, "string"),
-		"commit_id":   toBlameObject(o.CommitID, isavro, false, "string"),
-		"skipped":     toBlameObject(o.Skipped, isavro, false, "boolean"),
-		"license":     toBlameObject(o.License, isavro, true, "string"),
-		"status":      toBlameObject(o.Status, isavro, false, "status"),
-		"lines":       toBlameObject(o.Lines, isavro, false, "lines"),
+		"id":              o.GetID(),
+		"ref_id":          o.GetRefID(),
+		"ref_type":        o.RefType,
+		"customer_id":     o.CustomerID,
+		"hashcode":        o.Hash(),
+		"date_ts":         toBlameObject(o.DateAt, isavro, false, "long"),
+		"date":            toBlameObject(o.Date, isavro, false, "string"),
+		"repo_id":         toBlameObject(o.RepoID, isavro, false, "string"),
+		"filename":        toBlameObject(o.Filename, isavro, false, "string"),
+		"language":        toBlameObject(o.Language, isavro, false, "string"),
+		"size":            toBlameObject(o.Size, isavro, false, "long"),
+		"loc":             toBlameObject(o.Loc, isavro, false, "long"),
+		"sloc":            toBlameObject(o.Sloc, isavro, false, "long"),
+		"blanks":          toBlameObject(o.Blanks, isavro, false, "long"),
+		"comments":        toBlameObject(o.Comments, isavro, false, "long"),
+		"complexity":      toBlameObject(o.Complexity, isavro, false, "long"),
+		"sha":             toBlameObject(o.Sha, isavro, false, "string"),
+		"commit_id":       toBlameObject(o.CommitID, isavro, false, "string"),
+		"excluded":        toBlameObject(o.Excluded, isavro, false, "boolean"),
+		"excluded_reason": toBlameObject(o.ExcludedReason, isavro, false, "string"),
+		"license":         toBlameObject(o.License, isavro, true, "string"),
+		"status":          toBlameObject(o.Status, isavro, false, "status"),
+		"lines":           toBlameObject(o.Lines, isavro, false, "lines"),
 	}
 }
 
@@ -678,14 +681,24 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			o.CommitID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["skipped"].(bool); ok {
-		o.Skipped = val
+	if val, ok := kv["excluded"].(bool); ok {
+		o.Excluded = val
 	} else {
-		val := kv["skipped"]
+		val := kv["excluded"]
 		if val == nil {
-			o.Skipped = number.ToBoolAny(nil)
+			o.Excluded = number.ToBoolAny(nil)
 		} else {
-			o.Skipped = number.ToBoolAny(val)
+			o.Excluded = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["excluded_reason"].(string); ok {
+		o.ExcludedReason = val
+	} else {
+		val := kv["excluded_reason"]
+		if val == nil {
+			o.ExcludedReason = ""
+		} else {
+			o.ExcludedReason = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["license"].(*string); ok {
@@ -789,7 +802,8 @@ func (o *Blame) Hash() string {
 	args = append(args, o.Complexity)
 	args = append(args, o.Sha)
 	args = append(args, o.CommitID)
-	args = append(args, o.Skipped)
+	args = append(args, o.Excluded)
+	args = append(args, o.ExcludedReason)
 	args = append(args, o.License)
 	args = append(args, o.Status)
 	args = append(args, o.Lines)
@@ -878,8 +892,12 @@ func GetBlameAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "skipped",
+				"name": "excluded",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "excluded_reason",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name":    "license",
@@ -898,7 +916,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the sha when this line was last changed", "type": "string", "name": "sha"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"name": "date", "doc": "the change date in RFC3339 format of this line when last changed", "type": "string"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions", "type": "record"}},
 			},
 		},
 	}
