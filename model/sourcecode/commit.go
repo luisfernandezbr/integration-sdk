@@ -60,6 +60,8 @@ type Commit struct {
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// CreatedAt the timestamp in UTC that the commit was created
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Created date in rfc3339 format
+	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// Branch the branch that the commit was made to
 	Branch string `json:"branch" bson:"branch" yaml:"branch" faker:"-"`
 	// Additions the number of additions for the commit
@@ -90,8 +92,6 @@ type Commit struct {
 	GpgSigned bool `json:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
 	// Excluded if the commit was excluded
 	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
-	// ExcludedReason the reason the commit was excluded
-	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -432,6 +432,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"message":          toCommitObject(o.Message, isavro, false, "string"),
 		"url":              toCommitObject(o.URL, isavro, false, "string"),
 		"created_ts":       toCommitObject(o.CreatedAt, isavro, false, "long"),
+		"created":          toCommitObject(o.Created, isavro, false, "string"),
 		"branch":           toCommitObject(o.Branch, isavro, false, "string"),
 		"additions":        toCommitObject(o.Additions, isavro, false, "long"),
 		"deletions":        toCommitObject(o.Deletions, isavro, false, "long"),
@@ -447,7 +448,6 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"complexity":       toCommitObject(o.Complexity, isavro, false, "long"),
 		"gpg_signed":       toCommitObject(o.GpgSigned, isavro, false, "boolean"),
 		"excluded":         toCommitObject(o.Excluded, isavro, false, "boolean"),
-		"excluded_reason":  toCommitObject(o.ExcludedReason, isavro, false, "string"),
 	}
 }
 
@@ -515,6 +515,16 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.CreatedAt = number.ToInt64Any(nil)
 		} else {
 			o.CreatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["created"].(string); ok {
+		o.Created = val
+	} else {
+		val := kv["created"]
+		if val == nil {
+			o.Created = ""
+		} else {
+			o.Created = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["branch"].(string); ok {
@@ -667,16 +677,6 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.Excluded = number.ToBoolAny(val)
 		}
 	}
-	if val, ok := kv["excluded_reason"].(string); ok {
-		o.ExcludedReason = val
-	} else {
-		val := kv["excluded_reason"]
-		if val == nil {
-			o.ExcludedReason = ""
-		} else {
-			o.ExcludedReason = fmt.Sprintf("%v", val)
-		}
-	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -693,6 +693,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Message)
 	args = append(args, o.URL)
 	args = append(args, o.CreatedAt)
+	args = append(args, o.Created)
 	args = append(args, o.Branch)
 	args = append(args, o.Additions)
 	args = append(args, o.Deletions)
@@ -708,7 +709,6 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Complexity)
 	args = append(args, o.GpgSigned)
 	args = append(args, o.Excluded)
-	args = append(args, o.ExcludedReason)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -760,6 +760,10 @@ func GetCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "created_ts",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "created",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "branch",
@@ -820,10 +824,6 @@ func GetCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "excluded",
 				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "excluded_reason",
-				"type": "string",
 			},
 		},
 	}

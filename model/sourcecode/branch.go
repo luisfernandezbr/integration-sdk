@@ -57,7 +57,7 @@ type Branch struct {
 	// Merged wether it has been merged
 	Merged bool `json:"merged" bson:"merged" yaml:"merged" faker:"-"`
 	// MergeCommit commit from the merge
-	MergeCommit bool `json:"merge_commit" bson:"merge_commit" yaml:"merge_commit" faker:"-"`
+	MergeCommit string `json:"merge_commit" bson:"merge_commit" yaml:"merge_commit" faker:"-"`
 	// BranchedFromCommits branched from commits
 	BranchedFromCommits []string `json:"branched_from_commits" bson:"branched_from_commits" yaml:"branched_from_commits" faker:"-"`
 	// Commits list of commits on this branch
@@ -407,7 +407,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"name":                  toBranchObject(o.Name, isavro, false, "string"),
 		"default":               toBranchObject(o.Default, isavro, false, "boolean"),
 		"merged":                toBranchObject(o.Merged, isavro, false, "boolean"),
-		"merge_commit":          toBranchObject(o.MergeCommit, isavro, false, "boolean"),
+		"merge_commit":          toBranchObject(o.MergeCommit, isavro, false, "string"),
 		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro, false, "branched_from_commits"),
 		"commits":               toBranchObject(o.Commits, isavro, false, "commits"),
 		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
@@ -462,14 +462,14 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			o.Merged = number.ToBoolAny(val)
 		}
 	}
-	if val, ok := kv["merge_commit"].(bool); ok {
+	if val, ok := kv["merge_commit"].(string); ok {
 		o.MergeCommit = val
 	} else {
 		val := kv["merge_commit"]
 		if val == nil {
-			o.MergeCommit = number.ToBoolAny(nil)
+			o.MergeCommit = ""
 		} else {
-			o.MergeCommit = number.ToBoolAny(val)
+			o.MergeCommit = fmt.Sprintf("%v", val)
 		}
 	}
 	if val := kv["branched_from_commits"]; val != nil {
@@ -636,11 +636,11 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "merge_commit",
-				"type": "boolean",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
 			},
 			map[string]interface{}{
 				"name": "commits",
