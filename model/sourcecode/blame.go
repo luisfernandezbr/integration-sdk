@@ -67,9 +67,11 @@ const (
 
 // BlameLines represents the object structure for lines
 type BlameLines struct {
-	// AuthorRefID the author ref_id
+	// Sha the sha when this line was last changed
+	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
+	// AuthorRefID the author ref_id of this line when last changed
 	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
-	// Date the change data in RFC3339 format
+	// Date the change date in RFC3339 format of this line when last changed
 	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Comment if the line is a comment
 	Comment bool `json:"comment" bson:"comment" yaml:"comment" faker:"-"`
@@ -81,9 +83,11 @@ type BlameLines struct {
 
 func (o *BlameLines) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		// AuthorRefID the author ref_id
+		// Sha the sha when this line was last changed
+		"sha": o.Sha,
+		// AuthorRefID the author ref_id of this line when last changed
 		"author_ref_id": o.AuthorRefID,
-		// Date the change data in RFC3339 format
+		// Date the change date in RFC3339 format of this line when last changed
 		"date": o.Date,
 		// Comment if the line is a comment
 		"comment": o.Comment,
@@ -890,7 +894,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change data in RFC3339 format"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"doc": "the individual line attributions", "type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"name": "code", "doc": "if the line is sourcecode", "type": "boolean"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}}},
 			},
 		},
 	}
