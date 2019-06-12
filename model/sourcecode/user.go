@@ -55,6 +55,10 @@ type User struct {
 	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// Email the email for the user
 	Email *string `json:"email" bson:"email" yaml:"email" faker:"email"`
+	// Username username of the user
+	Username *string `json:"username" bson:"username" yaml:"username" faker:"username"`
+	// AssociatedRefID the ref id associated for this user in another system
+	AssociatedRefID *string `json:"associated_ref_id" bson:"associated_ref_id" yaml:"associated_ref_id" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -380,14 +384,16 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"name":        toUserObject(o.Name, isavro, false, "string"),
-		"avatar_url":  toUserObject(o.AvatarURL, isavro, true, "string"),
-		"email":       toUserObject(o.Email, isavro, true, "string"),
+		"id":                o.GetID(),
+		"ref_id":            o.GetRefID(),
+		"ref_type":          o.RefType,
+		"customer_id":       o.CustomerID,
+		"hashcode":          o.Hash(),
+		"name":              toUserObject(o.Name, isavro, false, "string"),
+		"avatar_url":        toUserObject(o.AvatarURL, isavro, true, "string"),
+		"email":             toUserObject(o.Email, isavro, true, "string"),
+		"username":          toUserObject(o.Username, isavro, true, "string"),
+		"associated_ref_id": toUserObject(o.AssociatedRefID, isavro, true, "string"),
 	}
 }
 
@@ -452,6 +458,38 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Email = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+	if val, ok := kv["username"].(*string); ok {
+		o.Username = val
+	} else if val, ok := kv["username"].(string); ok {
+		o.Username = &val
+	} else {
+		val := kv["username"]
+		if val == nil {
+			o.Username = pstrings.Pointer("")
+		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
+			o.Username = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["associated_ref_id"].(*string); ok {
+		o.AssociatedRefID = val
+	} else if val, ok := kv["associated_ref_id"].(string); ok {
+		o.AssociatedRefID = &val
+	} else {
+		val := kv["associated_ref_id"]
+		if val == nil {
+			o.AssociatedRefID = pstrings.Pointer("")
+		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
+			o.AssociatedRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -466,6 +504,8 @@ func (o *User) Hash() string {
 	args = append(args, o.Name)
 	args = append(args, o.AvatarURL)
 	args = append(args, o.Email)
+	args = append(args, o.Username)
+	args = append(args, o.AssociatedRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -509,6 +549,16 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name":    "email",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
+			},
+			map[string]interface{}{
+				"name":    "username",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
+			},
+			map[string]interface{}{
+				"name":    "associated_ref_id",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
 			},
