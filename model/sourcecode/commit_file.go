@@ -96,8 +96,6 @@ type CommitFile struct {
 	RenamedTo string `json:"renamed_to" bson:"renamed_to" yaml:"renamed_to" faker:"-"`
 	// Size the size of the file
 	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
-	// SkippedReason the reason why the file was skipped
-	SkippedReason string `json:"skipped_reason" bson:"skipped_reason" yaml:"skipped_reason" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -464,7 +462,6 @@ func (o *CommitFile) ToMap(avro ...bool) map[string]interface{} {
 		"renamed_from":       toCommitFileObject(o.RenamedFrom, isavro, false, "string"),
 		"renamed_to":         toCommitFileObject(o.RenamedTo, isavro, false, "string"),
 		"size":               toCommitFileObject(o.Size, isavro, false, "long"),
-		"skipped_reason":     toCommitFileObject(o.SkippedReason, isavro, false, "string"),
 	}
 }
 
@@ -741,19 +738,6 @@ func (o *CommitFile) FromMap(kv map[string]interface{}) {
 			o.Size = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["skipped_reason"].(string); ok {
-		o.SkippedReason = val
-	} else {
-		val := kv["skipped_reason"]
-		if val == nil {
-			o.SkippedReason = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.SkippedReason = fmt.Sprintf("%v", val)
-		}
-	}
 	// make sure that these have values if empty
 	o.setDefaults()
 }
@@ -788,7 +772,6 @@ func (o *CommitFile) Hash() string {
 	args = append(args, o.RenamedFrom)
 	args = append(args, o.RenamedTo)
 	args = append(args, o.Size)
-	args = append(args, o.SkippedReason)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -912,10 +895,6 @@ func GetCommitFileAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "size",
 				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "skipped_reason",
-				"type": "string",
 			},
 		},
 	}
