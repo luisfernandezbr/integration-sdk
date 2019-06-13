@@ -54,6 +54,8 @@ type Changelog struct {
 	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
 	// CreatedAt the timestamp in UTC when this change was created
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Created date in rfc3339 format
+	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// Ordinal so we can order correctly in queries since dates could be equal
 	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
 	// UserID id of the user of this change
@@ -406,6 +408,7 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 		"hashcode":    o.Hash(),
 		"issue_id":    toChangelogObject(o.IssueID, isavro, false, "string"),
 		"created_ts":  toChangelogObject(o.CreatedAt, isavro, false, "long"),
+		"created":     toChangelogObject(o.Created, isavro, false, "string"),
 		"ordinal":     toChangelogObject(o.Ordinal, isavro, false, "long"),
 		"user_id":     toChangelogObject(o.UserID, isavro, false, "string"),
 		"field":       toChangelogObject(o.Field, isavro, false, "string"),
@@ -454,6 +457,19 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 			o.CreatedAt = number.ToInt64Any(nil)
 		} else {
 			o.CreatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["created"].(string); ok {
+		o.Created = val
+	} else {
+		val := kv["created"]
+		if val == nil {
+			o.Created = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Created = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["ordinal"].(int64); ok {
@@ -570,6 +586,7 @@ func (o *Changelog) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.IssueID)
 	args = append(args, o.CreatedAt)
+	args = append(args, o.Created)
 	args = append(args, o.Ordinal)
 	args = append(args, o.UserID)
 	args = append(args, o.Field)
@@ -617,6 +634,10 @@ func GetChangelogAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "created_ts",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "created",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "ordinal",
