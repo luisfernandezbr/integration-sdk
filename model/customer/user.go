@@ -62,6 +62,8 @@ type User struct {
 	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// ManagerID the manager user id
 	ManagerID *string `json:"manager_id" bson:"manager_id" yaml:"manager_id" faker:"-"`
+	// Owner if true, the user is an owner of the account
+	Owner bool `json:"owner" bson:"owner" yaml:"owner" faker:"-"`
 	// Active if true, the user is active and able to login
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Trackable if true, the user is trackable in the pinpoint system
@@ -416,6 +418,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"location":       toUserObject(o.Location, isavro, true, "string"),
 		"avatar_url":     toUserObject(o.AvatarURL, isavro, true, "string"),
 		"manager_id":     toUserObject(o.ManagerID, isavro, true, "string"),
+		"owner":          toUserObject(o.Owner, isavro, false, "boolean"),
 		"active":         toUserObject(o.Active, isavro, false, "boolean"),
 		"trackable":      toUserObject(o.Trackable, isavro, false, "boolean"),
 		"created_ts":     toUserObject(o.CreatedAt, isavro, false, "long"),
@@ -532,6 +535,16 @@ func (o *User) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.ManagerID = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["owner"].(bool); ok {
+		o.Owner = val
+	} else {
+		val := kv["owner"]
+		if val == nil {
+			o.Owner = number.ToBoolAny(nil)
+		} else {
+			o.Owner = number.ToBoolAny(val)
 		}
 	}
 	if val, ok := kv["active"].(bool); ok {
@@ -671,6 +684,7 @@ func (o *User) Hash() string {
 	args = append(args, o.Location)
 	args = append(args, o.AvatarURL)
 	args = append(args, o.ManagerID)
+	args = append(args, o.Owner)
 	args = append(args, o.Active)
 	args = append(args, o.Trackable)
 	args = append(args, o.CreatedAt)
@@ -785,6 +799,10 @@ func GetUserAvroSchemaSpec() string {
 				"name":    "manager_id",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "owner",
+				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "active",

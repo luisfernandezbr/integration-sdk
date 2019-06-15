@@ -1,7 +1,7 @@
 // DO NOT EDIT -- generated code
 
-// Package work - the system which contains project work
-package work
+// Package pipeline - the pipeline models
+package pipeline
 
 import (
 	"bufio"
@@ -19,28 +19,53 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/event"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
-// ProjectTopic is the default topic name
-const ProjectTopic datamodel.TopicNameType = "work_Project_topic"
+// DbChangeTopic is the default topic name
+const DbChangeTopic datamodel.TopicNameType = "pipeline_DbChange_topic"
 
-// ProjectStream is the default stream name
-const ProjectStream datamodel.TopicNameType = "work_Project_stream"
+// DbChangeStream is the default stream name
+const DbChangeStream datamodel.TopicNameType = "pipeline_DbChange_stream"
 
-// ProjectTable is the default table name
-const ProjectTable datamodel.TopicNameType = "work_Project"
+// DbChangeTable is the default table name
+const DbChangeTable datamodel.TopicNameType = "pipeline_DbChange"
 
-// ProjectModelName is the model name
-const ProjectModelName datamodel.ModelNameType = "work.Project"
+// DbChangeModelName is the model name
+const DbChangeModelName datamodel.ModelNameType = "pipeline.DbChange"
 
-// Project the project holds work
-type Project struct {
+// Action is the enumeration type for action
+type Action int32
+
+// String returns the string value for Action
+func (v Action) String() string {
+	switch int32(v) {
+	case 0:
+		return "create"
+	case 1:
+		return "update"
+	case 2:
+		return "delete"
+	}
+	return "unset"
+}
+
+const (
+	// ActionCreate is the enumeration value for create
+	ActionCreate Action = 0
+	// ActionUpdate is the enumeration value for update
+	ActionUpdate Action = 1
+	// ActionDelete is the enumeration value for delete
+	ActionDelete Action = 2
+)
+
+// DbChange db change will contain all the changes to a specific data model from the DB
+type DbChange struct {
 	// built in types
 
 	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
@@ -50,37 +75,33 @@ type Project struct {
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
-	// Name the name of the project
-	Name string `json:"name" bson:"name" yaml:"name" faker:"project"`
-	// Identifier the common identifier for the project
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
-	// URL the url to the project home page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
-	// Description the description of the project
-	Description *string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
-	// Category the project category
-	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
-	// Active the status of the project
-	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	// DateAt the date when the change was made
+	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
+	// Model the name of the model
+	Model string `json:"model" bson:"model" yaml:"model" faker:"-"`
+	// Action the action that was taken
+	Action Action `json:"action" bson:"action" yaml:"action" faker:"-"`
+	// Data the data payload of the change
+	Data string `json:"data" bson:"data" yaml:"data" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Project)(nil)
+var _ datamodel.Model = (*DbChange)(nil)
 
-func toProjectObjectNil(isavro bool, isoptional bool) interface{} {
+func toDbChangeObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toDbChangeObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return toProjectObjectNil(isavro, isoptional)
+		return toDbChangeObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return toProjectObjectNil(isavro, isoptional)
+		return toDbChangeObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
 		if isavro && isoptional {
 			return goavro.Union(avrotype, v)
@@ -89,7 +110,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -98,7 +119,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -107,7 +128,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -116,7 +137,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -125,7 +146,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -134,7 +155,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -143,7 +164,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -152,7 +173,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -161,7 +182,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toDbChangeObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -175,9 +196,9 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		return v
 	case *map[string]string:
 		return *v
-	case *Project:
+	case *DbChange:
 		return v.ToMap()
-	case Project:
+	case DbChange:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -193,46 +214,59 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toProjectObject(av, isavro, false, ""))
+			arr = append(arr, toDbChangeObject(av, isavro, false, ""))
 		}
 		return arr
+	case Action:
+		if !isavro {
+			return (o.(Action)).String()
+		}
+		return map[string]string{
+			"pipeline.action": (o.(Action)).String(),
+		}
+	case *Action:
+		if !isavro {
+			return (o.(*Action)).String()
+		}
+		return map[string]string{
+			"pipeline.action": (o.(*Action)).String(),
+		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of Project
-func (o *Project) String() string {
-	return fmt.Sprintf("work.Project<%s>", o.ID)
+// String returns a string representation of DbChange
+func (o *DbChange) String() string {
+	return fmt.Sprintf("pipeline.DbChange<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Project) GetTopicName() datamodel.TopicNameType {
-	return ProjectTopic
+func (o *DbChange) GetTopicName() datamodel.TopicNameType {
+	return DbChangeTopic
 }
 
 // GetModelName returns the name of the model
-func (o *Project) GetModelName() datamodel.ModelNameType {
-	return ProjectModelName
+func (o *DbChange) GetModelName() datamodel.ModelNameType {
+	return DbChangeModelName
 }
 
-func (o *Project) setDefaults() {
+func (o *DbChange) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *Project) GetID() string {
+func (o *DbChange) GetID() string {
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Project", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.Model, o.Action, o.DateAt)
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Project) GetTopicKey() string {
-	var i interface{} = o.ID
+func (o *DbChange) GetTopicKey() string {
+	var i interface{} = o.Model
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -240,45 +274,58 @@ func (o *Project) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Project) GetTimestamp() time.Time {
-	return time.Now().UTC()
+func (o *DbChange) GetTimestamp() time.Time {
+	var dt interface{} = o.DateAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for DbChange")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Project) GetRefID() string {
+func (o *DbChange) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Project) IsMaterialized() bool {
+func (o *DbChange) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Project) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *DbChange) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Project) IsEvented() bool {
+func (o *DbChange) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Project) SetEventHeaders(kv map[string]string) {
+func (o *DbChange) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = ProjectModelName.String()
+	kv["model"] = DbChangeModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *DbChange) GetTopicConfig() *datamodel.ModelTopicConfig {
 	duration, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "id",
-		Timestamp:         "",
+		Key:               "model",
+		Timestamp:         "date_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         duration,
@@ -287,20 +334,20 @@ func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetCustomerID will return the customer_id
-func (o *Project) GetCustomerID() string {
+func (o *DbChange) GetCustomerID() string {
 	return o.CustomerID
 }
 
-// Clone returns an exact copy of Project
-func (o *Project) Clone() datamodel.Model {
-	c := new(Project)
+// Clone returns an exact copy of DbChange
+func (o *DbChange) Clone() datamodel.Model {
+	c := new(DbChange)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Project) Anon() datamodel.Model {
-	c := new(Project)
+func (o *DbChange) Anon() datamodel.Model {
+	c := new(DbChange)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -315,12 +362,12 @@ func (o *Project) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Project) MarshalJSON() ([]byte, error) {
+func (o *DbChange) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Project) UnmarshalJSON(data []byte) error {
+func (o *DbChange) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -331,22 +378,22 @@ func (o *Project) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecProject *goavro.Codec
+var cachedCodecDbChange *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *Project) GetAvroCodec() *goavro.Codec {
-	if cachedCodecProject == nil {
-		c, err := GetProjectAvroSchema()
+func (o *DbChange) GetAvroCodec() *goavro.Codec {
+	if cachedCodecDbChange == nil {
+		c, err := GetDbChangeAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecProject = c
+		cachedCodecDbChange = c
 	}
-	return cachedCodecProject
+	return cachedCodecDbChange
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Project) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *DbChange) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -360,17 +407,17 @@ func (o *Project) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Project) Stringify() string {
+func (o *DbChange) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Project objects are equal
-func (o *Project) IsEqual(other *Project) bool {
+// IsEqual returns true if the two DbChange objects are equal
+func (o *DbChange) IsEqual(other *DbChange) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Project) ToMap(avro ...bool) map[string]interface{} {
+func (o *DbChange) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -383,17 +430,15 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
-		"name":        toProjectObject(o.Name, isavro, false, "string"),
-		"identifier":  toProjectObject(o.Identifier, isavro, false, "string"),
-		"url":         toProjectObject(o.URL, isavro, false, "string"),
-		"description": toProjectObject(o.Description, isavro, true, "string"),
-		"category":    toProjectObject(o.Category, isavro, true, "string"),
-		"active":      toProjectObject(o.Active, isavro, false, "boolean"),
+		"date_ts":     toDbChangeObject(o.DateAt, isavro, false, "long"),
+		"model":       toDbChangeObject(o.Model, isavro, false, "string"),
+		"action":      toDbChangeObject(o.Action, isavro, false, "action"),
+		"data":        toDbChangeObject(o.Data, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Project) FromMap(kv map[string]interface{}) {
+func (o *DbChange) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
@@ -408,85 +453,65 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
+	if val, ok := kv["date_ts"].(int64); ok {
+		o.DateAt = val
 	} else {
-		val := kv["name"]
+		val := kv["date_ts"]
 		if val == nil {
-			o.Name = ""
+			o.DateAt = number.ToInt64Any(nil)
+		} else {
+			o.DateAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["model"].(string); ok {
+		o.Model = val
+	} else {
+		val := kv["model"]
+		if val == nil {
+			o.Model = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Name = fmt.Sprintf("%v", val)
+			o.Model = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["identifier"].(string); ok {
-		o.Identifier = val
+	if val, ok := kv["action"].(Action); ok {
+		o.Action = val
 	} else {
-		val := kv["identifier"]
+		if em, ok := kv["action"].(map[string]interface{}); ok {
+			ev := em["pipeline.action"].(string)
+			switch ev {
+			case "create":
+				o.Action = 0
+			case "update":
+				o.Action = 1
+			case "delete":
+				o.Action = 2
+			}
+		}
+		if em, ok := kv["action"].(string); ok {
+			switch em {
+			case "create":
+				o.Action = 0
+			case "update":
+				o.Action = 1
+			case "delete":
+				o.Action = 2
+			}
+		}
+	}
+	if val, ok := kv["data"].(string); ok {
+		o.Data = val
+	} else {
+		val := kv["data"]
 		if val == nil {
-			o.Identifier = ""
+			o.Data = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Identifier = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
-	} else {
-		val := kv["url"]
-		if val == nil {
-			o.URL = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.URL = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["description"].(*string); ok {
-		o.Description = val
-	} else if val, ok := kv["description"].(string); ok {
-		o.Description = &val
-	} else {
-		val := kv["description"]
-		if val == nil {
-			o.Description = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
-			}
-			o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["category"].(*string); ok {
-		o.Category = val
-	} else if val, ok := kv["category"].(string); ok {
-		o.Category = &val
-	} else {
-		val := kv["category"]
-		if val == nil {
-			o.Category = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
-			}
-			o.Category = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["active"].(bool); ok {
-		o.Active = val
-	} else {
-		val := kv["active"]
-		if val == nil {
-			o.Active = number.ToBoolAny(nil)
-		} else {
-			o.Active = number.ToBoolAny(val)
+			o.Data = fmt.Sprintf("%v", val)
 		}
 	}
 	// make sure that these have values if empty
@@ -494,29 +519,27 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Project) Hash() string {
+func (o *DbChange) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Name)
-	args = append(args, o.Identifier)
-	args = append(args, o.URL)
-	args = append(args, o.Description)
-	args = append(args, o.Category)
-	args = append(args, o.Active)
+	args = append(args, o.DateAt)
+	args = append(args, o.Model)
+	args = append(args, o.Action)
+	args = append(args, o.Data)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// GetProjectAvroSchemaSpec creates the avro schema specification for Project
-func GetProjectAvroSchemaSpec() string {
+// GetDbChangeAvroSchemaSpec creates the avro schema specification for DbChange
+func GetDbChangeAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "work",
-		"name":         "Project",
-		"connect.name": "work.Project",
+		"namespace":    "pipeline",
+		"name":         "DbChange",
+		"connect.name": "pipeline.DbChange",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",
@@ -539,55 +562,51 @@ func GetProjectAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "name",
+				"name": "date_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "model",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "identifier",
+				"name": "action",
+				"type": []interface{}{
+					map[string]interface{}{
+						"type":    "enum",
+						"name":    "action",
+						"symbols": []interface{}{"create", "update", "delete"},
+					},
+				},
+			},
+			map[string]interface{}{
+				"name": "data",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "description",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name":    "category",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "active",
-				"type": "boolean",
 			},
 		},
 	}
 	return pjson.Stringify(spec, true)
 }
 
-// GetProjectAvroSchema creates the avro schema for Project
-func GetProjectAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetProjectAvroSchemaSpec())
+// GetDbChangeAvroSchema creates the avro schema for DbChange
+func GetDbChangeAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetDbChangeAvroSchemaSpec())
 }
 
-// TransformProjectFunc is a function for transforming Project during processing
-type TransformProjectFunc func(input *Project) (*Project, error)
+// TransformDbChangeFunc is a function for transforming DbChange during processing
+type TransformDbChangeFunc func(input *DbChange) (*DbChange, error)
 
-// NewProjectPipe creates a pipe for processing Project items
-func NewProjectPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformProjectFunc) <-chan bool {
+// NewDbChangePipe creates a pipe for processing DbChange items
+func NewDbChangePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformDbChangeFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewProjectInputStream(input, errors)
-	var stream chan Project
+	inch, indone := NewDbChangeInputStream(input, errors)
+	var stream chan DbChange
 	if len(transforms) > 0 {
-		stream = make(chan Project, 1000)
+		stream = make(chan DbChange, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewProjectOutputStream(output, stream, errors)
+	outdone := NewDbChangeOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -623,12 +642,12 @@ func NewProjectPipe(input io.ReadCloser, output io.WriteCloser, errors chan erro
 	return done
 }
 
-// NewProjectInputStreamDir creates a channel for reading Project as JSON newlines from a directory of files
-func NewProjectInputStreamDir(dir string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/project\\.json(\\.gz)?$"))
+// NewDbChangeInputStreamDir creates a channel for reading DbChange as JSON newlines from a directory of files
+func NewDbChangeInputStreamDir(dir string, errors chan<- error, transforms ...TransformDbChangeFunc) (chan DbChange, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/pipeline/db_change\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Project)
+		ch := make(chan DbChange)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -636,16 +655,16 @@ func NewProjectInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for project")
-		ch := make(chan Project)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for db_change")
+		ch := make(chan DbChange)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewProjectInputStreamFile(files[0], errors, transforms...)
+		return NewDbChangeInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Project)
+		ch := make(chan DbChange)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -653,12 +672,12 @@ func NewProjectInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 }
 
-// NewProjectInputStreamFile creates an channel for reading Project as JSON newlines from filename
-func NewProjectInputStreamFile(filename string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
+// NewDbChangeInputStreamFile creates an channel for reading DbChange as JSON newlines from filename
+func NewDbChangeInputStreamFile(filename string, errors chan<- error, transforms ...TransformDbChangeFunc) (chan DbChange, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Project)
+		ch := make(chan DbChange)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -670,7 +689,7 @@ func NewProjectInputStreamFile(filename string, errors chan<- error, transforms 
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Project)
+			ch := make(chan DbChange)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -678,13 +697,13 @@ func NewProjectInputStreamFile(filename string, errors chan<- error, transforms 
 		}
 		f = gz
 	}
-	return NewProjectInputStream(f, errors, transforms...)
+	return NewDbChangeInputStream(f, errors, transforms...)
 }
 
-// NewProjectInputStream creates an channel for reading Project as JSON newlines from stream
-func NewProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
+// NewDbChangeInputStream creates an channel for reading DbChange as JSON newlines from stream
+func NewDbChangeInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformDbChangeFunc) (chan DbChange, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Project, 1000)
+	ch := make(chan DbChange, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -697,7 +716,7 @@ func NewProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms
 				errors <- err
 				return
 			}
-			var item Project
+			var item DbChange
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -723,9 +742,9 @@ func NewProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms
 	return ch, done
 }
 
-// NewProjectOutputStreamDir will output json newlines from channel and save in dir
-func NewProjectOutputStreamDir(dir string, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/project\\.json(\\.gz)?$")
+// NewDbChangeOutputStreamDir will output json newlines from channel and save in dir
+func NewDbChangeOutputStreamDir(dir string, ch chan DbChange, errors chan<- error, transforms ...TransformDbChangeFunc) <-chan bool {
+	fp := filepath.Join(dir, "/pipeline/db_change\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -741,11 +760,11 @@ func NewProjectOutputStreamDir(dir string, ch chan Project, errors chan<- error,
 		done <- true
 		return done
 	}
-	return NewProjectOutputStream(gz, ch, errors, transforms...)
+	return NewDbChangeOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewProjectOutputStream will output json newlines from channel to the stream
-func NewProjectOutputStream(stream io.WriteCloser, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
+// NewDbChangeOutputStream will output json newlines from channel to the stream
+func NewDbChangeOutputStream(stream io.WriteCloser, ch chan DbChange, errors chan<- error, transforms ...TransformDbChangeFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -785,59 +804,59 @@ func NewProjectOutputStream(stream io.WriteCloser, ch chan Project, errors chan<
 	return done
 }
 
-// ProjectSendEvent is an event detail for sending data
-type ProjectSendEvent struct {
-	Project *Project
-	headers map[string]string
-	time    time.Time
-	key     string
+// DbChangeSendEvent is an event detail for sending data
+type DbChangeSendEvent struct {
+	DbChange *DbChange
+	headers  map[string]string
+	time     time.Time
+	key      string
 }
 
-var _ datamodel.ModelSendEvent = (*ProjectSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*DbChangeSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *ProjectSendEvent) Key() string {
+func (e *DbChangeSendEvent) Key() string {
 	if e.key == "" {
-		return e.Project.GetID()
+		return e.DbChange.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *ProjectSendEvent) Object() datamodel.Model {
-	return e.Project
+func (e *DbChangeSendEvent) Object() datamodel.Model {
+	return e.DbChange
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *ProjectSendEvent) Headers() map[string]string {
+func (e *DbChangeSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *ProjectSendEvent) Timestamp() time.Time {
+func (e *DbChangeSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// ProjectSendEventOpts is a function handler for setting opts
-type ProjectSendEventOpts func(o *ProjectSendEvent)
+// DbChangeSendEventOpts is a function handler for setting opts
+type DbChangeSendEventOpts func(o *DbChangeSendEvent)
 
-// WithProjectSendEventKey sets the key value to a value different than the object ID
-func WithProjectSendEventKey(key string) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
+// WithDbChangeSendEventKey sets the key value to a value different than the object ID
+func WithDbChangeSendEventKey(key string) DbChangeSendEventOpts {
+	return func(o *DbChangeSendEvent) {
 		o.key = key
 	}
 }
 
-// WithProjectSendEventTimestamp sets the timestamp value
-func WithProjectSendEventTimestamp(tv time.Time) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
+// WithDbChangeSendEventTimestamp sets the timestamp value
+func WithDbChangeSendEventTimestamp(tv time.Time) DbChangeSendEventOpts {
+	return func(o *DbChangeSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithProjectSendEventHeader sets the timestamp value
-func WithProjectSendEventHeader(key, value string) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
+// WithDbChangeSendEventHeader sets the timestamp value
+func WithDbChangeSendEventHeader(key, value string) DbChangeSendEventOpts {
+	return func(o *DbChangeSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -845,10 +864,10 @@ func WithProjectSendEventHeader(key, value string) ProjectSendEventOpts {
 	}
 }
 
-// NewProjectSendEvent returns a new ProjectSendEvent instance
-func NewProjectSendEvent(o *Project, opts ...ProjectSendEventOpts) *ProjectSendEvent {
-	res := &ProjectSendEvent{
-		Project: o,
+// NewDbChangeSendEvent returns a new DbChangeSendEvent instance
+func NewDbChangeSendEvent(o *DbChange, opts ...DbChangeSendEventOpts) *DbChangeSendEvent {
+	res := &DbChangeSendEvent{
+		DbChange: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -858,14 +877,14 @@ func NewProjectSendEvent(o *Project, opts ...ProjectSendEventOpts) *ProjectSendE
 	return res
 }
 
-// NewProjectProducer will stream data from the channel
-func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+// NewDbChangeProducer will stream data from the channel
+func NewDbChangeProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			if object, ok := item.Object().(*Project); ok {
+			if object, ok := item.Object().(*DbChange); ok {
 				binary, codec, err := object.ToAvroBinary()
 				if err != nil {
 					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -894,23 +913,23 @@ func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEv
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 				}
 			} else {
-				errors <- fmt.Errorf("invalid event received. expected an object of type work.Project but received on of type %v", reflect.TypeOf(item.Object()))
+				errors <- fmt.Errorf("invalid event received. expected an object of type pipeline.DbChange but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// NewProjectConsumer will stream data from the topic into the provided channel
-func NewProjectConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+// NewDbChangeConsumer will stream data from the topic into the provided channel
+func NewDbChangeConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
 	consumer.Consume(event.ConsumerCallback{
 		OnDataReceived: func(msg event.Message) error {
-			var object Project
+			var object DbChange
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
-				return fmt.Errorf("error unmarshaling json data into work.Project: %s", err)
+				return fmt.Errorf("error unmarshaling json data into pipeline.DbChange: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &ProjectReceiveEvent{&object, msg}
+			ch <- &DbChangeReceiveEvent{&object, msg}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
@@ -919,94 +938,94 @@ func NewProjectConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiv
 	})
 }
 
-// ProjectReceiveEvent is an event detail for receiving data
-type ProjectReceiveEvent struct {
-	Project *Project
-	message event.Message
+// DbChangeReceiveEvent is an event detail for receiving data
+type DbChangeReceiveEvent struct {
+	DbChange *DbChange
+	message  event.Message
 }
 
-var _ datamodel.ModelReceiveEvent = (*ProjectReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*DbChangeReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *ProjectReceiveEvent) Object() datamodel.Model {
-	return e.Project
+func (e *DbChangeReceiveEvent) Object() datamodel.Model {
+	return e.DbChange
 }
 
 // Message returns the underlying message data for the event
-func (e *ProjectReceiveEvent) Message() event.Message {
+func (e *DbChangeReceiveEvent) Message() event.Message {
 	return e.message
 }
 
-// ProjectProducer implements the datamodel.ModelEventProducer
-type ProjectProducer struct {
+// DbChangeProducer implements the datamodel.ModelEventProducer
+type DbChangeProducer struct {
 	ch   chan datamodel.ModelSendEvent
 	done <-chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*ProjectProducer)(nil)
+var _ datamodel.ModelEventProducer = (*DbChangeProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *ProjectProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *DbChangeProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *ProjectProducer) Close() error {
+func (p *DbChangeProducer) Close() error {
 	close(p.ch)
 	<-p.done
 	return nil
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Project) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *DbChange) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
-	return &ProjectProducer{
+	return &DbChangeProducer{
 		ch:   ch,
-		done: NewProjectProducer(producer, ch, errors),
+		done: NewDbChangeProducer(producer, ch, errors),
 	}
 }
 
-// NewProjectProducerChannel returns a channel which can be used for producing Model events
-func NewProjectProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+// NewDbChangeProducerChannel returns a channel which can be used for producing Model events
+func NewDbChangeProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
-	return &ProjectProducer{
+	return &DbChangeProducer{
 		ch:   ch,
-		done: NewProjectProducer(producer, ch, errors),
+		done: NewDbChangeProducer(producer, ch, errors),
 	}
 }
 
-// ProjectConsumer implements the datamodel.ModelEventConsumer
-type ProjectConsumer struct {
+// DbChangeConsumer implements the datamodel.ModelEventConsumer
+type DbChangeConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
 }
 
-var _ datamodel.ModelEventConsumer = (*ProjectConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*DbChangeConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *ProjectConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *DbChangeConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *ProjectConsumer) Close() error {
+func (c *DbChangeConsumer) Close() error {
 	close(c.ch)
 	return nil
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Project) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *DbChange) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewProjectConsumer(consumer, ch, errors)
-	return &ProjectConsumer{
+	NewDbChangeConsumer(consumer, ch, errors)
+	return &DbChangeConsumer{
 		ch: ch,
 	}
 }
 
-// NewProjectConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewProjectConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewDbChangeConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewDbChangeConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewProjectConsumer(consumer, ch, errors)
-	return &ProjectConsumer{
+	NewDbChangeConsumer(consumer, ch, errors)
+	return &DbChangeConsumer{
 		ch: ch,
 	}
 }

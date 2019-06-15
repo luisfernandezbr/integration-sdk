@@ -1,7 +1,7 @@
 // DO NOT EDIT -- generated code
 
-// Package work - the system which contains project work
-package work
+// Package admin - admin specific data models
+package admin
 
 import (
 	"bufio"
@@ -24,23 +24,22 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
-// ProjectTopic is the default topic name
-const ProjectTopic datamodel.TopicNameType = "work_Project_topic"
+// AgentTopic is the default topic name
+const AgentTopic datamodel.TopicNameType = "admin_Agent_topic"
 
-// ProjectStream is the default stream name
-const ProjectStream datamodel.TopicNameType = "work_Project_stream"
+// AgentStream is the default stream name
+const AgentStream datamodel.TopicNameType = "admin_Agent_stream"
 
-// ProjectTable is the default table name
-const ProjectTable datamodel.TopicNameType = "work_Project"
+// AgentTable is the default table name
+const AgentTable datamodel.TopicNameType = "admin_Agent"
 
-// ProjectModelName is the model name
-const ProjectModelName datamodel.ModelNameType = "work.Project"
+// AgentModelName is the model name
+const AgentModelName datamodel.ModelNameType = "admin.Agent"
 
-// Project the project holds work
-type Project struct {
+// Agent Agent metadata
+type Agent struct {
 	// built in types
 
 	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
@@ -50,37 +49,33 @@ type Project struct {
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 	// custom types
 
-	// Name the name of the project
-	Name string `json:"name" bson:"name" yaml:"name" faker:"project"`
-	// Identifier the common identifier for the project
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
-	// URL the url to the project home page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
-	// Description the description of the project
-	Description *string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
-	// Category the project category
-	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
-	// Active the status of the project
-	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	// Apikey The apikey for this agent to use
+	Apikey string `json:"apikey" bson:"apikey" yaml:"apikey" faker:"-"`
+	// RerunHistorical Last re-run of historical data
+	RerunHistorical int64 `json:"rerun_historical" bson:"rerun_historical" yaml:"rerun_historical" faker:"-"`
+	// UUID The uuid
+	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	// CompletedAt Last time the agent completed
+	CompletedAt int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Project)(nil)
+var _ datamodel.Model = (*Agent)(nil)
 
-func toProjectObjectNil(isavro bool, isoptional bool) interface{} {
+func toAgentObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toAgentObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return toProjectObjectNil(isavro, isoptional)
+		return toAgentObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return toProjectObjectNil(isavro, isoptional)
+		return toAgentObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
 		if isavro && isoptional {
 			return goavro.Union(avrotype, v)
@@ -89,7 +84,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -98,7 +93,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -107,7 +102,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -116,7 +111,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -125,7 +120,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -134,7 +129,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -143,7 +138,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -152,7 +147,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -161,7 +156,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toProjectObjectNil(isavro, isoptional)
+				return toAgentObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -175,9 +170,9 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		return v
 	case *map[string]string:
 		return *v
-	case *Project:
+	case *Agent:
 		return v.ToMap()
-	case Project:
+	case Agent:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -193,45 +188,45 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toProjectObject(av, isavro, false, ""))
+			arr = append(arr, toAgentObject(av, isavro, false, ""))
 		}
 		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of Project
-func (o *Project) String() string {
-	return fmt.Sprintf("work.Project<%s>", o.ID)
+// String returns a string representation of Agent
+func (o *Agent) String() string {
+	return fmt.Sprintf("admin.Agent<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Project) GetTopicName() datamodel.TopicNameType {
-	return ProjectTopic
+func (o *Agent) GetTopicName() datamodel.TopicNameType {
+	return AgentTopic
 }
 
 // GetModelName returns the name of the model
-func (o *Project) GetModelName() datamodel.ModelNameType {
-	return ProjectModelName
+func (o *Agent) GetModelName() datamodel.ModelNameType {
+	return AgentModelName
 }
 
-func (o *Project) setDefaults() {
+func (o *Agent) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *Project) GetID() string {
+func (o *Agent) GetID() string {
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Project", o.CustomerID, o.RefType, o.GetRefID())
+		// set the id from the spec provided in the model
+		o.ID = hash.Values(o.CustomerID, o.RefID)
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Project) GetTopicKey() string {
+func (o *Agent) GetTopicKey() string {
 	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
@@ -240,38 +235,47 @@ func (o *Project) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Project) GetTimestamp() time.Time {
+func (o *Agent) GetTimestamp() time.Time {
 	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
-func (o *Project) GetRefID() string {
+func (o *Agent) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Project) IsMaterialized() bool {
-	return false
+func (o *Agent) IsMaterialized() bool {
+	return true
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Project) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
+func (o *Agent) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "id",
+		TableName: "admin_agent",
+		BatchSize: 5000,
+		IdleTime:  idletime,
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Project) IsEvented() bool {
+func (o *Agent) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Project) SetEventHeaders(kv map[string]string) {
+func (o *Agent) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = ProjectModelName.String()
+	kv["model"] = AgentModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *Agent) GetTopicConfig() *datamodel.ModelTopicConfig {
 	duration, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -287,20 +291,20 @@ func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetCustomerID will return the customer_id
-func (o *Project) GetCustomerID() string {
+func (o *Agent) GetCustomerID() string {
 	return o.CustomerID
 }
 
-// Clone returns an exact copy of Project
-func (o *Project) Clone() datamodel.Model {
-	c := new(Project)
+// Clone returns an exact copy of Agent
+func (o *Agent) Clone() datamodel.Model {
+	c := new(Agent)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Project) Anon() datamodel.Model {
-	c := new(Project)
+func (o *Agent) Anon() datamodel.Model {
+	c := new(Agent)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -315,12 +319,12 @@ func (o *Project) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Project) MarshalJSON() ([]byte, error) {
+func (o *Agent) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Project) UnmarshalJSON(data []byte) error {
+func (o *Agent) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -331,22 +335,22 @@ func (o *Project) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecProject *goavro.Codec
+var cachedCodecAgent *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *Project) GetAvroCodec() *goavro.Codec {
-	if cachedCodecProject == nil {
-		c, err := GetProjectAvroSchema()
+func (o *Agent) GetAvroCodec() *goavro.Codec {
+	if cachedCodecAgent == nil {
+		c, err := GetAgentAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecProject = c
+		cachedCodecAgent = c
 	}
-	return cachedCodecProject
+	return cachedCodecAgent
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Project) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *Agent) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -360,17 +364,17 @@ func (o *Project) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Project) Stringify() string {
+func (o *Agent) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Project objects are equal
-func (o *Project) IsEqual(other *Project) bool {
+// IsEqual returns true if the two Agent objects are equal
+func (o *Agent) IsEqual(other *Agent) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Project) ToMap(avro ...bool) map[string]interface{} {
+func (o *Agent) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -378,22 +382,20 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"name":        toProjectObject(o.Name, isavro, false, "string"),
-		"identifier":  toProjectObject(o.Identifier, isavro, false, "string"),
-		"url":         toProjectObject(o.URL, isavro, false, "string"),
-		"description": toProjectObject(o.Description, isavro, true, "string"),
-		"category":    toProjectObject(o.Category, isavro, true, "string"),
-		"active":      toProjectObject(o.Active, isavro, false, "boolean"),
+		"id":               o.GetID(),
+		"ref_id":           o.GetRefID(),
+		"ref_type":         o.RefType,
+		"customer_id":      o.CustomerID,
+		"hashcode":         o.Hash(),
+		"apikey":           toAgentObject(o.Apikey, isavro, false, "string"),
+		"rerun_historical": toAgentObject(o.RerunHistorical, isavro, false, "long"),
+		"uuid":             toAgentObject(o.UUID, isavro, false, "string"),
+		"completed_ts":     toAgentObject(o.CompletedAt, isavro, false, "long"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Project) FromMap(kv map[string]interface{}) {
+func (o *Agent) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
@@ -408,85 +410,50 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
+	if val, ok := kv["apikey"].(string); ok {
+		o.Apikey = val
 	} else {
-		val := kv["name"]
+		val := kv["apikey"]
 		if val == nil {
-			o.Name = ""
+			o.Apikey = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Name = fmt.Sprintf("%v", val)
+			o.Apikey = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["identifier"].(string); ok {
-		o.Identifier = val
+	if val, ok := kv["rerun_historical"].(int64); ok {
+		o.RerunHistorical = val
 	} else {
-		val := kv["identifier"]
+		val := kv["rerun_historical"]
 		if val == nil {
-			o.Identifier = ""
+			o.RerunHistorical = number.ToInt64Any(nil)
+		} else {
+			o.RerunHistorical = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["uuid"].(string); ok {
+		o.UUID = val
+	} else {
+		val := kv["uuid"]
+		if val == nil {
+			o.UUID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Identifier = fmt.Sprintf("%v", val)
+			o.UUID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
+	if val, ok := kv["completed_ts"].(int64); ok {
+		o.CompletedAt = val
 	} else {
-		val := kv["url"]
+		val := kv["completed_ts"]
 		if val == nil {
-			o.URL = ""
+			o.CompletedAt = number.ToInt64Any(nil)
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.URL = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["description"].(*string); ok {
-		o.Description = val
-	} else if val, ok := kv["description"].(string); ok {
-		o.Description = &val
-	} else {
-		val := kv["description"]
-		if val == nil {
-			o.Description = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
-			}
-			o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["category"].(*string); ok {
-		o.Category = val
-	} else if val, ok := kv["category"].(string); ok {
-		o.Category = &val
-	} else {
-		val := kv["category"]
-		if val == nil {
-			o.Category = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
-			}
-			o.Category = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["active"].(bool); ok {
-		o.Active = val
-	} else {
-		val := kv["active"]
-		if val == nil {
-			o.Active = number.ToBoolAny(nil)
-		} else {
-			o.Active = number.ToBoolAny(val)
+			o.CompletedAt = number.ToInt64Any(val)
 		}
 	}
 	// make sure that these have values if empty
@@ -494,29 +461,73 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Project) Hash() string {
+func (o *Agent) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.GetID())
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Name)
-	args = append(args, o.Identifier)
-	args = append(args, o.URL)
-	args = append(args, o.Description)
-	args = append(args, o.Category)
-	args = append(args, o.Active)
+	args = append(args, o.Apikey)
+	args = append(args, o.RerunHistorical)
+	args = append(args, o.UUID)
+	args = append(args, o.CompletedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// GetProjectAvroSchemaSpec creates the avro schema specification for Project
-func GetProjectAvroSchemaSpec() string {
+// CreateAgent creates a new Agent in the database
+func CreateAgent(ctx context.Context, db datamodel.Storage, o *Agent) error {
+	o.setDefaults()
+	return db.Create(ctx, o)
+}
+
+// DeleteAgent deletes a Agent in the database
+func DeleteAgent(ctx context.Context, db datamodel.Storage, o *Agent) error {
+	o.setDefaults()
+	return db.Delete(ctx, o)
+}
+
+// UpdateAgent updates a Agent in the database
+func UpdateAgent(ctx context.Context, db datamodel.Storage, o *Agent) error {
+	o.setDefaults()
+	return db.Update(ctx, o)
+}
+
+// FindAgent returns a Agent from the database
+func FindAgent(ctx context.Context, db datamodel.Storage, id string) (*Agent, error) {
+	kv, err := db.FindOne(ctx, AgentModelName, id)
+	if err != nil {
+		return nil, err
+	}
+	if kv == nil {
+		return nil, nil
+	}
+	return kv.(*Agent), nil
+}
+
+// FindAgents returns all Agent from the database matching keys
+func FindAgents(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*Agent, error) {
+	res, err := db.Find(ctx, AgentModelName, kv)
+	if err != nil {
+		return nil, err
+	}
+	if res != nil {
+		arr := make([]*Agent, 0)
+		for _, m := range res {
+			arr = append(arr, m.(*Agent))
+		}
+		return arr, nil
+	}
+	return nil, nil
+}
+
+// GetAgentAvroSchemaSpec creates the avro schema specification for Agent
+func GetAgentAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":         "record",
-		"namespace":    "work",
-		"name":         "Project",
-		"connect.name": "work.Project",
+		"namespace":    "admin",
+		"name":         "Agent",
+		"connect.name": "admin.Agent",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",
@@ -539,55 +550,45 @@ func GetProjectAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "name",
+				"name": "apikey",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "identifier",
+				"name": "rerun_historical",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "uuid",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "description",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name":    "category",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "active",
-				"type": "boolean",
+				"name": "completed_ts",
+				"type": "long",
 			},
 		},
 	}
 	return pjson.Stringify(spec, true)
 }
 
-// GetProjectAvroSchema creates the avro schema for Project
-func GetProjectAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetProjectAvroSchemaSpec())
+// GetAgentAvroSchema creates the avro schema for Agent
+func GetAgentAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetAgentAvroSchemaSpec())
 }
 
-// TransformProjectFunc is a function for transforming Project during processing
-type TransformProjectFunc func(input *Project) (*Project, error)
+// TransformAgentFunc is a function for transforming Agent during processing
+type TransformAgentFunc func(input *Agent) (*Agent, error)
 
-// NewProjectPipe creates a pipe for processing Project items
-func NewProjectPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformProjectFunc) <-chan bool {
+// NewAgentPipe creates a pipe for processing Agent items
+func NewAgentPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformAgentFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewProjectInputStream(input, errors)
-	var stream chan Project
+	inch, indone := NewAgentInputStream(input, errors)
+	var stream chan Agent
 	if len(transforms) > 0 {
-		stream = make(chan Project, 1000)
+		stream = make(chan Agent, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewProjectOutputStream(output, stream, errors)
+	outdone := NewAgentOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -623,12 +624,12 @@ func NewProjectPipe(input io.ReadCloser, output io.WriteCloser, errors chan erro
 	return done
 }
 
-// NewProjectInputStreamDir creates a channel for reading Project as JSON newlines from a directory of files
-func NewProjectInputStreamDir(dir string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/project\\.json(\\.gz)?$"))
+// NewAgentInputStreamDir creates a channel for reading Agent as JSON newlines from a directory of files
+func NewAgentInputStreamDir(dir string, errors chan<- error, transforms ...TransformAgentFunc) (chan Agent, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/admin/agent\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Project)
+		ch := make(chan Agent)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -636,16 +637,16 @@ func NewProjectInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for project")
-		ch := make(chan Project)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for agent")
+		ch := make(chan Agent)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewProjectInputStreamFile(files[0], errors, transforms...)
+		return NewAgentInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Project)
+		ch := make(chan Agent)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -653,12 +654,12 @@ func NewProjectInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 }
 
-// NewProjectInputStreamFile creates an channel for reading Project as JSON newlines from filename
-func NewProjectInputStreamFile(filename string, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
+// NewAgentInputStreamFile creates an channel for reading Agent as JSON newlines from filename
+func NewAgentInputStreamFile(filename string, errors chan<- error, transforms ...TransformAgentFunc) (chan Agent, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Project)
+		ch := make(chan Agent)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -670,7 +671,7 @@ func NewProjectInputStreamFile(filename string, errors chan<- error, transforms 
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Project)
+			ch := make(chan Agent)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -678,13 +679,13 @@ func NewProjectInputStreamFile(filename string, errors chan<- error, transforms 
 		}
 		f = gz
 	}
-	return NewProjectInputStream(f, errors, transforms...)
+	return NewAgentInputStream(f, errors, transforms...)
 }
 
-// NewProjectInputStream creates an channel for reading Project as JSON newlines from stream
-func NewProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformProjectFunc) (chan Project, <-chan bool) {
+// NewAgentInputStream creates an channel for reading Agent as JSON newlines from stream
+func NewAgentInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformAgentFunc) (chan Agent, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Project, 1000)
+	ch := make(chan Agent, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -697,7 +698,7 @@ func NewProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms
 				errors <- err
 				return
 			}
-			var item Project
+			var item Agent
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -723,9 +724,9 @@ func NewProjectInputStream(stream io.ReadCloser, errors chan<- error, transforms
 	return ch, done
 }
 
-// NewProjectOutputStreamDir will output json newlines from channel and save in dir
-func NewProjectOutputStreamDir(dir string, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/project\\.json(\\.gz)?$")
+// NewAgentOutputStreamDir will output json newlines from channel and save in dir
+func NewAgentOutputStreamDir(dir string, ch chan Agent, errors chan<- error, transforms ...TransformAgentFunc) <-chan bool {
+	fp := filepath.Join(dir, "/admin/agent\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -741,11 +742,11 @@ func NewProjectOutputStreamDir(dir string, ch chan Project, errors chan<- error,
 		done <- true
 		return done
 	}
-	return NewProjectOutputStream(gz, ch, errors, transforms...)
+	return NewAgentOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewProjectOutputStream will output json newlines from channel to the stream
-func NewProjectOutputStream(stream io.WriteCloser, ch chan Project, errors chan<- error, transforms ...TransformProjectFunc) <-chan bool {
+// NewAgentOutputStream will output json newlines from channel to the stream
+func NewAgentOutputStream(stream io.WriteCloser, ch chan Agent, errors chan<- error, transforms ...TransformAgentFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -785,59 +786,59 @@ func NewProjectOutputStream(stream io.WriteCloser, ch chan Project, errors chan<
 	return done
 }
 
-// ProjectSendEvent is an event detail for sending data
-type ProjectSendEvent struct {
-	Project *Project
+// AgentSendEvent is an event detail for sending data
+type AgentSendEvent struct {
+	Agent   *Agent
 	headers map[string]string
 	time    time.Time
 	key     string
 }
 
-var _ datamodel.ModelSendEvent = (*ProjectSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*AgentSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *ProjectSendEvent) Key() string {
+func (e *AgentSendEvent) Key() string {
 	if e.key == "" {
-		return e.Project.GetID()
+		return e.Agent.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *ProjectSendEvent) Object() datamodel.Model {
-	return e.Project
+func (e *AgentSendEvent) Object() datamodel.Model {
+	return e.Agent
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *ProjectSendEvent) Headers() map[string]string {
+func (e *AgentSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *ProjectSendEvent) Timestamp() time.Time {
+func (e *AgentSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// ProjectSendEventOpts is a function handler for setting opts
-type ProjectSendEventOpts func(o *ProjectSendEvent)
+// AgentSendEventOpts is a function handler for setting opts
+type AgentSendEventOpts func(o *AgentSendEvent)
 
-// WithProjectSendEventKey sets the key value to a value different than the object ID
-func WithProjectSendEventKey(key string) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
+// WithAgentSendEventKey sets the key value to a value different than the object ID
+func WithAgentSendEventKey(key string) AgentSendEventOpts {
+	return func(o *AgentSendEvent) {
 		o.key = key
 	}
 }
 
-// WithProjectSendEventTimestamp sets the timestamp value
-func WithProjectSendEventTimestamp(tv time.Time) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
+// WithAgentSendEventTimestamp sets the timestamp value
+func WithAgentSendEventTimestamp(tv time.Time) AgentSendEventOpts {
+	return func(o *AgentSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithProjectSendEventHeader sets the timestamp value
-func WithProjectSendEventHeader(key, value string) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
+// WithAgentSendEventHeader sets the timestamp value
+func WithAgentSendEventHeader(key, value string) AgentSendEventOpts {
+	return func(o *AgentSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -845,10 +846,10 @@ func WithProjectSendEventHeader(key, value string) ProjectSendEventOpts {
 	}
 }
 
-// NewProjectSendEvent returns a new ProjectSendEvent instance
-func NewProjectSendEvent(o *Project, opts ...ProjectSendEventOpts) *ProjectSendEvent {
-	res := &ProjectSendEvent{
-		Project: o,
+// NewAgentSendEvent returns a new AgentSendEvent instance
+func NewAgentSendEvent(o *Agent, opts ...AgentSendEventOpts) *AgentSendEvent {
+	res := &AgentSendEvent{
+		Agent: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -858,14 +859,14 @@ func NewProjectSendEvent(o *Project, opts ...ProjectSendEventOpts) *ProjectSendE
 	return res
 }
 
-// NewProjectProducer will stream data from the channel
-func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+// NewAgentProducer will stream data from the channel
+func NewAgentProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
 		ctx := context.Background()
 		for item := range ch {
-			if object, ok := item.Object().(*Project); ok {
+			if object, ok := item.Object().(*Agent); ok {
 				binary, codec, err := object.ToAvroBinary()
 				if err != nil {
 					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -894,23 +895,23 @@ func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEv
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 				}
 			} else {
-				errors <- fmt.Errorf("invalid event received. expected an object of type work.Project but received on of type %v", reflect.TypeOf(item.Object()))
+				errors <- fmt.Errorf("invalid event received. expected an object of type admin.Agent but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
 	return done
 }
 
-// NewProjectConsumer will stream data from the topic into the provided channel
-func NewProjectConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+// NewAgentConsumer will stream data from the topic into the provided channel
+func NewAgentConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
 	consumer.Consume(event.ConsumerCallback{
 		OnDataReceived: func(msg event.Message) error {
-			var object Project
+			var object Agent
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
-				return fmt.Errorf("error unmarshaling json data into work.Project: %s", err)
+				return fmt.Errorf("error unmarshaling json data into admin.Agent: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &ProjectReceiveEvent{&object, msg}
+			ch <- &AgentReceiveEvent{&object, msg}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
@@ -919,94 +920,94 @@ func NewProjectConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiv
 	})
 }
 
-// ProjectReceiveEvent is an event detail for receiving data
-type ProjectReceiveEvent struct {
-	Project *Project
+// AgentReceiveEvent is an event detail for receiving data
+type AgentReceiveEvent struct {
+	Agent   *Agent
 	message event.Message
 }
 
-var _ datamodel.ModelReceiveEvent = (*ProjectReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*AgentReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *ProjectReceiveEvent) Object() datamodel.Model {
-	return e.Project
+func (e *AgentReceiveEvent) Object() datamodel.Model {
+	return e.Agent
 }
 
 // Message returns the underlying message data for the event
-func (e *ProjectReceiveEvent) Message() event.Message {
+func (e *AgentReceiveEvent) Message() event.Message {
 	return e.message
 }
 
-// ProjectProducer implements the datamodel.ModelEventProducer
-type ProjectProducer struct {
+// AgentProducer implements the datamodel.ModelEventProducer
+type AgentProducer struct {
 	ch   chan datamodel.ModelSendEvent
 	done <-chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*ProjectProducer)(nil)
+var _ datamodel.ModelEventProducer = (*AgentProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *ProjectProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *AgentProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *ProjectProducer) Close() error {
+func (p *AgentProducer) Close() error {
 	close(p.ch)
 	<-p.done
 	return nil
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Project) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Agent) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
-	return &ProjectProducer{
+	return &AgentProducer{
 		ch:   ch,
-		done: NewProjectProducer(producer, ch, errors),
+		done: NewAgentProducer(producer, ch, errors),
 	}
 }
 
-// NewProjectProducerChannel returns a channel which can be used for producing Model events
-func NewProjectProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+// NewAgentProducerChannel returns a channel which can be used for producing Model events
+func NewAgentProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
-	return &ProjectProducer{
+	return &AgentProducer{
 		ch:   ch,
-		done: NewProjectProducer(producer, ch, errors),
+		done: NewAgentProducer(producer, ch, errors),
 	}
 }
 
-// ProjectConsumer implements the datamodel.ModelEventConsumer
-type ProjectConsumer struct {
+// AgentConsumer implements the datamodel.ModelEventConsumer
+type AgentConsumer struct {
 	ch chan datamodel.ModelReceiveEvent
 }
 
-var _ datamodel.ModelEventConsumer = (*ProjectConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*AgentConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *ProjectConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *AgentConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *ProjectConsumer) Close() error {
+func (c *AgentConsumer) Close() error {
 	close(c.ch)
 	return nil
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Project) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Agent) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewProjectConsumer(consumer, ch, errors)
-	return &ProjectConsumer{
+	NewAgentConsumer(consumer, ch, errors)
+	return &AgentConsumer{
 		ch: ch,
 	}
 }
 
-// NewProjectConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewProjectConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewAgentConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewAgentConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewProjectConsumer(consumer, ch, errors)
-	return &ProjectConsumer{
+	NewAgentConsumer(consumer, ch, errors)
+	return &AgentConsumer{
 		ch: ch,
 	}
 }
