@@ -25,17 +25,25 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 )
 
-// ProjectTopic is the default topic name
-const ProjectTopic datamodel.TopicNameType = "codequality_Project_topic"
+const (
+	// ProjectTopic is the default topic name
+	ProjectTopic datamodel.TopicNameType = "codequality_Project_topic"
 
-// ProjectStream is the default stream name
-const ProjectStream datamodel.TopicNameType = "codequality_Project_stream"
+	// ProjectStream is the default stream name
+	ProjectStream datamodel.TopicNameType = "codequality_Project_stream"
 
-// ProjectTable is the default table name
-const ProjectTable datamodel.TopicNameType = "codequality_Project"
+	// ProjectTable is the default table name
+	ProjectTable datamodel.TopicNameType = "codequality_Project"
+	// ProjectModelName is the model name
+	ProjectModelName datamodel.ModelNameType = "codequality.Project"
+)
 
-// ProjectModelName is the model name
-const ProjectModelName datamodel.ModelNameType = "codequality.Project"
+const (
+	// ProjectIdentifierColumn is the identifier column name
+	ProjectIdentifierColumn = "identifier"
+	// ProjectNameColumn is the name column name
+	ProjectNameColumn = "name"
+)
 
 // Project project information
 type Project struct {

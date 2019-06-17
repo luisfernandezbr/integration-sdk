@@ -27,17 +27,31 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// HookTopic is the default topic name
-const HookTopic datamodel.TopicNameType = "web_Hook_topic"
+const (
+	// HookTopic is the default topic name
+	HookTopic datamodel.TopicNameType = "web_Hook_topic"
 
-// HookStream is the default stream name
-const HookStream datamodel.TopicNameType = "web_Hook_stream"
+	// HookStream is the default stream name
+	HookStream datamodel.TopicNameType = "web_Hook_stream"
 
-// HookTable is the default table name
-const HookTable datamodel.TopicNameType = "web_Hook"
+	// HookTable is the default table name
+	HookTable datamodel.TopicNameType = "web_Hook"
+	// HookModelName is the model name
+	HookModelName datamodel.ModelNameType = "web.Hook"
+)
 
-// HookModelName is the model name
-const HookModelName datamodel.ModelNameType = "web.Hook"
+const (
+	// HookDateAtColumn is the date_ts column name
+	HookDateAtColumn = "date_ts"
+	// HookSystemColumn is the system column name
+	HookSystemColumn = "system"
+	// HookTokenColumn is the token column name
+	HookTokenColumn = "token"
+	// HookHeadersColumn is the headers column name
+	HookHeadersColumn = "headers"
+	// HookDataColumn is the data column name
+	HookDataColumn = "data"
+)
 
 // Hook hook is a webhook event which is received from an external source
 type Hook struct {

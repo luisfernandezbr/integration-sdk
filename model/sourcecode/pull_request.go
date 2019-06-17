@@ -27,17 +27,41 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// PullRequestTopic is the default topic name
-const PullRequestTopic datamodel.TopicNameType = "sourcecode_PullRequest_topic"
+const (
+	// PullRequestTopic is the default topic name
+	PullRequestTopic datamodel.TopicNameType = "sourcecode_PullRequest_topic"
 
-// PullRequestStream is the default stream name
-const PullRequestStream datamodel.TopicNameType = "sourcecode_PullRequest_stream"
+	// PullRequestStream is the default stream name
+	PullRequestStream datamodel.TopicNameType = "sourcecode_PullRequest_stream"
 
-// PullRequestTable is the default table name
-const PullRequestTable datamodel.TopicNameType = "sourcecode_PullRequest"
+	// PullRequestTable is the default table name
+	PullRequestTable datamodel.TopicNameType = "sourcecode_PullRequest"
+	// PullRequestModelName is the model name
+	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
+)
 
-// PullRequestModelName is the model name
-const PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
+const (
+	// PullRequestRepoIDColumn is the repo_id column name
+	PullRequestRepoIDColumn = "repo_id"
+	// PullRequestTitleColumn is the title column name
+	PullRequestTitleColumn = "title"
+	// PullRequestDescriptionColumn is the description column name
+	PullRequestDescriptionColumn = "description"
+	// PullRequestURLColumn is the url column name
+	PullRequestURLColumn = "url"
+	// PullRequestCreatedAtColumn is the created_ts column name
+	PullRequestCreatedAtColumn = "created_ts"
+	// PullRequestMergedAtColumn is the merged_ts column name
+	PullRequestMergedAtColumn = "merged_ts"
+	// PullRequestClosedAtColumn is the closed_ts column name
+	PullRequestClosedAtColumn = "closed_ts"
+	// PullRequestUpdatedAtColumn is the updated_ts column name
+	PullRequestUpdatedAtColumn = "updated_ts"
+	// PullRequestStatusColumn is the status column name
+	PullRequestStatusColumn = "status"
+	// PullRequestUserRefIDColumn is the user_ref_id column name
+	PullRequestUserRefIDColumn = "user_ref_id"
+)
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {

@@ -27,17 +27,43 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// ChangelogTopic is the default topic name
-const ChangelogTopic datamodel.TopicNameType = "work_Changelog_topic"
+const (
+	// ChangelogTopic is the default topic name
+	ChangelogTopic datamodel.TopicNameType = "work_Changelog_topic"
 
-// ChangelogStream is the default stream name
-const ChangelogStream datamodel.TopicNameType = "work_Changelog_stream"
+	// ChangelogStream is the default stream name
+	ChangelogStream datamodel.TopicNameType = "work_Changelog_stream"
 
-// ChangelogTable is the default table name
-const ChangelogTable datamodel.TopicNameType = "work_Changelog"
+	// ChangelogTable is the default table name
+	ChangelogTable datamodel.TopicNameType = "work_Changelog"
+	// ChangelogModelName is the model name
+	ChangelogModelName datamodel.ModelNameType = "work.Changelog"
+)
 
-// ChangelogModelName is the model name
-const ChangelogModelName datamodel.ModelNameType = "work.Changelog"
+const (
+	// ChangelogIssueIDColumn is the issue_id column name
+	ChangelogIssueIDColumn = "issue_id"
+	// ChangelogCreatedAtColumn is the created_ts column name
+	ChangelogCreatedAtColumn = "created_ts"
+	// ChangelogCreatedColumn is the created column name
+	ChangelogCreatedColumn = "created"
+	// ChangelogOrdinalColumn is the ordinal column name
+	ChangelogOrdinalColumn = "ordinal"
+	// ChangelogUserIDColumn is the user_id column name
+	ChangelogUserIDColumn = "user_id"
+	// ChangelogFieldColumn is the field column name
+	ChangelogFieldColumn = "field"
+	// ChangelogFieldTypeColumn is the field_type column name
+	ChangelogFieldTypeColumn = "field_type"
+	// ChangelogFromColumn is the from column name
+	ChangelogFromColumn = "from"
+	// ChangelogFromStringColumn is the from_string column name
+	ChangelogFromStringColumn = "from_string"
+	// ChangelogToColumn is the to column name
+	ChangelogToColumn = "to"
+	// ChangelogToStringColumn is the to_string column name
+	ChangelogToStringColumn = "to_string"
+)
 
 // Changelog change log
 type Changelog struct {

@@ -28,17 +28,59 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// IssueTopic is the default topic name
-const IssueTopic datamodel.TopicNameType = "work_Issue_topic"
+const (
+	// IssueTopic is the default topic name
+	IssueTopic datamodel.TopicNameType = "work_Issue_topic"
 
-// IssueStream is the default stream name
-const IssueStream datamodel.TopicNameType = "work_Issue_stream"
+	// IssueStream is the default stream name
+	IssueStream datamodel.TopicNameType = "work_Issue_stream"
 
-// IssueTable is the default table name
-const IssueTable datamodel.TopicNameType = "work_Issue"
+	// IssueTable is the default table name
+	IssueTable datamodel.TopicNameType = "work_Issue"
+	// IssueModelName is the model name
+	IssueModelName datamodel.ModelNameType = "work.Issue"
+)
 
-// IssueModelName is the model name
-const IssueModelName datamodel.ModelNameType = "work.Issue"
+const (
+	// IssueTitleColumn is the title column name
+	IssueTitleColumn = "title"
+	// IssueIdentifierColumn is the identifier column name
+	IssueIdentifierColumn = "identifier"
+	// IssueProjectIDColumn is the project_id column name
+	IssueProjectIDColumn = "project_id"
+	// IssueURLColumn is the url column name
+	IssueURLColumn = "url"
+	// IssueCreatedAtColumn is the created_ts column name
+	IssueCreatedAtColumn = "created_ts"
+	// IssueUpdatedAtColumn is the updated_ts column name
+	IssueUpdatedAtColumn = "updated_ts"
+	// IssuePlannedStartAtColumn is the planned_start_ts column name
+	IssuePlannedStartAtColumn = "planned_start_ts"
+	// IssuePlannedEndAtColumn is the planned_end_ts column name
+	IssuePlannedEndAtColumn = "planned_end_ts"
+	// IssueDueDateAtColumn is the due_date_ts column name
+	IssueDueDateAtColumn = "due_date_ts"
+	// IssuePriorityColumn is the priority column name
+	IssuePriorityColumn = "priority"
+	// IssueTypeColumn is the type column name
+	IssueTypeColumn = "type"
+	// IssueStatusColumn is the status column name
+	IssueStatusColumn = "status"
+	// IssueCreatorRefIDColumn is the creator_ref_id column name
+	IssueCreatorRefIDColumn = "creator_ref_id"
+	// IssueReporterRefIDColumn is the reporter_ref_id column name
+	IssueReporterRefIDColumn = "reporter_ref_id"
+	// IssueAssigneeRefIDColumn is the assignee_ref_id column name
+	IssueAssigneeRefIDColumn = "assignee_ref_id"
+	// IssueAuthorRefIDColumn is the author_ref_id column name
+	IssueAuthorRefIDColumn = "author_ref_id"
+	// IssueTagsColumn is the tags column name
+	IssueTagsColumn = "tags"
+	// IssueParentIDColumn is the parent_id column name
+	IssueParentIDColumn = "parent_id"
+	// IssueResolutionColumn is the resolution column name
+	IssueResolutionColumn = "resolution"
+)
 
 // Issue the issue is a specific work item for a project
 type Issue struct {

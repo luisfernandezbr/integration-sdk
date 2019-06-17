@@ -27,17 +27,18 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// ACLGrantTopic is the default topic name
-const ACLGrantTopic datamodel.TopicNameType = "auth_ACLGrant_topic"
+const (
+	// ACLGrantTopic is the default topic name
+	ACLGrantTopic datamodel.TopicNameType = "auth_ACLGrant_topic"
 
-// ACLGrantStream is the default stream name
-const ACLGrantStream datamodel.TopicNameType = "auth_ACLGrant_stream"
+	// ACLGrantStream is the default stream name
+	ACLGrantStream datamodel.TopicNameType = "auth_ACLGrant_stream"
 
-// ACLGrantTable is the default table name
-const ACLGrantTable datamodel.TopicNameType = "auth_ACLGrant"
-
-// ACLGrantModelName is the model name
-const ACLGrantModelName datamodel.ModelNameType = "auth.ACLGrant"
+	// ACLGrantTable is the default table name
+	ACLGrantTable datamodel.TopicNameType = "auth_ACLGrant"
+	// ACLGrantModelName is the model name
+	ACLGrantModelName datamodel.ModelNameType = "auth.ACLGrant"
+)
 
 // Permission is the enumeration type for permission
 type Permission int32
@@ -62,6 +63,17 @@ const (
 	PermissionRead Permission = 1
 	// PermissionReadwrite is the enumeration value for readwrite
 	PermissionReadwrite Permission = 2
+)
+
+const (
+	// ACLGrantResourceIDColumn is the resource_id column name
+	ACLGrantResourceIDColumn = "resource_id"
+	// ACLGrantRoleIDColumn is the role_id column name
+	ACLGrantRoleIDColumn = "role_id"
+	// ACLGrantCreatedAtColumn is the created_ts column name
+	ACLGrantCreatedAtColumn = "created_ts"
+	// ACLGrantPermissionColumn is the permission column name
+	ACLGrantPermissionColumn = "permission"
 )
 
 // ACLGrant a ACL grant controls permisson for a specific role to a resource

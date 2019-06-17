@@ -27,17 +27,29 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// MetricTopic is the default topic name
-const MetricTopic datamodel.TopicNameType = "codequality_Metric_topic"
+const (
+	// MetricTopic is the default topic name
+	MetricTopic datamodel.TopicNameType = "codequality_Metric_topic"
 
-// MetricStream is the default stream name
-const MetricStream datamodel.TopicNameType = "codequality_Metric_stream"
+	// MetricStream is the default stream name
+	MetricStream datamodel.TopicNameType = "codequality_Metric_stream"
 
-// MetricTable is the default table name
-const MetricTable datamodel.TopicNameType = "codequality_Metric"
+	// MetricTable is the default table name
+	MetricTable datamodel.TopicNameType = "codequality_Metric"
+	// MetricModelName is the model name
+	MetricModelName datamodel.ModelNameType = "codequality.Metric"
+)
 
-// MetricModelName is the model name
-const MetricModelName datamodel.ModelNameType = "codequality.Metric"
+const (
+	// MetricDateAtColumn is the date_ts column name
+	MetricDateAtColumn = "date_ts"
+	// MetricProjectIDColumn is the project_id column name
+	MetricProjectIDColumn = "project_id"
+	// MetricNameColumn is the name column name
+	MetricNameColumn = "name"
+	// MetricValueColumn is the value column name
+	MetricValueColumn = "value"
+)
 
 // Metric individual metric details
 type Metric struct {

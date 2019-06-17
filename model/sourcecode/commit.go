@@ -27,17 +27,63 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// CommitTopic is the default topic name
-const CommitTopic datamodel.TopicNameType = "sourcecode_Commit_topic"
+const (
+	// CommitTopic is the default topic name
+	CommitTopic datamodel.TopicNameType = "sourcecode_Commit_topic"
 
-// CommitStream is the default stream name
-const CommitStream datamodel.TopicNameType = "sourcecode_Commit_stream"
+	// CommitStream is the default stream name
+	CommitStream datamodel.TopicNameType = "sourcecode_Commit_stream"
 
-// CommitTable is the default table name
-const CommitTable datamodel.TopicNameType = "sourcecode_Commit"
+	// CommitTable is the default table name
+	CommitTable datamodel.TopicNameType = "sourcecode_Commit"
+	// CommitModelName is the model name
+	CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
+)
 
-// CommitModelName is the model name
-const CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
+const (
+	// CommitRepoIDColumn is the repo_id column name
+	CommitRepoIDColumn = "repo_id"
+	// CommitShaColumn is the sha column name
+	CommitShaColumn = "sha"
+	// CommitMessageColumn is the message column name
+	CommitMessageColumn = "message"
+	// CommitURLColumn is the url column name
+	CommitURLColumn = "url"
+	// CommitCreatedAtColumn is the created_ts column name
+	CommitCreatedAtColumn = "created_ts"
+	// CommitCreatedColumn is the created column name
+	CommitCreatedColumn = "created"
+	// CommitBranchColumn is the branch column name
+	CommitBranchColumn = "branch"
+	// CommitAdditionsColumn is the additions column name
+	CommitAdditionsColumn = "additions"
+	// CommitDeletionsColumn is the deletions column name
+	CommitDeletionsColumn = "deletions"
+	// CommitFilesChangedColumn is the files_changed column name
+	CommitFilesChangedColumn = "files_changed"
+	// CommitAuthorRefIDColumn is the author_ref_id column name
+	CommitAuthorRefIDColumn = "author_ref_id"
+	// CommitCommitterRefIDColumn is the committer_ref_id column name
+	CommitCommitterRefIDColumn = "committer_ref_id"
+	// CommitOrdinalColumn is the ordinal column name
+	CommitOrdinalColumn = "ordinal"
+	// CommitLocColumn is the loc column name
+	CommitLocColumn = "loc"
+	// CommitSlocColumn is the sloc column name
+	CommitSlocColumn = "sloc"
+	// CommitCommentsColumn is the comments column name
+	CommitCommentsColumn = "comments"
+	// CommitBlanksColumn is the blanks column name
+	CommitBlanksColumn = "blanks"
+	// CommitSizeColumn is the size column name
+	CommitSizeColumn = "size"
+	// CommitComplexityColumn is the complexity column name
+	CommitComplexityColumn = "complexity"
+	// CommitGpgSignedColumn is the gpg_signed column name
+	CommitGpgSignedColumn = "gpg_signed"
+	// CommitExcludedColumn is the excluded column name
+	CommitExcludedColumn = "excluded"
+)
 
 // Commit the commit is a specific change in a repo
 type Commit struct {

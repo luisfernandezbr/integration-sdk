@@ -26,17 +26,25 @@ import (
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
-// TeamTopic is the default topic name
-const TeamTopic datamodel.TopicNameType = "customer_Team_topic"
+const (
+	// TeamTopic is the default topic name
+	TeamTopic datamodel.TopicNameType = "customer_Team_topic"
 
-// TeamStream is the default stream name
-const TeamStream datamodel.TopicNameType = "customer_Team_stream"
+	// TeamStream is the default stream name
+	TeamStream datamodel.TopicNameType = "customer_Team_stream"
 
-// TeamTable is the default table name
-const TeamTable datamodel.TopicNameType = "customer_Team"
+	// TeamTable is the default table name
+	TeamTable datamodel.TopicNameType = "customer_Team"
+	// TeamModelName is the model name
+	TeamModelName datamodel.ModelNameType = "customer.Team"
+)
 
-// TeamModelName is the model name
-const TeamModelName datamodel.ModelNameType = "customer.Team"
+const (
+	// TeamNameColumn is the name column name
+	TeamNameColumn = "name"
+	// TeamParentIDColumn is the parent_id column name
+	TeamParentIDColumn = "parent_id"
+)
 
 // Team a team is a grouping of one or more users
 type Team struct {

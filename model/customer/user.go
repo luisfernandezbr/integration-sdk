@@ -27,17 +27,53 @@ import (
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
-// UserTopic is the default topic name
-const UserTopic datamodel.TopicNameType = "customer_User_topic"
+const (
+	// UserTopic is the default topic name
+	UserTopic datamodel.TopicNameType = "customer_User_topic"
 
-// UserStream is the default stream name
-const UserStream datamodel.TopicNameType = "customer_User_stream"
+	// UserStream is the default stream name
+	UserStream datamodel.TopicNameType = "customer_User_stream"
 
-// UserTable is the default table name
-const UserTable datamodel.TopicNameType = "customer_User"
+	// UserTable is the default table name
+	UserTable datamodel.TopicNameType = "customer_User"
+	// UserModelName is the model name
+	UserModelName datamodel.ModelNameType = "customer.User"
+)
 
-// UserModelName is the model name
-const UserModelName datamodel.ModelNameType = "customer.User"
+const (
+	// UserNameColumn is the name column name
+	UserNameColumn = "name"
+	// UserEmailColumn is the email column name
+	UserEmailColumn = "email"
+	// UserTitleColumn is the title column name
+	UserTitleColumn = "title"
+	// UserLocationColumn is the location column name
+	UserLocationColumn = "location"
+	// UserAvatarURLColumn is the avatar_url column name
+	UserAvatarURLColumn = "avatar_url"
+	// UserManagerIDColumn is the manager_id column name
+	UserManagerIDColumn = "manager_id"
+	// UserOwnerColumn is the owner column name
+	UserOwnerColumn = "owner"
+	// UserActiveColumn is the active column name
+	UserActiveColumn = "active"
+	// UserTrackableColumn is the trackable column name
+	UserTrackableColumn = "trackable"
+	// UserCreatedAtColumn is the created_ts column name
+	UserCreatedAtColumn = "created_ts"
+	// UserUpdatedAtColumn is the updated_ts column name
+	UserUpdatedAtColumn = "updated_ts"
+	// UserDeletedAtColumn is the deleted_ts column name
+	UserDeletedAtColumn = "deleted_ts"
+	// UserHiredAtColumn is the hired_ts column name
+	UserHiredAtColumn = "hired_ts"
+	// UserTerminatedAtColumn is the terminated_ts column name
+	UserTerminatedAtColumn = "terminated_ts"
+	// UserCostCenterIDColumn is the cost_center_id column name
+	UserCostCenterIDColumn = "cost_center_id"
+	// UserTeamIDColumn is the team_id column name
+	UserTeamIDColumn = "team_id"
+)
 
 // User the customer's user record
 type User struct {

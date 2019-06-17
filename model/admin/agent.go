@@ -26,17 +26,29 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// AgentTopic is the default topic name
-const AgentTopic datamodel.TopicNameType = "admin_Agent_topic"
+const (
+	// AgentTopic is the default topic name
+	AgentTopic datamodel.TopicNameType = "admin_Agent_topic"
 
-// AgentStream is the default stream name
-const AgentStream datamodel.TopicNameType = "admin_Agent_stream"
+	// AgentStream is the default stream name
+	AgentStream datamodel.TopicNameType = "admin_Agent_stream"
 
-// AgentTable is the default table name
-const AgentTable datamodel.TopicNameType = "admin_Agent"
+	// AgentTable is the default table name
+	AgentTable datamodel.TopicNameType = "admin_Agent"
+	// AgentModelName is the model name
+	AgentModelName datamodel.ModelNameType = "admin.Agent"
+)
 
-// AgentModelName is the model name
-const AgentModelName datamodel.ModelNameType = "admin.Agent"
+const (
+	// AgentApikeyColumn is the apikey column name
+	AgentApikeyColumn = "apikey"
+	// AgentRerunHistoricalColumn is the rerun_historical column name
+	AgentRerunHistoricalColumn = "rerun_historical"
+	// AgentUUIDColumn is the uuid column name
+	AgentUUIDColumn = "uuid"
+	// AgentCompletedAtColumn is the completed_ts column name
+	AgentCompletedAtColumn = "completed_ts"
+)
 
 // Agent Agent metadata
 type Agent struct {

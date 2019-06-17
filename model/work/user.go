@@ -26,17 +26,27 @@ import (
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
-// UserTopic is the default topic name
-const UserTopic datamodel.TopicNameType = "work_User_topic"
+const (
+	// UserTopic is the default topic name
+	UserTopic datamodel.TopicNameType = "work_User_topic"
 
-// UserStream is the default stream name
-const UserStream datamodel.TopicNameType = "work_User_stream"
+	// UserStream is the default stream name
+	UserStream datamodel.TopicNameType = "work_User_stream"
 
-// UserTable is the default table name
-const UserTable datamodel.TopicNameType = "work_User"
+	// UserTable is the default table name
+	UserTable datamodel.TopicNameType = "work_User"
+	// UserModelName is the model name
+	UserModelName datamodel.ModelNameType = "work.User"
+)
 
-// UserModelName is the model name
-const UserModelName datamodel.ModelNameType = "work.User"
+const (
+	// UserNameColumn is the name column name
+	UserNameColumn = "name"
+	// UserAvatarURLColumn is the avatar_url column name
+	UserAvatarURLColumn = "avatar_url"
+	// UserEmailColumn is the email column name
+	UserEmailColumn = "email"
+)
 
 // User the work user
 type User struct {

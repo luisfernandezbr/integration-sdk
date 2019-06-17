@@ -25,17 +25,25 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 )
 
-// RepoTopic is the default topic name
-const RepoTopic datamodel.TopicNameType = "sourcecode_Repo_topic"
+const (
+	// RepoTopic is the default topic name
+	RepoTopic datamodel.TopicNameType = "sourcecode_Repo_topic"
 
-// RepoStream is the default stream name
-const RepoStream datamodel.TopicNameType = "sourcecode_Repo_stream"
+	// RepoStream is the default stream name
+	RepoStream datamodel.TopicNameType = "sourcecode_Repo_stream"
 
-// RepoTable is the default table name
-const RepoTable datamodel.TopicNameType = "sourcecode_Repo"
+	// RepoTable is the default table name
+	RepoTable datamodel.TopicNameType = "sourcecode_Repo"
+	// RepoModelName is the model name
+	RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
+)
 
-// RepoModelName is the model name
-const RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
+const (
+	// RepoNameColumn is the name column name
+	RepoNameColumn = "name"
+	// RepoURLColumn is the url column name
+	RepoURLColumn = "url"
+)
 
 // Repo the repo holds source code
 type Repo struct {

@@ -27,17 +27,33 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// SprintTopic is the default topic name
-const SprintTopic datamodel.TopicNameType = "work_Sprint_topic"
+const (
+	// SprintTopic is the default topic name
+	SprintTopic datamodel.TopicNameType = "work_Sprint_topic"
 
-// SprintStream is the default stream name
-const SprintStream datamodel.TopicNameType = "work_Sprint_stream"
+	// SprintStream is the default stream name
+	SprintStream datamodel.TopicNameType = "work_Sprint_stream"
 
-// SprintTable is the default table name
-const SprintTable datamodel.TopicNameType = "work_Sprint"
+	// SprintTable is the default table name
+	SprintTable datamodel.TopicNameType = "work_Sprint"
+	// SprintModelName is the model name
+	SprintModelName datamodel.ModelNameType = "work.Sprint"
+)
 
-// SprintModelName is the model name
-const SprintModelName datamodel.ModelNameType = "work.Sprint"
+const (
+	// SprintNameColumn is the name column name
+	SprintNameColumn = "name"
+	// SprintIdentifierColumn is the identifier column name
+	SprintIdentifierColumn = "identifier"
+	// SprintStatusColumn is the status column name
+	SprintStatusColumn = "status"
+	// SprintStartedAtColumn is the started_ts column name
+	SprintStartedAtColumn = "started_ts"
+	// SprintEndedAtColumn is the ended_ts column name
+	SprintEndedAtColumn = "ended_ts"
+	// SprintCompletedAtColumn is the completed_ts column name
+	SprintCompletedAtColumn = "completed_ts"
+)
 
 // Sprint sprint details
 type Sprint struct {

@@ -27,17 +27,33 @@ import (
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
-// ProjectTopic is the default topic name
-const ProjectTopic datamodel.TopicNameType = "work_Project_topic"
+const (
+	// ProjectTopic is the default topic name
+	ProjectTopic datamodel.TopicNameType = "work_Project_topic"
 
-// ProjectStream is the default stream name
-const ProjectStream datamodel.TopicNameType = "work_Project_stream"
+	// ProjectStream is the default stream name
+	ProjectStream datamodel.TopicNameType = "work_Project_stream"
 
-// ProjectTable is the default table name
-const ProjectTable datamodel.TopicNameType = "work_Project"
+	// ProjectTable is the default table name
+	ProjectTable datamodel.TopicNameType = "work_Project"
+	// ProjectModelName is the model name
+	ProjectModelName datamodel.ModelNameType = "work.Project"
+)
 
-// ProjectModelName is the model name
-const ProjectModelName datamodel.ModelNameType = "work.Project"
+const (
+	// ProjectNameColumn is the name column name
+	ProjectNameColumn = "name"
+	// ProjectIdentifierColumn is the identifier column name
+	ProjectIdentifierColumn = "identifier"
+	// ProjectURLColumn is the url column name
+	ProjectURLColumn = "url"
+	// ProjectDescriptionColumn is the description column name
+	ProjectDescriptionColumn = "description"
+	// ProjectCategoryColumn is the category column name
+	ProjectCategoryColumn = "category"
+	// ProjectActiveColumn is the active column name
+	ProjectActiveColumn = "active"
+)
 
 // Project the project holds work
 type Project struct {

@@ -25,17 +25,25 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 )
 
-// CustomFieldTopic is the default topic name
-const CustomFieldTopic datamodel.TopicNameType = "work_CustomField_topic"
+const (
+	// CustomFieldTopic is the default topic name
+	CustomFieldTopic datamodel.TopicNameType = "work_CustomField_topic"
 
-// CustomFieldStream is the default stream name
-const CustomFieldStream datamodel.TopicNameType = "work_CustomField_stream"
+	// CustomFieldStream is the default stream name
+	CustomFieldStream datamodel.TopicNameType = "work_CustomField_stream"
 
-// CustomFieldTable is the default table name
-const CustomFieldTable datamodel.TopicNameType = "work_CustomField"
+	// CustomFieldTable is the default table name
+	CustomFieldTable datamodel.TopicNameType = "work_CustomField"
+	// CustomFieldModelName is the model name
+	CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
+)
 
-// CustomFieldModelName is the model name
-const CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
+const (
+	// CustomFieldNameColumn is the name column name
+	CustomFieldNameColumn = "name"
+	// CustomFieldKeyColumn is the key column name
+	CustomFieldKeyColumn = "key"
+)
 
 // CustomField user defined fields
 type CustomField struct {

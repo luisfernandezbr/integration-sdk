@@ -26,17 +26,27 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// CostCenterTopic is the default topic name
-const CostCenterTopic datamodel.TopicNameType = "customer_CostCenter_topic"
+const (
+	// CostCenterTopic is the default topic name
+	CostCenterTopic datamodel.TopicNameType = "customer_CostCenter_topic"
 
-// CostCenterStream is the default stream name
-const CostCenterStream datamodel.TopicNameType = "customer_CostCenter_stream"
+	// CostCenterStream is the default stream name
+	CostCenterStream datamodel.TopicNameType = "customer_CostCenter_stream"
 
-// CostCenterTable is the default table name
-const CostCenterTable datamodel.TopicNameType = "customer_CostCenter"
+	// CostCenterTable is the default table name
+	CostCenterTable datamodel.TopicNameType = "customer_CostCenter"
+	// CostCenterModelName is the model name
+	CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
+)
 
-// CostCenterModelName is the model name
-const CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
+const (
+	// CostCenterNameColumn is the name column name
+	CostCenterNameColumn = "name"
+	// CostCenterDescriptionColumn is the description column name
+	CostCenterDescriptionColumn = "description"
+	// CostCenterCostColumn is the cost column name
+	CostCenterCostColumn = "cost"
+)
 
 // CostCenter a cost center represents information about users and their cost
 type CostCenter struct {

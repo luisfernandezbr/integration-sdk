@@ -27,17 +27,18 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// DbChangeTopic is the default topic name
-const DbChangeTopic datamodel.TopicNameType = "pipeline_DbChange_topic"
+const (
+	// DbChangeTopic is the default topic name
+	DbChangeTopic datamodel.TopicNameType = "pipeline_DbChange_topic"
 
-// DbChangeStream is the default stream name
-const DbChangeStream datamodel.TopicNameType = "pipeline_DbChange_stream"
+	// DbChangeStream is the default stream name
+	DbChangeStream datamodel.TopicNameType = "pipeline_DbChange_stream"
 
-// DbChangeTable is the default table name
-const DbChangeTable datamodel.TopicNameType = "pipeline_DbChange"
-
-// DbChangeModelName is the model name
-const DbChangeModelName datamodel.ModelNameType = "pipeline.DbChange"
+	// DbChangeTable is the default table name
+	DbChangeTable datamodel.TopicNameType = "pipeline_DbChange"
+	// DbChangeModelName is the model name
+	DbChangeModelName datamodel.ModelNameType = "pipeline.DbChange"
+)
 
 // Action is the enumeration type for action
 type Action int32
@@ -62,6 +63,17 @@ const (
 	ActionUpdate Action = 1
 	// ActionDelete is the enumeration value for delete
 	ActionDelete Action = 2
+)
+
+const (
+	// DbChangeDateAtColumn is the date_ts column name
+	DbChangeDateAtColumn = "date_ts"
+	// DbChangeModelColumn is the model column name
+	DbChangeModelColumn = "model"
+	// DbChangeActionColumn is the action column name
+	DbChangeActionColumn = "action"
+	// DbChangeDataColumn is the data column name
+	DbChangeDataColumn = "data"
 )
 
 // DbChange db change will contain all the changes to a specific data model from the DB

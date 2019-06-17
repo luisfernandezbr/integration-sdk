@@ -27,17 +27,39 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// BranchTopic is the default topic name
-const BranchTopic datamodel.TopicNameType = "sourcecode_Branch_topic"
+const (
+	// BranchTopic is the default topic name
+	BranchTopic datamodel.TopicNameType = "sourcecode_Branch_topic"
 
-// BranchStream is the default stream name
-const BranchStream datamodel.TopicNameType = "sourcecode_Branch_stream"
+	// BranchStream is the default stream name
+	BranchStream datamodel.TopicNameType = "sourcecode_Branch_stream"
 
-// BranchTable is the default table name
-const BranchTable datamodel.TopicNameType = "sourcecode_Branch"
+	// BranchTable is the default table name
+	BranchTable datamodel.TopicNameType = "sourcecode_Branch"
+	// BranchModelName is the model name
+	BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
+)
 
-// BranchModelName is the model name
-const BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
+const (
+	// BranchNameColumn is the name column name
+	BranchNameColumn = "name"
+	// BranchDefaultColumn is the default column name
+	BranchDefaultColumn = "default"
+	// BranchMergedColumn is the merged column name
+	BranchMergedColumn = "merged"
+	// BranchMergeCommitColumn is the merge_commit column name
+	BranchMergeCommitColumn = "merge_commit"
+	// BranchBranchedFromCommitsColumn is the branched_from_commits column name
+	BranchBranchedFromCommitsColumn = "branched_from_commits"
+	// BranchCommitsColumn is the commits column name
+	BranchCommitsColumn = "commits"
+	// BranchBehindDefaultCountColumn is the behind_default_count column name
+	BranchBehindDefaultCountColumn = "behind_default_count"
+	// BranchAheadDefaultCountColumn is the ahead_default_count column name
+	BranchAheadDefaultCountColumn = "ahead_default_count"
+	// BranchRepoIDColumn is the repo_id column name
+	BranchRepoIDColumn = "repo_id"
+)
 
 // Branch git branches
 type Branch struct {

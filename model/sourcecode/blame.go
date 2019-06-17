@@ -28,17 +28,18 @@ import (
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
-// BlameTopic is the default topic name
-const BlameTopic datamodel.TopicNameType = "sourcecode_Blame_topic"
+const (
+	// BlameTopic is the default topic name
+	BlameTopic datamodel.TopicNameType = "sourcecode_Blame_topic"
 
-// BlameStream is the default stream name
-const BlameStream datamodel.TopicNameType = "sourcecode_Blame_stream"
+	// BlameStream is the default stream name
+	BlameStream datamodel.TopicNameType = "sourcecode_Blame_stream"
 
-// BlameTable is the default table name
-const BlameTable datamodel.TopicNameType = "sourcecode_Blame"
-
-// BlameModelName is the model name
-const BlameModelName datamodel.ModelNameType = "sourcecode.Blame"
+	// BlameTable is the default table name
+	BlameTable datamodel.TopicNameType = "sourcecode_Blame"
+	// BlameModelName is the model name
+	BlameModelName datamodel.ModelNameType = "sourcecode.Blame"
+)
 
 // Status is the enumeration type for status
 type Status int32
@@ -97,6 +98,45 @@ func (o *BlameLines) ToMap() map[string]interface{} {
 		"blank": o.Blank,
 	}
 }
+
+const (
+	// BlameDateAtColumn is the date_ts column name
+	BlameDateAtColumn = "date_ts"
+	// BlameDateColumn is the date column name
+	BlameDateColumn = "date"
+	// BlameRepoIDColumn is the repo_id column name
+	BlameRepoIDColumn = "repo_id"
+	// BlameFilenameColumn is the filename column name
+	BlameFilenameColumn = "filename"
+	// BlameLanguageColumn is the language column name
+	BlameLanguageColumn = "language"
+	// BlameSizeColumn is the size column name
+	BlameSizeColumn = "size"
+	// BlameLocColumn is the loc column name
+	BlameLocColumn = "loc"
+	// BlameSlocColumn is the sloc column name
+	BlameSlocColumn = "sloc"
+	// BlameBlanksColumn is the blanks column name
+	BlameBlanksColumn = "blanks"
+	// BlameCommentsColumn is the comments column name
+	BlameCommentsColumn = "comments"
+	// BlameComplexityColumn is the complexity column name
+	BlameComplexityColumn = "complexity"
+	// BlameShaColumn is the sha column name
+	BlameShaColumn = "sha"
+	// BlameCommitIDColumn is the commit_id column name
+	BlameCommitIDColumn = "commit_id"
+	// BlameExcludedColumn is the excluded column name
+	BlameExcludedColumn = "excluded"
+	// BlameExcludedReasonColumn is the excluded_reason column name
+	BlameExcludedReasonColumn = "excluded_reason"
+	// BlameLicenseColumn is the license column name
+	BlameLicenseColumn = "license"
+	// BlameStatusColumn is the status column name
+	BlameStatusColumn = "status"
+	// BlameLinesColumn is the lines column name
+	BlameLinesColumn = "lines"
+)
 
 // Blame the blame detail for each commit in a repo
 type Blame struct {
@@ -931,7 +971,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}, "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions", "type": "record"}},
 			},
 		},
 	}

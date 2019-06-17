@@ -27,17 +27,67 @@ import (
 	"github.com/pinpt/go-common/number"
 )
 
-// CommitFileTopic is the default topic name
-const CommitFileTopic datamodel.TopicNameType = "sourcecode_CommitFile_topic"
+const (
+	// CommitFileTopic is the default topic name
+	CommitFileTopic datamodel.TopicNameType = "sourcecode_CommitFile_topic"
 
-// CommitFileStream is the default stream name
-const CommitFileStream datamodel.TopicNameType = "sourcecode_CommitFile_stream"
+	// CommitFileStream is the default stream name
+	CommitFileStream datamodel.TopicNameType = "sourcecode_CommitFile_stream"
 
-// CommitFileTable is the default table name
-const CommitFileTable datamodel.TopicNameType = "sourcecode_CommitFile"
+	// CommitFileTable is the default table name
+	CommitFileTable datamodel.TopicNameType = "sourcecode_CommitFile"
+	// CommitFileModelName is the model name
+	CommitFileModelName datamodel.ModelNameType = "sourcecode.CommitFile"
+)
 
-// CommitFileModelName is the model name
-const CommitFileModelName datamodel.ModelNameType = "sourcecode.CommitFile"
+const (
+	// CommitFileCreatedAtColumn is the created_ts column name
+	CommitFileCreatedAtColumn = "created_ts"
+	// CommitFileCommitIDColumn is the commit_id column name
+	CommitFileCommitIDColumn = "commit_id"
+	// CommitFileRepoIDColumn is the repo_id column name
+	CommitFileRepoIDColumn = "repo_id"
+	// CommitFileFilenameColumn is the filename column name
+	CommitFileFilenameColumn = "filename"
+	// CommitFileAdditionsColumn is the additions column name
+	CommitFileAdditionsColumn = "additions"
+	// CommitFileDeletionsColumn is the deletions column name
+	CommitFileDeletionsColumn = "deletions"
+	// CommitFileStatusColumn is the status column name
+	CommitFileStatusColumn = "status"
+	// CommitFileBinaryColumn is the binary column name
+	CommitFileBinaryColumn = "binary"
+	// CommitFileLanguageColumn is the language column name
+	CommitFileLanguageColumn = "language"
+	// CommitFileExcludedColumn is the excluded column name
+	CommitFileExcludedColumn = "excluded"
+	// CommitFileExcludedReasonColumn is the excluded_reason column name
+	CommitFileExcludedReasonColumn = "excluded_reason"
+	// CommitFileOrdinalColumn is the ordinal column name
+	CommitFileOrdinalColumn = "ordinal"
+	// CommitFileLocColumn is the loc column name
+	CommitFileLocColumn = "loc"
+	// CommitFileSlocColumn is the sloc column name
+	CommitFileSlocColumn = "sloc"
+	// CommitFileBlanksColumn is the blanks column name
+	CommitFileBlanksColumn = "blanks"
+	// CommitFileCommentsColumn is the comments column name
+	CommitFileCommentsColumn = "comments"
+	// CommitFileComplexityColumn is the complexity column name
+	CommitFileComplexityColumn = "complexity"
+	// CommitFileLicenseColumn is the license column name
+	CommitFileLicenseColumn = "license"
+	// CommitFileLicenseConfidenceColumn is the license_confidence column name
+	CommitFileLicenseConfidenceColumn = "license_confidence"
+	// CommitFileRenamedColumn is the renamed column name
+	CommitFileRenamedColumn = "renamed"
+	// CommitFileRenamedFromColumn is the renamed_from column name
+	CommitFileRenamedFromColumn = "renamed_from"
+	// CommitFileRenamedToColumn is the renamed_to column name
+	CommitFileRenamedToColumn = "renamed_to"
+	// CommitFileSizeColumn is the size column name
+	CommitFileSizeColumn = "size"
+)
 
 // CommitFile the file change for a specific commit
 type CommitFile struct {
