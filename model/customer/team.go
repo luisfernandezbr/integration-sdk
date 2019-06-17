@@ -44,11 +44,11 @@ const (
 	// TeamIDColumn is the id column name
 	TeamIDColumn = "id"
 	// TeamRefIDColumn is the ref_id column name
-	TeamRefID = "ref_id"
+	TeamRefIDColumn = "ref_id"
 	// TeamRefTypeColumn is the ref_type column name
-	TeamRefType = "ref_type"
+	TeamRefTypeColumn = "ref_type"
 	// TeamCustomerIDColumn is the customer_id column name
-	TeamCustomerID = "customer_id"
+	TeamCustomerIDColumn = "customer_id"
 	// TeamNameColumn is the name column name
 	TeamNameColumn = "name"
 	// TeamParentIDColumn is the parent_id column name

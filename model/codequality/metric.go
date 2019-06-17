@@ -45,11 +45,11 @@ const (
 	// MetricIDColumn is the id column name
 	MetricIDColumn = "id"
 	// MetricRefIDColumn is the ref_id column name
-	MetricRefID = "ref_id"
+	MetricRefIDColumn = "ref_id"
 	// MetricRefTypeColumn is the ref_type column name
-	MetricRefType = "ref_type"
+	MetricRefTypeColumn = "ref_type"
 	// MetricCustomerIDColumn is the customer_id column name
-	MetricCustomerID = "customer_id"
+	MetricCustomerIDColumn = "customer_id"
 	// MetricDateAtColumn is the date_ts column name
 	MetricDateAtColumn = "date_ts"
 	// MetricProjectIDColumn is the project_id column name

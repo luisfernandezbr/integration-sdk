@@ -46,11 +46,11 @@ const (
 	// IssueIDColumn is the id column name
 	IssueIDColumn = "id"
 	// IssueRefIDColumn is the ref_id column name
-	IssueRefID = "ref_id"
+	IssueRefIDColumn = "ref_id"
 	// IssueRefTypeColumn is the ref_type column name
-	IssueRefType = "ref_type"
+	IssueRefTypeColumn = "ref_type"
 	// IssueCustomerIDColumn is the customer_id column name
-	IssueCustomerID = "customer_id"
+	IssueCustomerIDColumn = "customer_id"
 	// IssueTitleColumn is the title column name
 	IssueTitleColumn = "title"
 	// IssueIdentifierColumn is the identifier column name

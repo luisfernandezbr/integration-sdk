@@ -45,11 +45,11 @@ const (
 	// BranchIDColumn is the id column name
 	BranchIDColumn = "id"
 	// BranchRefIDColumn is the ref_id column name
-	BranchRefID = "ref_id"
+	BranchRefIDColumn = "ref_id"
 	// BranchRefTypeColumn is the ref_type column name
-	BranchRefType = "ref_type"
+	BranchRefTypeColumn = "ref_type"
 	// BranchCustomerIDColumn is the customer_id column name
-	BranchCustomerID = "customer_id"
+	BranchCustomerIDColumn = "customer_id"
 	// BranchNameColumn is the name column name
 	BranchNameColumn = "name"
 	// BranchDefaultColumn is the default column name

@@ -43,11 +43,11 @@ const (
 	// ProjectIDColumn is the id column name
 	ProjectIDColumn = "id"
 	// ProjectRefIDColumn is the ref_id column name
-	ProjectRefID = "ref_id"
+	ProjectRefIDColumn = "ref_id"
 	// ProjectRefTypeColumn is the ref_type column name
-	ProjectRefType = "ref_type"
+	ProjectRefTypeColumn = "ref_type"
 	// ProjectCustomerIDColumn is the customer_id column name
-	ProjectCustomerID = "customer_id"
+	ProjectCustomerIDColumn = "customer_id"
 	// ProjectIdentifierColumn is the identifier column name
 	ProjectIdentifierColumn = "identifier"
 	// ProjectNameColumn is the name column name

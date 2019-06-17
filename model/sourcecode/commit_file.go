@@ -45,11 +45,11 @@ const (
 	// CommitFileIDColumn is the id column name
 	CommitFileIDColumn = "id"
 	// CommitFileRefIDColumn is the ref_id column name
-	CommitFileRefID = "ref_id"
+	CommitFileRefIDColumn = "ref_id"
 	// CommitFileRefTypeColumn is the ref_type column name
-	CommitFileRefType = "ref_type"
+	CommitFileRefTypeColumn = "ref_type"
 	// CommitFileCustomerIDColumn is the customer_id column name
-	CommitFileCustomerID = "customer_id"
+	CommitFileCustomerIDColumn = "customer_id"
 	// CommitFileCreatedAtColumn is the created_ts column name
 	CommitFileCreatedAtColumn = "created_ts"
 	// CommitFileCommitIDColumn is the commit_id column name

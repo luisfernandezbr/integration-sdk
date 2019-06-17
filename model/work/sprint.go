@@ -45,11 +45,11 @@ const (
 	// SprintIDColumn is the id column name
 	SprintIDColumn = "id"
 	// SprintRefIDColumn is the ref_id column name
-	SprintRefID = "ref_id"
+	SprintRefIDColumn = "ref_id"
 	// SprintRefTypeColumn is the ref_type column name
-	SprintRefType = "ref_type"
+	SprintRefTypeColumn = "ref_type"
 	// SprintCustomerIDColumn is the customer_id column name
-	SprintCustomerID = "customer_id"
+	SprintCustomerIDColumn = "customer_id"
 	// SprintNameColumn is the name column name
 	SprintNameColumn = "name"
 	// SprintIdentifierColumn is the identifier column name

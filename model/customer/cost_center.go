@@ -44,11 +44,11 @@ const (
 	// CostCenterIDColumn is the id column name
 	CostCenterIDColumn = "id"
 	// CostCenterRefIDColumn is the ref_id column name
-	CostCenterRefID = "ref_id"
+	CostCenterRefIDColumn = "ref_id"
 	// CostCenterRefTypeColumn is the ref_type column name
-	CostCenterRefType = "ref_type"
+	CostCenterRefTypeColumn = "ref_type"
 	// CostCenterCustomerIDColumn is the customer_id column name
-	CostCenterCustomerID = "customer_id"
+	CostCenterCustomerIDColumn = "customer_id"
 	// CostCenterNameColumn is the name column name
 	CostCenterNameColumn = "name"
 	// CostCenterDescriptionColumn is the description column name

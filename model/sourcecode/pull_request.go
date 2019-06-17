@@ -45,11 +45,11 @@ const (
 	// PullRequestIDColumn is the id column name
 	PullRequestIDColumn = "id"
 	// PullRequestRefIDColumn is the ref_id column name
-	PullRequestRefID = "ref_id"
+	PullRequestRefIDColumn = "ref_id"
 	// PullRequestRefTypeColumn is the ref_type column name
-	PullRequestRefType = "ref_type"
+	PullRequestRefTypeColumn = "ref_type"
 	// PullRequestCustomerIDColumn is the customer_id column name
-	PullRequestCustomerID = "customer_id"
+	PullRequestCustomerIDColumn = "customer_id"
 	// PullRequestRepoIDColumn is the repo_id column name
 	PullRequestRepoIDColumn = "repo_id"
 	// PullRequestTitleColumn is the title column name

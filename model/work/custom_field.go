@@ -43,11 +43,11 @@ const (
 	// CustomFieldIDColumn is the id column name
 	CustomFieldIDColumn = "id"
 	// CustomFieldRefIDColumn is the ref_id column name
-	CustomFieldRefID = "ref_id"
+	CustomFieldRefIDColumn = "ref_id"
 	// CustomFieldRefTypeColumn is the ref_type column name
-	CustomFieldRefType = "ref_type"
+	CustomFieldRefTypeColumn = "ref_type"
 	// CustomFieldCustomerIDColumn is the customer_id column name
-	CustomFieldCustomerID = "customer_id"
+	CustomFieldCustomerIDColumn = "customer_id"
 	// CustomFieldNameColumn is the name column name
 	CustomFieldNameColumn = "name"
 	// CustomFieldKeyColumn is the key column name

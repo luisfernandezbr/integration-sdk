@@ -45,11 +45,11 @@ const (
 	// ChangelogIDColumn is the id column name
 	ChangelogIDColumn = "id"
 	// ChangelogRefIDColumn is the ref_id column name
-	ChangelogRefID = "ref_id"
+	ChangelogRefIDColumn = "ref_id"
 	// ChangelogRefTypeColumn is the ref_type column name
-	ChangelogRefType = "ref_type"
+	ChangelogRefTypeColumn = "ref_type"
 	// ChangelogCustomerIDColumn is the customer_id column name
-	ChangelogCustomerID = "customer_id"
+	ChangelogCustomerIDColumn = "customer_id"
 	// ChangelogIssueIDColumn is the issue_id column name
 	ChangelogIssueIDColumn = "issue_id"
 	// ChangelogCreatedAtColumn is the created_ts column name

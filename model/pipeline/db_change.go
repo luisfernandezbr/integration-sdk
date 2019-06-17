@@ -41,6 +41,25 @@ const (
 	DbChangeModelName datamodel.ModelNameType = "pipeline.DbChange"
 )
 
+const (
+	// DbChangeIDColumn is the id column name
+	DbChangeIDColumn = "id"
+	// DbChangeRefIDColumn is the ref_id column name
+	DbChangeRefIDColumn = "ref_id"
+	// DbChangeRefTypeColumn is the ref_type column name
+	DbChangeRefTypeColumn = "ref_type"
+	// DbChangeCustomerIDColumn is the customer_id column name
+	DbChangeCustomerIDColumn = "customer_id"
+	// DbChangeDateAtColumn is the date_ts column name
+	DbChangeDateAtColumn = "date_ts"
+	// DbChangeModelColumn is the model column name
+	DbChangeModelColumn = "model"
+	// DbChangeActionColumn is the action column name
+	DbChangeActionColumn = "action"
+	// DbChangeDataColumn is the data column name
+	DbChangeDataColumn = "data"
+)
+
 // Action is the enumeration type for action
 type Action int32
 
@@ -64,25 +83,6 @@ const (
 	ActionUpdate Action = 1
 	// ActionDelete is the enumeration value for delete
 	ActionDelete Action = 2
-)
-
-const (
-	// DbChangeIDColumn is the id column name
-	DbChangeIDColumn = "id"
-	// DbChangeRefIDColumn is the ref_id column name
-	DbChangeRefID = "ref_id"
-	// DbChangeRefTypeColumn is the ref_type column name
-	DbChangeRefType = "ref_type"
-	// DbChangeCustomerIDColumn is the customer_id column name
-	DbChangeCustomerID = "customer_id"
-	// DbChangeDateAtColumn is the date_ts column name
-	DbChangeDateAtColumn = "date_ts"
-	// DbChangeModelColumn is the model column name
-	DbChangeModelColumn = "model"
-	// DbChangeActionColumn is the action column name
-	DbChangeActionColumn = "action"
-	// DbChangeDataColumn is the data column name
-	DbChangeDataColumn = "data"
 )
 
 // DbChange db change will contain all the changes to a specific data model from the DB

@@ -44,11 +44,11 @@ const (
 	// UserIDColumn is the id column name
 	UserIDColumn = "id"
 	// UserRefIDColumn is the ref_id column name
-	UserRefID = "ref_id"
+	UserRefIDColumn = "ref_id"
 	// UserRefTypeColumn is the ref_type column name
-	UserRefType = "ref_type"
+	UserRefTypeColumn = "ref_type"
 	// UserCustomerIDColumn is the customer_id column name
-	UserCustomerID = "customer_id"
+	UserCustomerIDColumn = "customer_id"
 	// UserNameColumn is the name column name
 	UserNameColumn = "name"
 	// UserAvatarURLColumn is the avatar_url column name

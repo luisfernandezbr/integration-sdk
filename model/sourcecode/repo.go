@@ -43,11 +43,11 @@ const (
 	// RepoIDColumn is the id column name
 	RepoIDColumn = "id"
 	// RepoRefIDColumn is the ref_id column name
-	RepoRefID = "ref_id"
+	RepoRefIDColumn = "ref_id"
 	// RepoRefTypeColumn is the ref_type column name
-	RepoRefType = "ref_type"
+	RepoRefTypeColumn = "ref_type"
 	// RepoCustomerIDColumn is the customer_id column name
-	RepoCustomerID = "customer_id"
+	RepoCustomerIDColumn = "customer_id"
 	// RepoNameColumn is the name column name
 	RepoNameColumn = "name"
 	// RepoURLColumn is the url column name

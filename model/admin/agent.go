@@ -44,11 +44,11 @@ const (
 	// AgentIDColumn is the id column name
 	AgentIDColumn = "id"
 	// AgentRefIDColumn is the ref_id column name
-	AgentRefID = "ref_id"
+	AgentRefIDColumn = "ref_id"
 	// AgentRefTypeColumn is the ref_type column name
-	AgentRefType = "ref_type"
+	AgentRefTypeColumn = "ref_type"
 	// AgentCustomerIDColumn is the customer_id column name
-	AgentCustomerID = "customer_id"
+	AgentCustomerIDColumn = "customer_id"
 	// AgentApikeyColumn is the apikey column name
 	AgentApikeyColumn = "apikey"
 	// AgentRerunHistoricalColumn is the rerun_historical column name

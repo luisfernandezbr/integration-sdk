@@ -41,6 +41,25 @@ const (
 	ACLGrantModelName datamodel.ModelNameType = "auth.ACLGrant"
 )
 
+const (
+	// ACLGrantIDColumn is the id column name
+	ACLGrantIDColumn = "id"
+	// ACLGrantRefIDColumn is the ref_id column name
+	ACLGrantRefIDColumn = "ref_id"
+	// ACLGrantRefTypeColumn is the ref_type column name
+	ACLGrantRefTypeColumn = "ref_type"
+	// ACLGrantCustomerIDColumn is the customer_id column name
+	ACLGrantCustomerIDColumn = "customer_id"
+	// ACLGrantResourceIDColumn is the resource_id column name
+	ACLGrantResourceIDColumn = "resource_id"
+	// ACLGrantRoleIDColumn is the role_id column name
+	ACLGrantRoleIDColumn = "role_id"
+	// ACLGrantCreatedAtColumn is the created_ts column name
+	ACLGrantCreatedAtColumn = "created_ts"
+	// ACLGrantPermissionColumn is the permission column name
+	ACLGrantPermissionColumn = "permission"
+)
+
 // Permission is the enumeration type for permission
 type Permission int32
 
@@ -64,25 +83,6 @@ const (
 	PermissionRead Permission = 1
 	// PermissionReadwrite is the enumeration value for readwrite
 	PermissionReadwrite Permission = 2
-)
-
-const (
-	// ACLGrantIDColumn is the id column name
-	ACLGrantIDColumn = "id"
-	// ACLGrantRefIDColumn is the ref_id column name
-	ACLGrantRefID = "ref_id"
-	// ACLGrantRefTypeColumn is the ref_type column name
-	ACLGrantRefType = "ref_type"
-	// ACLGrantCustomerIDColumn is the customer_id column name
-	ACLGrantCustomerID = "customer_id"
-	// ACLGrantResourceIDColumn is the resource_id column name
-	ACLGrantResourceIDColumn = "resource_id"
-	// ACLGrantRoleIDColumn is the role_id column name
-	ACLGrantRoleIDColumn = "role_id"
-	// ACLGrantCreatedAtColumn is the created_ts column name
-	ACLGrantCreatedAtColumn = "created_ts"
-	// ACLGrantPermissionColumn is the permission column name
-	ACLGrantPermissionColumn = "permission"
 )
 
 // ACLGrant a ACL grant controls permisson for a specific role to a resource
