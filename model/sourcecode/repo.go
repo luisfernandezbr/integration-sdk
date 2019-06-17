@@ -34,11 +34,20 @@ const (
 
 	// RepoTable is the default table name
 	RepoTable datamodel.TopicNameType = "sourcecode_Repo"
+
 	// RepoModelName is the model name
 	RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
 )
 
 const (
+	// RepoIDColumn is the id column name
+	RepoIDColumn = "id"
+	// RepoRefIDColumn is the ref_id column name
+	RepoRefID = "ref_id"
+	// RepoRefTypeColumn is the ref_type column name
+	RepoRefType = "ref_type"
+	// RepoCustomerIDColumn is the customer_id column name
+	RepoCustomerID = "customer_id"
 	// RepoNameColumn is the name column name
 	RepoNameColumn = "name"
 	// RepoURLColumn is the url column name

@@ -36,11 +36,14 @@ const (
 
 	// HookTable is the default table name
 	HookTable datamodel.TopicNameType = "web_Hook"
+
 	// HookModelName is the model name
 	HookModelName datamodel.ModelNameType = "web.Hook"
 )
 
 const (
+	// HookIDColumn is the id column name
+	HookIDColumn = "id"
 	// HookDateAtColumn is the date_ts column name
 	HookDateAtColumn = "date_ts"
 	// HookSystemColumn is the system column name

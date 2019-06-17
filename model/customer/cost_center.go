@@ -35,11 +35,20 @@ const (
 
 	// CostCenterTable is the default table name
 	CostCenterTable datamodel.TopicNameType = "customer_CostCenter"
+
 	// CostCenterModelName is the model name
 	CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
 )
 
 const (
+	// CostCenterIDColumn is the id column name
+	CostCenterIDColumn = "id"
+	// CostCenterRefIDColumn is the ref_id column name
+	CostCenterRefID = "ref_id"
+	// CostCenterRefTypeColumn is the ref_type column name
+	CostCenterRefType = "ref_type"
+	// CostCenterCustomerIDColumn is the customer_id column name
+	CostCenterCustomerID = "customer_id"
 	// CostCenterNameColumn is the name column name
 	CostCenterNameColumn = "name"
 	// CostCenterDescriptionColumn is the description column name

@@ -36,11 +36,20 @@ const (
 
 	// CommitTable is the default table name
 	CommitTable datamodel.TopicNameType = "sourcecode_Commit"
+
 	// CommitModelName is the model name
 	CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
 )
 
 const (
+	// CommitIDColumn is the id column name
+	CommitIDColumn = "id"
+	// CommitRefIDColumn is the ref_id column name
+	CommitRefID = "ref_id"
+	// CommitRefTypeColumn is the ref_type column name
+	CommitRefType = "ref_type"
+	// CommitCustomerIDColumn is the customer_id column name
+	CommitCustomerID = "customer_id"
 	// CommitRepoIDColumn is the repo_id column name
 	CommitRepoIDColumn = "repo_id"
 	// CommitShaColumn is the sha column name

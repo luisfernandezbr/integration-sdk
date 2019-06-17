@@ -37,11 +37,20 @@ const (
 
 	// IssueTable is the default table name
 	IssueTable datamodel.TopicNameType = "work_Issue"
+
 	// IssueModelName is the model name
 	IssueModelName datamodel.ModelNameType = "work.Issue"
 )
 
 const (
+	// IssueIDColumn is the id column name
+	IssueIDColumn = "id"
+	// IssueRefIDColumn is the ref_id column name
+	IssueRefID = "ref_id"
+	// IssueRefTypeColumn is the ref_type column name
+	IssueRefType = "ref_type"
+	// IssueCustomerIDColumn is the customer_id column name
+	IssueCustomerID = "customer_id"
 	// IssueTitleColumn is the title column name
 	IssueTitleColumn = "title"
 	// IssueIdentifierColumn is the identifier column name
@@ -887,7 +896,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",

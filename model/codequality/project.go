@@ -34,11 +34,20 @@ const (
 
 	// ProjectTable is the default table name
 	ProjectTable datamodel.TopicNameType = "codequality_Project"
+
 	// ProjectModelName is the model name
 	ProjectModelName datamodel.ModelNameType = "codequality.Project"
 )
 
 const (
+	// ProjectIDColumn is the id column name
+	ProjectIDColumn = "id"
+	// ProjectRefIDColumn is the ref_id column name
+	ProjectRefID = "ref_id"
+	// ProjectRefTypeColumn is the ref_type column name
+	ProjectRefType = "ref_type"
+	// ProjectCustomerIDColumn is the customer_id column name
+	ProjectCustomerID = "customer_id"
 	// ProjectIdentifierColumn is the identifier column name
 	ProjectIdentifierColumn = "identifier"
 	// ProjectNameColumn is the name column name

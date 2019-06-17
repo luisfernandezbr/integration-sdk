@@ -37,6 +37,7 @@ const (
 
 	// BlameTable is the default table name
 	BlameTable datamodel.TopicNameType = "sourcecode_Blame"
+
 	// BlameModelName is the model name
 	BlameModelName datamodel.ModelNameType = "sourcecode.Blame"
 )
@@ -100,6 +101,14 @@ func (o *BlameLines) ToMap() map[string]interface{} {
 }
 
 const (
+	// BlameIDColumn is the id column name
+	BlameIDColumn = "id"
+	// BlameRefIDColumn is the ref_id column name
+	BlameRefID = "ref_id"
+	// BlameRefTypeColumn is the ref_type column name
+	BlameRefType = "ref_type"
+	// BlameCustomerIDColumn is the customer_id column name
+	BlameCustomerID = "customer_id"
 	// BlameDateAtColumn is the date_ts column name
 	BlameDateAtColumn = "date_ts"
 	// BlameDateColumn is the date column name
@@ -971,7 +980,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions", "type": "record"}},
+				"type": map[string]interface{}{"name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"name": "blank", "doc": "if the line is a blank line", "type": "boolean"}}, "doc": "the individual line attributions"}, "type": "array"},
 			},
 		},
 	}

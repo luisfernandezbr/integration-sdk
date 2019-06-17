@@ -36,11 +36,20 @@ const (
 
 	// PullRequestTable is the default table name
 	PullRequestTable datamodel.TopicNameType = "sourcecode_PullRequest"
+
 	// PullRequestModelName is the model name
 	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 )
 
 const (
+	// PullRequestIDColumn is the id column name
+	PullRequestIDColumn = "id"
+	// PullRequestRefIDColumn is the ref_id column name
+	PullRequestRefID = "ref_id"
+	// PullRequestRefTypeColumn is the ref_type column name
+	PullRequestRefType = "ref_type"
+	// PullRequestCustomerIDColumn is the customer_id column name
+	PullRequestCustomerID = "customer_id"
 	// PullRequestRepoIDColumn is the repo_id column name
 	PullRequestRepoIDColumn = "repo_id"
 	// PullRequestTitleColumn is the title column name

@@ -36,6 +36,7 @@ const (
 
 	// ACLGrantTable is the default table name
 	ACLGrantTable datamodel.TopicNameType = "auth_ACLGrant"
+
 	// ACLGrantModelName is the model name
 	ACLGrantModelName datamodel.ModelNameType = "auth.ACLGrant"
 )
@@ -66,6 +67,14 @@ const (
 )
 
 const (
+	// ACLGrantIDColumn is the id column name
+	ACLGrantIDColumn = "id"
+	// ACLGrantRefIDColumn is the ref_id column name
+	ACLGrantRefID = "ref_id"
+	// ACLGrantRefTypeColumn is the ref_type column name
+	ACLGrantRefType = "ref_type"
+	// ACLGrantCustomerIDColumn is the customer_id column name
+	ACLGrantCustomerID = "customer_id"
 	// ACLGrantResourceIDColumn is the resource_id column name
 	ACLGrantResourceIDColumn = "resource_id"
 	// ACLGrantRoleIDColumn is the role_id column name

@@ -36,11 +36,20 @@ const (
 
 	// SprintTable is the default table name
 	SprintTable datamodel.TopicNameType = "work_Sprint"
+
 	// SprintModelName is the model name
 	SprintModelName datamodel.ModelNameType = "work.Sprint"
 )
 
 const (
+	// SprintIDColumn is the id column name
+	SprintIDColumn = "id"
+	// SprintRefIDColumn is the ref_id column name
+	SprintRefID = "ref_id"
+	// SprintRefTypeColumn is the ref_type column name
+	SprintRefType = "ref_type"
+	// SprintCustomerIDColumn is the customer_id column name
+	SprintCustomerID = "customer_id"
 	// SprintNameColumn is the name column name
 	SprintNameColumn = "name"
 	// SprintIdentifierColumn is the identifier column name

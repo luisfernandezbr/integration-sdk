@@ -36,11 +36,20 @@ const (
 
 	// MetricTable is the default table name
 	MetricTable datamodel.TopicNameType = "codequality_Metric"
+
 	// MetricModelName is the model name
 	MetricModelName datamodel.ModelNameType = "codequality.Metric"
 )
 
 const (
+	// MetricIDColumn is the id column name
+	MetricIDColumn = "id"
+	// MetricRefIDColumn is the ref_id column name
+	MetricRefID = "ref_id"
+	// MetricRefTypeColumn is the ref_type column name
+	MetricRefType = "ref_type"
+	// MetricCustomerIDColumn is the customer_id column name
+	MetricCustomerID = "customer_id"
 	// MetricDateAtColumn is the date_ts column name
 	MetricDateAtColumn = "date_ts"
 	// MetricProjectIDColumn is the project_id column name

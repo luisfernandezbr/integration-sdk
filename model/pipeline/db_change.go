@@ -36,6 +36,7 @@ const (
 
 	// DbChangeTable is the default table name
 	DbChangeTable datamodel.TopicNameType = "pipeline_DbChange"
+
 	// DbChangeModelName is the model name
 	DbChangeModelName datamodel.ModelNameType = "pipeline.DbChange"
 )
@@ -66,6 +67,14 @@ const (
 )
 
 const (
+	// DbChangeIDColumn is the id column name
+	DbChangeIDColumn = "id"
+	// DbChangeRefIDColumn is the ref_id column name
+	DbChangeRefID = "ref_id"
+	// DbChangeRefTypeColumn is the ref_type column name
+	DbChangeRefType = "ref_type"
+	// DbChangeCustomerIDColumn is the customer_id column name
+	DbChangeCustomerID = "customer_id"
 	// DbChangeDateAtColumn is the date_ts column name
 	DbChangeDateAtColumn = "date_ts"
 	// DbChangeModelColumn is the model column name

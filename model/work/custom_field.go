@@ -34,11 +34,20 @@ const (
 
 	// CustomFieldTable is the default table name
 	CustomFieldTable datamodel.TopicNameType = "work_CustomField"
+
 	// CustomFieldModelName is the model name
 	CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
 )
 
 const (
+	// CustomFieldIDColumn is the id column name
+	CustomFieldIDColumn = "id"
+	// CustomFieldRefIDColumn is the ref_id column name
+	CustomFieldRefID = "ref_id"
+	// CustomFieldRefTypeColumn is the ref_type column name
+	CustomFieldRefType = "ref_type"
+	// CustomFieldCustomerIDColumn is the customer_id column name
+	CustomFieldCustomerID = "customer_id"
 	// CustomFieldNameColumn is the name column name
 	CustomFieldNameColumn = "name"
 	// CustomFieldKeyColumn is the key column name

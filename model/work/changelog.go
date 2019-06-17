@@ -36,11 +36,20 @@ const (
 
 	// ChangelogTable is the default table name
 	ChangelogTable datamodel.TopicNameType = "work_Changelog"
+
 	// ChangelogModelName is the model name
 	ChangelogModelName datamodel.ModelNameType = "work.Changelog"
 )
 
 const (
+	// ChangelogIDColumn is the id column name
+	ChangelogIDColumn = "id"
+	// ChangelogRefIDColumn is the ref_id column name
+	ChangelogRefID = "ref_id"
+	// ChangelogRefTypeColumn is the ref_type column name
+	ChangelogRefType = "ref_type"
+	// ChangelogCustomerIDColumn is the customer_id column name
+	ChangelogCustomerID = "customer_id"
 	// ChangelogIssueIDColumn is the issue_id column name
 	ChangelogIssueIDColumn = "issue_id"
 	// ChangelogCreatedAtColumn is the created_ts column name
