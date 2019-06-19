@@ -288,15 +288,6 @@ func (o *User) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
-	if o.Owner == nil {
-		o.Owner = false
-	}
-	if o.Active == nil {
-		o.Active = false
-	}
-	if o.Trackable == nil {
-		o.Trackable = true
-	}
 }
 
 // GetID returns the ID for the object
