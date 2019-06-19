@@ -350,9 +350,9 @@ func (o *Agent) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	o.FromMap(kv)
 	// make sure that these have values if empty
 	o.setDefaults()
+	o.FromMap(kv)
 	return nil
 }
 
@@ -417,6 +417,8 @@ func (o *Agent) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Agent) FromMap(kv map[string]interface{}) {
+	// make sure that these have values if empty
+	o.setDefaults()
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
@@ -477,8 +479,6 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 			o.CompletedAt = number.ToInt64Any(val)
 		}
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object

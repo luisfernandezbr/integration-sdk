@@ -335,9 +335,9 @@ func (o *Hook) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	o.FromMap(kv)
 	// make sure that these have values if empty
 	o.setDefaults()
+	o.FromMap(kv)
 	return nil
 }
 
@@ -402,6 +402,8 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Hook) FromMap(kv map[string]interface{}) {
+	// make sure that these have values if empty
+	o.setDefaults()
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
@@ -477,8 +479,6 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 			o.Data = fmt.Sprintf("%v", val)
 		}
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 }
 
 // GetHookAvroSchemaSpec creates the avro schema specification for Hook
