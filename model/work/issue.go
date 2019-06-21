@@ -100,6 +100,7 @@ type Issue struct {
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+
 	// custom types
 
 	// Title the issue title

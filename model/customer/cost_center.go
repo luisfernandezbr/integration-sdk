@@ -19,6 +19,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/event"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -49,6 +50,10 @@ const (
 	CostCenterRefTypeColumn = "ref_type"
 	// CostCenterCustomerIDColumn is the customer_id column name
 	CostCenterCustomerIDColumn = "customer_id"
+	// CostCenterCreatedAtColumn is the created_ts column name
+	CostCenterCreatedAtColumn = "created_ts"
+	// CostCenterUpdatedAtColumn is the updated_ts column name
+	CostCenterUpdatedAtColumn = "updated_ts"
 	// CostCenterNameColumn is the name column name
 	CostCenterNameColumn = "name"
 	// CostCenterDescriptionColumn is the description column name
@@ -66,6 +71,10 @@ type CostCenter struct {
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+
 	// custom types
 
 	// Name the name of the cost center
@@ -404,6 +413,8 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
+		"created_ts":  o.CreatedAt,
+		"updated_ts":  o.UpdatedAt,
 		"name":        toCostCenterObject(o.Name, isavro, false, "string"),
 		"description": toCostCenterObject(o.Description, isavro, false, "string"),
 		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),
@@ -427,6 +438,16 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	}
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else if val, ok := kv["created_ts"].(time.Time); ok {
+		o.CreatedAt = datetime.TimeToEpoch(val)
+	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else if val, ok := kv["updated_ts"].(time.Time); ok {
+		o.UpdatedAt = datetime.TimeToEpoch(val)
 	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
@@ -553,6 +574,14 @@ func GetCostCenterAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "name",

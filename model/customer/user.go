@@ -19,6 +19,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/event"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -50,6 +51,10 @@ const (
 	UserRefTypeColumn = "ref_type"
 	// UserCustomerIDColumn is the customer_id column name
 	UserCustomerIDColumn = "customer_id"
+	// UserCreatedAtColumn is the created_ts column name
+	UserCreatedAtColumn = "created_ts"
+	// UserUpdatedAtColumn is the updated_ts column name
+	UserUpdatedAtColumn = "updated_ts"
 	// UserNameColumn is the name column name
 	UserNameColumn = "name"
 	// UserEmailColumn is the email column name
@@ -68,10 +73,6 @@ const (
 	UserActiveColumn = "active"
 	// UserTrackableColumn is the trackable column name
 	UserTrackableColumn = "trackable"
-	// UserCreatedAtColumn is the created_ts column name
-	UserCreatedAtColumn = "created_ts"
-	// UserUpdatedAtColumn is the updated_ts column name
-	UserUpdatedAtColumn = "updated_ts"
 	// UserDeletedAtColumn is the deleted_ts column name
 	UserDeletedAtColumn = "deleted_ts"
 	// UserHiredAtColumn is the hired_ts column name
@@ -93,6 +94,10 @@ type User struct {
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+
 	// custom types
 
 	// Name name of the user
@@ -113,10 +118,6 @@ type User struct {
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Trackable if true, the user is trackable in the pinpoint system
 	Trackable bool `json:"trackable" bson:"trackable" yaml:"trackable" faker:"-"`
-	// CreatedAt when the user was created in epoch timestamp
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
-	// UpdatedAt when the user record was updated in epoch timestamp
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// DeletedAt when the user record was deleted in epoch timestamp
 	DeletedAt *int64 `json:"deleted_ts" bson:"deleted_ts" yaml:"deleted_ts" faker:"-"`
 	// HiredAt when the user was hired in epoch timestamp
@@ -457,6 +458,8 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":       o.RefType,
 		"customer_id":    o.CustomerID,
 		"hashcode":       o.Hash(),
+		"created_ts":     o.CreatedAt,
+		"updated_ts":     o.UpdatedAt,
 		"name":           toUserObject(o.Name, isavro, false, "string"),
 		"email":          toUserObject(o.Email, isavro, false, "string"),
 		"title":          toUserObject(o.Title, isavro, true, "string"),
@@ -466,8 +469,6 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"owner":          toUserObject(o.Owner, isavro, false, "boolean"),
 		"active":         toUserObject(o.Active, isavro, false, "boolean"),
 		"trackable":      toUserObject(o.Trackable, isavro, false, "boolean"),
-		"created_ts":     toUserObject(o.CreatedAt, isavro, false, "long"),
-		"updated_ts":     toUserObject(o.UpdatedAt, isavro, false, "long"),
 		"deleted_ts":     toUserObject(o.DeletedAt, isavro, true, "long"),
 		"hired_ts":       toUserObject(o.HiredAt, isavro, true, "long"),
 		"terminated_ts":  toUserObject(o.TerminatedAt, isavro, true, "long"),
@@ -493,6 +494,16 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	}
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else if val, ok := kv["created_ts"].(time.Time); ok {
+		o.CreatedAt = datetime.TimeToEpoch(val)
+	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else if val, ok := kv["updated_ts"].(time.Time); ok {
+		o.UpdatedAt = datetime.TimeToEpoch(val)
 	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
@@ -614,26 +625,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Trackable = number.ToBoolAny(val)
 		}
 	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			o.CreatedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		val := kv["updated_ts"]
-		if val == nil {
-			o.UpdatedAt = number.ToInt64Any(nil)
-		} else {
-			o.UpdatedAt = number.ToInt64Any(val)
-		}
-	}
 	if val, ok := kv["deleted_ts"].(*int64); ok {
 		o.DeletedAt = val
 	} else if val, ok := kv["deleted_ts"].(int64); ok {
@@ -732,8 +723,6 @@ func (o *User) Hash() string {
 	args = append(args, o.Owner)
 	args = append(args, o.Active)
 	args = append(args, o.Trackable)
-	args = append(args, o.CreatedAt)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.DeletedAt)
 	args = append(args, o.HiredAt)
 	args = append(args, o.TerminatedAt)
@@ -818,6 +807,14 @@ func GetUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
 				"name": "name",
 				"type": "string",
 			},
@@ -856,14 +853,6 @@ func GetUserAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "trackable",
 				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
 			},
 			map[string]interface{}{
 				"name":    "deleted_ts",

@@ -24,7 +24,6 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -50,12 +49,14 @@ const (
 	ACLGrantRefTypeColumn = "ref_type"
 	// ACLGrantCustomerIDColumn is the customer_id column name
 	ACLGrantCustomerIDColumn = "customer_id"
+	// ACLGrantCreatedAtColumn is the created_ts column name
+	ACLGrantCreatedAtColumn = "created_ts"
+	// ACLGrantUpdatedAtColumn is the updated_ts column name
+	ACLGrantUpdatedAtColumn = "updated_ts"
 	// ACLGrantResourceIDColumn is the resource_id column name
 	ACLGrantResourceIDColumn = "resource_id"
 	// ACLGrantRoleIDColumn is the role_id column name
 	ACLGrantRoleIDColumn = "role_id"
-	// ACLGrantCreatedAtColumn is the created_ts column name
-	ACLGrantCreatedAtColumn = "created_ts"
 	// ACLGrantPermissionColumn is the permission column name
 	ACLGrantPermissionColumn = "permission"
 )
@@ -94,14 +95,16 @@ type ACLGrant struct {
 	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+
 	// custom types
 
 	// ResourceID the resource id for the grant
 	ResourceID string `json:"resource_id" bson:"resource_id" yaml:"resource_id" faker:"-"`
 	// RoleID the role id for the grant
 	RoleID string `json:"role_id" bson:"role_id" yaml:"role_id" faker:"-"`
-	// CreatedAt the timestamp when the grant was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// Permission the permission that the grant provides
 	Permission Permission `json:"permission" bson:"permission" yaml:"permission" faker:"-"`
 }
@@ -461,9 +464,10 @@ func (o *ACLGrant) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":    o.RefType,
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
+		"created_ts":  o.CreatedAt,
+		"updated_ts":  o.UpdatedAt,
 		"resource_id": toACLGrantObject(o.ResourceID, isavro, false, "string"),
 		"role_id":     toACLGrantObject(o.RoleID, isavro, false, "string"),
-		"created_ts":  toACLGrantObject(o.CreatedAt, isavro, false, "long"),
 		"permission":  toACLGrantObject(o.Permission, isavro, false, "permission"),
 	}
 }
@@ -485,6 +489,16 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	}
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else if val, ok := kv["created_ts"].(time.Time); ok {
+		o.CreatedAt = datetime.TimeToEpoch(val)
+	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else if val, ok := kv["updated_ts"].(time.Time); ok {
+		o.UpdatedAt = datetime.TimeToEpoch(val)
 	}
 	if val, ok := kv["resource_id"].(string); ok {
 		o.ResourceID = val
@@ -510,16 +524,6 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.RoleID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			o.CreatedAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["permission"].(Permission); ok {
@@ -558,7 +562,6 @@ func (o *ACLGrant) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ResourceID)
 	args = append(args, o.RoleID)
-	args = append(args, o.CreatedAt)
 	args = append(args, o.Permission)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -639,16 +642,20 @@ func GetACLGrantAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
 				"name": "resource_id",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "role_id",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "permission",
