@@ -52,6 +52,10 @@ const (
 	RepoNameColumn = "name"
 	// RepoURLColumn is the url column name
 	RepoURLColumn = "url"
+	// RepoDefaultBranchColumn is the default_branch column name
+	RepoDefaultBranchColumn = "default_branch"
+	// RepoDescriptionColumn is the description column name
+	RepoDescriptionColumn = "description"
 )
 
 // Repo the repo holds source code
@@ -70,6 +74,10 @@ type Repo struct {
 	Name string `json:"name" bson:"name" yaml:"name" faker:"repo"`
 	// URL the url to the repo home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	// DefaultBranch the repo default branch
+	DefaultBranch string `json:"default_branch" bson:"default_branch" yaml:"default_branch" faker:"-"`
+	// Description the repo description
+	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -227,6 +235,9 @@ func (o *Repo) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
+	if o.DefaultBranch == "" {
+		o.DefaultBranch = "master"
+	}
 }
 
 // GetID returns the ID for the object
@@ -395,13 +406,15 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"name":        toRepoObject(o.Name, isavro, false, "string"),
-		"url":         toRepoObject(o.URL, isavro, false, "string"),
+		"id":             o.GetID(),
+		"ref_id":         o.GetRefID(),
+		"ref_type":       o.RefType,
+		"customer_id":    o.CustomerID,
+		"hashcode":       o.Hash(),
+		"name":           toRepoObject(o.Name, isavro, false, "string"),
+		"url":            toRepoObject(o.URL, isavro, false, "string"),
+		"default_branch": toRepoObject(o.DefaultBranch, isavro, false, "string"),
+		"description":    toRepoObject(o.Description, isavro, false, "string"),
 	}
 }
 
@@ -449,6 +462,32 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["default_branch"].(string); ok {
+		o.DefaultBranch = val
+	} else {
+		val := kv["default_branch"]
+		if val == nil {
+			o.DefaultBranch = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.DefaultBranch = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		val := kv["description"]
+		if val == nil {
+			o.Description = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Description = fmt.Sprintf("%v", val)
+		}
+	}
 }
 
 // Hash will return a hashcode for the object
@@ -460,6 +499,8 @@ func (o *Repo) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Name)
 	args = append(args, o.URL)
+	args = append(args, o.DefaultBranch)
+	args = append(args, o.Description)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -498,6 +539,14 @@ func GetRepoAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "url",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "default_branch",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "description",
 				"type": "string",
 			},
 		},
