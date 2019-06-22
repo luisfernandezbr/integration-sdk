@@ -242,7 +242,7 @@ func (o *Team) setDefaults() {
 func (o *Team) GetID() string {
 	if o.ID == "" {
 		// set the id from the spec provided in the model
-		o.ID = hash.Values(o.CustomerID, o.CreatedAt)
+		o.ID = hash.Values(o.CustomerID, randomString(64))
 	}
 	return o.ID
 }
