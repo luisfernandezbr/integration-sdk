@@ -23,6 +23,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -52,10 +53,14 @@ const (
 	RepoNameColumn = "name"
 	// RepoURLColumn is the url column name
 	RepoURLColumn = "url"
-	// RepoDefaultBranchColumn is the default_branch column name
-	RepoDefaultBranchColumn = "default_branch"
 	// RepoDescriptionColumn is the description column name
 	RepoDescriptionColumn = "description"
+	// RepoLanguageColumn is the language column name
+	RepoLanguageColumn = "language"
+	// RepoActiveColumn is the active column name
+	RepoActiveColumn = "active"
+	// RepoDefaultBranchColumn is the default_branch column name
+	RepoDefaultBranchColumn = "default_branch"
 )
 
 // Repo the repo holds source code
@@ -74,10 +79,14 @@ type Repo struct {
 	Name string `json:"name" bson:"name" yaml:"name" faker:"repo"`
 	// URL the url to the repo home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	// Description brief explanation of the repo
+	Description string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
+	// Language the programming language the source code is primarily written in
+	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
+	// Active the status of the repo
+	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// DefaultBranch the repo default branch
 	DefaultBranch string `json:"default_branch" bson:"default_branch" yaml:"default_branch" faker:"-"`
-	// Description the repo description
-	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -413,8 +422,10 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 		"hashcode":       o.Hash(),
 		"name":           toRepoObject(o.Name, isavro, false, "string"),
 		"url":            toRepoObject(o.URL, isavro, false, "string"),
-		"default_branch": toRepoObject(o.DefaultBranch, isavro, false, "string"),
 		"description":    toRepoObject(o.Description, isavro, false, "string"),
+		"language":       toRepoObject(o.Language, isavro, false, "string"),
+		"active":         toRepoObject(o.Active, isavro, false, "boolean"),
+		"default_branch": toRepoObject(o.DefaultBranch, isavro, false, "string"),
 	}
 }
 
@@ -462,19 +473,6 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["default_branch"].(string); ok {
-		o.DefaultBranch = val
-	} else {
-		val := kv["default_branch"]
-		if val == nil {
-			o.DefaultBranch = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.DefaultBranch = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["description"].(string); ok {
 		o.Description = val
 	} else {
@@ -488,6 +486,42 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			o.Description = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["language"].(string); ok {
+		o.Language = val
+	} else {
+		val := kv["language"]
+		if val == nil {
+			o.Language = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Language = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		val := kv["active"]
+		if val == nil {
+			o.Active = number.ToBoolAny(nil)
+		} else {
+			o.Active = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["default_branch"].(string); ok {
+		o.DefaultBranch = val
+	} else {
+		val := kv["default_branch"]
+		if val == nil {
+			o.DefaultBranch = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.DefaultBranch = fmt.Sprintf("%v", val)
+		}
+	}
 }
 
 // Hash will return a hashcode for the object
@@ -499,8 +533,10 @@ func (o *Repo) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Name)
 	args = append(args, o.URL)
-	args = append(args, o.DefaultBranch)
 	args = append(args, o.Description)
+	args = append(args, o.Language)
+	args = append(args, o.Active)
+	args = append(args, o.DefaultBranch)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -542,11 +578,19 @@ func GetRepoAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "default_branch",
+				"name": "description",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "description",
+				"name": "language",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "active",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "default_branch",
 				"type": "string",
 			},
 		},
