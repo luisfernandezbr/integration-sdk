@@ -92,7 +92,110 @@ const (
 	CommitGpgSignedColumn = "gpg_signed"
 	// CommitExcludedColumn is the excluded column name
 	CommitExcludedColumn = "excluded"
+	// CommitFilesColumn is the files column name
+	CommitFilesColumn = "files"
 )
+
+// CommitFiles represents the object structure for files
+type CommitFiles struct {
+	// CreatedAt the timestamp in UTC that the commit was created
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CommitID the unique id for the commit
+	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	// Filename the filename
+	Filename string `json:"filename" bson:"filename" yaml:"filename" faker:"-"`
+	// Additions the number of additions for the commit file
+	Additions int64 `json:"additions" bson:"additions" yaml:"additions" faker:"-"`
+	// Deletions the number of deletions for the commit file
+	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
+	// Status the status of the change
+	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
+	// Binary indicates if the file was detected to be a binary file
+	Binary bool `json:"binary" bson:"binary" yaml:"binary" faker:"-"`
+	// Language the language that was detected for the file
+	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
+	// Excluded if the file was excluded from processing
+	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	// ExcludedReason if the file was excluded, the reason
+	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
+	// Ordinal the order value for the file in the change set
+	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
+	// Loc the number of lines in the file
+	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
+	// Sloc the number of source lines in the file
+	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	// Blanks the number of blank lines in the file
+	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
+	// Comments the number of comment lines in the file
+	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
+	// Complexity the complexity value for the file change
+	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
+	// License the license which was detected for the file
+	License string `json:"license" bson:"license" yaml:"license" faker:"-"`
+	// LicenseConfidence the license confidence from the detection engine
+	LicenseConfidence float64 `json:"license_confidence" bson:"license_confidence" yaml:"license_confidence" faker:"-"`
+	// Renamed if the file was renamed
+	Renamed bool `json:"renamed" bson:"renamed" yaml:"renamed" faker:"-"`
+	// RenamedFrom the original file name
+	RenamedFrom string `json:"renamed_from" bson:"renamed_from" yaml:"renamed_from" faker:"-"`
+	// RenamedTo the final file name
+	RenamedTo string `json:"renamed_to" bson:"renamed_to" yaml:"renamed_to" faker:"-"`
+	// Size the size of the file
+	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
+}
+
+func (o *CommitFiles) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// CreatedAt the timestamp in UTC that the commit was created
+		"created_ts": o.CreatedAt,
+		// CommitID the unique id for the commit
+		"commit_id": o.CommitID,
+		// RepoID the unique id for the repo
+		"repo_id": o.RepoID,
+		// Filename the filename
+		"filename": o.Filename,
+		// Additions the number of additions for the commit file
+		"additions": o.Additions,
+		// Deletions the number of deletions for the commit file
+		"deletions": o.Deletions,
+		// Status the status of the change
+		"status": o.Status,
+		// Binary indicates if the file was detected to be a binary file
+		"binary": o.Binary,
+		// Language the language that was detected for the file
+		"language": o.Language,
+		// Excluded if the file was excluded from processing
+		"excluded": o.Excluded,
+		// ExcludedReason if the file was excluded, the reason
+		"excluded_reason": o.ExcludedReason,
+		// Ordinal the order value for the file in the change set
+		"ordinal": o.Ordinal,
+		// Loc the number of lines in the file
+		"loc": o.Loc,
+		// Sloc the number of source lines in the file
+		"sloc": o.Sloc,
+		// Blanks the number of blank lines in the file
+		"blanks": o.Blanks,
+		// Comments the number of comment lines in the file
+		"comments": o.Comments,
+		// Complexity the complexity value for the file change
+		"complexity": o.Complexity,
+		// License the license which was detected for the file
+		"license": o.License,
+		// LicenseConfidence the license confidence from the detection engine
+		"license_confidence": o.LicenseConfidence,
+		// Renamed if the file was renamed
+		"renamed": o.Renamed,
+		// RenamedFrom the original file name
+		"renamed_from": o.RenamedFrom,
+		// RenamedTo the final file name
+		"renamed_to": o.RenamedTo,
+		// Size the size of the file
+		"size": o.Size,
+	}
+}
 
 // Commit the commit is a specific change in a repo
 type Commit struct {
@@ -148,6 +251,8 @@ type Commit struct {
 	GpgSigned bool `json:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
 	// Excluded if the commit was excluded
 	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	// Files the files touched by this commit
+	Files []CommitFiles `json:"files" bson:"files" yaml:"files" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -280,6 +385,24 @@ func toCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		arr := make([]interface{}, 0)
 		for _, av := range a {
 			arr = append(arr, toCommitObject(av, isavro, false, ""))
+		}
+		return arr
+	case CommitFiles:
+		vv := o.(CommitFiles)
+		return vv.ToMap()
+	case *CommitFiles:
+		return (*o.(*CommitFiles)).ToMap()
+	case []CommitFiles:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]CommitFiles) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]CommitFiles:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]CommitFiles)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
 		}
 		return arr
 	}
@@ -476,6 +599,9 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
+		if o.Files == nil {
+			o.Files = make([]CommitFiles, 0)
+		}
 	}
 	return map[string]interface{}{
 		"id":               o.GetID(),
@@ -504,6 +630,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"complexity":       toCommitObject(o.Complexity, isavro, false, "long"),
 		"gpg_signed":       toCommitObject(o.GpgSigned, isavro, false, "boolean"),
 		"excluded":         toCommitObject(o.Excluded, isavro, false, "boolean"),
+		"files":            toCommitObject(o.Files, isavro, false, "files"),
 	}
 }
 
@@ -759,6 +886,36 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.Excluded = number.ToBoolAny(val)
 		}
 	}
+	if val := kv["files"]; val != nil {
+		na := make([]CommitFiles, 0)
+		if a, ok := val.([]CommitFiles); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(CommitFiles); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av CommitFiles
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for files field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for files field")
+			}
+		}
+		o.Files = na
+	} else {
+		o.Files = []CommitFiles{}
+	}
+	if o.Files == nil {
+		o.Files = make([]CommitFiles, 0)
+	}
 }
 
 // Hash will return a hashcode for the object
@@ -789,6 +946,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Complexity)
 	args = append(args, o.GpgSigned)
 	args = append(args, o.Excluded)
+	args = append(args, o.Files)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -904,6 +1062,10 @@ func GetCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "excluded",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "files",
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"doc": "the timestamp in UTC that the commit was created", "type": "long", "name": "created_ts"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"name": "language", "doc": "the language that was detected for the file", "type": "string"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"name": "excluded_reason", "doc": "if the file was excluded, the reason", "type": "string"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"name": "license", "doc": "the license which was detected for the file", "type": "string"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"doc": "the size of the file", "type": "long", "name": "size"}}, "doc": "the files touched by this commit"}},
 			},
 		},
 	}
