@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -1065,7 +1065,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"doc": "the number of lines in the file", "type": "long", "name": "loc"}, map[string]interface{}{"name": "sloc", "doc": "the number of source lines in the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"doc": "the complexity value for the file change", "type": "long", "name": "complexity"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"doc": "the license confidence from the detection engine", "type": "float", "name": "license_confidence"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}}, "doc": "the files touched by this commit"}},
+				"type": map[string]interface{}{"name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"doc": "the timestamp in UTC that the commit was created", "type": "long", "name": "created_ts"}, map[string]interface{}{"doc": "the unique id for the commit", "type": "string", "name": "commit_id"}, map[string]interface{}{"doc": "the unique id for the repo", "type": "string", "name": "repo_id"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"doc": "the number of additions for the commit file", "type": "long", "name": "additions"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}, map[string]interface{}{"name": "binary", "doc": "indicates if the file was detected to be a binary file", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"name": "loc", "doc": "the number of lines in the file", "type": "long"}, map[string]interface{}{"doc": "the number of source lines in the file", "type": "long", "name": "sloc"}, map[string]interface{}{"doc": "the number of blank lines in the file", "type": "long", "name": "blanks"}, map[string]interface{}{"doc": "the number of comment lines in the file", "type": "long", "name": "comments"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"name": "license", "doc": "the license which was detected for the file", "type": "string"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"doc": "the size of the file", "type": "long", "name": "size"}}, "doc": "the files touched by this commit"}, "type": "array"},
 			},
 		},
 	}
@@ -1362,7 +1362,7 @@ func NewCommitSendEvent(o *Commit, opts ...CommitSendEventOpts) *CommitSendEvent
 }
 
 // NewCommitProducer will stream data from the channel
-func NewCommitProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewCommitProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1386,7 +1386,7 @@ func NewCommitProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -1405,9 +1405,9 @@ func NewCommitProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 }
 
 // NewCommitConsumer will stream data from the topic into the provided channel
-func NewCommitConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewCommitConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Commit
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into sourcecode.Commit: %s", err)
@@ -1425,7 +1425,7 @@ func NewCommitConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceive
 // CommitReceiveEvent is an event detail for receiving data
 type CommitReceiveEvent struct {
 	Commit  *Commit
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*CommitReceiveEvent)(nil)
@@ -1436,7 +1436,7 @@ func (e *CommitReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *CommitReceiveEvent) Message() event.Message {
+func (e *CommitReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -1461,7 +1461,7 @@ func (p *CommitProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Commit) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Commit) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &CommitProducer{
 		ch:   ch,
@@ -1470,7 +1470,7 @@ func (o *Commit) NewProducerChannel(producer event.Producer, errors chan<- error
 }
 
 // NewCommitProducerChannel returns a channel which can be used for producing Model events
-func NewCommitProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewCommitProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &CommitProducer{
 		ch:   ch,
@@ -1497,7 +1497,7 @@ func (c *CommitConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Commit) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Commit) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewCommitConsumer(consumer, ch, errors)
 	return &CommitConsumer{
@@ -1506,7 +1506,7 @@ func (o *Commit) NewConsumerChannel(consumer event.Consumer, errors chan<- error
 }
 
 // NewCommitConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewCommitConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewCommitConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewCommitConsumer(consumer, ch, errors)
 	return &CommitConsumer{

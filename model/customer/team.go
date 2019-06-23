@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -874,7 +874,7 @@ func NewTeamSendEvent(o *Team, opts ...TeamSendEventOpts) *TeamSendEvent {
 }
 
 // NewTeamProducer will stream data from the channel
-func NewTeamProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewTeamProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -898,7 +898,7 @@ func NewTeamProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -917,9 +917,9 @@ func NewTeamProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 }
 
 // NewTeamConsumer will stream data from the topic into the provided channel
-func NewTeamConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewTeamConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Team
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into customer.Team: %s", err)
@@ -937,7 +937,7 @@ func NewTeamConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEv
 // TeamReceiveEvent is an event detail for receiving data
 type TeamReceiveEvent struct {
 	Team    *Team
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*TeamReceiveEvent)(nil)
@@ -948,7 +948,7 @@ func (e *TeamReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *TeamReceiveEvent) Message() event.Message {
+func (e *TeamReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -973,7 +973,7 @@ func (p *TeamProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Team) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Team) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &TeamProducer{
 		ch:   ch,
@@ -982,7 +982,7 @@ func (o *Team) NewProducerChannel(producer event.Producer, errors chan<- error) 
 }
 
 // NewTeamProducerChannel returns a channel which can be used for producing Model events
-func NewTeamProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewTeamProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &TeamProducer{
 		ch:   ch,
@@ -1009,7 +1009,7 @@ func (c *TeamConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Team) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Team) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewTeamConsumer(consumer, ch, errors)
 	return &TeamConsumer{
@@ -1018,7 +1018,7 @@ func (o *Team) NewConsumerChannel(consumer event.Consumer, errors chan<- error) 
 }
 
 // NewTeamConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewTeamConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewTeamConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewTeamConsumer(consumer, ch, errors)
 	return &TeamConsumer{

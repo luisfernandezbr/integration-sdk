@@ -20,7 +20,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -681,7 +681,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"name": "branched_from_commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",
@@ -994,7 +994,7 @@ func NewBranchSendEvent(o *Branch, opts ...BranchSendEventOpts) *BranchSendEvent
 }
 
 // NewBranchProducer will stream data from the channel
-func NewBranchProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewBranchProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1018,7 +1018,7 @@ func NewBranchProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -1037,9 +1037,9 @@ func NewBranchProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 }
 
 // NewBranchConsumer will stream data from the topic into the provided channel
-func NewBranchConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewBranchConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Branch
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into sourcecode.Branch: %s", err)
@@ -1057,7 +1057,7 @@ func NewBranchConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceive
 // BranchReceiveEvent is an event detail for receiving data
 type BranchReceiveEvent struct {
 	Branch  *Branch
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*BranchReceiveEvent)(nil)
@@ -1068,7 +1068,7 @@ func (e *BranchReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *BranchReceiveEvent) Message() event.Message {
+func (e *BranchReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -1093,7 +1093,7 @@ func (p *BranchProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Branch) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Branch) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &BranchProducer{
 		ch:   ch,
@@ -1102,7 +1102,7 @@ func (o *Branch) NewProducerChannel(producer event.Producer, errors chan<- error
 }
 
 // NewBranchProducerChannel returns a channel which can be used for producing Model events
-func NewBranchProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewBranchProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &BranchProducer{
 		ch:   ch,
@@ -1129,7 +1129,7 @@ func (c *BranchConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Branch) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Branch) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewBranchConsumer(consumer, ch, errors)
 	return &BranchConsumer{
@@ -1138,7 +1138,7 @@ func (o *Branch) NewConsumerChannel(consumer event.Consumer, errors chan<- error
 }
 
 // NewBranchConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewBranchConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewBranchConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewBranchConsumer(consumer, ch, errors)
 	return &BranchConsumer{

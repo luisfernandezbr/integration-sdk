@@ -21,7 +21,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -897,7 +897,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",
@@ -1202,7 +1202,7 @@ func NewIssueSendEvent(o *Issue, opts ...IssueSendEventOpts) *IssueSendEvent {
 }
 
 // NewIssueProducer will stream data from the channel
-func NewIssueProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewIssueProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1226,7 +1226,7 @@ func NewIssueProducer(producer event.Producer, ch <-chan datamodel.ModelSendEven
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -1245,9 +1245,9 @@ func NewIssueProducer(producer event.Producer, ch <-chan datamodel.ModelSendEven
 }
 
 // NewIssueConsumer will stream data from the topic into the provided channel
-func NewIssueConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Issue
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into work.Issue: %s", err)
@@ -1265,7 +1265,7 @@ func NewIssueConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveE
 // IssueReceiveEvent is an event detail for receiving data
 type IssueReceiveEvent struct {
 	Issue   *Issue
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*IssueReceiveEvent)(nil)
@@ -1276,7 +1276,7 @@ func (e *IssueReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *IssueReceiveEvent) Message() event.Message {
+func (e *IssueReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -1301,7 +1301,7 @@ func (p *IssueProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Issue) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Issue) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &IssueProducer{
 		ch:   ch,
@@ -1310,7 +1310,7 @@ func (o *Issue) NewProducerChannel(producer event.Producer, errors chan<- error)
 }
 
 // NewIssueProducerChannel returns a channel which can be used for producing Model events
-func NewIssueProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewIssueProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &IssueProducer{
 		ch:   ch,
@@ -1337,7 +1337,7 @@ func (c *IssueConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Issue) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Issue) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewIssueConsumer(consumer, ch, errors)
 	return &IssueConsumer{
@@ -1346,7 +1346,7 @@ func (o *Issue) NewConsumerChannel(consumer event.Consumer, errors chan<- error)
 }
 
 // NewIssueConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewIssueConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewIssueConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewIssueConsumer(consumer, ch, errors)
 	return &IssueConsumer{

@@ -19,7 +19,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -894,7 +894,7 @@ func NewProjectSendEvent(o *Project, opts ...ProjectSendEventOpts) *ProjectSendE
 }
 
 // NewProjectProducer will stream data from the channel
-func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewProjectProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -918,7 +918,7 @@ func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEv
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -937,9 +937,9 @@ func NewProjectProducer(producer event.Producer, ch <-chan datamodel.ModelSendEv
 }
 
 // NewProjectConsumer will stream data from the topic into the provided channel
-func NewProjectConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewProjectConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Project
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into work.Project: %s", err)
@@ -957,7 +957,7 @@ func NewProjectConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiv
 // ProjectReceiveEvent is an event detail for receiving data
 type ProjectReceiveEvent struct {
 	Project *Project
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*ProjectReceiveEvent)(nil)
@@ -968,7 +968,7 @@ func (e *ProjectReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *ProjectReceiveEvent) Message() event.Message {
+func (e *ProjectReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -993,7 +993,7 @@ func (p *ProjectProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Project) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Project) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &ProjectProducer{
 		ch:   ch,
@@ -1002,7 +1002,7 @@ func (o *Project) NewProducerChannel(producer event.Producer, errors chan<- erro
 }
 
 // NewProjectProducerChannel returns a channel which can be used for producing Model events
-func NewProjectProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewProjectProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &ProjectProducer{
 		ch:   ch,
@@ -1029,7 +1029,7 @@ func (c *ProjectConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Project) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Project) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewProjectConsumer(consumer, ch, errors)
 	return &ProjectConsumer{
@@ -1038,7 +1038,7 @@ func (o *Project) NewConsumerChannel(consumer event.Consumer, errors chan<- erro
 }
 
 // NewProjectConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewProjectConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewProjectConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewProjectConsumer(consumer, ch, errors)
 	return &ProjectConsumer{

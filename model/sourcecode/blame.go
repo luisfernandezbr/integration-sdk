@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -981,7 +981,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"name": "date", "doc": "the change date in RFC3339 format of this line when last changed", "type": "string"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"name": "code", "doc": "if the line is sourcecode", "type": "boolean"}, map[string]interface{}{"doc": "if the line is a blank line", "type": "boolean", "name": "blank"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"doc": "if the line is a blank line", "type": "boolean", "name": "blank"}}, "doc": "the individual line attributions", "type": "record", "name": "lines"}},
 			},
 		},
 	}
@@ -1278,7 +1278,7 @@ func NewBlameSendEvent(o *Blame, opts ...BlameSendEventOpts) *BlameSendEvent {
 }
 
 // NewBlameProducer will stream data from the channel
-func NewBlameProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewBlameProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1302,7 +1302,7 @@ func NewBlameProducer(producer event.Producer, ch <-chan datamodel.ModelSendEven
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -1321,9 +1321,9 @@ func NewBlameProducer(producer event.Producer, ch <-chan datamodel.ModelSendEven
 }
 
 // NewBlameConsumer will stream data from the topic into the provided channel
-func NewBlameConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Blame
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into sourcecode.Blame: %s", err)
@@ -1341,7 +1341,7 @@ func NewBlameConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveE
 // BlameReceiveEvent is an event detail for receiving data
 type BlameReceiveEvent struct {
 	Blame   *Blame
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*BlameReceiveEvent)(nil)
@@ -1352,7 +1352,7 @@ func (e *BlameReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *BlameReceiveEvent) Message() event.Message {
+func (e *BlameReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -1377,7 +1377,7 @@ func (p *BlameProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Blame) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Blame) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &BlameProducer{
 		ch:   ch,
@@ -1386,7 +1386,7 @@ func (o *Blame) NewProducerChannel(producer event.Producer, errors chan<- error)
 }
 
 // NewBlameProducerChannel returns a channel which can be used for producing Model events
-func NewBlameProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewBlameProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &BlameProducer{
 		ch:   ch,
@@ -1413,7 +1413,7 @@ func (c *BlameConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Blame) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Blame) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewBlameConsumer(consumer, ch, errors)
 	return &BlameConsumer{
@@ -1422,7 +1422,7 @@ func (o *Blame) NewConsumerChannel(consumer event.Consumer, errors chan<- error)
 }
 
 // NewBlameConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewBlameConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewBlameConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewBlameConsumer(consumer, ch, errors)
 	return &BlameConsumer{

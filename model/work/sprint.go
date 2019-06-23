@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -898,7 +898,7 @@ func NewSprintSendEvent(o *Sprint, opts ...SprintSendEventOpts) *SprintSendEvent
 }
 
 // NewSprintProducer will stream data from the channel
-func NewSprintProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewSprintProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -922,7 +922,7 @@ func NewSprintProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -941,9 +941,9 @@ func NewSprintProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 }
 
 // NewSprintConsumer will stream data from the topic into the provided channel
-func NewSprintConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewSprintConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Sprint
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into work.Sprint: %s", err)
@@ -961,7 +961,7 @@ func NewSprintConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceive
 // SprintReceiveEvent is an event detail for receiving data
 type SprintReceiveEvent struct {
 	Sprint  *Sprint
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*SprintReceiveEvent)(nil)
@@ -972,7 +972,7 @@ func (e *SprintReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *SprintReceiveEvent) Message() event.Message {
+func (e *SprintReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -997,7 +997,7 @@ func (p *SprintProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Sprint) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Sprint) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &SprintProducer{
 		ch:   ch,
@@ -1006,7 +1006,7 @@ func (o *Sprint) NewProducerChannel(producer event.Producer, errors chan<- error
 }
 
 // NewSprintProducerChannel returns a channel which can be used for producing Model events
-func NewSprintProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewSprintProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &SprintProducer{
 		ch:   ch,
@@ -1033,7 +1033,7 @@ func (c *SprintConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Sprint) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Sprint) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewSprintConsumer(consumer, ch, errors)
 	return &SprintConsumer{
@@ -1042,7 +1042,7 @@ func (o *Sprint) NewConsumerChannel(consumer event.Consumer, errors chan<- error
 }
 
 // NewSprintConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewSprintConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewSprintConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewSprintConsumer(consumer, ch, errors)
 	return &SprintConsumer{

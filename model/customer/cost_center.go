@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -890,7 +890,7 @@ func NewCostCenterSendEvent(o *CostCenter, opts ...CostCenterSendEventOpts) *Cos
 }
 
 // NewCostCenterProducer will stream data from the channel
-func NewCostCenterProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewCostCenterProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -914,7 +914,7 @@ func NewCostCenterProducer(producer event.Producer, ch <-chan datamodel.ModelSen
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -933,9 +933,9 @@ func NewCostCenterProducer(producer event.Producer, ch <-chan datamodel.ModelSen
 }
 
 // NewCostCenterConsumer will stream data from the topic into the provided channel
-func NewCostCenterConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewCostCenterConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object CostCenter
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into customer.CostCenter: %s", err)
@@ -953,7 +953,7 @@ func NewCostCenterConsumer(consumer event.Consumer, ch chan<- datamodel.ModelRec
 // CostCenterReceiveEvent is an event detail for receiving data
 type CostCenterReceiveEvent struct {
 	CostCenter *CostCenter
-	message    event.Message
+	message    eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*CostCenterReceiveEvent)(nil)
@@ -964,7 +964,7 @@ func (e *CostCenterReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *CostCenterReceiveEvent) Message() event.Message {
+func (e *CostCenterReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -989,7 +989,7 @@ func (p *CostCenterProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *CostCenter) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *CostCenter) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &CostCenterProducer{
 		ch:   ch,
@@ -998,7 +998,7 @@ func (o *CostCenter) NewProducerChannel(producer event.Producer, errors chan<- e
 }
 
 // NewCostCenterProducerChannel returns a channel which can be used for producing Model events
-func NewCostCenterProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewCostCenterProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &CostCenterProducer{
 		ch:   ch,
@@ -1025,7 +1025,7 @@ func (c *CostCenterConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *CostCenter) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *CostCenter) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewCostCenterConsumer(consumer, ch, errors)
 	return &CostCenterConsumer{
@@ -1034,7 +1034,7 @@ func (o *CostCenter) NewConsumerChannel(consumer event.Consumer, errors chan<- e
 }
 
 // NewCostCenterConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewCostCenterConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewCostCenterConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewCostCenterConsumer(consumer, ch, errors)
 	return &CostCenterConsumer{

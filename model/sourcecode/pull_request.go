@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -1028,7 +1028,7 @@ func NewPullRequestSendEvent(o *PullRequest, opts ...PullRequestSendEventOpts) *
 }
 
 // NewPullRequestProducer will stream data from the channel
-func NewPullRequestProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewPullRequestProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1052,7 +1052,7 @@ func NewPullRequestProducer(producer event.Producer, ch <-chan datamodel.ModelSe
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -1071,9 +1071,9 @@ func NewPullRequestProducer(producer event.Producer, ch <-chan datamodel.ModelSe
 }
 
 // NewPullRequestConsumer will stream data from the topic into the provided channel
-func NewPullRequestConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewPullRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object PullRequest
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequest: %s", err)
@@ -1091,7 +1091,7 @@ func NewPullRequestConsumer(consumer event.Consumer, ch chan<- datamodel.ModelRe
 // PullRequestReceiveEvent is an event detail for receiving data
 type PullRequestReceiveEvent struct {
 	PullRequest *PullRequest
-	message     event.Message
+	message     eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*PullRequestReceiveEvent)(nil)
@@ -1102,7 +1102,7 @@ func (e *PullRequestReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *PullRequestReceiveEvent) Message() event.Message {
+func (e *PullRequestReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -1127,7 +1127,7 @@ func (p *PullRequestProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *PullRequest) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *PullRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &PullRequestProducer{
 		ch:   ch,
@@ -1136,7 +1136,7 @@ func (o *PullRequest) NewProducerChannel(producer event.Producer, errors chan<- 
 }
 
 // NewPullRequestProducerChannel returns a channel which can be used for producing Model events
-func NewPullRequestProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewPullRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &PullRequestProducer{
 		ch:   ch,
@@ -1163,7 +1163,7 @@ func (c *PullRequestConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *PullRequest) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *PullRequest) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewPullRequestConsumer(consumer, ch, errors)
 	return &PullRequestConsumer{
@@ -1172,7 +1172,7 @@ func (o *PullRequest) NewConsumerChannel(consumer event.Consumer, errors chan<- 
 }
 
 // NewPullRequestConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewPullRequestConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewPullRequestConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewPullRequestConsumer(consumer, ch, errors)
 	return &PullRequestConsumer{

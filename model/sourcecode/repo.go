@@ -19,7 +19,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -888,7 +888,7 @@ func NewRepoSendEvent(o *Repo, opts ...RepoSendEventOpts) *RepoSendEvent {
 }
 
 // NewRepoProducer will stream data from the channel
-func NewRepoProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewRepoProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -912,7 +912,7 @@ func NewRepoProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -931,9 +931,9 @@ func NewRepoProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 }
 
 // NewRepoConsumer will stream data from the topic into the provided channel
-func NewRepoConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewRepoConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Repo
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into sourcecode.Repo: %s", err)
@@ -951,7 +951,7 @@ func NewRepoConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEv
 // RepoReceiveEvent is an event detail for receiving data
 type RepoReceiveEvent struct {
 	Repo    *Repo
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*RepoReceiveEvent)(nil)
@@ -962,7 +962,7 @@ func (e *RepoReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *RepoReceiveEvent) Message() event.Message {
+func (e *RepoReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -987,7 +987,7 @@ func (p *RepoProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Repo) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Repo) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &RepoProducer{
 		ch:   ch,
@@ -996,7 +996,7 @@ func (o *Repo) NewProducerChannel(producer event.Producer, errors chan<- error) 
 }
 
 // NewRepoProducerChannel returns a channel which can be used for producing Model events
-func NewRepoProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewRepoProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &RepoProducer{
 		ch:   ch,
@@ -1023,7 +1023,7 @@ func (c *RepoConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Repo) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Repo) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewRepoConsumer(consumer, ch, errors)
 	return &RepoConsumer{
@@ -1032,7 +1032,7 @@ func (o *Repo) NewConsumerChannel(consumer event.Consumer, errors chan<- error) 
 }
 
 // NewRepoConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewRepoConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewRepoConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewRepoConsumer(consumer, ch, errors)
 	return &RepoConsumer{

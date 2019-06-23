@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -962,7 +962,7 @@ func NewACLGrantSendEvent(o *ACLGrant, opts ...ACLGrantSendEventOpts) *ACLGrantS
 }
 
 // NewACLGrantProducer will stream data from the channel
-func NewACLGrantProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewACLGrantProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -986,7 +986,7 @@ func NewACLGrantProducer(producer event.Producer, ch <-chan datamodel.ModelSendE
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -1005,9 +1005,9 @@ func NewACLGrantProducer(producer event.Producer, ch <-chan datamodel.ModelSendE
 }
 
 // NewACLGrantConsumer will stream data from the topic into the provided channel
-func NewACLGrantConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewACLGrantConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object ACLGrant
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into auth.ACLGrant: %s", err)
@@ -1025,7 +1025,7 @@ func NewACLGrantConsumer(consumer event.Consumer, ch chan<- datamodel.ModelRecei
 // ACLGrantReceiveEvent is an event detail for receiving data
 type ACLGrantReceiveEvent struct {
 	ACLGrant *ACLGrant
-	message  event.Message
+	message  eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*ACLGrantReceiveEvent)(nil)
@@ -1036,7 +1036,7 @@ func (e *ACLGrantReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *ACLGrantReceiveEvent) Message() event.Message {
+func (e *ACLGrantReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -1061,7 +1061,7 @@ func (p *ACLGrantProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *ACLGrant) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *ACLGrant) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &ACLGrantProducer{
 		ch:   ch,
@@ -1070,7 +1070,7 @@ func (o *ACLGrant) NewProducerChannel(producer event.Producer, errors chan<- err
 }
 
 // NewACLGrantProducerChannel returns a channel which can be used for producing Model events
-func NewACLGrantProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewACLGrantProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &ACLGrantProducer{
 		ch:   ch,
@@ -1097,7 +1097,7 @@ func (c *ACLGrantConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *ACLGrant) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *ACLGrant) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewACLGrantConsumer(consumer, ch, errors)
 	return &ACLGrantConsumer{
@@ -1106,7 +1106,7 @@ func (o *ACLGrant) NewConsumerChannel(consumer event.Consumer, errors chan<- err
 }
 
 // NewACLGrantConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewACLGrantConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewACLGrantConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewACLGrantConsumer(consumer, ch, errors)
 	return &ACLGrantConsumer{

@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -844,7 +844,7 @@ func NewMetricSendEvent(o *Metric, opts ...MetricSendEventOpts) *MetricSendEvent
 }
 
 // NewMetricProducer will stream data from the channel
-func NewMetricProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewMetricProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -868,7 +868,7 @@ func NewMetricProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -887,9 +887,9 @@ func NewMetricProducer(producer event.Producer, ch <-chan datamodel.ModelSendEve
 }
 
 // NewMetricConsumer will stream data from the topic into the provided channel
-func NewMetricConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewMetricConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Metric
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into codequality.Metric: %s", err)
@@ -907,7 +907,7 @@ func NewMetricConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceive
 // MetricReceiveEvent is an event detail for receiving data
 type MetricReceiveEvent struct {
 	Metric  *Metric
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*MetricReceiveEvent)(nil)
@@ -918,7 +918,7 @@ func (e *MetricReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *MetricReceiveEvent) Message() event.Message {
+func (e *MetricReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -943,7 +943,7 @@ func (p *MetricProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Metric) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Metric) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &MetricProducer{
 		ch:   ch,
@@ -952,7 +952,7 @@ func (o *Metric) NewProducerChannel(producer event.Producer, errors chan<- error
 }
 
 // NewMetricProducerChannel returns a channel which can be used for producing Model events
-func NewMetricProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewMetricProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &MetricProducer{
 		ch:   ch,
@@ -979,7 +979,7 @@ func (c *MetricConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Metric) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Metric) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewMetricConsumer(consumer, ch, errors)
 	return &MetricConsumer{
@@ -988,7 +988,7 @@ func (o *Metric) NewConsumerChannel(consumer event.Consumer, errors chan<- error
 }
 
 // NewMetricConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewMetricConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewMetricConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewMetricConsumer(consumer, ch, errors)
 	return &MetricConsumer{

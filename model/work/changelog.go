@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -1002,7 +1002,7 @@ func NewChangelogSendEvent(o *Changelog, opts ...ChangelogSendEventOpts) *Change
 }
 
 // NewChangelogProducer will stream data from the channel
-func NewChangelogProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewChangelogProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1026,7 +1026,7 @@ func NewChangelogProducer(producer event.Producer, ch <-chan datamodel.ModelSend
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -1045,9 +1045,9 @@ func NewChangelogProducer(producer event.Producer, ch <-chan datamodel.ModelSend
 }
 
 // NewChangelogConsumer will stream data from the topic into the provided channel
-func NewChangelogConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewChangelogConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Changelog
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into work.Changelog: %s", err)
@@ -1065,7 +1065,7 @@ func NewChangelogConsumer(consumer event.Consumer, ch chan<- datamodel.ModelRece
 // ChangelogReceiveEvent is an event detail for receiving data
 type ChangelogReceiveEvent struct {
 	Changelog *Changelog
-	message   event.Message
+	message   eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*ChangelogReceiveEvent)(nil)
@@ -1076,7 +1076,7 @@ func (e *ChangelogReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *ChangelogReceiveEvent) Message() event.Message {
+func (e *ChangelogReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -1101,7 +1101,7 @@ func (p *ChangelogProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Changelog) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Changelog) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &ChangelogProducer{
 		ch:   ch,
@@ -1110,7 +1110,7 @@ func (o *Changelog) NewProducerChannel(producer event.Producer, errors chan<- er
 }
 
 // NewChangelogProducerChannel returns a channel which can be used for producing Model events
-func NewChangelogProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewChangelogProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &ChangelogProducer{
 		ch:   ch,
@@ -1137,7 +1137,7 @@ func (c *ChangelogConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Changelog) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Changelog) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewChangelogConsumer(consumer, ch, errors)
 	return &ChangelogConsumer{
@@ -1146,7 +1146,7 @@ func (o *Changelog) NewConsumerChannel(consumer event.Consumer, errors chan<- er
 }
 
 // NewChangelogConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewChangelogConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewChangelogConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewChangelogConsumer(consumer, ch, errors)
 	return &ChangelogConsumer{

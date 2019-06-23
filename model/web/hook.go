@@ -20,7 +20,7 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/event"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -811,7 +811,7 @@ func NewHookSendEvent(o *Hook, opts ...HookSendEventOpts) *HookSendEvent {
 }
 
 // NewHookProducer will stream data from the channel
-func NewHookProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewHookProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -835,7 +835,7 @@ func NewHookProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 				if tv.IsZero() {
 					tv = time.Now() // if its still zero, use the ingest time
 				}
-				msg := event.Message{
+				msg := eventing.Message{
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
@@ -854,9 +854,9 @@ func NewHookProducer(producer event.Producer, ch <-chan datamodel.ModelSendEvent
 }
 
 // NewHookConsumer will stream data from the topic into the provided channel
-func NewHookConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(event.ConsumerCallback{
-		OnDataReceived: func(msg event.Message) error {
+func NewHookConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
+	consumer.Consume(eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
 			var object Hook
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
 				return fmt.Errorf("error unmarshaling json data into web.Hook: %s", err)
@@ -874,7 +874,7 @@ func NewHookConsumer(consumer event.Consumer, ch chan<- datamodel.ModelReceiveEv
 // HookReceiveEvent is an event detail for receiving data
 type HookReceiveEvent struct {
 	Hook    *Hook
-	message event.Message
+	message eventing.Message
 }
 
 var _ datamodel.ModelReceiveEvent = (*HookReceiveEvent)(nil)
@@ -885,7 +885,7 @@ func (e *HookReceiveEvent) Object() datamodel.Model {
 }
 
 // Message returns the underlying message data for the event
-func (e *HookReceiveEvent) Message() event.Message {
+func (e *HookReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
@@ -910,7 +910,7 @@ func (p *HookProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Hook) NewProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Hook) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &HookProducer{
 		ch:   ch,
@@ -919,7 +919,7 @@ func (o *Hook) NewProducerChannel(producer event.Producer, errors chan<- error) 
 }
 
 // NewHookProducerChannel returns a channel which can be used for producing Model events
-func NewHookProducerChannel(producer event.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func NewHookProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
 	return &HookProducer{
 		ch:   ch,
@@ -946,7 +946,7 @@ func (c *HookConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Hook) NewConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Hook) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewHookConsumer(consumer, ch, errors)
 	return &HookConsumer{
@@ -955,7 +955,7 @@ func (o *Hook) NewConsumerChannel(consumer event.Consumer, errors chan<- error) 
 }
 
 // NewHookConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewHookConsumerChannel(consumer event.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func NewHookConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
 	NewHookConsumer(consumer, ch, errors)
 	return &HookConsumer{
