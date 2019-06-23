@@ -981,7 +981,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"doc": "if the line is a blank line", "type": "boolean", "name": "blank"}}, "doc": "the individual line attributions", "type": "record", "name": "lines"}},
+				"type": map[string]interface{}{"name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}, map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"name": "blank", "doc": "if the line is a blank line", "type": "boolean"}}, "doc": "the individual line attributions"}, "type": "array"},
 			},
 		},
 	}
@@ -1322,7 +1322,7 @@ func NewBlameProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendE
 
 // NewBlameConsumer will stream data from the topic into the provided channel
 func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(eventing.ConsumerCallbackAdapter{
+	consumer.Consume(&eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Blame
 			if err := json.Unmarshal(msg.Value, &object); err != nil {

@@ -934,7 +934,7 @@ func NewCostCenterProducer(producer eventing.Producer, ch <-chan datamodel.Model
 
 // NewCostCenterConsumer will stream data from the topic into the provided channel
 func NewCostCenterConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(eventing.ConsumerCallbackAdapter{
+	consumer.Consume(&eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object CostCenter
 			if err := json.Unmarshal(msg.Value, &object); err != nil {

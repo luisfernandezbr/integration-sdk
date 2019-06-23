@@ -918,7 +918,7 @@ func NewTeamProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEv
 
 // NewTeamConsumer will stream data from the topic into the provided channel
 func NewTeamConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(eventing.ConsumerCallbackAdapter{
+	consumer.Consume(&eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Team
 			if err := json.Unmarshal(msg.Value, &object); err != nil {

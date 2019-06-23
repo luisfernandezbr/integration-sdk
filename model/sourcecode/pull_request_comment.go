@@ -940,7 +940,7 @@ func NewPullRequestCommentProducer(producer eventing.Producer, ch <-chan datamod
 
 // NewPullRequestCommentConsumer will stream data from the topic into the provided channel
 func NewPullRequestCommentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(eventing.ConsumerCallbackAdapter{
+	consumer.Consume(&eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object PullRequestComment
 			if err := json.Unmarshal(msg.Value, &object); err != nil {

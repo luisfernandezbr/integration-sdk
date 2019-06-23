@@ -954,7 +954,7 @@ func NewAgentProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendE
 
 // NewAgentConsumer will stream data from the topic into the provided channel
 func NewAgentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(eventing.ConsumerCallbackAdapter{
+	consumer.Consume(&eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Agent
 			if err := json.Unmarshal(msg.Value, &object); err != nil {
