@@ -9,6 +9,7 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -462,7 +463,7 @@ func (o *Issue) FromAvroBinary(value []byte) error {
 	if err != nil {
 		return err
 	}
-	object.FromMap(kv.(map[string]interface{}))
+	o.FromMap(kv.(map[string]interface{}))
 	return nil
 }
 
@@ -911,7 +912,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",

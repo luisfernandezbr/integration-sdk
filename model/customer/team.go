@@ -9,6 +9,7 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -396,7 +397,7 @@ func (o *Team) FromAvroBinary(value []byte) error {
 	if err != nil {
 		return err
 	}
-	object.FromMap(kv.(map[string]interface{}))
+	o.FromMap(kv.(map[string]interface{}))
 	return nil
 }
 

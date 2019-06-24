@@ -9,6 +9,7 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -417,7 +418,7 @@ func (o *Branch) FromAvroBinary(value []byte) error {
 	if err != nil {
 		return err
 	}
-	object.FromMap(kv.(map[string]interface{}))
+	o.FromMap(kv.(map[string]interface{}))
 	return nil
 }
 
@@ -695,7 +696,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"name": "branched_from_commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
 			},
 			map[string]interface{}{
 				"name": "commits",
