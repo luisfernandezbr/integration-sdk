@@ -80,7 +80,7 @@ type PullRequestReview struct {
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// State the state of the review
-	State string `json:"state" bson:"state" yaml:"state" faker:"commit_message"`
+	State string `json:"state" bson:"state" yaml:"state" faker:"-"`
 	// CreatedAt the timestamp in UTC that the review was created
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// UserRefID the user ref_id in the source system
