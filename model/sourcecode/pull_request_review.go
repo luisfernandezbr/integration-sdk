@@ -901,6 +901,7 @@ func NewPullRequestReviewProducer(producer eventing.Producer, ch <-chan datamode
 					tv = time.Now() // if its still zero, use the ingest time
 				}
 				msg := eventing.Message{
+					Encoding:  eventing.AvroEncoding,
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,

@@ -935,6 +935,7 @@ func NewAgentProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendE
 					tv = time.Now() // if its still zero, use the ingest time
 				}
 				msg := eventing.Message{
+					Encoding:  eventing.AvroEncoding,
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,

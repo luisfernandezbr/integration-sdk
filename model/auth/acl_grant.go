@@ -987,6 +987,7 @@ func NewACLGrantProducer(producer eventing.Producer, ch <-chan datamodel.ModelSe
 					tv = time.Now() // if its still zero, use the ingest time
 				}
 				msg := eventing.Message{
+					Encoding:  eventing.AvroEncoding,
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,

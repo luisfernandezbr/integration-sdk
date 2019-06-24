@@ -681,7 +681,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"name": "branched_from_commits", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "commits",
@@ -1019,6 +1019,7 @@ func NewBranchProducer(producer eventing.Producer, ch <-chan datamodel.ModelSend
 					tv = time.Now() // if its still zero, use the ingest time
 				}
 				msg := eventing.Message{
+					Encoding:  eventing.AvroEncoding,
 					Key:       item.Key(),
 					Value:     binary,
 					Codec:     codec,
