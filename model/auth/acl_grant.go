@@ -992,6 +992,7 @@ func NewACLGrantProducer(producer eventing.Producer, ch <-chan datamodel.ModelSe
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -1013,11 +1014,19 @@ func NewACLGrantConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRe
 				return fmt.Errorf("error unmarshaling json data into auth.ACLGrant: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &ACLGrantReceiveEvent{&object, msg}
+			ch <- &ACLGrantReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object ACLGrant
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &ACLGrantReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -1026,6 +1035,7 @@ func NewACLGrantConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRe
 type ACLGrantReceiveEvent struct {
 	ACLGrant *ACLGrant
 	message  eventing.Message
+	eof      bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*ACLGrantReceiveEvent)(nil)
@@ -1038,6 +1048,11 @@ func (e *ACLGrantReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *ACLGrantReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *ACLGrantReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // ACLGrantProducer implements the datamodel.ModelEventProducer

@@ -918,6 +918,7 @@ func NewRepoProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEv
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -939,11 +940,19 @@ func NewRepoConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 				return fmt.Errorf("error unmarshaling json data into sourcecode.Repo: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &RepoReceiveEvent{&object, msg}
+			ch <- &RepoReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object Repo
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &RepoReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -952,6 +961,7 @@ func NewRepoConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 type RepoReceiveEvent struct {
 	Repo    *Repo
 	message eventing.Message
+	eof     bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*RepoReceiveEvent)(nil)
@@ -964,6 +974,11 @@ func (e *RepoReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *RepoReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *RepoReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // RepoProducer implements the datamodel.ModelEventProducer

@@ -841,6 +841,7 @@ func NewHookProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEv
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -862,11 +863,19 @@ func NewHookConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 				return fmt.Errorf("error unmarshaling json data into web.Hook: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &HookReceiveEvent{&object, msg}
+			ch <- &HookReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object Hook
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &HookReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -875,6 +884,7 @@ func NewHookConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 type HookReceiveEvent struct {
 	Hook    *Hook
 	message eventing.Message
+	eof     bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*HookReceiveEvent)(nil)
@@ -887,6 +897,11 @@ func (e *HookReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *HookReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *HookReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // HookProducer implements the datamodel.ModelEventProducer

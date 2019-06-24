@@ -926,6 +926,7 @@ func NewPullRequestCommentProducer(producer eventing.Producer, ch <-chan datamod
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -947,11 +948,19 @@ func NewPullRequestCommentConsumer(consumer eventing.Consumer, ch chan<- datamod
 				return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequestComment: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &PullRequestCommentReceiveEvent{&object, msg}
+			ch <- &PullRequestCommentReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object PullRequestComment
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &PullRequestCommentReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -960,6 +969,7 @@ func NewPullRequestCommentConsumer(consumer eventing.Consumer, ch chan<- datamod
 type PullRequestCommentReceiveEvent struct {
 	PullRequestComment *PullRequestComment
 	message            eventing.Message
+	eof                bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*PullRequestCommentReceiveEvent)(nil)
@@ -972,6 +982,11 @@ func (e *PullRequestCommentReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *PullRequestCommentReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *PullRequestCommentReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // PullRequestCommentProducer implements the datamodel.ModelEventProducer

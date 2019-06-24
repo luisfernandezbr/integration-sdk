@@ -920,6 +920,7 @@ func NewCostCenterProducer(producer eventing.Producer, ch <-chan datamodel.Model
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -941,11 +942,19 @@ func NewCostCenterConsumer(consumer eventing.Consumer, ch chan<- datamodel.Model
 				return fmt.Errorf("error unmarshaling json data into customer.CostCenter: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &CostCenterReceiveEvent{&object, msg}
+			ch <- &CostCenterReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object CostCenter
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &CostCenterReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -954,6 +963,7 @@ func NewCostCenterConsumer(consumer eventing.Consumer, ch chan<- datamodel.Model
 type CostCenterReceiveEvent struct {
 	CostCenter *CostCenter
 	message    eventing.Message
+	eof        bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*CostCenterReceiveEvent)(nil)
@@ -966,6 +976,11 @@ func (e *CostCenterReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *CostCenterReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *CostCenterReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // CostCenterProducer implements the datamodel.ModelEventProducer

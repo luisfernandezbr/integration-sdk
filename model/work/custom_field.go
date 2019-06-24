@@ -816,6 +816,7 @@ func NewCustomFieldProducer(producer eventing.Producer, ch <-chan datamodel.Mode
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -837,11 +838,19 @@ func NewCustomFieldConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 				return fmt.Errorf("error unmarshaling json data into work.CustomField: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &CustomFieldReceiveEvent{&object, msg}
+			ch <- &CustomFieldReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object CustomField
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &CustomFieldReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -850,6 +859,7 @@ func NewCustomFieldConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 type CustomFieldReceiveEvent struct {
 	CustomField *CustomField
 	message     eventing.Message
+	eof         bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*CustomFieldReceiveEvent)(nil)
@@ -862,6 +872,11 @@ func (e *CustomFieldReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *CustomFieldReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *CustomFieldReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // CustomFieldProducer implements the datamodel.ModelEventProducer

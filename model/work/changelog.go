@@ -1032,6 +1032,7 @@ func NewChangelogProducer(producer eventing.Producer, ch <-chan datamodel.ModelS
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -1053,11 +1054,19 @@ func NewChangelogConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelR
 				return fmt.Errorf("error unmarshaling json data into work.Changelog: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &ChangelogReceiveEvent{&object, msg}
+			ch <- &ChangelogReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object Changelog
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &ChangelogReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -1066,6 +1075,7 @@ func NewChangelogConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelR
 type ChangelogReceiveEvent struct {
 	Changelog *Changelog
 	message   eventing.Message
+	eof       bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*ChangelogReceiveEvent)(nil)
@@ -1078,6 +1088,11 @@ func (e *ChangelogReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *ChangelogReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *ChangelogReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // ChangelogProducer implements the datamodel.ModelEventProducer

@@ -1058,6 +1058,7 @@ func NewPullRequestProducer(producer eventing.Producer, ch <-chan datamodel.Mode
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -1079,11 +1080,19 @@ func NewPullRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 				return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequest: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &PullRequestReceiveEvent{&object, msg}
+			ch <- &PullRequestReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object PullRequest
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &PullRequestReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -1092,6 +1101,7 @@ func NewPullRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 type PullRequestReceiveEvent struct {
 	PullRequest *PullRequest
 	message     eventing.Message
+	eof         bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*PullRequestReceiveEvent)(nil)
@@ -1104,6 +1114,11 @@ func (e *PullRequestReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *PullRequestReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *PullRequestReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // PullRequestProducer implements the datamodel.ModelEventProducer

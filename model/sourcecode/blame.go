@@ -981,7 +981,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}, map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"name": "blank", "doc": "if the line is a blank line", "type": "boolean"}}, "doc": "the individual line attributions"}, "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the sha when this line was last changed", "type": "string", "name": "sha"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions", "type": "record", "name": "lines"}},
 			},
 		},
 	}
@@ -1308,6 +1308,7 @@ func NewBlameProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendE
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -1329,11 +1330,19 @@ func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 				return fmt.Errorf("error unmarshaling json data into sourcecode.Blame: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &BlameReceiveEvent{&object, msg}
+			ch <- &BlameReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object Blame
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &BlameReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -1342,6 +1351,7 @@ func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 type BlameReceiveEvent struct {
 	Blame   *Blame
 	message eventing.Message
+	eof     bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*BlameReceiveEvent)(nil)
@@ -1354,6 +1364,11 @@ func (e *BlameReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *BlameReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *BlameReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // BlameProducer implements the datamodel.ModelEventProducer

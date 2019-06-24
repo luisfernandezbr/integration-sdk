@@ -1024,6 +1024,7 @@ func NewBranchProducer(producer eventing.Producer, ch <-chan datamodel.ModelSend
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -1045,11 +1046,19 @@ func NewBranchConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 				return fmt.Errorf("error unmarshaling json data into sourcecode.Branch: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &BranchReceiveEvent{&object, msg}
+			ch <- &BranchReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object Branch
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &BranchReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -1058,6 +1067,7 @@ func NewBranchConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 type BranchReceiveEvent struct {
 	Branch  *Branch
 	message eventing.Message
+	eof     bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*BranchReceiveEvent)(nil)
@@ -1070,6 +1080,11 @@ func (e *BranchReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *BranchReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *BranchReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // BranchProducer implements the datamodel.ModelEventProducer

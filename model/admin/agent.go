@@ -940,6 +940,7 @@ func NewAgentProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendE
 					Codec:     codec,
 					Headers:   headers,
 					Timestamp: tv,
+					Topic:     object.GetTopicName().String(),
 				}
 				if err := producer.Send(ctx, msg); err != nil {
 					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
@@ -961,11 +962,19 @@ func NewAgentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 				return fmt.Errorf("error unmarshaling json data into admin.Agent: %s", err)
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &AgentReceiveEvent{&object, msg}
+			ch <- &AgentReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object Agent
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &AgentReceiveEvent{nil, msg, true}
 		},
 	})
 }
@@ -974,6 +983,7 @@ func NewAgentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 type AgentReceiveEvent struct {
 	Agent   *Agent
 	message eventing.Message
+	eof     bool
 }
 
 var _ datamodel.ModelReceiveEvent = (*AgentReceiveEvent)(nil)
@@ -986,6 +996,11 @@ func (e *AgentReceiveEvent) Object() datamodel.Model {
 // Message returns the underlying message data for the event
 func (e *AgentReceiveEvent) Message() eventing.Message {
 	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *AgentReceiveEvent) EOF() bool {
+	return e.eof
 }
 
 // AgentProducer implements the datamodel.ModelEventProducer
