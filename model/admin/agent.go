@@ -5,10 +5,10 @@ package admin
 
 import (
 	"bufio"
+	"bytes"
 	"compress/gzip"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -391,6 +391,21 @@ func (o *Agent) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	// Convert native Go form to binary Avro data
 	buf, err := codec.BinaryFromNative(nil, native)
 	return buf, codec, err
+}
+
+// FromAvroBinary will convert from Avro binary data into data in this object
+func (o *Agent) FromAvroBinary(value []byte) error {
+	var nullHeader = []byte{byte(0)}
+	// if this still has the schema encoded in the header, move past it to the avro payload
+	if bytes.HasPrefix(value, nullHeader) {
+		value = value[5:]
+	}
+	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
+	if err != nil {
+		return err
+	}
+	object.FromMap(kv.(map[string]interface{}))
+	return nil
 }
 
 // Stringify returns the object in JSON format as a string
@@ -958,8 +973,17 @@ func NewAgentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 	consumer.Consume(&eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Agent
-			if err := json.Unmarshal(msg.Value, &object); err != nil {
-				return fmt.Errorf("error unmarshaling json data into admin.Agent: %s", err)
+			switch msg.Encoding {
+			case eventing.JSONEncoding:
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into admin.Agent: %s", err)
+				}
+			case eventing.AvroEncoding:
+				if err := object.FromAvroBinary(msg.Value); err != nil {
+					return fmt.Errorf("error unmarshaling avri data into admin.Agent: %s", err)
+				}
+			default:
+				return fmt.Error("unsure of the encoding since it was not set for admin.Agent")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &AgentReceiveEvent{&object, msg, false}

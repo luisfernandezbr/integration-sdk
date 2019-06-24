@@ -5,10 +5,10 @@ package sourcecode
 
 import (
 	"bufio"
+	"bytes"
 	"compress/gzip"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -537,6 +537,21 @@ func (o *Blame) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	return buf, codec, err
 }
 
+// FromAvroBinary will convert from Avro binary data into data in this object
+func (o *Blame) FromAvroBinary(value []byte) error {
+	var nullHeader = []byte{byte(0)}
+	// if this still has the schema encoded in the header, move past it to the avro payload
+	if bytes.HasPrefix(value, nullHeader) {
+		value = value[5:]
+	}
+	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
+	if err != nil {
+		return err
+	}
+	object.FromMap(kv.(map[string]interface{}))
+	return nil
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *Blame) Stringify() string {
 	return pjson.Stringify(o)
@@ -980,7 +995,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"doc": "the individual line attributions", "type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}, map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"doc": "if the line is a comment", "type": "boolean", "name": "comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"doc": "if the line is a blank line", "type": "boolean", "name": "blank"}}}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"doc": "the individual line attributions", "type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}}},
 			},
 		},
 	}
@@ -1326,8 +1341,17 @@ func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 	consumer.Consume(&eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Blame
-			if err := json.Unmarshal(msg.Value, &object); err != nil {
-				return fmt.Errorf("error unmarshaling json data into sourcecode.Blame: %s", err)
+			switch msg.Encoding {
+			case eventing.JSONEncoding:
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into sourcecode.Blame: %s", err)
+				}
+			case eventing.AvroEncoding:
+				if err := object.FromAvroBinary(msg.Value); err != nil {
+					return fmt.Errorf("error unmarshaling avri data into sourcecode.Blame: %s", err)
+				}
+			default:
+				return fmt.Error("unsure of the encoding since it was not set for sourcecode.Blame")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &BlameReceiveEvent{&object, msg, false}

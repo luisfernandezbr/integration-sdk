@@ -5,10 +5,10 @@ package sourcecode
 
 import (
 	"bufio"
+	"bytes"
 	"compress/gzip"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -582,6 +582,21 @@ func (o *Commit) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	return buf, codec, err
 }
 
+// FromAvroBinary will convert from Avro binary data into data in this object
+func (o *Commit) FromAvroBinary(value []byte) error {
+	var nullHeader = []byte{byte(0)}
+	// if this still has the schema encoded in the header, move past it to the avro payload
+	if bytes.HasPrefix(value, nullHeader) {
+		value = value[5:]
+	}
+	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
+	if err != nil {
+		return err
+	}
+	object.FromMap(kv.(map[string]interface{}))
+	return nil
+}
+
 // Stringify returns the object in JSON format as a string
 func (o *Commit) Stringify() string {
 	return pjson.Stringify(o)
@@ -1064,7 +1079,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"doc": "the order value for the file in the change set", "type": "long", "name": "ordinal"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"doc": "the number of source lines in the file", "type": "long", "name": "sloc"}, map[string]interface{}{"name": "blanks", "doc": "the number of blank lines in the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}}, "doc": "the files touched by this commit"}},
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"doc": "the unique id for the commit", "type": "string", "name": "commit_id"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"doc": "the number of source lines in the file", "type": "long", "name": "sloc"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"doc": "the final file name", "type": "string", "name": "renamed_to"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}}, "doc": "the files touched by this commit"}},
 			},
 		},
 	}
@@ -1410,8 +1425,17 @@ func NewCommitConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 	consumer.Consume(&eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Commit
-			if err := json.Unmarshal(msg.Value, &object); err != nil {
-				return fmt.Errorf("error unmarshaling json data into sourcecode.Commit: %s", err)
+			switch msg.Encoding {
+			case eventing.JSONEncoding:
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into sourcecode.Commit: %s", err)
+				}
+			case eventing.AvroEncoding:
+				if err := object.FromAvroBinary(msg.Value); err != nil {
+					return fmt.Errorf("error unmarshaling avri data into sourcecode.Commit: %s", err)
+				}
+			default:
+				return fmt.Error("unsure of the encoding since it was not set for sourcecode.Commit")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &CommitReceiveEvent{&object, msg, false}
