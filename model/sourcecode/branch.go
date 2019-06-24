@@ -696,7 +696,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
+				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",
@@ -1068,7 +1068,7 @@ func NewBranchConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 					return fmt.Errorf("error unmarshaling avri data into sourcecode.Branch: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for sourcecode.Branch")
+				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Branch")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &BranchReceiveEvent{&object, msg, false}

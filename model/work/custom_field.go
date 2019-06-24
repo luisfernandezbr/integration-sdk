@@ -860,7 +860,7 @@ func NewCustomFieldConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 					return fmt.Errorf("error unmarshaling avri data into work.CustomField: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for work.CustomField")
+				return fmt.Errorf("unsure of the encoding since it was not set for work.CustomField")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &CustomFieldReceiveEvent{&object, msg, false}

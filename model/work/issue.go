@@ -912,7 +912,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",
@@ -1276,7 +1276,7 @@ func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 					return fmt.Errorf("error unmarshaling avri data into work.Issue: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for work.Issue")
+				return fmt.Errorf("unsure of the encoding since it was not set for work.Issue")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &IssueReceiveEvent{&object, msg, false}

@@ -1036,7 +1036,7 @@ func NewACLGrantConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRe
 					return fmt.Errorf("error unmarshaling avri data into auth.ACLGrant: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for auth.ACLGrant")
+				return fmt.Errorf("unsure of the encoding since it was not set for auth.ACLGrant")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &ACLGrantReceiveEvent{&object, msg, false}

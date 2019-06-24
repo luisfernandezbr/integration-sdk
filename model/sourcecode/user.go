@@ -955,7 +955,7 @@ func NewUserConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 					return fmt.Errorf("error unmarshaling avri data into sourcecode.User: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for sourcecode.User")
+				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.User")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &UserReceiveEvent{&object, msg, false}

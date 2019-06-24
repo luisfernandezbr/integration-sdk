@@ -972,7 +972,7 @@ func NewSprintConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 					return fmt.Errorf("error unmarshaling avri data into work.Sprint: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for work.Sprint")
+				return fmt.Errorf("unsure of the encoding since it was not set for work.Sprint")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &SprintReceiveEvent{&object, msg, false}

@@ -885,7 +885,7 @@ func NewHookConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 					return fmt.Errorf("error unmarshaling avri data into web.Hook: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for web.Hook")
+				return fmt.Errorf("unsure of the encoding since it was not set for web.Hook")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &HookReceiveEvent{&object, msg, false}

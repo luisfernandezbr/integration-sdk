@@ -948,7 +948,7 @@ func NewTeamConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 					return fmt.Errorf("error unmarshaling avri data into customer.Team: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for customer.Team")
+				return fmt.Errorf("unsure of the encoding since it was not set for customer.Team")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &TeamReceiveEvent{&object, msg, false}

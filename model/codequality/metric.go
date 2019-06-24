@@ -918,7 +918,7 @@ func NewMetricConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 					return fmt.Errorf("error unmarshaling avri data into codequality.Metric: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for codequality.Metric")
+				return fmt.Errorf("unsure of the encoding since it was not set for codequality.Metric")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &MetricReceiveEvent{&object, msg, false}

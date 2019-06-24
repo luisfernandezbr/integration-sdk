@@ -950,7 +950,7 @@ func NewPullRequestReviewConsumer(consumer eventing.Consumer, ch chan<- datamode
 					return fmt.Errorf("error unmarshaling avri data into sourcecode.PullRequestReview: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for sourcecode.PullRequestReview")
+				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.PullRequestReview")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &PullRequestReviewReceiveEvent{&object, msg, false}

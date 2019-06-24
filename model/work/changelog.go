@@ -1076,7 +1076,7 @@ func NewChangelogConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelR
 					return fmt.Errorf("error unmarshaling avri data into work.Changelog: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for work.Changelog")
+				return fmt.Errorf("unsure of the encoding since it was not set for work.Changelog")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &ChangelogReceiveEvent{&object, msg, false}

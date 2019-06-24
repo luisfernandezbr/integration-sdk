@@ -860,7 +860,7 @@ func NewProjectConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRec
 					return fmt.Errorf("error unmarshaling avri data into codequality.Project: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for codequality.Project")
+				return fmt.Errorf("unsure of the encoding since it was not set for codequality.Project")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &ProjectReceiveEvent{&object, msg, false}

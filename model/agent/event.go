@@ -1128,7 +1128,7 @@ func NewEventConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 					return fmt.Errorf("error unmarshaling avri data into agent.Event: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for agent.Event")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.Event")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &EventReceiveEvent{&object, msg, false}

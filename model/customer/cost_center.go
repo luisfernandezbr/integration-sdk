@@ -964,7 +964,7 @@ func NewCostCenterConsumer(consumer eventing.Consumer, ch chan<- datamodel.Model
 					return fmt.Errorf("error unmarshaling avri data into customer.CostCenter: %s", err)
 				}
 			default:
-				return fmt.Error("unsure of the encoding since it was not set for customer.CostCenter")
+				return fmt.Errorf("unsure of the encoding since it was not set for customer.CostCenter")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &CostCenterReceiveEvent{&object, msg, false}
