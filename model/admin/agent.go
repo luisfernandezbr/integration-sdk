@@ -566,10 +566,9 @@ func FindAgents(ctx context.Context, db datamodel.Storage, kv map[string]interfa
 // GetAgentAvroSchemaSpec creates the avro schema specification for Agent
 func GetAgentAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "admin",
-		"name":         "Agent",
-		"connect.name": "admin.Agent",
+		"type":      "record",
+		"namespace": "admin",
+		"name":      "Agent",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

@@ -552,10 +552,9 @@ func (o *PullRequestComment) Hash() string {
 // GetPullRequestCommentAvroSchemaSpec creates the avro schema specification for PullRequestComment
 func GetPullRequestCommentAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "sourcecode",
-		"name":         "PullRequestComment",
-		"connect.name": "sourcecode.PullRequestComment",
+		"type":      "record",
+		"namespace": "sourcecode",
+		"name":      "PullRequestComment",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

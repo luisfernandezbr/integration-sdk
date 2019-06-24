@@ -879,10 +879,9 @@ func (o *Blame) Hash() string {
 // GetBlameAvroSchemaSpec creates the avro schema specification for Blame
 func GetBlameAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "sourcecode",
-		"name":         "Blame",
-		"connect.name": "sourcecode.Blame",
+		"type":      "record",
+		"namespace": "sourcecode",
+		"name":      "Blame",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",
@@ -981,7 +980,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the sha when this line was last changed", "type": "string", "name": "sha"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"doc": "the individual line attributions", "type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}, map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"doc": "if the line is a comment", "type": "boolean", "name": "comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"doc": "if the line is a blank line", "type": "boolean", "name": "blank"}}}},
 			},
 		},
 	}

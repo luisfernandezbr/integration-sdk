@@ -722,10 +722,9 @@ func (o *User) Hash() string {
 // GetUserAvroSchemaSpec creates the avro schema specification for User
 func GetUserAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "pipeline",
-		"name":         "User",
-		"connect.name": "pipeline.User",
+		"type":      "record",
+		"namespace": "pipeline",
+		"name":      "User",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

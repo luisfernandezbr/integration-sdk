@@ -781,10 +781,9 @@ func FindUsers(ctx context.Context, db datamodel.Storage, kv map[string]interfac
 // GetUserAvroSchemaSpec creates the avro schema specification for User
 func GetUserAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "customer",
-		"name":         "User",
-		"connect.name": "customer.User",
+		"type":      "record",
+		"namespace": "customer",
+		"name":      "User",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

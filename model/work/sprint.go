@@ -552,10 +552,9 @@ func (o *Sprint) Hash() string {
 // GetSprintAvroSchemaSpec creates the avro schema specification for Sprint
 func GetSprintAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "work",
-		"name":         "Sprint",
-		"connect.name": "work.Sprint",
+		"type":      "record",
+		"namespace": "work",
+		"name":      "Sprint",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

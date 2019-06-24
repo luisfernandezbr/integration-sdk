@@ -806,10 +806,9 @@ func (o *Issue) Hash() string {
 // GetIssueAvroSchemaSpec creates the avro schema specification for Issue
 func GetIssueAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "work",
-		"name":         "Issue",
-		"connect.name": "work.Issue",
+		"type":      "record",
+		"namespace": "work",
+		"name":      "Issue",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

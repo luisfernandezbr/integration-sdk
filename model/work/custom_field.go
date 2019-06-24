@@ -458,10 +458,9 @@ func (o *CustomField) Hash() string {
 // GetCustomFieldAvroSchemaSpec creates the avro schema specification for CustomField
 func GetCustomFieldAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "work",
-		"name":         "CustomField",
-		"connect.name": "work.CustomField",
+		"type":      "record",
+		"namespace": "work",
+		"name":      "CustomField",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

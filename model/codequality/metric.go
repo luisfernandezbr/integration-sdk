@@ -508,10 +508,9 @@ func (o *Metric) Hash() string {
 // GetMetricAvroSchemaSpec creates the avro schema specification for Metric
 func GetMetricAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "codequality",
-		"name":         "Metric",
-		"connect.name": "codequality.Metric",
+		"type":      "record",
+		"namespace": "codequality",
+		"name":      "Metric",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

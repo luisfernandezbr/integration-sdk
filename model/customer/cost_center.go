@@ -550,10 +550,9 @@ func FindCostCenters(ctx context.Context, db datamodel.Storage, kv map[string]in
 // GetCostCenterAvroSchemaSpec creates the avro schema specification for CostCenter
 func GetCostCenterAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "customer",
-		"name":         "CostCenter",
-		"connect.name": "customer.CostCenter",
+		"type":      "record",
+		"namespace": "customer",
+		"name":      "CostCenter",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

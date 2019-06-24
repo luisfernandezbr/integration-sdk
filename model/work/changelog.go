@@ -638,10 +638,9 @@ func (o *Changelog) Hash() string {
 // GetChangelogAvroSchemaSpec creates the avro schema specification for Changelog
 func GetChangelogAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "work",
-		"name":         "Changelog",
-		"connect.name": "work.Changelog",
+		"type":      "record",
+		"namespace": "work",
+		"name":      "Changelog",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

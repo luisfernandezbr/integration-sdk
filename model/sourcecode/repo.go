@@ -544,10 +544,9 @@ func (o *Repo) Hash() string {
 // GetRepoAvroSchemaSpec creates the avro schema specification for Repo
 func GetRepoAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "sourcecode",
-		"name":         "Repo",
-		"connect.name": "sourcecode.Repo",
+		"type":      "record",
+		"namespace": "sourcecode",
+		"name":      "Repo",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

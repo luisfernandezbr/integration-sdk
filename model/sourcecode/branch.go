@@ -638,10 +638,9 @@ func (o *Branch) Hash() string {
 // GetBranchAvroSchemaSpec creates the avro schema specification for Branch
 func GetBranchAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "sourcecode",
-		"name":         "Branch",
-		"connect.name": "sourcecode.Branch",
+		"type":      "record",
+		"namespace": "sourcecode",
+		"name":      "Branch",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",
@@ -681,11 +680,11 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"name": "branched_from_commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "commits"},
 			},
 			map[string]interface{}{
 				"name": "behind_default_count",

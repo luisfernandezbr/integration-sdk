@@ -537,10 +537,9 @@ func FindTeams(ctx context.Context, db datamodel.Storage, kv map[string]interfac
 // GetTeamAvroSchemaSpec creates the avro schema specification for Team
 func GetTeamAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "customer",
-		"name":         "Team",
-		"connect.name": "customer.Team",
+		"type":      "record",
+		"namespace": "customer",
+		"name":      "Team",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

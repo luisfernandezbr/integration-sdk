@@ -616,10 +616,9 @@ func FindACLGrants(ctx context.Context, db datamodel.Storage, kv map[string]inte
 // GetACLGrantAvroSchemaSpec creates the avro schema specification for ACLGrant
 func GetACLGrantAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "auth",
-		"name":         "ACLGrant",
-		"connect.name": "auth.ACLGrant",
+		"type":      "record",
+		"namespace": "auth",
+		"name":      "ACLGrant",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

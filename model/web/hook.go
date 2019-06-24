@@ -484,10 +484,9 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 // GetHookAvroSchemaSpec creates the avro schema specification for Hook
 func GetHookAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "web",
-		"name":         "Hook",
-		"connect.name": "web.Hook",
+		"type":      "record",
+		"namespace": "web",
+		"name":      "Hook",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

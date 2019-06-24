@@ -548,10 +548,9 @@ func (o *Project) Hash() string {
 // GetProjectAvroSchemaSpec creates the avro schema specification for Project
 func GetProjectAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "work",
-		"name":         "Project",
-		"connect.name": "work.Project",
+		"type":      "record",
+		"namespace": "work",
+		"name":      "Project",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",

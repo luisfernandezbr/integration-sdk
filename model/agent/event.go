@@ -678,10 +678,9 @@ func (o *Event) Hash() string {
 // GetEventAvroSchemaSpec creates the avro schema specification for Event
 func GetEventAvroSchemaSpec() string {
 	spec := map[string]interface{}{
-		"type":         "record",
-		"namespace":    "agent",
-		"name":         "Event",
-		"connect.name": "agent.Event",
+		"type":      "record",
+		"namespace": "agent",
+		"name":      "Event",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "id",
