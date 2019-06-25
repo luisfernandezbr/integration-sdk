@@ -419,12 +419,12 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 // FromMap attempts to load data into object from a map
 func (o *Hook) FromMap(kv map[string]interface{}) {
 	// make sure that these have values if empty
-	o.setDefaults()
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
 		o.ID = val
 	}
+	o.setDefaults()
 	if val, ok := kv["date_ts"].(int64); ok {
 		o.DateAt = val
 	} else {

@@ -475,7 +475,6 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 // FromMap attempts to load data into object from a map
 func (o *Changelog) FromMap(kv map[string]interface{}) {
 	// make sure that these have values if empty
-	o.setDefaults()
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
@@ -490,6 +489,7 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
+	o.setDefaults()
 	if val, ok := kv["issue_id"].(string); ok {
 		o.IssueID = val
 	} else {

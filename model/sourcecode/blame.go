@@ -604,7 +604,6 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 // FromMap attempts to load data into object from a map
 func (o *Blame) FromMap(kv map[string]interface{}) {
 	// make sure that these have values if empty
-	o.setDefaults()
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
@@ -619,6 +618,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
+	o.setDefaults()
 	if val, ok := kv["date_ts"].(int64); ok {
 		o.DateAt = val
 	} else {
@@ -996,7 +996,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"name": "author_ref_id", "doc": "the author ref_id of this line when last changed", "type": "string"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions", "type": "record", "name": "lines"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"name": "date", "doc": "the change date in RFC3339 format of this line when last changed", "type": "string"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"name": "code", "doc": "if the line is sourcecode", "type": "boolean"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}},
 			},
 		},
 	}

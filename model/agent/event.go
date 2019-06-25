@@ -476,7 +476,6 @@ func (o *Event) ToMap(avro ...bool) map[string]interface{} {
 // FromMap attempts to load data into object from a map
 func (o *Event) FromMap(kv map[string]interface{}) {
 	// make sure that these have values if empty
-	o.setDefaults()
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
@@ -491,6 +490,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
+	o.setDefaults()
 	if val, ok := kv["type"].(string); ok {
 		o.Type = val
 	} else {

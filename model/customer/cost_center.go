@@ -440,7 +440,6 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 // FromMap attempts to load data into object from a map
 func (o *CostCenter) FromMap(kv map[string]interface{}) {
 	// make sure that these have values if empty
-	o.setDefaults()
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else if val, ok := kv["_id"].(string); ok {
@@ -465,6 +464,7 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 	} else if val, ok := kv["updated_ts"].(time.Time); ok {
 		o.UpdatedAt = datetime.TimeToEpoch(val)
 	}
+	o.setDefaults()
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
