@@ -24,6 +24,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
@@ -58,8 +59,37 @@ const (
 	UserEmailColumn = "email"
 	// UserUsernameColumn is the username column name
 	UserUsernameColumn = "username"
+	// UserMemberColumn is the member column name
+	UserMemberColumn = "member"
+	// UserTypeColumn is the type column name
+	UserTypeColumn = "type"
 	// UserAssociatedRefIDColumn is the associated_ref_id column name
 	UserAssociatedRefIDColumn = "associated_ref_id"
+)
+
+// Type is the enumeration type for type
+type Type int32
+
+// String returns the string value for Type
+func (v Type) String() string {
+	switch int32(v) {
+	case 0:
+		return "human"
+	case 1:
+		return "bot"
+	case 2:
+		return "deleted_special_user"
+	}
+	return "unset"
+}
+
+const (
+	// TypeHuman is the enumeration value for human
+	TypeHuman Type = 0
+	// TypeBot is the enumeration value for bot
+	TypeBot Type = 1
+	// TypeDeletedSpecialUser is the enumeration value for deleted_special_user
+	TypeDeletedSpecialUser Type = 2
 )
 
 // User the source code user
@@ -82,6 +112,10 @@ type User struct {
 	Email *string `json:"email" bson:"email" yaml:"email" faker:"email"`
 	// Username username of the user
 	Username *string `json:"username" bson:"username" yaml:"username" faker:"username"`
+	// Member if the user is a member of organization
+	Member bool `json:"member" bson:"member" yaml:"member" faker:"-"`
+	// Type type of the user
+	Type Type `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// AssociatedRefID the ref id associated for this user in another system
 	AssociatedRefID *string `json:"associated_ref_id" bson:"associated_ref_id" yaml:"associated_ref_id" faker:"-"`
 }
@@ -218,6 +252,20 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 			arr = append(arr, toUserObject(av, isavro, false, ""))
 		}
 		return arr
+	case Type:
+		if !isavro {
+			return (o.(Type)).String()
+		}
+		return map[string]string{
+			"sourcecode.type": (o.(Type)).String(),
+		}
+	case *Type:
+		if !isavro {
+			return (o.(*Type)).String()
+		}
+		return map[string]string{
+			"sourcecode.type": (o.(*Type)).String(),
+		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -433,6 +481,8 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"avatar_url":        toUserObject(o.AvatarURL, isavro, true, "string"),
 		"email":             toUserObject(o.Email, isavro, true, "string"),
 		"username":          toUserObject(o.Username, isavro, true, "string"),
+		"member":            toUserObject(o.Member, isavro, false, "boolean"),
+		"type":              toUserObject(o.Type, isavro, false, "type"),
 		"associated_ref_id": toUserObject(o.AssociatedRefID, isavro, true, "string"),
 	}
 }
@@ -516,6 +566,41 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Username = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+	if val, ok := kv["member"].(bool); ok {
+		o.Member = val
+	} else {
+		val := kv["member"]
+		if val == nil {
+			o.Member = number.ToBoolAny(nil)
+		} else {
+			o.Member = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["type"].(Type); ok {
+		o.Type = val
+	} else {
+		if em, ok := kv["type"].(map[string]interface{}); ok {
+			ev := em["sourcecode.type"].(string)
+			switch ev {
+			case "human":
+				o.Type = 0
+			case "bot":
+				o.Type = 1
+			case "deleted_special_user":
+				o.Type = 2
+			}
+		}
+		if em, ok := kv["type"].(string); ok {
+			switch em {
+			case "human":
+				o.Type = 0
+			case "bot":
+				o.Type = 1
+			case "deleted_special_user":
+				o.Type = 2
+			}
+		}
+	}
 	if val, ok := kv["associated_ref_id"].(*string); ok {
 		o.AssociatedRefID = val
 	} else if val, ok := kv["associated_ref_id"].(string); ok {
@@ -545,6 +630,8 @@ func (o *User) Hash() string {
 	args = append(args, o.AvatarURL)
 	args = append(args, o.Email)
 	args = append(args, o.Username)
+	args = append(args, o.Member)
+	args = append(args, o.Type)
 	args = append(args, o.AssociatedRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -595,6 +682,20 @@ func GetUserAvroSchemaSpec() string {
 				"name":    "username",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "member",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "type",
+				"type": []interface{}{
+					map[string]interface{}{
+						"type":    "enum",
+						"name":    "type",
+						"symbols": []interface{}{"human", "bot", "deleted_special_user"},
+					},
+				},
 			},
 			map[string]interface{}{
 				"name":    "associated_ref_id",

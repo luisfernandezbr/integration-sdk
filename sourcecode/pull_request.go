@@ -65,10 +65,10 @@ const (
 	PullRequestMergedAtColumn = "merged_ts"
 	// PullRequestClosedAtColumn is the closed_ts column name
 	PullRequestClosedAtColumn = "closed_ts"
+	// PullRequestMergedByRefIDColumn is the merged_by_ref_id column name
+	PullRequestMergedByRefIDColumn = "merged_by_ref_id"
 	// PullRequestClosedByRefIDColumn is the closed_by_ref_id column name
 	PullRequestClosedByRefIDColumn = "closed_by_ref_id"
-	// PullRequestClosedByLoginColumn is the closed_by_login column name
-	PullRequestClosedByLoginColumn = "closed_by_login"
 	// PullRequestUpdatedAtColumn is the updated_ts column name
 	PullRequestUpdatedAtColumn = "updated_ts"
 	// PullRequestStatusColumn is the status column name
@@ -103,10 +103,10 @@ type PullRequest struct {
 	MergedAt int64 `json:"merged_ts" bson:"merged_ts" yaml:"merged_ts" faker:"-"`
 	// ClosedAt the timestamp in UTC that the pull request was closed
 	ClosedAt int64 `json:"closed_ts" bson:"closed_ts" yaml:"closed_ts" faker:"-"`
+	// MergedByRefID the id of user who merged the pull request
+	MergedByRefID string `json:"merged_by_ref_id" bson:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
 	// ClosedByRefID the id of user who closed the pull request
 	ClosedByRefID string `json:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
-	// ClosedByLogin the username/login of user who closed the pull request
-	ClosedByLogin string `json:"closed_by_login" bson:"closed_by_login" yaml:"closed_by_login" faker:"-"`
 	// UpdatedAt the timestamp in UTC that the pull request was closed
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Status the status of the pull request
@@ -478,8 +478,8 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		"created_ts":       toPullRequestObject(o.CreatedAt, isavro, false, "long"),
 		"merged_ts":        toPullRequestObject(o.MergedAt, isavro, false, "long"),
 		"closed_ts":        toPullRequestObject(o.ClosedAt, isavro, false, "long"),
+		"merged_by_ref_id": toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
 		"closed_by_ref_id": toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
-		"closed_by_login":  toPullRequestObject(o.ClosedByLogin, isavro, false, "string"),
 		"updated_ts":       toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"status":           toPullRequestObject(o.Status, isavro, false, "string"),
 		"user_ref_id":      toPullRequestObject(o.UserRefID, isavro, false, "string"),
@@ -586,6 +586,19 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.ClosedAt = number.ToInt64Any(val)
 		}
 	}
+	if val, ok := kv["merged_by_ref_id"].(string); ok {
+		o.MergedByRefID = val
+	} else {
+		val := kv["merged_by_ref_id"]
+		if val == nil {
+			o.MergedByRefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.MergedByRefID = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["closed_by_ref_id"].(string); ok {
 		o.ClosedByRefID = val
 	} else {
@@ -597,19 +610,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ClosedByRefID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["closed_by_login"].(string); ok {
-		o.ClosedByLogin = val
-	} else {
-		val := kv["closed_by_login"]
-		if val == nil {
-			o.ClosedByLogin = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.ClosedByLogin = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["updated_ts"].(int64); ok {
@@ -664,8 +664,8 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.CreatedAt)
 	args = append(args, o.MergedAt)
 	args = append(args, o.ClosedAt)
+	args = append(args, o.MergedByRefID)
 	args = append(args, o.ClosedByRefID)
-	args = append(args, o.ClosedByLogin)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Status)
 	args = append(args, o.UserRefID)
@@ -729,11 +729,11 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "closed_by_ref_id",
+				"name": "merged_by_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "closed_by_login",
+				"name": "closed_by_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
