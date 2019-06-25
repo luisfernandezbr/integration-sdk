@@ -75,12 +75,12 @@
   revision = "2e52cf6e685269ed8aefec6390f3cac3ef74e730"
 
 [[projects]]
-  digest = "1:735fca48737192239af99fb87dcc21d00d95966f62a974964495b065316946c1"
+  digest = "1:03ebda8458c6b51593ffc09c53f4ef284d00c0559b2ded0173d0be80d4106695"
   name = "github.com/pinpt/go-common"
   packages = [
     "datamodel",
     "datetime",
-    "event",
+    "eventing",
     "fileutil",
     "hash",
     "json",
@@ -88,21 +88,26 @@
     "strings",
   ]
   pruneopts = "UT"
-  revision = "2a9fd30c2ba1e679be07cf898eef30281461383d"
-  version = "6.0.2"
+  revision = "1defd191a5de5e4a814034e958905838dd68dd79"
+  version = "7.0.7"
 
 [[projects]]
-  digest = "1:db191185f48ab169672d345ccffd813c5b9c8f4d2dc30d8ba4e3ad0e24bbcd85"
+  digest = "1:33f77686ecba179f4f3b6fefbc2179d01f35d7c0ed678bacf22dbf774b9e75ab"
   name = "github.com/pinpt/go-datamodel"
   packages = [
+    "admin",
+    "agent",
+    "auth",
     "codequality",
     "customer",
+    "pipeline",
     "sourcecode",
+    "web",
     "work",
   ]
   pruneopts = "UT"
-  revision = "881b8d9655aca5a4b704b545d01d5388c1b62048"
-  version = "0.0.42"
+  revision = "222907651c9b86d044c5706768387f1630690ac4"
+  version = "0.0.187"
 
 [[projects]]
   digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
@@ -119,15 +124,21 @@
     "github.com/bxcodec/faker",
     "github.com/linkedin/goavro",
     "github.com/pinpt/go-common/datamodel",
-    "github.com/pinpt/go-common/event",
+    "github.com/pinpt/go-common/datetime",
+    "github.com/pinpt/go-common/eventing",
     "github.com/pinpt/go-common/fileutil",
     "github.com/pinpt/go-common/hash",
     "github.com/pinpt/go-common/json",
     "github.com/pinpt/go-common/number",
     "github.com/pinpt/go-common/strings",
+    "github.com/pinpt/go-datamodel/admin",
+    "github.com/pinpt/go-datamodel/agent",
+    "github.com/pinpt/go-datamodel/auth",
     "github.com/pinpt/go-datamodel/codequality",
     "github.com/pinpt/go-datamodel/customer",
+    "github.com/pinpt/go-datamodel/pipeline",
     "github.com/pinpt/go-datamodel/sourcecode",
+    "github.com/pinpt/go-datamodel/web",
     "github.com/pinpt/go-datamodel/work",
   ]
   solver-name = "gps-cdcl"
