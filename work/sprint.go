@@ -272,7 +272,7 @@ func (o *Sprint) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Sprint) GetTimestamp() time.Time {
-	var dt interface{} = o.StartedAt
+	var dt interface{} = o.FetchedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -322,7 +322,7 @@ func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "started_ts",
+		Timestamp:         "fetched_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         duration,
