@@ -63,6 +63,8 @@ const (
 	SprintEndedAtColumn = "ended_ts"
 	// SprintCompletedAtColumn is the completed_ts column name
 	SprintCompletedAtColumn = "completed_ts"
+	// SprintFetchedAtColumn is the fetched_ts column name
+	SprintFetchedAtColumn = "fetched_ts"
 )
 
 // Sprint sprint details
@@ -89,6 +91,8 @@ type Sprint struct {
 	EndedAt *int64 `json:"ended_ts" bson:"ended_ts" yaml:"ended_ts" faker:"-"`
 	// CompletedAt the timestamp in UTC that the sprint was completed
 	CompletedAt *int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
+	// FetchedAt data in epoch when the api was called
+	FetchedAt int64 `json:"fetched_ts" bson:"fetched_ts" yaml:"fetched_ts" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -444,6 +448,7 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 		"started_ts":   toSprintObject(o.StartedAt, isavro, false, "long"),
 		"ended_ts":     toSprintObject(o.EndedAt, isavro, true, "long"),
 		"completed_ts": toSprintObject(o.CompletedAt, isavro, true, "long"),
+		"fetched_ts":   toSprintObject(o.FetchedAt, isavro, false, "long"),
 	}
 }
 
@@ -546,6 +551,16 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.CompletedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
 	}
+	if val, ok := kv["fetched_ts"].(int64); ok {
+		o.FetchedAt = val
+	} else {
+		val := kv["fetched_ts"]
+		if val == nil {
+			o.FetchedAt = number.ToInt64Any(nil)
+		} else {
+			o.FetchedAt = number.ToInt64Any(val)
+		}
+	}
 }
 
 // Hash will return a hashcode for the object
@@ -561,6 +576,7 @@ func (o *Sprint) Hash() string {
 	args = append(args, o.StartedAt)
 	args = append(args, o.EndedAt)
 	args = append(args, o.CompletedAt)
+	args = append(args, o.FetchedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -617,6 +633,10 @@ func GetSprintAvroSchemaSpec() string {
 				"name":    "completed_ts",
 				"type":    []interface{}{"null", "long"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "fetched_ts",
+				"type": "long",
 			},
 		},
 	}
