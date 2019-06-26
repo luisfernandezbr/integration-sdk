@@ -82,8 +82,6 @@ const (
 	IssueReporterRefIDColumn = "reporter_ref_id"
 	// IssueAssigneeRefIDColumn is the assignee_ref_id column name
 	IssueAssigneeRefIDColumn = "assignee_ref_id"
-	// IssueAuthorRefIDColumn is the author_ref_id column name
-	IssueAuthorRefIDColumn = "author_ref_id"
 	// IssueTagsColumn is the tags column name
 	IssueTagsColumn = "tags"
 	// IssueParentIDColumn is the parent_id column name
@@ -134,8 +132,6 @@ type Issue struct {
 	ReporterRefID string `json:"reporter_ref_id" bson:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
 	// AssigneeRefID user id of the assignee
 	AssigneeRefID string `json:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
-	// AuthorRefID user id of the author
-	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Tags tags on the issue
 	Tags []string `json:"tags" bson:"tags" yaml:"tags" faker:"-"`
 	// ParentID parent issue id, if any
@@ -509,7 +505,6 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"creator_ref_id":   toIssueObject(o.CreatorRefID, isavro, false, "string"),
 		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro, false, "string"),
 		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro, false, "string"),
-		"author_ref_id":    toIssueObject(o.AuthorRefID, isavro, false, "string"),
 		"tags":             toIssueObject(o.Tags, isavro, false, "tags"),
 		"parent_id":        toIssueObject(o.ParentID, isavro, false, "string"),
 		"resolution":       toIssueObject(o.Resolution, isavro, false, "string"),
@@ -714,19 +709,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.AssigneeRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["author_ref_id"].(string); ok {
-		o.AuthorRefID = val
-	} else {
-		val := kv["author_ref_id"]
-		if val == nil {
-			o.AuthorRefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.AuthorRefID = fmt.Sprintf("%v", val)
-		}
-	}
 	if val := kv["tags"]; val != nil {
 		na := make([]string, 0)
 		if a, ok := val.([]string); ok {
@@ -811,7 +793,6 @@ func (o *Issue) Hash() string {
 	args = append(args, o.CreatorRefID)
 	args = append(args, o.ReporterRefID)
 	args = append(args, o.AssigneeRefID)
-	args = append(args, o.AuthorRefID)
 	args = append(args, o.Tags)
 	args = append(args, o.ParentID)
 	args = append(args, o.Resolution)
@@ -904,10 +885,6 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "assignee_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "author_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
