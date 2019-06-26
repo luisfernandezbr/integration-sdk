@@ -84,11 +84,34 @@ const (
 	IssueAssigneeRefIDColumn = "assignee_ref_id"
 	// IssueTagsColumn is the tags column name
 	IssueTagsColumn = "tags"
+	// IssueCustomFieldsColumn is the customFields column name
+	IssueCustomFieldsColumn = "customFields"
 	// IssueParentIDColumn is the parent_id column name
 	IssueParentIDColumn = "parent_id"
 	// IssueResolutionColumn is the resolution column name
 	IssueResolutionColumn = "resolution"
 )
+
+// IssueCustomFields represents the object structure for customFields
+type IssueCustomFields struct {
+	// ID the id of the custom field
+	ID string `json:"id" bson:"id" yaml:"id" faker:"-"`
+	// Name the name of the custom field
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	// Value the value of the custom field
+	Value string `json:"value" bson:"value" yaml:"value" faker:"-"`
+}
+
+func (o *IssueCustomFields) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// ID the id of the custom field
+		"id": o.ID,
+		// Name the name of the custom field
+		"name": o.Name,
+		// Value the value of the custom field
+		"value": o.Value,
+	}
+}
 
 // Issue the issue is a specific work item for a project
 type Issue struct {
@@ -134,6 +157,8 @@ type Issue struct {
 	AssigneeRefID string `json:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
 	// Tags tags on the issue
 	Tags []string `json:"tags" bson:"tags" yaml:"tags" faker:"-"`
+	// CustomFields list of custom fields and their values
+	CustomFields []IssueCustomFields `json:"customFields" bson:"customFields" yaml:"customFields" faker:"-"`
 	// ParentID parent issue id, if any
 	ParentID string `json:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
 	// Resolution resolution of the issue
@@ -270,6 +295,24 @@ func toIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		arr := make([]interface{}, 0)
 		for _, av := range a {
 			arr = append(arr, toIssueObject(av, isavro, false, ""))
+		}
+		return arr
+	case IssueCustomFields:
+		vv := o.(IssueCustomFields)
+		return vv.ToMap()
+	case *IssueCustomFields:
+		return (*o.(*IssueCustomFields)).ToMap()
+	case []IssueCustomFields:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]IssueCustomFields) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]IssueCustomFields:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]IssueCustomFields)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
 		}
 		return arr
 	}
@@ -483,6 +526,9 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		if o.Tags == nil {
 			o.Tags = make([]string, 0)
 		}
+		if o.CustomFields == nil {
+			o.CustomFields = make([]IssueCustomFields, 0)
+		}
 	}
 	return map[string]interface{}{
 		"id":               o.GetID(),
@@ -506,6 +552,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro, false, "string"),
 		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro, false, "string"),
 		"tags":             toIssueObject(o.Tags, isavro, false, "tags"),
+		"customFields":     toIssueObject(o.CustomFields, isavro, false, "customFields"),
 		"parent_id":        toIssueObject(o.ParentID, isavro, false, "string"),
 		"resolution":       toIssueObject(o.Resolution, isavro, false, "string"),
 	}
@@ -743,6 +790,36 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 	if o.Tags == nil {
 		o.Tags = make([]string, 0)
 	}
+	if val := kv["customFields"]; val != nil {
+		na := make([]IssueCustomFields, 0)
+		if a, ok := val.([]IssueCustomFields); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(IssueCustomFields); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av IssueCustomFields
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for customFields field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for customFields field")
+			}
+		}
+		o.CustomFields = na
+	} else {
+		o.CustomFields = []IssueCustomFields{}
+	}
+	if o.CustomFields == nil {
+		o.CustomFields = make([]IssueCustomFields, 0)
+	}
 	if val, ok := kv["parent_id"].(string); ok {
 		o.ParentID = val
 	} else {
@@ -794,6 +871,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.ReporterRefID)
 	args = append(args, o.AssigneeRefID)
 	args = append(args, o.Tags)
+	args = append(args, o.CustomFields)
 	args = append(args, o.ParentID)
 	args = append(args, o.Resolution)
 	o.Hashcode = hash.Values(args...)
@@ -890,6 +968,10 @@ func GetIssueAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "tags",
 				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+			},
+			map[string]interface{}{
+				"name": "customFields",
+				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "list of custom fields and their values", "type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}}, "type": "array", "name": "customFields"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",

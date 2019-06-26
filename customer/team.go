@@ -25,6 +25,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
@@ -57,6 +58,10 @@ const (
 	TeamUpdatedAtColumn = "updated_ts"
 	// TeamNameColumn is the name column name
 	TeamNameColumn = "name"
+	// TeamDescriptionColumn is the description column name
+	TeamDescriptionColumn = "description"
+	// TeamActiveColumn is the active column name
+	TeamActiveColumn = "active"
 	// TeamParentIDColumn is the parent_id column name
 	TeamParentIDColumn = "parent_id"
 )
@@ -78,6 +83,10 @@ type Team struct {
 
 	// Name the name of the team
 	Name string `json:"name" bson:"name" yaml:"name" faker:"team"`
+	// Description the description of the team
+	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	// Active whether the team is tracked in pinpoint
+	Active *bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// ParentID the parent id of the team
 	ParentID *string `json:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
 }
@@ -428,6 +437,8 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 		"created_ts":  o.CreatedAt,
 		"updated_ts":  o.UpdatedAt,
 		"name":        toTeamObject(o.Name, isavro, false, "string"),
+		"description": toTeamObject(o.Description, isavro, false, "string"),
+		"active":      toTeamObject(o.Active, isavro, true, "boolean"),
 		"parent_id":   toTeamObject(o.ParentID, isavro, true, "string"),
 	}
 }
@@ -473,6 +484,35 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		val := kv["description"]
+		if val == nil {
+			o.Description = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Description = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		val := kv["active"]
+		if val == nil {
+			o.Active = number.BoolPointer(number.ToBoolAny(nil))
+		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["bool"]
+			}
+			o.Active = number.BoolPointer(number.ToBoolAny(val))
+		}
+	}
 	if val, ok := kv["parent_id"].(*string); ok {
 		o.ParentID = val
 	} else if val, ok := kv["parent_id"].(string); ok {
@@ -499,6 +539,8 @@ func (o *Team) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Name)
+	args = append(args, o.Description)
+	args = append(args, o.Active)
 	args = append(args, o.ParentID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -588,6 +630,15 @@ func GetTeamAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "name",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "description",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name":    "active",
+				"type":    []interface{}{"null", "boolean"},
+				"default": nil,
 			},
 			map[string]interface{}{
 				"name":    "parent_id",
