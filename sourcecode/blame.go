@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -996,7 +997,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"name": "author_ref_id", "doc": "the author ref_id of this line when last changed", "type": "string"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"doc": "if the line is a comment", "type": "boolean", "name": "comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}},
 			},
 		},
 	}
@@ -1293,44 +1294,51 @@ func NewBlameSendEvent(o *Blame, opts ...BlameSendEventOpts) *BlameSendEvent {
 }
 
 // NewBlameProducer will stream data from the channel
-func NewBlameProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewBlameProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		ctx := context.Background()
-		for item := range ch {
-			if object, ok := item.Object().(*Blame); ok {
-				binary, codec, err := object.ToAvroBinary()
-				if err != nil {
-					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
 					return
 				}
-				headers := map[string]string{}
-				object.SetEventHeaders(headers)
-				for k, v := range item.Headers() {
-					headers[k] = v
+				if object, ok := item.Object().(*Blame); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.Blame but received on of type %v", reflect.TypeOf(item.Object()))
 				}
-				tv := item.Timestamp()
-				if tv.IsZero() {
-					tv = object.GetTimestamp() // if not provided in the message, use the objects value
-				}
-				if tv.IsZero() {
-					tv = time.Now() // if its still zero, use the ingest time
-				}
-				msg := eventing.Message{
-					Encoding:  eventing.AvroEncoding,
-					Key:       item.Key(),
-					Value:     binary,
-					Codec:     codec,
-					Headers:   headers,
-					Timestamp: tv,
-					Topic:     object.GetTopicName().String(),
-				}
-				if err := producer.Send(ctx, msg); err != nil {
-					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-				}
-			} else {
-				errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.Blame but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
@@ -1338,8 +1346,8 @@ func NewBlameProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendE
 }
 
 // NewBlameConsumer will stream data from the topic into the provided channel
-func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(&eventing.ConsumerCallbackAdapter{
+func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Blame
 			switch msg.Encoding {
@@ -1369,7 +1377,9 @@ func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &BlameReceiveEvent{nil, msg, true}
 		},
-	})
+	}
+	consumer.Consume(adapter)
+	return adapter
 }
 
 // BlameReceiveEvent is an event detail for receiving data
@@ -1398,8 +1408,13 @@ func (e *BlameReceiveEvent) EOF() bool {
 
 // BlameProducer implements the datamodel.ModelEventProducer
 type BlameProducer struct {
-	ch   chan datamodel.ModelSendEvent
-	done <-chan bool
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
 }
 
 var _ datamodel.ModelEventProducer = (*BlameProducer)(nil)
@@ -1411,32 +1426,53 @@ func (p *BlameProducer) Channel() chan<- datamodel.ModelSendEvent {
 
 // Close is called to shutdown the producer
 func (p *BlameProducer) Close() error {
-	close(p.ch)
-	<-p.done
-	return nil
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	var err error
+	if !closed {
+		p.cancel()
+		err = p.producer.Close()
+		close(p.ch)
+		<-p.done
+	}
+	return err
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Blame) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &BlameProducer{
-		ch:   ch,
-		done: NewBlameProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewBlameProducer(newctx, producer, ch, errors),
 	}
 }
 
 // NewBlameProducerChannel returns a channel which can be used for producing Model events
 func NewBlameProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &BlameProducer{
-		ch:   ch,
-		done: NewBlameProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewBlameProducer(newctx, producer, ch, errors),
 	}
 }
 
 // BlameConsumer implements the datamodel.ModelEventConsumer
 type BlameConsumer struct {
-	ch chan datamodel.ModelReceiveEvent
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
 }
 
 var _ datamodel.ModelEventConsumer = (*BlameConsumer)(nil)
@@ -1448,24 +1484,34 @@ func (c *BlameConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 
 // Close is called to shutdown the producer
 func (c *BlameConsumer) Close() error {
-	close(c.ch)
-	return nil
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Blame) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewBlameConsumer(consumer, ch, errors)
 	return &BlameConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewBlameConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }
 
 // NewBlameConsumerChannel returns a consumer channel which can be used to consume Model events
 func NewBlameConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewBlameConsumer(consumer, ch, errors)
 	return &BlameConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewBlameConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }

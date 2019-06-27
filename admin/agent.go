@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -925,44 +926,51 @@ func NewAgentSendEvent(o *Agent, opts ...AgentSendEventOpts) *AgentSendEvent {
 }
 
 // NewAgentProducer will stream data from the channel
-func NewAgentProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewAgentProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		ctx := context.Background()
-		for item := range ch {
-			if object, ok := item.Object().(*Agent); ok {
-				binary, codec, err := object.ToAvroBinary()
-				if err != nil {
-					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
 					return
 				}
-				headers := map[string]string{}
-				object.SetEventHeaders(headers)
-				for k, v := range item.Headers() {
-					headers[k] = v
+				if object, ok := item.Object().(*Agent); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type admin.Agent but received on of type %v", reflect.TypeOf(item.Object()))
 				}
-				tv := item.Timestamp()
-				if tv.IsZero() {
-					tv = object.GetTimestamp() // if not provided in the message, use the objects value
-				}
-				if tv.IsZero() {
-					tv = time.Now() // if its still zero, use the ingest time
-				}
-				msg := eventing.Message{
-					Encoding:  eventing.AvroEncoding,
-					Key:       item.Key(),
-					Value:     binary,
-					Codec:     codec,
-					Headers:   headers,
-					Timestamp: tv,
-					Topic:     object.GetTopicName().String(),
-				}
-				if err := producer.Send(ctx, msg); err != nil {
-					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-				}
-			} else {
-				errors <- fmt.Errorf("invalid event received. expected an object of type admin.Agent but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
@@ -970,8 +978,8 @@ func NewAgentProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendE
 }
 
 // NewAgentConsumer will stream data from the topic into the provided channel
-func NewAgentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(&eventing.ConsumerCallbackAdapter{
+func NewAgentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Agent
 			switch msg.Encoding {
@@ -1001,7 +1009,9 @@ func NewAgentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &AgentReceiveEvent{nil, msg, true}
 		},
-	})
+	}
+	consumer.Consume(adapter)
+	return adapter
 }
 
 // AgentReceiveEvent is an event detail for receiving data
@@ -1030,8 +1040,13 @@ func (e *AgentReceiveEvent) EOF() bool {
 
 // AgentProducer implements the datamodel.ModelEventProducer
 type AgentProducer struct {
-	ch   chan datamodel.ModelSendEvent
-	done <-chan bool
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
 }
 
 var _ datamodel.ModelEventProducer = (*AgentProducer)(nil)
@@ -1043,32 +1058,53 @@ func (p *AgentProducer) Channel() chan<- datamodel.ModelSendEvent {
 
 // Close is called to shutdown the producer
 func (p *AgentProducer) Close() error {
-	close(p.ch)
-	<-p.done
-	return nil
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	var err error
+	if !closed {
+		p.cancel()
+		err = p.producer.Close()
+		close(p.ch)
+		<-p.done
+	}
+	return err
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Agent) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &AgentProducer{
-		ch:   ch,
-		done: NewAgentProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewAgentProducer(newctx, producer, ch, errors),
 	}
 }
 
 // NewAgentProducerChannel returns a channel which can be used for producing Model events
 func NewAgentProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &AgentProducer{
-		ch:   ch,
-		done: NewAgentProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewAgentProducer(newctx, producer, ch, errors),
 	}
 }
 
 // AgentConsumer implements the datamodel.ModelEventConsumer
 type AgentConsumer struct {
-	ch chan datamodel.ModelReceiveEvent
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
 }
 
 var _ datamodel.ModelEventConsumer = (*AgentConsumer)(nil)
@@ -1080,24 +1116,34 @@ func (c *AgentConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 
 // Close is called to shutdown the producer
 func (c *AgentConsumer) Close() error {
-	close(c.ch)
-	return nil
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Agent) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewAgentConsumer(consumer, ch, errors)
 	return &AgentConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewAgentConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }
 
 // NewAgentConsumerChannel returns a consumer channel which can be used to consume Model events
 func NewAgentConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewAgentConsumer(consumer, ch, errors)
 	return &AgentConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewAgentConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }

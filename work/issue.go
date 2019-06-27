@@ -16,6 +16,7 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -971,7 +972,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "parent_id",
@@ -1276,44 +1277,51 @@ func NewIssueSendEvent(o *Issue, opts ...IssueSendEventOpts) *IssueSendEvent {
 }
 
 // NewIssueProducer will stream data from the channel
-func NewIssueProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewIssueProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		ctx := context.Background()
-		for item := range ch {
-			if object, ok := item.Object().(*Issue); ok {
-				binary, codec, err := object.ToAvroBinary()
-				if err != nil {
-					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
 					return
 				}
-				headers := map[string]string{}
-				object.SetEventHeaders(headers)
-				for k, v := range item.Headers() {
-					headers[k] = v
+				if object, ok := item.Object().(*Issue); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type work.Issue but received on of type %v", reflect.TypeOf(item.Object()))
 				}
-				tv := item.Timestamp()
-				if tv.IsZero() {
-					tv = object.GetTimestamp() // if not provided in the message, use the objects value
-				}
-				if tv.IsZero() {
-					tv = time.Now() // if its still zero, use the ingest time
-				}
-				msg := eventing.Message{
-					Encoding:  eventing.AvroEncoding,
-					Key:       item.Key(),
-					Value:     binary,
-					Codec:     codec,
-					Headers:   headers,
-					Timestamp: tv,
-					Topic:     object.GetTopicName().String(),
-				}
-				if err := producer.Send(ctx, msg); err != nil {
-					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-				}
-			} else {
-				errors <- fmt.Errorf("invalid event received. expected an object of type work.Issue but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
@@ -1321,8 +1329,8 @@ func NewIssueProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendE
 }
 
 // NewIssueConsumer will stream data from the topic into the provided channel
-func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(&eventing.ConsumerCallbackAdapter{
+func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Issue
 			switch msg.Encoding {
@@ -1352,7 +1360,9 @@ func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &IssueReceiveEvent{nil, msg, true}
 		},
-	})
+	}
+	consumer.Consume(adapter)
+	return adapter
 }
 
 // IssueReceiveEvent is an event detail for receiving data
@@ -1381,8 +1391,13 @@ func (e *IssueReceiveEvent) EOF() bool {
 
 // IssueProducer implements the datamodel.ModelEventProducer
 type IssueProducer struct {
-	ch   chan datamodel.ModelSendEvent
-	done <-chan bool
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
 }
 
 var _ datamodel.ModelEventProducer = (*IssueProducer)(nil)
@@ -1394,32 +1409,53 @@ func (p *IssueProducer) Channel() chan<- datamodel.ModelSendEvent {
 
 // Close is called to shutdown the producer
 func (p *IssueProducer) Close() error {
-	close(p.ch)
-	<-p.done
-	return nil
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	var err error
+	if !closed {
+		p.cancel()
+		err = p.producer.Close()
+		close(p.ch)
+		<-p.done
+	}
+	return err
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Issue) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &IssueProducer{
-		ch:   ch,
-		done: NewIssueProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewIssueProducer(newctx, producer, ch, errors),
 	}
 }
 
 // NewIssueProducerChannel returns a channel which can be used for producing Model events
 func NewIssueProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &IssueProducer{
-		ch:   ch,
-		done: NewIssueProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewIssueProducer(newctx, producer, ch, errors),
 	}
 }
 
 // IssueConsumer implements the datamodel.ModelEventConsumer
 type IssueConsumer struct {
-	ch chan datamodel.ModelReceiveEvent
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
 }
 
 var _ datamodel.ModelEventConsumer = (*IssueConsumer)(nil)
@@ -1431,24 +1467,34 @@ func (c *IssueConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 
 // Close is called to shutdown the producer
 func (c *IssueConsumer) Close() error {
-	close(c.ch)
-	return nil
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Issue) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewIssueConsumer(consumer, ch, errors)
 	return &IssueConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewIssueConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }
 
 // NewIssueConsumerChannel returns a consumer channel which can be used to consume Model events
 func NewIssueConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewIssueConsumer(consumer, ch, errors)
 	return &IssueConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewIssueConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }

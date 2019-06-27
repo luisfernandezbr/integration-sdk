@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -909,44 +910,51 @@ func NewProjectSendEvent(o *Project, opts ...ProjectSendEventOpts) *ProjectSendE
 }
 
 // NewProjectProducer will stream data from the channel
-func NewProjectProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewProjectProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		ctx := context.Background()
-		for item := range ch {
-			if object, ok := item.Object().(*Project); ok {
-				binary, codec, err := object.ToAvroBinary()
-				if err != nil {
-					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
 					return
 				}
-				headers := map[string]string{}
-				object.SetEventHeaders(headers)
-				for k, v := range item.Headers() {
-					headers[k] = v
+				if object, ok := item.Object().(*Project); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type work.Project but received on of type %v", reflect.TypeOf(item.Object()))
 				}
-				tv := item.Timestamp()
-				if tv.IsZero() {
-					tv = object.GetTimestamp() // if not provided in the message, use the objects value
-				}
-				if tv.IsZero() {
-					tv = time.Now() // if its still zero, use the ingest time
-				}
-				msg := eventing.Message{
-					Encoding:  eventing.AvroEncoding,
-					Key:       item.Key(),
-					Value:     binary,
-					Codec:     codec,
-					Headers:   headers,
-					Timestamp: tv,
-					Topic:     object.GetTopicName().String(),
-				}
-				if err := producer.Send(ctx, msg); err != nil {
-					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-				}
-			} else {
-				errors <- fmt.Errorf("invalid event received. expected an object of type work.Project but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
@@ -954,8 +962,8 @@ func NewProjectProducer(producer eventing.Producer, ch <-chan datamodel.ModelSen
 }
 
 // NewProjectConsumer will stream data from the topic into the provided channel
-func NewProjectConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(&eventing.ConsumerCallbackAdapter{
+func NewProjectConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Project
 			switch msg.Encoding {
@@ -985,7 +993,9 @@ func NewProjectConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRec
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &ProjectReceiveEvent{nil, msg, true}
 		},
-	})
+	}
+	consumer.Consume(adapter)
+	return adapter
 }
 
 // ProjectReceiveEvent is an event detail for receiving data
@@ -1014,8 +1024,13 @@ func (e *ProjectReceiveEvent) EOF() bool {
 
 // ProjectProducer implements the datamodel.ModelEventProducer
 type ProjectProducer struct {
-	ch   chan datamodel.ModelSendEvent
-	done <-chan bool
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
 }
 
 var _ datamodel.ModelEventProducer = (*ProjectProducer)(nil)
@@ -1027,32 +1042,53 @@ func (p *ProjectProducer) Channel() chan<- datamodel.ModelSendEvent {
 
 // Close is called to shutdown the producer
 func (p *ProjectProducer) Close() error {
-	close(p.ch)
-	<-p.done
-	return nil
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	var err error
+	if !closed {
+		p.cancel()
+		err = p.producer.Close()
+		close(p.ch)
+		<-p.done
+	}
+	return err
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Project) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &ProjectProducer{
-		ch:   ch,
-		done: NewProjectProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewProjectProducer(newctx, producer, ch, errors),
 	}
 }
 
 // NewProjectProducerChannel returns a channel which can be used for producing Model events
 func NewProjectProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &ProjectProducer{
-		ch:   ch,
-		done: NewProjectProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewProjectProducer(newctx, producer, ch, errors),
 	}
 }
 
 // ProjectConsumer implements the datamodel.ModelEventConsumer
 type ProjectConsumer struct {
-	ch chan datamodel.ModelReceiveEvent
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
 }
 
 var _ datamodel.ModelEventConsumer = (*ProjectConsumer)(nil)
@@ -1064,24 +1100,34 @@ func (c *ProjectConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 
 // Close is called to shutdown the producer
 func (c *ProjectConsumer) Close() error {
-	close(c.ch)
-	return nil
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Project) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewProjectConsumer(consumer, ch, errors)
 	return &ProjectConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewProjectConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }
 
 // NewProjectConsumerChannel returns a consumer channel which can be used to consume Model events
 func NewProjectConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewProjectConsumer(consumer, ch, errors)
 	return &ProjectConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewProjectConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }

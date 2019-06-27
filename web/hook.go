@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -826,44 +827,51 @@ func NewHookSendEvent(o *Hook, opts ...HookSendEventOpts) *HookSendEvent {
 }
 
 // NewHookProducer will stream data from the channel
-func NewHookProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewHookProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		ctx := context.Background()
-		for item := range ch {
-			if object, ok := item.Object().(*Hook); ok {
-				binary, codec, err := object.ToAvroBinary()
-				if err != nil {
-					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
 					return
 				}
-				headers := map[string]string{}
-				object.SetEventHeaders(headers)
-				for k, v := range item.Headers() {
-					headers[k] = v
+				if object, ok := item.Object().(*Hook); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type web.Hook but received on of type %v", reflect.TypeOf(item.Object()))
 				}
-				tv := item.Timestamp()
-				if tv.IsZero() {
-					tv = object.GetTimestamp() // if not provided in the message, use the objects value
-				}
-				if tv.IsZero() {
-					tv = time.Now() // if its still zero, use the ingest time
-				}
-				msg := eventing.Message{
-					Encoding:  eventing.AvroEncoding,
-					Key:       item.Key(),
-					Value:     binary,
-					Codec:     codec,
-					Headers:   headers,
-					Timestamp: tv,
-					Topic:     object.GetTopicName().String(),
-				}
-				if err := producer.Send(ctx, msg); err != nil {
-					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-				}
-			} else {
-				errors <- fmt.Errorf("invalid event received. expected an object of type web.Hook but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
@@ -871,8 +879,8 @@ func NewHookProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEv
 }
 
 // NewHookConsumer will stream data from the topic into the provided channel
-func NewHookConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(&eventing.ConsumerCallbackAdapter{
+func NewHookConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object Hook
 			switch msg.Encoding {
@@ -902,7 +910,9 @@ func NewHookConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &HookReceiveEvent{nil, msg, true}
 		},
-	})
+	}
+	consumer.Consume(adapter)
+	return adapter
 }
 
 // HookReceiveEvent is an event detail for receiving data
@@ -931,8 +941,13 @@ func (e *HookReceiveEvent) EOF() bool {
 
 // HookProducer implements the datamodel.ModelEventProducer
 type HookProducer struct {
-	ch   chan datamodel.ModelSendEvent
-	done <-chan bool
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
 }
 
 var _ datamodel.ModelEventProducer = (*HookProducer)(nil)
@@ -944,32 +959,53 @@ func (p *HookProducer) Channel() chan<- datamodel.ModelSendEvent {
 
 // Close is called to shutdown the producer
 func (p *HookProducer) Close() error {
-	close(p.ch)
-	<-p.done
-	return nil
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	var err error
+	if !closed {
+		p.cancel()
+		err = p.producer.Close()
+		close(p.ch)
+		<-p.done
+	}
+	return err
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Hook) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &HookProducer{
-		ch:   ch,
-		done: NewHookProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewHookProducer(newctx, producer, ch, errors),
 	}
 }
 
 // NewHookProducerChannel returns a channel which can be used for producing Model events
 func NewHookProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &HookProducer{
-		ch:   ch,
-		done: NewHookProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewHookProducer(newctx, producer, ch, errors),
 	}
 }
 
 // HookConsumer implements the datamodel.ModelEventConsumer
 type HookConsumer struct {
-	ch chan datamodel.ModelReceiveEvent
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
 }
 
 var _ datamodel.ModelEventConsumer = (*HookConsumer)(nil)
@@ -981,24 +1017,34 @@ func (c *HookConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 
 // Close is called to shutdown the producer
 func (c *HookConsumer) Close() error {
-	close(c.ch)
-	return nil
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *Hook) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewHookConsumer(consumer, ch, errors)
 	return &HookConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewHookConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }
 
 // NewHookConsumerChannel returns a consumer channel which can be used to consume Model events
 func NewHookConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewHookConsumer(consumer, ch, errors)
 	return &HookConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewHookConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }

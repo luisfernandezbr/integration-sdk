@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -911,44 +912,51 @@ func NewPullRequestCommentSendEvent(o *PullRequestComment, opts ...PullRequestCo
 }
 
 // NewPullRequestCommentProducer will stream data from the channel
-func NewPullRequestCommentProducer(producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewPullRequestCommentProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
-		ctx := context.Background()
-		for item := range ch {
-			if object, ok := item.Object().(*PullRequestComment); ok {
-				binary, codec, err := object.ToAvroBinary()
-				if err != nil {
-					errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
 					return
 				}
-				headers := map[string]string{}
-				object.SetEventHeaders(headers)
-				for k, v := range item.Headers() {
-					headers[k] = v
+				if object, ok := item.Object().(*PullRequestComment); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.PullRequestComment but received on of type %v", reflect.TypeOf(item.Object()))
 				}
-				tv := item.Timestamp()
-				if tv.IsZero() {
-					tv = object.GetTimestamp() // if not provided in the message, use the objects value
-				}
-				if tv.IsZero() {
-					tv = time.Now() // if its still zero, use the ingest time
-				}
-				msg := eventing.Message{
-					Encoding:  eventing.AvroEncoding,
-					Key:       item.Key(),
-					Value:     binary,
-					Codec:     codec,
-					Headers:   headers,
-					Timestamp: tv,
-					Topic:     object.GetTopicName().String(),
-				}
-				if err := producer.Send(ctx, msg); err != nil {
-					errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-				}
-			} else {
-				errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.PullRequestComment but received on of type %v", reflect.TypeOf(item.Object()))
 			}
 		}
 	}()
@@ -956,8 +964,8 @@ func NewPullRequestCommentProducer(producer eventing.Producer, ch <-chan datamod
 }
 
 // NewPullRequestCommentConsumer will stream data from the topic into the provided channel
-func NewPullRequestCommentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) {
-	consumer.Consume(&eventing.ConsumerCallbackAdapter{
+func NewPullRequestCommentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
 			var object PullRequestComment
 			switch msg.Encoding {
@@ -987,7 +995,9 @@ func NewPullRequestCommentConsumer(consumer eventing.Consumer, ch chan<- datamod
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &PullRequestCommentReceiveEvent{nil, msg, true}
 		},
-	})
+	}
+	consumer.Consume(adapter)
+	return adapter
 }
 
 // PullRequestCommentReceiveEvent is an event detail for receiving data
@@ -1016,8 +1026,13 @@ func (e *PullRequestCommentReceiveEvent) EOF() bool {
 
 // PullRequestCommentProducer implements the datamodel.ModelEventProducer
 type PullRequestCommentProducer struct {
-	ch   chan datamodel.ModelSendEvent
-	done <-chan bool
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
 }
 
 var _ datamodel.ModelEventProducer = (*PullRequestCommentProducer)(nil)
@@ -1029,32 +1044,53 @@ func (p *PullRequestCommentProducer) Channel() chan<- datamodel.ModelSendEvent {
 
 // Close is called to shutdown the producer
 func (p *PullRequestCommentProducer) Close() error {
-	close(p.ch)
-	<-p.done
-	return nil
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	var err error
+	if !closed {
+		p.cancel()
+		err = p.producer.Close()
+		close(p.ch)
+		<-p.done
+	}
+	return err
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *PullRequestComment) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &PullRequestCommentProducer{
-		ch:   ch,
-		done: NewPullRequestCommentProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewPullRequestCommentProducer(newctx, producer, ch, errors),
 	}
 }
 
 // NewPullRequestCommentProducerChannel returns a channel which can be used for producing Model events
 func NewPullRequestCommentProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	newctx, cancel := context.WithCancel(context.Background())
 	return &PullRequestCommentProducer{
-		ch:   ch,
-		done: NewPullRequestCommentProducer(producer, ch, errors),
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		done:     NewPullRequestCommentProducer(newctx, producer, ch, errors),
 	}
 }
 
 // PullRequestCommentConsumer implements the datamodel.ModelEventConsumer
 type PullRequestCommentConsumer struct {
-	ch chan datamodel.ModelReceiveEvent
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
 }
 
 var _ datamodel.ModelEventConsumer = (*PullRequestCommentConsumer)(nil)
@@ -1066,24 +1102,34 @@ func (c *PullRequestCommentConsumer) Channel() <-chan datamodel.ModelReceiveEven
 
 // Close is called to shutdown the producer
 func (c *PullRequestCommentConsumer) Close() error {
-	close(c.ch)
-	return nil
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
 func (o *PullRequestComment) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewPullRequestCommentConsumer(consumer, ch, errors)
 	return &PullRequestCommentConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewPullRequestCommentConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }
 
 // NewPullRequestCommentConsumerChannel returns a consumer channel which can be used to consume Model events
 func NewPullRequestCommentConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	NewPullRequestCommentConsumer(consumer, ch, errors)
 	return &PullRequestCommentConsumer{
-		ch: ch,
+		ch:       ch,
+		callback: NewPullRequestCommentConsumer(consumer, ch, errors),
+		consumer: consumer,
 	}
 }
