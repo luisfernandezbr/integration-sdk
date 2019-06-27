@@ -52,6 +52,8 @@ const (
 	UserCustomerIDColumn = "customer_id"
 	// UserNameColumn is the name column name
 	UserNameColumn = "name"
+	// UserUsernameColumn is the username column name
+	UserUsernameColumn = "username"
 	// UserAvatarURLColumn is the avatar_url column name
 	UserAvatarURLColumn = "avatar_url"
 	// UserEmailColumn is the email column name
@@ -72,6 +74,8 @@ type User struct {
 
 	// Name the name of the user
 	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
+	// Username the username of the user
+	Username string `json:"username" bson:"username" yaml:"username" faker:"-"`
 	// AvatarURL the url to users avatar
 	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// Email the email for the user
@@ -413,6 +417,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"customer_id": o.CustomerID,
 		"hashcode":    o.Hash(),
 		"name":        toUserObject(o.Name, isavro, false, "string"),
+		"username":    toUserObject(o.Username, isavro, false, "string"),
 		"avatar_url":  toUserObject(o.AvatarURL, isavro, true, "string"),
 		"email":       toUserObject(o.Email, isavro, true, "string"),
 	}
@@ -447,6 +452,19 @@ func (o *User) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.Name = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["username"].(string); ok {
+		o.Username = val
+	} else {
+		val := kv["username"]
+		if val == nil {
+			o.Username = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Username = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["avatar_url"].(*string); ok {
@@ -491,6 +509,7 @@ func (o *User) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Name)
+	args = append(args, o.Username)
 	args = append(args, o.AvatarURL)
 	args = append(args, o.Email)
 	o.Hashcode = hash.Values(args...)
@@ -526,6 +545,10 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "name",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "username",
 				"type": "string",
 			},
 			map[string]interface{}{
