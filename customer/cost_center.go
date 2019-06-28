@@ -62,6 +62,8 @@ const (
 	CostCenterDescriptionColumn = "description"
 	// CostCenterCostColumn is the cost column name
 	CostCenterCostColumn = "cost"
+	// CostCenterActiveColumn is the active column name
+	CostCenterActiveColumn = "active"
 )
 
 // CostCenter a cost center represents information about users and their cost
@@ -85,6 +87,8 @@ type CostCenter struct {
 	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// Cost the cost value of the cost center
 	Cost float64 `json:"cost" bson:"cost" yaml:"cost" faker:"salary"`
+	// Active whether the cost center is tracked in pinpoint
+	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -435,6 +439,7 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 		"name":        toCostCenterObject(o.Name, isavro, false, "string"),
 		"description": toCostCenterObject(o.Description, isavro, false, "string"),
 		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),
+		"active":      toCostCenterObject(o.Active, isavro, false, "boolean"),
 	}
 }
 
@@ -502,6 +507,16 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 			o.Cost = number.ToFloat64Any(val)
 		}
 	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		val := kv["active"]
+		if val == nil {
+			o.Active = number.ToBoolAny(nil)
+		} else {
+			o.Active = number.ToBoolAny(val)
+		}
+	}
 }
 
 // Hash will return a hashcode for the object
@@ -514,6 +529,7 @@ func (o *CostCenter) Hash() string {
 	args = append(args, o.Name)
 	args = append(args, o.Description)
 	args = append(args, o.Cost)
+	args = append(args, o.Active)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -610,6 +626,10 @@ func GetCostCenterAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "cost",
 				"type": "float",
+			},
+			map[string]interface{}{
+				"name": "active",
+				"type": "boolean",
 			},
 		},
 	}
