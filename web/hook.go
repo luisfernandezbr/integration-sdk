@@ -337,8 +337,6 @@ func (o *Hook) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 	o.FromMap(kv)
 	return nil
 }
@@ -425,7 +423,6 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 	} else if val, ok := kv["_id"].(string); ok {
 		o.ID = val
 	}
-	o.setDefaults()
 	if val, ok := kv["date_ts"].(int64); ok {
 		o.DateAt = val
 	} else {
@@ -496,6 +493,7 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 			o.Data = fmt.Sprintf("%v", val)
 		}
 	}
+	o.setDefaults()
 }
 
 // GetHookAvroSchemaSpec creates the avro schema specification for Hook

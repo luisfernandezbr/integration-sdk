@@ -505,8 +505,6 @@ func (o *Blame) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 	o.FromMap(kv)
 	return nil
 }
@@ -619,7 +617,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
-	o.setDefaults()
 	if val, ok := kv["date_ts"].(int64); ok {
 		o.DateAt = val
 	} else {
@@ -862,6 +859,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	if o.Lines == nil {
 		o.Lines = make([]BlameLines, 0)
 	}
+	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object
@@ -997,7 +995,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"doc": "if the line is a comment", "type": "boolean", "name": "comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}, "type": "array", "name": "lines"},
+				"type": map[string]interface{}{"name": "lines", "items": map[string]interface{}{"name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the sha when this line was last changed", "type": "string", "name": "sha"}, map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions", "type": "record"}, "type": "array"},
 			},
 		},
 	}

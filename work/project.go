@@ -362,8 +362,6 @@ func (o *Project) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 	o.FromMap(kv)
 	return nil
 }
@@ -461,7 +459,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
-	o.setDefaults()
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -543,6 +540,7 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			o.Active = number.ToBoolAny(val)
 		}
 	}
+	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object

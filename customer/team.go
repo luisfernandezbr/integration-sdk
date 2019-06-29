@@ -362,8 +362,6 @@ func (o *Team) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 	o.FromMap(kv)
 	return nil
 }
@@ -471,7 +469,6 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 	} else if val, ok := kv["updated_ts"].(time.Time); ok {
 		o.UpdatedAt = datetime.TimeToEpoch(val)
 	}
-	o.setDefaults()
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -530,6 +527,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			o.ParentID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object

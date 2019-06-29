@@ -408,8 +408,6 @@ func (o *ACLGrant) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 	o.FromMap(kv)
 	return nil
 }
@@ -516,7 +514,6 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 	} else if val, ok := kv["updated_ts"].(time.Time); ok {
 		o.UpdatedAt = datetime.TimeToEpoch(val)
 	}
-	o.setDefaults()
 	if val, ok := kv["resource_id"].(string); ok {
 		o.ResourceID = val
 	} else {
@@ -568,6 +565,7 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object

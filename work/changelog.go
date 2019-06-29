@@ -386,8 +386,6 @@ func (o *Changelog) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 	o.FromMap(kv)
 	return nil
 }
@@ -490,7 +488,6 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	}
-	o.setDefaults()
 	if val, ok := kv["issue_id"].(string); ok {
 		o.IssueID = val
 	} else {
@@ -628,6 +625,7 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 			o.ToString = fmt.Sprintf("%v", val)
 		}
 	}
+	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object

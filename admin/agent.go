@@ -361,8 +361,6 @@ func (o *Agent) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
 	}
-	// make sure that these have values if empty
-	o.setDefaults()
 	o.FromMap(kv)
 	return nil
 }
@@ -470,7 +468,6 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 	} else if val, ok := kv["updated_ts"].(time.Time); ok {
 		o.UpdatedAt = datetime.TimeToEpoch(val)
 	}
-	o.setDefaults()
 	if val, ok := kv["apikey"].(string); ok {
 		o.Apikey = val
 	} else {
@@ -517,6 +514,7 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 			o.CompletedAt = number.ToInt64Any(val)
 		}
 	}
+	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object
