@@ -695,11 +695,11 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
+				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "commits"},
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "behind_default_count",
@@ -1008,7 +1008,7 @@ func NewBranchSendEvent(o *Branch, opts ...BranchSendEventOpts) *BranchSendEvent
 }
 
 // NewBranchProducer will stream data from the channel
-func NewBranchProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewBranchProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1018,6 +1018,7 @@ func NewBranchProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 				return
 			case item := <-ch:
 				if item == nil {
+					empty <- true
 					return
 				}
 				if object, ok := item.Object().(*Branch); ok {
@@ -1129,6 +1130,7 @@ type BranchProducer struct {
 	mu       sync.Mutex
 	ctx      context.Context
 	cancel   context.CancelFunc
+	empty    chan bool
 }
 
 var _ datamodel.ModelEventProducer = (*BranchProducer)(nil)
@@ -1144,39 +1146,42 @@ func (p *BranchProducer) Close() error {
 	closed := p.closed
 	p.closed = true
 	p.mu.Unlock()
-	var err error
 	if !closed {
-		p.cancel()
-		err = p.producer.Close()
 		close(p.ch)
+		<-p.empty
+		p.cancel()
 		<-p.done
 	}
-	return err
+	return nil
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Branch) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &BranchProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewBranchProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewBranchProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
 // NewBranchProducerChannel returns a channel which can be used for producing Model events
 func NewBranchProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &BranchProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewBranchProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewBranchProducer(newctx, producer, ch, errors, empty),
 	}
 }
 

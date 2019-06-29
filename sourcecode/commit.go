@@ -1079,7 +1079,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}, map[string]interface{}{"doc": "indicates if the file was detected to be a binary file", "type": "boolean", "name": "binary"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"name": "loc", "doc": "the number of lines in the file", "type": "long"}, map[string]interface{}{"doc": "the number of source lines in the file", "type": "long", "name": "sloc"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"name": "license_confidence", "doc": "the license confidence from the detection engine", "type": "float"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"doc": "the original file name", "type": "string", "name": "renamed_from"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"doc": "the size of the file", "type": "long", "name": "size"}}, "doc": "the files touched by this commit", "type": "record", "name": "files"}},
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"doc": "the files touched by this commit", "type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"doc": "the timestamp in UTC that the commit was created", "type": "long", "name": "created_ts"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"name": "repo_id", "doc": "the unique id for the repo", "type": "string"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"doc": "if the file was excluded, the reason", "type": "string", "name": "excluded_reason"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"name": "complexity", "doc": "the complexity value for the file change", "type": "long"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"name": "renamed", "doc": "if the file was renamed", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}}}},
 			},
 		},
 	}
@@ -1376,7 +1376,7 @@ func NewCommitSendEvent(o *Commit, opts ...CommitSendEventOpts) *CommitSendEvent
 }
 
 // NewCommitProducer will stream data from the channel
-func NewCommitProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewCommitProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1386,6 +1386,7 @@ func NewCommitProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 				return
 			case item := <-ch:
 				if item == nil {
+					empty <- true
 					return
 				}
 				if object, ok := item.Object().(*Commit); ok {
@@ -1497,6 +1498,7 @@ type CommitProducer struct {
 	mu       sync.Mutex
 	ctx      context.Context
 	cancel   context.CancelFunc
+	empty    chan bool
 }
 
 var _ datamodel.ModelEventProducer = (*CommitProducer)(nil)
@@ -1512,39 +1514,42 @@ func (p *CommitProducer) Close() error {
 	closed := p.closed
 	p.closed = true
 	p.mu.Unlock()
-	var err error
 	if !closed {
-		p.cancel()
-		err = p.producer.Close()
 		close(p.ch)
+		<-p.empty
+		p.cancel()
 		<-p.done
 	}
-	return err
+	return nil
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Commit) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &CommitProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewCommitProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewCommitProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
 // NewCommitProducerChannel returns a channel which can be used for producing Model events
 func NewCommitProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &CommitProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewCommitProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewCommitProducer(newctx, producer, ch, errors, empty),
 	}
 }
 

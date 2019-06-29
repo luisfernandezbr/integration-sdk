@@ -966,11 +966,11 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "tags"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the id of the custom field", "type": "string"}, map[string]interface{}{"doc": "the name of the custom field", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"name": "name", "doc": "the name of the custom field", "type": "string"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
 			},
 			map[string]interface{}{
 				"name": "parent_id",
@@ -1275,7 +1275,7 @@ func NewIssueSendEvent(o *Issue, opts ...IssueSendEventOpts) *IssueSendEvent {
 }
 
 // NewIssueProducer will stream data from the channel
-func NewIssueProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewIssueProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1285,6 +1285,7 @@ func NewIssueProducer(ctx context.Context, producer eventing.Producer, ch <-chan
 				return
 			case item := <-ch:
 				if item == nil {
+					empty <- true
 					return
 				}
 				if object, ok := item.Object().(*Issue); ok {
@@ -1396,6 +1397,7 @@ type IssueProducer struct {
 	mu       sync.Mutex
 	ctx      context.Context
 	cancel   context.CancelFunc
+	empty    chan bool
 }
 
 var _ datamodel.ModelEventProducer = (*IssueProducer)(nil)
@@ -1411,39 +1413,42 @@ func (p *IssueProducer) Close() error {
 	closed := p.closed
 	p.closed = true
 	p.mu.Unlock()
-	var err error
 	if !closed {
-		p.cancel()
-		err = p.producer.Close()
 		close(p.ch)
+		<-p.empty
+		p.cancel()
 		<-p.done
 	}
-	return err
+	return nil
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Issue) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &IssueProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewIssueProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewIssueProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
 // NewIssueProducerChannel returns a channel which can be used for producing Model events
 func NewIssueProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &IssueProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewIssueProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewIssueProducer(newctx, producer, ch, errors, empty),
 	}
 }
 

@@ -939,7 +939,7 @@ func NewTeamSendEvent(o *Team, opts ...TeamSendEventOpts) *TeamSendEvent {
 }
 
 // NewTeamProducer will stream data from the channel
-func NewTeamProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewTeamProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -949,6 +949,7 @@ func NewTeamProducer(ctx context.Context, producer eventing.Producer, ch <-chan 
 				return
 			case item := <-ch:
 				if item == nil {
+					empty <- true
 					return
 				}
 				if object, ok := item.Object().(*Team); ok {
@@ -1060,6 +1061,7 @@ type TeamProducer struct {
 	mu       sync.Mutex
 	ctx      context.Context
 	cancel   context.CancelFunc
+	empty    chan bool
 }
 
 var _ datamodel.ModelEventProducer = (*TeamProducer)(nil)
@@ -1075,39 +1077,42 @@ func (p *TeamProducer) Close() error {
 	closed := p.closed
 	p.closed = true
 	p.mu.Unlock()
-	var err error
 	if !closed {
-		p.cancel()
-		err = p.producer.Close()
 		close(p.ch)
+		<-p.empty
+		p.cancel()
 		<-p.done
 	}
-	return err
+	return nil
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Team) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &TeamProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewTeamProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewTeamProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
 // NewTeamProducerChannel returns a channel which can be used for producing Model events
 func NewTeamProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &TeamProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewTeamProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewTeamProducer(newctx, producer, ch, errors, empty),
 	}
 }
 

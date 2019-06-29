@@ -890,7 +890,7 @@ func NewPullRequestReviewSendEvent(o *PullRequestReview, opts ...PullRequestRevi
 }
 
 // NewPullRequestReviewProducer will stream data from the channel
-func NewPullRequestReviewProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error) <-chan bool {
+func NewPullRequestReviewProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -900,6 +900,7 @@ func NewPullRequestReviewProducer(ctx context.Context, producer eventing.Produce
 				return
 			case item := <-ch:
 				if item == nil {
+					empty <- true
 					return
 				}
 				if object, ok := item.Object().(*PullRequestReview); ok {
@@ -1011,6 +1012,7 @@ type PullRequestReviewProducer struct {
 	mu       sync.Mutex
 	ctx      context.Context
 	cancel   context.CancelFunc
+	empty    chan bool
 }
 
 var _ datamodel.ModelEventProducer = (*PullRequestReviewProducer)(nil)
@@ -1026,39 +1028,42 @@ func (p *PullRequestReviewProducer) Close() error {
 	closed := p.closed
 	p.closed = true
 	p.mu.Unlock()
-	var err error
 	if !closed {
-		p.cancel()
-		err = p.producer.Close()
 		close(p.ch)
+		<-p.empty
+		p.cancel()
 		<-p.done
 	}
-	return err
+	return nil
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *PullRequestReview) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &PullRequestReviewProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewPullRequestReviewProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewPullRequestReviewProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
 // NewPullRequestReviewProducerChannel returns a channel which can be used for producing Model events
 func NewPullRequestReviewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &PullRequestReviewProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
-		done:     NewPullRequestReviewProducer(newctx, producer, ch, errors),
+		empty:    empty,
+		done:     NewPullRequestReviewProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
