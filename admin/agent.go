@@ -223,6 +223,7 @@ func toAgentObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 			arr = append(arr, toAgentObject(av, isavro, false, ""))
 		}
 		return arr
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }

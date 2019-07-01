@@ -253,6 +253,7 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 			arr = append(arr, toUserObject(av, isavro, false, ""))
 		}
 		return arr
+
 	case Type:
 		if !isavro {
 			return (o.(Type)).String()

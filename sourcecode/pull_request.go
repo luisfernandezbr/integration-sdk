@@ -248,6 +248,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 			arr = append(arr, toPullRequestObject(av, isavro, false, ""))
 		}
 		return arr
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }

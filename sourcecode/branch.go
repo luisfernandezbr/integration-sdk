@@ -236,6 +236,7 @@ func toBranchObject(o interface{}, isavro bool, isoptional bool, avrotype string
 			arr = append(arr, toBranchObject(av, isavro, false, ""))
 		}
 		return arr
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -695,7 +696,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"name": "branched_from_commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",

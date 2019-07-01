@@ -224,6 +224,7 @@ func toPullRequestCommentObject(o interface{}, isavro bool, isoptional bool, avr
 			arr = append(arr, toPullRequestCommentObject(av, isavro, false, ""))
 		}
 		return arr
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }

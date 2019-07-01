@@ -243,6 +243,7 @@ func toACLGrantObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 			arr = append(arr, toACLGrantObject(av, isavro, false, ""))
 		}
 		return arr
+
 	case Permission:
 		if !isavro {
 			return (o.(Permission)).String()

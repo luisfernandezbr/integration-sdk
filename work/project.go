@@ -224,6 +224,7 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 			arr = append(arr, toProjectObject(av, isavro, false, ""))
 		}
 		return arr
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }

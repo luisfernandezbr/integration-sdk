@@ -244,6 +244,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 			arr = append(arr, toChangelogObject(av, isavro, false, ""))
 		}
 		return arr
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }

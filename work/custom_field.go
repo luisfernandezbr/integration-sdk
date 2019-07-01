@@ -206,6 +206,7 @@ func toCustomFieldObject(o interface{}, isavro bool, isoptional bool, avrotype s
 			arr = append(arr, toCustomFieldObject(av, isavro, false, ""))
 		}
 		return arr
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }

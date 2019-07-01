@@ -220,6 +220,7 @@ func toPullRequestReviewObject(o interface{}, isavro bool, isoptional bool, avro
 			arr = append(arr, toPullRequestReviewObject(av, isavro, false, ""))
 		}
 		return arr
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
