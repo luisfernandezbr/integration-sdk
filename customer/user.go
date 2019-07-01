@@ -651,7 +651,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["int64"]
+				val = kv["long"]
 			}
 			o.DeletedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
@@ -667,7 +667,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["int64"]
+				val = kv["long"]
 			}
 			o.HiredAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
@@ -683,7 +683,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["int64"]
+				val = kv["long"]
 			}
 			o.TerminatedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}

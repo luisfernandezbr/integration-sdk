@@ -529,7 +529,7 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["int64"]
+				val = kv["long"]
 			}
 			o.EndedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
@@ -545,7 +545,7 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["int64"]
+				val = kv["long"]
 			}
 			o.CompletedAt = number.Int64Pointer(number.ToInt64Any(val))
 		}
