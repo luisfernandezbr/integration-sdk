@@ -337,6 +337,12 @@ func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
+// GetStateKey returns a key for use in state store
+func (o *Branch) GetStateKey() string {
+	key := "repo_id"
+	return fmt.Sprintf("%s_%s", key, o.GetID())
+}
+
 // GetCustomerID will return the customer_id
 func (o *Branch) GetCustomerID() string {
 	return o.CustomerID
@@ -724,7 +730,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "commits"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

@@ -324,6 +324,12 @@ func (o *Agent) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
+// GetStateKey returns a key for use in state store
+func (o *Agent) GetStateKey() string {
+	key := "id"
+	return fmt.Sprintf("%s_%s", key, o.GetID())
+}
+
 // GetCustomerID will return the customer_id
 func (o *Agent) GetCustomerID() string {
 	return o.CustomerID

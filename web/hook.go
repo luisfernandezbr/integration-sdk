@@ -303,6 +303,12 @@ func (o *Hook) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
+// GetStateKey returns a key for use in state store
+func (o *Hook) GetStateKey() string {
+	key := "system"
+	return fmt.Sprintf("%s_%s", key, o.GetID())
+}
+
 // Clone returns an exact copy of Hook
 func (o *Hook) Clone() datamodel.Model {
 	c := new(Hook)

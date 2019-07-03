@@ -297,6 +297,12 @@ func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
+// GetStateKey returns a key for use in state store
+func (o *Project) GetStateKey() string {
+	key := "id"
+	return fmt.Sprintf("%s_%s", key, o.GetID())
+}
+
 // GetCustomerID will return the customer_id
 func (o *Project) GetCustomerID() string {
 	return o.CustomerID

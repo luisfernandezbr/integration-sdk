@@ -320,6 +320,12 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
+// GetStateKey returns a key for use in state store
+func (o *Metric) GetStateKey() string {
+	key := "id"
+	return fmt.Sprintf("%s_%s", key, o.GetID())
+}
+
 // GetCustomerID will return the customer_id
 func (o *Metric) GetCustomerID() string {
 	return o.CustomerID

@@ -333,6 +333,12 @@ func (o *PullRequestReview) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
+// GetStateKey returns a key for use in state store
+func (o *PullRequestReview) GetStateKey() string {
+	key := "repo_id"
+	return fmt.Sprintf("%s_%s", key, o.GetID())
+}
+
 // GetCustomerID will return the customer_id
 func (o *PullRequestReview) GetCustomerID() string {
 	return o.CustomerID

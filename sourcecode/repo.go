@@ -326,6 +326,12 @@ func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
+// GetStateKey returns a key for use in state store
+func (o *Repo) GetStateKey() string {
+	key := "id"
+	return fmt.Sprintf("%s_%s", key, o.GetID())
+}
+
 // GetCustomerID will return the customer_id
 func (o *Repo) GetCustomerID() string {
 	return o.CustomerID

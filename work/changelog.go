@@ -348,6 +348,12 @@ func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
+// GetStateKey returns a key for use in state store
+func (o *Changelog) GetStateKey() string {
+	key := "issue_id"
+	return fmt.Sprintf("%s_%s", key, o.GetID())
+}
+
 // GetCustomerID will return the customer_id
 func (o *Changelog) GetCustomerID() string {
 	return o.CustomerID
