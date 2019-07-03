@@ -447,6 +447,7 @@ func (o *PullRequestReview) ToMap(avro ...bool) map[string]interface{} {
 		"repo_id":         toPullRequestReviewObject(o.RepoID, isavro, false, "string"),
 		"state":           toPullRequestReviewObject(o.State, isavro, false, "string"),
 		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, isavro, false, "string"),
+		"hashcode":        toPullRequestReviewObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 

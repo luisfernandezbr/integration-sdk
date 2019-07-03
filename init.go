@@ -18,36 +18,28 @@ import (
 // New returns a new instanceof from a ModelNameType
 func New(name datamodel.ModelNameType) datamodel.Model {
 	switch name {
-	case "auth.ACLGrant":
-		return new(auth.ACLGrant)
-	case "work.Changelog":
-		return new(work.Changelog)
-	case "work.CustomField":
-		return new(work.CustomField)
-	case "work.Project":
-		return new(work.Project)
-	case "work.User":
-		return new(work.User)
-	case "work.Issue":
-		return new(work.Issue)
-	case "work.Sprint":
-		return new(work.Sprint)
-	case "agent.Event":
-		return new(agent.Event)
-	case "customer.User":
-		return new(customer.User)
-	case "customer.CostCenter":
-		return new(customer.CostCenter)
-	case "customer.Team":
-		return new(customer.Team)
-	case "admin.Agent":
-		return new(admin.Agent)
-	case "pipeline.User":
-		return new(pipeline.User)
 	case "codequality.Metric":
 		return new(codequality.Metric)
 	case "codequality.Project":
 		return new(codequality.Project)
+	case "agent.Event":
+		return new(agent.Event)
+	case "web.Hook":
+		return new(web.Hook)
+	case "admin.Agent":
+		return new(admin.Agent)
+	case "auth.ACLGrant":
+		return new(auth.ACLGrant)
+	case "pipeline.User":
+		return new(pipeline.User)
+	case "customer.Team":
+		return new(customer.Team)
+	case "customer.CostCenter":
+		return new(customer.CostCenter)
+	case "customer.User":
+		return new(customer.User)
+	case "sourcecode.Branch":
+		return new(sourcecode.Branch)
 	case "sourcecode.Commit":
 		return new(sourcecode.Commit)
 	case "sourcecode.PullRequest":
@@ -62,10 +54,18 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return new(sourcecode.User)
 	case "sourcecode.Blame":
 		return new(sourcecode.Blame)
-	case "sourcecode.Branch":
-		return new(sourcecode.Branch)
-	case "web.Hook":
-		return new(web.Hook)
+	case "work.Project":
+		return new(work.Project)
+	case "work.Sprint":
+		return new(work.Sprint)
+	case "work.User":
+		return new(work.User)
+	case "work.Changelog":
+		return new(work.Changelog)
+	case "work.CustomField":
+		return new(work.CustomField)
+	case "work.Issue":
+		return new(work.Issue)
 	}
 	return nil
 }
@@ -75,38 +75,24 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
 	case "agent_Event_topic":
 		return new(agent.Event)
-	case "customer_CostCenter_topic":
-		return new(customer.CostCenter)
-	case "customer_Team_topic":
-		return new(customer.Team)
-	case "customer_User_topic":
-		return new(customer.User)
+	case "web_Hook_topic":
+		return new(web.Hook)
 	case "admin_Agent_topic":
 		return new(admin.Agent)
 	case "auth_ACLGrant_topic":
 		return new(auth.ACLGrant)
-	case "work_CustomField_topic":
-		return new(work.CustomField)
-	case "work_Project_topic":
-		return new(work.Project)
-	case "work_User_topic":
-		return new(work.User)
-	case "work_Issue_topic":
-		return new(work.Issue)
-	case "work_Sprint_topic":
-		return new(work.Sprint)
-	case "work_Changelog_topic":
-		return new(work.Changelog)
 	case "codequality_Metric_topic":
 		return new(codequality.Metric)
 	case "codequality_Project_topic":
 		return new(codequality.Project)
-	case "sourcecode_Commit_topic":
-		return new(sourcecode.Commit)
-	case "sourcecode_PullRequest_topic":
-		return new(sourcecode.PullRequest)
-	case "sourcecode_PullRequestComment_topic":
-		return new(sourcecode.PullRequestComment)
+	case "pipeline_User_topic":
+		return new(pipeline.User)
+	case "customer_Team_topic":
+		return new(customer.Team)
+	case "customer_CostCenter_topic":
+		return new(customer.CostCenter)
+	case "customer_User_topic":
+		return new(customer.User)
 	case "sourcecode_PullRequestReview_topic":
 		return new(sourcecode.PullRequestReview)
 	case "sourcecode_Repo_topic":
@@ -117,10 +103,24 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		return new(sourcecode.Blame)
 	case "sourcecode_Branch_topic":
 		return new(sourcecode.Branch)
-	case "web_Hook_topic":
-		return new(web.Hook)
-	case "pipeline_User_topic":
-		return new(pipeline.User)
+	case "sourcecode_Commit_topic":
+		return new(sourcecode.Commit)
+	case "sourcecode_PullRequest_topic":
+		return new(sourcecode.PullRequest)
+	case "sourcecode_PullRequestComment_topic":
+		return new(sourcecode.PullRequestComment)
+	case "work_Changelog_topic":
+		return new(work.Changelog)
+	case "work_CustomField_topic":
+		return new(work.CustomField)
+	case "work_Issue_topic":
+		return new(work.Issue)
+	case "work_Project_topic":
+		return new(work.Project)
+	case "work_Sprint_topic":
+		return new(work.Sprint)
+	case "work_User_topic":
+		return new(work.User)
 	}
 	return nil
 }
@@ -128,77 +128,77 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 // GetMaterializedTopics returns an array of topics to be materialized
 func GetMaterializedTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
-		datamodel.TopicNameType("work_Project_topic"),
-		datamodel.TopicNameType("customer_User_topic"),
-		datamodel.TopicNameType("customer_CostCenter_topic"),
 		datamodel.TopicNameType("customer_Team_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequest_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequestReview_topic"),
+		datamodel.TopicNameType("customer_CostCenter_topic"),
+		datamodel.TopicNameType("customer_User_topic"),
 		datamodel.TopicNameType("sourcecode_Repo_topic"),
 		datamodel.TopicNameType("sourcecode_User_topic"),
 		datamodel.TopicNameType("sourcecode_Branch_topic"),
+		datamodel.TopicNameType("sourcecode_PullRequest_topic"),
+		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
+		datamodel.TopicNameType("sourcecode_PullRequestReview_topic"),
 		datamodel.TopicNameType("admin_Agent_topic"),
 		datamodel.TopicNameType("auth_ACLGrant_topic"),
+		datamodel.TopicNameType("work_Project_topic"),
 	}
 }
 
 // GetTopics returns an array of topics that are configured
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
-		datamodel.TopicNameType("work_Project_topic"),
-		datamodel.TopicNameType("work_User_topic"),
-		datamodel.TopicNameType("work_Issue_topic"),
-		datamodel.TopicNameType("work_Sprint_topic"),
-		datamodel.TopicNameType("work_Changelog_topic"),
-		datamodel.TopicNameType("work_CustomField_topic"),
 		datamodel.TopicNameType("pipeline_User_topic"),
-		datamodel.TopicNameType("agent_Event_topic"),
-		datamodel.TopicNameType("codequality_Metric_topic"),
-		datamodel.TopicNameType("codequality_Project_topic"),
-		datamodel.TopicNameType("customer_User_topic"),
-		datamodel.TopicNameType("customer_CostCenter_topic"),
 		datamodel.TopicNameType("customer_Team_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequest_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequestReview_topic"),
+		datamodel.TopicNameType("agent_Event_topic"),
+		datamodel.TopicNameType("customer_CostCenter_topic"),
+		datamodel.TopicNameType("customer_User_topic"),
 		datamodel.TopicNameType("sourcecode_Repo_topic"),
 		datamodel.TopicNameType("sourcecode_User_topic"),
 		datamodel.TopicNameType("sourcecode_Blame_topic"),
 		datamodel.TopicNameType("sourcecode_Branch_topic"),
 		datamodel.TopicNameType("sourcecode_Commit_topic"),
+		datamodel.TopicNameType("sourcecode_PullRequest_topic"),
+		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
+		datamodel.TopicNameType("sourcecode_PullRequestReview_topic"),
+		datamodel.TopicNameType("web_Hook_topic"),
 		datamodel.TopicNameType("admin_Agent_topic"),
 		datamodel.TopicNameType("auth_ACLGrant_topic"),
-		datamodel.TopicNameType("web_Hook_topic"),
+		datamodel.TopicNameType("codequality_Metric_topic"),
+		datamodel.TopicNameType("codequality_Project_topic"),
+		datamodel.TopicNameType("work_CustomField_topic"),
+		datamodel.TopicNameType("work_Issue_topic"),
+		datamodel.TopicNameType("work_Project_topic"),
+		datamodel.TopicNameType("work_Sprint_topic"),
+		datamodel.TopicNameType("work_User_topic"),
+		datamodel.TopicNameType("work_Changelog_topic"),
 	}
 }
 
 // GetModelNames returns an array of model names that are configured
 func GetModelNames() []datamodel.ModelNameType {
 	return []datamodel.ModelNameType{
-		datamodel.ModelNameType("work.Project"),
-		datamodel.ModelNameType("work.User"),
-		datamodel.ModelNameType("work.Issue"),
-		datamodel.ModelNameType("work.Sprint"),
-		datamodel.ModelNameType("work.Changelog"),
-		datamodel.ModelNameType("work.CustomField"),
 		datamodel.ModelNameType("pipeline.User"),
-		datamodel.ModelNameType("agent.Event"),
-		datamodel.ModelNameType("codequality.Metric"),
-		datamodel.ModelNameType("codequality.Project"),
-		datamodel.ModelNameType("customer.User"),
-		datamodel.ModelNameType("customer.CostCenter"),
 		datamodel.ModelNameType("customer.Team"),
-		datamodel.ModelNameType("sourcecode.PullRequest"),
-		datamodel.ModelNameType("sourcecode.PullRequestComment"),
-		datamodel.ModelNameType("sourcecode.PullRequestReview"),
+		datamodel.ModelNameType("agent.Event"),
+		datamodel.ModelNameType("customer.CostCenter"),
+		datamodel.ModelNameType("customer.User"),
 		datamodel.ModelNameType("sourcecode.Repo"),
 		datamodel.ModelNameType("sourcecode.User"),
 		datamodel.ModelNameType("sourcecode.Blame"),
 		datamodel.ModelNameType("sourcecode.Branch"),
 		datamodel.ModelNameType("sourcecode.Commit"),
+		datamodel.ModelNameType("sourcecode.PullRequest"),
+		datamodel.ModelNameType("sourcecode.PullRequestComment"),
+		datamodel.ModelNameType("sourcecode.PullRequestReview"),
+		datamodel.ModelNameType("web.Hook"),
 		datamodel.ModelNameType("admin.Agent"),
 		datamodel.ModelNameType("auth.ACLGrant"),
-		datamodel.ModelNameType("web.Hook"),
+		datamodel.ModelNameType("codequality.Metric"),
+		datamodel.ModelNameType("codequality.Project"),
+		datamodel.ModelNameType("work.CustomField"),
+		datamodel.ModelNameType("work.Issue"),
+		datamodel.ModelNameType("work.Project"),
+		datamodel.ModelNameType("work.Sprint"),
+		datamodel.ModelNameType("work.User"),
+		datamodel.ModelNameType("work.Changelog"),
 	}
 }

@@ -461,6 +461,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":                toBranchObject(o.RefID, isavro, false, "string"),
 		"ref_type":              toBranchObject(o.RefType, isavro, false, "string"),
 		"repo_id":               toBranchObject(o.RepoID, isavro, false, "string"),
+		"hashcode":              toBranchObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -719,7 +720,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
+				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "commits",

@@ -452,6 +452,7 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
 		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, isavro, false, "long"),
 		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, isavro, false, "string"),
+		"hashcode":        toPullRequestCommentObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 

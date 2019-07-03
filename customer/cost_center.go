@@ -439,6 +439,7 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":      toCostCenterObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toCostCenterObject(o.RefType, isavro, false, "string"),
 		"updated_ts":  toCostCenterObject(o.UpdatedAt, isavro, false, "long"),
+		"hashcode":    toCostCenterObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 

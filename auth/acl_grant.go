@@ -486,6 +486,7 @@ func (o *ACLGrant) ToMap(avro ...bool) map[string]interface{} {
 		"resource_id": toACLGrantObject(o.ResourceID, isavro, false, "string"),
 		"role_id":     toACLGrantObject(o.RoleID, isavro, false, "string"),
 		"updated_ts":  toACLGrantObject(o.UpdatedAt, isavro, false, "long"),
+		"hashcode":    toACLGrantObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 

@@ -439,6 +439,7 @@ func (o *Agent) ToMap(avro ...bool) map[string]interface{} {
 		"rerun_historical": toAgentObject(o.RerunHistorical, isavro, false, "long"),
 		"updated_ts":       toAgentObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":             toAgentObject(o.UUID, isavro, false, "string"),
+		"hashcode":         toAgentObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 

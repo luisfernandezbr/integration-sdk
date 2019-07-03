@@ -470,6 +470,7 @@ func (o *Event) ToMap(avro ...bool) map[string]interface{} {
 		"type":         toEventObject(o.Type, isavro, false, "string"),
 		"uuid":         toEventObject(o.UUID, isavro, false, "string"),
 		"version":      toEventObject(o.Version, isavro, false, "string"),
+		"hashcode":     toEventObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 

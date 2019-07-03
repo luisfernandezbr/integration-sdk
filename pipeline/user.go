@@ -475,6 +475,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"terminated_ts":  toUserObject(o.TerminatedAt, isavro, true, "long"),
 		"title":          toUserObject(o.Title, isavro, true, "string"),
 		"trackable":      toUserObject(o.Trackable, isavro, false, "boolean"),
+		"hashcode":       toUserObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 

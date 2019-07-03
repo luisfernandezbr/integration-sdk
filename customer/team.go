@@ -440,6 +440,7 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":      toTeamObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toTeamObject(o.RefType, isavro, false, "string"),
 		"updated_ts":  toTeamObject(o.UpdatedAt, isavro, false, "long"),
+		"hashcode":    toTeamObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 

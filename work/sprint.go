@@ -447,6 +447,7 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":     toSprintObject(o.RefType, isavro, false, "string"),
 		"started_ts":   toSprintObject(o.StartedAt, isavro, false, "long"),
 		"status":       toSprintObject(o.Status, isavro, false, "string"),
+		"hashcode":     toSprintObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
