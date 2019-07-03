@@ -652,10 +652,6 @@ func GetAgentAvroSchemaSpec() string {
 		"name":      "Agent",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
 			},

@@ -514,10 +514,6 @@ func GetHookAvroSchemaSpec() string {
 		"name":      "Hook",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "data",
 				"type": "string",
 			},
