@@ -30,7 +30,7 @@
 
 [[constraint]]
   name = "github.com/pinpt/go-common"
-  version = "7.0.7"
+  version = "7.0.12"
 
 [[constraint]]
   name = "github.com/linkedin/goavro"
