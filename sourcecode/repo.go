@@ -43,52 +43,52 @@ const (
 )
 
 const (
+	// RepoActiveColumn is the active column name
+	RepoActiveColumn = "active"
+	// RepoCustomerIDColumn is the customer_id column name
+	RepoCustomerIDColumn = "customer_id"
+	// RepoDefaultBranchColumn is the default_branch column name
+	RepoDefaultBranchColumn = "default_branch"
+	// RepoDescriptionColumn is the description column name
+	RepoDescriptionColumn = "description"
 	// RepoIDColumn is the id column name
 	RepoIDColumn = "id"
+	// RepoLanguageColumn is the language column name
+	RepoLanguageColumn = "language"
+	// RepoNameColumn is the name column name
+	RepoNameColumn = "name"
 	// RepoRefIDColumn is the ref_id column name
 	RepoRefIDColumn = "ref_id"
 	// RepoRefTypeColumn is the ref_type column name
 	RepoRefTypeColumn = "ref_type"
-	// RepoCustomerIDColumn is the customer_id column name
-	RepoCustomerIDColumn = "customer_id"
-	// RepoNameColumn is the name column name
-	RepoNameColumn = "name"
 	// RepoURLColumn is the url column name
 	RepoURLColumn = "url"
-	// RepoDescriptionColumn is the description column name
-	RepoDescriptionColumn = "description"
-	// RepoLanguageColumn is the language column name
-	RepoLanguageColumn = "language"
-	// RepoActiveColumn is the active column name
-	RepoActiveColumn = "active"
-	// RepoDefaultBranchColumn is the default_branch column name
-	RepoDefaultBranchColumn = "default_branch"
 )
 
 // Repo the repo holds source code
 type Repo struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// Name the name of the repo
-	Name string `json:"name" bson:"name" yaml:"name" faker:"repo"`
-	// URL the url to the repo home page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
-	// Description brief explanation of the repo
-	Description string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
-	// Language the programming language the source code is primarily written in
-	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
 	// Active the status of the repo
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DefaultBranch the repo default branch
 	DefaultBranch string `json:"default_branch" bson:"default_branch" yaml:"default_branch" faker:"-"`
+	// Description brief explanation of the repo
+	Description string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Language the programming language the source code is primarily written in
+	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
+	// Name the name of the repo
+	Name string `json:"name" bson:"name" yaml:"name" faker:"repo"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// URL the url to the repo home page
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -431,89 +431,21 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":             o.GetID(),
-		"ref_id":         o.GetRefID(),
-		"ref_type":       o.RefType,
-		"customer_id":    o.CustomerID,
-		"hashcode":       o.Hash(),
-		"name":           toRepoObject(o.Name, isavro, false, "string"),
-		"url":            toRepoObject(o.URL, isavro, false, "string"),
-		"description":    toRepoObject(o.Description, isavro, false, "string"),
-		"language":       toRepoObject(o.Language, isavro, false, "string"),
 		"active":         toRepoObject(o.Active, isavro, false, "boolean"),
+		"customer_id":    toRepoObject(o.CustomerID, isavro, false, "string"),
 		"default_branch": toRepoObject(o.DefaultBranch, isavro, false, "string"),
+		"description":    toRepoObject(o.Description, isavro, false, "string"),
+		"id":             toRepoObject(o.ID, isavro, false, "string"),
+		"language":       toRepoObject(o.Language, isavro, false, "string"),
+		"name":           toRepoObject(o.Name, isavro, false, "string"),
+		"ref_id":         toRepoObject(o.RefID, isavro, false, "string"),
+		"ref_type":       toRepoObject(o.RefType, isavro, false, "string"),
+		"url":            toRepoObject(o.URL, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Repo) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Name = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
-	} else {
-		val := kv["url"]
-		if val == nil {
-			o.URL = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.URL = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["description"].(string); ok {
-		o.Description = val
-	} else {
-		val := kv["description"]
-		if val == nil {
-			o.Description = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Description = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["language"].(string); ok {
-		o.Language = val
-	} else {
-		val := kv["language"]
-		if val == nil {
-			o.Language = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Language = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
 	} else {
@@ -522,6 +454,19 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			o.Active = number.ToBoolAny(nil)
 		} else {
 			o.Active = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["default_branch"].(string); ok {
@@ -537,6 +482,97 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			o.DefaultBranch = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		val := kv["description"]
+		if val == nil {
+			o.Description = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Description = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["language"].(string); ok {
+		o.Language = val
+	} else {
+		val := kv["language"]
+		if val == nil {
+			o.Language = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Language = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		val := kv["name"]
+		if val == nil {
+			o.Name = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Name = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		val := kv["url"]
+		if val == nil {
+			o.URL = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.URL = fmt.Sprintf("%v", val)
+		}
+	}
 	o.setDefaults()
 }
 
@@ -547,12 +583,16 @@ func (o *Repo) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Name)
-	args = append(args, o.URL)
-	args = append(args, o.Description)
-	args = append(args, o.Language)
 	args = append(args, o.Active)
+	args = append(args, o.CustomerID)
 	args = append(args, o.DefaultBranch)
+	args = append(args, o.Description)
+	args = append(args, o.ID)
+	args = append(args, o.Language)
+	args = append(args, o.Name)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -569,6 +609,38 @@ func GetRepoAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "active",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "customer_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "default_branch",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "description",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "language",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "name",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "ref_id",
 				"type": "string",
 			},
@@ -577,35 +649,7 @@ func GetRepoAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "description",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "language",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "active",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "default_branch",
 				"type": "string",
 			},
 		},

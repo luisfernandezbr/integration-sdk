@@ -45,58 +45,58 @@ const (
 )
 
 const (
+	// IssueAssigneeRefIDColumn is the assignee_ref_id column name
+	IssueAssigneeRefIDColumn = "assignee_ref_id"
+	// IssueCreatedAtColumn is the created_ts column name
+	IssueCreatedAtColumn = "created_ts"
+	// IssueCreatorRefIDColumn is the creator_ref_id column name
+	IssueCreatorRefIDColumn = "creator_ref_id"
+	// IssueCustomFieldsColumn is the customFields column name
+	IssueCustomFieldsColumn = "customFields"
+	// IssueCustomerIDColumn is the customer_id column name
+	IssueCustomerIDColumn = "customer_id"
+	// IssueDueDateAtColumn is the due_date_ts column name
+	IssueDueDateAtColumn = "due_date_ts"
 	// IssueIDColumn is the id column name
 	IssueIDColumn = "id"
+	// IssueIdentifierColumn is the identifier column name
+	IssueIdentifierColumn = "identifier"
+	// IssueParentIDColumn is the parent_id column name
+	IssueParentIDColumn = "parent_id"
+	// IssuePlannedEndAtColumn is the planned_end_ts column name
+	IssuePlannedEndAtColumn = "planned_end_ts"
+	// IssuePlannedStartAtColumn is the planned_start_ts column name
+	IssuePlannedStartAtColumn = "planned_start_ts"
+	// IssuePriorityColumn is the priority column name
+	IssuePriorityColumn = "priority"
+	// IssueProjectIDColumn is the project_id column name
+	IssueProjectIDColumn = "project_id"
 	// IssueRefIDColumn is the ref_id column name
 	IssueRefIDColumn = "ref_id"
 	// IssueRefTypeColumn is the ref_type column name
 	IssueRefTypeColumn = "ref_type"
-	// IssueCustomerIDColumn is the customer_id column name
-	IssueCustomerIDColumn = "customer_id"
-	// IssueTitleColumn is the title column name
-	IssueTitleColumn = "title"
-	// IssueIdentifierColumn is the identifier column name
-	IssueIdentifierColumn = "identifier"
-	// IssueProjectIDColumn is the project_id column name
-	IssueProjectIDColumn = "project_id"
-	// IssueURLColumn is the url column name
-	IssueURLColumn = "url"
-	// IssueCreatedAtColumn is the created_ts column name
-	IssueCreatedAtColumn = "created_ts"
-	// IssueUpdatedAtColumn is the updated_ts column name
-	IssueUpdatedAtColumn = "updated_ts"
-	// IssuePlannedStartAtColumn is the planned_start_ts column name
-	IssuePlannedStartAtColumn = "planned_start_ts"
-	// IssuePlannedEndAtColumn is the planned_end_ts column name
-	IssuePlannedEndAtColumn = "planned_end_ts"
-	// IssueDueDateAtColumn is the due_date_ts column name
-	IssueDueDateAtColumn = "due_date_ts"
-	// IssuePriorityColumn is the priority column name
-	IssuePriorityColumn = "priority"
-	// IssueTypeColumn is the type column name
-	IssueTypeColumn = "type"
-	// IssueStatusColumn is the status column name
-	IssueStatusColumn = "status"
-	// IssueCreatorRefIDColumn is the creator_ref_id column name
-	IssueCreatorRefIDColumn = "creator_ref_id"
 	// IssueReporterRefIDColumn is the reporter_ref_id column name
 	IssueReporterRefIDColumn = "reporter_ref_id"
-	// IssueAssigneeRefIDColumn is the assignee_ref_id column name
-	IssueAssigneeRefIDColumn = "assignee_ref_id"
-	// IssueTagsColumn is the tags column name
-	IssueTagsColumn = "tags"
-	// IssueCustomFieldsColumn is the customFields column name
-	IssueCustomFieldsColumn = "customFields"
-	// IssueParentIDColumn is the parent_id column name
-	IssueParentIDColumn = "parent_id"
 	// IssueResolutionColumn is the resolution column name
 	IssueResolutionColumn = "resolution"
+	// IssueStatusColumn is the status column name
+	IssueStatusColumn = "status"
+	// IssueTagsColumn is the tags column name
+	IssueTagsColumn = "tags"
+	// IssueTitleColumn is the title column name
+	IssueTitleColumn = "title"
+	// IssueTypeColumn is the type column name
+	IssueTypeColumn = "type"
+	// IssueUpdatedAtColumn is the updated_ts column name
+	IssueUpdatedAtColumn = "updated_ts"
+	// IssueURLColumn is the url column name
+	IssueURLColumn = "url"
 )
 
 // IssueCustomFields represents the object structure for customFields
 type IssueCustomFields struct {
 	// ID the id of the custom field
-	ID string `json:"id" bson:"id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the custom field
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Value the value of the custom field
@@ -116,54 +116,54 @@ func (o *IssueCustomFields) ToMap() map[string]interface{} {
 
 // Issue the issue is a specific work item for a project
 type Issue struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// Title the issue title
-	Title string `json:"title" bson:"title" yaml:"title" faker:"issue_title"`
-	// Identifier the common identifier for the issue
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
-	// ProjectID unique project id
-	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
-	// URL the url to the issue page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
-	// CreatedAt the timestamp in UTC that the issue was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
-	// UpdatedAt the timestamp in UTC that the issue was updated
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
-	// PlannedStartAt the timestamp in UTC that the issue was planned to start
-	PlannedStartAt int64 `json:"planned_start_ts" bson:"planned_start_ts" yaml:"planned_start_ts" faker:"-"`
-	// PlannedEndAt the timestamp in UTC that the issue was planned to end
-	PlannedEndAt int64 `json:"planned_end_ts" bson:"planned_end_ts" yaml:"planned_end_ts" faker:"-"`
-	// DueDateAt due date of the issue
-	DueDateAt int64 `json:"due_date_ts" bson:"due_date_ts" yaml:"due_date_ts" faker:"-"`
-	// Priority priority of the issue
-	Priority string `json:"priority" bson:"priority" yaml:"priority" faker:"-"`
-	// Type type of issue
-	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
-	// Status status of the issue
-	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
-	// CreatorRefID user id of the creator
-	CreatorRefID string `json:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
-	// ReporterRefID user id of the reporter
-	ReporterRefID string `json:"reporter_ref_id" bson:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
 	// AssigneeRefID user id of the assignee
 	AssigneeRefID string `json:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
-	// Tags tags on the issue
-	Tags []string `json:"tags" bson:"tags" yaml:"tags" faker:"-"`
+	// CreatedAt the timestamp in UTC that the issue was created
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CreatorRefID user id of the creator
+	CreatorRefID string `json:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
 	// CustomFields list of custom fields and their values
 	CustomFields []IssueCustomFields `json:"customFields" bson:"customFields" yaml:"customFields" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// DueDateAt due date of the issue
+	DueDateAt int64 `json:"due_date_ts" bson:"due_date_ts" yaml:"due_date_ts" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Identifier the common identifier for the issue
+	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
 	// ParentID parent issue id, if any
 	ParentID string `json:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
+	// PlannedEndAt the timestamp in UTC that the issue was planned to end
+	PlannedEndAt int64 `json:"planned_end_ts" bson:"planned_end_ts" yaml:"planned_end_ts" faker:"-"`
+	// PlannedStartAt the timestamp in UTC that the issue was planned to start
+	PlannedStartAt int64 `json:"planned_start_ts" bson:"planned_start_ts" yaml:"planned_start_ts" faker:"-"`
+	// Priority priority of the issue
+	Priority string `json:"priority" bson:"priority" yaml:"priority" faker:"-"`
+	// ProjectID unique project id
+	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// ReporterRefID user id of the reporter
+	ReporterRefID string `json:"reporter_ref_id" bson:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
 	// Resolution resolution of the issue
 	Resolution string `json:"resolution" bson:"resolution" yaml:"resolution" faker:"-"`
+	// Status status of the issue
+	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
+	// Tags tags on the issue
+	Tags []string `json:"tags" bson:"tags" yaml:"tags" faker:"-"`
+	// Title the issue title
+	Title string `json:"title" bson:"title" yaml:"title" faker:"issue_title"`
+	// Type type of issue
+	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
+	// UpdatedAt the timestamp in UTC that the issue was updated
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// URL the url to the issue page
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -523,108 +523,53 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
-		if o.Tags == nil {
-			o.Tags = make([]string, 0)
-		}
 		if o.CustomFields == nil {
 			o.CustomFields = make([]IssueCustomFields, 0)
 		}
+		if o.Tags == nil {
+			o.Tags = make([]string, 0)
+		}
 	}
 	return map[string]interface{}{
-		"id":               o.GetID(),
-		"ref_id":           o.GetRefID(),
-		"ref_type":         o.RefType,
-		"customer_id":      o.CustomerID,
-		"hashcode":         o.Hash(),
-		"title":            toIssueObject(o.Title, isavro, false, "string"),
-		"identifier":       toIssueObject(o.Identifier, isavro, false, "string"),
-		"project_id":       toIssueObject(o.ProjectID, isavro, false, "string"),
-		"url":              toIssueObject(o.URL, isavro, false, "string"),
-		"created_ts":       toIssueObject(o.CreatedAt, isavro, false, "long"),
-		"updated_ts":       toIssueObject(o.UpdatedAt, isavro, false, "long"),
-		"planned_start_ts": toIssueObject(o.PlannedStartAt, isavro, false, "long"),
-		"planned_end_ts":   toIssueObject(o.PlannedEndAt, isavro, false, "long"),
-		"due_date_ts":      toIssueObject(o.DueDateAt, isavro, false, "long"),
-		"priority":         toIssueObject(o.Priority, isavro, false, "string"),
-		"type":             toIssueObject(o.Type, isavro, false, "string"),
-		"status":           toIssueObject(o.Status, isavro, false, "string"),
-		"creator_ref_id":   toIssueObject(o.CreatorRefID, isavro, false, "string"),
-		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro, false, "string"),
 		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro, false, "string"),
-		"tags":             toIssueObject(o.Tags, isavro, false, "tags"),
+		"created_ts":       toIssueObject(o.CreatedAt, isavro, false, "long"),
+		"creator_ref_id":   toIssueObject(o.CreatorRefID, isavro, false, "string"),
 		"customFields":     toIssueObject(o.CustomFields, isavro, false, "customFields"),
+		"customer_id":      toIssueObject(o.CustomerID, isavro, false, "string"),
+		"due_date_ts":      toIssueObject(o.DueDateAt, isavro, false, "long"),
+		"id":               toIssueObject(o.ID, isavro, false, "string"),
+		"identifier":       toIssueObject(o.Identifier, isavro, false, "string"),
 		"parent_id":        toIssueObject(o.ParentID, isavro, false, "string"),
+		"planned_end_ts":   toIssueObject(o.PlannedEndAt, isavro, false, "long"),
+		"planned_start_ts": toIssueObject(o.PlannedStartAt, isavro, false, "long"),
+		"priority":         toIssueObject(o.Priority, isavro, false, "string"),
+		"project_id":       toIssueObject(o.ProjectID, isavro, false, "string"),
+		"ref_id":           toIssueObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toIssueObject(o.RefType, isavro, false, "string"),
+		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro, false, "string"),
 		"resolution":       toIssueObject(o.Resolution, isavro, false, "string"),
+		"status":           toIssueObject(o.Status, isavro, false, "string"),
+		"tags":             toIssueObject(o.Tags, isavro, false, "tags"),
+		"title":            toIssueObject(o.Title, isavro, false, "string"),
+		"type":             toIssueObject(o.Type, isavro, false, "string"),
+		"updated_ts":       toIssueObject(o.UpdatedAt, isavro, false, "long"),
+		"url":              toIssueObject(o.URL, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Issue) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["title"].(string); ok {
-		o.Title = val
+	if val, ok := kv["assignee_ref_id"].(string); ok {
+		o.AssigneeRefID = val
 	} else {
-		val := kv["title"]
+		val := kv["assignee_ref_id"]
 		if val == nil {
-			o.Title = ""
+			o.AssigneeRefID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Title = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["identifier"].(string); ok {
-		o.Identifier = val
-	} else {
-		val := kv["identifier"]
-		if val == nil {
-			o.Identifier = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Identifier = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["project_id"].(string); ok {
-		o.ProjectID = val
-	} else {
-		val := kv["project_id"]
-		if val == nil {
-			o.ProjectID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.ProjectID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
-	} else {
-		val := kv["url"]
-		if val == nil {
-			o.URL = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.URL = fmt.Sprintf("%v", val)
+			o.AssigneeRefID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
@@ -634,86 +579,10 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.CreatedAt = number.ToInt64Any(nil)
 		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
 			o.CreatedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		val := kv["updated_ts"]
-		if val == nil {
-			o.UpdatedAt = number.ToInt64Any(nil)
-		} else {
-			o.UpdatedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["planned_start_ts"].(int64); ok {
-		o.PlannedStartAt = val
-	} else {
-		val := kv["planned_start_ts"]
-		if val == nil {
-			o.PlannedStartAt = number.ToInt64Any(nil)
-		} else {
-			o.PlannedStartAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["planned_end_ts"].(int64); ok {
-		o.PlannedEndAt = val
-	} else {
-		val := kv["planned_end_ts"]
-		if val == nil {
-			o.PlannedEndAt = number.ToInt64Any(nil)
-		} else {
-			o.PlannedEndAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["due_date_ts"].(int64); ok {
-		o.DueDateAt = val
-	} else {
-		val := kv["due_date_ts"]
-		if val == nil {
-			o.DueDateAt = number.ToInt64Any(nil)
-		} else {
-			o.DueDateAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["priority"].(string); ok {
-		o.Priority = val
-	} else {
-		val := kv["priority"]
-		if val == nil {
-			o.Priority = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Priority = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["type"].(string); ok {
-		o.Type = val
-	} else {
-		val := kv["type"]
-		if val == nil {
-			o.Type = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Type = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["status"].(string); ok {
-		o.Status = val
-	} else {
-		val := kv["status"]
-		if val == nil {
-			o.Status = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Status = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["creator_ref_id"].(string); ok {
@@ -729,6 +598,179 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.CreatorRefID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val := kv["customFields"]; val != nil {
+		na := make([]IssueCustomFields, 0)
+		if a, ok := val.([]IssueCustomFields); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(IssueCustomFields); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av IssueCustomFields
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for customFields field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for customFields field")
+			}
+		}
+		o.CustomFields = na
+	} else {
+		o.CustomFields = []IssueCustomFields{}
+	}
+	if o.CustomFields == nil {
+		o.CustomFields = make([]IssueCustomFields, 0)
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["due_date_ts"].(int64); ok {
+		o.DueDateAt = val
+	} else {
+		val := kv["due_date_ts"]
+		if val == nil {
+			o.DueDateAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.DueDateAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
+	} else {
+		val := kv["identifier"]
+		if val == nil {
+			o.Identifier = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Identifier = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["parent_id"].(string); ok {
+		o.ParentID = val
+	} else {
+		val := kv["parent_id"]
+		if val == nil {
+			o.ParentID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ParentID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["planned_end_ts"].(int64); ok {
+		o.PlannedEndAt = val
+	} else {
+		val := kv["planned_end_ts"]
+		if val == nil {
+			o.PlannedEndAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.PlannedEndAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["planned_start_ts"].(int64); ok {
+		o.PlannedStartAt = val
+	} else {
+		val := kv["planned_start_ts"]
+		if val == nil {
+			o.PlannedStartAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.PlannedStartAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["priority"].(string); ok {
+		o.Priority = val
+	} else {
+		val := kv["priority"]
+		if val == nil {
+			o.Priority = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Priority = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = val
+	} else {
+		val := kv["project_id"]
+		if val == nil {
+			o.ProjectID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ProjectID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["reporter_ref_id"].(string); ok {
 		o.ReporterRefID = val
 	} else {
@@ -742,17 +784,30 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.ReporterRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["assignee_ref_id"].(string); ok {
-		o.AssigneeRefID = val
+	if val, ok := kv["resolution"].(string); ok {
+		o.Resolution = val
 	} else {
-		val := kv["assignee_ref_id"]
+		val := kv["resolution"]
 		if val == nil {
-			o.AssigneeRefID = ""
+			o.Resolution = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.AssigneeRefID = fmt.Sprintf("%v", val)
+			o.Resolution = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["status"].(string); ok {
+		o.Status = val
+	} else {
+		val := kv["status"]
+		if val == nil {
+			o.Status = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Status = fmt.Sprintf("%v", val)
 		}
 	}
 	if val := kv["tags"]; val != nil {
@@ -789,60 +844,56 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 	if o.Tags == nil {
 		o.Tags = make([]string, 0)
 	}
-	if val := kv["customFields"]; val != nil {
-		na := make([]IssueCustomFields, 0)
-		if a, ok := val.([]IssueCustomFields); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(IssueCustomFields); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av IssueCustomFields
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for customFields field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for customFields field")
-			}
-		}
-		o.CustomFields = na
+	if val, ok := kv["title"].(string); ok {
+		o.Title = val
 	} else {
-		o.CustomFields = []IssueCustomFields{}
-	}
-	if o.CustomFields == nil {
-		o.CustomFields = make([]IssueCustomFields, 0)
-	}
-	if val, ok := kv["parent_id"].(string); ok {
-		o.ParentID = val
-	} else {
-		val := kv["parent_id"]
+		val := kv["title"]
 		if val == nil {
-			o.ParentID = ""
+			o.Title = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.ParentID = fmt.Sprintf("%v", val)
+			o.Title = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["resolution"].(string); ok {
-		o.Resolution = val
+	if val, ok := kv["type"].(string); ok {
+		o.Type = val
 	} else {
-		val := kv["resolution"]
+		val := kv["type"]
 		if val == nil {
-			o.Resolution = ""
+			o.Type = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Resolution = fmt.Sprintf("%v", val)
+			o.Type = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		val := kv["updated_ts"]
+		if val == nil {
+			o.UpdatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.UpdatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		val := kv["url"]
+		if val == nil {
+			o.URL = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
 	o.setDefaults()
@@ -855,25 +906,29 @@ func (o *Issue) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Title)
-	args = append(args, o.Identifier)
-	args = append(args, o.ProjectID)
-	args = append(args, o.URL)
-	args = append(args, o.CreatedAt)
-	args = append(args, o.UpdatedAt)
-	args = append(args, o.PlannedStartAt)
-	args = append(args, o.PlannedEndAt)
-	args = append(args, o.DueDateAt)
-	args = append(args, o.Priority)
-	args = append(args, o.Type)
-	args = append(args, o.Status)
-	args = append(args, o.CreatorRefID)
-	args = append(args, o.ReporterRefID)
 	args = append(args, o.AssigneeRefID)
-	args = append(args, o.Tags)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.CreatorRefID)
 	args = append(args, o.CustomFields)
+	args = append(args, o.CustomerID)
+	args = append(args, o.DueDateAt)
+	args = append(args, o.ID)
+	args = append(args, o.Identifier)
 	args = append(args, o.ParentID)
+	args = append(args, o.PlannedEndAt)
+	args = append(args, o.PlannedStartAt)
+	args = append(args, o.Priority)
+	args = append(args, o.ProjectID)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.ReporterRefID)
 	args = append(args, o.Resolution)
+	args = append(args, o.Status)
+	args = append(args, o.Tags)
+	args = append(args, o.Title)
+	args = append(args, o.Type)
+	args = append(args, o.UpdatedAt)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -890,6 +945,62 @@ func GetIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "assignee_ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "creator_ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "customFields",
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"name": "name", "doc": "the name of the custom field", "type": "string"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+			},
+			map[string]interface{}{
+				"name": "customer_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "due_date_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "identifier",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "parent_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "planned_end_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "planned_start_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "priority",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "project_id",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "ref_id",
 				"type": "string",
 			},
@@ -898,55 +1009,11 @@ func GetIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "customer_id",
+				"name": "reporter_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "title",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "identifier",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "project_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "planned_start_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "planned_end_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "due_date_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "priority",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type",
+				"name": "resolution",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -954,31 +1021,23 @@ func GetIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "creator_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "reporter_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "assignee_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "tags",
 				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
-				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"name": "value", "doc": "the value of the custom field", "type": "string"}}, "doc": "list of custom fields and their values"}},
-			},
-			map[string]interface{}{
-				"name": "parent_id",
+				"name": "title",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "resolution",
+				"name": "type",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "url",
 				"type": "string",
 			},
 		},

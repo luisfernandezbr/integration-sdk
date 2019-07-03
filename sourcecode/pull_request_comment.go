@@ -44,22 +44,22 @@ const (
 )
 
 const (
-	// PullRequestCommentIDColumn is the id column name
-	PullRequestCommentIDColumn = "id"
-	// PullRequestCommentRefIDColumn is the ref_id column name
-	PullRequestCommentRefIDColumn = "ref_id"
-	// PullRequestCommentRefTypeColumn is the ref_type column name
-	PullRequestCommentRefTypeColumn = "ref_type"
-	// PullRequestCommentCustomerIDColumn is the customer_id column name
-	PullRequestCommentCustomerIDColumn = "customer_id"
-	// PullRequestCommentPullRequestIDColumn is the pull_request_id column name
-	PullRequestCommentPullRequestIDColumn = "pull_request_id"
-	// PullRequestCommentRepoIDColumn is the repo_id column name
-	PullRequestCommentRepoIDColumn = "repo_id"
 	// PullRequestCommentBodyColumn is the body column name
 	PullRequestCommentBodyColumn = "body"
 	// PullRequestCommentCreatedAtColumn is the created_ts column name
 	PullRequestCommentCreatedAtColumn = "created_ts"
+	// PullRequestCommentCustomerIDColumn is the customer_id column name
+	PullRequestCommentCustomerIDColumn = "customer_id"
+	// PullRequestCommentIDColumn is the id column name
+	PullRequestCommentIDColumn = "id"
+	// PullRequestCommentPullRequestIDColumn is the pull_request_id column name
+	PullRequestCommentPullRequestIDColumn = "pull_request_id"
+	// PullRequestCommentRefIDColumn is the ref_id column name
+	PullRequestCommentRefIDColumn = "ref_id"
+	// PullRequestCommentRefTypeColumn is the ref_type column name
+	PullRequestCommentRefTypeColumn = "ref_type"
+	// PullRequestCommentRepoIDColumn is the repo_id column name
+	PullRequestCommentRepoIDColumn = "repo_id"
 	// PullRequestCommentUpdatedAtColumn is the updated_ts column name
 	PullRequestCommentUpdatedAtColumn = "updated_ts"
 	// PullRequestCommentUserRefIDColumn is the user_ref_id column name
@@ -68,28 +68,28 @@ const (
 
 // PullRequestComment the comment for a given pull request
 type PullRequestComment struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// PullRequestID the pull request this comment is associated with
-	PullRequestID string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
-	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Body the body of the comment
 	Body string `json:"body" bson:"body" yaml:"body" faker:"commit_message"`
 	// CreatedAt the timestamp in UTC that the comment was created
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// PullRequestID the pull request this comment is associated with
+	PullRequestID string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// UpdatedAt the timestamp in UTC that the comment was closed
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -442,15 +442,14 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":              o.GetID(),
-		"ref_id":          o.GetRefID(),
-		"ref_type":        o.RefType,
-		"customer_id":     o.CustomerID,
-		"hashcode":        o.Hash(),
-		"pull_request_id": toPullRequestCommentObject(o.PullRequestID, isavro, false, "string"),
-		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
 		"body":            toPullRequestCommentObject(o.Body, isavro, false, "string"),
 		"created_ts":      toPullRequestCommentObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id":     toPullRequestCommentObject(o.CustomerID, isavro, false, "string"),
+		"id":              toPullRequestCommentObject(o.ID, isavro, false, "string"),
+		"pull_request_id": toPullRequestCommentObject(o.PullRequestID, isavro, false, "string"),
+		"ref_id":          toPullRequestCommentObject(o.RefID, isavro, false, "string"),
+		"ref_type":        toPullRequestCommentObject(o.RefType, isavro, false, "string"),
+		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
 		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, isavro, false, "long"),
 		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, isavro, false, "string"),
 	}
@@ -458,47 +457,6 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["pull_request_id"].(string); ok {
-		o.PullRequestID = val
-	} else {
-		val := kv["pull_request_id"]
-		if val == nil {
-			o.PullRequestID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.PullRequestID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["repo_id"].(string); ok {
-		o.RepoID = val
-	} else {
-		val := kv["repo_id"]
-		if val == nil {
-			o.RepoID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.RepoID = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["body"].(string); ok {
 		o.Body = val
 	} else {
@@ -519,7 +477,88 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.CreatedAt = number.ToInt64Any(nil)
 		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
 			o.CreatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["pull_request_id"].(string); ok {
+		o.PullRequestID = val
+	} else {
+		val := kv["pull_request_id"]
+		if val == nil {
+			o.PullRequestID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.PullRequestID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = val
+	} else {
+		val := kv["repo_id"]
+		if val == nil {
+			o.RepoID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["updated_ts"].(int64); ok {
@@ -529,6 +568,9 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.UpdatedAt = number.ToInt64Any(nil)
 		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
 			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
@@ -555,10 +597,14 @@ func (o *PullRequestComment) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.PullRequestID)
-	args = append(args, o.RepoID)
 	args = append(args, o.Body)
 	args = append(args, o.CreatedAt)
+	args = append(args, o.CustomerID)
+	args = append(args, o.ID)
+	args = append(args, o.PullRequestID)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.RepoID)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
@@ -577,27 +623,7 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "pull_request_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "repo_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -607,6 +633,30 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "created_ts",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "customer_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "pull_request_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "repo_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "updated_ts",

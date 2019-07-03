@@ -43,44 +43,44 @@ const (
 )
 
 const (
+	// UserAvatarURLColumn is the avatar_url column name
+	UserAvatarURLColumn = "avatar_url"
+	// UserCustomerIDColumn is the customer_id column name
+	UserCustomerIDColumn = "customer_id"
+	// UserEmailColumn is the email column name
+	UserEmailColumn = "email"
 	// UserIDColumn is the id column name
 	UserIDColumn = "id"
+	// UserNameColumn is the name column name
+	UserNameColumn = "name"
 	// UserRefIDColumn is the ref_id column name
 	UserRefIDColumn = "ref_id"
 	// UserRefTypeColumn is the ref_type column name
 	UserRefTypeColumn = "ref_type"
-	// UserCustomerIDColumn is the customer_id column name
-	UserCustomerIDColumn = "customer_id"
-	// UserNameColumn is the name column name
-	UserNameColumn = "name"
 	// UserUsernameColumn is the username column name
 	UserUsernameColumn = "username"
-	// UserAvatarURLColumn is the avatar_url column name
-	UserAvatarURLColumn = "avatar_url"
-	// UserEmailColumn is the email column name
-	UserEmailColumn = "email"
 )
 
 // User the work user
 type User struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// Name the name of the user
-	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
-	// Username the username of the user
-	Username string `json:"username" bson:"username" yaml:"username" faker:"-"`
 	// AvatarURL the url to users avatar
 	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Email the email for the user
 	Email *string `json:"email" bson:"email" yaml:"email" faker:"email"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Name the name of the user
+	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// Username the username of the user
+	Username string `json:"username" bson:"username" yaml:"username" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -411,61 +411,19 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"name":        toUserObject(o.Name, isavro, false, "string"),
-		"username":    toUserObject(o.Username, isavro, false, "string"),
 		"avatar_url":  toUserObject(o.AvatarURL, isavro, true, "string"),
+		"customer_id": toUserObject(o.CustomerID, isavro, false, "string"),
 		"email":       toUserObject(o.Email, isavro, true, "string"),
+		"id":          toUserObject(o.ID, isavro, false, "string"),
+		"name":        toUserObject(o.Name, isavro, false, "string"),
+		"ref_id":      toUserObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toUserObject(o.RefType, isavro, false, "string"),
+		"username":    toUserObject(o.Username, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *User) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Name = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["username"].(string); ok {
-		o.Username = val
-	} else {
-		val := kv["username"]
-		if val == nil {
-			o.Username = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Username = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["avatar_url"].(*string); ok {
 		o.AvatarURL = val
 	} else if val, ok := kv["avatar_url"].(string); ok {
@@ -480,6 +438,19 @@ func (o *User) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["email"].(*string); ok {
@@ -498,6 +469,71 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Email = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		val := kv["name"]
+		if val == nil {
+			o.Name = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Name = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["username"].(string); ok {
+		o.Username = val
+	} else {
+		val := kv["username"]
+		if val == nil {
+			o.Username = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Username = fmt.Sprintf("%v", val)
+		}
+	}
 	o.setDefaults()
 }
 
@@ -508,10 +544,14 @@ func (o *User) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Name)
-	args = append(args, o.Username)
 	args = append(args, o.AvatarURL)
+	args = append(args, o.CustomerID)
 	args = append(args, o.Email)
+	args = append(args, o.ID)
+	args = append(args, o.Name)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.Username)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -528,27 +568,7 @@ func GetUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "username",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -557,9 +577,33 @@ func GetUserAvroSchemaSpec() string {
 				"default": nil,
 			},
 			map[string]interface{}{
+				"name": "customer_id",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name":    "email",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "name",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "username",
+				"type": "string",
 			},
 		},
 	}

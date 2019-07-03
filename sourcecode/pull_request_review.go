@@ -44,48 +44,48 @@ const (
 )
 
 const (
+	// PullRequestReviewCreatedAtColumn is the created_ts column name
+	PullRequestReviewCreatedAtColumn = "created_ts"
+	// PullRequestReviewCustomerIDColumn is the customer_id column name
+	PullRequestReviewCustomerIDColumn = "customer_id"
 	// PullRequestReviewIDColumn is the id column name
 	PullRequestReviewIDColumn = "id"
+	// PullRequestReviewPullRequestIDColumn is the pull_request_id column name
+	PullRequestReviewPullRequestIDColumn = "pull_request_id"
 	// PullRequestReviewRefIDColumn is the ref_id column name
 	PullRequestReviewRefIDColumn = "ref_id"
 	// PullRequestReviewRefTypeColumn is the ref_type column name
 	PullRequestReviewRefTypeColumn = "ref_type"
-	// PullRequestReviewCustomerIDColumn is the customer_id column name
-	PullRequestReviewCustomerIDColumn = "customer_id"
-	// PullRequestReviewPullRequestIDColumn is the pull_request_id column name
-	PullRequestReviewPullRequestIDColumn = "pull_request_id"
 	// PullRequestReviewRepoIDColumn is the repo_id column name
 	PullRequestReviewRepoIDColumn = "repo_id"
 	// PullRequestReviewStateColumn is the state column name
 	PullRequestReviewStateColumn = "state"
-	// PullRequestReviewCreatedAtColumn is the created_ts column name
-	PullRequestReviewCreatedAtColumn = "created_ts"
 	// PullRequestReviewUserRefIDColumn is the user_ref_id column name
 	PullRequestReviewUserRefIDColumn = "user_ref_id"
 )
 
 // PullRequestReview the review for a given pull request
 type PullRequestReview struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// CreatedAt the timestamp in UTC that the review was created
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// PullRequestID the pull request this review is associated with
 	PullRequestID string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// State the state of the review
 	State string `json:"state" bson:"state" yaml:"state" faker:"-"`
-	// CreatedAt the timestamp in UTC that the review was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -438,35 +438,58 @@ func (o *PullRequestReview) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":              o.GetID(),
-		"ref_id":          o.GetRefID(),
-		"ref_type":        o.RefType,
-		"customer_id":     o.CustomerID,
-		"hashcode":        o.Hash(),
+		"created_ts":      toPullRequestReviewObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id":     toPullRequestReviewObject(o.CustomerID, isavro, false, "string"),
+		"id":              toPullRequestReviewObject(o.ID, isavro, false, "string"),
 		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, isavro, false, "string"),
+		"ref_id":          toPullRequestReviewObject(o.RefID, isavro, false, "string"),
+		"ref_type":        toPullRequestReviewObject(o.RefType, isavro, false, "string"),
 		"repo_id":         toPullRequestReviewObject(o.RepoID, isavro, false, "string"),
 		"state":           toPullRequestReviewObject(o.State, isavro, false, "string"),
-		"created_ts":      toPullRequestReviewObject(o.CreatedAt, isavro, false, "long"),
 		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else {
+		val := kv["created_ts"]
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["pull_request_id"].(string); ok {
 		o.PullRequestID = val
@@ -479,6 +502,32 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.PullRequestID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["repo_id"].(string); ok {
@@ -507,16 +556,6 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			o.State = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			o.CreatedAt = number.ToInt64Any(val)
-		}
-	}
 	if val, ok := kv["user_ref_id"].(string); ok {
 		o.UserRefID = val
 	} else {
@@ -540,10 +579,14 @@ func (o *PullRequestReview) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.CustomerID)
+	args = append(args, o.ID)
 	args = append(args, o.PullRequestID)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
 	args = append(args, o.State)
-	args = append(args, o.CreatedAt)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -561,23 +604,31 @@ func GetPullRequestReviewAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
+				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
+				"name": "created_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "hashcode",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "pull_request_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -587,10 +638,6 @@ func GetPullRequestReviewAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "state",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "user_ref_id",

@@ -44,44 +44,44 @@ const (
 )
 
 const (
-	// MetricIDColumn is the id column name
-	MetricIDColumn = "id"
-	// MetricRefIDColumn is the ref_id column name
-	MetricRefIDColumn = "ref_id"
-	// MetricRefTypeColumn is the ref_type column name
-	MetricRefTypeColumn = "ref_type"
 	// MetricCustomerIDColumn is the customer_id column name
 	MetricCustomerIDColumn = "customer_id"
 	// MetricDateAtColumn is the date_ts column name
 	MetricDateAtColumn = "date_ts"
-	// MetricProjectIDColumn is the project_id column name
-	MetricProjectIDColumn = "project_id"
+	// MetricIDColumn is the id column name
+	MetricIDColumn = "id"
 	// MetricNameColumn is the name column name
 	MetricNameColumn = "name"
+	// MetricProjectIDColumn is the project_id column name
+	MetricProjectIDColumn = "project_id"
+	// MetricRefIDColumn is the ref_id column name
+	MetricRefIDColumn = "ref_id"
+	// MetricRefTypeColumn is the ref_type column name
+	MetricRefTypeColumn = "ref_type"
 	// MetricValueColumn is the value column name
 	MetricValueColumn = "value"
 )
 
 // Metric individual metric details
 type Metric struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
 	// DateAt the date when the metric was created
 	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
-	// ProjectID the the project id
-	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the metric name
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	// ProjectID the the project id
+	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Value the value of the metric
 	Value string `json:"value" bson:"value" yaml:"value" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -425,34 +425,31 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
+		"customer_id": toMetricObject(o.CustomerID, isavro, false, "string"),
 		"date_ts":     toMetricObject(o.DateAt, isavro, false, "long"),
-		"project_id":  toMetricObject(o.ProjectID, isavro, false, "string"),
+		"id":          toMetricObject(o.ID, isavro, false, "string"),
 		"name":        toMetricObject(o.Name, isavro, false, "string"),
+		"project_id":  toMetricObject(o.ProjectID, isavro, false, "string"),
+		"ref_id":      toMetricObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toMetricObject(o.RefType, isavro, false, "string"),
 		"value":       toMetricObject(o.Value, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Metric) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["date_ts"].(int64); ok {
 		o.DateAt = val
@@ -461,7 +458,36 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.DateAt = number.ToInt64Any(nil)
 		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
 			o.DateAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		val := kv["name"]
+		if val == nil {
+			o.Name = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["project_id"].(string); ok {
@@ -477,17 +503,30 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			o.ProjectID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
 	} else {
-		val := kv["name"]
+		val := kv["ref_id"]
 		if val == nil {
-			o.Name = ""
+			o.RefID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Name = fmt.Sprintf("%v", val)
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["value"].(string); ok {
@@ -513,9 +552,13 @@ func (o *Metric) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
+	args = append(args, o.CustomerID)
 	args = append(args, o.DateAt)
-	args = append(args, o.ProjectID)
+	args = append(args, o.ID)
 	args = append(args, o.Name)
+	args = append(args, o.ProjectID)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
 	args = append(args, o.Value)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -533,11 +576,7 @@ func GetMetricAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
+				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -545,19 +584,27 @@ func GetMetricAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "hashcode",
+				"name": "date_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date_ts",
-				"type": "long",
+				"name": "name",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "project_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "name",
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
 				"type": "string",
 			},
 			map[string]interface{}{

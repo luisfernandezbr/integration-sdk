@@ -44,24 +44,12 @@ const (
 )
 
 const (
-	// ChangelogIDColumn is the id column name
-	ChangelogIDColumn = "id"
-	// ChangelogRefIDColumn is the ref_id column name
-	ChangelogRefIDColumn = "ref_id"
-	// ChangelogRefTypeColumn is the ref_type column name
-	ChangelogRefTypeColumn = "ref_type"
-	// ChangelogCustomerIDColumn is the customer_id column name
-	ChangelogCustomerIDColumn = "customer_id"
-	// ChangelogIssueIDColumn is the issue_id column name
-	ChangelogIssueIDColumn = "issue_id"
-	// ChangelogCreatedAtColumn is the created_ts column name
-	ChangelogCreatedAtColumn = "created_ts"
 	// ChangelogCreatedColumn is the created column name
 	ChangelogCreatedColumn = "created"
-	// ChangelogOrdinalColumn is the ordinal column name
-	ChangelogOrdinalColumn = "ordinal"
-	// ChangelogUserIDColumn is the user_id column name
-	ChangelogUserIDColumn = "user_id"
+	// ChangelogCreatedAtColumn is the created_ts column name
+	ChangelogCreatedAtColumn = "created_ts"
+	// ChangelogCustomerIDColumn is the customer_id column name
+	ChangelogCustomerIDColumn = "customer_id"
 	// ChangelogFieldColumn is the field column name
 	ChangelogFieldColumn = "field"
 	// ChangelogFieldTypeColumn is the field_type column name
@@ -70,34 +58,32 @@ const (
 	ChangelogFromColumn = "from"
 	// ChangelogFromStringColumn is the from_string column name
 	ChangelogFromStringColumn = "from_string"
+	// ChangelogIDColumn is the id column name
+	ChangelogIDColumn = "id"
+	// ChangelogIssueIDColumn is the issue_id column name
+	ChangelogIssueIDColumn = "issue_id"
+	// ChangelogOrdinalColumn is the ordinal column name
+	ChangelogOrdinalColumn = "ordinal"
+	// ChangelogRefIDColumn is the ref_id column name
+	ChangelogRefIDColumn = "ref_id"
+	// ChangelogRefTypeColumn is the ref_type column name
+	ChangelogRefTypeColumn = "ref_type"
 	// ChangelogToColumn is the to column name
 	ChangelogToColumn = "to"
 	// ChangelogToStringColumn is the to_string column name
 	ChangelogToStringColumn = "to_string"
+	// ChangelogUserIDColumn is the user_id column name
+	ChangelogUserIDColumn = "user_id"
 )
 
 // Changelog change log
 type Changelog struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// IssueID id of the issue
-	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
-	// CreatedAt the timestamp in UTC when this change was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// Created date in rfc3339 format
 	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
-	// Ordinal so we can order correctly in queries since dates could be equal
-	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
-	// UserID id of the user of this change
-	UserID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
+	// CreatedAt the timestamp in UTC when this change was created
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Field name of the field that was changed
 	Field string `json:"field" bson:"field" yaml:"field" faker:"-"`
 	// FieldType type of the field that was changed
@@ -106,10 +92,24 @@ type Changelog struct {
 	From string `json:"from" bson:"from" yaml:"from" faker:"-"`
 	// FromString name of the change from
 	FromString string `json:"from_string" bson:"from_string" yaml:"from_string" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IssueID id of the issue
+	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
+	// Ordinal so we can order correctly in queries since dates could be equal
+	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// To id of the change to
 	To string `json:"to" bson:"to" yaml:"to" faker:"-"`
 	// ToString name of the change to
 	ToString string `json:"to_string" bson:"to_string" yaml:"to_string" faker:"-"`
+	// UserID id of the user of this change
+	UserID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -453,65 +453,26 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"issue_id":    toChangelogObject(o.IssueID, isavro, false, "string"),
-		"created_ts":  toChangelogObject(o.CreatedAt, isavro, false, "long"),
 		"created":     toChangelogObject(o.Created, isavro, false, "string"),
-		"ordinal":     toChangelogObject(o.Ordinal, isavro, false, "long"),
-		"user_id":     toChangelogObject(o.UserID, isavro, false, "string"),
+		"created_ts":  toChangelogObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id": toChangelogObject(o.CustomerID, isavro, false, "string"),
 		"field":       toChangelogObject(o.Field, isavro, false, "string"),
 		"field_type":  toChangelogObject(o.FieldType, isavro, false, "string"),
 		"from":        toChangelogObject(o.From, isavro, false, "string"),
 		"from_string": toChangelogObject(o.FromString, isavro, false, "string"),
+		"id":          toChangelogObject(o.ID, isavro, false, "string"),
+		"issue_id":    toChangelogObject(o.IssueID, isavro, false, "string"),
+		"ordinal":     toChangelogObject(o.Ordinal, isavro, false, "long"),
+		"ref_id":      toChangelogObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toChangelogObject(o.RefType, isavro, false, "string"),
 		"to":          toChangelogObject(o.To, isavro, false, "string"),
 		"to_string":   toChangelogObject(o.ToString, isavro, false, "string"),
+		"user_id":     toChangelogObject(o.UserID, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Changelog) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["issue_id"].(string); ok {
-		o.IssueID = val
-	} else {
-		val := kv["issue_id"]
-		if val == nil {
-			o.IssueID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.IssueID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			o.CreatedAt = number.ToInt64Any(val)
-		}
-	}
 	if val, ok := kv["created"].(string); ok {
 		o.Created = val
 	} else {
@@ -525,27 +486,30 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 			o.Created = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["ordinal"].(int64); ok {
-		o.Ordinal = val
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
 	} else {
-		val := kv["ordinal"]
+		val := kv["created_ts"]
 		if val == nil {
-			o.Ordinal = number.ToInt64Any(nil)
+			o.CreatedAt = number.ToInt64Any(nil)
 		} else {
-			o.Ordinal = number.ToInt64Any(val)
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["user_id"].(string); ok {
-		o.UserID = val
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
 	} else {
-		val := kv["user_id"]
+		val := kv["customer_id"]
 		if val == nil {
-			o.UserID = ""
+			o.CustomerID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.UserID = fmt.Sprintf("%v", val)
+			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["field"].(string); ok {
@@ -600,6 +564,71 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 			o.FromString = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["issue_id"].(string); ok {
+		o.IssueID = val
+	} else {
+		val := kv["issue_id"]
+		if val == nil {
+			o.IssueID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.IssueID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ordinal"].(int64); ok {
+		o.Ordinal = val
+	} else {
+		val := kv["ordinal"]
+		if val == nil {
+			o.Ordinal = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Ordinal = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["to"].(string); ok {
 		o.To = val
 	} else {
@@ -626,6 +655,19 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 			o.ToString = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["user_id"].(string); ok {
+		o.UserID = val
+	} else {
+		val := kv["user_id"]
+		if val == nil {
+			o.UserID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.UserID = fmt.Sprintf("%v", val)
+		}
+	}
 	o.setDefaults()
 }
 
@@ -636,17 +678,21 @@ func (o *Changelog) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.IssueID)
-	args = append(args, o.CreatedAt)
 	args = append(args, o.Created)
-	args = append(args, o.Ordinal)
-	args = append(args, o.UserID)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.CustomerID)
 	args = append(args, o.Field)
 	args = append(args, o.FieldType)
 	args = append(args, o.From)
 	args = append(args, o.FromString)
+	args = append(args, o.ID)
+	args = append(args, o.IssueID)
+	args = append(args, o.Ordinal)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
 	args = append(args, o.To)
 	args = append(args, o.ToString)
+	args = append(args, o.UserID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -663,23 +709,11 @@ func GetChangelogAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "issue_id",
+				"name": "created",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -687,15 +721,7 @@ func GetChangelogAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "created",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ordinal",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "user_id",
+				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -715,11 +741,35 @@ func GetChangelogAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "issue_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ordinal",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "to",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "to_string",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "user_id",
 				"type": "string",
 			},
 		},

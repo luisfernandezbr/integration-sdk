@@ -44,52 +44,52 @@ const (
 )
 
 const (
+	// ProjectActiveColumn is the active column name
+	ProjectActiveColumn = "active"
+	// ProjectCategoryColumn is the category column name
+	ProjectCategoryColumn = "category"
+	// ProjectCustomerIDColumn is the customer_id column name
+	ProjectCustomerIDColumn = "customer_id"
+	// ProjectDescriptionColumn is the description column name
+	ProjectDescriptionColumn = "description"
 	// ProjectIDColumn is the id column name
 	ProjectIDColumn = "id"
+	// ProjectIdentifierColumn is the identifier column name
+	ProjectIdentifierColumn = "identifier"
+	// ProjectNameColumn is the name column name
+	ProjectNameColumn = "name"
 	// ProjectRefIDColumn is the ref_id column name
 	ProjectRefIDColumn = "ref_id"
 	// ProjectRefTypeColumn is the ref_type column name
 	ProjectRefTypeColumn = "ref_type"
-	// ProjectCustomerIDColumn is the customer_id column name
-	ProjectCustomerIDColumn = "customer_id"
-	// ProjectNameColumn is the name column name
-	ProjectNameColumn = "name"
-	// ProjectIdentifierColumn is the identifier column name
-	ProjectIdentifierColumn = "identifier"
 	// ProjectURLColumn is the url column name
 	ProjectURLColumn = "url"
-	// ProjectDescriptionColumn is the description column name
-	ProjectDescriptionColumn = "description"
-	// ProjectCategoryColumn is the category column name
-	ProjectCategoryColumn = "category"
-	// ProjectActiveColumn is the active column name
-	ProjectActiveColumn = "active"
 )
 
 // Project the project holds work
 type Project struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// Name the name of the project
-	Name string `json:"name" bson:"name" yaml:"name" faker:"project"`
-	// Identifier the common identifier for the project
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
-	// URL the url to the project home page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
-	// Description the description of the project
-	Description *string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
-	// Category the project category
-	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
 	// Active the status of the project
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	// Category the project category
+	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Description the description of the project
+	Description *string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Identifier the common identifier for the project
+	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
+	// Name the name of the project
+	Name string `json:"name" bson:"name" yaml:"name" faker:"project"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// URL the url to the project home page
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -429,90 +429,29 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"name":        toProjectObject(o.Name, isavro, false, "string"),
-		"identifier":  toProjectObject(o.Identifier, isavro, false, "string"),
-		"url":         toProjectObject(o.URL, isavro, false, "string"),
-		"description": toProjectObject(o.Description, isavro, true, "string"),
-		"category":    toProjectObject(o.Category, isavro, true, "string"),
 		"active":      toProjectObject(o.Active, isavro, false, "boolean"),
+		"category":    toProjectObject(o.Category, isavro, true, "string"),
+		"customer_id": toProjectObject(o.CustomerID, isavro, false, "string"),
+		"description": toProjectObject(o.Description, isavro, true, "string"),
+		"id":          toProjectObject(o.ID, isavro, false, "string"),
+		"identifier":  toProjectObject(o.Identifier, isavro, false, "string"),
+		"name":        toProjectObject(o.Name, isavro, false, "string"),
+		"ref_id":      toProjectObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toProjectObject(o.RefType, isavro, false, "string"),
+		"url":         toProjectObject(o.URL, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Project) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
 	} else {
-		val := kv["name"]
+		val := kv["active"]
 		if val == nil {
-			o.Name = ""
+			o.Active = number.ToBoolAny(nil)
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Name = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["identifier"].(string); ok {
-		o.Identifier = val
-	} else {
-		val := kv["identifier"]
-		if val == nil {
-			o.Identifier = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Identifier = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
-	} else {
-		val := kv["url"]
-		if val == nil {
-			o.URL = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.URL = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["description"].(*string); ok {
-		o.Description = val
-	} else if val, ok := kv["description"].(string); ok {
-		o.Description = &val
-	} else {
-		val := kv["description"]
-		if val == nil {
-			o.Description = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
-			}
-			o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			o.Active = number.ToBoolAny(val)
 		}
 	}
 	if val, ok := kv["category"].(*string); ok {
@@ -531,14 +470,111 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			o.Category = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["active"].(bool); ok {
-		o.Active = val
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
 	} else {
-		val := kv["active"]
+		val := kv["customer_id"]
 		if val == nil {
-			o.Active = number.ToBoolAny(nil)
+			o.CustomerID = ""
 		} else {
-			o.Active = number.ToBoolAny(val)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		val := kv["description"]
+		if val == nil {
+			o.Description = pstrings.Pointer("")
+		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
+			o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
+	} else {
+		val := kv["identifier"]
+		if val == nil {
+			o.Identifier = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Identifier = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		val := kv["name"]
+		if val == nil {
+			o.Name = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Name = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		val := kv["url"]
+		if val == nil {
+			o.URL = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
 	o.setDefaults()
@@ -551,12 +587,16 @@ func (o *Project) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Name)
-	args = append(args, o.Identifier)
-	args = append(args, o.URL)
-	args = append(args, o.Description)
-	args = append(args, o.Category)
 	args = append(args, o.Active)
+	args = append(args, o.Category)
+	args = append(args, o.CustomerID)
+	args = append(args, o.Description)
+	args = append(args, o.ID)
+	args = append(args, o.Identifier)
+	args = append(args, o.Name)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -573,31 +613,20 @@ func GetProjectAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "name",
-				"type": "string",
+				"name": "active",
+				"type": "boolean",
 			},
 			map[string]interface{}{
-				"name": "identifier",
-				"type": "string",
+				"name":    "category",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "url",
+				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -606,13 +635,28 @@ func GetProjectAvroSchemaSpec() string {
 				"default": nil,
 			},
 			map[string]interface{}{
-				"name":    "category",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
+				"name": "id",
+				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "active",
-				"type": "boolean",
+				"name": "identifier",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "name",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "url",
+				"type": "string",
 			},
 		},
 	}

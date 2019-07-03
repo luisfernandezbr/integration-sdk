@@ -44,76 +44,76 @@ const (
 )
 
 const (
+	// PullRequestClosedByRefIDColumn is the closed_by_ref_id column name
+	PullRequestClosedByRefIDColumn = "closed_by_ref_id"
+	// PullRequestClosedAtColumn is the closed_ts column name
+	PullRequestClosedAtColumn = "closed_ts"
+	// PullRequestCreatedAtColumn is the created_ts column name
+	PullRequestCreatedAtColumn = "created_ts"
+	// PullRequestCustomerIDColumn is the customer_id column name
+	PullRequestCustomerIDColumn = "customer_id"
+	// PullRequestDescriptionColumn is the description column name
+	PullRequestDescriptionColumn = "description"
 	// PullRequestIDColumn is the id column name
 	PullRequestIDColumn = "id"
+	// PullRequestMergedByRefIDColumn is the merged_by_ref_id column name
+	PullRequestMergedByRefIDColumn = "merged_by_ref_id"
+	// PullRequestMergedAtColumn is the merged_ts column name
+	PullRequestMergedAtColumn = "merged_ts"
 	// PullRequestRefIDColumn is the ref_id column name
 	PullRequestRefIDColumn = "ref_id"
 	// PullRequestRefTypeColumn is the ref_type column name
 	PullRequestRefTypeColumn = "ref_type"
-	// PullRequestCustomerIDColumn is the customer_id column name
-	PullRequestCustomerIDColumn = "customer_id"
 	// PullRequestRepoIDColumn is the repo_id column name
 	PullRequestRepoIDColumn = "repo_id"
-	// PullRequestTitleColumn is the title column name
-	PullRequestTitleColumn = "title"
-	// PullRequestDescriptionColumn is the description column name
-	PullRequestDescriptionColumn = "description"
-	// PullRequestURLColumn is the url column name
-	PullRequestURLColumn = "url"
-	// PullRequestCreatedAtColumn is the created_ts column name
-	PullRequestCreatedAtColumn = "created_ts"
-	// PullRequestMergedAtColumn is the merged_ts column name
-	PullRequestMergedAtColumn = "merged_ts"
-	// PullRequestClosedAtColumn is the closed_ts column name
-	PullRequestClosedAtColumn = "closed_ts"
-	// PullRequestMergedByRefIDColumn is the merged_by_ref_id column name
-	PullRequestMergedByRefIDColumn = "merged_by_ref_id"
-	// PullRequestClosedByRefIDColumn is the closed_by_ref_id column name
-	PullRequestClosedByRefIDColumn = "closed_by_ref_id"
-	// PullRequestUpdatedAtColumn is the updated_ts column name
-	PullRequestUpdatedAtColumn = "updated_ts"
 	// PullRequestStatusColumn is the status column name
 	PullRequestStatusColumn = "status"
+	// PullRequestTitleColumn is the title column name
+	PullRequestTitleColumn = "title"
+	// PullRequestUpdatedAtColumn is the updated_ts column name
+	PullRequestUpdatedAtColumn = "updated_ts"
+	// PullRequestURLColumn is the url column name
+	PullRequestURLColumn = "url"
 	// PullRequestUserRefIDColumn is the user_ref_id column name
 	PullRequestUserRefIDColumn = "user_ref_id"
 )
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
-	// Title the title of the pull request
-	Title string `json:"title" bson:"title" yaml:"title" faker:"commit_message"`
-	// Description the description of the pull request
-	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
-	// URL the url to the pull request home page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
-	// CreatedAt the timestamp in UTC that the pull request was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
-	// MergedAt the timestamp in UTC that the pull request was merged
-	MergedAt int64 `json:"merged_ts" bson:"merged_ts" yaml:"merged_ts" faker:"-"`
-	// ClosedAt the timestamp in UTC that the pull request was closed
-	ClosedAt int64 `json:"closed_ts" bson:"closed_ts" yaml:"closed_ts" faker:"-"`
-	// MergedByRefID the id of user who merged the pull request
-	MergedByRefID string `json:"merged_by_ref_id" bson:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
 	// ClosedByRefID the id of user who closed the pull request
 	ClosedByRefID string `json:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
-	// UpdatedAt the timestamp in UTC that the pull request was closed
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// ClosedAt the timestamp in UTC that the pull request was closed
+	ClosedAt int64 `json:"closed_ts" bson:"closed_ts" yaml:"closed_ts" faker:"-"`
+	// CreatedAt the timestamp in UTC that the pull request was created
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Description the description of the pull request
+	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// MergedByRefID the id of user who merged the pull request
+	MergedByRefID string `json:"merged_by_ref_id" bson:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
+	// MergedAt the timestamp in UTC that the pull request was merged
+	MergedAt int64 `json:"merged_ts" bson:"merged_ts" yaml:"merged_ts" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Status the status of the pull request
 	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
+	// Title the title of the pull request
+	Title string `json:"title" bson:"title" yaml:"title" faker:"commit_message"`
+	// UpdatedAt the timestamp in UTC that the pull request was closed
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// URL the url to the pull request home page
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -466,67 +466,77 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":               o.GetID(),
-		"ref_id":           o.GetRefID(),
-		"ref_type":         o.RefType,
-		"customer_id":      o.CustomerID,
-		"hashcode":         o.Hash(),
-		"repo_id":          toPullRequestObject(o.RepoID, isavro, false, "string"),
-		"title":            toPullRequestObject(o.Title, isavro, false, "string"),
-		"description":      toPullRequestObject(o.Description, isavro, false, "string"),
-		"url":              toPullRequestObject(o.URL, isavro, false, "string"),
-		"created_ts":       toPullRequestObject(o.CreatedAt, isavro, false, "long"),
-		"merged_ts":        toPullRequestObject(o.MergedAt, isavro, false, "long"),
-		"closed_ts":        toPullRequestObject(o.ClosedAt, isavro, false, "long"),
-		"merged_by_ref_id": toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
 		"closed_by_ref_id": toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
-		"updated_ts":       toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
+		"closed_ts":        toPullRequestObject(o.ClosedAt, isavro, false, "long"),
+		"created_ts":       toPullRequestObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id":      toPullRequestObject(o.CustomerID, isavro, false, "string"),
+		"description":      toPullRequestObject(o.Description, isavro, false, "string"),
+		"id":               toPullRequestObject(o.ID, isavro, false, "string"),
+		"merged_by_ref_id": toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
+		"merged_ts":        toPullRequestObject(o.MergedAt, isavro, false, "long"),
+		"ref_id":           toPullRequestObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toPullRequestObject(o.RefType, isavro, false, "string"),
+		"repo_id":          toPullRequestObject(o.RepoID, isavro, false, "string"),
 		"status":           toPullRequestObject(o.Status, isavro, false, "string"),
+		"title":            toPullRequestObject(o.Title, isavro, false, "string"),
+		"updated_ts":       toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
+		"url":              toPullRequestObject(o.URL, isavro, false, "string"),
 		"user_ref_id":      toPullRequestObject(o.UserRefID, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequest) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
+	if val, ok := kv["closed_by_ref_id"].(string); ok {
+		o.ClosedByRefID = val
+	} else {
+		val := kv["closed_by_ref_id"]
+		if val == nil {
+			o.ClosedByRefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ClosedByRefID = fmt.Sprintf("%v", val)
+		}
 	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
+	if val, ok := kv["closed_ts"].(int64); ok {
+		o.ClosedAt = val
+	} else {
+		val := kv["closed_ts"]
+		if val == nil {
+			o.ClosedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.ClosedAt = number.ToInt64Any(val)
+		}
 	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else {
+		val := kv["created_ts"]
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
-	}
-	if val, ok := kv["repo_id"].(string); ok {
-		o.RepoID = val
 	} else {
-		val := kv["repo_id"]
+		val := kv["customer_id"]
 		if val == nil {
-			o.RepoID = ""
+			o.CustomerID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.RepoID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["title"].(string); ok {
-		o.Title = val
-	} else {
-		val := kv["title"]
-		if val == nil {
-			o.Title = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Title = fmt.Sprintf("%v", val)
+			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["description"].(string); ok {
@@ -542,47 +552,17 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.Description = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
 	} else {
-		val := kv["url"]
+		val := kv["id"]
 		if val == nil {
-			o.URL = ""
+			o.ID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.URL = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			o.CreatedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["merged_ts"].(int64); ok {
-		o.MergedAt = val
-	} else {
-		val := kv["merged_ts"]
-		if val == nil {
-			o.MergedAt = number.ToInt64Any(nil)
-		} else {
-			o.MergedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["closed_ts"].(int64); ok {
-		o.ClosedAt = val
-	} else {
-		val := kv["closed_ts"]
-		if val == nil {
-			o.ClosedAt = number.ToInt64Any(nil)
-		} else {
-			o.ClosedAt = number.ToInt64Any(val)
+			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["merged_by_ref_id"].(string); ok {
@@ -598,27 +578,56 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.MergedByRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["closed_by_ref_id"].(string); ok {
-		o.ClosedByRefID = val
+	if val, ok := kv["merged_ts"].(int64); ok {
+		o.MergedAt = val
 	} else {
-		val := kv["closed_by_ref_id"]
+		val := kv["merged_ts"]
 		if val == nil {
-			o.ClosedByRefID = ""
+			o.MergedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.MergedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.ClosedByRefID = fmt.Sprintf("%v", val)
+			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
 	} else {
-		val := kv["updated_ts"]
+		val := kv["ref_type"]
 		if val == nil {
-			o.UpdatedAt = number.ToInt64Any(nil)
+			o.RefType = ""
 		} else {
-			o.UpdatedAt = number.ToInt64Any(val)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = val
+	} else {
+		val := kv["repo_id"]
+		if val == nil {
+			o.RepoID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["status"].(string); ok {
@@ -632,6 +641,45 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.Status = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["title"].(string); ok {
+		o.Title = val
+	} else {
+		val := kv["title"]
+		if val == nil {
+			o.Title = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Title = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		val := kv["updated_ts"]
+		if val == nil {
+			o.UpdatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.UpdatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		val := kv["url"]
+		if val == nil {
+			o.URL = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["user_ref_id"].(string); ok {
@@ -657,17 +705,21 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.RepoID)
-	args = append(args, o.Title)
-	args = append(args, o.Description)
-	args = append(args, o.URL)
-	args = append(args, o.CreatedAt)
-	args = append(args, o.MergedAt)
-	args = append(args, o.ClosedAt)
-	args = append(args, o.MergedByRefID)
 	args = append(args, o.ClosedByRefID)
-	args = append(args, o.UpdatedAt)
+	args = append(args, o.ClosedAt)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.CustomerID)
+	args = append(args, o.Description)
+	args = append(args, o.ID)
+	args = append(args, o.MergedByRefID)
+	args = append(args, o.MergedAt)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.RepoID)
 	args = append(args, o.Status)
+	args = append(args, o.Title)
+	args = append(args, o.UpdatedAt)
+	args = append(args, o.URL)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -685,6 +737,42 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "closed_by_ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "closed_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "customer_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "description",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "merged_by_ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "merged_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
 				"name": "ref_id",
 				"type": "string",
 			},
@@ -693,15 +781,11 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "repo_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "status",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -709,39 +793,11 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "description",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "merged_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "closed_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "merged_by_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "closed_by_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "updated_ts",
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "status",
+				"name": "url",
 				"type": "string",
 			},
 			map[string]interface{}{

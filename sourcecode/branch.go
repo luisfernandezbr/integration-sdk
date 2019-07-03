@@ -22,6 +22,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -44,64 +45,64 @@ const (
 )
 
 const (
-	// BranchIDColumn is the id column name
-	BranchIDColumn = "id"
-	// BranchRefIDColumn is the ref_id column name
-	BranchRefIDColumn = "ref_id"
-	// BranchRefTypeColumn is the ref_type column name
-	BranchRefTypeColumn = "ref_type"
-	// BranchCustomerIDColumn is the customer_id column name
-	BranchCustomerIDColumn = "customer_id"
-	// BranchNameColumn is the name column name
-	BranchNameColumn = "name"
-	// BranchDefaultColumn is the default column name
-	BranchDefaultColumn = "default"
-	// BranchMergedColumn is the merged column name
-	BranchMergedColumn = "merged"
-	// BranchMergeCommitColumn is the merge_commit column name
-	BranchMergeCommitColumn = "merge_commit"
+	// BranchAheadDefaultCountColumn is the ahead_default_count column name
+	BranchAheadDefaultCountColumn = "ahead_default_count"
+	// BranchBehindDefaultCountColumn is the behind_default_count column name
+	BranchBehindDefaultCountColumn = "behind_default_count"
 	// BranchBranchedFromCommitsColumn is the branched_from_commits column name
 	BranchBranchedFromCommitsColumn = "branched_from_commits"
 	// BranchCommitsColumn is the commits column name
 	BranchCommitsColumn = "commits"
-	// BranchBehindDefaultCountColumn is the behind_default_count column name
-	BranchBehindDefaultCountColumn = "behind_default_count"
-	// BranchAheadDefaultCountColumn is the ahead_default_count column name
-	BranchAheadDefaultCountColumn = "ahead_default_count"
+	// BranchCustomerIDColumn is the customer_id column name
+	BranchCustomerIDColumn = "customer_id"
+	// BranchDefaultColumn is the default column name
+	BranchDefaultColumn = "default"
+	// BranchIDColumn is the id column name
+	BranchIDColumn = "id"
+	// BranchMergeCommitColumn is the merge_commit column name
+	BranchMergeCommitColumn = "merge_commit"
+	// BranchMergedColumn is the merged column name
+	BranchMergedColumn = "merged"
+	// BranchNameColumn is the name column name
+	BranchNameColumn = "name"
+	// BranchRefIDColumn is the ref_id column name
+	BranchRefIDColumn = "ref_id"
+	// BranchRefTypeColumn is the ref_type column name
+	BranchRefTypeColumn = "ref_type"
 	// BranchRepoIDColumn is the repo_id column name
 	BranchRepoIDColumn = "repo_id"
 )
 
 // Branch git branches
 type Branch struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// Name name of the branch
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
-	// Default wether is the default branch or not
-	Default bool `json:"default" bson:"default" yaml:"default" faker:"-"`
-	// Merged wether it has been merged
-	Merged bool `json:"merged" bson:"merged" yaml:"merged" faker:"-"`
-	// MergeCommit commit from the merge
-	MergeCommit string `json:"merge_commit" bson:"merge_commit" yaml:"merge_commit" faker:"-"`
+	// AheadDefaultCount ahead default count
+	AheadDefaultCount int64 `json:"ahead_default_count" bson:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
+	// BehindDefaultCount behind default count
+	BehindDefaultCount int64 `json:"behind_default_count" bson:"behind_default_count" yaml:"behind_default_count" faker:"-"`
 	// BranchedFromCommits branched from commits
 	BranchedFromCommits []string `json:"branched_from_commits" bson:"branched_from_commits" yaml:"branched_from_commits" faker:"-"`
 	// Commits list of commits on this branch
 	Commits []string `json:"commits" bson:"commits" yaml:"commits" faker:"-"`
-	// BehindDefaultCount behind default count
-	BehindDefaultCount int64 `json:"behind_default_count" bson:"behind_default_count" yaml:"behind_default_count" faker:"-"`
-	// AheadDefaultCount ahead default count
-	AheadDefaultCount int64 `json:"ahead_default_count" bson:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Default wether is the default branch or not
+	Default bool `json:"default" bson:"default" yaml:"default" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// MergeCommit commit from the merge
+	MergeCommit string `json:"merge_commit" bson:"merge_commit" yaml:"merge_commit" faker:"-"`
+	// Merged wether it has been merged
+	Merged bool `json:"merged" bson:"merged" yaml:"merged" faker:"-"`
+	// Name name of the branch
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -447,84 +448,48 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		}
 	}
 	return map[string]interface{}{
-		"id":                    o.GetID(),
-		"ref_id":                o.GetRefID(),
-		"ref_type":              o.RefType,
-		"customer_id":           o.CustomerID,
-		"hashcode":              o.Hash(),
-		"name":                  toBranchObject(o.Name, isavro, false, "string"),
-		"default":               toBranchObject(o.Default, isavro, false, "boolean"),
-		"merged":                toBranchObject(o.Merged, isavro, false, "boolean"),
-		"merge_commit":          toBranchObject(o.MergeCommit, isavro, false, "string"),
+		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
+		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
 		"branched_from_commits": toBranchObject(o.BranchedFromCommits, isavro, false, "branched_from_commits"),
 		"commits":               toBranchObject(o.Commits, isavro, false, "commits"),
-		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
-		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
+		"customer_id":           toBranchObject(o.CustomerID, isavro, false, "string"),
+		"default":               toBranchObject(o.Default, isavro, false, "boolean"),
+		"id":                    toBranchObject(o.ID, isavro, false, "string"),
+		"merge_commit":          toBranchObject(o.MergeCommit, isavro, false, "string"),
+		"merged":                toBranchObject(o.Merged, isavro, false, "boolean"),
+		"name":                  toBranchObject(o.Name, isavro, false, "string"),
+		"ref_id":                toBranchObject(o.RefID, isavro, false, "string"),
+		"ref_type":              toBranchObject(o.RefType, isavro, false, "string"),
 		"repo_id":               toBranchObject(o.RepoID, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Branch) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
+	if val, ok := kv["ahead_default_count"].(int64); ok {
+		o.AheadDefaultCount = val
 	} else {
-		val := kv["name"]
+		val := kv["ahead_default_count"]
 		if val == nil {
-			o.Name = ""
+			o.AheadDefaultCount = number.ToInt64Any(nil)
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
 			}
-			o.Name = fmt.Sprintf("%v", val)
+			o.AheadDefaultCount = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["default"].(bool); ok {
-		o.Default = val
+	if val, ok := kv["behind_default_count"].(int64); ok {
+		o.BehindDefaultCount = val
 	} else {
-		val := kv["default"]
+		val := kv["behind_default_count"]
 		if val == nil {
-			o.Default = number.ToBoolAny(nil)
+			o.BehindDefaultCount = number.ToInt64Any(nil)
 		} else {
-			o.Default = number.ToBoolAny(val)
-		}
-	}
-	if val, ok := kv["merged"].(bool); ok {
-		o.Merged = val
-	} else {
-		val := kv["merged"]
-		if val == nil {
-			o.Merged = number.ToBoolAny(nil)
-		} else {
-			o.Merged = number.ToBoolAny(val)
-		}
-	}
-	if val, ok := kv["merge_commit"].(string); ok {
-		o.MergeCommit = val
-	} else {
-		val := kv["merge_commit"]
-		if val == nil {
-			o.MergeCommit = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
 			}
-			o.MergeCommit = fmt.Sprintf("%v", val)
+			o.BehindDefaultCount = number.ToInt64Any(val)
 		}
 	}
 	if val := kv["branched_from_commits"]; val != nil {
@@ -595,24 +560,102 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	if o.Commits == nil {
 		o.Commits = make([]string, 0)
 	}
-	if val, ok := kv["behind_default_count"].(int64); ok {
-		o.BehindDefaultCount = val
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
 	} else {
-		val := kv["behind_default_count"]
+		val := kv["customer_id"]
 		if val == nil {
-			o.BehindDefaultCount = number.ToInt64Any(nil)
+			o.CustomerID = ""
 		} else {
-			o.BehindDefaultCount = number.ToInt64Any(val)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["ahead_default_count"].(int64); ok {
-		o.AheadDefaultCount = val
+	if val, ok := kv["default"].(bool); ok {
+		o.Default = val
 	} else {
-		val := kv["ahead_default_count"]
+		val := kv["default"]
 		if val == nil {
-			o.AheadDefaultCount = number.ToInt64Any(nil)
+			o.Default = number.ToBoolAny(nil)
 		} else {
-			o.AheadDefaultCount = number.ToInt64Any(val)
+			o.Default = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["merge_commit"].(string); ok {
+		o.MergeCommit = val
+	} else {
+		val := kv["merge_commit"]
+		if val == nil {
+			o.MergeCommit = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.MergeCommit = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["merged"].(bool); ok {
+		o.Merged = val
+	} else {
+		val := kv["merged"]
+		if val == nil {
+			o.Merged = number.ToBoolAny(nil)
+		} else {
+			o.Merged = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		val := kv["name"]
+		if val == nil {
+			o.Name = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Name = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["repo_id"].(string); ok {
@@ -638,14 +681,18 @@ func (o *Branch) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Name)
-	args = append(args, o.Default)
-	args = append(args, o.Merged)
-	args = append(args, o.MergeCommit)
+	args = append(args, o.AheadDefaultCount)
+	args = append(args, o.BehindDefaultCount)
 	args = append(args, o.BranchedFromCommits)
 	args = append(args, o.Commits)
-	args = append(args, o.BehindDefaultCount)
-	args = append(args, o.AheadDefaultCount)
+	args = append(args, o.CustomerID)
+	args = append(args, o.Default)
+	args = append(args, o.ID)
+	args = append(args, o.MergeCommit)
+	args = append(args, o.Merged)
+	args = append(args, o.Name)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -663,36 +710,16 @@ func GetBranchAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "name",
-				"type": "string",
+				"name": "ahead_default_count",
+				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "default",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "merged",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "merge_commit",
-				"type": "string",
+				"name": "behind_default_count",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
@@ -703,12 +730,36 @@ func GetBranchAvroSchemaSpec() string {
 				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
-				"name": "behind_default_count",
-				"type": "long",
+				"name": "customer_id",
+				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ahead_default_count",
-				"type": "long",
+				"name": "default",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "merge_commit",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "merged",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "name",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "repo_id",

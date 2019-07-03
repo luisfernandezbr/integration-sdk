@@ -44,51 +44,52 @@ const (
 )
 
 const (
+	// AgentApikeyColumn is the apikey column name
+	AgentApikeyColumn = "apikey"
+	// AgentCompletedAtColumn is the completed_ts column name
+	AgentCompletedAtColumn = "completed_ts"
+	// AgentCreatedAtColumn is the created_ts column name
+	AgentCreatedAtColumn = "created_ts"
+	// AgentCustomerIDColumn is the customer_id column name
+	AgentCustomerIDColumn = "customer_id"
 	// AgentIDColumn is the id column name
 	AgentIDColumn = "id"
 	// AgentRefIDColumn is the ref_id column name
 	AgentRefIDColumn = "ref_id"
 	// AgentRefTypeColumn is the ref_type column name
 	AgentRefTypeColumn = "ref_type"
-	// AgentCustomerIDColumn is the customer_id column name
-	AgentCustomerIDColumn = "customer_id"
-	// AgentCreatedAtColumn is the created_ts column name
-	AgentCreatedAtColumn = "created_ts"
-	// AgentUpdatedAtColumn is the updated_ts column name
-	AgentUpdatedAtColumn = "updated_ts"
-	// AgentApikeyColumn is the apikey column name
-	AgentApikeyColumn = "apikey"
 	// AgentRerunHistoricalColumn is the rerun_historical column name
 	AgentRerunHistoricalColumn = "rerun_historical"
+	// AgentUpdatedAtColumn is the updated_ts column name
+	AgentUpdatedAtColumn = "updated_ts"
 	// AgentUUIDColumn is the uuid column name
 	AgentUUIDColumn = "uuid"
-	// AgentCompletedAtColumn is the completed_ts column name
-	AgentCompletedAtColumn = "completed_ts"
 )
 
 // Agent Agent metadata
 type Agent struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
-
-	// custom types
-
 	// Apikey The apikey for this agent to use
 	Apikey string `json:"apikey" bson:"apikey" yaml:"apikey" faker:"-"`
-	// RerunHistorical Last re-run of historical data
-	RerunHistorical int64 `json:"rerun_historical" bson:"rerun_historical" yaml:"rerun_historical" faker:"-"`
-	// UUID The uuid
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// CompletedAt Last time the agent completed
 	CompletedAt int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
+	// CreatedAt the date the record was created in Epoch time
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RerunHistorical Last re-run of historical data
+	RerunHistorical int64 `json:"rerun_historical" bson:"rerun_historical" yaml:"rerun_historical" faker:"-"`
+	// UpdatedAt the date the record was updated in Epoch time
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// UUID The uuid
+	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -428,47 +429,21 @@ func (o *Agent) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":               o.GetID(),
-		"ref_id":           o.GetRefID(),
-		"ref_type":         o.RefType,
-		"customer_id":      o.CustomerID,
-		"hashcode":         o.Hash(),
-		"created_ts":       o.CreatedAt,
-		"updated_ts":       o.UpdatedAt,
 		"apikey":           toAgentObject(o.Apikey, isavro, false, "string"),
-		"rerun_historical": toAgentObject(o.RerunHistorical, isavro, false, "long"),
-		"uuid":             toAgentObject(o.UUID, isavro, false, "string"),
 		"completed_ts":     toAgentObject(o.CompletedAt, isavro, false, "long"),
+		"created_ts":       toAgentObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id":      toAgentObject(o.CustomerID, isavro, false, "string"),
+		"id":               toAgentObject(o.ID, isavro, false, "string"),
+		"ref_id":           toAgentObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toAgentObject(o.RefType, isavro, false, "string"),
+		"rerun_historical": toAgentObject(o.RerunHistorical, isavro, false, "long"),
+		"updated_ts":       toAgentObject(o.UpdatedAt, isavro, false, "long"),
+		"uuid":             toAgentObject(o.UUID, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Agent) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else if val, ok := kv["created_ts"].(time.Time); ok {
-		o.CreatedAt = datetime.TimeToEpoch(val)
-	}
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else if val, ok := kv["updated_ts"].(time.Time); ok {
-		o.UpdatedAt = datetime.TimeToEpoch(val)
-	}
 	if val, ok := kv["apikey"].(string); ok {
 		o.Apikey = val
 	} else {
@@ -482,6 +457,84 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 			o.Apikey = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["completed_ts"].(int64); ok {
+		o.CompletedAt = val
+	} else {
+		val := kv["completed_ts"]
+		if val == nil {
+			o.CompletedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CompletedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else {
+		val := kv["created_ts"]
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["rerun_historical"].(int64); ok {
 		o.RerunHistorical = val
 	} else {
@@ -489,7 +542,23 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.RerunHistorical = number.ToInt64Any(nil)
 		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
 			o.RerunHistorical = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		val := kv["updated_ts"]
+		if val == nil {
+			o.UpdatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["uuid"].(string); ok {
@@ -505,16 +574,6 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 			o.UUID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["completed_ts"].(int64); ok {
-		o.CompletedAt = val
-	} else {
-		val := kv["completed_ts"]
-		if val == nil {
-			o.CompletedAt = number.ToInt64Any(nil)
-		} else {
-			o.CompletedAt = number.ToInt64Any(val)
-		}
-	}
 	o.setDefaults()
 }
 
@@ -526,9 +585,15 @@ func (o *Agent) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Apikey)
-	args = append(args, o.RerunHistorical)
-	args = append(args, o.UUID)
 	args = append(args, o.CompletedAt)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.CustomerID)
+	args = append(args, o.ID)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.RerunHistorical)
+	args = append(args, o.UpdatedAt)
+	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -591,6 +656,30 @@ func GetAgentAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "apikey",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "completed_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "customer_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "ref_id",
 				"type": "string",
 			},
@@ -599,15 +688,7 @@ func GetAgentAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
+				"name": "rerun_historical",
 				"type": "long",
 			},
 			map[string]interface{}{
@@ -615,20 +696,8 @@ func GetAgentAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "apikey",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "rerun_historical",
-				"type": "long",
-			},
-			map[string]interface{}{
 				"name": "uuid",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "completed_ts",
-				"type": "long",
 			},
 		},
 	}

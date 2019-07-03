@@ -44,37 +44,36 @@ const (
 )
 
 const (
-	// HookIDColumn is the id column name
-	HookIDColumn = "id"
+	// HookDataColumn is the data column name
+	HookDataColumn = "data"
 	// HookDateAtColumn is the date_ts column name
 	HookDateAtColumn = "date_ts"
+	// HookHeadersColumn is the headers column name
+	HookHeadersColumn = "headers"
+	// HookIDColumn is the id column name
+	HookIDColumn = "id"
 	// HookSystemColumn is the system column name
 	HookSystemColumn = "system"
 	// HookTokenColumn is the token column name
 	HookTokenColumn = "token"
-	// HookHeadersColumn is the headers column name
-	HookHeadersColumn = "headers"
-	// HookDataColumn is the data column name
-	HookDataColumn = "data"
 )
 
 // Hook hook is a webhook event which is received from an external source
 type Hook struct {
-	// built in types
-
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// custom types
-
+	// Data the webhook data payload base64 encoded
+	Data string `json:"data" bson:"data" yaml:"data" faker:"-"`
 	// DateAt the date when the hook was received in UTC format
 	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
+	// Headers the headers of the incoming webhook
+	Headers map[string]string `json:"headers" bson:"headers" yaml:"headers" faker:"-"`
+	// ID the primary key for this model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// System the name of the system sending the hook
 	System string `json:"system" bson:"system" yaml:"system" faker:"-"`
 	// Token the token part of the url
 	Token string `json:"token" bson:"token" yaml:"token" faker:"-"`
-	// Headers the headers of the incoming webhook
-	Headers map[string]string `json:"headers" bson:"headers" yaml:"headers" faker:"-"`
-	// Data the webhook data payload base64 encoded
-	Data string `json:"data" bson:"data" yaml:"data" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -407,22 +406,29 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 		}
 	}
 	return map[string]interface{}{
-		"id":      o.GetID(),
+		"data":    toHookObject(o.Data, isavro, false, "string"),
 		"date_ts": toHookObject(o.DateAt, isavro, false, "long"),
+		"headers": toHookObject(o.Headers, isavro, false, "string"),
+		"id":      toHookObject(o.ID, isavro, false, "string"),
 		"system":  toHookObject(o.System, isavro, false, "string"),
 		"token":   toHookObject(o.Token, isavro, false, "string"),
-		"headers": toHookObject(o.Headers, isavro, false, "string"),
-		"data":    toHookObject(o.Data, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Hook) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
+	if val, ok := kv["data"].(string); ok {
+		o.Data = val
+	} else {
+		val := kv["data"]
+		if val == nil {
+			o.Data = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Data = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["date_ts"].(int64); ok {
 		o.DateAt = val
@@ -431,7 +437,44 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.DateAt = number.ToInt64Any(nil)
 		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
 			o.DateAt = number.ToInt64Any(val)
+		}
+	}
+	if val := kv["headers"]; val != nil {
+		kv := make(map[string]string)
+		if m, ok := val.(map[string]string); ok {
+			kv = m
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				for k, v := range m {
+					if mv, ok := v.(string); ok {
+						kv[k] = mv
+					} else {
+						kv[k] = fmt.Sprintf("%v", v)
+					}
+				}
+			} else {
+				panic("unsupported type for headers field entry: " + reflect.TypeOf(val).String())
+			}
+		}
+		o.Headers = kv
+	} else {
+		o.Headers = map[string]string{}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["system"].(string); ok {
@@ -460,40 +503,6 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 			o.Token = fmt.Sprintf("%v", val)
 		}
 	}
-	if val := kv["headers"]; val != nil {
-		kv := make(map[string]string)
-		if m, ok := val.(map[string]string); ok {
-			kv = m
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				for k, v := range m {
-					if mv, ok := v.(string); ok {
-						kv[k] = mv
-					} else {
-						kv[k] = fmt.Sprintf("%v", v)
-					}
-				}
-			} else {
-				panic("unsupported type for headers field entry: " + reflect.TypeOf(val).String())
-			}
-		}
-		o.Headers = kv
-	} else {
-		o.Headers = map[string]string{}
-	}
-	if val, ok := kv["data"].(string); ok {
-		o.Data = val
-	} else {
-		val := kv["data"]
-		if val == nil {
-			o.Data = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Data = fmt.Sprintf("%v", val)
-		}
-	}
 	o.setDefaults()
 }
 
@@ -509,16 +518,12 @@ func GetHookAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "data",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "date_ts",
 				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "system",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "token",
-				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "headers",
@@ -528,7 +533,15 @@ func GetHookAvroSchemaSpec() string {
 				},
 			},
 			map[string]interface{}{
-				"name": "data",
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "system",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "token",
 				"type": "string",
 			},
 		},

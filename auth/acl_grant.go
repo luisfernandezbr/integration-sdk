@@ -26,6 +26,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -43,31 +44,31 @@ const (
 )
 
 const (
+	// ACLGrantCreatedAtColumn is the created_ts column name
+	ACLGrantCreatedAtColumn = "created_ts"
+	// ACLGrantCustomerIDColumn is the customer_id column name
+	ACLGrantCustomerIDColumn = "customer_id"
 	// ACLGrantIDColumn is the id column name
 	ACLGrantIDColumn = "id"
+	// ACLGrantPermissionColumn is the permission column name
+	ACLGrantPermissionColumn = "permission"
 	// ACLGrantRefIDColumn is the ref_id column name
 	ACLGrantRefIDColumn = "ref_id"
 	// ACLGrantRefTypeColumn is the ref_type column name
 	ACLGrantRefTypeColumn = "ref_type"
-	// ACLGrantCustomerIDColumn is the customer_id column name
-	ACLGrantCustomerIDColumn = "customer_id"
-	// ACLGrantCreatedAtColumn is the created_ts column name
-	ACLGrantCreatedAtColumn = "created_ts"
-	// ACLGrantUpdatedAtColumn is the updated_ts column name
-	ACLGrantUpdatedAtColumn = "updated_ts"
 	// ACLGrantResourceIDColumn is the resource_id column name
 	ACLGrantResourceIDColumn = "resource_id"
 	// ACLGrantRoleIDColumn is the role_id column name
 	ACLGrantRoleIDColumn = "role_id"
-	// ACLGrantPermissionColumn is the permission column name
-	ACLGrantPermissionColumn = "permission"
+	// ACLGrantUpdatedAtColumn is the updated_ts column name
+	ACLGrantUpdatedAtColumn = "updated_ts"
 )
 
 // Permission is the enumeration type for permission
-type Permission int32
+type ACLGrantPermission int32
 
 // String returns the string value for Permission
-func (v Permission) String() string {
+func (v ACLGrantPermission) String() string {
 	switch int32(v) {
 	case 0:
 		return "admin"
@@ -81,34 +82,35 @@ func (v Permission) String() string {
 
 const (
 	// PermissionAdmin is the enumeration value for admin
-	PermissionAdmin Permission = 0
+	ACLGrantPermissionAdmin ACLGrantPermission = 0
 	// PermissionRead is the enumeration value for read
-	PermissionRead Permission = 1
+	ACLGrantPermissionRead ACLGrantPermission = 1
 	// PermissionReadwrite is the enumeration value for readwrite
-	PermissionReadwrite Permission = 2
+	ACLGrantPermissionReadwrite ACLGrantPermission = 2
 )
 
 // ACLGrant a ACL grant controls permisson for a specific role to a resource
 type ACLGrant struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
+	// CreatedAt the date the record was created in Epoch time
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
-
-	// custom types
-
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Permission the permission that the grant provides
+	Permission ACLGrantPermission `json:"permission" bson:"permission" yaml:"permission" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// ResourceID the resource id for the grant
 	ResourceID string `json:"resource_id" bson:"resource_id" yaml:"resource_id" faker:"-"`
 	// RoleID the role id for the grant
 	RoleID string `json:"role_id" bson:"role_id" yaml:"role_id" faker:"-"`
-	// Permission the permission that the grant provides
-	Permission Permission `json:"permission" bson:"permission" yaml:"permission" faker:"-"`
+	// UpdatedAt the date the record was updated in Epoch time
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -244,19 +246,19 @@ func toACLGrantObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 		}
 		return arr
 
-	case Permission:
+	case ACLGrantPermission:
 		if !isavro {
-			return (o.(Permission)).String()
+			return (o.(ACLGrantPermission)).String()
 		}
 		return map[string]string{
-			"auth.permission": (o.(Permission)).String(),
+			"auth.permission": (o.(ACLGrantPermission)).String(),
 		}
-	case *Permission:
+	case *ACLGrantPermission:
 		if !isavro {
-			return (o.(*Permission)).String()
+			return (o.(*ACLGrantPermission)).String()
 		}
 		return map[string]string{
-			"auth.permission": (o.(*Permission)).String(),
+			"auth.permission": (o.(*ACLGrantPermission)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -475,45 +477,109 @@ func (o *ACLGrant) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"created_ts":  o.CreatedAt,
-		"updated_ts":  o.UpdatedAt,
+		"created_ts":  toACLGrantObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id": toACLGrantObject(o.CustomerID, isavro, false, "string"),
+		"id":          toACLGrantObject(o.ID, isavro, false, "string"),
+		"permission":  toACLGrantObject(o.Permission, isavro, false, "permission"),
+		"ref_id":      toACLGrantObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toACLGrantObject(o.RefType, isavro, false, "string"),
 		"resource_id": toACLGrantObject(o.ResourceID, isavro, false, "string"),
 		"role_id":     toACLGrantObject(o.RoleID, isavro, false, "string"),
-		"permission":  toACLGrantObject(o.Permission, isavro, false, "permission"),
+		"updated_ts":  toACLGrantObject(o.UpdatedAt, isavro, false, "long"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *ACLGrant) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else {
+		val := kv["created_ts"]
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
 	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else if val, ok := kv["created_ts"].(time.Time); ok {
-		o.CreatedAt = datetime.TimeToEpoch(val)
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
 	}
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else if val, ok := kv["updated_ts"].(time.Time); ok {
-		o.UpdatedAt = datetime.TimeToEpoch(val)
+	if val, ok := kv["permission"].(ACLGrantPermission); ok {
+		o.Permission = val
+	} else {
+		if em, ok := kv["permission"].(map[string]interface{}); ok {
+			ev := em["auth.permission"].(string)
+			switch ev {
+			case "admin":
+				o.Permission = 0
+			case "read":
+				o.Permission = 1
+			case "readwrite":
+				o.Permission = 2
+			}
+		}
+		if em, ok := kv["permission"].(string); ok {
+			switch em {
+			case "admin":
+				o.Permission = 0
+			case "read":
+				o.Permission = 1
+			case "readwrite":
+				o.Permission = 2
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["resource_id"].(string); ok {
 		o.ResourceID = val
@@ -541,29 +607,17 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 			o.RoleID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["permission"].(Permission); ok {
-		o.Permission = val
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
 	} else {
-		if em, ok := kv["permission"].(map[string]interface{}); ok {
-			ev := em["auth.permission"].(string)
-			switch ev {
-			case "admin":
-				o.Permission = 0
-			case "read":
-				o.Permission = 1
-			case "readwrite":
-				o.Permission = 2
+		val := kv["updated_ts"]
+		if val == nil {
+			o.UpdatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
 			}
-		}
-		if em, ok := kv["permission"].(string); ok {
-			switch em {
-			case "admin":
-				o.Permission = 0
-			case "read":
-				o.Permission = 1
-			case "readwrite":
-				o.Permission = 2
-			}
+			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
 	o.setDefaults()
@@ -576,9 +630,15 @@ func (o *ACLGrant) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.CustomerID)
+	args = append(args, o.ID)
+	args = append(args, o.Permission)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
 	args = append(args, o.ResourceID)
 	args = append(args, o.RoleID)
-	args = append(args, o.Permission)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -641,18 +701,6 @@ func GetACLGrantAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
 			},
@@ -661,15 +709,11 @@ func GetACLGrantAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "resource_id",
+				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "role_id",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -681,6 +725,26 @@ func GetACLGrantAvroSchemaSpec() string {
 						"symbols": []interface{}{"admin", "read", "readwrite"},
 					},
 				},
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "resource_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "role_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 		},
 	}

@@ -45,57 +45,90 @@ const (
 )
 
 const (
-	// BlameIDColumn is the id column name
-	BlameIDColumn = "id"
-	// BlameRefIDColumn is the ref_id column name
-	BlameRefIDColumn = "ref_id"
-	// BlameRefTypeColumn is the ref_type column name
-	BlameRefTypeColumn = "ref_type"
-	// BlameCustomerIDColumn is the customer_id column name
-	BlameCustomerIDColumn = "customer_id"
-	// BlameDateAtColumn is the date_ts column name
-	BlameDateAtColumn = "date_ts"
-	// BlameDateColumn is the date column name
-	BlameDateColumn = "date"
-	// BlameRepoIDColumn is the repo_id column name
-	BlameRepoIDColumn = "repo_id"
-	// BlameFilenameColumn is the filename column name
-	BlameFilenameColumn = "filename"
-	// BlameLanguageColumn is the language column name
-	BlameLanguageColumn = "language"
-	// BlameSizeColumn is the size column name
-	BlameSizeColumn = "size"
-	// BlameLocColumn is the loc column name
-	BlameLocColumn = "loc"
-	// BlameSlocColumn is the sloc column name
-	BlameSlocColumn = "sloc"
 	// BlameBlanksColumn is the blanks column name
 	BlameBlanksColumn = "blanks"
 	// BlameCommentsColumn is the comments column name
 	BlameCommentsColumn = "comments"
-	// BlameComplexityColumn is the complexity column name
-	BlameComplexityColumn = "complexity"
-	// BlameShaColumn is the sha column name
-	BlameShaColumn = "sha"
 	// BlameCommitIDColumn is the commit_id column name
 	BlameCommitIDColumn = "commit_id"
+	// BlameComplexityColumn is the complexity column name
+	BlameComplexityColumn = "complexity"
+	// BlameCustomerIDColumn is the customer_id column name
+	BlameCustomerIDColumn = "customer_id"
+	// BlameDateColumn is the date column name
+	BlameDateColumn = "date"
+	// BlameDateAtColumn is the date_ts column name
+	BlameDateAtColumn = "date_ts"
 	// BlameExcludedColumn is the excluded column name
 	BlameExcludedColumn = "excluded"
 	// BlameExcludedReasonColumn is the excluded_reason column name
 	BlameExcludedReasonColumn = "excluded_reason"
+	// BlameFilenameColumn is the filename column name
+	BlameFilenameColumn = "filename"
+	// BlameIDColumn is the id column name
+	BlameIDColumn = "id"
+	// BlameLanguageColumn is the language column name
+	BlameLanguageColumn = "language"
 	// BlameLicenseColumn is the license column name
 	BlameLicenseColumn = "license"
-	// BlameStatusColumn is the status column name
-	BlameStatusColumn = "status"
 	// BlameLinesColumn is the lines column name
 	BlameLinesColumn = "lines"
+	// BlameLocColumn is the loc column name
+	BlameLocColumn = "loc"
+	// BlameRefIDColumn is the ref_id column name
+	BlameRefIDColumn = "ref_id"
+	// BlameRefTypeColumn is the ref_type column name
+	BlameRefTypeColumn = "ref_type"
+	// BlameRepoIDColumn is the repo_id column name
+	BlameRepoIDColumn = "repo_id"
+	// BlameShaColumn is the sha column name
+	BlameShaColumn = "sha"
+	// BlameSizeColumn is the size column name
+	BlameSizeColumn = "size"
+	// BlameSlocColumn is the sloc column name
+	BlameSlocColumn = "sloc"
+	// BlameStatusColumn is the status column name
+	BlameStatusColumn = "status"
 )
 
+// BlameLines represents the object structure for lines
+type BlameLines struct {
+	// AuthorRefID the author ref_id of this line when last changed
+	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	// Blank if the line is a blank line
+	Blank bool `json:"blank" bson:"blank" yaml:"blank" faker:"-"`
+	// Code if the line is sourcecode
+	Code bool `json:"code" bson:"code" yaml:"code" faker:"-"`
+	// Comment if the line is a comment
+	Comment bool `json:"comment" bson:"comment" yaml:"comment" faker:"-"`
+	// Date the change date in RFC3339 format of this line when last changed
+	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
+	// Sha the sha when this line was last changed
+	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
+}
+
+func (o *BlameLines) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// AuthorRefID the author ref_id of this line when last changed
+		"author_ref_id": o.AuthorRefID,
+		// Blank if the line is a blank line
+		"blank": o.Blank,
+		// Code if the line is sourcecode
+		"code": o.Code,
+		// Comment if the line is a comment
+		"comment": o.Comment,
+		// Date the change date in RFC3339 format of this line when last changed
+		"date": o.Date,
+		// Sha the sha when this line was last changed
+		"sha": o.Sha,
+	}
+}
+
 // Status is the enumeration type for status
-type Status int32
+type BlameStatus int32
 
 // String returns the string value for Status
-func (v Status) String() string {
+func (v BlameStatus) String() string {
 	switch int32(v) {
 	case 0:
 		return "added"
@@ -109,94 +142,61 @@ func (v Status) String() string {
 
 const (
 	// StatusAdded is the enumeration value for added
-	StatusAdded Status = 0
+	BlameStatusAdded BlameStatus = 0
 	// StatusModified is the enumeration value for modified
-	StatusModified Status = 1
+	BlameStatusModified BlameStatus = 1
 	// StatusRemoved is the enumeration value for removed
-	StatusRemoved Status = 2
+	BlameStatusRemoved BlameStatus = 2
 )
-
-// BlameLines represents the object structure for lines
-type BlameLines struct {
-	// Sha the sha when this line was last changed
-	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
-	// AuthorRefID the author ref_id of this line when last changed
-	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
-	// Date the change date in RFC3339 format of this line when last changed
-	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
-	// Comment if the line is a comment
-	Comment bool `json:"comment" bson:"comment" yaml:"comment" faker:"-"`
-	// Code if the line is sourcecode
-	Code bool `json:"code" bson:"code" yaml:"code" faker:"-"`
-	// Blank if the line is a blank line
-	Blank bool `json:"blank" bson:"blank" yaml:"blank" faker:"-"`
-}
-
-func (o *BlameLines) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Sha the sha when this line was last changed
-		"sha": o.Sha,
-		// AuthorRefID the author ref_id of this line when last changed
-		"author_ref_id": o.AuthorRefID,
-		// Date the change date in RFC3339 format of this line when last changed
-		"date": o.Date,
-		// Comment if the line is a comment
-		"comment": o.Comment,
-		// Code if the line is sourcecode
-		"code": o.Code,
-		// Blank if the line is a blank line
-		"blank": o.Blank,
-	}
-}
 
 // Blame the blame detail for each commit in a repo
 type Blame struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// DateAt the date of the change
-	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
-	// Date the date of the change in RFC3339 format
-	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
-	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
-	// Filename the filename
-	Filename string `json:"filename" bson:"filename" yaml:"filename" faker:"-"`
-	// Language the detected language
-	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
-	// Size the size of the file
-	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
-	// Loc the count of lines in the file
-	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
-	// Sloc the count of source lines in the file based on language rules
-	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
 	// Blanks the count of blank lines in the file
 	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
 	// Comments the count of comment lines in the file based on language rules
 	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
-	// Complexity the cyclomatic complexity for the change
-	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
-	// Sha the commit SHA
-	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
 	// CommitID the commit ID
 	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
+	// Complexity the cyclomatic complexity for the change
+	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Date the date of the change in RFC3339 format
+	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
+	// DateAt the date of the change
+	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
 	// Excluded if the result was excluded
 	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
 	// ExcludedReason why the result was excluded
 	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
+	// Filename the filename
+	Filename string `json:"filename" bson:"filename" yaml:"filename" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Language the detected language
+	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
 	// License if a license was detected in the file, what was the license SPDX
 	License *string `json:"license" bson:"license" yaml:"license" faker:"-"`
-	// Status the status of the change
-	Status Status `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// Lines the individual line attributions
 	Lines []BlameLines `json:"lines" bson:"lines" yaml:"lines" faker:"-"`
+	// Loc the count of lines in the file
+	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	// Sha the commit SHA
+	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
+	// Size the size of the file
+	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
+	// Sloc the count of source lines in the file based on language rules
+	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	// Status the status of the change
+	Status BlameStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -332,20 +332,6 @@ func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		}
 		return arr
 
-	case Status:
-		if !isavro {
-			return (o.(Status)).String()
-		}
-		return map[string]string{
-			"sourcecode.status": (o.(Status)).String(),
-		}
-	case *Status:
-		if !isavro {
-			return (o.(*Status)).String()
-		}
-		return map[string]string{
-			"sourcecode.status": (o.(*Status)).String(),
-		}
 	case BlameLines:
 		vv := o.(BlameLines)
 		return vv.ToMap()
@@ -364,6 +350,20 @@ func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 			arr = append(arr, i.ToMap())
 		}
 		return arr
+	case BlameStatus:
+		if !isavro {
+			return (o.(BlameStatus)).String()
+		}
+		return map[string]string{
+			"sourcecode.status": (o.(BlameStatus)).String(),
+		}
+	case *BlameStatus:
+		if !isavro {
+			return (o.(*BlameStatus)).String()
+		}
+		return map[string]string{
+			"sourcecode.status": (o.(*BlameStatus)).String(),
+		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -575,57 +575,96 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 		}
 	}
 	return map[string]interface{}{
-		"id":              o.GetID(),
-		"ref_id":          o.GetRefID(),
-		"ref_type":        o.RefType,
-		"customer_id":     o.CustomerID,
-		"hashcode":        o.Hash(),
-		"date_ts":         toBlameObject(o.DateAt, isavro, false, "long"),
-		"date":            toBlameObject(o.Date, isavro, false, "string"),
-		"repo_id":         toBlameObject(o.RepoID, isavro, false, "string"),
-		"filename":        toBlameObject(o.Filename, isavro, false, "string"),
-		"language":        toBlameObject(o.Language, isavro, false, "string"),
-		"size":            toBlameObject(o.Size, isavro, false, "long"),
-		"loc":             toBlameObject(o.Loc, isavro, false, "long"),
-		"sloc":            toBlameObject(o.Sloc, isavro, false, "long"),
 		"blanks":          toBlameObject(o.Blanks, isavro, false, "long"),
 		"comments":        toBlameObject(o.Comments, isavro, false, "long"),
-		"complexity":      toBlameObject(o.Complexity, isavro, false, "long"),
-		"sha":             toBlameObject(o.Sha, isavro, false, "string"),
 		"commit_id":       toBlameObject(o.CommitID, isavro, false, "string"),
+		"complexity":      toBlameObject(o.Complexity, isavro, false, "long"),
+		"customer_id":     toBlameObject(o.CustomerID, isavro, false, "string"),
+		"date":            toBlameObject(o.Date, isavro, false, "string"),
+		"date_ts":         toBlameObject(o.DateAt, isavro, false, "long"),
 		"excluded":        toBlameObject(o.Excluded, isavro, false, "boolean"),
 		"excluded_reason": toBlameObject(o.ExcludedReason, isavro, false, "string"),
+		"filename":        toBlameObject(o.Filename, isavro, false, "string"),
+		"id":              toBlameObject(o.ID, isavro, false, "string"),
+		"language":        toBlameObject(o.Language, isavro, false, "string"),
 		"license":         toBlameObject(o.License, isavro, true, "string"),
-		"status":          toBlameObject(o.Status, isavro, false, "status"),
 		"lines":           toBlameObject(o.Lines, isavro, false, "lines"),
+		"loc":             toBlameObject(o.Loc, isavro, false, "long"),
+		"ref_id":          toBlameObject(o.RefID, isavro, false, "string"),
+		"ref_type":        toBlameObject(o.RefType, isavro, false, "string"),
+		"repo_id":         toBlameObject(o.RepoID, isavro, false, "string"),
+		"sha":             toBlameObject(o.Sha, isavro, false, "string"),
+		"size":            toBlameObject(o.Size, isavro, false, "long"),
+		"sloc":            toBlameObject(o.Sloc, isavro, false, "long"),
+		"status":          toBlameObject(o.Status, isavro, false, "status"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Blame) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
+	if val, ok := kv["blanks"].(int64); ok {
+		o.Blanks = val
+	} else {
+		val := kv["blanks"]
+		if val == nil {
+			o.Blanks = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Blanks = number.ToInt64Any(val)
+		}
 	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
+	if val, ok := kv["comments"].(int64); ok {
+		o.Comments = val
+	} else {
+		val := kv["comments"]
+		if val == nil {
+			o.Comments = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Comments = number.ToInt64Any(val)
+		}
 	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
+	if val, ok := kv["commit_id"].(string); ok {
+		o.CommitID = val
+	} else {
+		val := kv["commit_id"]
+		if val == nil {
+			o.CommitID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CommitID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["complexity"].(int64); ok {
+		o.Complexity = val
+	} else {
+		val := kv["complexity"]
+		if val == nil {
+			o.Complexity = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Complexity = number.ToInt64Any(val)
+		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
-	}
-	if val, ok := kv["date_ts"].(int64); ok {
-		o.DateAt = val
 	} else {
-		val := kv["date_ts"]
+		val := kv["customer_id"]
 		if val == nil {
-			o.DateAt = number.ToInt64Any(nil)
+			o.CustomerID = ""
 		} else {
-			o.DateAt = number.ToInt64Any(val)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["date"].(string); ok {
@@ -641,129 +680,17 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			o.Date = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["repo_id"].(string); ok {
-		o.RepoID = val
+	if val, ok := kv["date_ts"].(int64); ok {
+		o.DateAt = val
 	} else {
-		val := kv["repo_id"]
+		val := kv["date_ts"]
 		if val == nil {
-			o.RepoID = ""
+			o.DateAt = number.ToInt64Any(nil)
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
 			}
-			o.RepoID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["filename"].(string); ok {
-		o.Filename = val
-	} else {
-		val := kv["filename"]
-		if val == nil {
-			o.Filename = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Filename = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["language"].(string); ok {
-		o.Language = val
-	} else {
-		val := kv["language"]
-		if val == nil {
-			o.Language = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Language = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["size"].(int64); ok {
-		o.Size = val
-	} else {
-		val := kv["size"]
-		if val == nil {
-			o.Size = number.ToInt64Any(nil)
-		} else {
-			o.Size = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["loc"].(int64); ok {
-		o.Loc = val
-	} else {
-		val := kv["loc"]
-		if val == nil {
-			o.Loc = number.ToInt64Any(nil)
-		} else {
-			o.Loc = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["sloc"].(int64); ok {
-		o.Sloc = val
-	} else {
-		val := kv["sloc"]
-		if val == nil {
-			o.Sloc = number.ToInt64Any(nil)
-		} else {
-			o.Sloc = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["blanks"].(int64); ok {
-		o.Blanks = val
-	} else {
-		val := kv["blanks"]
-		if val == nil {
-			o.Blanks = number.ToInt64Any(nil)
-		} else {
-			o.Blanks = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["comments"].(int64); ok {
-		o.Comments = val
-	} else {
-		val := kv["comments"]
-		if val == nil {
-			o.Comments = number.ToInt64Any(nil)
-		} else {
-			o.Comments = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["complexity"].(int64); ok {
-		o.Complexity = val
-	} else {
-		val := kv["complexity"]
-		if val == nil {
-			o.Complexity = number.ToInt64Any(nil)
-		} else {
-			o.Complexity = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["sha"].(string); ok {
-		o.Sha = val
-	} else {
-		val := kv["sha"]
-		if val == nil {
-			o.Sha = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Sha = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["commit_id"].(string); ok {
-		o.CommitID = val
-	} else {
-		val := kv["commit_id"]
-		if val == nil {
-			o.CommitID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.CommitID = fmt.Sprintf("%v", val)
+			o.DateAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["excluded"].(bool); ok {
@@ -789,6 +716,45 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			o.ExcludedReason = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["filename"].(string); ok {
+		o.Filename = val
+	} else {
+		val := kv["filename"]
+		if val == nil {
+			o.Filename = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Filename = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["language"].(string); ok {
+		o.Language = val
+	} else {
+		val := kv["language"]
+		if val == nil {
+			o.Language = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Language = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["license"].(*string); ok {
 		o.License = val
 	} else if val, ok := kv["license"].(string); ok {
@@ -803,31 +769,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.License = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["status"].(Status); ok {
-		o.Status = val
-	} else {
-		if em, ok := kv["status"].(map[string]interface{}); ok {
-			ev := em["sourcecode.status"].(string)
-			switch ev {
-			case "added":
-				o.Status = 0
-			case "modified":
-				o.Status = 1
-			case "removed":
-				o.Status = 2
-			}
-		}
-		if em, ok := kv["status"].(string); ok {
-			switch em {
-			case "added":
-				o.Status = 0
-			case "modified":
-				o.Status = 1
-			case "removed":
-				o.Status = 2
-			}
 		}
 	}
 	if val := kv["lines"]; val != nil {
@@ -860,6 +801,122 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	if o.Lines == nil {
 		o.Lines = make([]BlameLines, 0)
 	}
+	if val, ok := kv["loc"].(int64); ok {
+		o.Loc = val
+	} else {
+		val := kv["loc"]
+		if val == nil {
+			o.Loc = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Loc = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = val
+	} else {
+		val := kv["repo_id"]
+		if val == nil {
+			o.RepoID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RepoID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["sha"].(string); ok {
+		o.Sha = val
+	} else {
+		val := kv["sha"]
+		if val == nil {
+			o.Sha = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Sha = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["size"].(int64); ok {
+		o.Size = val
+	} else {
+		val := kv["size"]
+		if val == nil {
+			o.Size = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Size = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["sloc"].(int64); ok {
+		o.Sloc = val
+	} else {
+		val := kv["sloc"]
+		if val == nil {
+			o.Sloc = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Sloc = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["status"].(BlameStatus); ok {
+		o.Status = val
+	} else {
+		if em, ok := kv["status"].(map[string]interface{}); ok {
+			ev := em["sourcecode.status"].(string)
+			switch ev {
+			case "added":
+				o.Status = 0
+			case "modified":
+				o.Status = 1
+			case "removed":
+				o.Status = 2
+			}
+		}
+		if em, ok := kv["status"].(string); ok {
+			switch em {
+			case "added":
+				o.Status = 0
+			case "modified":
+				o.Status = 1
+			case "removed":
+				o.Status = 2
+			}
+		}
+	}
 	o.setDefaults()
 }
 
@@ -870,24 +927,28 @@ func (o *Blame) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.DateAt)
-	args = append(args, o.Date)
-	args = append(args, o.RepoID)
-	args = append(args, o.Filename)
-	args = append(args, o.Language)
-	args = append(args, o.Size)
-	args = append(args, o.Loc)
-	args = append(args, o.Sloc)
 	args = append(args, o.Blanks)
 	args = append(args, o.Comments)
-	args = append(args, o.Complexity)
-	args = append(args, o.Sha)
 	args = append(args, o.CommitID)
+	args = append(args, o.Complexity)
+	args = append(args, o.CustomerID)
+	args = append(args, o.Date)
+	args = append(args, o.DateAt)
 	args = append(args, o.Excluded)
 	args = append(args, o.ExcludedReason)
+	args = append(args, o.Filename)
+	args = append(args, o.ID)
+	args = append(args, o.Language)
 	args = append(args, o.License)
-	args = append(args, o.Status)
 	args = append(args, o.Lines)
+	args = append(args, o.Loc)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.RepoID)
+	args = append(args, o.Sha)
+	args = append(args, o.Size)
+	args = append(args, o.Sloc)
+	args = append(args, o.Status)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -904,52 +965,8 @@ func GetBlameAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "date_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "date",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "repo_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "filename",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "language",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "size",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "loc",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "sloc",
-				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "blanks",
@@ -960,16 +977,24 @@ func GetBlameAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
+				"name": "commit_id",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "complexity",
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "sha",
+				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "commit_id",
+				"name": "date",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "date_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "excluded",
@@ -980,9 +1005,53 @@ func GetBlameAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "filename",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "language",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name":    "license",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "lines",
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}}, "doc": "the individual line attributions"}},
+			},
+			map[string]interface{}{
+				"name": "loc",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "repo_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "sha",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "size",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "sloc",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "status",
@@ -993,10 +1062,6 @@ func GetBlameAvroSchemaSpec() string {
 						"symbols": []interface{}{"added", "modified", "removed"},
 					},
 				},
-			},
-			map[string]interface{}{
-				"name": "lines",
-				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}, map[string]interface{}{"name": "author_ref_id", "doc": "the author ref_id of this line when last changed", "type": "string"}, map[string]interface{}{"name": "date", "doc": "the change date in RFC3339 format of this line when last changed", "type": "string"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}}, "doc": "the individual line attributions"}, "type": "array", "name": "lines"},
 			},
 		},
 	}

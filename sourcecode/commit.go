@@ -44,217 +44,217 @@ const (
 )
 
 const (
-	// CommitIDColumn is the id column name
-	CommitIDColumn = "id"
-	// CommitRefIDColumn is the ref_id column name
-	CommitRefIDColumn = "ref_id"
-	// CommitRefTypeColumn is the ref_type column name
-	CommitRefTypeColumn = "ref_type"
-	// CommitCustomerIDColumn is the customer_id column name
-	CommitCustomerIDColumn = "customer_id"
-	// CommitRepoIDColumn is the repo_id column name
-	CommitRepoIDColumn = "repo_id"
-	// CommitShaColumn is the sha column name
-	CommitShaColumn = "sha"
-	// CommitMessageColumn is the message column name
-	CommitMessageColumn = "message"
-	// CommitURLColumn is the url column name
-	CommitURLColumn = "url"
-	// CommitCreatedAtColumn is the created_ts column name
-	CommitCreatedAtColumn = "created_ts"
-	// CommitCreatedColumn is the created column name
-	CommitCreatedColumn = "created"
-	// CommitBranchColumn is the branch column name
-	CommitBranchColumn = "branch"
 	// CommitAdditionsColumn is the additions column name
 	CommitAdditionsColumn = "additions"
-	// CommitDeletionsColumn is the deletions column name
-	CommitDeletionsColumn = "deletions"
-	// CommitFilesChangedColumn is the files_changed column name
-	CommitFilesChangedColumn = "files_changed"
 	// CommitAuthorRefIDColumn is the author_ref_id column name
 	CommitAuthorRefIDColumn = "author_ref_id"
-	// CommitCommitterRefIDColumn is the committer_ref_id column name
-	CommitCommitterRefIDColumn = "committer_ref_id"
-	// CommitOrdinalColumn is the ordinal column name
-	CommitOrdinalColumn = "ordinal"
-	// CommitLocColumn is the loc column name
-	CommitLocColumn = "loc"
-	// CommitSlocColumn is the sloc column name
-	CommitSlocColumn = "sloc"
-	// CommitCommentsColumn is the comments column name
-	CommitCommentsColumn = "comments"
 	// CommitBlanksColumn is the blanks column name
 	CommitBlanksColumn = "blanks"
-	// CommitSizeColumn is the size column name
-	CommitSizeColumn = "size"
+	// CommitBranchColumn is the branch column name
+	CommitBranchColumn = "branch"
+	// CommitCommentsColumn is the comments column name
+	CommitCommentsColumn = "comments"
+	// CommitCommitterRefIDColumn is the committer_ref_id column name
+	CommitCommitterRefIDColumn = "committer_ref_id"
 	// CommitComplexityColumn is the complexity column name
 	CommitComplexityColumn = "complexity"
-	// CommitGpgSignedColumn is the gpg_signed column name
-	CommitGpgSignedColumn = "gpg_signed"
+	// CommitCreatedColumn is the created column name
+	CommitCreatedColumn = "created"
+	// CommitCreatedAtColumn is the created_ts column name
+	CommitCreatedAtColumn = "created_ts"
+	// CommitCustomerIDColumn is the customer_id column name
+	CommitCustomerIDColumn = "customer_id"
+	// CommitDeletionsColumn is the deletions column name
+	CommitDeletionsColumn = "deletions"
 	// CommitExcludedColumn is the excluded column name
 	CommitExcludedColumn = "excluded"
 	// CommitFilesColumn is the files column name
 	CommitFilesColumn = "files"
+	// CommitFilesChangedColumn is the files_changed column name
+	CommitFilesChangedColumn = "files_changed"
+	// CommitGpgSignedColumn is the gpg_signed column name
+	CommitGpgSignedColumn = "gpg_signed"
+	// CommitIDColumn is the id column name
+	CommitIDColumn = "id"
+	// CommitLocColumn is the loc column name
+	CommitLocColumn = "loc"
+	// CommitMessageColumn is the message column name
+	CommitMessageColumn = "message"
+	// CommitOrdinalColumn is the ordinal column name
+	CommitOrdinalColumn = "ordinal"
+	// CommitRefIDColumn is the ref_id column name
+	CommitRefIDColumn = "ref_id"
+	// CommitRefTypeColumn is the ref_type column name
+	CommitRefTypeColumn = "ref_type"
+	// CommitRepoIDColumn is the repo_id column name
+	CommitRepoIDColumn = "repo_id"
+	// CommitShaColumn is the sha column name
+	CommitShaColumn = "sha"
+	// CommitSizeColumn is the size column name
+	CommitSizeColumn = "size"
+	// CommitSlocColumn is the sloc column name
+	CommitSlocColumn = "sloc"
+	// CommitURLColumn is the url column name
+	CommitURLColumn = "url"
 )
 
 // CommitFiles represents the object structure for files
 type CommitFiles struct {
-	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
-	// CommitID the unique id for the commit
-	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
-	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
-	// Filename the filename
-	Filename string `json:"filename" bson:"filename" yaml:"filename" faker:"-"`
 	// Additions the number of additions for the commit file
 	Additions int64 `json:"additions" bson:"additions" yaml:"additions" faker:"-"`
-	// Deletions the number of deletions for the commit file
-	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
-	// Status the status of the change
-	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// Binary indicates if the file was detected to be a binary file
 	Binary bool `json:"binary" bson:"binary" yaml:"binary" faker:"-"`
-	// Language the language that was detected for the file
-	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
-	// Excluded if the file was excluded from processing
-	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
-	// ExcludedReason if the file was excluded, the reason
-	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
-	// Ordinal the order value for the file in the change set
-	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
-	// Loc the number of lines in the file
-	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
-	// Sloc the number of source lines in the file
-	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
 	// Blanks the number of blank lines in the file
 	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
 	// Comments the number of comment lines in the file
 	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
+	// CommitID the unique id for the commit
+	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
 	// Complexity the complexity value for the file change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
+	// CreatedAt the timestamp in UTC that the commit was created
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Deletions the number of deletions for the commit file
+	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
+	// Excluded if the file was excluded from processing
+	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	// ExcludedReason if the file was excluded, the reason
+	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
+	// Filename the filename
+	Filename string `json:"filename" bson:"filename" yaml:"filename" faker:"-"`
+	// Language the language that was detected for the file
+	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
 	// License the license which was detected for the file
 	License string `json:"license" bson:"license" yaml:"license" faker:"-"`
 	// LicenseConfidence the license confidence from the detection engine
 	LicenseConfidence float64 `json:"license_confidence" bson:"license_confidence" yaml:"license_confidence" faker:"-"`
+	// Loc the number of lines in the file
+	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
+	// Ordinal the order value for the file in the change set
+	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
 	// Renamed if the file was renamed
 	Renamed bool `json:"renamed" bson:"renamed" yaml:"renamed" faker:"-"`
 	// RenamedFrom the original file name
 	RenamedFrom string `json:"renamed_from" bson:"renamed_from" yaml:"renamed_from" faker:"-"`
 	// RenamedTo the final file name
 	RenamedTo string `json:"renamed_to" bson:"renamed_to" yaml:"renamed_to" faker:"-"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Size the size of the file
 	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
+	// Sloc the number of source lines in the file
+	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	// Status the status of the change
+	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
 }
 
 func (o *CommitFiles) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		// CreatedAt the timestamp in UTC that the commit was created
-		"created_ts": o.CreatedAt,
-		// CommitID the unique id for the commit
-		"commit_id": o.CommitID,
-		// RepoID the unique id for the repo
-		"repo_id": o.RepoID,
-		// Filename the filename
-		"filename": o.Filename,
 		// Additions the number of additions for the commit file
 		"additions": o.Additions,
-		// Deletions the number of deletions for the commit file
-		"deletions": o.Deletions,
-		// Status the status of the change
-		"status": o.Status,
 		// Binary indicates if the file was detected to be a binary file
 		"binary": o.Binary,
-		// Language the language that was detected for the file
-		"language": o.Language,
-		// Excluded if the file was excluded from processing
-		"excluded": o.Excluded,
-		// ExcludedReason if the file was excluded, the reason
-		"excluded_reason": o.ExcludedReason,
-		// Ordinal the order value for the file in the change set
-		"ordinal": o.Ordinal,
-		// Loc the number of lines in the file
-		"loc": o.Loc,
-		// Sloc the number of source lines in the file
-		"sloc": o.Sloc,
 		// Blanks the number of blank lines in the file
 		"blanks": o.Blanks,
 		// Comments the number of comment lines in the file
 		"comments": o.Comments,
+		// CommitID the unique id for the commit
+		"commit_id": o.CommitID,
 		// Complexity the complexity value for the file change
 		"complexity": o.Complexity,
+		// CreatedAt the timestamp in UTC that the commit was created
+		"created_ts": o.CreatedAt,
+		// Deletions the number of deletions for the commit file
+		"deletions": o.Deletions,
+		// Excluded if the file was excluded from processing
+		"excluded": o.Excluded,
+		// ExcludedReason if the file was excluded, the reason
+		"excluded_reason": o.ExcludedReason,
+		// Filename the filename
+		"filename": o.Filename,
+		// Language the language that was detected for the file
+		"language": o.Language,
 		// License the license which was detected for the file
 		"license": o.License,
 		// LicenseConfidence the license confidence from the detection engine
 		"license_confidence": o.LicenseConfidence,
+		// Loc the number of lines in the file
+		"loc": o.Loc,
+		// Ordinal the order value for the file in the change set
+		"ordinal": o.Ordinal,
 		// Renamed if the file was renamed
 		"renamed": o.Renamed,
 		// RenamedFrom the original file name
 		"renamed_from": o.RenamedFrom,
 		// RenamedTo the final file name
 		"renamed_to": o.RenamedTo,
+		// RepoID the unique id for the repo
+		"repo_id": o.RepoID,
 		// Size the size of the file
 		"size": o.Size,
+		// Sloc the number of source lines in the file
+		"sloc": o.Sloc,
+		// Status the status of the change
+		"status": o.Status,
 	}
 }
 
 // Commit the commit is a specific change in a repo
 type Commit struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
-	// Sha the unique sha for the commit
-	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"sha"`
-	// Message the commit message
-	Message string `json:"message" bson:"message" yaml:"message" faker:"commit_message"`
-	// URL the url to the commit detail
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
-	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
-	// Created date in rfc3339 format
-	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
-	// Branch the branch that the commit was made to
-	Branch string `json:"branch" bson:"branch" yaml:"branch" faker:"-"`
 	// Additions the number of additions for the commit
 	Additions int64 `json:"additions" bson:"additions" yaml:"additions" faker:"-"`
-	// Deletions the number of deletions for the commit
-	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
-	// FilesChanged the number of files changed for the commit
-	FilesChanged int64 `json:"files_changed" bson:"files_changed" yaml:"files_changed" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
 	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
-	// CommitterRefID the committer ref_id in the source system
-	CommitterRefID string `json:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
-	// Ordinal the order of the commit in the commit stream
-	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
-	// Loc the number of lines in the commit
-	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
-	// Sloc the number of source lines in the commit
-	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
-	// Comments the number of comment lines in the commit
-	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
 	// Blanks the number of blank lines in the commit
 	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
-	// Size the size of all files in the commit
-	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
+	// Branch the branch that the commit was made to
+	Branch string `json:"branch" bson:"branch" yaml:"branch" faker:"-"`
+	// Comments the number of comment lines in the commit
+	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
+	// CommitterRefID the committer ref_id in the source system
+	CommitterRefID string `json:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
 	// Complexity the complexity value for the change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
-	// GpgSigned if the commit was signed
-	GpgSigned bool `json:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
+	// Created date in rfc3339 format
+	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
+	// CreatedAt the timestamp in UTC that the commit was created
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Deletions the number of deletions for the commit
+	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// Excluded if the commit was excluded
 	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
 	// Files the files touched by this commit
 	Files []CommitFiles `json:"files" bson:"files" yaml:"files" faker:"-"`
+	// FilesChanged the number of files changed for the commit
+	FilesChanged int64 `json:"files_changed" bson:"files_changed" yaml:"files_changed" faker:"-"`
+	// GpgSigned if the commit was signed
+	GpgSigned bool `json:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Loc the number of lines in the commit
+	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
+	// Message the commit message
+	Message string `json:"message" bson:"message" yaml:"message" faker:"commit_message"`
+	// Ordinal the order of the commit in the commit stream
+	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RepoID the unique id for the repo
+	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	// Sha the unique sha for the commit
+	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"sha"`
+	// Size the size of all files in the commit
+	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
+	// Sloc the number of source lines in the commit
+	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	// URL the url to the commit detail
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -620,141 +620,37 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		}
 	}
 	return map[string]interface{}{
-		"id":               o.GetID(),
-		"ref_id":           o.GetRefID(),
-		"ref_type":         o.RefType,
-		"customer_id":      o.CustomerID,
-		"hashcode":         o.Hash(),
-		"repo_id":          toCommitObject(o.RepoID, isavro, false, "string"),
-		"sha":              toCommitObject(o.Sha, isavro, false, "string"),
-		"message":          toCommitObject(o.Message, isavro, false, "string"),
-		"url":              toCommitObject(o.URL, isavro, false, "string"),
-		"created_ts":       toCommitObject(o.CreatedAt, isavro, false, "long"),
-		"created":          toCommitObject(o.Created, isavro, false, "string"),
-		"branch":           toCommitObject(o.Branch, isavro, false, "string"),
 		"additions":        toCommitObject(o.Additions, isavro, false, "long"),
-		"deletions":        toCommitObject(o.Deletions, isavro, false, "long"),
-		"files_changed":    toCommitObject(o.FilesChanged, isavro, false, "long"),
 		"author_ref_id":    toCommitObject(o.AuthorRefID, isavro, false, "string"),
-		"committer_ref_id": toCommitObject(o.CommitterRefID, isavro, false, "string"),
-		"ordinal":          toCommitObject(o.Ordinal, isavro, false, "long"),
-		"loc":              toCommitObject(o.Loc, isavro, false, "long"),
-		"sloc":             toCommitObject(o.Sloc, isavro, false, "long"),
-		"comments":         toCommitObject(o.Comments, isavro, false, "long"),
 		"blanks":           toCommitObject(o.Blanks, isavro, false, "long"),
-		"size":             toCommitObject(o.Size, isavro, false, "long"),
+		"branch":           toCommitObject(o.Branch, isavro, false, "string"),
+		"comments":         toCommitObject(o.Comments, isavro, false, "long"),
+		"committer_ref_id": toCommitObject(o.CommitterRefID, isavro, false, "string"),
 		"complexity":       toCommitObject(o.Complexity, isavro, false, "long"),
-		"gpg_signed":       toCommitObject(o.GpgSigned, isavro, false, "boolean"),
+		"created":          toCommitObject(o.Created, isavro, false, "string"),
+		"created_ts":       toCommitObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id":      toCommitObject(o.CustomerID, isavro, false, "string"),
+		"deletions":        toCommitObject(o.Deletions, isavro, false, "long"),
 		"excluded":         toCommitObject(o.Excluded, isavro, false, "boolean"),
 		"files":            toCommitObject(o.Files, isavro, false, "files"),
+		"files_changed":    toCommitObject(o.FilesChanged, isavro, false, "long"),
+		"gpg_signed":       toCommitObject(o.GpgSigned, isavro, false, "boolean"),
+		"id":               toCommitObject(o.ID, isavro, false, "string"),
+		"loc":              toCommitObject(o.Loc, isavro, false, "long"),
+		"message":          toCommitObject(o.Message, isavro, false, "string"),
+		"ordinal":          toCommitObject(o.Ordinal, isavro, false, "long"),
+		"ref_id":           toCommitObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toCommitObject(o.RefType, isavro, false, "string"),
+		"repo_id":          toCommitObject(o.RepoID, isavro, false, "string"),
+		"sha":              toCommitObject(o.Sha, isavro, false, "string"),
+		"size":             toCommitObject(o.Size, isavro, false, "long"),
+		"sloc":             toCommitObject(o.Sloc, isavro, false, "long"),
+		"url":              toCommitObject(o.URL, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Commit) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	}
-	if val, ok := kv["repo_id"].(string); ok {
-		o.RepoID = val
-	} else {
-		val := kv["repo_id"]
-		if val == nil {
-			o.RepoID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.RepoID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["sha"].(string); ok {
-		o.Sha = val
-	} else {
-		val := kv["sha"]
-		if val == nil {
-			o.Sha = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Sha = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["message"].(string); ok {
-		o.Message = val
-	} else {
-		val := kv["message"]
-		if val == nil {
-			o.Message = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Message = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
-	} else {
-		val := kv["url"]
-		if val == nil {
-			o.URL = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.URL = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			o.CreatedAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["created"].(string); ok {
-		o.Created = val
-	} else {
-		val := kv["created"]
-		if val == nil {
-			o.Created = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Created = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["branch"].(string); ok {
-		o.Branch = val
-	} else {
-		val := kv["branch"]
-		if val == nil {
-			o.Branch = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Branch = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["additions"].(int64); ok {
 		o.Additions = val
 	} else {
@@ -762,27 +658,10 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Additions = number.ToInt64Any(nil)
 		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
 			o.Additions = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["deletions"].(int64); ok {
-		o.Deletions = val
-	} else {
-		val := kv["deletions"]
-		if val == nil {
-			o.Deletions = number.ToInt64Any(nil)
-		} else {
-			o.Deletions = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["files_changed"].(int64); ok {
-		o.FilesChanged = val
-	} else {
-		val := kv["files_changed"]
-		if val == nil {
-			o.FilesChanged = number.ToInt64Any(nil)
-		} else {
-			o.FilesChanged = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["author_ref_id"].(string); ok {
@@ -798,6 +677,45 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.AuthorRefID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["blanks"].(int64); ok {
+		o.Blanks = val
+	} else {
+		val := kv["blanks"]
+		if val == nil {
+			o.Blanks = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Blanks = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["branch"].(string); ok {
+		o.Branch = val
+	} else {
+		val := kv["branch"]
+		if val == nil {
+			o.Branch = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Branch = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["comments"].(int64); ok {
+		o.Comments = val
+	} else {
+		val := kv["comments"]
+		if val == nil {
+			o.Comments = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Comments = number.ToInt64Any(val)
+		}
+	}
 	if val, ok := kv["committer_ref_id"].(string); ok {
 		o.CommitterRefID = val
 	} else {
@@ -811,66 +729,6 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.CommitterRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["ordinal"].(int64); ok {
-		o.Ordinal = val
-	} else {
-		val := kv["ordinal"]
-		if val == nil {
-			o.Ordinal = number.ToInt64Any(nil)
-		} else {
-			o.Ordinal = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["loc"].(int64); ok {
-		o.Loc = val
-	} else {
-		val := kv["loc"]
-		if val == nil {
-			o.Loc = number.ToInt64Any(nil)
-		} else {
-			o.Loc = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["sloc"].(int64); ok {
-		o.Sloc = val
-	} else {
-		val := kv["sloc"]
-		if val == nil {
-			o.Sloc = number.ToInt64Any(nil)
-		} else {
-			o.Sloc = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["comments"].(int64); ok {
-		o.Comments = val
-	} else {
-		val := kv["comments"]
-		if val == nil {
-			o.Comments = number.ToInt64Any(nil)
-		} else {
-			o.Comments = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["blanks"].(int64); ok {
-		o.Blanks = val
-	} else {
-		val := kv["blanks"]
-		if val == nil {
-			o.Blanks = number.ToInt64Any(nil)
-		} else {
-			o.Blanks = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["size"].(int64); ok {
-		o.Size = val
-	} else {
-		val := kv["size"]
-		if val == nil {
-			o.Size = number.ToInt64Any(nil)
-		} else {
-			o.Size = number.ToInt64Any(val)
-		}
-	}
 	if val, ok := kv["complexity"].(int64); ok {
 		o.Complexity = val
 	} else {
@@ -878,17 +736,62 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		if val == nil {
 			o.Complexity = number.ToInt64Any(nil)
 		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
 			o.Complexity = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["gpg_signed"].(bool); ok {
-		o.GpgSigned = val
+	if val, ok := kv["created"].(string); ok {
+		o.Created = val
 	} else {
-		val := kv["gpg_signed"]
+		val := kv["created"]
 		if val == nil {
-			o.GpgSigned = number.ToBoolAny(nil)
+			o.Created = ""
 		} else {
-			o.GpgSigned = number.ToBoolAny(val)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Created = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else {
+		val := kv["created_ts"]
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["deletions"].(int64); ok {
+		o.Deletions = val
+	} else {
+		val := kv["deletions"]
+		if val == nil {
+			o.Deletions = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Deletions = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["excluded"].(bool); ok {
@@ -931,6 +834,172 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 	if o.Files == nil {
 		o.Files = make([]CommitFiles, 0)
 	}
+	if val, ok := kv["files_changed"].(int64); ok {
+		o.FilesChanged = val
+	} else {
+		val := kv["files_changed"]
+		if val == nil {
+			o.FilesChanged = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.FilesChanged = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["gpg_signed"].(bool); ok {
+		o.GpgSigned = val
+	} else {
+		val := kv["gpg_signed"]
+		if val == nil {
+			o.GpgSigned = number.ToBoolAny(nil)
+		} else {
+			o.GpgSigned = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["loc"].(int64); ok {
+		o.Loc = val
+	} else {
+		val := kv["loc"]
+		if val == nil {
+			o.Loc = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Loc = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["message"].(string); ok {
+		o.Message = val
+	} else {
+		val := kv["message"]
+		if val == nil {
+			o.Message = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Message = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ordinal"].(int64); ok {
+		o.Ordinal = val
+	} else {
+		val := kv["ordinal"]
+		if val == nil {
+			o.Ordinal = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Ordinal = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = val
+	} else {
+		val := kv["repo_id"]
+		if val == nil {
+			o.RepoID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RepoID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["sha"].(string); ok {
+		o.Sha = val
+	} else {
+		val := kv["sha"]
+		if val == nil {
+			o.Sha = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Sha = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["size"].(int64); ok {
+		o.Size = val
+	} else {
+		val := kv["size"]
+		if val == nil {
+			o.Size = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Size = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["sloc"].(int64); ok {
+		o.Sloc = val
+	} else {
+		val := kv["sloc"]
+		if val == nil {
+			o.Sloc = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Sloc = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		val := kv["url"]
+		if val == nil {
+			o.URL = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.URL = fmt.Sprintf("%v", val)
+		}
+	}
 	o.setDefaults()
 }
 
@@ -941,28 +1010,32 @@ func (o *Commit) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.RepoID)
-	args = append(args, o.Sha)
-	args = append(args, o.Message)
-	args = append(args, o.URL)
-	args = append(args, o.CreatedAt)
-	args = append(args, o.Created)
-	args = append(args, o.Branch)
 	args = append(args, o.Additions)
-	args = append(args, o.Deletions)
-	args = append(args, o.FilesChanged)
 	args = append(args, o.AuthorRefID)
-	args = append(args, o.CommitterRefID)
-	args = append(args, o.Ordinal)
-	args = append(args, o.Loc)
-	args = append(args, o.Sloc)
-	args = append(args, o.Comments)
 	args = append(args, o.Blanks)
-	args = append(args, o.Size)
+	args = append(args, o.Branch)
+	args = append(args, o.Comments)
+	args = append(args, o.CommitterRefID)
 	args = append(args, o.Complexity)
-	args = append(args, o.GpgSigned)
+	args = append(args, o.Created)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.CustomerID)
+	args = append(args, o.Deletions)
 	args = append(args, o.Excluded)
 	args = append(args, o.Files)
+	args = append(args, o.FilesChanged)
+	args = append(args, o.GpgSigned)
+	args = append(args, o.ID)
+	args = append(args, o.Loc)
+	args = append(args, o.Message)
+	args = append(args, o.Ordinal)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.RepoID)
+	args = append(args, o.Sha)
+	args = append(args, o.Size)
+	args = append(args, o.Sloc)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -979,19 +1052,91 @@ func GetCommitAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
+				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_type",
+				"name": "additions",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "author_ref_id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "blanks",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "branch",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "comments",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "committer_ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "complexity",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "created",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "hashcode",
+				"name": "deletions",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "excluded",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "files",
+				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"name": "renamed", "doc": "if the file was renamed", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"name": "size", "doc": "the size of the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit"}, "type": "array", "name": "files"},
+			},
+			map[string]interface{}{
+				"name": "files_changed",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "gpg_signed",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "loc",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "message",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ordinal",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -1003,51 +1148,7 @@ func GetCommitAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "message",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "created",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "branch",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "additions",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "deletions",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "files_changed",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "author_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "committer_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ordinal",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "loc",
+				"name": "size",
 				"type": "long",
 			},
 			map[string]interface{}{
@@ -1055,32 +1156,8 @@ func GetCommitAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "comments",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "blanks",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "size",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "complexity",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "gpg_signed",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "excluded",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"doc": "the unique id for the repo", "type": "string", "name": "repo_id"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"doc": "the number of additions for the commit file", "type": "long", "name": "additions"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"doc": "the status of the change", "type": "string", "name": "status"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"doc": "the order value for the file in the change set", "type": "long", "name": "ordinal"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"name": "comments", "doc": "the number of comment lines in the file", "type": "long"}, map[string]interface{}{"name": "complexity", "doc": "the complexity value for the file change", "type": "long"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}}, "doc": "the files touched by this commit", "type": "record"}},
+				"name": "url",
+				"type": "string",
 			},
 		},
 	}

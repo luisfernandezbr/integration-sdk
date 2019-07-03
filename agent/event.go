@@ -21,6 +21,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -43,84 +44,84 @@ const (
 )
 
 const (
-	// EventIDColumn is the id column name
-	EventIDColumn = "id"
-	// EventRefIDColumn is the ref_id column name
-	EventRefIDColumn = "ref_id"
-	// EventRefTypeColumn is the ref_type column name
-	EventRefTypeColumn = "ref_type"
+	// EventArchitectureColumn is the architecture column name
+	EventArchitectureColumn = "architecture"
 	// EventCustomerIDColumn is the customer_id column name
 	EventCustomerIDColumn = "customer_id"
-	// EventTypeColumn is the type column name
-	EventTypeColumn = "type"
-	// EventUUIDColumn is the uuid column name
-	EventUUIDColumn = "uuid"
-	// EventOSColumn is the os column name
-	EventOSColumn = "os"
+	// EventDateColumn is the date column name
+	EventDateColumn = "date"
 	// EventDistroColumn is the distro column name
 	EventDistroColumn = "distro"
-	// EventVersionColumn is the version column name
-	EventVersionColumn = "version"
-	// EventHostnameColumn is the hostname column name
-	EventHostnameColumn = "hostname"
-	// EventNumCPUColumn is the num_cpu column name
-	EventNumCPUColumn = "num_cpu"
+	// EventErrorColumn is the error column name
+	EventErrorColumn = "error"
 	// EventFreeSpaceColumn is the free_space column name
 	EventFreeSpaceColumn = "free_space"
 	// EventGoVersionColumn is the go_version column name
 	EventGoVersionColumn = "go_version"
-	// EventArchitectureColumn is the architecture column name
-	EventArchitectureColumn = "architecture"
+	// EventHostnameColumn is the hostname column name
+	EventHostnameColumn = "hostname"
+	// EventIDColumn is the id column name
+	EventIDColumn = "id"
 	// EventMemoryColumn is the memory column name
 	EventMemoryColumn = "memory"
-	// EventDateColumn is the date column name
-	EventDateColumn = "date"
-	// EventErrorColumn is the error column name
-	EventErrorColumn = "error"
 	// EventMessageColumn is the message column name
 	EventMessageColumn = "message"
+	// EventNumCPUColumn is the num_cpu column name
+	EventNumCPUColumn = "num_cpu"
+	// EventOSColumn is the os column name
+	EventOSColumn = "os"
+	// EventRefIDColumn is the ref_id column name
+	EventRefIDColumn = "ref_id"
+	// EventRefTypeColumn is the ref_type column name
+	EventRefTypeColumn = "ref_type"
+	// EventTypeColumn is the type column name
+	EventTypeColumn = "type"
+	// EventUUIDColumn is the uuid column name
+	EventUUIDColumn = "uuid"
+	// EventVersionColumn is the version column name
+	EventVersionColumn = "version"
 )
 
 // Event event logs
 type Event struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// Architecture architecture
+	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// Type type
-	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
-	// UUID uuid
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
-	// OS os
-	OS string `json:"os" bson:"os" yaml:"os" faker:"-"`
+	// Date date
+	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Distro distro
 	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
-	// Version agent version
-	Version string `json:"version" bson:"version" yaml:"version" faker:"-"`
-	// Hostname hostname
-	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
-	// NumCPU num cpus
-	NumCPU int64 `json:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	// Error error
+	Error string `json:"error" bson:"error" yaml:"error" faker:"-"`
 	// FreeSpace free space
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion go version
 	GoVersion string `json:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
-	// Architecture architecture
-	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	// Hostname hostname
+	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Memory memory
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
-	// Date date
-	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
-	// Error error
-	Error string `json:"error" bson:"error" yaml:"error" faker:"-"`
 	// Message message
 	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	// NumCPU num cpus
+	NumCPU int64 `json:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	// OS os
+	OS string `json:"os" bson:"os" yaml:"os" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// Type type
+	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
+	// UUID uuid
+	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	// Version agent version
+	Version string `json:"version" bson:"version" yaml:"version" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -451,44 +452,223 @@ func (o *Event) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":           o.GetID(),
-		"ref_id":       o.GetRefID(),
-		"ref_type":     o.RefType,
-		"customer_id":  o.CustomerID,
-		"hashcode":     o.Hash(),
-		"type":         toEventObject(o.Type, isavro, false, "string"),
-		"uuid":         toEventObject(o.UUID, isavro, false, "string"),
-		"os":           toEventObject(o.OS, isavro, false, "string"),
+		"architecture": toEventObject(o.Architecture, isavro, false, "string"),
+		"customer_id":  toEventObject(o.CustomerID, isavro, false, "string"),
+		"date":         toEventObject(o.Date, isavro, false, "string"),
 		"distro":       toEventObject(o.Distro, isavro, false, "string"),
-		"version":      toEventObject(o.Version, isavro, false, "string"),
-		"hostname":     toEventObject(o.Hostname, isavro, false, "string"),
-		"num_cpu":      toEventObject(o.NumCPU, isavro, false, "long"),
+		"error":        toEventObject(o.Error, isavro, false, "string"),
 		"free_space":   toEventObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":   toEventObject(o.GoVersion, isavro, false, "string"),
-		"architecture": toEventObject(o.Architecture, isavro, false, "string"),
+		"hostname":     toEventObject(o.Hostname, isavro, false, "string"),
+		"id":           toEventObject(o.ID, isavro, false, "string"),
 		"memory":       toEventObject(o.Memory, isavro, false, "long"),
-		"date":         toEventObject(o.Date, isavro, false, "string"),
-		"error":        toEventObject(o.Error, isavro, false, "string"),
 		"message":      toEventObject(o.Message, isavro, false, "string"),
+		"num_cpu":      toEventObject(o.NumCPU, isavro, false, "long"),
+		"os":           toEventObject(o.OS, isavro, false, "string"),
+		"ref_id":       toEventObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toEventObject(o.RefType, isavro, false, "string"),
+		"type":         toEventObject(o.Type, isavro, false, "string"),
+		"uuid":         toEventObject(o.UUID, isavro, false, "string"),
+		"version":      toEventObject(o.Version, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Event) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
+	if val, ok := kv["architecture"].(string); ok {
+		o.Architecture = val
+	} else {
+		val := kv["architecture"]
+		if val == nil {
+			o.Architecture = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Architecture = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["date"].(string); ok {
+		o.Date = val
+	} else {
+		val := kv["date"]
+		if val == nil {
+			o.Date = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Date = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["distro"].(string); ok {
+		o.Distro = val
+	} else {
+		val := kv["distro"]
+		if val == nil {
+			o.Distro = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Distro = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["error"].(string); ok {
+		o.Error = val
+	} else {
+		val := kv["error"]
+		if val == nil {
+			o.Error = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Error = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["free_space"].(int64); ok {
+		o.FreeSpace = val
+	} else {
+		val := kv["free_space"]
+		if val == nil {
+			o.FreeSpace = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.FreeSpace = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["go_version"].(string); ok {
+		o.GoVersion = val
+	} else {
+		val := kv["go_version"]
+		if val == nil {
+			o.GoVersion = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.GoVersion = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["hostname"].(string); ok {
+		o.Hostname = val
+	} else {
+		val := kv["hostname"]
+		if val == nil {
+			o.Hostname = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Hostname = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["memory"].(int64); ok {
+		o.Memory = val
+	} else {
+		val := kv["memory"]
+		if val == nil {
+			o.Memory = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Memory = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["message"].(string); ok {
+		o.Message = val
+	} else {
+		val := kv["message"]
+		if val == nil {
+			o.Message = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Message = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["num_cpu"].(int64); ok {
+		o.NumCPU = val
+	} else {
+		val := kv["num_cpu"]
+		if val == nil {
+			o.NumCPU = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.NumCPU = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["os"].(string); ok {
+		o.OS = val
+	} else {
+		val := kv["os"]
+		if val == nil {
+			o.OS = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.OS = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["type"].(string); ok {
 		o.Type = val
@@ -516,32 +696,6 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			o.UUID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["os"].(string); ok {
-		o.OS = val
-	} else {
-		val := kv["os"]
-		if val == nil {
-			o.OS = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.OS = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["distro"].(string); ok {
-		o.Distro = val
-	} else {
-		val := kv["distro"]
-		if val == nil {
-			o.Distro = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Distro = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["version"].(string); ok {
 		o.Version = val
 	} else {
@@ -555,114 +709,6 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			o.Version = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["hostname"].(string); ok {
-		o.Hostname = val
-	} else {
-		val := kv["hostname"]
-		if val == nil {
-			o.Hostname = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Hostname = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["num_cpu"].(int64); ok {
-		o.NumCPU = val
-	} else {
-		val := kv["num_cpu"]
-		if val == nil {
-			o.NumCPU = number.ToInt64Any(nil)
-		} else {
-			o.NumCPU = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["free_space"].(int64); ok {
-		o.FreeSpace = val
-	} else {
-		val := kv["free_space"]
-		if val == nil {
-			o.FreeSpace = number.ToInt64Any(nil)
-		} else {
-			o.FreeSpace = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["go_version"].(string); ok {
-		o.GoVersion = val
-	} else {
-		val := kv["go_version"]
-		if val == nil {
-			o.GoVersion = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.GoVersion = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["architecture"].(string); ok {
-		o.Architecture = val
-	} else {
-		val := kv["architecture"]
-		if val == nil {
-			o.Architecture = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Architecture = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["memory"].(int64); ok {
-		o.Memory = val
-	} else {
-		val := kv["memory"]
-		if val == nil {
-			o.Memory = number.ToInt64Any(nil)
-		} else {
-			o.Memory = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["date"].(string); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Date = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["error"].(string); ok {
-		o.Error = val
-	} else {
-		val := kv["error"]
-		if val == nil {
-			o.Error = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Error = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["message"].(string); ok {
-		o.Message = val
-	} else {
-		val := kv["message"]
-		if val == nil {
-			o.Message = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Message = fmt.Sprintf("%v", val)
-		}
-	}
 	o.setDefaults()
 }
 
@@ -673,20 +719,24 @@ func (o *Event) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Type)
-	args = append(args, o.UUID)
-	args = append(args, o.OS)
+	args = append(args, o.Architecture)
+	args = append(args, o.CustomerID)
+	args = append(args, o.Date)
 	args = append(args, o.Distro)
-	args = append(args, o.Version)
-	args = append(args, o.Hostname)
-	args = append(args, o.NumCPU)
+	args = append(args, o.Error)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
-	args = append(args, o.Architecture)
+	args = append(args, o.Hostname)
+	args = append(args, o.ID)
 	args = append(args, o.Memory)
-	args = append(args, o.Date)
-	args = append(args, o.Error)
 	args = append(args, o.Message)
+	args = append(args, o.NumCPU)
+	args = append(args, o.OS)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.Type)
+	args = append(args, o.UUID)
+	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -703,11 +753,11 @@ func GetEventAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
+				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_type",
+				"name": "architecture",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -715,7 +765,55 @@ func GetEventAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "hashcode",
+				"name": "date",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "distro",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "error",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "free_space",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "go_version",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "hostname",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "memory",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "message",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "num_cpu",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "os",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -727,51 +825,7 @@ func GetEventAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "os",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "distro",
-				"type": "string",
-			},
-			map[string]interface{}{
 				"name": "version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hostname",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "num_cpu",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "free_space",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "go_version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "architecture",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "memory",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "date",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "error",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "message",
 				"type": "string",
 			},
 		},

@@ -44,51 +44,52 @@ const (
 )
 
 const (
+	// CostCenterActiveColumn is the active column name
+	CostCenterActiveColumn = "active"
+	// CostCenterCostColumn is the cost column name
+	CostCenterCostColumn = "cost"
+	// CostCenterCreatedAtColumn is the created_ts column name
+	CostCenterCreatedAtColumn = "created_ts"
+	// CostCenterCustomerIDColumn is the customer_id column name
+	CostCenterCustomerIDColumn = "customer_id"
+	// CostCenterDescriptionColumn is the description column name
+	CostCenterDescriptionColumn = "description"
 	// CostCenterIDColumn is the id column name
 	CostCenterIDColumn = "id"
+	// CostCenterNameColumn is the name column name
+	CostCenterNameColumn = "name"
 	// CostCenterRefIDColumn is the ref_id column name
 	CostCenterRefIDColumn = "ref_id"
 	// CostCenterRefTypeColumn is the ref_type column name
 	CostCenterRefTypeColumn = "ref_type"
-	// CostCenterCustomerIDColumn is the customer_id column name
-	CostCenterCustomerIDColumn = "customer_id"
-	// CostCenterCreatedAtColumn is the created_ts column name
-	CostCenterCreatedAtColumn = "created_ts"
 	// CostCenterUpdatedAtColumn is the updated_ts column name
 	CostCenterUpdatedAtColumn = "updated_ts"
-	// CostCenterNameColumn is the name column name
-	CostCenterNameColumn = "name"
-	// CostCenterDescriptionColumn is the description column name
-	CostCenterDescriptionColumn = "description"
-	// CostCenterCostColumn is the cost column name
-	CostCenterCostColumn = "cost"
-	// CostCenterActiveColumn is the active column name
-	CostCenterActiveColumn = "active"
 )
 
 // CostCenter a cost center represents information about users and their cost
 type CostCenter struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
-
-	// custom types
-
-	// Name the name of the cost center
-	Name string `json:"name" bson:"name" yaml:"name" faker:"costcenter"`
-	// Description the description for the cost center
-	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
-	// Cost the cost value of the cost center
-	Cost float64 `json:"cost" bson:"cost" yaml:"cost" faker:"salary"`
 	// Active whether the cost center is tracked in pinpoint
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	// Cost the cost value of the cost center
+	Cost float64 `json:"cost" bson:"cost" yaml:"cost" faker:"salary"`
+	// CreatedAt the date the record was created in Epoch time
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Description the description for the cost center
+	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Name the name of the cost center
+	Name string `json:"name" bson:"name" yaml:"name" faker:"costcenter"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// UpdatedAt the date the record was updated in Epoch time
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -428,58 +429,65 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"created_ts":  o.CreatedAt,
-		"updated_ts":  o.UpdatedAt,
-		"name":        toCostCenterObject(o.Name, isavro, false, "string"),
-		"description": toCostCenterObject(o.Description, isavro, false, "string"),
-		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),
 		"active":      toCostCenterObject(o.Active, isavro, false, "boolean"),
+		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),
+		"created_ts":  toCostCenterObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id": toCostCenterObject(o.CustomerID, isavro, false, "string"),
+		"description": toCostCenterObject(o.Description, isavro, false, "string"),
+		"id":          toCostCenterObject(o.ID, isavro, false, "string"),
+		"name":        toCostCenterObject(o.Name, isavro, false, "string"),
+		"ref_id":      toCostCenterObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toCostCenterObject(o.RefType, isavro, false, "string"),
+		"updated_ts":  toCostCenterObject(o.UpdatedAt, isavro, false, "long"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *CostCenter) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		val := kv["active"]
+		if val == nil {
+			o.Active = number.ToBoolAny(nil)
+		} else {
+			o.Active = number.ToBoolAny(val)
+		}
 	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
+	if val, ok := kv["cost"].(float64); ok {
+		o.Cost = val
+	} else {
+		val := kv["cost"]
+		if val == nil {
+			o.Cost = number.ToFloat64Any(nil)
+		} else {
+			o.Cost = number.ToFloat64Any(val)
+		}
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
-	} else if val, ok := kv["created_ts"].(time.Time); ok {
-		o.CreatedAt = datetime.TimeToEpoch(val)
-	}
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else if val, ok := kv["updated_ts"].(time.Time); ok {
-		o.UpdatedAt = datetime.TimeToEpoch(val)
-	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
 	} else {
-		val := kv["name"]
+		val := kv["created_ts"]
 		if val == nil {
-			o.Name = ""
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		val := kv["customer_id"]
+		if val == nil {
+			o.CustomerID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Name = fmt.Sprintf("%v", val)
+			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["description"].(string); ok {
@@ -495,24 +503,69 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 			o.Description = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["cost"].(float64); ok {
-		o.Cost = val
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
 	} else {
-		val := kv["cost"]
+		val := kv["id"]
 		if val == nil {
-			o.Cost = number.ToFloat64Any(nil)
+			o.ID = ""
 		} else {
-			o.Cost = number.ToFloat64Any(val)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["active"].(bool); ok {
-		o.Active = val
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
 	} else {
-		val := kv["active"]
+		val := kv["name"]
 		if val == nil {
-			o.Active = number.ToBoolAny(nil)
+			o.Name = ""
 		} else {
-			o.Active = number.ToBoolAny(val)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Name = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		val := kv["updated_ts"]
+		if val == nil {
+			o.UpdatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
 	o.setDefaults()
@@ -525,10 +578,16 @@ func (o *CostCenter) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Name)
-	args = append(args, o.Description)
-	args = append(args, o.Cost)
 	args = append(args, o.Active)
+	args = append(args, o.Cost)
+	args = append(args, o.CreatedAt)
+	args = append(args, o.CustomerID)
+	args = append(args, o.Description)
+	args = append(args, o.ID)
+	args = append(args, o.Name)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -591,6 +650,38 @@ func GetCostCenterAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "active",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "cost",
+				"type": "float",
+			},
+			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "customer_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "description",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "name",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "ref_id",
 				"type": "string",
 			},
@@ -599,36 +690,8 @@ func GetCostCenterAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
 				"name": "updated_ts",
 				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "description",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "cost",
-				"type": "float",
-			},
-			map[string]interface{}{
-				"name": "active",
-				"type": "boolean",
 			},
 		},
 	}

@@ -42,36 +42,36 @@ const (
 )
 
 const (
+	// CustomFieldCustomerIDColumn is the customer_id column name
+	CustomFieldCustomerIDColumn = "customer_id"
 	// CustomFieldIDColumn is the id column name
 	CustomFieldIDColumn = "id"
+	// CustomFieldKeyColumn is the key column name
+	CustomFieldKeyColumn = "key"
+	// CustomFieldNameColumn is the name column name
+	CustomFieldNameColumn = "name"
 	// CustomFieldRefIDColumn is the ref_id column name
 	CustomFieldRefIDColumn = "ref_id"
 	// CustomFieldRefTypeColumn is the ref_type column name
 	CustomFieldRefTypeColumn = "ref_type"
-	// CustomFieldCustomerIDColumn is the customer_id column name
-	CustomFieldCustomerIDColumn = "customer_id"
-	// CustomFieldNameColumn is the name column name
-	CustomFieldNameColumn = "name"
-	// CustomFieldKeyColumn is the key column name
-	CustomFieldKeyColumn = "key"
 )
 
 // CustomField user defined fields
 type CustomField struct {
-	// built in types
-
-	ID         string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	RefID      string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	RefType    string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	Hashcode   string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
-
-	// custom types
-
-	// Name the name of the field
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Key key of the field
 	Key string `json:"key" bson:"key" yaml:"key" faker:"-"`
+	// Name the name of the field
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
+	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -402,44 +402,41 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 	if isavro {
 	}
 	return map[string]interface{}{
-		"id":          o.GetID(),
-		"ref_id":      o.GetRefID(),
-		"ref_type":    o.RefType,
-		"customer_id": o.CustomerID,
-		"hashcode":    o.Hash(),
-		"name":        toCustomFieldObject(o.Name, isavro, false, "string"),
+		"customer_id": toCustomFieldObject(o.CustomerID, isavro, false, "string"),
+		"id":          toCustomFieldObject(o.ID, isavro, false, "string"),
 		"key":         toCustomFieldObject(o.Key, isavro, false, "string"),
+		"name":        toCustomFieldObject(o.Name, isavro, false, "string"),
+		"ref_id":      toCustomFieldObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toCustomFieldObject(o.RefType, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *CustomField) FromMap(kv map[string]interface{}) {
-	// make sure that these have values if empty
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else if val, ok := kv["_id"].(string); ok {
-		o.ID = val
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	}
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
-	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
 	} else {
-		val := kv["name"]
+		val := kv["customer_id"]
 		if val == nil {
-			o.Name = ""
+			o.CustomerID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Name = fmt.Sprintf("%v", val)
+			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		val := kv["id"]
+		if val == nil {
+			o.ID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["key"].(string); ok {
@@ -455,6 +452,45 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 			o.Key = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		val := kv["name"]
+		if val == nil {
+			o.Name = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Name = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
 	o.setDefaults()
 }
 
@@ -465,8 +501,12 @@ func (o *CustomField) Hash() string {
 	args = append(args, o.GetRefID())
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Name)
+	args = append(args, o.CustomerID)
+	args = append(args, o.ID)
 	args = append(args, o.Key)
+	args = append(args, o.Name)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -483,11 +523,7 @@ func GetCustomFieldAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
+				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -495,7 +531,11 @@ func GetCustomFieldAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "hashcode",
+				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "key",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -503,7 +543,11 @@ func GetCustomFieldAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "key",
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
 				"type": "string",
 			},
 		},
