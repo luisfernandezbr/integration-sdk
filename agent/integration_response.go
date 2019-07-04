@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"bytes"
 	"compress/gzip"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,12 +15,14 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
@@ -28,6 +31,14 @@ import (
 )
 
 const (
+	// IntegrationResponseTopic is the default topic name
+	IntegrationResponseTopic datamodel.TopicNameType = "agent_IntegrationResponse_topic"
+
+	// IntegrationResponseStream is the default stream name
+	IntegrationResponseStream datamodel.TopicNameType = "agent_IntegrationResponse_stream"
+
+	// IntegrationResponseTable is the default table name
+	IntegrationResponseTable datamodel.TopicNameType = "agent_IntegrationResponse"
 
 	// IntegrationResponseModelName is the model name
 	IntegrationResponseModelName datamodel.ModelNameType = "agent.IntegrationResponse"
@@ -364,7 +375,7 @@ func (o *IntegrationResponse) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *IntegrationResponse) GetTopicName() datamodel.TopicNameType {
-	return ""
+	return IntegrationResponseTopic
 }
 
 // GetModelName returns the name of the model
@@ -389,12 +400,31 @@ func (o *IntegrationResponse) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *IntegrationResponse) GetTopicKey() string {
-	return ""
+	var i interface{} = o.UUID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *IntegrationResponse) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.Date
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	case IntegrationResponseDate:
+		return datetime.DateFromEpoch(v.Epoch)
+	}
+	panic("not sure how to handle the date time format for IntegrationResponse")
 }
 
 // GetRefID returns the RefID for the object
@@ -414,17 +444,34 @@ func (o *IntegrationResponse) GetModelMaterializeConfig() *datamodel.ModelMateri
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *IntegrationResponse) IsEvented() bool {
-	return false
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *IntegrationResponse) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = IntegrationResponseModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
 func (o *IntegrationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
-	return nil
+	duration, err := time.ParseDuration("168h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "uuid",
+		Timestamp:         "date",
+		NumPartitions:     8,
+		ReplicationFactor: 3,
+		Retention:         duration,
+		MaxSize:           5242880,
+	}
 }
 
 // GetStateKey returns a key for use in state store
 func (o *IntegrationResponse) GetStateKey() string {
-	key := ""
+	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
@@ -951,7 +998,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1251,4 +1298,305 @@ func NewIntegrationResponseOutputStream(stream io.WriteCloser, ch chan Integrati
 		}
 	}()
 	return done
+}
+
+// IntegrationResponseSendEvent is an event detail for sending data
+type IntegrationResponseSendEvent struct {
+	IntegrationResponse *IntegrationResponse
+	headers             map[string]string
+	time                time.Time
+	key                 string
+}
+
+var _ datamodel.ModelSendEvent = (*IntegrationResponseSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *IntegrationResponseSendEvent) Key() string {
+	if e.key == "" {
+		return e.IntegrationResponse.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *IntegrationResponseSendEvent) Object() datamodel.Model {
+	return e.IntegrationResponse
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *IntegrationResponseSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *IntegrationResponseSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// IntegrationResponseSendEventOpts is a function handler for setting opts
+type IntegrationResponseSendEventOpts func(o *IntegrationResponseSendEvent)
+
+// WithIntegrationResponseSendEventKey sets the key value to a value different than the object ID
+func WithIntegrationResponseSendEventKey(key string) IntegrationResponseSendEventOpts {
+	return func(o *IntegrationResponseSendEvent) {
+		o.key = key
+	}
+}
+
+// WithIntegrationResponseSendEventTimestamp sets the timestamp value
+func WithIntegrationResponseSendEventTimestamp(tv time.Time) IntegrationResponseSendEventOpts {
+	return func(o *IntegrationResponseSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithIntegrationResponseSendEventHeader sets the timestamp value
+func WithIntegrationResponseSendEventHeader(key, value string) IntegrationResponseSendEventOpts {
+	return func(o *IntegrationResponseSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewIntegrationResponseSendEvent returns a new IntegrationResponseSendEvent instance
+func NewIntegrationResponseSendEvent(o *IntegrationResponse, opts ...IntegrationResponseSendEventOpts) *IntegrationResponseSendEvent {
+	res := &IntegrationResponseSendEvent{
+		IntegrationResponse: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewIntegrationResponseProducer will stream data from the channel
+func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+	done := make(chan bool, 1)
+	go func() {
+		defer func() { done <- true }()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
+					empty <- true
+					return
+				}
+				if object, ok := item.Object().(*IntegrationResponse); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.IntegrationResponse but received on of type %v", reflect.TypeOf(item.Object()))
+				}
+			}
+		}
+	}()
+	return done
+}
+
+// NewIntegrationResponseConsumer will stream data from the topic into the provided channel
+func NewIntegrationResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
+			var object IntegrationResponse
+			switch msg.Encoding {
+			case eventing.JSONEncoding:
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into agent.IntegrationResponse: %s", err)
+				}
+			case eventing.AvroEncoding:
+				if err := object.FromAvroBinary(msg.Value); err != nil {
+					return fmt.Errorf("error unmarshaling avri data into agent.IntegrationResponse: %s", err)
+				}
+			default:
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.IntegrationResponse")
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &IntegrationResponseReceiveEvent{&object, msg, false}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object IntegrationResponse
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &IntegrationResponseReceiveEvent{nil, msg, true}
+		},
+	}
+	consumer.Consume(adapter)
+	return adapter
+}
+
+// IntegrationResponseReceiveEvent is an event detail for receiving data
+type IntegrationResponseReceiveEvent struct {
+	IntegrationResponse *IntegrationResponse
+	message             eventing.Message
+	eof                 bool
+}
+
+var _ datamodel.ModelReceiveEvent = (*IntegrationResponseReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *IntegrationResponseReceiveEvent) Object() datamodel.Model {
+	return e.IntegrationResponse
+}
+
+// Message returns the underlying message data for the event
+func (e *IntegrationResponseReceiveEvent) Message() eventing.Message {
+	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *IntegrationResponseReceiveEvent) EOF() bool {
+	return e.eof
+}
+
+// IntegrationResponseProducer implements the datamodel.ModelEventProducer
+type IntegrationResponseProducer struct {
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
+	empty    chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*IntegrationResponseProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *IntegrationResponseProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *IntegrationResponseProducer) Close() error {
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	if !closed {
+		close(p.ch)
+		<-p.empty
+		p.cancel()
+		<-p.done
+	}
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *IntegrationResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
+	newctx, cancel := context.WithCancel(context.Background())
+	return &IntegrationResponseProducer{
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		empty:    empty,
+		done:     NewIntegrationResponseProducer(newctx, producer, ch, errors, empty),
+	}
+}
+
+// NewIntegrationResponseProducerChannel returns a channel which can be used for producing Model events
+func NewIntegrationResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent)
+	empty := make(chan bool, 1)
+	newctx, cancel := context.WithCancel(context.Background())
+	return &IntegrationResponseProducer{
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		empty:    empty,
+		done:     NewIntegrationResponseProducer(newctx, producer, ch, errors, empty),
+	}
+}
+
+// IntegrationResponseConsumer implements the datamodel.ModelEventConsumer
+type IntegrationResponseConsumer struct {
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
+}
+
+var _ datamodel.ModelEventConsumer = (*IntegrationResponseConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *IntegrationResponseConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *IntegrationResponseConsumer) Close() error {
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *IntegrationResponse) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	return &IntegrationResponseConsumer{
+		ch:       ch,
+		callback: NewIntegrationResponseConsumer(consumer, ch, errors),
+		consumer: consumer,
+	}
+}
+
+// NewIntegrationResponseConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewIntegrationResponseConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	return &IntegrationResponseConsumer{
+		ch:       ch,
+		callback: NewIntegrationResponseConsumer(consumer, ch, errors),
+		consumer: consumer,
+	}
 }
