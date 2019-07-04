@@ -1,6 +1,6 @@
 // DO NOT EDIT -- generated code
 
-// Package agent - the system which contains source code
+// Package agent - the agent communicates with pinpoint cloud to send integration data
 package agent
 
 import (
