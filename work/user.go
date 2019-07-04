@@ -425,7 +425,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":      toUserObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toUserObject(o.RefType, isavro, false, "string"),
 		"username":    toUserObject(o.Username, isavro, false, "string"),
-		"hashcode":    toUserObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":    toUserObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

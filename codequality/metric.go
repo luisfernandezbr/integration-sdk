@@ -439,7 +439,7 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":      toMetricObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toMetricObject(o.RefType, isavro, false, "string"),
 		"value":       toMetricObject(o.Value, isavro, false, "string"),
-		"hashcode":    toMetricObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":    toMetricObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

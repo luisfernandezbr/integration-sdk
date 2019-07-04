@@ -414,7 +414,7 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 		"name":        toCustomFieldObject(o.Name, isavro, false, "string"),
 		"ref_id":      toCustomFieldObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toCustomFieldObject(o.RefType, isavro, false, "string"),
-		"hashcode":    toCustomFieldObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":    toCustomFieldObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

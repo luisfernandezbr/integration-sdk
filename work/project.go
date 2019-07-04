@@ -445,7 +445,7 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":      toProjectObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toProjectObject(o.RefType, isavro, false, "string"),
 		"url":         toProjectObject(o.URL, isavro, false, "string"),
-		"hashcode":    toProjectObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":    toProjectObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

@@ -488,7 +488,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		"updated_ts":       toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"url":              toPullRequestObject(o.URL, isavro, false, "string"),
 		"user_ref_id":      toPullRequestObject(o.UserRefID, isavro, false, "string"),
-		"hashcode":         toPullRequestObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":         toPullRequestObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

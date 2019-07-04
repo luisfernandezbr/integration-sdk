@@ -583,7 +583,7 @@ func (o *Event) ToMap(avro ...bool) map[string]interface{} {
 		"type":         toEventObject(o.Type, isavro, false, "type"),
 		"uuid":         toEventObject(o.UUID, isavro, false, "string"),
 		"version":      toEventObject(o.Version, isavro, false, "string"),
-		"hashcode":     toEventObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":     toEventObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

@@ -467,7 +467,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":                toBranchObject(o.RefID, isavro, false, "string"),
 		"ref_type":              toBranchObject(o.RefType, isavro, false, "string"),
 		"repo_id":               toBranchObject(o.RepoID, isavro, false, "string"),
-		"hashcode":              toBranchObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":              toBranchObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

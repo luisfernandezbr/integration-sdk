@@ -474,7 +474,7 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 		"to":          toChangelogObject(o.To, isavro, false, "string"),
 		"to_string":   toChangelogObject(o.ToString, isavro, false, "string"),
 		"user_id":     toChangelogObject(o.UserID, isavro, false, "string"),
-		"hashcode":    toChangelogObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":    toChangelogObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

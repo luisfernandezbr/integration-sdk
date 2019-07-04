@@ -447,7 +447,7 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":         toRepoObject(o.RefID, isavro, false, "string"),
 		"ref_type":       toRepoObject(o.RefType, isavro, false, "string"),
 		"url":            toRepoObject(o.URL, isavro, false, "string"),
-		"hashcode":       toRepoObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":       toRepoObject(o.Hash(), isavro, false, "string"),
 	}
 }
 

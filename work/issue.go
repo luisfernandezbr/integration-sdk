@@ -560,7 +560,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"type":             toIssueObject(o.Type, isavro, false, "string"),
 		"updated_ts":       toIssueObject(o.UpdatedAt, isavro, false, "long"),
 		"url":              toIssueObject(o.URL, isavro, false, "string"),
-		"hashcode":         toIssueObject(o.Hashcode, isavro, false, "string"),
+		"hashcode":         toIssueObject(o.Hash(), isavro, false, "string"),
 	}
 }
 
@@ -965,7 +965,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"doc": "the name of the custom field", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1025,7 +1025,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "title",
