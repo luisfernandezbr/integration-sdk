@@ -443,6 +443,7 @@ func (o *PullRequestReview) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"created_ts":      toPullRequestReviewObject(o.CreatedAt, isavro, false, "long"),
 		"customer_id":     toPullRequestReviewObject(o.CustomerID, isavro, false, "string"),

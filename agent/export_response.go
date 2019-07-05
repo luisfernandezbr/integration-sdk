@@ -657,6 +657,7 @@ func (o *ExportResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"architecture": toExportResponseObject(o.Architecture, isavro, false, "string"),
 		"customer_id":  toExportResponseObject(o.CustomerID, isavro, false, "string"),
@@ -1072,7 +1073,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1080,7 +1081,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date"},
+				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date"},
 			},
 			map[string]interface{}{
 				"name":    "error",
@@ -1133,7 +1134,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "start_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export start date", "type": "record", "name": "start_date"},
+				"type": map[string]interface{}{"doc": "the export start date", "type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "success",

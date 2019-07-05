@@ -416,6 +416,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"avatar_url":  toUserObject(o.AvatarURL, isavro, true, "string"),
 		"customer_id": toUserObject(o.CustomerID, isavro, false, "string"),

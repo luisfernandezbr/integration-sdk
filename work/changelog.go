@@ -458,6 +458,7 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"created":     toChangelogObject(o.Created, isavro, false, "string"),
 		"created_ts":  toChangelogObject(o.CreatedAt, isavro, false, "long"),

@@ -579,6 +579,7 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"architecture":   toIntegrationResponseObject(o.Architecture, isavro, false, "string"),
 		"authorization":  toIntegrationResponseObject(o.Authorization, isavro, false, "string"),
@@ -998,7 +999,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "date"},
 			},
 			map[string]interface{}{
 				"name": "distro",

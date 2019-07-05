@@ -436,6 +436,7 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"active":         toRepoObject(o.Active, isavro, false, "boolean"),
 		"customer_id":    toRepoObject(o.CustomerID, isavro, false, "string"),

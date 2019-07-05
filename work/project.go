@@ -434,6 +434,7 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"active":      toProjectObject(o.Active, isavro, false, "boolean"),
 		"category":    toProjectObject(o.Category, isavro, true, "string"),

@@ -430,6 +430,7 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"customer_id": toMetricObject(o.CustomerID, isavro, false, "string"),
 		"date_ts":     toMetricObject(o.DateAt, isavro, false, "long"),

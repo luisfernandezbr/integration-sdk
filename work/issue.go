@@ -47,16 +47,16 @@ const (
 const (
 	// IssueAssigneeRefIDColumn is the assignee_ref_id column name
 	IssueAssigneeRefIDColumn = "assignee_ref_id"
-	// IssueCreatedAtColumn is the created_ts column name
-	IssueCreatedAtColumn = "created_ts"
+	// IssueCreatedColumn is the created column name
+	IssueCreatedColumn = "created"
 	// IssueCreatorRefIDColumn is the creator_ref_id column name
 	IssueCreatorRefIDColumn = "creator_ref_id"
 	// IssueCustomFieldsColumn is the customFields column name
 	IssueCustomFieldsColumn = "customFields"
 	// IssueCustomerIDColumn is the customer_id column name
 	IssueCustomerIDColumn = "customer_id"
-	// IssueDueDateAtColumn is the due_date_ts column name
-	IssueDueDateAtColumn = "due_date_ts"
+	// IssueDueDateColumn is the due_date column name
+	IssueDueDateColumn = "due_date"
 	// IssueIDColumn is the id column name
 	IssueIDColumn = "id"
 	// IssueIdentifierColumn is the identifier column name
@@ -87,8 +87,8 @@ const (
 	IssueTitleColumn = "title"
 	// IssueTypeColumn is the type column name
 	IssueTypeColumn = "type"
-	// IssueUpdatedAtColumn is the updated_ts column name
-	IssueUpdatedAtColumn = "updated_ts"
+	// IssueUpdatedColumn is the updated column name
+	IssueUpdatedColumn = "updated"
 	// IssueURLColumn is the url column name
 	IssueURLColumn = "url"
 )
@@ -118,16 +118,16 @@ func (o *IssueCustomFields) ToMap() map[string]interface{} {
 type Issue struct {
 	// AssigneeRefID user id of the assignee
 	AssigneeRefID string `json:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
-	// CreatedAt the timestamp in UTC that the issue was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Created the date that the issue was created
+	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// CreatorRefID user id of the creator
 	CreatorRefID string `json:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
 	// CustomFields list of custom fields and their values
 	CustomFields []IssueCustomFields `json:"customFields" bson:"customFields" yaml:"customFields" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// DueDateAt due date of the issue
-	DueDateAt int64 `json:"due_date_ts" bson:"due_date_ts" yaml:"due_date_ts" faker:"-"`
+	// DueDate due date of the issue
+	DueDate string `json:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the issue
@@ -158,8 +158,8 @@ type Issue struct {
 	Title string `json:"title" bson:"title" yaml:"title" faker:"issue_title"`
 	// Type type of issue
 	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
-	// UpdatedAt the timestamp in UTC that the issue was updated
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Updated the date that the issue was updated
+	Updated string `json:"updated" bson:"updated" yaml:"updated" faker:"-"`
 	// URL the url to the issue page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -362,7 +362,7 @@ func (o *Issue) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Issue) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
+	var dt interface{} = o.Updated
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -412,7 +412,7 @@ func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "project_id",
-		Timestamp:         "updated_ts",
+		Timestamp:         "updated",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         duration,
@@ -536,13 +536,14 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 			o.Tags = make([]string, 0)
 		}
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro, false, "string"),
-		"created_ts":       toIssueObject(o.CreatedAt, isavro, false, "long"),
+		"created":          toIssueObject(o.Created, isavro, false, "string"),
 		"creator_ref_id":   toIssueObject(o.CreatorRefID, isavro, false, "string"),
 		"customFields":     toIssueObject(o.CustomFields, isavro, false, "customFields"),
 		"customer_id":      toIssueObject(o.CustomerID, isavro, false, "string"),
-		"due_date_ts":      toIssueObject(o.DueDateAt, isavro, false, "long"),
+		"due_date":         toIssueObject(o.DueDate, isavro, false, "string"),
 		"id":               toIssueObject(o.ID, isavro, false, "string"),
 		"identifier":       toIssueObject(o.Identifier, isavro, false, "string"),
 		"parent_id":        toIssueObject(o.ParentID, isavro, false, "string"),
@@ -558,7 +559,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"tags":             toIssueObject(o.Tags, isavro, false, "tags"),
 		"title":            toIssueObject(o.Title, isavro, false, "string"),
 		"type":             toIssueObject(o.Type, isavro, false, "string"),
-		"updated_ts":       toIssueObject(o.UpdatedAt, isavro, false, "long"),
+		"updated":          toIssueObject(o.Updated, isavro, false, "string"),
 		"url":              toIssueObject(o.URL, isavro, false, "string"),
 		"hashcode":         toIssueObject(o.Hash(), isavro, false, "string"),
 	}
@@ -579,17 +580,17 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.AssigneeRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
+	if val, ok := kv["created"].(string); ok {
+		o.Created = val
 	} else {
-		val := kv["created_ts"]
+		val := kv["created"]
 		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
+			o.Created = ""
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
 			}
-			o.CreatedAt = number.ToInt64Any(val)
+			o.Created = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["creator_ref_id"].(string); ok {
@@ -648,17 +649,17 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["due_date_ts"].(int64); ok {
-		o.DueDateAt = val
+	if val, ok := kv["due_date"].(string); ok {
+		o.DueDate = val
 	} else {
-		val := kv["due_date_ts"]
+		val := kv["due_date"]
 		if val == nil {
-			o.DueDateAt = number.ToInt64Any(nil)
+			o.DueDate = ""
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
 			}
-			o.DueDateAt = number.ToInt64Any(val)
+			o.DueDate = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -877,17 +878,17 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.Type = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
+	if val, ok := kv["updated"].(string); ok {
+		o.Updated = val
 	} else {
-		val := kv["updated_ts"]
+		val := kv["updated"]
 		if val == nil {
-			o.UpdatedAt = number.ToInt64Any(nil)
+			o.Updated = ""
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
 			}
-			o.UpdatedAt = number.ToInt64Any(val)
+			o.Updated = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["url"].(string); ok {
@@ -914,11 +915,11 @@ func (o *Issue) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.CustomerID)
 	args = append(args, o.AssigneeRefID)
-	args = append(args, o.CreatedAt)
+	args = append(args, o.Created)
 	args = append(args, o.CreatorRefID)
 	args = append(args, o.CustomFields)
 	args = append(args, o.CustomerID)
-	args = append(args, o.DueDateAt)
+	args = append(args, o.DueDate)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
 	args = append(args, o.ParentID)
@@ -934,7 +935,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.Tags)
 	args = append(args, o.Title)
 	args = append(args, o.Type)
-	args = append(args, o.UpdatedAt)
+	args = append(args, o.Updated)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -956,8 +957,8 @@ func GetIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
+				"name": "created",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "creator_ref_id",
@@ -965,15 +966,15 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values", "type": "record"}},
+				"type": map[string]interface{}{"name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"name": "value", "doc": "the value of the custom field", "type": "string"}}, "doc": "list of custom fields and their values"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "due_date_ts",
-				"type": "long",
+				"name": "due_date",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1025,7 +1026,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "title",
@@ -1036,8 +1037,8 @@ func GetIssueAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
+				"name": "updated",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "url",

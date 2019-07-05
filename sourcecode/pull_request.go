@@ -471,6 +471,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"closed_by_ref_id": toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
 		"closed_ts":        toPullRequestObject(o.ClosedAt, isavro, false, "long"),

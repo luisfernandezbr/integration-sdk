@@ -447,6 +447,7 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"body":            toPullRequestCommentObject(o.Body, isavro, false, "string"),
 		"created_ts":      toPullRequestCommentObject(o.CreatedAt, isavro, false, "long"),

@@ -580,6 +580,7 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 			o.Lines = make([]BlameLines, 0)
 		}
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"blanks":          toBlameObject(o.Blanks, isavro, false, "long"),
 		"comments":        toBlameObject(o.Comments, isavro, false, "long"),
@@ -1026,7 +1027,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"doc": "if the line is a blank line", "type": "boolean", "name": "blank"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"doc": "if the line is a comment", "type": "boolean", "name": "comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions", "type": "record"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"name": "code", "doc": "if the line is sourcecode", "type": "boolean"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
 			},
 			map[string]interface{}{
 				"name": "loc",

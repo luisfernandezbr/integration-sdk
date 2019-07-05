@@ -477,6 +477,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"associated_ref_id": toUserObject(o.AssociatedRefID, isavro, true, "string"),
 		"avatar_url":        toUserObject(o.AvatarURL, isavro, true, "string"),

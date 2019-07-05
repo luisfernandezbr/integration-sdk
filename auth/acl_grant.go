@@ -482,6 +482,7 @@ func (o *ACLGrant) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"created_ts":  toACLGrantObject(o.CreatedAt, isavro, false, "long"),
 		"customer_id": toACLGrantObject(o.CustomerID, isavro, false, "string"),

@@ -435,6 +435,7 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"active":      toTeamObject(o.Active, isavro, true, "boolean"),
 		"created_ts":  toTeamObject(o.CreatedAt, isavro, false, "long"),

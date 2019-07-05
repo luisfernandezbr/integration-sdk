@@ -453,6 +453,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 			o.Commits = make([]string, 0)
 		}
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
 		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
@@ -726,7 +727,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
 			},
 			map[string]interface{}{
 				"name": "commits",

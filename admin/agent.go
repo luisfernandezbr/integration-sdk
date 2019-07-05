@@ -434,6 +434,7 @@ func (o *Agent) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"apikey":           toAgentObject(o.Apikey, isavro, false, "string"),
 		"completed_ts":     toAgentObject(o.CompletedAt, isavro, false, "long"),

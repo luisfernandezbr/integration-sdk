@@ -407,6 +407,7 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"customer_id": toCustomFieldObject(o.CustomerID, isavro, false, "string"),
 		"id":          toCustomFieldObject(o.ID, isavro, false, "string"),

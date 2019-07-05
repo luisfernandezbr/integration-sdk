@@ -434,6 +434,7 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"active":      toCostCenterObject(o.Active, isavro, false, "boolean"),
 		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),

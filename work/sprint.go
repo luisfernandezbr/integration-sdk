@@ -441,6 +441,7 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"completed_ts": toSprintObject(o.CompletedAt, isavro, true, "long"),
 		"customer_id":  toSprintObject(o.CustomerID, isavro, false, "string"),

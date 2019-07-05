@@ -411,6 +411,7 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 			o.Headers = make(map[string]string)
 		}
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"data":    toHookObject(o.Data, isavro, false, "string"),
 		"date_ts": toHookObject(o.DateAt, isavro, false, "long"),

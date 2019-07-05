@@ -407,6 +407,7 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
+	o.setDefaults()
 	return map[string]interface{}{
 		"customer_id": toProjectObject(o.CustomerID, isavro, false, "string"),
 		"id":          toProjectObject(o.ID, isavro, false, "string"),
