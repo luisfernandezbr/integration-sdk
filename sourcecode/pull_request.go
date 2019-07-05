@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -48,6 +49,8 @@ const (
 	PullRequestClosedByRefIDColumn = "closed_by_ref_id"
 	// PullRequestClosedAtColumn is the closed_ts column name
 	PullRequestClosedAtColumn = "closed_ts"
+	// PullRequestCommitsColumn is the commits column name
+	PullRequestCommitsColumn = "commits"
 	// PullRequestCreatedAtColumn is the created_ts column name
 	PullRequestCreatedAtColumn = "created_ts"
 	// PullRequestCustomerIDColumn is the customer_id column name
@@ -56,6 +59,8 @@ const (
 	PullRequestDescriptionColumn = "description"
 	// PullRequestIDColumn is the id column name
 	PullRequestIDColumn = "id"
+	// PullRequestMergeShaColumn is the merge_sha column name
+	PullRequestMergeShaColumn = "merge_sha"
 	// PullRequestMergedByRefIDColumn is the merged_by_ref_id column name
 	PullRequestMergedByRefIDColumn = "merged_by_ref_id"
 	// PullRequestMergedAtColumn is the merged_ts column name
@@ -84,6 +89,8 @@ type PullRequest struct {
 	ClosedByRefID string `json:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
 	// ClosedAt the timestamp in UTC that the pull request was closed
 	ClosedAt int64 `json:"closed_ts" bson:"closed_ts" yaml:"closed_ts" faker:"-"`
+	// Commits the commits in the pull request
+	Commits []string `json:"commits" bson:"commits" yaml:"commits" faker:"-"`
 	// CreatedAt the timestamp in UTC that the pull request was created
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -92,6 +99,8 @@ type PullRequest struct {
 	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// MergeSha the sha of the merge commit
+	MergeSha string `json:"merge_sha" bson:"merge_sha" yaml:"merge_sha" faker:"-"`
 	// MergedByRefID the id of user who merged the pull request
 	MergedByRefID string `json:"merged_by_ref_id" bson:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
 	// MergedAt the timestamp in UTC that the pull request was merged
@@ -470,15 +479,20 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
+		if o.Commits == nil {
+			o.Commits = make([]string, 0)
+		}
 	}
 	o.setDefaults()
 	return map[string]interface{}{
 		"closed_by_ref_id": toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
 		"closed_ts":        toPullRequestObject(o.ClosedAt, isavro, false, "long"),
+		"commits":          toPullRequestObject(o.Commits, isavro, false, "commits"),
 		"created_ts":       toPullRequestObject(o.CreatedAt, isavro, false, "long"),
 		"customer_id":      toPullRequestObject(o.CustomerID, isavro, false, "string"),
 		"description":      toPullRequestObject(o.Description, isavro, false, "string"),
 		"id":               toPullRequestObject(o.ID, isavro, false, "string"),
+		"merge_sha":        toPullRequestObject(o.MergeSha, isavro, false, "string"),
 		"merged_by_ref_id": toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
 		"merged_ts":        toPullRequestObject(o.MergedAt, isavro, false, "long"),
 		"ref_id":           toPullRequestObject(o.RefID, isavro, false, "string"),
@@ -520,6 +534,40 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 			o.ClosedAt = number.ToInt64Any(val)
 		}
+	}
+	if val := kv["commits"]; val != nil {
+		na := make([]string, 0)
+		if a, ok := val.([]string); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for commits field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for commits field")
+			}
+		}
+		o.Commits = na
+	} else {
+		o.Commits = []string{}
+	}
+	if o.Commits == nil {
+		o.Commits = make([]string, 0)
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
@@ -571,6 +619,19 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["merge_sha"].(string); ok {
+		o.MergeSha = val
+	} else {
+		val := kv["merge_sha"]
+		if val == nil {
+			o.MergeSha = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.MergeSha = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["merged_by_ref_id"].(string); ok {
@@ -715,10 +776,12 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ClosedByRefID)
 	args = append(args, o.ClosedAt)
+	args = append(args, o.Commits)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
+	args = append(args, o.MergeSha)
 	args = append(args, o.MergedByRefID)
 	args = append(args, o.MergedAt)
 	args = append(args, o.RefID)
@@ -753,6 +816,10 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
+				"name": "commits",
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+			},
+			map[string]interface{}{
 				"name": "created_ts",
 				"type": "long",
 			},
@@ -766,6 +833,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "merge_sha",
 				"type": "string",
 			},
 			map[string]interface{}{
