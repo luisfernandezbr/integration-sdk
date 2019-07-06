@@ -440,12 +440,16 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":      toMetricObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toMetricObject(o.RefType, isavro, false, "string"),
 		"value":       toMetricObject(o.Value, isavro, false, "string"),
-		"hashcode":    toMetricObject(o.Hash(), isavro, false, "string"),
+		"hashcode":    toMetricObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Metric) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -556,10 +560,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Metric) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.CustomerID)
 	args = append(args, o.DateAt)
 	args = append(args, o.ID)
@@ -1059,7 +1059,12 @@ func (p *MetricProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Metric) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *Metric) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &MetricProducer{
@@ -1074,7 +1079,12 @@ func (o *Metric) NewProducerChannel(producer eventing.Producer, errors chan<- er
 
 // NewMetricProducerChannel returns a channel which can be used for producing Model events
 func NewMetricProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewMetricProducerChannelSize(producer, 0, errors)
+}
+
+// NewMetricProducerChannelSize returns a channel which can be used for producing Model events
+func NewMetricProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &MetricProducer{

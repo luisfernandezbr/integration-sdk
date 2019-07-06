@@ -636,12 +636,16 @@ func (o *IntegrationRequest) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":      toIntegrationRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toIntegrationRequestObject(o.RefType, isavro, false, "string"),
 		"uuid":        toIntegrationRequestObject(o.UUID, isavro, false, "string"),
-		"hashcode":    toIntegrationRequestObject(o.Hash(), isavro, false, "string"),
+		"hashcode":    toIntegrationRequestObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -739,10 +743,6 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *IntegrationRequest) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Date)
 	args = append(args, o.ID)
@@ -779,7 +779,7 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"name": "access_token", "doc": "Access token", "type": "string"}, map[string]interface{}{"doc": "API Token for instance, if relevant", "type": "string", "name": "api_token"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": "long", "name": "validated_ts", "doc": "Timestamp when validated"}, map[string]interface{}{"name": "validation_message", "doc": "The validation message from the agent", "type": "string"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "location", "doc": "The location of this integration (on-premise / private or cloud)"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"name": "progress", "doc": "Agent processing progress", "type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"doc": "The total amount to be processed", "type": "long", "name": "total"}}, "doc": "Agent processing progress"}}}, "doc": "the integration details to add"},
+				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"doc": "the agents encrypted authorization", "type": "string", "name": "authorization"}, map[string]interface{}{"name": "errored", "doc": "If authorization failed by the agent", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"doc": "Timestamp when validated", "type": "long", "name": "validated_ts"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "Authorization information", "type": "record", "name": "integration.authorization"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"doc": "The exclusion list for this integration", "type": map[string]interface{}{"items": "string", "type": "array", "name": "exclusions"}, "name": "exclusions"}, map[string]interface{}{"type": "string", "name": "location", "doc": "The location of this integration (on-premise / private or cloud)"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"name": "progress", "doc": "Agent processing progress", "type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}, "doc": "Agent processing progress"}}}, "doc": "the integration details to add"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1237,7 +1237,12 @@ func (p *IntegrationRequestProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *IntegrationRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *IntegrationRequest) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &IntegrationRequestProducer{
@@ -1252,7 +1257,12 @@ func (o *IntegrationRequest) NewProducerChannel(producer eventing.Producer, erro
 
 // NewIntegrationRequestProducerChannel returns a channel which can be used for producing Model events
 func NewIntegrationRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewIntegrationRequestProducerChannelSize(producer, 0, errors)
+}
+
+// NewIntegrationRequestProducerChannelSize returns a channel which can be used for producing Model events
+func NewIntegrationRequestProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &IntegrationRequestProducer{

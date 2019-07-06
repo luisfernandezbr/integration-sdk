@@ -475,12 +475,16 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 		"to":          toChangelogObject(o.To, isavro, false, "string"),
 		"to_string":   toChangelogObject(o.ToString, isavro, false, "string"),
 		"user_id":     toChangelogObject(o.UserID, isavro, false, "string"),
-		"hashcode":    toChangelogObject(o.Hash(), isavro, false, "string"),
+		"hashcode":    toChangelogObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Changelog) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["created"].(string); ok {
 		o.Created = val
 	} else {
@@ -682,10 +686,6 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Changelog) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.Created)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
@@ -1220,7 +1220,12 @@ func (p *ChangelogProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Changelog) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *Changelog) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &ChangelogProducer{
@@ -1235,7 +1240,12 @@ func (o *Changelog) NewProducerChannel(producer eventing.Producer, errors chan<-
 
 // NewChangelogProducerChannel returns a channel which can be used for producing Model events
 func NewChangelogProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewChangelogProducerChannelSize(producer, 0, errors)
+}
+
+// NewChangelogProducerChannelSize returns a channel which can be used for producing Model events
+func NewChangelogProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &ChangelogProducer{

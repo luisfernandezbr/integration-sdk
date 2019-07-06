@@ -454,12 +454,16 @@ func (o *PullRequestReview) ToMap(avro ...bool) map[string]interface{} {
 		"repo_id":         toPullRequestReviewObject(o.RepoID, isavro, false, "string"),
 		"state":           toPullRequestReviewObject(o.State, isavro, false, "string"),
 		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, isavro, false, "string"),
-		"hashcode":        toPullRequestReviewObject(o.Hash(), isavro, false, "string"),
+		"hashcode":        toPullRequestReviewObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
@@ -583,10 +587,6 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequestReview) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
@@ -1091,7 +1091,12 @@ func (p *PullRequestReviewProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *PullRequestReview) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *PullRequestReview) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &PullRequestReviewProducer{
@@ -1106,7 +1111,12 @@ func (o *PullRequestReview) NewProducerChannel(producer eventing.Producer, error
 
 // NewPullRequestReviewProducerChannel returns a channel which can be used for producing Model events
 func NewPullRequestReviewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewPullRequestReviewProducerChannelSize(producer, 0, errors)
+}
+
+// NewPullRequestReviewProducerChannelSize returns a channel which can be used for producing Model events
+func NewPullRequestReviewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &PullRequestReviewProducer{

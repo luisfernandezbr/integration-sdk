@@ -493,12 +493,16 @@ func (o *ACLGrant) ToMap(avro ...bool) map[string]interface{} {
 		"resource_id": toACLGrantObject(o.ResourceID, isavro, false, "string"),
 		"role_id":     toACLGrantObject(o.RoleID, isavro, false, "string"),
 		"updated_ts":  toACLGrantObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":    toACLGrantObject(o.Hash(), isavro, false, "string"),
+		"hashcode":    toACLGrantObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *ACLGrant) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
@@ -634,10 +638,6 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *ACLGrant) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
@@ -1194,7 +1194,12 @@ func (p *ACLGrantProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *ACLGrant) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *ACLGrant) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &ACLGrantProducer{
@@ -1209,7 +1214,12 @@ func (o *ACLGrant) NewProducerChannel(producer eventing.Producer, errors chan<- 
 
 // NewACLGrantProducerChannel returns a channel which can be used for producing Model events
 func NewACLGrantProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewACLGrantProducerChannelSize(producer, 0, errors)
+}
+
+// NewACLGrantProducerChannelSize returns a channel which can be used for producing Model events
+func NewACLGrantProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &ACLGrantProducer{

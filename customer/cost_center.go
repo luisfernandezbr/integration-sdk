@@ -446,12 +446,16 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":      toCostCenterObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toCostCenterObject(o.RefType, isavro, false, "string"),
 		"updated_ts":  toCostCenterObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":    toCostCenterObject(o.Hash(), isavro, false, "string"),
+		"hashcode":    toCostCenterObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *CostCenter) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
 	} else {
@@ -582,10 +586,6 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *CostCenter) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.Active)
 	args = append(args, o.Cost)
 	args = append(args, o.CreatedAt)
@@ -1141,7 +1141,12 @@ func (p *CostCenterProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *CostCenter) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *CostCenter) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &CostCenterProducer{
@@ -1156,7 +1161,12 @@ func (o *CostCenter) NewProducerChannel(producer eventing.Producer, errors chan<
 
 // NewCostCenterProducerChannel returns a channel which can be used for producing Model events
 func NewCostCenterProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewCostCenterProducerChannelSize(producer, 0, errors)
+}
+
+// NewCostCenterProducerChannelSize returns a channel which can be used for producing Model events
+func NewCostCenterProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &CostCenterProducer{

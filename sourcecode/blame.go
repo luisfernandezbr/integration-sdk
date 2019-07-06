@@ -604,12 +604,16 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 		"size":            toBlameObject(o.Size, isavro, false, "long"),
 		"sloc":            toBlameObject(o.Sloc, isavro, false, "long"),
 		"status":          toBlameObject(o.Status, isavro, false, "status"),
-		"hashcode":        toBlameObject(o.Hash(), isavro, false, "string"),
+		"hashcode":        toBlameObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Blame) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["blanks"].(int64); ok {
 		o.Blanks = val
 	} else {
@@ -931,10 +935,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Blame) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.Blanks)
 	args = append(args, o.Comments)
 	args = append(args, o.CommitID)
@@ -1027,7 +1027,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"name": "date", "doc": "the change date in RFC3339 format of this line when last changed", "type": "string"}, map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"name": "comment", "doc": "if the line is a comment", "type": "boolean"}, map[string]interface{}{"name": "date", "doc": "the change date in RFC3339 format of this line when last changed", "type": "string"}, map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}}, "doc": "the individual line attributions"}, "type": "array", "name": "lines"},
 			},
 			map[string]interface{}{
 				"name": "loc",
@@ -1511,7 +1511,12 @@ func (p *BlameProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Blame) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *Blame) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &BlameProducer{
@@ -1526,7 +1531,12 @@ func (o *Blame) NewProducerChannel(producer eventing.Producer, errors chan<- err
 
 // NewBlameProducerChannel returns a channel which can be used for producing Model events
 func NewBlameProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewBlameProducerChannelSize(producer, 0, errors)
+}
+
+// NewBlameProducerChannelSize returns a channel which can be used for producing Model events
+func NewBlameProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &BlameProducer{

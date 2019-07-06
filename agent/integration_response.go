@@ -604,12 +604,16 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 		"type":           toIntegrationResponseObject(o.Type, isavro, false, "type"),
 		"uuid":           toIntegrationResponseObject(o.UUID, isavro, false, "string"),
 		"version":        toIntegrationResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":       toIntegrationResponseObject(o.Hash(), isavro, false, "string"),
+		"hashcode":       toIntegrationResponseObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
 	} else {
@@ -938,10 +942,6 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *IntegrationResponse) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.Architecture)
 	args = append(args, o.Authorization)
 	args = append(args, o.CustomerID)
@@ -999,7 +999,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1524,7 +1524,12 @@ func (p *IntegrationResponseProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *IntegrationResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *IntegrationResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &IntegrationResponseProducer{
@@ -1539,7 +1544,12 @@ func (o *IntegrationResponse) NewProducerChannel(producer eventing.Producer, err
 
 // NewIntegrationResponseProducerChannel returns a channel which can be used for producing Model events
 func NewIntegrationResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewIntegrationResponseProducerChannelSize(producer, 0, errors)
+}
+
+// NewIntegrationResponseProducerChannelSize returns a channel which can be used for producing Model events
+func NewIntegrationResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &IntegrationResponseProducer{

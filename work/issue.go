@@ -561,12 +561,16 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"type":             toIssueObject(o.Type, isavro, false, "string"),
 		"updated":          toIssueObject(o.Updated, isavro, false, "string"),
 		"url":              toIssueObject(o.URL, isavro, false, "string"),
-		"hashcode":         toIssueObject(o.Hash(), isavro, false, "string"),
+		"hashcode":         toIssueObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Issue) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["assignee_ref_id"].(string); ok {
 		o.AssigneeRefID = val
 	} else {
@@ -910,10 +914,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Issue) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.AssigneeRefID)
 	args = append(args, o.Created)
 	args = append(args, o.CreatorRefID)
@@ -966,7 +966,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"doc": "the id of the custom field", "type": "string", "name": "id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"doc": "the name of the custom field", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1026,7 +1026,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "tags"},
 			},
 			map[string]interface{}{
 				"name": "title",
@@ -1488,7 +1488,12 @@ func (p *IssueProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Issue) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *Issue) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &IssueProducer{
@@ -1503,7 +1508,12 @@ func (o *Issue) NewProducerChannel(producer eventing.Producer, errors chan<- err
 
 // NewIssueProducerChannel returns a channel which can be used for producing Model events
 func NewIssueProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewIssueProducerChannelSize(producer, 0, errors)
+}
+
+// NewIssueProducerChannelSize returns a channel which can be used for producing Model events
+func NewIssueProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &IssueProducer{

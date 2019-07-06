@@ -459,12 +459,16 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
 		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, isavro, false, "long"),
 		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, isavro, false, "string"),
-		"hashcode":        toPullRequestCommentObject(o.Hash(), isavro, false, "string"),
+		"hashcode":        toPullRequestCommentObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["body"].(string); ok {
 		o.Body = val
 	} else {
@@ -601,10 +605,6 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequestComment) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.Body)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
@@ -1114,7 +1114,12 @@ func (p *PullRequestCommentProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *PullRequestComment) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *PullRequestComment) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &PullRequestCommentProducer{
@@ -1129,7 +1134,12 @@ func (o *PullRequestComment) NewProducerChannel(producer eventing.Producer, erro
 
 // NewPullRequestCommentProducerChannel returns a channel which can be used for producing Model events
 func NewPullRequestCommentProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewPullRequestCommentProducerChannelSize(producer, 0, errors)
+}
+
+// NewPullRequestCommentProducerChannelSize returns a channel which can be used for producing Model events
+func NewPullRequestCommentProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &PullRequestCommentProducer{

@@ -468,12 +468,16 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":                toBranchObject(o.RefID, isavro, false, "string"),
 		"ref_type":              toBranchObject(o.RefType, isavro, false, "string"),
 		"repo_id":               toBranchObject(o.RepoID, isavro, false, "string"),
-		"hashcode":              toBranchObject(o.Hash(), isavro, false, "string"),
+		"hashcode":              toBranchObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Branch) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["ahead_default_count"].(int64); ok {
 		o.AheadDefaultCount = val
 	} else {
@@ -685,10 +689,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Branch) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.AheadDefaultCount)
 	args = append(args, o.BehindDefaultCount)
 	args = append(args, o.BranchedFromCommits)
@@ -1213,7 +1213,12 @@ func (p *BranchProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Branch) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *Branch) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &BranchProducer{
@@ -1228,7 +1233,12 @@ func (o *Branch) NewProducerChannel(producer eventing.Producer, errors chan<- er
 
 // NewBranchProducerChannel returns a channel which can be used for producing Model events
 func NewBranchProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewBranchProducerChannelSize(producer, 0, errors)
+}
+
+// NewBranchProducerChannelSize returns a channel which can be used for producing Model events
+func NewBranchProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &BranchProducer{

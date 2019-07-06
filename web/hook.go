@@ -424,6 +424,10 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Hook) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["data"].(string); ok {
 		o.Data = val
 	} else {
@@ -991,7 +995,12 @@ func (p *HookProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Hook) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *Hook) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &HookProducer{
@@ -1006,7 +1015,12 @@ func (o *Hook) NewProducerChannel(producer eventing.Producer, errors chan<- erro
 
 // NewHookProducerChannel returns a channel which can be used for producing Model events
 func NewHookProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewHookProducerChannelSize(producer, 0, errors)
+}
+
+// NewHookProducerChannelSize returns a channel which can be used for producing Model events
+func NewHookProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &HookProducer{

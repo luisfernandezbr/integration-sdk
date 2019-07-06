@@ -448,12 +448,16 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":         toRepoObject(o.RefID, isavro, false, "string"),
 		"ref_type":       toRepoObject(o.RefType, isavro, false, "string"),
 		"url":            toRepoObject(o.URL, isavro, false, "string"),
-		"hashcode":       toRepoObject(o.Hash(), isavro, false, "string"),
+		"hashcode":       toRepoObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Repo) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
 	} else {
@@ -587,10 +591,6 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Repo) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.Active)
 	args = append(args, o.CustomerID)
 	args = append(args, o.DefaultBranch)
@@ -1100,7 +1100,12 @@ func (p *RepoProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Repo) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *Repo) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &RepoProducer{
@@ -1115,7 +1120,12 @@ func (o *Repo) NewProducerChannel(producer eventing.Producer, errors chan<- erro
 
 // NewRepoProducerChannel returns a channel which can be used for producing Model events
 func NewRepoProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewRepoProducerChannelSize(producer, 0, errors)
+}
+
+// NewRepoProducerChannelSize returns a channel which can be used for producing Model events
+func NewRepoProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &RepoProducer{

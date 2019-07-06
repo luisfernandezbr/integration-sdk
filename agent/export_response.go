@@ -682,12 +682,16 @@ func (o *ExportResponse) ToMap(avro ...bool) map[string]interface{} {
 		"type":         toExportResponseObject(o.Type, isavro, false, "type"),
 		"uuid":         toExportResponseObject(o.UUID, isavro, false, "string"),
 		"version":      toExportResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":     toExportResponseObject(o.Hash(), isavro, false, "string"),
+		"hashcode":     toExportResponseObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *ExportResponse) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
 	} else {
@@ -1016,10 +1020,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *ExportResponse) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
@@ -1081,7 +1081,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the export end date", "type": "record", "name": "end_date"},
+				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the export end date"},
 			},
 			map[string]interface{}{
 				"name":    "error",
@@ -1134,7 +1134,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "start_date",
-				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the export start date"},
+				"type": map[string]interface{}{"doc": "the export start date", "type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "success",
@@ -1602,7 +1602,12 @@ func (p *ExportResponseProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *ExportResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *ExportResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &ExportResponseProducer{
@@ -1617,7 +1622,12 @@ func (o *ExportResponse) NewProducerChannel(producer eventing.Producer, errors c
 
 // NewExportResponseProducerChannel returns a channel which can be used for producing Model events
 func NewExportResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewExportResponseProducerChannelSize(producer, 0, errors)
+}
+
+// NewExportResponseProducerChannelSize returns a channel which can be used for producing Model events
+func NewExportResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &ExportResponseProducer{

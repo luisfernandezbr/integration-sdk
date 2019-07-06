@@ -454,12 +454,16 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":     toSprintObject(o.RefType, isavro, false, "string"),
 		"started_ts":   toSprintObject(o.StartedAt, isavro, false, "long"),
 		"status":       toSprintObject(o.Status, isavro, false, "string"),
-		"hashcode":     toSprintObject(o.Hash(), isavro, false, "string"),
+		"hashcode":     toSprintObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *Sprint) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["completed_ts"].(*int64); ok {
 		o.CompletedAt = val
 	} else if val, ok := kv["completed_ts"].(int64); ok {
@@ -615,10 +619,6 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Sprint) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.CompletedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.EndedAt)
@@ -1135,7 +1135,12 @@ func (p *SprintProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *Sprint) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *Sprint) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &SprintProducer{
@@ -1150,7 +1155,12 @@ func (o *Sprint) NewProducerChannel(producer eventing.Producer, errors chan<- er
 
 // NewSprintProducerChannel returns a channel which can be used for producing Model events
 func NewSprintProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewSprintProducerChannelSize(producer, 0, errors)
+}
+
+// NewSprintProducerChannelSize returns a channel which can be used for producing Model events
+func NewSprintProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &SprintProducer{

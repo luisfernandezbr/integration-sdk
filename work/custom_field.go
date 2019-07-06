@@ -415,12 +415,16 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 		"name":        toCustomFieldObject(o.Name, isavro, false, "string"),
 		"ref_id":      toCustomFieldObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toCustomFieldObject(o.RefType, isavro, false, "string"),
-		"hashcode":    toCustomFieldObject(o.Hash(), isavro, false, "string"),
+		"hashcode":    toCustomFieldObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *CustomField) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -505,10 +509,6 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *CustomField) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Key)
@@ -998,7 +998,12 @@ func (p *CustomFieldProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *CustomField) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *CustomField) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &CustomFieldProducer{
@@ -1013,7 +1018,12 @@ func (o *CustomField) NewProducerChannel(producer eventing.Producer, errors chan
 
 // NewCustomFieldProducerChannel returns a channel which can be used for producing Model events
 func NewCustomFieldProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewCustomFieldProducerChannelSize(producer, 0, errors)
+}
+
+// NewCustomFieldProducerChannelSize returns a channel which can be used for producing Model events
+func NewCustomFieldProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &CustomFieldProducer{

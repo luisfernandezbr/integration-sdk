@@ -481,12 +481,16 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"terminated_ts":  toUserObject(o.TerminatedAt, isavro, true, "long"),
 		"title":          toUserObject(o.Title, isavro, true, "string"),
 		"trackable":      toUserObject(o.Trackable, isavro, false, "boolean"),
-		"hashcode":       toUserObject(o.Hash(), isavro, false, "string"),
+		"hashcode":       toUserObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
 func (o *User) FromMap(kv map[string]interface{}) {
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
 	} else {
@@ -755,10 +759,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *User) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.GetID())
-	args = append(args, o.GetRefID())
-	args = append(args, o.RefType)
-	args = append(args, o.CustomerID)
 	args = append(args, o.Active)
 	args = append(args, o.AvatarURL)
 	args = append(args, o.Cost)
@@ -1322,7 +1322,12 @@ func (p *UserProducer) Close() error {
 
 // NewProducerChannel returns a channel which can be used for producing Model events
 func (o *User) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *User) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &UserProducer{
@@ -1337,7 +1342,12 @@ func (o *User) NewProducerChannel(producer eventing.Producer, errors chan<- erro
 
 // NewUserProducerChannel returns a channel which can be used for producing Model events
 func NewUserProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent)
+	return NewUserProducerChannelSize(producer, 0, errors)
+}
+
+// NewUserProducerChannelSize returns a channel which can be used for producing Model events
+func NewUserProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
 	return &UserProducer{
