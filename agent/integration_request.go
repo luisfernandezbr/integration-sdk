@@ -67,8 +67,6 @@ type IntegrationRequestAuthorization struct {
 	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
 	// Authorization the agents encrypted authorization
 	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
-	// Errored If authorization failed by the agent
-	Errored bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
 	// Password Password for instance, if relevant
 	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
 	// RefreshToken Refresh token
@@ -77,12 +75,6 @@ type IntegrationRequestAuthorization struct {
 	URL *string `json:"url" bson:"url" yaml:"url" faker:"-"`
 	// Username Username for instance, if relevant
 	Username *string `json:"username" bson:"username" yaml:"username" faker:"-"`
-	// Validated If the validation has been run against this instance
-	Validated bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
-	// ValidatedAt Timestamp when validated
-	ValidatedAt int64 `json:"validated_ts" bson:"validated_ts" yaml:"validated_ts" faker:"-"`
-	// ValidationMessage The validation message from the agent
-	ValidationMessage string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
 }
 
 func (o *IntegrationRequestAuthorization) ToMap() map[string]interface{} {
@@ -93,8 +85,6 @@ func (o *IntegrationRequestAuthorization) ToMap() map[string]interface{} {
 		"api_token": o.APIToken,
 		// Authorization the agents encrypted authorization
 		"authorization": o.Authorization,
-		// Errored If authorization failed by the agent
-		"errored": o.Errored,
 		// Password Password for instance, if relevant
 		"password": o.Password,
 		// RefreshToken Refresh token
@@ -103,12 +93,6 @@ func (o *IntegrationRequestAuthorization) ToMap() map[string]interface{} {
 		"url": o.URL,
 		// Username Username for instance, if relevant
 		"username": o.Username,
-		// Validated If the validation has been run against this instance
-		"validated": o.Validated,
-		// ValidatedAt Timestamp when validated
-		"validated_ts": o.ValidatedAt,
-		// ValidationMessage The validation message from the agent
-		"validation_message": o.ValidationMessage,
 	}
 }
 
@@ -139,6 +123,8 @@ type IntegrationRequestIntegration struct {
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
 	Authorization IntegrationRequestAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	// Errored If authorization failed by the agent
+	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
 	// Exclusions The exclusion list for this integration
 	Exclusions []string `json:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
@@ -147,6 +133,12 @@ type IntegrationRequestIntegration struct {
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
 	Progress IntegrationRequestProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	// Validated If the validation has been run against this instance
+	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
+	// ValidatedAt Timestamp when validated
+	ValidatedAt *int64 `json:"validated_ts" bson:"validated_ts" yaml:"validated_ts" faker:"-"`
+	// ValidationMessage The validation message from the agent
+	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
 }
 
 func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
@@ -155,6 +147,8 @@ func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 		"active": o.Active,
 		// Authorization Authorization information
 		"authorization": o.Authorization,
+		// Errored If authorization failed by the agent
+		"errored": o.Errored,
 		// Exclusions The exclusion list for this integration
 		"exclusions": o.Exclusions,
 		// Location The location of this integration (on-premise / private or cloud)
@@ -163,6 +157,12 @@ func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 		"name": o.Name,
 		// Progress Agent processing progress
 		"progress": o.Progress,
+		// Validated If the validation has been run against this instance
+		"validated": o.Validated,
+		// ValidatedAt Timestamp when validated
+		"validated_ts": o.ValidatedAt,
+		// ValidationMessage The validation message from the agent
+		"validation_message": o.ValidationMessage,
 	}
 }
 
@@ -779,7 +779,7 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "active", "doc": "If true, the integration is still active", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"doc": "API Token for instance, if relevant", "type": "string", "name": "api_token"}, map[string]interface{}{"doc": "the agents encrypted authorization", "type": "string", "name": "authorization"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"doc": "Password for instance, if relevant", "type": "string", "name": "password"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"doc": "Username for instance, if relevant", "type": "string", "name": "username"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"name": "validated_ts", "doc": "Timestamp when validated", "type": "long"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "location", "doc": "The location of this integration (on-premise / private or cloud)"}, map[string]interface{}{"doc": "The user friendly name of the integration", "type": "string", "name": "name"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"name": "message", "doc": "Any relevant messaging during processing", "type": "string"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}}, "doc": "the integration details to add", "type": "record", "name": "integration"},
+				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"name": "refresh_token", "doc": "Refresh token", "type": "string"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}, "doc": "Authorization information", "type": "record", "name": "integration.authorization"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"name": "errored", "doc": "If authorization failed by the agent", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "location", "doc": "The location of this integration (on-premise / private or cloud)"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"name": "message", "doc": "Any relevant messaging during processing", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "type": "long", "name": "total"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"doc": "Timestamp when validated", "type": "long", "name": "validated_ts"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to add"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
