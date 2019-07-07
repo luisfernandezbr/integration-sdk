@@ -283,7 +283,7 @@ func (o *User) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "id",
-		TableName: "pipeline.integration_user",
+		TableName: "pipeline_integration_user",
 		BatchSize: 5000,
 		IdleTime:  idletime,
 	}

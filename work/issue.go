@@ -1026,7 +1026,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "title",

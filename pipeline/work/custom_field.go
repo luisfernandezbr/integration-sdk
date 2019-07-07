@@ -316,7 +316,7 @@ func (o *CustomField) GetModelMaterializeConfig() *datamodel.ModelMaterializeCon
 	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "id",
-		TableName: "pipeline.work_customfield",
+		TableName: "pipeline_work_customfield",
 		BatchSize: 5000,
 		IdleTime:  idletime,
 	}

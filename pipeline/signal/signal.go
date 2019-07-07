@@ -363,7 +363,7 @@ func (o *Signal) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	}
 	return &datamodel.ModelMaterializeConfig{
 		KeyName:   "id",
-		TableName: "pipeline.signal_signal",
+		TableName: "pipeline_signal_signal",
 		BatchSize: 5000,
 		IdleTime:  idletime,
 	}
@@ -765,7 +765,7 @@ func GetSignalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "date object"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
 			},
 			map[string]interface{}{
 				"name": "date_ts",
