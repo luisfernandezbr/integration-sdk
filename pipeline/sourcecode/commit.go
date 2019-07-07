@@ -1,6 +1,6 @@
 // DO NOT EDIT -- generated code
 
-// Package sourcecode - the system which contains source code
+// Package sourcecode - the pipeline models
 package sourcecode
 
 import (
@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -27,25 +28,28 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
 	// CommitTopic is the default topic name
-	CommitTopic datamodel.TopicNameType = "sourcecode_Commit_topic"
+	CommitTopic datamodel.TopicNameType = "pipeline_sourcecode_Commit_topic"
 
 	// CommitStream is the default stream name
-	CommitStream datamodel.TopicNameType = "sourcecode_Commit_stream"
+	CommitStream datamodel.TopicNameType = "pipeline_sourcecode_Commit_stream"
 
 	// CommitTable is the default table name
-	CommitTable datamodel.TopicNameType = "sourcecode_Commit"
+	CommitTable datamodel.TopicNameType = "pipeline_sourcecode_Commit"
 
 	// CommitModelName is the model name
-	CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
+	CommitModelName datamodel.ModelNameType = "pipeline.sourcecode.Commit"
 )
 
 const (
 	// CommitAdditionsColumn is the additions column name
 	CommitAdditionsColumn = "additions"
+	// CommitAuthorColumn is the author column name
+	CommitAuthorColumn = "author"
 	// CommitAuthorRefIDColumn is the author_ref_id column name
 	CommitAuthorRefIDColumn = "author_ref_id"
 	// CommitBlanksColumn is the blanks column name
@@ -54,6 +58,8 @@ const (
 	CommitBranchColumn = "branch"
 	// CommitCommentsColumn is the comments column name
 	CommitCommentsColumn = "comments"
+	// CommitCommitterColumn is the committer column name
+	CommitCommitterColumn = "committer"
 	// CommitCommitterRefIDColumn is the committer_ref_id column name
 	CommitCommitterRefIDColumn = "committer_ref_id"
 	// CommitComplexityColumn is the complexity column name
@@ -76,12 +82,18 @@ const (
 	CommitGpgSignedColumn = "gpg_signed"
 	// CommitIDColumn is the id column name
 	CommitIDColumn = "id"
+	// CommitIssueIDColumn is the issue_id column name
+	CommitIssueIDColumn = "issue_id"
+	// CommitLinkedColumn is the linked column name
+	CommitLinkedColumn = "linked"
 	// CommitLocColumn is the loc column name
 	CommitLocColumn = "loc"
 	// CommitMessageColumn is the message column name
 	CommitMessageColumn = "message"
 	// CommitOrdinalColumn is the ordinal column name
 	CommitOrdinalColumn = "ordinal"
+	// CommitProjectIDColumn is the project_id column name
+	CommitProjectIDColumn = "project_id"
 	// CommitRefIDColumn is the ref_id column name
 	CommitRefIDColumn = "ref_id"
 	// CommitRefTypeColumn is the ref_type column name
@@ -97,6 +109,40 @@ const (
 	// CommitURLColumn is the url column name
 	CommitURLColumn = "url"
 )
+
+// CommitAuthor represents the object structure for author
+type CommitAuthor struct {
+	// ID the corporate user id
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// TeamID the corporate team id
+	TeamID string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
+}
+
+func (o *CommitAuthor) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// ID the corporate user id
+		"id": o.ID,
+		// TeamID the corporate team id
+		"team_id": o.TeamID,
+	}
+}
+
+// CommitCommitter represents the object structure for committer
+type CommitCommitter struct {
+	// ID the corporate user id
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// TeamID the corporate team id
+	TeamID string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
+}
+
+func (o *CommitCommitter) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// ID the corporate user id
+		"id": o.ID,
+		// TeamID the corporate team id
+		"team_id": o.TeamID,
+	}
+}
 
 // CommitFiles represents the object structure for files
 type CommitFiles struct {
@@ -199,10 +245,12 @@ func (o *CommitFiles) ToMap() map[string]interface{} {
 	}
 }
 
-// Commit the commit is a specific change in a repo
+// Commit the enriched sourcecode.Commit
 type Commit struct {
 	// Additions the number of additions for the commit
 	Additions int64 `json:"additions" bson:"additions" yaml:"additions" faker:"-"`
+	// Author the author that authored the commit
+	Author CommitAuthor `json:"author" bson:"author" yaml:"author" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
 	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Blanks the number of blank lines in the commit
@@ -211,6 +259,8 @@ type Commit struct {
 	Branch string `json:"branch" bson:"branch" yaml:"branch" faker:"-"`
 	// Comments the number of comment lines in the commit
 	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
+	// Committer the committer that commmitted the commit
+	Committer CommitCommitter `json:"committer" bson:"committer" yaml:"committer" faker:"-"`
 	// CommitterRefID the committer ref_id in the source system
 	CommitterRefID string `json:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
 	// Complexity the complexity value for the change
@@ -233,12 +283,18 @@ type Commit struct {
 	GpgSigned bool `json:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IssueID the issues this commit is linked to
+	IssueID []string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
+	// Linked if the commit is linked to an issue
+	Linked bool `json:"linked" bson:"linked" yaml:"linked" faker:"-"`
 	// Loc the number of lines in the commit
 	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
 	// Message the commit message
 	Message string `json:"message" bson:"message" yaml:"message" faker:"commit_message"`
 	// Ordinal the order of the commit in the commit stream
 	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
+	// ProjectID the project of the issue that this commit is linked to
+	ProjectID *string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -390,6 +446,42 @@ func toCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		}
 		return arr
 
+	case CommitAuthor:
+		vv := o.(CommitAuthor)
+		return vv.ToMap()
+	case *CommitAuthor:
+		return (*o.(*CommitAuthor)).ToMap()
+	case []CommitAuthor:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]CommitAuthor) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]CommitAuthor:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]CommitAuthor)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case CommitCommitter:
+		vv := o.(CommitCommitter)
+		return vv.ToMap()
+	case *CommitCommitter:
+		return (*o.(*CommitCommitter)).ToMap()
+	case []CommitCommitter:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]CommitCommitter) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]CommitCommitter:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]CommitCommitter)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	case CommitFiles:
 		vv := o.(CommitFiles)
 		return vv.ToMap()
@@ -414,7 +506,7 @@ func toCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string
 
 // String returns a string representation of Commit
 func (o *Commit) String() string {
-	return fmt.Sprintf("sourcecode.Commit<%s>", o.ID)
+	return fmt.Sprintf("pipeline.sourcecode.Commit<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
@@ -477,12 +569,21 @@ func (o *Commit) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Commit) IsMaterialized() bool {
-	return false
+	return true
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *Commit) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "id",
+		TableName: "pipeline.sourcecode_commit",
+		BatchSize: 5000,
+		IdleTime:  idletime,
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
@@ -624,14 +725,19 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		if o.Files == nil {
 			o.Files = make([]CommitFiles, 0)
 		}
+		if o.IssueID == nil {
+			o.IssueID = make([]string, 0)
+		}
 	}
 	o.setDefaults()
 	return map[string]interface{}{
 		"additions":        toCommitObject(o.Additions, isavro, false, "long"),
+		"author":           toCommitObject(o.Author, isavro, false, "author"),
 		"author_ref_id":    toCommitObject(o.AuthorRefID, isavro, false, "string"),
 		"blanks":           toCommitObject(o.Blanks, isavro, false, "long"),
 		"branch":           toCommitObject(o.Branch, isavro, false, "string"),
 		"comments":         toCommitObject(o.Comments, isavro, false, "long"),
+		"committer":        toCommitObject(o.Committer, isavro, false, "committer"),
 		"committer_ref_id": toCommitObject(o.CommitterRefID, isavro, false, "string"),
 		"complexity":       toCommitObject(o.Complexity, isavro, false, "long"),
 		"created":          toCommitObject(o.Created, isavro, false, "string"),
@@ -643,9 +749,12 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"files_changed":    toCommitObject(o.FilesChanged, isavro, false, "long"),
 		"gpg_signed":       toCommitObject(o.GpgSigned, isavro, false, "boolean"),
 		"id":               toCommitObject(o.ID, isavro, false, "string"),
+		"issue_id":         toCommitObject(o.IssueID, isavro, false, "issue_id"),
+		"linked":           toCommitObject(o.Linked, isavro, false, "boolean"),
 		"loc":              toCommitObject(o.Loc, isavro, false, "long"),
 		"message":          toCommitObject(o.Message, isavro, false, "string"),
 		"ordinal":          toCommitObject(o.Ordinal, isavro, false, "long"),
+		"project_id":       toCommitObject(o.ProjectID, isavro, true, "string"),
 		"ref_id":           toCommitObject(o.RefID, isavro, false, "string"),
 		"ref_type":         toCommitObject(o.RefType, isavro, false, "string"),
 		"repo_id":          toCommitObject(o.RepoID, isavro, false, "string"),
@@ -674,6 +783,19 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 				val = datetime.TimeToEpoch(tv)
 			}
 			o.Additions = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["author"].(CommitAuthor); ok {
+		o.Author = val
+	} else {
+		val := kv["author"]
+		if val == nil {
+			o.Author = CommitAuthor{}
+		} else {
+			o.Author = CommitAuthor{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Author)
+
 		}
 	}
 	if val, ok := kv["author_ref_id"].(string); ok {
@@ -726,6 +848,19 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 				val = datetime.TimeToEpoch(tv)
 			}
 			o.Comments = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["committer"].(CommitCommitter); ok {
+		o.Committer = val
+	} else {
+		val := kv["committer"]
+		if val == nil {
+			o.Committer = CommitCommitter{}
+		} else {
+			o.Committer = CommitCommitter{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Committer)
+
 		}
 	}
 	if val, ok := kv["committer_ref_id"].(string); ok {
@@ -882,6 +1017,50 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val := kv["issue_id"]; val != nil {
+		na := make([]string, 0)
+		if a, ok := val.([]string); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for issue_id field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for issue_id field")
+			}
+		}
+		o.IssueID = na
+	} else {
+		o.IssueID = []string{}
+	}
+	if o.IssueID == nil {
+		o.IssueID = make([]string, 0)
+	}
+	if val, ok := kv["linked"].(bool); ok {
+		o.Linked = val
+	} else {
+		val := kv["linked"]
+		if val == nil {
+			o.Linked = number.ToBoolAny(nil)
+		} else {
+			o.Linked = number.ToBoolAny(val)
+		}
+	}
 	if val, ok := kv["loc"].(int64); ok {
 		o.Loc = val
 	} else {
@@ -919,6 +1098,22 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 				val = datetime.TimeToEpoch(tv)
 			}
 			o.Ordinal = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["project_id"].(*string); ok {
+		o.ProjectID = val
+	} else if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = &val
+	} else {
+		val := kv["project_id"]
+		if val == nil {
+			o.ProjectID = pstrings.Pointer("")
+		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
+			o.ProjectID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -1019,10 +1214,12 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 func (o *Commit) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Additions)
+	args = append(args, o.Author)
 	args = append(args, o.AuthorRefID)
 	args = append(args, o.Blanks)
 	args = append(args, o.Branch)
 	args = append(args, o.Comments)
+	args = append(args, o.Committer)
 	args = append(args, o.CommitterRefID)
 	args = append(args, o.Complexity)
 	args = append(args, o.Created)
@@ -1034,9 +1231,12 @@ func (o *Commit) Hash() string {
 	args = append(args, o.FilesChanged)
 	args = append(args, o.GpgSigned)
 	args = append(args, o.ID)
+	args = append(args, o.IssueID)
+	args = append(args, o.Linked)
 	args = append(args, o.Loc)
 	args = append(args, o.Message)
 	args = append(args, o.Ordinal)
+	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
@@ -1052,7 +1252,7 @@ func (o *Commit) Hash() string {
 func GetCommitAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
-		"namespace": "sourcecode",
+		"namespace": "pipeline.sourcecode",
 		"name":      "Commit",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
@@ -1062,6 +1262,10 @@ func GetCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "additions",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "author",
+				"type": map[string]interface{}{"type": "record", "name": "author", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the author that authored the commit"},
 			},
 			map[string]interface{}{
 				"name": "author_ref_id",
@@ -1078,6 +1282,10 @@ func GetCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "comments",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "committer",
+				"type": map[string]interface{}{"type": "record", "name": "committer", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the committer that commmitted the commit"},
 			},
 			map[string]interface{}{
 				"name": "committer_ref_id",
@@ -1109,7 +1317,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"name": "blanks", "doc": "the number of blank lines in the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"doc": "the unique id for the commit", "type": "string", "name": "commit_id"}, map[string]interface{}{"name": "complexity", "doc": "the complexity value for the file change", "type": "long"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"name": "ordinal", "doc": "the order value for the file in the change set", "type": "long"}, map[string]interface{}{"name": "renamed", "doc": "if the file was renamed", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"doc": "the unique id for the repo", "type": "string", "name": "repo_id"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"doc": "the number of source lines in the file", "type": "long", "name": "sloc"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit", "type": "record", "name": "files"}},
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"doc": "if the file was excluded from processing", "type": "boolean", "name": "excluded"}, map[string]interface{}{"doc": "if the file was excluded, the reason", "type": "string", "name": "excluded_reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"name": "license_confidence", "doc": "the license confidence from the detection engine", "type": "float"}, map[string]interface{}{"doc": "the number of lines in the file", "type": "long", "name": "loc"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"doc": "the final file name", "type": "string", "name": "renamed_to"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"name": "size", "doc": "the size of the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"name": "status", "doc": "the status of the change", "type": "string"}}, "doc": "the files touched by this commit"}},
 			},
 			map[string]interface{}{
 				"name": "files_changed",
@@ -1124,6 +1332,14 @@ func GetCommitAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "issue_id",
+				"type": map[string]interface{}{"type": "array", "name": "issue_id", "items": "string"},
+			},
+			map[string]interface{}{
+				"name": "linked",
+				"type": "boolean",
+			},
+			map[string]interface{}{
 				"name": "loc",
 				"type": "long",
 			},
@@ -1134,6 +1350,11 @@ func GetCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ordinal",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name":    "project_id",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1224,7 +1445,7 @@ func NewCommitPipe(input io.ReadCloser, output io.WriteCloser, errors chan error
 
 // NewCommitInputStreamDir creates a channel for reading Commit as JSON newlines from a directory of files
 func NewCommitInputStreamDir(dir string, errors chan<- error, transforms ...TransformCommitFunc) (chan Commit, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/commit\\.json(\\.gz)?$"))
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/pipeline.sourcecode/commit\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
 		ch := make(chan Commit)
@@ -1324,7 +1545,7 @@ func NewCommitInputStream(stream io.ReadCloser, errors chan<- error, transforms 
 
 // NewCommitOutputStreamDir will output json newlines from channel and save in dir
 func NewCommitOutputStreamDir(dir string, ch chan Commit, errors chan<- error, transforms ...TransformCommitFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/commit\\.json(\\.gz)?$")
+	fp := filepath.Join(dir, "/pipeline.sourcecode/commit\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -1502,7 +1723,7 @@ func NewCommitProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.Commit but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type pipeline.sourcecode.Commit but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -1518,14 +1739,14 @@ func NewCommitConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.Commit: %s", err)
+					return fmt.Errorf("error unmarshaling json data into pipeline.sourcecode.Commit: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into sourcecode.Commit: %s", err)
+					return fmt.Errorf("error unmarshaling avri data into pipeline.sourcecode.Commit: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Commit")
+				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.sourcecode.Commit")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &CommitReceiveEvent{&object, msg, false}
