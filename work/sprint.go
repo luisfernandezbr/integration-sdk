@@ -68,6 +68,31 @@ const (
 	SprintStatusColumn = "status"
 )
 
+// Status is the enumeration type for status
+type SprintStatus int32
+
+// String returns the string value for Status
+func (v SprintStatus) String() string {
+	switch int32(v) {
+	case 0:
+		return "active"
+	case 1:
+		return "future"
+	case 2:
+		return "closed"
+	}
+	return "unset"
+}
+
+const (
+	// StatusActive is the enumeration value for active
+	SprintStatusActive SprintStatus = 0
+	// StatusFuture is the enumeration value for future
+	SprintStatusFuture SprintStatus = 1
+	// StatusClosed is the enumeration value for closed
+	SprintStatusClosed SprintStatus = 2
+)
+
 // Sprint sprint details
 type Sprint struct {
 	// CompletedAt the timestamp in UTC that the sprint was completed
@@ -91,7 +116,7 @@ type Sprint struct {
 	// StartedAt the timestamp in UTC that the sprint was started
 	StartedAt int64 `json:"started_ts" bson:"started_ts" yaml:"started_ts" faker:"-"`
 	// Status status of the sprint
-	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
+	Status SprintStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -229,6 +254,20 @@ func toSprintObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		}
 		return arr
 
+	case SprintStatus:
+		if !isavro {
+			return (o.(SprintStatus)).String()
+		}
+		return map[string]string{
+			"work.status": (o.(SprintStatus)).String(),
+		}
+	case *SprintStatus:
+		if !isavro {
+			return (o.(*SprintStatus)).String()
+		}
+		return map[string]string{
+			"work.status": (o.(*SprintStatus)).String(),
+		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -453,7 +492,7 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toSprintObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toSprintObject(o.RefType, isavro, false, "string"),
 		"started_ts":   toSprintObject(o.StartedAt, isavro, false, "long"),
-		"status":       toSprintObject(o.Status, isavro, false, "string"),
+		"status":       toSprintObject(o.Status, isavro, false, "status"),
 		"hashcode":     toSprintObject(o.Hashcode, isavro, false, "string"),
 	}
 }
@@ -600,17 +639,29 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.StartedAt = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["status"].(string); ok {
+	if val, ok := kv["status"].(SprintStatus); ok {
 		o.Status = val
 	} else {
-		val := kv["status"]
-		if val == nil {
-			o.Status = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if em, ok := kv["status"].(map[string]interface{}); ok {
+			ev := em["work.status"].(string)
+			switch ev {
+			case "active":
+				o.Status = 0
+			case "future":
+				o.Status = 1
+			case "closed":
+				o.Status = 2
 			}
-			o.Status = fmt.Sprintf("%v", val)
+		}
+		if em, ok := kv["status"].(string); ok {
+			switch em {
+			case "active":
+				o.Status = 0
+			case "future":
+				o.Status = 1
+			case "closed":
+				o.Status = 2
+			}
 		}
 	}
 	o.setDefaults()
@@ -689,7 +740,13 @@ func GetSprintAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "status",
-				"type": "string",
+				"type": []interface{}{
+					map[string]interface{}{
+						"type":    "enum",
+						"name":    "status",
+						"symbols": []interface{}{"active", "future", "closed"},
+					},
+				},
 			},
 		},
 	}
