@@ -52,10 +52,10 @@ const (
 	SprintEndedAtColumn = "ended_ts"
 	// SprintFetchedAtColumn is the fetched_ts column name
 	SprintFetchedAtColumn = "fetched_ts"
+	// SprintGoalColumn is the goal column name
+	SprintGoalColumn = "goal"
 	// SprintIDColumn is the id column name
 	SprintIDColumn = "id"
-	// SprintIdentifierColumn is the identifier column name
-	SprintIdentifierColumn = "identifier"
 	// SprintNameColumn is the name column name
 	SprintNameColumn = "name"
 	// SprintRefIDColumn is the ref_id column name
@@ -78,10 +78,10 @@ type Sprint struct {
 	EndedAt *int64 `json:"ended_ts" bson:"ended_ts" yaml:"ended_ts" faker:"-"`
 	// FetchedAt data in epoch when the api was called
 	FetchedAt int64 `json:"fetched_ts" bson:"fetched_ts" yaml:"fetched_ts" faker:"-"`
+	// Goal the goal for the sprint
+	Goal string `json:"goal" bson:"goal" yaml:"goal" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Identifier the common identifier for the sprint
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// Name the name of the field
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
@@ -447,8 +447,8 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 		"customer_id":  toSprintObject(o.CustomerID, isavro, false, "string"),
 		"ended_ts":     toSprintObject(o.EndedAt, isavro, true, "long"),
 		"fetched_ts":   toSprintObject(o.FetchedAt, isavro, false, "long"),
+		"goal":         toSprintObject(o.Goal, isavro, false, "string"),
 		"id":           toSprintObject(o.ID, isavro, false, "string"),
-		"identifier":   toSprintObject(o.Identifier, isavro, false, "string"),
 		"name":         toSprintObject(o.Name, isavro, false, "string"),
 		"ref_id":       toSprintObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toSprintObject(o.RefType, isavro, false, "string"),
@@ -522,6 +522,19 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.FetchedAt = number.ToInt64Any(val)
 		}
 	}
+	if val, ok := kv["goal"].(string); ok {
+		o.Goal = val
+	} else {
+		val := kv["goal"]
+		if val == nil {
+			o.Goal = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Goal = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -533,19 +546,6 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["identifier"].(string); ok {
-		o.Identifier = val
-	} else {
-		val := kv["identifier"]
-		if val == nil {
-			o.Identifier = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Identifier = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["name"].(string); ok {
@@ -623,8 +623,8 @@ func (o *Sprint) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.EndedAt)
 	args = append(args, o.FetchedAt)
+	args = append(args, o.Goal)
 	args = append(args, o.ID)
-	args = append(args, o.Identifier)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
@@ -664,11 +664,11 @@ func GetSprintAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "id",
+				"name": "goal",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "identifier",
+				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{
