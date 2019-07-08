@@ -79,7 +79,7 @@ func (o *CustomFieldDate) ToMap() map[string]interface{} {
 	}
 }
 
-// CustomField
+// CustomField user defined fields
 type CustomField struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
