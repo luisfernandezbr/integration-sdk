@@ -28,6 +28,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -634,6 +635,19 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 						na = append(na, av)
 					}
 				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(IssueCustomFields); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av IssueCustomFields
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for customFields field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
 				panic("unsupported type for customFields field")
@@ -850,6 +864,19 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 				for _, sv := range strings.Split(s, ",") {
 					na = append(na, strings.TrimSpace(sv))
 				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for tags field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
 				panic("unsupported type for tags field")
@@ -972,7 +999,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"doc": "list of custom fields and their values", "type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"doc": "the value of the custom field", "type": "string", "name": "value"}}}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

@@ -28,6 +28,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -532,6 +533,19 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 				for _, sv := range strings.Split(s, ",") {
 					na = append(na, strings.TrimSpace(sv))
 				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for branched_from_commits field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
 				panic("unsupported type for branched_from_commits field")
@@ -565,6 +579,19 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			} else if s, ok := val.(string); ok {
 				for _, sv := range strings.Split(s, ",") {
 					na = append(na, strings.TrimSpace(sv))
+				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for commits field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
 				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
@@ -737,7 +764,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"name": "commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

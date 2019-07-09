@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -583,6 +584,19 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 						na = append(na, av)
 					}
 				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(ExportRequestIntegrations); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av ExportRequestIntegrations
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for integrations field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
 				panic("unsupported type for integrations field")
@@ -685,7 +699,7 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -693,7 +707,7 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integrations",
-				"type": map[string]interface{}{"type": "array", "name": "integrations", "items": map[string]interface{}{"fields": []interface{}{}, "doc": "The integrations that should be exported and their current configuration", "type": "record", "name": "integrations"}},
+				"type": map[string]interface{}{"type": "array", "name": "integrations", "items": map[string]interface{}{"type": "record", "name": "integrations", "fields": []interface{}{}, "doc": "The integrations that should be exported and their current configuration"}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

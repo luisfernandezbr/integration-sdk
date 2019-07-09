@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -505,6 +506,19 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			} else if s, ok := val.(string); ok {
 				for _, sv := range strings.Split(s, ",") {
 					na = append(na, strings.TrimSpace(sv))
+				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for emails field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
 				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())

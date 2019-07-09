@@ -29,6 +29,7 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -975,6 +976,19 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 						na = append(na, av)
 					}
 				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(CommitFiles); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av CommitFiles
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for files field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
 				panic("unsupported type for files field")
@@ -1044,6 +1058,19 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			} else if s, ok := val.(string); ok {
 				for _, sv := range strings.Split(s, ",") {
 					na = append(na, strings.TrimSpace(sv))
+				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for issue_id field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
 				}
 			} else {
 				fmt.Println(reflect.TypeOf(val).String())
@@ -1271,7 +1298,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "author",
-				"type": map[string]interface{}{"type": "record", "name": "author", "fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the corporate user id", "type": "string"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the author that authored the commit"},
+				"type": map[string]interface{}{"doc": "the author that authored the commit", "type": "record", "name": "author", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}},
 			},
 			map[string]interface{}{
 				"name": "author_ref_id",
@@ -1291,7 +1318,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "committer",
-				"type": map[string]interface{}{"type": "record", "name": "committer", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the committer that commmitted the commit"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the corporate user id", "type": "string", "name": "id"}, map[string]interface{}{"name": "team_id", "doc": "the corporate team id", "type": "string"}}, "doc": "the committer that commmitted the commit", "type": "record", "name": "committer"},
 			},
 			map[string]interface{}{
 				"name": "committer_ref_id",
@@ -1323,7 +1350,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"name": "excluded", "doc": "if the file was excluded from processing", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"doc": "the filename", "type": "string", "name": "filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"doc": "the license confidence from the detection engine", "type": "float", "name": "license_confidence"}, map[string]interface{}{"name": "loc", "doc": "the number of lines in the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"name": "renamed", "doc": "if the file was renamed", "type": "boolean"}, map[string]interface{}{"name": "renamed_from", "doc": "the original file name", "type": "string"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit", "type": "record", "name": "files"}},
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"name": "additions", "doc": "the number of additions for the commit file", "type": "long"}, map[string]interface{}{"name": "binary", "doc": "indicates if the file was detected to be a binary file", "type": "boolean"}, map[string]interface{}{"doc": "the number of blank lines in the file", "type": "long", "name": "blanks"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"name": "complexity", "doc": "the complexity value for the file change", "type": "long"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"doc": "the number of lines in the file", "type": "long", "name": "loc"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"doc": "if the file was renamed", "type": "boolean", "name": "renamed"}, map[string]interface{}{"doc": "the original file name", "type": "string", "name": "renamed_from"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"name": "size", "doc": "the size of the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"name": "status", "doc": "the status of the change", "type": "string"}}, "doc": "the files touched by this commit"}},
 			},
 			map[string]interface{}{
 				"name": "files_changed",
@@ -1339,7 +1366,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "issue_id",
-				"type": map[string]interface{}{"type": "array", "name": "issue_id", "items": "string"},
+				"type": map[string]interface{}{"name": "issue_id", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "linked",
