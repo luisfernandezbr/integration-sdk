@@ -617,7 +617,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "emails",
-				"type": map[string]interface{}{"name": "emails", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "id",
