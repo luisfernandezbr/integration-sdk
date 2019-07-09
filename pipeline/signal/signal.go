@@ -382,17 +382,23 @@ func (o *Signal) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *Signal) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("168h0m0s")
+	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
 		Timestamp:         "date_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
-		Retention:         duration,
+		Retention:         retention,
 		MaxSize:           5242880,
+		TTL:               ttl,
 	}
 }
 
@@ -765,7 +771,7 @@ func GetSignalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "date object"},
 			},
 			map[string]interface{}{
 				"name": "date_ts",
@@ -1180,6 +1186,12 @@ func NewSignalConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.signal.Signal")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
+			//ignore messages that have exceeded the TTL
+			cfg := object.GetTopicConfig()
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+				return nil
+			}
 			ch <- &SignalReceiveEvent{&object, msg, false}
 			return nil
 		},

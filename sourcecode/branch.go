@@ -323,17 +323,23 @@ func (o *Branch) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("168h0m0s")
+	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
 		Timestamp:         "",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
-		Retention:         duration,
+		Retention:         retention,
 		MaxSize:           5242880,
+		TTL:               ttl,
 	}
 }
 
@@ -731,7 +737,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+				"type": map[string]interface{}{"name": "commits", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1134,6 +1140,12 @@ func NewBranchConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Branch")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
+			//ignore messages that have exceeded the TTL
+			cfg := object.GetTopicConfig()
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+				return nil
+			}
 			ch <- &BranchReceiveEvent{&object, msg, false}
 			return nil
 		},

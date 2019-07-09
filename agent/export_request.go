@@ -62,43 +62,6 @@ const (
 	ExportRequestUUIDColumn = "uuid"
 )
 
-// ExportRequestAuthorization represents the object structure for authorization
-type ExportRequestAuthorization struct {
-	// AccessToken Access token
-	AccessToken *string `json:"access_token" bson:"access_token" yaml:"access_token" faker:"-"`
-	// APIToken API Token for instance, if relevant
-	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
-	// Authorization the agents encrypted authorization
-	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
-	// Password Password for instance, if relevant
-	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
-	// RefreshToken Refresh token
-	RefreshToken *string `json:"refresh_token" bson:"refresh_token" yaml:"refresh_token" faker:"-"`
-	// URL URL of instance if relevant
-	URL *string `json:"url" bson:"url" yaml:"url" faker:"-"`
-	// Username Username for instance, if relevant
-	Username *string `json:"username" bson:"username" yaml:"username" faker:"-"`
-}
-
-func (o *ExportRequestAuthorization) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// AccessToken Access token
-		"access_token": o.AccessToken,
-		// APIToken API Token for instance, if relevant
-		"api_token": o.APIToken,
-		// Authorization the agents encrypted authorization
-		"authorization": o.Authorization,
-		// Password Password for instance, if relevant
-		"password": o.Password,
-		// RefreshToken Refresh token
-		"refresh_token": o.RefreshToken,
-		// URL URL of instance if relevant
-		"url": o.URL,
-		// Username Username for instance, if relevant
-		"username": o.Username,
-	}
-}
-
 // ExportRequestDate represents the object structure for date
 type ExportRequestDate struct {
 	// Epoch the date in epoch format
@@ -122,72 +85,10 @@ func (o *ExportRequestDate) ToMap() map[string]interface{} {
 
 // ExportRequestIntegrations represents the object structure for integrations
 type ExportRequestIntegrations struct {
-	// Active If true, the integration is still active
-	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
-	// Authorization Authorization information
-	Authorization ExportRequestAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
-	// Errored If authorization failed by the agent
-	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
-	// Exclusions The exclusion list for this integration
-	Exclusions []string `json:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
-	// Location The location of this integration (on-premise / private or cloud)
-	Location string `json:"location" bson:"location" yaml:"location" faker:"-"`
-	// Name The user friendly name of the integration
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
-	// Progress Agent processing progress
-	Progress ExportRequestProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
-	// Validated If the validation has been run against this instance
-	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
-	// ValidatedAt Timestamp when validated
-	ValidatedAt *int64 `json:"validated_ts" bson:"validated_ts" yaml:"validated_ts" faker:"-"`
-	// ValidationMessage The validation message from the agent
-	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
 }
 
 func (o *ExportRequestIntegrations) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Active If true, the integration is still active
-		"active": o.Active,
-		// Authorization Authorization information
-		"authorization": o.Authorization,
-		// Errored If authorization failed by the agent
-		"errored": o.Errored,
-		// Exclusions The exclusion list for this integration
-		"exclusions": o.Exclusions,
-		// Location The location of this integration (on-premise / private or cloud)
-		"location": o.Location,
-		// Name The user friendly name of the integration
-		"name": o.Name,
-		// Progress Agent processing progress
-		"progress": o.Progress,
-		// Validated If the validation has been run against this instance
-		"validated": o.Validated,
-		// ValidatedAt Timestamp when validated
-		"validated_ts": o.ValidatedAt,
-		// ValidationMessage The validation message from the agent
-		"validation_message": o.ValidationMessage,
-	}
-}
-
-// ExportRequestProgress represents the object structure for progress
-type ExportRequestProgress struct {
-	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
-	// Message Any relevant messaging during processing
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
-	// Total The total amount to be processed
-	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
-}
-
-func (o *ExportRequestProgress) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Completed The total amount processed thus far
-		"completed": o.Completed,
-		// Message Any relevant messaging during processing
-		"message": o.Message,
-		// Total The total amount to be processed
-		"total": o.Total,
-	}
+	return map[string]interface{}{}
 }
 
 // ExportRequest an agent action to request an export
@@ -345,24 +246,6 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 		}
 		return arr
 
-	case ExportRequestAuthorization:
-		vv := o.(ExportRequestAuthorization)
-		return vv.ToMap()
-	case *ExportRequestAuthorization:
-		return (*o.(*ExportRequestAuthorization)).ToMap()
-	case []ExportRequestAuthorization:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportRequestAuthorization) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportRequestAuthorization:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportRequestAuthorization)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ExportRequestDate:
 		vv := o.(ExportRequestDate)
 		return vv.ToMap()
@@ -395,24 +278,6 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *[]ExportRequestIntegrations:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]ExportRequestIntegrations)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case ExportRequestProgress:
-		vv := o.(ExportRequestProgress)
-		return vv.ToMap()
-	case *ExportRequestProgress:
-		return (*o.(*ExportRequestProgress)).ToMap()
-	case []ExportRequestProgress:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportRequestProgress) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportRequestProgress:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportRequestProgress)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -508,17 +373,23 @@ func (o *ExportRequest) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *ExportRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("168h0m0s")
+	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
 		Timestamp:         "date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
-		Retention:         duration,
+		Retention:         retention,
 		MaxSize:           5242880,
+		TTL:               ttl,
 	}
 }
 
@@ -814,7 +685,7 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record", "name": "date"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -822,7 +693,7 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integrations",
-				"type": map[string]interface{}{"name": "integrations", "items": map[string]interface{}{"name": "integrations", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"doc": "Username for instance, if relevant", "type": "string", "name": "username"}}, "doc": "Authorization information", "type": "record", "name": "integrations.authorization"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"doc": "If authorization failed by the agent", "type": "boolean", "name": "errored"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "location", "doc": "The location of this integration (on-premise / private or cloud)"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.progress", "fields": []interface{}{map[string]interface{}{"doc": "The total amount processed thus far", "type": "long", "name": "completed"}, map[string]interface{}{"doc": "Any relevant messaging during processing", "type": "string", "name": "message"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": "long", "name": "validated_ts", "doc": "Timestamp when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "The integrations that should be exported and their current configuration", "type": "record"}, "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "integrations", "items": map[string]interface{}{"fields": []interface{}{}, "doc": "The integrations that should be exported and their current configuration", "type": "record", "name": "integrations"}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1206,6 +1077,12 @@ func NewExportRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mo
 				return fmt.Errorf("unsure of the encoding since it was not set for agent.ExportRequest")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
+			//ignore messages that have exceeded the TTL
+			cfg := object.GetTopicConfig()
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+				return nil
+			}
 			ch <- &ExportRequestReceiveEvent{&object, msg, false}
 			return nil
 		},

@@ -289,17 +289,23 @@ func (o *Hook) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *Hook) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("168h0m0s")
+	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "system",
 		Timestamp:         "date_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
-		Retention:         duration,
+		Retention:         retention,
 		MaxSize:           5242880,
+		TTL:               ttl,
 	}
 }
 
@@ -916,6 +922,12 @@ func NewHookConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 				return fmt.Errorf("unsure of the encoding since it was not set for web.Hook")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
+			//ignore messages that have exceeded the TTL
+			cfg := object.GetTopicConfig()
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+				return nil
+			}
 			ch <- &HookReceiveEvent{&object, msg, false}
 			return nil
 		},

@@ -406,17 +406,23 @@ func (o *Issue) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("168h0m0s")
+	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "project_id",
 		Timestamp:         "updated",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
-		Retention:         duration,
+		Retention:         retention,
 		MaxSize:           5242880,
+		TTL:               ttl,
 	}
 }
 
@@ -966,7 +972,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the id of the custom field", "type": "string", "name": "id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values", "type": "record", "name": "customFields"}},
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1409,6 +1415,12 @@ func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 				return fmt.Errorf("unsure of the encoding since it was not set for work.Issue")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
+			//ignore messages that have exceeded the TTL
+			cfg := object.GetTopicConfig()
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+				return nil
+			}
 			ch <- &IssueReceiveEvent{&object, msg, false}
 			return nil
 		},

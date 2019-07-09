@@ -453,17 +453,23 @@ func (o *Blame) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *Blame) GetTopicConfig() *datamodel.ModelTopicConfig {
-	duration, err := time.ParseDuration("168h0m0s")
+	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
 		Timestamp:         "date_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
-		Retention:         duration,
+		Retention:         retention,
 		MaxSize:           5242880,
+		TTL:               ttl,
 	}
 }
 
@@ -1027,7 +1033,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions", "type": "record"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
 			},
 			map[string]interface{}{
 				"name": "loc",
@@ -1432,6 +1438,12 @@ func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Blame")
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
+			//ignore messages that have exceeded the TTL
+			cfg := object.GetTopicConfig()
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+				return nil
+			}
 			ch <- &BlameReceiveEvent{&object, msg, false}
 			return nil
 		},
