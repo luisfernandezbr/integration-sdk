@@ -15,18 +15,21 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -52,6 +55,8 @@ const (
 	UserCostColumn = "cost"
 	// UserCostCenterIDColumn is the cost_center_id column name
 	UserCostCenterIDColumn = "cost_center_id"
+	// UserCreatedAtColumn is the created_ts column name
+	UserCreatedAtColumn = "created_ts"
 	// UserCustomerIDColumn is the customer_id column name
 	UserCustomerIDColumn = "customer_id"
 	// UserDeletedAtColumn is the deleted_ts column name
@@ -70,18 +75,24 @@ const (
 	UserNameColumn = "name"
 	// UserOwnerColumn is the owner column name
 	UserOwnerColumn = "owner"
+	// UserPrimaryTeamIDColumn is the primary_team_id column name
+	UserPrimaryTeamIDColumn = "primary_team_id"
 	// UserRefIDColumn is the ref_id column name
 	UserRefIDColumn = "ref_id"
 	// UserRefTypeColumn is the ref_type column name
 	UserRefTypeColumn = "ref_type"
-	// UserTeamIDColumn is the team_id column name
-	UserTeamIDColumn = "team_id"
+	// UserRoleIdsColumn is the role_ids column name
+	UserRoleIdsColumn = "role_ids"
+	// UserTeamIdsColumn is the team_ids column name
+	UserTeamIdsColumn = "team_ids"
 	// UserTerminatedAtColumn is the terminated_ts column name
 	UserTerminatedAtColumn = "terminated_ts"
 	// UserTitleColumn is the title column name
 	UserTitleColumn = "title"
 	// UserTrackableColumn is the trackable column name
 	UserTrackableColumn = "trackable"
+	// UserUpdatedAtColumn is the updated_ts column name
+	UserUpdatedAtColumn = "updated_ts"
 )
 
 // User the enriched customer user record
@@ -94,6 +105,8 @@ type User struct {
 	Cost float64 `json:"cost" bson:"cost" yaml:"cost" faker:"-"`
 	// CostCenterID the id of the cost center
 	CostCenterID *string `json:"cost_center_id" bson:"cost_center_id" yaml:"cost_center_id" faker:"-"`
+	// CreatedAt the date the record was created in Epoch time
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DeletedAt when the user record was deleted in epoch timestamp
@@ -112,18 +125,24 @@ type User struct {
 	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
 	// Owner if true, the user is an owner of the account
 	Owner bool `json:"owner" bson:"owner" yaml:"owner" faker:"-"`
+	// PrimaryTeamID the team id of the user's primary team
+	PrimaryTeamID *string `json:"primary_team_id" bson:"primary_team_id" yaml:"primary_team_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// TeamID the team id that the user is part of
-	TeamID *string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
+	// RoleIds the auth role ids for the user
+	RoleIds []string `json:"role_ids" bson:"role_ids" yaml:"role_ids" faker:"-"`
+	// TeamIds the team ids that the user is part of
+	TeamIds []string `json:"team_ids" bson:"team_ids" yaml:"team_ids" faker:"-"`
 	// TerminatedAt when the user was terminated in epoch timestamp
 	TerminatedAt *int64 `json:"terminated_ts" bson:"terminated_ts" yaml:"terminated_ts" faker:"-"`
 	// Title the title of the user
 	Title *string `json:"title" bson:"title" yaml:"title" faker:"jobtitle"`
 	// Trackable if true, the user is trackable in the pinpoint system
 	Trackable bool `json:"trackable" bson:"trackable" yaml:"trackable" faker:"-"`
+	// UpdatedAt the date the record was updated in Epoch time
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -465,29 +484,39 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
+		if o.RoleIds == nil {
+			o.RoleIds = make([]string, 0)
+		}
+		if o.TeamIds == nil {
+			o.TeamIds = make([]string, 0)
+		}
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"active":         toUserObject(o.Active, isavro, false, "boolean"),
-		"avatar_url":     toUserObject(o.AvatarURL, isavro, true, "string"),
-		"cost":           toUserObject(o.Cost, isavro, false, "float"),
-		"cost_center_id": toUserObject(o.CostCenterID, isavro, true, "string"),
-		"customer_id":    toUserObject(o.CustomerID, isavro, false, "string"),
-		"deleted_ts":     toUserObject(o.DeletedAt, isavro, true, "long"),
-		"email":          toUserObject(o.Email, isavro, false, "string"),
-		"hired_ts":       toUserObject(o.HiredAt, isavro, true, "long"),
-		"id":             toUserObject(o.ID, isavro, false, "string"),
-		"location":       toUserObject(o.Location, isavro, true, "string"),
-		"manager_id":     toUserObject(o.ManagerID, isavro, true, "string"),
-		"name":           toUserObject(o.Name, isavro, false, "string"),
-		"owner":          toUserObject(o.Owner, isavro, false, "boolean"),
-		"ref_id":         toUserObject(o.RefID, isavro, false, "string"),
-		"ref_type":       toUserObject(o.RefType, isavro, false, "string"),
-		"team_id":        toUserObject(o.TeamID, isavro, true, "string"),
-		"terminated_ts":  toUserObject(o.TerminatedAt, isavro, true, "long"),
-		"title":          toUserObject(o.Title, isavro, true, "string"),
-		"trackable":      toUserObject(o.Trackable, isavro, false, "boolean"),
-		"hashcode":       toUserObject(o.Hashcode, isavro, false, "string"),
+		"active":          toUserObject(o.Active, isavro, false, "boolean"),
+		"avatar_url":      toUserObject(o.AvatarURL, isavro, true, "string"),
+		"cost":            toUserObject(o.Cost, isavro, false, "float"),
+		"cost_center_id":  toUserObject(o.CostCenterID, isavro, true, "string"),
+		"created_ts":      toUserObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id":     toUserObject(o.CustomerID, isavro, false, "string"),
+		"deleted_ts":      toUserObject(o.DeletedAt, isavro, true, "long"),
+		"email":           toUserObject(o.Email, isavro, false, "string"),
+		"hired_ts":        toUserObject(o.HiredAt, isavro, true, "long"),
+		"id":              toUserObject(o.ID, isavro, false, "string"),
+		"location":        toUserObject(o.Location, isavro, true, "string"),
+		"manager_id":      toUserObject(o.ManagerID, isavro, true, "string"),
+		"name":            toUserObject(o.Name, isavro, false, "string"),
+		"owner":           toUserObject(o.Owner, isavro, false, "boolean"),
+		"primary_team_id": toUserObject(o.PrimaryTeamID, isavro, true, "string"),
+		"ref_id":          toUserObject(o.RefID, isavro, false, "string"),
+		"ref_type":        toUserObject(o.RefType, isavro, false, "string"),
+		"role_ids":        toUserObject(o.RoleIds, isavro, false, "role_ids"),
+		"team_ids":        toUserObject(o.TeamIds, isavro, false, "team_ids"),
+		"terminated_ts":   toUserObject(o.TerminatedAt, isavro, true, "long"),
+		"title":           toUserObject(o.Title, isavro, true, "string"),
+		"trackable":       toUserObject(o.Trackable, isavro, false, "boolean"),
+		"updated_ts":      toUserObject(o.UpdatedAt, isavro, false, "long"),
+		"hashcode":        toUserObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -547,6 +576,19 @@ func (o *User) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.CostCenterID = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else {
+		val := kv["created_ts"]
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
@@ -675,6 +717,22 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Owner = number.ToBoolAny(val)
 		}
 	}
+	if val, ok := kv["primary_team_id"].(*string); ok {
+		o.PrimaryTeamID = val
+	} else if val, ok := kv["primary_team_id"].(string); ok {
+		o.PrimaryTeamID = &val
+	} else {
+		val := kv["primary_team_id"]
+		if val == nil {
+			o.PrimaryTeamID = pstrings.Pointer("")
+		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
+			o.PrimaryTeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -701,21 +759,99 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["team_id"].(*string); ok {
-		o.TeamID = val
-	} else if val, ok := kv["team_id"].(string); ok {
-		o.TeamID = &val
-	} else {
-		val := kv["team_id"]
-		if val == nil {
-			o.TeamID = pstrings.Pointer("")
+	if val := kv["role_ids"]; val != nil {
+		na := make([]string, 0)
+		if a, ok := val.([]string); ok {
+			na = append(na, a...)
 		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for role_ids field")
 			}
-			o.TeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
+		o.RoleIds = na
+	} else {
+		o.RoleIds = []string{}
+	}
+	if o.RoleIds == nil {
+		o.RoleIds = make([]string, 0)
+	}
+	if val := kv["team_ids"]; val != nil {
+		na := make([]string, 0)
+		if a, ok := val.([]string); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for team_ids field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for team_ids field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for team_ids field")
+			}
+		}
+		o.TeamIds = na
+	} else {
+		o.TeamIds = []string{}
+	}
+	if o.TeamIds == nil {
+		o.TeamIds = make([]string, 0)
 	}
 	if val, ok := kv["terminated_ts"].(*int64); ok {
 		o.TerminatedAt = val
@@ -759,6 +895,19 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Trackable = number.ToBoolAny(val)
 		}
 	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		val := kv["updated_ts"]
+		if val == nil {
+			o.UpdatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.UpdatedAt = number.ToInt64Any(val)
+		}
+	}
 	o.setDefaults()
 }
 
@@ -769,6 +918,7 @@ func (o *User) Hash() string {
 	args = append(args, o.AvatarURL)
 	args = append(args, o.Cost)
 	args = append(args, o.CostCenterID)
+	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.DeletedAt)
 	args = append(args, o.Email)
@@ -778,12 +928,15 @@ func (o *User) Hash() string {
 	args = append(args, o.ManagerID)
 	args = append(args, o.Name)
 	args = append(args, o.Owner)
+	args = append(args, o.PrimaryTeamID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.TeamID)
+	args = append(args, o.RoleIds)
+	args = append(args, o.TeamIds)
 	args = append(args, o.TerminatedAt)
 	args = append(args, o.Title)
 	args = append(args, o.Trackable)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -816,6 +969,10 @@ func GetUserAvroSchemaSpec() string {
 				"name":    "cost_center_id",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -858,6 +1015,11 @@ func GetUserAvroSchemaSpec() string {
 				"type": "boolean",
 			},
 			map[string]interface{}{
+				"name":    "primary_team_id",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
+			},
+			map[string]interface{}{
 				"name": "ref_id",
 				"type": "string",
 			},
@@ -866,9 +1028,12 @@ func GetUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name":    "team_id",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
+				"name": "role_ids",
+				"type": map[string]interface{}{"type": "array", "name": "role_ids", "items": "string"},
+			},
+			map[string]interface{}{
+				"name": "team_ids",
+				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name":    "terminated_ts",
@@ -883,6 +1048,10 @@ func GetUserAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "trackable",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 		},
 	}
