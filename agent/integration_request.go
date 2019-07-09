@@ -51,6 +51,8 @@ const (
 	IntegrationRequestIDColumn = "id"
 	// IntegrationRequestIntegrationColumn is the integration column name
 	IntegrationRequestIntegrationColumn = "integration"
+	// IntegrationRequestLocationColumn is the location column name
+	IntegrationRequestLocationColumn = "location"
 	// IntegrationRequestRefIDColumn is the ref_id column name
 	IntegrationRequestRefIDColumn = "ref_id"
 	// IntegrationRequestRefTypeColumn is the ref_type column name
@@ -166,6 +168,27 @@ func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 	}
 }
 
+// Location is the enumeration type for location
+type IntegrationRequestLocation int32
+
+// String returns the string value for Location
+func (v IntegrationRequestLocation) String() string {
+	switch int32(v) {
+	case 0:
+		return "private"
+	case 1:
+		return "cloud"
+	}
+	return "unset"
+}
+
+const (
+	// LocationPrivate is the enumeration value for private
+	IntegrationRequestLocationPrivate IntegrationRequestLocation = 0
+	// LocationCloud is the enumeration value for cloud
+	IntegrationRequestLocationCloud IntegrationRequestLocation = 1
+)
+
 // IntegrationRequestProgress represents the object structure for progress
 type IntegrationRequestProgress struct {
 	// Completed The total amount processed thus far
@@ -197,6 +220,8 @@ type IntegrationRequest struct {
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to add
 	Integration IntegrationRequestIntegration `json:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	// Location The location of this integration (on-premise / private or cloud)
+	Location IntegrationRequestLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -394,6 +419,20 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 			arr = append(arr, i.ToMap())
 		}
 		return arr
+	case IntegrationRequestLocation:
+		if !isavro {
+			return (o.(IntegrationRequestLocation)).String()
+		}
+		return map[string]string{
+			"agent.location": (o.(IntegrationRequestLocation)).String(),
+		}
+	case *IntegrationRequestLocation:
+		if !isavro {
+			return (o.(*IntegrationRequestLocation)).String()
+		}
+		return map[string]string{
+			"agent.location": (o.(*IntegrationRequestLocation)).String(),
+		}
 	case IntegrationRequestProgress:
 		vv := o.(IntegrationRequestProgress)
 		return vv.ToMap()
@@ -639,6 +678,7 @@ func (o *IntegrationRequest) ToMap(avro ...bool) map[string]interface{} {
 		"date":        toIntegrationRequestObject(o.Date, isavro, false, "date"),
 		"id":          toIntegrationRequestObject(o.ID, isavro, false, "string"),
 		"integration": toIntegrationRequestObject(o.Integration, isavro, false, "integration"),
+		"location":    toIntegrationRequestObject(o.Location, isavro, false, "location"),
 		"ref_id":      toIntegrationRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toIntegrationRequestObject(o.RefType, isavro, false, "string"),
 		"uuid":        toIntegrationRequestObject(o.UUID, isavro, false, "string"),
@@ -704,6 +744,27 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 
 		}
 	}
+	if val, ok := kv["location"].(IntegrationRequestLocation); ok {
+		o.Location = val
+	} else {
+		if em, ok := kv["location"].(map[string]interface{}); ok {
+			ev := em["agent.location"].(string)
+			switch ev {
+			case "private":
+				o.Location = 0
+			case "cloud":
+				o.Location = 1
+			}
+		}
+		if em, ok := kv["location"].(string); ok {
+			switch em {
+			case "private":
+				o.Location = 0
+			case "cloud":
+				o.Location = 1
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -753,6 +814,7 @@ func (o *IntegrationRequest) Hash() string {
 	args = append(args, o.Date)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
+	args = append(args, o.Location)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UUID)
@@ -777,7 +839,7 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"doc": "the date when the request was made", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record", "name": "date"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -785,7 +847,17 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"doc": "Access token", "type": "string", "name": "access_token"}, map[string]interface{}{"doc": "API Token for instance, if relevant", "type": "string", "name": "api_token"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"name": "password", "doc": "Password for instance, if relevant", "type": "string"}, map[string]interface{}{"doc": "Refresh token", "type": "string", "name": "refresh_token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"doc": "Username for instance, if relevant", "type": "string", "name": "username"}}, "doc": "Authorization information", "type": "record"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"items": "string", "type": "array", "name": "exclusions"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": map[string]interface{}{"symbols": []string{"private", "cloud"}, "doc": "The location of this integration (on-premise / private or cloud)", "type": "enum", "name": "integration.location"}, "name": "location", "doc": "The location of this integration (on-premise / private or cloud)"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"name": "completed", "doc": "The total amount processed thus far", "type": "long"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"name": "validated_ts", "doc": "Timestamp when validated", "type": "long"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to add"},
+				"type": map[string]interface{}{"doc": "the integration details to add", "type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "type": "boolean", "name": "active"}, map[string]interface{}{"doc": "Authorization information", "type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"name": "url", "doc": "URL of instance if relevant", "type": "string"}, map[string]interface{}{"doc": "Username for instance, if relevant", "type": "string", "name": "username"}}, "doc": "Authorization information"}, "name": "authorization"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"name": "exclusions", "items": "string", "type": "array"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": map[string]interface{}{"name": "integration.location", "symbols": []string{"private", "cloud"}, "doc": "The location of this integration (on-premise / private or cloud)", "type": "enum"}, "name": "location", "doc": "The location of this integration (on-premise / private or cloud)"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"doc": "Any relevant messaging during processing", "type": "string", "name": "message"}, map[string]interface{}{"name": "total", "doc": "The total amount to be processed", "type": "long"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": "long", "name": "validated_ts", "doc": "Timestamp when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}},
+			},
+			map[string]interface{}{
+				"name": "location",
+				"type": []interface{}{
+					map[string]interface{}{
+						"type":    "enum",
+						"name":    "location",
+						"symbols": []interface{}{"private", "cloud"},
+					},
+				},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
