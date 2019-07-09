@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -27,7 +28,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -47,6 +47,8 @@ const (
 const (
 	// TeamActiveColumn is the active column name
 	TeamActiveColumn = "active"
+	// TeamChildrenIdsColumn is the children_ids column name
+	TeamChildrenIdsColumn = "children_ids"
 	// TeamCreatedAtColumn is the created_ts column name
 	TeamCreatedAtColumn = "created_ts"
 	// TeamCustomerIDColumn is the customer_id column name
@@ -55,10 +57,12 @@ const (
 	TeamDescriptionColumn = "description"
 	// TeamIDColumn is the id column name
 	TeamIDColumn = "id"
+	// TeamLeafColumn is the leaf column name
+	TeamLeafColumn = "leaf"
 	// TeamNameColumn is the name column name
 	TeamNameColumn = "name"
-	// TeamParentIDColumn is the parent_id column name
-	TeamParentIDColumn = "parent_id"
+	// TeamParentIdsColumn is the parent_ids column name
+	TeamParentIdsColumn = "parent_ids"
 	// TeamRefIDColumn is the ref_id column name
 	TeamRefIDColumn = "ref_id"
 	// TeamRefTypeColumn is the ref_type column name
@@ -71,6 +75,8 @@ const (
 type Team struct {
 	// Active whether the team is tracked in pinpoint
 	Active *bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	// ChildrenIds the children_ids for this team
+	ChildrenIds []string `json:"children_ids" bson:"children_ids" yaml:"children_ids" faker:"-"`
 	// CreatedAt the date the record was created in Epoch time
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -79,10 +85,12 @@ type Team struct {
 	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Leaf True when team has no children_ids
+	Leaf bool `json:"leaf" bson:"leaf" yaml:"leaf" faker:"-"`
 	// Name the name of the team
 	Name string `json:"name" bson:"name" yaml:"name" faker:"team"`
-	// ParentID the parent id of the team
-	ParentID *string `json:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
+	// ParentIds the parent_ids for this team
+	ParentIds []string `json:"parent_ids" bson:"parent_ids" yaml:"parent_ids" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -434,20 +442,28 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
+		if o.ChildrenIds == nil {
+			o.ChildrenIds = make([]string, 0)
+		}
+		if o.ParentIds == nil {
+			o.ParentIds = make([]string, 0)
+		}
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"active":      toTeamObject(o.Active, isavro, true, "boolean"),
-		"created_ts":  toTeamObject(o.CreatedAt, isavro, false, "long"),
-		"customer_id": toTeamObject(o.CustomerID, isavro, false, "string"),
-		"description": toTeamObject(o.Description, isavro, false, "string"),
-		"id":          toTeamObject(o.ID, isavro, false, "string"),
-		"name":        toTeamObject(o.Name, isavro, false, "string"),
-		"parent_id":   toTeamObject(o.ParentID, isavro, true, "string"),
-		"ref_id":      toTeamObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toTeamObject(o.RefType, isavro, false, "string"),
-		"updated_ts":  toTeamObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":    toTeamObject(o.Hashcode, isavro, false, "string"),
+		"active":       toTeamObject(o.Active, isavro, true, "boolean"),
+		"children_ids": toTeamObject(o.ChildrenIds, isavro, false, "children_ids"),
+		"created_ts":   toTeamObject(o.CreatedAt, isavro, false, "long"),
+		"customer_id":  toTeamObject(o.CustomerID, isavro, false, "string"),
+		"description":  toTeamObject(o.Description, isavro, false, "string"),
+		"id":           toTeamObject(o.ID, isavro, false, "string"),
+		"leaf":         toTeamObject(o.Leaf, isavro, false, "boolean"),
+		"name":         toTeamObject(o.Name, isavro, false, "string"),
+		"parent_ids":   toTeamObject(o.ParentIds, isavro, false, "parent_ids"),
+		"ref_id":       toTeamObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toTeamObject(o.RefType, isavro, false, "string"),
+		"updated_ts":   toTeamObject(o.UpdatedAt, isavro, false, "long"),
+		"hashcode":     toTeamObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -472,6 +488,40 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			}
 			o.Active = number.BoolPointer(number.ToBoolAny(val))
 		}
+	}
+	if val := kv["children_ids"]; val != nil {
+		na := make([]string, 0)
+		if a, ok := val.([]string); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for children_ids field")
+			}
+		}
+		o.ChildrenIds = na
+	} else {
+		o.ChildrenIds = []string{}
+	}
+	if o.ChildrenIds == nil {
+		o.ChildrenIds = make([]string, 0)
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
@@ -525,6 +575,16 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["leaf"].(bool); ok {
+		o.Leaf = val
+	} else {
+		val := kv["leaf"]
+		if val == nil {
+			o.Leaf = number.ToBoolAny(nil)
+		} else {
+			o.Leaf = number.ToBoolAny(val)
+		}
+	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -538,21 +598,39 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["parent_id"].(*string); ok {
-		o.ParentID = val
-	} else if val, ok := kv["parent_id"].(string); ok {
-		o.ParentID = &val
-	} else {
-		val := kv["parent_id"]
-		if val == nil {
-			o.ParentID = pstrings.Pointer("")
+	if val := kv["parent_ids"]; val != nil {
+		na := make([]string, 0)
+		if a, ok := val.([]string); ok {
+			na = append(na, a...)
 		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(string); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av string
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else if s, ok := val.(string); ok {
+				for _, sv := range strings.Split(s, ",") {
+					na = append(na, strings.TrimSpace(sv))
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for parent_ids field")
 			}
-			o.ParentID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
+		o.ParentIds = na
+	} else {
+		o.ParentIds = []string{}
+	}
+	if o.ParentIds == nil {
+		o.ParentIds = make([]string, 0)
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -600,12 +678,14 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 func (o *Team) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Active)
+	args = append(args, o.ChildrenIds)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
+	args = append(args, o.Leaf)
 	args = append(args, o.Name)
-	args = append(args, o.ParentID)
+	args = append(args, o.ParentIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
@@ -676,6 +756,10 @@ func GetTeamAvroSchemaSpec() string {
 				"default": nil,
 			},
 			map[string]interface{}{
+				"name": "children_ids",
+				"type": map[string]interface{}{"type": "array", "name": "children_ids", "items": "string"},
+			},
+			map[string]interface{}{
 				"name": "created_ts",
 				"type": "long",
 			},
@@ -692,13 +776,16 @@ func GetTeamAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "leaf",
+				"type": "boolean",
+			},
+			map[string]interface{}{
 				"name": "name",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name":    "parent_id",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
+				"name": "parent_ids",
+				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
