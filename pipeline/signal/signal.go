@@ -771,7 +771,7 @@ func GetSignalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
 			},
 			map[string]interface{}{
 				"name": "date_ts",
@@ -1180,18 +1180,17 @@ func NewSignalConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into pipeline.signal.Signal: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into pipeline.signal.Signal: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.signal.Signal")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &SignalReceiveEvent{&object, msg, false}
 			return nil
 		},

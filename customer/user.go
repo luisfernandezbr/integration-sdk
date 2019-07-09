@@ -1326,18 +1326,17 @@ func NewUserConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into customer.User: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into customer.User: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for customer.User")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &UserReceiveEvent{&object, msg, false}
 			return nil
 		},

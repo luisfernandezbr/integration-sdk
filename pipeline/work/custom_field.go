@@ -609,7 +609,7 @@ func GetCustomFieldAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "date of processing a custom field", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -990,18 +990,17 @@ func NewCustomFieldConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into pipeline.work.CustomField: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into pipeline.work.CustomField: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.work.CustomField")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &CustomFieldReceiveEvent{&object, msg, false}
 			return nil
 		},

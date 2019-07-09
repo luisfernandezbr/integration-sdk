@@ -919,18 +919,17 @@ func NewProjectConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRec
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into codequality.Project: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into codequality.Project: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for codequality.Project")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &ProjectReceiveEvent{&object, msg, false}
 			return nil
 		},

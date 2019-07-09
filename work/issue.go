@@ -999,7 +999,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"name": "name", "doc": "the name of the custom field", "type": "string"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"name": "customFields", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the id of the custom field", "type": "string"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values", "type": "record", "name": "customFields"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1436,18 +1436,17 @@ func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into work.Issue: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into work.Issue: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for work.Issue")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &IssueReceiveEvent{&object, msg, false}
 			return nil
 		},

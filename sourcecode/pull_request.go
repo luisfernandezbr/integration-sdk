@@ -837,7 +837,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "commits"},
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
@@ -1258,18 +1258,17 @@ func NewPullRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into sourcecode.PullRequest: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into sourcecode.PullRequest: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.PullRequest")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &PullRequestReceiveEvent{&object, msg, false}
 			return nil
 		},

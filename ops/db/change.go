@@ -1036,18 +1036,17 @@ func NewChangeConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into ops.db.Change: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into ops.db.Change: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for ops.db.Change")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &ChangeReceiveEvent{&object, msg, false}
 			return nil
 		},

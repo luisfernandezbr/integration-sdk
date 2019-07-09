@@ -801,7 +801,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "user",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"doc": "the corporate team id", "type": "string", "name": "team_id"}}, "doc": "the user related to the activity", "type": "record", "name": "user"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the corporate user id", "type": "string"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the user related to the activity", "type": "record", "name": "user"},
 			},
 		},
 	}
@@ -1162,18 +1162,17 @@ func NewActivityConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRe
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into pipeline.activity.Activity: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into pipeline.activity.Activity: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.activity.Activity")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &ActivityReceiveEvent{&object, msg, false}
 			return nil
 		},

@@ -760,7 +760,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"name": "branched_from_commits", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "commits",
@@ -1161,18 +1161,17 @@ func NewBranchConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into sourcecode.Branch: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into sourcecode.Branch: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Branch")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &BranchReceiveEvent{&object, msg, false}
 			return nil
 		},

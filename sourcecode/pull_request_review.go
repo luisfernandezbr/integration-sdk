@@ -1012,18 +1012,17 @@ func NewPullRequestReviewConsumer(consumer eventing.Consumer, ch chan<- datamode
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avri data into sourcecode.PullRequestReview: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into sourcecode.PullRequestReview: %s", err)
 				}
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.PullRequestReview")
 			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			//ignore messages that have exceeded the TTL
+			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
 				return nil
 			}
+			msg.Codec = object.GetAvroCodec() // match the codec
 			ch <- &PullRequestReviewReceiveEvent{&object, msg, false}
 			return nil
 		},
