@@ -1069,7 +1069,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "team_ids",
-				"type": map[string]interface{}{"name": "team_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "team_ids"},
 			},
 			map[string]interface{}{
 				"name":    "terminated_ts",
