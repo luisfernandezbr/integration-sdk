@@ -130,6 +130,8 @@ func (v IntegrationResponseType) String() string {
 		return "integration"
 	case 4:
 		return "export"
+	case 5:
+		return "project"
 	}
 	return "unset"
 }
@@ -145,6 +147,8 @@ const (
 	IntegrationResponseTypeIntegration IntegrationResponseType = 3
 	// TypeExport is the enumeration value for export
 	IntegrationResponseTypeExport IntegrationResponseType = 4
+	// TypeProject is the enumeration value for project
+	IntegrationResponseTypeProject IntegrationResponseType = 5
 )
 
 // IntegrationResponse an agent response to an action request adding an integration
@@ -899,6 +903,8 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 3
 			case "export":
 				o.Type = 4
+			case "project":
+				o.Type = 5
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -913,6 +919,8 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 3
 			case "export":
 				o.Type = 4
+			case "project":
+				o.Type = 5
 			}
 		}
 	}
@@ -1074,7 +1082,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 					map[string]interface{}{
 						"type":    "enum",
 						"name":    "type",
-						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export"},
+						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project"},
 					},
 				},
 			},

@@ -172,6 +172,8 @@ func (v ExportResponseType) String() string {
 		return "integration"
 	case 4:
 		return "export"
+	case 5:
+		return "project"
 	}
 	return "unset"
 }
@@ -187,6 +189,8 @@ const (
 	ExportResponseTypeIntegration ExportResponseType = 3
 	// TypeExport is the enumeration value for export
 	ExportResponseTypeExport ExportResponseType = 4
+	// TypeProject is the enumeration value for project
+	ExportResponseTypeProject ExportResponseType = 5
 )
 
 // ExportResponse an agent response to an action request for export
@@ -977,6 +981,8 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 3
 			case "export":
 				o.Type = 4
+			case "project":
+				o.Type = 5
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -991,6 +997,8 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 3
 			case "export":
 				o.Type = 4
+			case "project":
+				o.Type = 5
 			}
 		}
 	}
@@ -1079,7 +1087,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1087,7 +1095,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date"},
+				"type": map[string]interface{}{"name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date", "type": "record"},
 			},
 			map[string]interface{}{
 				"name":    "error",
@@ -1140,7 +1148,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "start_date",
-				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the export start date"},
+				"type": map[string]interface{}{"name": "start_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export start date", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "success",
@@ -1152,7 +1160,7 @@ func GetExportResponseAvroSchemaSpec() string {
 					map[string]interface{}{
 						"type":    "enum",
 						"name":    "type",
-						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export"},
+						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project"},
 					},
 				},
 			},

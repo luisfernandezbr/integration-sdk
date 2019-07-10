@@ -29,40 +29,40 @@ import (
 )
 
 const (
-	// IntegrationRequestTopic is the default topic name
-	IntegrationRequestTopic datamodel.TopicNameType = "agent_IntegrationRequest_topic"
+	// ProjectRequestTopic is the default topic name
+	ProjectRequestTopic datamodel.TopicNameType = "agent_ProjectRequest_topic"
 
-	// IntegrationRequestStream is the default stream name
-	IntegrationRequestStream datamodel.TopicNameType = "agent_IntegrationRequest_stream"
+	// ProjectRequestStream is the default stream name
+	ProjectRequestStream datamodel.TopicNameType = "agent_ProjectRequest_stream"
 
-	// IntegrationRequestTable is the default table name
-	IntegrationRequestTable datamodel.TopicNameType = "agent_IntegrationRequest"
+	// ProjectRequestTable is the default table name
+	ProjectRequestTable datamodel.TopicNameType = "agent_ProjectRequest"
 
-	// IntegrationRequestModelName is the model name
-	IntegrationRequestModelName datamodel.ModelNameType = "agent.IntegrationRequest"
+	// ProjectRequestModelName is the model name
+	ProjectRequestModelName datamodel.ModelNameType = "agent.ProjectRequest"
 )
 
 const (
-	// IntegrationRequestCustomerIDColumn is the customer_id column name
-	IntegrationRequestCustomerIDColumn = "customer_id"
-	// IntegrationRequestDateColumn is the date column name
-	IntegrationRequestDateColumn = "date"
-	// IntegrationRequestIDColumn is the id column name
-	IntegrationRequestIDColumn = "id"
-	// IntegrationRequestIntegrationColumn is the integration column name
-	IntegrationRequestIntegrationColumn = "integration"
-	// IntegrationRequestLocationColumn is the location column name
-	IntegrationRequestLocationColumn = "location"
-	// IntegrationRequestRefIDColumn is the ref_id column name
-	IntegrationRequestRefIDColumn = "ref_id"
-	// IntegrationRequestRefTypeColumn is the ref_type column name
-	IntegrationRequestRefTypeColumn = "ref_type"
-	// IntegrationRequestUUIDColumn is the uuid column name
-	IntegrationRequestUUIDColumn = "uuid"
+	// ProjectRequestCustomerIDColumn is the customer_id column name
+	ProjectRequestCustomerIDColumn = "customer_id"
+	// ProjectRequestDateColumn is the date column name
+	ProjectRequestDateColumn = "date"
+	// ProjectRequestIDColumn is the id column name
+	ProjectRequestIDColumn = "id"
+	// ProjectRequestIntegrationColumn is the integration column name
+	ProjectRequestIntegrationColumn = "integration"
+	// ProjectRequestLocationColumn is the location column name
+	ProjectRequestLocationColumn = "location"
+	// ProjectRequestRefIDColumn is the ref_id column name
+	ProjectRequestRefIDColumn = "ref_id"
+	// ProjectRequestRefTypeColumn is the ref_type column name
+	ProjectRequestRefTypeColumn = "ref_type"
+	// ProjectRequestUUIDColumn is the uuid column name
+	ProjectRequestUUIDColumn = "uuid"
 )
 
-// IntegrationRequestAuthorization represents the object structure for authorization
-type IntegrationRequestAuthorization struct {
+// ProjectRequestAuthorization represents the object structure for authorization
+type ProjectRequestAuthorization struct {
 	// AccessToken Access token
 	AccessToken *string `json:"access_token" bson:"access_token" yaml:"access_token" faker:"-"`
 	// APIToken API Token for instance, if relevant
@@ -79,7 +79,7 @@ type IntegrationRequestAuthorization struct {
 	Username *string `json:"username" bson:"username" yaml:"username" faker:"-"`
 }
 
-func (o *IntegrationRequestAuthorization) ToMap() map[string]interface{} {
+func (o *ProjectRequestAuthorization) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// AccessToken Access token
 		"access_token": o.AccessToken,
@@ -98,8 +98,8 @@ func (o *IntegrationRequestAuthorization) ToMap() map[string]interface{} {
 	}
 }
 
-// IntegrationRequestDate represents the object structure for date
-type IntegrationRequestDate struct {
+// ProjectRequestDate represents the object structure for date
+type ProjectRequestDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -108,7 +108,7 @@ type IntegrationRequestDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *IntegrationRequestDate) ToMap() map[string]interface{} {
+func (o *ProjectRequestDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -119,12 +119,12 @@ func (o *IntegrationRequestDate) ToMap() map[string]interface{} {
 	}
 }
 
-// IntegrationRequestIntegration represents the object structure for integration
-type IntegrationRequestIntegration struct {
+// ProjectRequestIntegration represents the object structure for integration
+type ProjectRequestIntegration struct {
 	// Active If true, the integration is still active
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
-	Authorization IntegrationRequestAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization ProjectRequestAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// Errored If authorization failed by the agent
 	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
 	// Exclusions The exclusion list for this integration
@@ -132,7 +132,7 @@ type IntegrationRequestIntegration struct {
 	// Name The user friendly name of the integration
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
-	Progress IntegrationRequestProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	Progress ProjectRequestProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
 	// ValidatedAt Timestamp when validated
@@ -141,7 +141,7 @@ type IntegrationRequestIntegration struct {
 	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
 }
 
-func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
+func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Active If true, the integration is still active
 		"active": o.Active,
@@ -165,10 +165,10 @@ func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 }
 
 // Location is the enumeration type for location
-type IntegrationRequestLocation int32
+type ProjectRequestLocation int32
 
 // String returns the string value for Location
-func (v IntegrationRequestLocation) String() string {
+func (v ProjectRequestLocation) String() string {
 	switch int32(v) {
 	case 0:
 		return "private"
@@ -180,13 +180,13 @@ func (v IntegrationRequestLocation) String() string {
 
 const (
 	// LocationPrivate is the enumeration value for private
-	IntegrationRequestLocationPrivate IntegrationRequestLocation = 0
+	ProjectRequestLocationPrivate ProjectRequestLocation = 0
 	// LocationCloud is the enumeration value for cloud
-	IntegrationRequestLocationCloud IntegrationRequestLocation = 1
+	ProjectRequestLocationCloud ProjectRequestLocation = 1
 )
 
-// IntegrationRequestProgress represents the object structure for progress
-type IntegrationRequestProgress struct {
+// ProjectRequestProgress represents the object structure for progress
+type ProjectRequestProgress struct {
 	// Completed The total amount processed thus far
 	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
 	// Message Any relevant messaging during processing
@@ -195,7 +195,7 @@ type IntegrationRequestProgress struct {
 	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
 }
 
-func (o *IntegrationRequestProgress) ToMap() map[string]interface{} {
+func (o *ProjectRequestProgress) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Completed The total amount processed thus far
 		"completed": o.Completed,
@@ -206,18 +206,18 @@ func (o *IntegrationRequestProgress) ToMap() map[string]interface{} {
 	}
 }
 
-// IntegrationRequest an agent action to request adding an integration
-type IntegrationRequest struct {
+// ProjectRequest an agent action to request adding new projects
+type ProjectRequest struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Date the date when the request was made
-	Date IntegrationRequestDate `json:"date" bson:"date" yaml:"date" faker:"-"`
+	Date ProjectRequestDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Integration the integration details to add
-	Integration IntegrationRequestIntegration `json:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	// Integration the integration details to use
+	Integration ProjectRequestIntegration `json:"integration" bson:"integration" yaml:"integration" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
-	Location IntegrationRequestLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
+	Location ProjectRequestLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -229,22 +229,22 @@ type IntegrationRequest struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*IntegrationRequest)(nil)
+var _ datamodel.Model = (*ProjectRequest)(nil)
 
-func toIntegrationRequestObjectNil(isavro bool, isoptional bool) interface{} {
+func toProjectRequestObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toProjectRequestObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return toIntegrationRequestObjectNil(isavro, isoptional)
+		return toProjectRequestObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return toIntegrationRequestObjectNil(isavro, isoptional)
+		return toProjectRequestObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
 		if isavro && isoptional {
 			return goavro.Union(avrotype, v)
@@ -253,7 +253,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -262,7 +262,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -271,7 +271,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -280,7 +280,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -289,7 +289,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -298,7 +298,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -307,7 +307,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -316,7 +316,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -325,7 +325,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationRequestObjectNil(isavro, isoptional)
+				return toProjectRequestObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -339,9 +339,9 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 		return v
 	case *map[string]string:
 		return *v
-	case *IntegrationRequest:
+	case *ProjectRequest:
 		return v.ToMap()
-	case IntegrationRequest:
+	case ProjectRequest:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -357,92 +357,92 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toIntegrationRequestObject(av, isavro, false, ""))
+			arr = append(arr, toProjectRequestObject(av, isavro, false, ""))
 		}
 		return arr
 
-	case IntegrationRequestAuthorization:
-		vv := o.(IntegrationRequestAuthorization)
+	case ProjectRequestAuthorization:
+		vv := o.(ProjectRequestAuthorization)
 		return vv.ToMap()
-	case *IntegrationRequestAuthorization:
-		return (*o.(*IntegrationRequestAuthorization)).ToMap()
-	case []IntegrationRequestAuthorization:
+	case *ProjectRequestAuthorization:
+		return (*o.(*ProjectRequestAuthorization)).ToMap()
+	case []ProjectRequestAuthorization:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]IntegrationRequestAuthorization) {
+		for _, i := range o.([]ProjectRequestAuthorization) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]IntegrationRequestAuthorization:
+	case *[]ProjectRequestAuthorization:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]IntegrationRequestAuthorization)
+		vv := o.(*[]ProjectRequestAuthorization)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case IntegrationRequestDate:
-		vv := o.(IntegrationRequestDate)
+	case ProjectRequestDate:
+		vv := o.(ProjectRequestDate)
 		return vv.ToMap()
-	case *IntegrationRequestDate:
-		return (*o.(*IntegrationRequestDate)).ToMap()
-	case []IntegrationRequestDate:
+	case *ProjectRequestDate:
+		return (*o.(*ProjectRequestDate)).ToMap()
+	case []ProjectRequestDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]IntegrationRequestDate) {
+		for _, i := range o.([]ProjectRequestDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]IntegrationRequestDate:
+	case *[]ProjectRequestDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]IntegrationRequestDate)
+		vv := o.(*[]ProjectRequestDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case IntegrationRequestIntegration:
-		vv := o.(IntegrationRequestIntegration)
+	case ProjectRequestIntegration:
+		vv := o.(ProjectRequestIntegration)
 		return vv.ToMap()
-	case *IntegrationRequestIntegration:
-		return (*o.(*IntegrationRequestIntegration)).ToMap()
-	case []IntegrationRequestIntegration:
+	case *ProjectRequestIntegration:
+		return (*o.(*ProjectRequestIntegration)).ToMap()
+	case []ProjectRequestIntegration:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]IntegrationRequestIntegration) {
+		for _, i := range o.([]ProjectRequestIntegration) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]IntegrationRequestIntegration:
+	case *[]ProjectRequestIntegration:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]IntegrationRequestIntegration)
+		vv := o.(*[]ProjectRequestIntegration)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case IntegrationRequestLocation:
+	case ProjectRequestLocation:
 		if !isavro {
-			return (o.(IntegrationRequestLocation)).String()
+			return (o.(ProjectRequestLocation)).String()
 		}
 		return map[string]string{
-			"agent.location": (o.(IntegrationRequestLocation)).String(),
+			"agent.location": (o.(ProjectRequestLocation)).String(),
 		}
-	case *IntegrationRequestLocation:
+	case *ProjectRequestLocation:
 		if !isavro {
-			return (o.(*IntegrationRequestLocation)).String()
+			return (o.(*ProjectRequestLocation)).String()
 		}
 		return map[string]string{
-			"agent.location": (o.(*IntegrationRequestLocation)).String(),
+			"agent.location": (o.(*ProjectRequestLocation)).String(),
 		}
-	case IntegrationRequestProgress:
-		vv := o.(IntegrationRequestProgress)
+	case ProjectRequestProgress:
+		vv := o.(ProjectRequestProgress)
 		return vv.ToMap()
-	case *IntegrationRequestProgress:
-		return (*o.(*IntegrationRequestProgress)).ToMap()
-	case []IntegrationRequestProgress:
+	case *ProjectRequestProgress:
+		return (*o.(*ProjectRequestProgress)).ToMap()
+	case []ProjectRequestProgress:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]IntegrationRequestProgress) {
+		for _, i := range o.([]ProjectRequestProgress) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]IntegrationRequestProgress:
+	case *[]ProjectRequestProgress:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]IntegrationRequestProgress)
+		vv := o.(*[]ProjectRequestProgress)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -451,38 +451,38 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of IntegrationRequest
-func (o *IntegrationRequest) String() string {
-	return fmt.Sprintf("agent.IntegrationRequest<%s>", o.ID)
+// String returns a string representation of ProjectRequest
+func (o *ProjectRequest) String() string {
+	return fmt.Sprintf("agent.ProjectRequest<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *IntegrationRequest) GetTopicName() datamodel.TopicNameType {
-	return IntegrationRequestTopic
+func (o *ProjectRequest) GetTopicName() datamodel.TopicNameType {
+	return ProjectRequestTopic
 }
 
 // GetModelName returns the name of the model
-func (o *IntegrationRequest) GetModelName() datamodel.ModelNameType {
-	return IntegrationRequestModelName
+func (o *ProjectRequest) GetModelName() datamodel.ModelNameType {
+	return ProjectRequestModelName
 }
 
-func (o *IntegrationRequest) setDefaults() {
+func (o *ProjectRequest) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *IntegrationRequest) GetID() string {
+func (o *ProjectRequest) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("IntegrationRequest", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("ProjectRequest", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *IntegrationRequest) GetTopicKey() string {
+func (o *ProjectRequest) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -491,7 +491,7 @@ func (o *IntegrationRequest) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *IntegrationRequest) GetTimestamp() time.Time {
+func (o *ProjectRequest) GetTimestamp() time.Time {
 	var dt interface{} = o.Date
 	switch v := dt.(type) {
 	case int64:
@@ -504,40 +504,40 @@ func (o *IntegrationRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case IntegrationRequestDate:
+	case ProjectRequestDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
-	panic("not sure how to handle the date time format for IntegrationRequest")
+	panic("not sure how to handle the date time format for ProjectRequest")
 }
 
 // GetRefID returns the RefID for the object
-func (o *IntegrationRequest) GetRefID() string {
+func (o *ProjectRequest) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *IntegrationRequest) IsMaterialized() bool {
+func (o *ProjectRequest) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *IntegrationRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *ProjectRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *IntegrationRequest) IsEvented() bool {
+func (o *ProjectRequest) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *IntegrationRequest) SetEventHeaders(kv map[string]string) {
+func (o *ProjectRequest) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = IntegrationRequestModelName.String()
+	kv["model"] = ProjectRequestModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *IntegrationRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *ProjectRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -559,26 +559,26 @@ func (o *IntegrationRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *IntegrationRequest) GetStateKey() string {
+func (o *ProjectRequest) GetStateKey() string {
 	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *IntegrationRequest) GetCustomerID() string {
+func (o *ProjectRequest) GetCustomerID() string {
 	return o.CustomerID
 }
 
-// Clone returns an exact copy of IntegrationRequest
-func (o *IntegrationRequest) Clone() datamodel.Model {
-	c := new(IntegrationRequest)
+// Clone returns an exact copy of ProjectRequest
+func (o *ProjectRequest) Clone() datamodel.Model {
+	c := new(ProjectRequest)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *IntegrationRequest) Anon() datamodel.Model {
-	c := new(IntegrationRequest)
+func (o *ProjectRequest) Anon() datamodel.Model {
+	c := new(ProjectRequest)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -593,12 +593,12 @@ func (o *IntegrationRequest) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *IntegrationRequest) MarshalJSON() ([]byte, error) {
+func (o *ProjectRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *IntegrationRequest) UnmarshalJSON(data []byte) error {
+func (o *ProjectRequest) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -607,22 +607,22 @@ func (o *IntegrationRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecIntegrationRequest *goavro.Codec
+var cachedCodecProjectRequest *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *IntegrationRequest) GetAvroCodec() *goavro.Codec {
-	if cachedCodecIntegrationRequest == nil {
-		c, err := GetIntegrationRequestAvroSchema()
+func (o *ProjectRequest) GetAvroCodec() *goavro.Codec {
+	if cachedCodecProjectRequest == nil {
+		c, err := GetProjectRequestAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecIntegrationRequest = c
+		cachedCodecProjectRequest = c
 	}
-	return cachedCodecIntegrationRequest
+	return cachedCodecProjectRequest
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *IntegrationRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *ProjectRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -636,7 +636,7 @@ func (o *IntegrationRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *IntegrationRequest) FromAvroBinary(value []byte) error {
+func (o *ProjectRequest) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -651,17 +651,17 @@ func (o *IntegrationRequest) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *IntegrationRequest) Stringify() string {
+func (o *ProjectRequest) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two IntegrationRequest objects are equal
-func (o *IntegrationRequest) IsEqual(other *IntegrationRequest) bool {
+// IsEqual returns true if the two ProjectRequest objects are equal
+func (o *ProjectRequest) IsEqual(other *ProjectRequest) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *IntegrationRequest) ToMap(avro ...bool) map[string]interface{} {
+func (o *ProjectRequest) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -670,20 +670,20 @@ func (o *IntegrationRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id": toIntegrationRequestObject(o.CustomerID, isavro, false, "string"),
-		"date":        toIntegrationRequestObject(o.Date, isavro, false, "date"),
-		"id":          toIntegrationRequestObject(o.ID, isavro, false, "string"),
-		"integration": toIntegrationRequestObject(o.Integration, isavro, false, "integration"),
-		"location":    toIntegrationRequestObject(o.Location, isavro, false, "location"),
-		"ref_id":      toIntegrationRequestObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toIntegrationRequestObject(o.RefType, isavro, false, "string"),
-		"uuid":        toIntegrationRequestObject(o.UUID, isavro, false, "string"),
-		"hashcode":    toIntegrationRequestObject(o.Hashcode, isavro, false, "string"),
+		"customer_id": toProjectRequestObject(o.CustomerID, isavro, false, "string"),
+		"date":        toProjectRequestObject(o.Date, isavro, false, "date"),
+		"id":          toProjectRequestObject(o.ID, isavro, false, "string"),
+		"integration": toProjectRequestObject(o.Integration, isavro, false, "integration"),
+		"location":    toProjectRequestObject(o.Location, isavro, false, "location"),
+		"ref_id":      toProjectRequestObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toProjectRequestObject(o.RefType, isavro, false, "string"),
+		"uuid":        toProjectRequestObject(o.UUID, isavro, false, "string"),
+		"hashcode":    toProjectRequestObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
+func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
@@ -701,14 +701,14 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date"].(IntegrationRequestDate); ok {
+	if val, ok := kv["date"].(ProjectRequestDate); ok {
 		o.Date = val
 	} else {
 		val := kv["date"]
 		if val == nil {
-			o.Date = IntegrationRequestDate{}
+			o.Date = ProjectRequestDate{}
 		} else {
-			o.Date = IntegrationRequestDate{}
+			o.Date = ProjectRequestDate{}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Date)
 
@@ -727,20 +727,20 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["integration"].(IntegrationRequestIntegration); ok {
+	if val, ok := kv["integration"].(ProjectRequestIntegration); ok {
 		o.Integration = val
 	} else {
 		val := kv["integration"]
 		if val == nil {
-			o.Integration = IntegrationRequestIntegration{}
+			o.Integration = ProjectRequestIntegration{}
 		} else {
-			o.Integration = IntegrationRequestIntegration{}
+			o.Integration = ProjectRequestIntegration{}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Integration)
 
 		}
 	}
-	if val, ok := kv["location"].(IntegrationRequestLocation); ok {
+	if val, ok := kv["location"].(ProjectRequestLocation); ok {
 		o.Location = val
 	} else {
 		if em, ok := kv["location"].(map[string]interface{}); ok {
@@ -804,7 +804,7 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *IntegrationRequest) Hash() string {
+func (o *ProjectRequest) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Date)
@@ -818,12 +818,12 @@ func (o *IntegrationRequest) Hash() string {
 	return o.Hashcode
 }
 
-// GetIntegrationRequestAvroSchemaSpec creates the avro schema specification for IntegrationRequest
-func GetIntegrationRequestAvroSchemaSpec() string {
+// GetProjectRequestAvroSchemaSpec creates the avro schema specification for ProjectRequest
+func GetProjectRequestAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "IntegrationRequest",
+		"name":      "ProjectRequest",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
@@ -835,7 +835,7 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -843,7 +843,7 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"name": "authorization", "doc": "Authorization information", "type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}, "doc": "Authorization information"}}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"name": "exclusions", "items": "string", "type": "array"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Agent processing progress", "type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"name": "total", "doc": "The total amount to be processed", "type": "long"}}}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"name": "validated", "doc": "If the validation has been run against this instance", "type": "boolean"}, map[string]interface{}{"type": "long", "name": "validated_ts", "doc": "Timestamp when validated"}, map[string]interface{}{"name": "validation_message", "doc": "The validation message from the agent", "type": "string"}}, "doc": "the integration details to add"},
+				"type": map[string]interface{}{"doc": "the integration details to use", "type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"name": "api_token", "doc": "API Token for instance, if relevant", "type": "string"}, map[string]interface{}{"name": "authorization", "doc": "the agents encrypted authorization", "type": "string"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"doc": "URL of instance if relevant", "type": "string", "name": "url"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}, "doc": "Authorization information", "type": "record"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"doc": "If authorization failed by the agent", "type": "boolean", "name": "errored"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Agent processing progress", "type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"name": "validated_ts", "doc": "Timestamp when validated", "type": "long"}, map[string]interface{}{"doc": "The validation message from the agent", "type": "string", "name": "validation_message"}}},
 			},
 			map[string]interface{}{
 				"name": "location",
@@ -872,25 +872,25 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// GetIntegrationRequestAvroSchema creates the avro schema for IntegrationRequest
-func GetIntegrationRequestAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetIntegrationRequestAvroSchemaSpec())
+// GetProjectRequestAvroSchema creates the avro schema for ProjectRequest
+func GetProjectRequestAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetProjectRequestAvroSchemaSpec())
 }
 
-// TransformIntegrationRequestFunc is a function for transforming IntegrationRequest during processing
-type TransformIntegrationRequestFunc func(input *IntegrationRequest) (*IntegrationRequest, error)
+// TransformProjectRequestFunc is a function for transforming ProjectRequest during processing
+type TransformProjectRequestFunc func(input *ProjectRequest) (*ProjectRequest, error)
 
-// NewIntegrationRequestPipe creates a pipe for processing IntegrationRequest items
-func NewIntegrationRequestPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformIntegrationRequestFunc) <-chan bool {
+// NewProjectRequestPipe creates a pipe for processing ProjectRequest items
+func NewProjectRequestPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformProjectRequestFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewIntegrationRequestInputStream(input, errors)
-	var stream chan IntegrationRequest
+	inch, indone := NewProjectRequestInputStream(input, errors)
+	var stream chan ProjectRequest
 	if len(transforms) > 0 {
-		stream = make(chan IntegrationRequest, 1000)
+		stream = make(chan ProjectRequest, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewIntegrationRequestOutputStream(output, stream, errors)
+	outdone := NewProjectRequestOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -926,12 +926,12 @@ func NewIntegrationRequestPipe(input io.ReadCloser, output io.WriteCloser, error
 	return done
 }
 
-// NewIntegrationRequestInputStreamDir creates a channel for reading IntegrationRequest as JSON newlines from a directory of files
-func NewIntegrationRequestInputStreamDir(dir string, errors chan<- error, transforms ...TransformIntegrationRequestFunc) (chan IntegrationRequest, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/integration_request\\.json(\\.gz)?$"))
+// NewProjectRequestInputStreamDir creates a channel for reading ProjectRequest as JSON newlines from a directory of files
+func NewProjectRequestInputStreamDir(dir string, errors chan<- error, transforms ...TransformProjectRequestFunc) (chan ProjectRequest, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/project_request\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan IntegrationRequest)
+		ch := make(chan ProjectRequest)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -939,16 +939,16 @@ func NewIntegrationRequestInputStreamDir(dir string, errors chan<- error, transf
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for integration_request")
-		ch := make(chan IntegrationRequest)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for project_request")
+		ch := make(chan ProjectRequest)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewIntegrationRequestInputStreamFile(files[0], errors, transforms...)
+		return NewProjectRequestInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan IntegrationRequest)
+		ch := make(chan ProjectRequest)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -956,12 +956,12 @@ func NewIntegrationRequestInputStreamDir(dir string, errors chan<- error, transf
 	}
 }
 
-// NewIntegrationRequestInputStreamFile creates an channel for reading IntegrationRequest as JSON newlines from filename
-func NewIntegrationRequestInputStreamFile(filename string, errors chan<- error, transforms ...TransformIntegrationRequestFunc) (chan IntegrationRequest, <-chan bool) {
+// NewProjectRequestInputStreamFile creates an channel for reading ProjectRequest as JSON newlines from filename
+func NewProjectRequestInputStreamFile(filename string, errors chan<- error, transforms ...TransformProjectRequestFunc) (chan ProjectRequest, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan IntegrationRequest)
+		ch := make(chan ProjectRequest)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -973,7 +973,7 @@ func NewIntegrationRequestInputStreamFile(filename string, errors chan<- error, 
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan IntegrationRequest)
+			ch := make(chan ProjectRequest)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -981,13 +981,13 @@ func NewIntegrationRequestInputStreamFile(filename string, errors chan<- error, 
 		}
 		f = gz
 	}
-	return NewIntegrationRequestInputStream(f, errors, transforms...)
+	return NewProjectRequestInputStream(f, errors, transforms...)
 }
 
-// NewIntegrationRequestInputStream creates an channel for reading IntegrationRequest as JSON newlines from stream
-func NewIntegrationRequestInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformIntegrationRequestFunc) (chan IntegrationRequest, <-chan bool) {
+// NewProjectRequestInputStream creates an channel for reading ProjectRequest as JSON newlines from stream
+func NewProjectRequestInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformProjectRequestFunc) (chan ProjectRequest, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan IntegrationRequest, 1000)
+	ch := make(chan ProjectRequest, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -1000,7 +1000,7 @@ func NewIntegrationRequestInputStream(stream io.ReadCloser, errors chan<- error,
 				errors <- err
 				return
 			}
-			var item IntegrationRequest
+			var item ProjectRequest
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -1026,9 +1026,9 @@ func NewIntegrationRequestInputStream(stream io.ReadCloser, errors chan<- error,
 	return ch, done
 }
 
-// NewIntegrationRequestOutputStreamDir will output json newlines from channel and save in dir
-func NewIntegrationRequestOutputStreamDir(dir string, ch chan IntegrationRequest, errors chan<- error, transforms ...TransformIntegrationRequestFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/integration_request\\.json(\\.gz)?$")
+// NewProjectRequestOutputStreamDir will output json newlines from channel and save in dir
+func NewProjectRequestOutputStreamDir(dir string, ch chan ProjectRequest, errors chan<- error, transforms ...TransformProjectRequestFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/project_request\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -1044,11 +1044,11 @@ func NewIntegrationRequestOutputStreamDir(dir string, ch chan IntegrationRequest
 		done <- true
 		return done
 	}
-	return NewIntegrationRequestOutputStream(gz, ch, errors, transforms...)
+	return NewProjectRequestOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewIntegrationRequestOutputStream will output json newlines from channel to the stream
-func NewIntegrationRequestOutputStream(stream io.WriteCloser, ch chan IntegrationRequest, errors chan<- error, transforms ...TransformIntegrationRequestFunc) <-chan bool {
+// NewProjectRequestOutputStream will output json newlines from channel to the stream
+func NewProjectRequestOutputStream(stream io.WriteCloser, ch chan ProjectRequest, errors chan<- error, transforms ...TransformProjectRequestFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -1088,59 +1088,59 @@ func NewIntegrationRequestOutputStream(stream io.WriteCloser, ch chan Integratio
 	return done
 }
 
-// IntegrationRequestSendEvent is an event detail for sending data
-type IntegrationRequestSendEvent struct {
-	IntegrationRequest *IntegrationRequest
-	headers            map[string]string
-	time               time.Time
-	key                string
+// ProjectRequestSendEvent is an event detail for sending data
+type ProjectRequestSendEvent struct {
+	ProjectRequest *ProjectRequest
+	headers        map[string]string
+	time           time.Time
+	key            string
 }
 
-var _ datamodel.ModelSendEvent = (*IntegrationRequestSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*ProjectRequestSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *IntegrationRequestSendEvent) Key() string {
+func (e *ProjectRequestSendEvent) Key() string {
 	if e.key == "" {
-		return e.IntegrationRequest.GetID()
+		return e.ProjectRequest.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *IntegrationRequestSendEvent) Object() datamodel.Model {
-	return e.IntegrationRequest
+func (e *ProjectRequestSendEvent) Object() datamodel.Model {
+	return e.ProjectRequest
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *IntegrationRequestSendEvent) Headers() map[string]string {
+func (e *ProjectRequestSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *IntegrationRequestSendEvent) Timestamp() time.Time {
+func (e *ProjectRequestSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// IntegrationRequestSendEventOpts is a function handler for setting opts
-type IntegrationRequestSendEventOpts func(o *IntegrationRequestSendEvent)
+// ProjectRequestSendEventOpts is a function handler for setting opts
+type ProjectRequestSendEventOpts func(o *ProjectRequestSendEvent)
 
-// WithIntegrationRequestSendEventKey sets the key value to a value different than the object ID
-func WithIntegrationRequestSendEventKey(key string) IntegrationRequestSendEventOpts {
-	return func(o *IntegrationRequestSendEvent) {
+// WithProjectRequestSendEventKey sets the key value to a value different than the object ID
+func WithProjectRequestSendEventKey(key string) ProjectRequestSendEventOpts {
+	return func(o *ProjectRequestSendEvent) {
 		o.key = key
 	}
 }
 
-// WithIntegrationRequestSendEventTimestamp sets the timestamp value
-func WithIntegrationRequestSendEventTimestamp(tv time.Time) IntegrationRequestSendEventOpts {
-	return func(o *IntegrationRequestSendEvent) {
+// WithProjectRequestSendEventTimestamp sets the timestamp value
+func WithProjectRequestSendEventTimestamp(tv time.Time) ProjectRequestSendEventOpts {
+	return func(o *ProjectRequestSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithIntegrationRequestSendEventHeader sets the timestamp value
-func WithIntegrationRequestSendEventHeader(key, value string) IntegrationRequestSendEventOpts {
-	return func(o *IntegrationRequestSendEvent) {
+// WithProjectRequestSendEventHeader sets the timestamp value
+func WithProjectRequestSendEventHeader(key, value string) ProjectRequestSendEventOpts {
+	return func(o *ProjectRequestSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -1148,10 +1148,10 @@ func WithIntegrationRequestSendEventHeader(key, value string) IntegrationRequest
 	}
 }
 
-// NewIntegrationRequestSendEvent returns a new IntegrationRequestSendEvent instance
-func NewIntegrationRequestSendEvent(o *IntegrationRequest, opts ...IntegrationRequestSendEventOpts) *IntegrationRequestSendEvent {
-	res := &IntegrationRequestSendEvent{
-		IntegrationRequest: o,
+// NewProjectRequestSendEvent returns a new ProjectRequestSendEvent instance
+func NewProjectRequestSendEvent(o *ProjectRequest, opts ...ProjectRequestSendEventOpts) *ProjectRequestSendEvent {
+	res := &ProjectRequestSendEvent{
+		ProjectRequest: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -1161,8 +1161,8 @@ func NewIntegrationRequestSendEvent(o *IntegrationRequest, opts ...IntegrationRe
 	return res
 }
 
-// NewIntegrationRequestProducer will stream data from the channel
-func NewIntegrationRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewProjectRequestProducer will stream data from the channel
+func NewProjectRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1175,7 +1175,7 @@ func NewIntegrationRequestProducer(ctx context.Context, producer eventing.Produc
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*IntegrationRequest); ok {
+				if object, ok := item.Object().(*ProjectRequest); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1206,7 +1206,7 @@ func NewIntegrationRequestProducer(ctx context.Context, producer eventing.Produc
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.IntegrationRequest but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.ProjectRequest but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -1214,22 +1214,22 @@ func NewIntegrationRequestProducer(ctx context.Context, producer eventing.Produc
 	return done
 }
 
-// NewIntegrationRequestConsumer will stream data from the topic into the provided channel
-func NewIntegrationRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewProjectRequestConsumer will stream data from the topic into the provided channel
+func NewProjectRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object IntegrationRequest
+			var object ProjectRequest
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.IntegrationRequest: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.ProjectRequest: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.IntegrationRequest: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.ProjectRequest: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.IntegrationRequest")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.ProjectRequest")
 			}
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
@@ -1237,51 +1237,51 @@ func NewIntegrationRequestConsumer(consumer eventing.Consumer, ch chan<- datamod
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &IntegrationRequestReceiveEvent{&object, msg, false}
+			ch <- &ProjectRequestReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object IntegrationRequest
+			var object ProjectRequest
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &IntegrationRequestReceiveEvent{nil, msg, true}
+			ch <- &ProjectRequestReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// IntegrationRequestReceiveEvent is an event detail for receiving data
-type IntegrationRequestReceiveEvent struct {
-	IntegrationRequest *IntegrationRequest
-	message            eventing.Message
-	eof                bool
+// ProjectRequestReceiveEvent is an event detail for receiving data
+type ProjectRequestReceiveEvent struct {
+	ProjectRequest *ProjectRequest
+	message        eventing.Message
+	eof            bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*IntegrationRequestReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*ProjectRequestReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *IntegrationRequestReceiveEvent) Object() datamodel.Model {
-	return e.IntegrationRequest
+func (e *ProjectRequestReceiveEvent) Object() datamodel.Model {
+	return e.ProjectRequest
 }
 
 // Message returns the underlying message data for the event
-func (e *IntegrationRequestReceiveEvent) Message() eventing.Message {
+func (e *ProjectRequestReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *IntegrationRequestReceiveEvent) EOF() bool {
+func (e *ProjectRequestReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// IntegrationRequestProducer implements the datamodel.ModelEventProducer
-type IntegrationRequestProducer struct {
+// ProjectRequestProducer implements the datamodel.ModelEventProducer
+type ProjectRequestProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -1292,15 +1292,15 @@ type IntegrationRequestProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*IntegrationRequestProducer)(nil)
+var _ datamodel.ModelEventProducer = (*ProjectRequestProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *IntegrationRequestProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *ProjectRequestProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *IntegrationRequestProducer) Close() error {
+func (p *ProjectRequestProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1315,47 +1315,47 @@ func (p *IntegrationRequestProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *IntegrationRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *ProjectRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *IntegrationRequest) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *ProjectRequest) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &IntegrationRequestProducer{
+	return &ProjectRequestProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewIntegrationRequestProducer(newctx, producer, ch, errors, empty),
+		done:     NewProjectRequestProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewIntegrationRequestProducerChannel returns a channel which can be used for producing Model events
-func NewIntegrationRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewIntegrationRequestProducerChannelSize(producer, 0, errors)
+// NewProjectRequestProducerChannel returns a channel which can be used for producing Model events
+func NewProjectRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewProjectRequestProducerChannelSize(producer, 0, errors)
 }
 
-// NewIntegrationRequestProducerChannelSize returns a channel which can be used for producing Model events
-func NewIntegrationRequestProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewProjectRequestProducerChannelSize returns a channel which can be used for producing Model events
+func NewProjectRequestProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &IntegrationRequestProducer{
+	return &ProjectRequestProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewIntegrationRequestProducer(newctx, producer, ch, errors, empty),
+		done:     NewProjectRequestProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// IntegrationRequestConsumer implements the datamodel.ModelEventConsumer
-type IntegrationRequestConsumer struct {
+// ProjectRequestConsumer implements the datamodel.ModelEventConsumer
+type ProjectRequestConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1363,15 +1363,15 @@ type IntegrationRequestConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*IntegrationRequestConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*ProjectRequestConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *IntegrationRequestConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *ProjectRequestConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *IntegrationRequestConsumer) Close() error {
+func (c *ProjectRequestConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1385,21 +1385,21 @@ func (c *IntegrationRequestConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *IntegrationRequest) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *ProjectRequest) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &IntegrationRequestConsumer{
+	return &ProjectRequestConsumer{
 		ch:       ch,
-		callback: NewIntegrationRequestConsumer(consumer, ch, errors),
+		callback: NewProjectRequestConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewIntegrationRequestConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewIntegrationRequestConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewProjectRequestConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewProjectRequestConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &IntegrationRequestConsumer{
+	return &ProjectRequestConsumer{
 		ch:       ch,
-		callback: NewIntegrationRequestConsumer(consumer, ch, errors),
+		callback: NewProjectRequestConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
