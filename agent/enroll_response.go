@@ -45,6 +45,8 @@ const (
 )
 
 const (
+	// EnrollResponseApikeyColumn is the apikey column name
+	EnrollResponseApikeyColumn = "apikey"
 	// EnrollResponseArchitectureColumn is the architecture column name
 	EnrollResponseArchitectureColumn = "architecture"
 	// EnrollResponseCompletedAtColumn is the completed_ts column name
@@ -157,6 +159,8 @@ const (
 
 // EnrollResponse an agent response to an the enroll action
 type EnrollResponse struct {
+	// Apikey The API key that the agent should use when communicating with the cloud
+	Apikey string `json:"apikey" bson:"apikey" yaml:"apikey" faker:"-"`
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CompletedAt Last time the agent completed setup
@@ -596,6 +600,7 @@ func (o *EnrollResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
+		"apikey":       toEnrollResponseObject(o.Apikey, isavro, false, "string"),
 		"architecture": toEnrollResponseObject(o.Architecture, isavro, false, "string"),
 		"completed_ts": toEnrollResponseObject(o.CompletedAt, isavro, false, "long"),
 		"customer_id":  toEnrollResponseObject(o.CustomerID, isavro, false, "string"),
@@ -627,6 +632,19 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["apikey"].(string); ok {
+		o.Apikey = val
+	} else {
+		val := kv["apikey"]
+		if val == nil {
+			o.Apikey = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Apikey = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
@@ -947,6 +965,7 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *EnrollResponse) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Apikey)
 	args = append(args, o.Architecture)
 	args = append(args, o.CompletedAt)
 	args = append(args, o.CustomerID)
@@ -982,6 +1001,10 @@ func GetEnrollResponseAvroSchemaSpec() string {
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "apikey",
 				"type": "string",
 			},
 			map[string]interface{}{
