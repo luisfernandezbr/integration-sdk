@@ -551,6 +551,19 @@ func GetEnrollRequestAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *EnrollRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: true,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetEnrollRequestAvroSchema creates the avro schema for EnrollRequest
 func GetEnrollRequestAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetEnrollRequestAvroSchemaSpec())

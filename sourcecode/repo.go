@@ -668,6 +668,19 @@ func GetRepoAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Repo) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetRepoAvroSchema creates the avro schema for Repo
 func GetRepoAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetRepoAvroSchemaSpec())

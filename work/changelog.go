@@ -788,6 +788,19 @@ func GetChangelogAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Changelog) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetChangelogAvroSchema creates the avro schema for Changelog
 func GetChangelogAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetChangelogAvroSchemaSpec())

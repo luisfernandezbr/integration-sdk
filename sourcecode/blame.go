@@ -1062,7 +1062,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"name": "comment", "doc": "if the line is a comment", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}, "type": "array", "name": "lines"},
+				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}, "type": "array", "name": "lines"},
 			},
 			map[string]interface{}{
 				"name": "loc",
@@ -1105,6 +1105,19 @@ func GetBlameAvroSchemaSpec() string {
 		},
 	}
 	return pjson.Stringify(spec, true)
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Blame) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }
 
 // GetBlameAvroSchema creates the avro schema for Blame

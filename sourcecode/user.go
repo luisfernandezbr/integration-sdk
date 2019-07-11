@@ -766,6 +766,19 @@ func GetUserAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *User) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetUserAvroSchema creates the avro schema for User
 func GetUserAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetUserAvroSchemaSpec())

@@ -822,7 +822,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "parent_ids",
-				"type": map[string]interface{}{"name": "parent_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -839,6 +839,19 @@ func GetTeamAvroSchemaSpec() string {
 		},
 	}
 	return pjson.Stringify(spec, true)
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Team) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }
 
 // GetTeamAvroSchema creates the avro schema for Team

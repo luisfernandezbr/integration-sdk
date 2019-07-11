@@ -683,6 +683,19 @@ func GetChangeAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Change) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetChangeAvroSchema creates the avro schema for Change
 func GetChangeAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetChangeAvroSchemaSpec())

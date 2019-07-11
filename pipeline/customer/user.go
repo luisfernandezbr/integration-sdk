@@ -1045,7 +1045,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "team_ids",
-				"type": map[string]interface{}{"name": "team_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name":    "terminated_ts",
@@ -1068,6 +1068,19 @@ func GetUserAvroSchemaSpec() string {
 		},
 	}
 	return pjson.Stringify(spec, true)
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *User) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }
 
 // GetUserAvroSchema creates the avro schema for User

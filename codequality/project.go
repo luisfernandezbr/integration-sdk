@@ -566,6 +566,19 @@ func GetProjectAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Project) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetProjectAvroSchema creates the avro schema for Project
 func GetProjectAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetProjectAvroSchemaSpec())

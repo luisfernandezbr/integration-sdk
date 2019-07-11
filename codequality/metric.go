@@ -627,6 +627,19 @@ func GetMetricAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Metric) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetMetricAvroSchema creates the avro schema for Metric
 func GetMetricAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetMetricAvroSchemaSpec())

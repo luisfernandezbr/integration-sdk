@@ -762,6 +762,19 @@ func GetACLGrantAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *ACLGrant) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetACLGrantAvroSchema creates the avro schema for ACLGrant
 func GetACLGrantAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetACLGrantAvroSchemaSpec())

@@ -692,6 +692,19 @@ func GetAgentAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Agent) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetAgentAvroSchema creates the avro schema for Agent
 func GetAgentAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetAgentAvroSchemaSpec())

@@ -563,6 +563,19 @@ func GetHookAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Hook) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: true,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetHookAvroSchema creates the avro schema for Hook
 func GetHookAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetHookAvroSchemaSpec())

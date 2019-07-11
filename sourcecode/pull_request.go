@@ -906,6 +906,19 @@ func GetPullRequestAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *PullRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetPullRequestAvroSchema creates the avro schema for PullRequest
 func GetPullRequestAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetPullRequestAvroSchemaSpec())

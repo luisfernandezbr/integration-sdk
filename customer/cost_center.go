@@ -709,6 +709,19 @@ func GetCostCenterAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *CostCenter) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
+}
+
 // GetCostCenterAvroSchema creates the avro schema for CostCenter
 func GetCostCenterAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetCostCenterAvroSchemaSpec())
