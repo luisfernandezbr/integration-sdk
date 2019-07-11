@@ -46,6 +46,12 @@ const (
 	CustomFieldCustomerIDColumn = "customer_id"
 	// CustomFieldDateColumn is the date column name
 	CustomFieldDateColumn = "date"
+	// CustomFieldDateColumnEpochColumn is the epoch column property of the Date name
+	CustomFieldDateColumnEpochColumn = "date->epoch"
+	// CustomFieldDateColumnOffsetColumn is the offset column property of the Date name
+	CustomFieldDateColumnOffsetColumn = "date->offset"
+	// CustomFieldDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	CustomFieldDateColumnRfc3339Column = "date->rfc3339"
 	// CustomFieldIDColumn is the id column name
 	CustomFieldIDColumn = "id"
 	// CustomFieldKeyColumn is the key column name
@@ -270,6 +276,7 @@ func (o *CustomField) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *CustomField) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -609,7 +616,7 @@ func GetCustomFieldAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "date of processing a custom field"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field"},
 			},
 			map[string]interface{}{
 				"name": "id",

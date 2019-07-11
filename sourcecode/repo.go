@@ -244,6 +244,7 @@ func (o *Repo) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Repo) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

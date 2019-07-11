@@ -279,6 +279,8 @@ func (o *PullRequest) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *PullRequest) setDefaults() {
+	o.Commits = []string{}
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -837,7 +839,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"name": "commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

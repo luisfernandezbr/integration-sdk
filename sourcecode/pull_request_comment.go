@@ -245,6 +245,7 @@ func (o *PullRequestComment) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *PullRequestComment) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

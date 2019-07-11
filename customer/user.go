@@ -296,6 +296,18 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *User) setDefaults() {
+	o.AvatarURL = &emptyString
+	o.CostCenterID = &emptyString
+	o.DeletedAt = &emptyInt
+	o.HiredAt = &emptyInt
+	o.Location = &emptyString
+	o.ManagerID = &emptyString
+	o.PrimaryTeamID = &emptyString
+	o.RoleIds = []string{}
+	o.TeamIds = []string{}
+	o.TerminatedAt = &emptyInt
+	o.Title = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -1065,7 +1077,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "role_ids",
-				"type": map[string]interface{}{"type": "array", "name": "role_ids", "items": "string"},
+				"type": map[string]interface{}{"name": "role_ids", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "team_ids",

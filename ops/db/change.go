@@ -276,6 +276,7 @@ func (o *Change) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Change) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

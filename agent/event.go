@@ -53,6 +53,12 @@ const (
 	EventDataColumn = "data"
 	// EventDateColumn is the date column name
 	EventDateColumn = "date"
+	// EventDateColumnEpochColumn is the epoch column property of the Date name
+	EventDateColumnEpochColumn = "date->epoch"
+	// EventDateColumnOffsetColumn is the offset column property of the Date name
+	EventDateColumnOffsetColumn = "date->offset"
+	// EventDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	EventDateColumnRfc3339Column = "date->rfc3339"
 	// EventDistroColumn is the distro column name
 	EventDistroColumn = "distro"
 	// EventErrorColumn is the error column name
@@ -372,6 +378,9 @@ func (o *Event) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Event) setDefaults() {
+	o.Data = &emptyString
+	o.Error = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

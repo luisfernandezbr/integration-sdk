@@ -280,6 +280,7 @@ func (o *ACLGrant) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *ACLGrant) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

@@ -241,6 +241,7 @@ func (o *PullRequestReview) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *PullRequestReview) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

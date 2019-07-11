@@ -47,6 +47,12 @@ const (
 	ActivityCustomerIDColumn = "customer_id"
 	// ActivityDateColumn is the date column name
 	ActivityDateColumn = "date"
+	// ActivityDateColumnEpochColumn is the epoch column property of the Date name
+	ActivityDateColumnEpochColumn = "date->epoch"
+	// ActivityDateColumnOffsetColumn is the offset column property of the Date name
+	ActivityDateColumnOffsetColumn = "date->offset"
+	// ActivityDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	ActivityDateColumnRfc3339Column = "date->rfc3339"
 	// ActivityIDColumn is the id column name
 	ActivityIDColumn = "id"
 	// ActivityRefIDColumn is the ref_id column name
@@ -57,6 +63,10 @@ const (
 	ActivityTypeColumn = "type"
 	// ActivityUserColumn is the user column name
 	ActivityUserColumn = "user"
+	// ActivityUserColumnIDColumn is the id column property of the User name
+	ActivityUserColumnIDColumn = "user->id"
+	// ActivityUserColumnTeamIDColumn is the team_id column property of the User name
+	ActivityUserColumnTeamIDColumn = "user->team_id"
 )
 
 // ActivityDate represents the object structure for date
@@ -377,6 +387,7 @@ func (o *Activity) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Activity) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -775,7 +786,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
+				"type": map[string]interface{}{"doc": "date object", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -801,7 +812,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "user",
-				"type": map[string]interface{}{"type": "record", "name": "user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the user related to the activity"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the user related to the activity", "type": "record", "name": "user"},
 			},
 		},
 	}

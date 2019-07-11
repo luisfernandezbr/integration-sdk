@@ -241,6 +241,7 @@ func (o *Agent) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Agent) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

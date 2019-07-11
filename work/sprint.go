@@ -289,6 +289,9 @@ func (o *Sprint) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Sprint) setDefaults() {
+	o.Completed = &emptyString
+	o.Ended = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

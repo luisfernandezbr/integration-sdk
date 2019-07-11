@@ -245,6 +245,7 @@ func (o *CostCenter) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *CostCenter) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

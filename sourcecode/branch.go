@@ -259,6 +259,9 @@ func (o *Branch) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Branch) setDefaults() {
+	o.BranchedFromCommits = []string{}
+	o.Commits = []string{}
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -764,7 +767,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+				"type": map[string]interface{}{"name": "commits", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

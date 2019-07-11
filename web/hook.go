@@ -229,6 +229,7 @@ func (o *Hook) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Hook) setDefaults() {
+
 	o.GetID()
 }
 

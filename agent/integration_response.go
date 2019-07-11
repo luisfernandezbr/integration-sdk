@@ -55,6 +55,12 @@ const (
 	IntegrationResponseDataColumn = "data"
 	// IntegrationResponseDateColumn is the date column name
 	IntegrationResponseDateColumn = "date"
+	// IntegrationResponseDateColumnEpochColumn is the epoch column property of the Date name
+	IntegrationResponseDateColumnEpochColumn = "date->epoch"
+	// IntegrationResponseDateColumnOffsetColumn is the offset column property of the Date name
+	IntegrationResponseDateColumnOffsetColumn = "date->offset"
+	// IntegrationResponseDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	IntegrationResponseDateColumnRfc3339Column = "date->rfc3339"
 	// IntegrationResponseDistroColumn is the distro column name
 	IntegrationResponseDistroColumn = "distro"
 	// IntegrationResponseErrorColumn is the error column name
@@ -388,6 +394,9 @@ func (o *IntegrationResponse) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *IntegrationResponse) setDefaults() {
+	o.Data = &emptyString
+	o.Error = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -1013,7 +1022,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",

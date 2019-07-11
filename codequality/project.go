@@ -227,6 +227,7 @@ func (o *Project) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Project) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

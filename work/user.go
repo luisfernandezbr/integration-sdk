@@ -236,6 +236,9 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *User) setDefaults() {
+	o.AvatarURL = &emptyString
+	o.Email = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

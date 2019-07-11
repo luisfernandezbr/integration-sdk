@@ -49,10 +49,34 @@ const (
 	ExportRequestCustomerIDColumn = "customer_id"
 	// ExportRequestDateColumn is the date column name
 	ExportRequestDateColumn = "date"
+	// ExportRequestDateColumnEpochColumn is the epoch column property of the Date name
+	ExportRequestDateColumnEpochColumn = "date->epoch"
+	// ExportRequestDateColumnOffsetColumn is the offset column property of the Date name
+	ExportRequestDateColumnOffsetColumn = "date->offset"
+	// ExportRequestDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	ExportRequestDateColumnRfc3339Column = "date->rfc3339"
 	// ExportRequestIDColumn is the id column name
 	ExportRequestIDColumn = "id"
 	// ExportRequestIntegrationsColumn is the integrations column name
 	ExportRequestIntegrationsColumn = "integrations"
+	// ExportRequestIntegrationsColumnActiveColumn is the active column property of the Integrations name
+	ExportRequestIntegrationsColumnActiveColumn = "integrations->active"
+	// ExportRequestIntegrationsColumnAuthorizationColumn is the authorization column property of the Integrations name
+	ExportRequestIntegrationsColumnAuthorizationColumn = "integrations->authorization"
+	// ExportRequestIntegrationsColumnErroredColumn is the errored column property of the Integrations name
+	ExportRequestIntegrationsColumnErroredColumn = "integrations->errored"
+	// ExportRequestIntegrationsColumnExclusionsColumn is the exclusions column property of the Integrations name
+	ExportRequestIntegrationsColumnExclusionsColumn = "integrations->exclusions"
+	// ExportRequestIntegrationsColumnNameColumn is the name column property of the Integrations name
+	ExportRequestIntegrationsColumnNameColumn = "integrations->name"
+	// ExportRequestIntegrationsColumnProgressColumn is the progress column property of the Integrations name
+	ExportRequestIntegrationsColumnProgressColumn = "integrations->progress"
+	// ExportRequestIntegrationsColumnValidatedColumn is the validated column property of the Integrations name
+	ExportRequestIntegrationsColumnValidatedColumn = "integrations->validated"
+	// ExportRequestIntegrationsColumnValidatedAtColumn is the validated_ts column property of the Integrations name
+	ExportRequestIntegrationsColumnValidatedAtColumn = "integrations->validated_ts"
+	// ExportRequestIntegrationsColumnValidationMessageColumn is the validation_message column property of the Integrations name
+	ExportRequestIntegrationsColumnValidationMessageColumn = "integrations->validation_message"
 	// ExportRequestLocationColumn is the location column name
 	ExportRequestLocationColumn = "location"
 	// ExportRequestRefIDColumn is the ref_id column name
@@ -473,6 +497,9 @@ func (o *ExportRequest) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *ExportRequest) setDefaults() {
+	o.Integrations = []ExportRequestIntegrations{}
+	o.UploadURL = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -892,7 +919,7 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -900,7 +927,7 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integrations",
-				"type": map[string]interface{}{"type": "array", "name": "integrations", "items": map[string]interface{}{"type": "record", "name": "integrations", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Authorization information", "type": "record", "name": "integrations.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"name": "authorization", "doc": "the agents encrypted authorization", "type": "string"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "The total amount processed thus far", "type": "long", "name": "completed"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}, "doc": "Agent processing progress", "type": "record", "name": "integrations.progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"doc": "If the validation has been run against this instance", "type": "boolean", "name": "validated"}, map[string]interface{}{"type": "long", "name": "validated_ts", "doc": "Timestamp when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "The integrations that should be exported and their current configuration"}},
+				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "integrations", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"name": "authorization", "doc": "the agents encrypted authorization", "type": "string"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"doc": "If authorization failed by the agent", "type": "boolean", "name": "errored"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"name": "name", "doc": "The user friendly name of the integration", "type": "string"}, map[string]interface{}{"type": map[string]interface{}{"name": "integrations.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"doc": "The total amount to be processed", "type": "long", "name": "total"}}, "doc": "Agent processing progress", "type": "record"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": "long", "name": "validated_ts", "doc": "Timestamp when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "The integrations that should be exported and their current configuration"}, "type": "array", "name": "integrations"},
 			},
 			map[string]interface{}{
 				"name": "location",

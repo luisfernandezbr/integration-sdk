@@ -245,6 +245,9 @@ func (o *Project) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Project) setDefaults() {
+	o.Category = &emptyString
+	o.Description = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

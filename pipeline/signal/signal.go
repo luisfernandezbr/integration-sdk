@@ -50,6 +50,12 @@ const (
 	SignalCustomerIDColumn = "customer_id"
 	// SignalDateColumn is the date column name
 	SignalDateColumn = "date"
+	// SignalDateColumnEpochColumn is the epoch column property of the Date name
+	SignalDateColumnEpochColumn = "date->epoch"
+	// SignalDateColumnOffsetColumn is the offset column property of the Date name
+	SignalDateColumnOffsetColumn = "date->offset"
+	// SignalDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	SignalDateColumnRfc3339Column = "date->rfc3339"
 	// SignalDateAtColumn is the date_ts column name
 	SignalDateAtColumn = "date_ts"
 	// SignalIDColumn is the id column name
@@ -304,6 +310,7 @@ func (o *Signal) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Signal) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -771,7 +778,7 @@ func GetSignalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "date object"},
 			},
 			map[string]interface{}{
 				"name": "date_ts",

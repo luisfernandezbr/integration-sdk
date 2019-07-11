@@ -238,6 +238,9 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *User) setDefaults() {
+	o.AvatarURL = &emptyString
+	o.Emails = []string{}
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -637,7 +640,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "emails",
-				"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"},
+				"type": map[string]interface{}{"name": "emails", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "id",

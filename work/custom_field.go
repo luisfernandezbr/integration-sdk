@@ -227,6 +227,7 @@ func (o *CustomField) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *CustomField) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

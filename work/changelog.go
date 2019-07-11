@@ -265,6 +265,7 @@ func (o *Changelog) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Changelog) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

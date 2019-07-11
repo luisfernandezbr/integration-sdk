@@ -51,6 +51,10 @@ const (
 	CommitAdditionsColumn = "additions"
 	// CommitAuthorColumn is the author column name
 	CommitAuthorColumn = "author"
+	// CommitAuthorColumnIDColumn is the id column property of the Author name
+	CommitAuthorColumnIDColumn = "author->id"
+	// CommitAuthorColumnTeamIDColumn is the team_id column property of the Author name
+	CommitAuthorColumnTeamIDColumn = "author->team_id"
 	// CommitAuthorRefIDColumn is the author_ref_id column name
 	CommitAuthorRefIDColumn = "author_ref_id"
 	// CommitBlanksColumn is the blanks column name
@@ -61,6 +65,10 @@ const (
 	CommitCommentsColumn = "comments"
 	// CommitCommitterColumn is the committer column name
 	CommitCommitterColumn = "committer"
+	// CommitCommitterColumnIDColumn is the id column property of the Committer name
+	CommitCommitterColumnIDColumn = "committer->id"
+	// CommitCommitterColumnTeamIDColumn is the team_id column property of the Committer name
+	CommitCommitterColumnTeamIDColumn = "committer->team_id"
 	// CommitCommitterRefIDColumn is the committer_ref_id column name
 	CommitCommitterRefIDColumn = "committer_ref_id"
 	// CommitComplexityColumn is the complexity column name
@@ -77,6 +85,52 @@ const (
 	CommitExcludedColumn = "excluded"
 	// CommitFilesColumn is the files column name
 	CommitFilesColumn = "files"
+	// CommitFilesColumnAdditionsColumn is the additions column property of the Files name
+	CommitFilesColumnAdditionsColumn = "files->additions"
+	// CommitFilesColumnBinaryColumn is the binary column property of the Files name
+	CommitFilesColumnBinaryColumn = "files->binary"
+	// CommitFilesColumnBlanksColumn is the blanks column property of the Files name
+	CommitFilesColumnBlanksColumn = "files->blanks"
+	// CommitFilesColumnCommentsColumn is the comments column property of the Files name
+	CommitFilesColumnCommentsColumn = "files->comments"
+	// CommitFilesColumnCommitIDColumn is the commit_id column property of the Files name
+	CommitFilesColumnCommitIDColumn = "files->commit_id"
+	// CommitFilesColumnComplexityColumn is the complexity column property of the Files name
+	CommitFilesColumnComplexityColumn = "files->complexity"
+	// CommitFilesColumnCreatedAtColumn is the created_ts column property of the Files name
+	CommitFilesColumnCreatedAtColumn = "files->created_ts"
+	// CommitFilesColumnDeletionsColumn is the deletions column property of the Files name
+	CommitFilesColumnDeletionsColumn = "files->deletions"
+	// CommitFilesColumnExcludedColumn is the excluded column property of the Files name
+	CommitFilesColumnExcludedColumn = "files->excluded"
+	// CommitFilesColumnExcludedReasonColumn is the excluded_reason column property of the Files name
+	CommitFilesColumnExcludedReasonColumn = "files->excluded_reason"
+	// CommitFilesColumnFilenameColumn is the filename column property of the Files name
+	CommitFilesColumnFilenameColumn = "files->filename"
+	// CommitFilesColumnLanguageColumn is the language column property of the Files name
+	CommitFilesColumnLanguageColumn = "files->language"
+	// CommitFilesColumnLicenseColumn is the license column property of the Files name
+	CommitFilesColumnLicenseColumn = "files->license"
+	// CommitFilesColumnLicenseConfidenceColumn is the license_confidence column property of the Files name
+	CommitFilesColumnLicenseConfidenceColumn = "files->license_confidence"
+	// CommitFilesColumnLocColumn is the loc column property of the Files name
+	CommitFilesColumnLocColumn = "files->loc"
+	// CommitFilesColumnOrdinalColumn is the ordinal column property of the Files name
+	CommitFilesColumnOrdinalColumn = "files->ordinal"
+	// CommitFilesColumnRenamedColumn is the renamed column property of the Files name
+	CommitFilesColumnRenamedColumn = "files->renamed"
+	// CommitFilesColumnRenamedFromColumn is the renamed_from column property of the Files name
+	CommitFilesColumnRenamedFromColumn = "files->renamed_from"
+	// CommitFilesColumnRenamedToColumn is the renamed_to column property of the Files name
+	CommitFilesColumnRenamedToColumn = "files->renamed_to"
+	// CommitFilesColumnRepoIDColumn is the repo_id column property of the Files name
+	CommitFilesColumnRepoIDColumn = "files->repo_id"
+	// CommitFilesColumnSizeColumn is the size column property of the Files name
+	CommitFilesColumnSizeColumn = "files->size"
+	// CommitFilesColumnSlocColumn is the sloc column property of the Files name
+	CommitFilesColumnSlocColumn = "files->sloc"
+	// CommitFilesColumnStatusColumn is the status column property of the Files name
+	CommitFilesColumnStatusColumn = "files->status"
 	// CommitFilesChangedColumn is the files_changed column name
 	CommitFilesChangedColumn = "files_changed"
 	// CommitGpgSignedColumn is the gpg_signed column name
@@ -521,6 +575,10 @@ func (o *Commit) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Commit) setDefaults() {
+	o.Files = []CommitFiles{}
+	o.IssueID = []string{}
+	o.ProjectID = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -1298,7 +1356,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "author",
-				"type": map[string]interface{}{"name": "author", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the author that authored the commit", "type": "record"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"doc": "the corporate team id", "type": "string", "name": "team_id"}}, "doc": "the author that authored the commit", "type": "record", "name": "author"},
 			},
 			map[string]interface{}{
 				"name": "author_ref_id",
@@ -1318,7 +1376,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "committer",
-				"type": map[string]interface{}{"doc": "the committer that commmitted the commit", "type": "record", "name": "committer", "fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the corporate user id", "type": "string"}, map[string]interface{}{"name": "team_id", "doc": "the corporate team id", "type": "string"}}},
+				"type": map[string]interface{}{"name": "committer", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the committer that commmitted the commit", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "committer_ref_id",
@@ -1350,7 +1408,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"name": "blanks", "doc": "the number of blank lines in the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"doc": "if the file was excluded, the reason", "type": "string", "name": "excluded_reason"}, map[string]interface{}{"name": "filename", "doc": "the filename", "type": "string"}, map[string]interface{}{"doc": "the language that was detected for the file", "type": "string", "name": "language"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"doc": "the number of lines in the file", "type": "long", "name": "loc"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"name": "renamed_to", "doc": "the final file name", "type": "string"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit"}},
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"name": "binary", "doc": "indicates if the file was detected to be a binary file", "type": "boolean"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"doc": "if the file was excluded from processing", "type": "boolean", "name": "excluded"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"doc": "the license confidence from the detection engine", "type": "float", "name": "license_confidence"}, map[string]interface{}{"name": "loc", "doc": "the number of lines in the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"name": "renamed_from", "doc": "the original file name", "type": "string"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"doc": "the unique id for the repo", "type": "string", "name": "repo_id"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "files_changed",

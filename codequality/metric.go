@@ -237,6 +237,7 @@ func (o *Metric) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Metric) setDefaults() {
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

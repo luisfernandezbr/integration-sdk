@@ -54,6 +54,12 @@ const (
 	IssueCreatorRefIDColumn = "creator_ref_id"
 	// IssueCustomFieldsColumn is the customFields column name
 	IssueCustomFieldsColumn = "customFields"
+	// IssueCustomFieldsColumnIDColumn is the id column property of the CustomFields name
+	IssueCustomFieldsColumnIDColumn = "customFields->id"
+	// IssueCustomFieldsColumnNameColumn is the name column property of the CustomFields name
+	IssueCustomFieldsColumnNameColumn = "customFields->name"
+	// IssueCustomFieldsColumnValueColumn is the value column property of the CustomFields name
+	IssueCustomFieldsColumnValueColumn = "customFields->value"
 	// IssueCustomerIDColumn is the customer_id column name
 	IssueCustomerIDColumn = "customer_id"
 	// IssueDueDateColumn is the due_date column name
@@ -338,6 +344,9 @@ func (o *Issue) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Issue) setDefaults() {
+	o.CustomFields = []IssueCustomFields{}
+	o.Tags = []string{}
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

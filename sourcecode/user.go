@@ -288,6 +288,11 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *User) setDefaults() {
+	o.AssociatedRefID = &emptyString
+	o.AvatarURL = &emptyString
+	o.Email = &emptyString
+	o.Username = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

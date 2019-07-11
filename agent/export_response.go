@@ -53,10 +53,22 @@ const (
 	ExportResponseDataColumn = "data"
 	// ExportResponseDateColumn is the date column name
 	ExportResponseDateColumn = "date"
+	// ExportResponseDateColumnEpochColumn is the epoch column property of the Date name
+	ExportResponseDateColumnEpochColumn = "date->epoch"
+	// ExportResponseDateColumnOffsetColumn is the offset column property of the Date name
+	ExportResponseDateColumnOffsetColumn = "date->offset"
+	// ExportResponseDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	ExportResponseDateColumnRfc3339Column = "date->rfc3339"
 	// ExportResponseDistroColumn is the distro column name
 	ExportResponseDistroColumn = "distro"
 	// ExportResponseEndDateColumn is the end_date column name
 	ExportResponseEndDateColumn = "end_date"
+	// ExportResponseEndDateColumnEpochColumn is the epoch column property of the EndDate name
+	ExportResponseEndDateColumnEpochColumn = "end_date->epoch"
+	// ExportResponseEndDateColumnOffsetColumn is the offset column property of the EndDate name
+	ExportResponseEndDateColumnOffsetColumn = "end_date->offset"
+	// ExportResponseEndDateColumnRfc3339Column is the rfc3339 column property of the EndDate name
+	ExportResponseEndDateColumnRfc3339Column = "end_date->rfc3339"
 	// ExportResponseErrorColumn is the error column name
 	ExportResponseErrorColumn = "error"
 	// ExportResponseFreeSpaceColumn is the free_space column name
@@ -83,6 +95,12 @@ const (
 	ExportResponseRequestIDColumn = "request_id"
 	// ExportResponseStartDateColumn is the start_date column name
 	ExportResponseStartDateColumn = "start_date"
+	// ExportResponseStartDateColumnEpochColumn is the epoch column property of the StartDate name
+	ExportResponseStartDateColumnEpochColumn = "start_date->epoch"
+	// ExportResponseStartDateColumnOffsetColumn is the offset column property of the StartDate name
+	ExportResponseStartDateColumnOffsetColumn = "start_date->offset"
+	// ExportResponseStartDateColumnRfc3339Column is the rfc3339 column property of the StartDate name
+	ExportResponseStartDateColumnRfc3339Column = "start_date->rfc3339"
 	// ExportResponseSuccessColumn is the success column name
 	ExportResponseSuccessColumn = "success"
 	// ExportResponseTypeColumn is the type column name
@@ -466,6 +484,9 @@ func (o *ExportResponse) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *ExportResponse) setDefaults() {
+	o.Data = &emptyString
+	o.Error = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -1087,7 +1108,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1095,7 +1116,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date"},
+				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date"},
 			},
 			map[string]interface{}{
 				"name":    "error",

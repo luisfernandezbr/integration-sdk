@@ -300,6 +300,18 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *User) setDefaults() {
+	o.AvatarURL = &emptyString
+	o.CostCenterID = &emptyString
+	o.DeletedAt = &emptyInt
+	o.HiredAt = &emptyInt
+	o.Location = &emptyString
+	o.ManagerID = &emptyString
+	o.PrimaryTeamID = &emptyString
+	o.RoleIds = []string{}
+	o.TeamIds = []string{}
+	o.TerminatedAt = &emptyInt
+	o.Title = &emptyString
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()

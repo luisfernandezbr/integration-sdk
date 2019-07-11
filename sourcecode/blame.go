@@ -74,6 +74,18 @@ const (
 	BlameLicenseColumn = "license"
 	// BlameLinesColumn is the lines column name
 	BlameLinesColumn = "lines"
+	// BlameLinesColumnAuthorRefIDColumn is the author_ref_id column property of the Lines name
+	BlameLinesColumnAuthorRefIDColumn = "lines->author_ref_id"
+	// BlameLinesColumnBlankColumn is the blank column property of the Lines name
+	BlameLinesColumnBlankColumn = "lines->blank"
+	// BlameLinesColumnCodeColumn is the code column property of the Lines name
+	BlameLinesColumnCodeColumn = "lines->code"
+	// BlameLinesColumnCommentColumn is the comment column property of the Lines name
+	BlameLinesColumnCommentColumn = "lines->comment"
+	// BlameLinesColumnDateColumn is the date column property of the Lines name
+	BlameLinesColumnDateColumn = "lines->date"
+	// BlameLinesColumnShaColumn is the sha column property of the Lines name
+	BlameLinesColumnShaColumn = "lines->sha"
 	// BlameLocColumn is the loc column name
 	BlameLocColumn = "loc"
 	// BlameRefIDColumn is the ref_id column name
@@ -385,6 +397,9 @@ func (o *Blame) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Blame) setDefaults() {
+	o.License = &emptyString
+	o.Lines = []BlameLines{}
+
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
@@ -1047,7 +1062,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}}, "doc": "the individual line attributions"}},
 			},
 			map[string]interface{}{
 				"name": "loc",
