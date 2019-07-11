@@ -1128,7 +1128,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1177,7 +1177,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "project created timestamp"}, map[string]interface{}{"doc": "the description of the project", "type": "string", "name": "description"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}},
+				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"name": "category", "doc": "the project category", "type": "string"}, map[string]interface{}{"doc": "project created timestamp", "type": "long", "name": "created_ts"}, map[string]interface{}{"doc": "the description of the project", "type": "string", "name": "description"}, map[string]interface{}{"name": "identifier", "doc": "the common identifier for the project", "type": "string"}, map[string]interface{}{"doc": "the name of the project", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

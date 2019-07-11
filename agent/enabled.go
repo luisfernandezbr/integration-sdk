@@ -29,38 +29,42 @@ import (
 )
 
 const (
-	// EnrollRequestTopic is the default topic name
-	EnrollRequestTopic datamodel.TopicNameType = "agent_EnrollRequest_topic"
+	// EnabledTopic is the default topic name
+	EnabledTopic datamodel.TopicNameType = "agent_Enabled_topic"
 
-	// EnrollRequestStream is the default stream name
-	EnrollRequestStream datamodel.TopicNameType = "agent_EnrollRequest_stream"
+	// EnabledStream is the default stream name
+	EnabledStream datamodel.TopicNameType = "agent_Enabled_stream"
 
-	// EnrollRequestTable is the default table name
-	EnrollRequestTable datamodel.TopicNameType = "agent_EnrollRequest"
+	// EnabledTable is the default table name
+	EnabledTable datamodel.TopicNameType = "agent_Enabled"
 
-	// EnrollRequestModelName is the model name
-	EnrollRequestModelName datamodel.ModelNameType = "agent.EnrollRequest"
+	// EnabledModelName is the model name
+	EnabledModelName datamodel.ModelNameType = "agent.Enabled"
 )
 
 const (
-	// EnrollRequestCodeColumn is the code column name
-	EnrollRequestCodeColumn = "code"
-	// EnrollRequestDateColumn is the date column name
-	EnrollRequestDateColumn = "date"
-	// EnrollRequestDateColumnEpochColumn is the epoch column property of the Date name
-	EnrollRequestDateColumnEpochColumn = "date->epoch"
-	// EnrollRequestDateColumnOffsetColumn is the offset column property of the Date name
-	EnrollRequestDateColumnOffsetColumn = "date->offset"
-	// EnrollRequestDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	EnrollRequestDateColumnRfc3339Column = "date->rfc3339"
-	// EnrollRequestIDColumn is the id column name
-	EnrollRequestIDColumn = "id"
-	// EnrollRequestUUIDColumn is the uuid column name
-	EnrollRequestUUIDColumn = "uuid"
+	// EnabledCustomerIDColumn is the customer_id column name
+	EnabledCustomerIDColumn = "customer_id"
+	// EnabledDateColumn is the date column name
+	EnabledDateColumn = "date"
+	// EnabledDateColumnEpochColumn is the epoch column property of the Date name
+	EnabledDateColumnEpochColumn = "date->epoch"
+	// EnabledDateColumnOffsetColumn is the offset column property of the Date name
+	EnabledDateColumnOffsetColumn = "date->offset"
+	// EnabledDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	EnabledDateColumnRfc3339Column = "date->rfc3339"
+	// EnabledIDColumn is the id column name
+	EnabledIDColumn = "id"
+	// EnabledRefIDColumn is the ref_id column name
+	EnabledRefIDColumn = "ref_id"
+	// EnabledRefTypeColumn is the ref_type column name
+	EnabledRefTypeColumn = "ref_type"
+	// EnabledUUIDColumn is the uuid column name
+	EnabledUUIDColumn = "uuid"
 )
 
-// EnrollRequestDate represents the object structure for date
-type EnrollRequestDate struct {
+// EnabledDate represents the object structure for date
+type EnabledDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -69,7 +73,7 @@ type EnrollRequestDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *EnrollRequestDate) ToMap() map[string]interface{} {
+func (o *EnabledDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -80,14 +84,18 @@ func (o *EnrollRequestDate) ToMap() map[string]interface{} {
 	}
 }
 
-// EnrollRequest an agent request to enroll a new agent machine
-type EnrollRequest struct {
-	// Code The agent enrollment code
-	Code string `json:"code" bson:"code" yaml:"code" faker:"-"`
+// Enabled an agent event to indicate that it's enabled and ready for actions
+type Enabled struct {
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Date the date when the request was made
-	Date EnrollRequestDate `json:"date" bson:"date" yaml:"date" faker:"-"`
-	// ID the primary key for this model instance
+	Date EnabledDate `json:"date" bson:"date" yaml:"date" faker:"-"`
+	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -95,22 +103,22 @@ type EnrollRequest struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*EnrollRequest)(nil)
+var _ datamodel.Model = (*Enabled)(nil)
 
-func toEnrollRequestObjectNil(isavro bool, isoptional bool) interface{} {
+func toEnabledObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return toEnrollRequestObjectNil(isavro, isoptional)
+		return toEnabledObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return toEnrollRequestObjectNil(isavro, isoptional)
+		return toEnabledObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
 		if isavro && isoptional {
 			return goavro.Union(avrotype, v)
@@ -119,7 +127,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -128,7 +136,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -137,7 +145,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -146,7 +154,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -155,7 +163,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -164,7 +172,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -173,7 +181,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -182,7 +190,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -191,7 +199,7 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnrollRequestObjectNil(isavro, isoptional)
+				return toEnabledObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -205,9 +213,9 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 		return v
 	case *map[string]string:
 		return *v
-	case *EnrollRequest:
+	case *Enabled:
 		return v.ToMap()
-	case EnrollRequest:
+	case Enabled:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -223,24 +231,24 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toEnrollRequestObject(av, isavro, false, ""))
+			arr = append(arr, toEnabledObject(av, isavro, false, ""))
 		}
 		return arr
 
-	case EnrollRequestDate:
-		vv := o.(EnrollRequestDate)
+	case EnabledDate:
+		vv := o.(EnabledDate)
 		return vv.ToMap()
-	case *EnrollRequestDate:
-		return (*o.(*EnrollRequestDate)).ToMap()
-	case []EnrollRequestDate:
+	case *EnabledDate:
+		return (*o.(*EnabledDate)).ToMap()
+	case []EnabledDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]EnrollRequestDate) {
+		for _, i := range o.([]EnabledDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]EnrollRequestDate:
+	case *[]EnabledDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]EnrollRequestDate)
+		vv := o.(*[]EnabledDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -249,36 +257,39 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of EnrollRequest
-func (o *EnrollRequest) String() string {
-	return fmt.Sprintf("agent.EnrollRequest<%s>", o.ID)
+// String returns a string representation of Enabled
+func (o *Enabled) String() string {
+	return fmt.Sprintf("agent.Enabled<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *EnrollRequest) GetTopicName() datamodel.TopicNameType {
-	return EnrollRequestTopic
+func (o *Enabled) GetTopicName() datamodel.TopicNameType {
+	return EnabledTopic
 }
 
 // GetModelName returns the name of the model
-func (o *EnrollRequest) GetModelName() datamodel.ModelNameType {
-	return EnrollRequestModelName
+func (o *Enabled) GetModelName() datamodel.ModelNameType {
+	return EnabledModelName
 }
 
-func (o *EnrollRequest) setDefaults() {
+func (o *Enabled) setDefaults() {
 
 	o.GetID()
+	o.GetRefID()
+	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *EnrollRequest) GetID() string {
+func (o *Enabled) GetID() string {
 	if o.ID == "" {
-		o.ID = hash.Values(o.Code, o.UUID)
+		// we will attempt to generate a consistent, unique ID from a hash
+		o.ID = hash.Values("Enabled", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *EnrollRequest) GetTopicKey() string {
+func (o *Enabled) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -287,7 +298,7 @@ func (o *EnrollRequest) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *EnrollRequest) GetTimestamp() time.Time {
+func (o *Enabled) GetTimestamp() time.Time {
 	var dt interface{} = o.Date
 	switch v := dt.(type) {
 	case int64:
@@ -300,34 +311,40 @@ func (o *EnrollRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case EnrollRequestDate:
+	case EnabledDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
-	panic("not sure how to handle the date time format for EnrollRequest")
+	panic("not sure how to handle the date time format for Enabled")
+}
+
+// GetRefID returns the RefID for the object
+func (o *Enabled) GetRefID() string {
+	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *EnrollRequest) IsMaterialized() bool {
+func (o *Enabled) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *EnrollRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *Enabled) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *EnrollRequest) IsEvented() bool {
+func (o *Enabled) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *EnrollRequest) SetEventHeaders(kv map[string]string) {
-	kv["model"] = EnrollRequestModelName.String()
+func (o *Enabled) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = EnabledModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *EnrollRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *Enabled) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -349,21 +366,26 @@ func (o *EnrollRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *EnrollRequest) GetStateKey() string {
+func (o *Enabled) GetStateKey() string {
 	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
-// Clone returns an exact copy of EnrollRequest
-func (o *EnrollRequest) Clone() datamodel.Model {
-	c := new(EnrollRequest)
+// GetCustomerID will return the customer_id
+func (o *Enabled) GetCustomerID() string {
+	return o.CustomerID
+}
+
+// Clone returns an exact copy of Enabled
+func (o *Enabled) Clone() datamodel.Model {
+	c := new(Enabled)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *EnrollRequest) Anon() datamodel.Model {
-	c := new(EnrollRequest)
+func (o *Enabled) Anon() datamodel.Model {
+	c := new(Enabled)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -378,12 +400,12 @@ func (o *EnrollRequest) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *EnrollRequest) MarshalJSON() ([]byte, error) {
+func (o *Enabled) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *EnrollRequest) UnmarshalJSON(data []byte) error {
+func (o *Enabled) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -392,22 +414,22 @@ func (o *EnrollRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecEnrollRequest *goavro.Codec
+var cachedCodecEnabled *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *EnrollRequest) GetAvroCodec() *goavro.Codec {
-	if cachedCodecEnrollRequest == nil {
-		c, err := GetEnrollRequestAvroSchema()
+func (o *Enabled) GetAvroCodec() *goavro.Codec {
+	if cachedCodecEnabled == nil {
+		c, err := GetEnabledAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecEnrollRequest = c
+		cachedCodecEnabled = c
 	}
-	return cachedCodecEnrollRequest
+	return cachedCodecEnabled
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *EnrollRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *Enabled) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -421,7 +443,7 @@ func (o *EnrollRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *EnrollRequest) FromAvroBinary(value []byte) error {
+func (o *Enabled) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -436,17 +458,17 @@ func (o *EnrollRequest) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *EnrollRequest) Stringify() string {
+func (o *Enabled) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two EnrollRequest objects are equal
-func (o *EnrollRequest) IsEqual(other *EnrollRequest) bool {
-	return o.GetID() == other.GetID()
+// IsEqual returns true if the two Enabled objects are equal
+func (o *Enabled) IsEqual(other *Enabled) bool {
+	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *EnrollRequest) ToMap(avro ...bool) map[string]interface{} {
+func (o *Enabled) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -455,40 +477,43 @@ func (o *EnrollRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"code": toEnrollRequestObject(o.Code, isavro, false, "string"),
-		"date": toEnrollRequestObject(o.Date, isavro, false, "date"),
-		"id":   toEnrollRequestObject(o.ID, isavro, false, "string"),
-		"uuid": toEnrollRequestObject(o.UUID, isavro, false, "string"),
+		"customer_id": toEnabledObject(o.CustomerID, isavro, false, "string"),
+		"date":        toEnabledObject(o.Date, isavro, false, "date"),
+		"id":          toEnabledObject(o.ID, isavro, false, "string"),
+		"ref_id":      toEnabledObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toEnabledObject(o.RefType, isavro, false, "string"),
+		"uuid":        toEnabledObject(o.UUID, isavro, false, "string"),
+		"hashcode":    toEnabledObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
+func (o *Enabled) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["code"].(string); ok {
-		o.Code = val
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
 	} else {
-		val := kv["code"]
+		val := kv["customer_id"]
 		if val == nil {
-			o.Code = ""
+			o.CustomerID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Code = fmt.Sprintf("%v", val)
+			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date"].(EnrollRequestDate); ok {
+	if val, ok := kv["date"].(EnabledDate); ok {
 		o.Date = val
 	} else {
 		val := kv["date"]
 		if val == nil {
-			o.Date = EnrollRequestDate{}
+			o.Date = EnabledDate{}
 		} else {
-			o.Date = EnrollRequestDate{}
+			o.Date = EnabledDate{}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Date)
 
@@ -507,6 +532,32 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		val := kv["ref_id"]
+		if val == nil {
+			o.RefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		val := kv["ref_type"]
+		if val == nil {
+			o.RefType = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RefType = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -523,23 +574,48 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 	o.setDefaults()
 }
 
-// GetEnrollRequestAvroSchemaSpec creates the avro schema specification for EnrollRequest
-func GetEnrollRequestAvroSchemaSpec() string {
+// Hash will return a hashcode for the object
+func (o *Enabled) Hash() string {
+	args := make([]interface{}, 0)
+	args = append(args, o.CustomerID)
+	args = append(args, o.Date)
+	args = append(args, o.ID)
+	args = append(args, o.RefID)
+	args = append(args, o.RefType)
+	args = append(args, o.UUID)
+	o.Hashcode = hash.Values(args...)
+	return o.Hashcode
+}
+
+// GetEnabledAvroSchemaSpec creates the avro schema specification for Enabled
+func GetEnabledAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "EnrollRequest",
+		"name":      "Enabled",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
-				"name": "code",
+				"name": "hashcode",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "ref_type",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -551,25 +627,25 @@ func GetEnrollRequestAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// GetEnrollRequestAvroSchema creates the avro schema for EnrollRequest
-func GetEnrollRequestAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetEnrollRequestAvroSchemaSpec())
+// GetEnabledAvroSchema creates the avro schema for Enabled
+func GetEnabledAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetEnabledAvroSchemaSpec())
 }
 
-// TransformEnrollRequestFunc is a function for transforming EnrollRequest during processing
-type TransformEnrollRequestFunc func(input *EnrollRequest) (*EnrollRequest, error)
+// TransformEnabledFunc is a function for transforming Enabled during processing
+type TransformEnabledFunc func(input *Enabled) (*Enabled, error)
 
-// NewEnrollRequestPipe creates a pipe for processing EnrollRequest items
-func NewEnrollRequestPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformEnrollRequestFunc) <-chan bool {
+// NewEnabledPipe creates a pipe for processing Enabled items
+func NewEnabledPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformEnabledFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewEnrollRequestInputStream(input, errors)
-	var stream chan EnrollRequest
+	inch, indone := NewEnabledInputStream(input, errors)
+	var stream chan Enabled
 	if len(transforms) > 0 {
-		stream = make(chan EnrollRequest, 1000)
+		stream = make(chan Enabled, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewEnrollRequestOutputStream(output, stream, errors)
+	outdone := NewEnabledOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -605,12 +681,12 @@ func NewEnrollRequestPipe(input io.ReadCloser, output io.WriteCloser, errors cha
 	return done
 }
 
-// NewEnrollRequestInputStreamDir creates a channel for reading EnrollRequest as JSON newlines from a directory of files
-func NewEnrollRequestInputStreamDir(dir string, errors chan<- error, transforms ...TransformEnrollRequestFunc) (chan EnrollRequest, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/enroll_request\\.json(\\.gz)?$"))
+// NewEnabledInputStreamDir creates a channel for reading Enabled as JSON newlines from a directory of files
+func NewEnabledInputStreamDir(dir string, errors chan<- error, transforms ...TransformEnabledFunc) (chan Enabled, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/enabled\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan EnrollRequest)
+		ch := make(chan Enabled)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -618,16 +694,16 @@ func NewEnrollRequestInputStreamDir(dir string, errors chan<- error, transforms 
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for enroll_request")
-		ch := make(chan EnrollRequest)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for enabled")
+		ch := make(chan Enabled)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewEnrollRequestInputStreamFile(files[0], errors, transforms...)
+		return NewEnabledInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan EnrollRequest)
+		ch := make(chan Enabled)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -635,12 +711,12 @@ func NewEnrollRequestInputStreamDir(dir string, errors chan<- error, transforms 
 	}
 }
 
-// NewEnrollRequestInputStreamFile creates an channel for reading EnrollRequest as JSON newlines from filename
-func NewEnrollRequestInputStreamFile(filename string, errors chan<- error, transforms ...TransformEnrollRequestFunc) (chan EnrollRequest, <-chan bool) {
+// NewEnabledInputStreamFile creates an channel for reading Enabled as JSON newlines from filename
+func NewEnabledInputStreamFile(filename string, errors chan<- error, transforms ...TransformEnabledFunc) (chan Enabled, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan EnrollRequest)
+		ch := make(chan Enabled)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -652,7 +728,7 @@ func NewEnrollRequestInputStreamFile(filename string, errors chan<- error, trans
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan EnrollRequest)
+			ch := make(chan Enabled)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -660,13 +736,13 @@ func NewEnrollRequestInputStreamFile(filename string, errors chan<- error, trans
 		}
 		f = gz
 	}
-	return NewEnrollRequestInputStream(f, errors, transforms...)
+	return NewEnabledInputStream(f, errors, transforms...)
 }
 
-// NewEnrollRequestInputStream creates an channel for reading EnrollRequest as JSON newlines from stream
-func NewEnrollRequestInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformEnrollRequestFunc) (chan EnrollRequest, <-chan bool) {
+// NewEnabledInputStream creates an channel for reading Enabled as JSON newlines from stream
+func NewEnabledInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformEnabledFunc) (chan Enabled, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan EnrollRequest, 1000)
+	ch := make(chan Enabled, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -679,7 +755,7 @@ func NewEnrollRequestInputStream(stream io.ReadCloser, errors chan<- error, tran
 				errors <- err
 				return
 			}
-			var item EnrollRequest
+			var item Enabled
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -705,9 +781,9 @@ func NewEnrollRequestInputStream(stream io.ReadCloser, errors chan<- error, tran
 	return ch, done
 }
 
-// NewEnrollRequestOutputStreamDir will output json newlines from channel and save in dir
-func NewEnrollRequestOutputStreamDir(dir string, ch chan EnrollRequest, errors chan<- error, transforms ...TransformEnrollRequestFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/enroll_request\\.json(\\.gz)?$")
+// NewEnabledOutputStreamDir will output json newlines from channel and save in dir
+func NewEnabledOutputStreamDir(dir string, ch chan Enabled, errors chan<- error, transforms ...TransformEnabledFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/enabled\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -723,11 +799,11 @@ func NewEnrollRequestOutputStreamDir(dir string, ch chan EnrollRequest, errors c
 		done <- true
 		return done
 	}
-	return NewEnrollRequestOutputStream(gz, ch, errors, transforms...)
+	return NewEnabledOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewEnrollRequestOutputStream will output json newlines from channel to the stream
-func NewEnrollRequestOutputStream(stream io.WriteCloser, ch chan EnrollRequest, errors chan<- error, transforms ...TransformEnrollRequestFunc) <-chan bool {
+// NewEnabledOutputStream will output json newlines from channel to the stream
+func NewEnabledOutputStream(stream io.WriteCloser, ch chan Enabled, errors chan<- error, transforms ...TransformEnabledFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -767,59 +843,59 @@ func NewEnrollRequestOutputStream(stream io.WriteCloser, ch chan EnrollRequest, 
 	return done
 }
 
-// EnrollRequestSendEvent is an event detail for sending data
-type EnrollRequestSendEvent struct {
-	EnrollRequest *EnrollRequest
-	headers       map[string]string
-	time          time.Time
-	key           string
+// EnabledSendEvent is an event detail for sending data
+type EnabledSendEvent struct {
+	Enabled *Enabled
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-var _ datamodel.ModelSendEvent = (*EnrollRequestSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*EnabledSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *EnrollRequestSendEvent) Key() string {
+func (e *EnabledSendEvent) Key() string {
 	if e.key == "" {
-		return e.EnrollRequest.GetID()
+		return e.Enabled.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *EnrollRequestSendEvent) Object() datamodel.Model {
-	return e.EnrollRequest
+func (e *EnabledSendEvent) Object() datamodel.Model {
+	return e.Enabled
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *EnrollRequestSendEvent) Headers() map[string]string {
+func (e *EnabledSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *EnrollRequestSendEvent) Timestamp() time.Time {
+func (e *EnabledSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// EnrollRequestSendEventOpts is a function handler for setting opts
-type EnrollRequestSendEventOpts func(o *EnrollRequestSendEvent)
+// EnabledSendEventOpts is a function handler for setting opts
+type EnabledSendEventOpts func(o *EnabledSendEvent)
 
-// WithEnrollRequestSendEventKey sets the key value to a value different than the object ID
-func WithEnrollRequestSendEventKey(key string) EnrollRequestSendEventOpts {
-	return func(o *EnrollRequestSendEvent) {
+// WithEnabledSendEventKey sets the key value to a value different than the object ID
+func WithEnabledSendEventKey(key string) EnabledSendEventOpts {
+	return func(o *EnabledSendEvent) {
 		o.key = key
 	}
 }
 
-// WithEnrollRequestSendEventTimestamp sets the timestamp value
-func WithEnrollRequestSendEventTimestamp(tv time.Time) EnrollRequestSendEventOpts {
-	return func(o *EnrollRequestSendEvent) {
+// WithEnabledSendEventTimestamp sets the timestamp value
+func WithEnabledSendEventTimestamp(tv time.Time) EnabledSendEventOpts {
+	return func(o *EnabledSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithEnrollRequestSendEventHeader sets the timestamp value
-func WithEnrollRequestSendEventHeader(key, value string) EnrollRequestSendEventOpts {
-	return func(o *EnrollRequestSendEvent) {
+// WithEnabledSendEventHeader sets the timestamp value
+func WithEnabledSendEventHeader(key, value string) EnabledSendEventOpts {
+	return func(o *EnabledSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -827,10 +903,10 @@ func WithEnrollRequestSendEventHeader(key, value string) EnrollRequestSendEventO
 	}
 }
 
-// NewEnrollRequestSendEvent returns a new EnrollRequestSendEvent instance
-func NewEnrollRequestSendEvent(o *EnrollRequest, opts ...EnrollRequestSendEventOpts) *EnrollRequestSendEvent {
-	res := &EnrollRequestSendEvent{
-		EnrollRequest: o,
+// NewEnabledSendEvent returns a new EnabledSendEvent instance
+func NewEnabledSendEvent(o *Enabled, opts ...EnabledSendEventOpts) *EnabledSendEvent {
+	res := &EnabledSendEvent{
+		Enabled: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -840,8 +916,8 @@ func NewEnrollRequestSendEvent(o *EnrollRequest, opts ...EnrollRequestSendEventO
 	return res
 }
 
-// NewEnrollRequestProducer will stream data from the channel
-func NewEnrollRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewEnabledProducer will stream data from the channel
+func NewEnabledProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -854,7 +930,7 @@ func NewEnrollRequestProducer(ctx context.Context, producer eventing.Producer, c
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*EnrollRequest); ok {
+				if object, ok := item.Object().(*Enabled); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -885,7 +961,7 @@ func NewEnrollRequestProducer(ctx context.Context, producer eventing.Producer, c
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.EnrollRequest but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Enabled but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -893,22 +969,22 @@ func NewEnrollRequestProducer(ctx context.Context, producer eventing.Producer, c
 	return done
 }
 
-// NewEnrollRequestConsumer will stream data from the topic into the provided channel
-func NewEnrollRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewEnabledConsumer will stream data from the topic into the provided channel
+func NewEnabledConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object EnrollRequest
+			var object Enabled
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.EnrollRequest: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.Enabled: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.EnrollRequest: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.Enabled: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.EnrollRequest")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.Enabled")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -918,51 +994,51 @@ func NewEnrollRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mo
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &EnrollRequestReceiveEvent{&object, msg, false}
+			ch <- &EnabledReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object EnrollRequest
+			var object Enabled
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &EnrollRequestReceiveEvent{nil, msg, true}
+			ch <- &EnabledReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// EnrollRequestReceiveEvent is an event detail for receiving data
-type EnrollRequestReceiveEvent struct {
-	EnrollRequest *EnrollRequest
-	message       eventing.Message
-	eof           bool
+// EnabledReceiveEvent is an event detail for receiving data
+type EnabledReceiveEvent struct {
+	Enabled *Enabled
+	message eventing.Message
+	eof     bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*EnrollRequestReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*EnabledReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *EnrollRequestReceiveEvent) Object() datamodel.Model {
-	return e.EnrollRequest
+func (e *EnabledReceiveEvent) Object() datamodel.Model {
+	return e.Enabled
 }
 
 // Message returns the underlying message data for the event
-func (e *EnrollRequestReceiveEvent) Message() eventing.Message {
+func (e *EnabledReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *EnrollRequestReceiveEvent) EOF() bool {
+func (e *EnabledReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// EnrollRequestProducer implements the datamodel.ModelEventProducer
-type EnrollRequestProducer struct {
+// EnabledProducer implements the datamodel.ModelEventProducer
+type EnabledProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -973,15 +1049,15 @@ type EnrollRequestProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*EnrollRequestProducer)(nil)
+var _ datamodel.ModelEventProducer = (*EnabledProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *EnrollRequestProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *EnabledProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *EnrollRequestProducer) Close() error {
+func (p *EnabledProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -996,47 +1072,47 @@ func (p *EnrollRequestProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *EnrollRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Enabled) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *EnrollRequest) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Enabled) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &EnrollRequestProducer{
+	return &EnabledProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewEnrollRequestProducer(newctx, producer, ch, errors, empty),
+		done:     NewEnabledProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewEnrollRequestProducerChannel returns a channel which can be used for producing Model events
-func NewEnrollRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewEnrollRequestProducerChannelSize(producer, 0, errors)
+// NewEnabledProducerChannel returns a channel which can be used for producing Model events
+func NewEnabledProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewEnabledProducerChannelSize(producer, 0, errors)
 }
 
-// NewEnrollRequestProducerChannelSize returns a channel which can be used for producing Model events
-func NewEnrollRequestProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewEnabledProducerChannelSize returns a channel which can be used for producing Model events
+func NewEnabledProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &EnrollRequestProducer{
+	return &EnabledProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewEnrollRequestProducer(newctx, producer, ch, errors, empty),
+		done:     NewEnabledProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// EnrollRequestConsumer implements the datamodel.ModelEventConsumer
-type EnrollRequestConsumer struct {
+// EnabledConsumer implements the datamodel.ModelEventConsumer
+type EnabledConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1044,15 +1120,15 @@ type EnrollRequestConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*EnrollRequestConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*EnabledConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *EnrollRequestConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *EnabledConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *EnrollRequestConsumer) Close() error {
+func (c *EnabledConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1066,21 +1142,21 @@ func (c *EnrollRequestConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *EnrollRequest) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Enabled) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &EnrollRequestConsumer{
+	return &EnabledConsumer{
 		ch:       ch,
-		callback: NewEnrollRequestConsumer(consumer, ch, errors),
+		callback: NewEnabledConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewEnrollRequestConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewEnrollRequestConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewEnabledConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewEnabledConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &EnrollRequestConsumer{
+	return &EnabledConsumer{
 		ch:       ch,
-		callback: NewEnrollRequestConsumer(consumer, ch, errors),
+		callback: NewEnabledConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }

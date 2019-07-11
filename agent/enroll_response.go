@@ -49,8 +49,6 @@ const (
 	EnrollResponseApikeyColumn = "apikey"
 	// EnrollResponseArchitectureColumn is the architecture column name
 	EnrollResponseArchitectureColumn = "architecture"
-	// EnrollResponseCompletedAtColumn is the completed_ts column name
-	EnrollResponseCompletedAtColumn = "completed_ts"
 	// EnrollResponseCustomerIDColumn is the customer_id column name
 	EnrollResponseCustomerIDColumn = "customer_id"
 	// EnrollResponseDataColumn is the data column name
@@ -163,8 +161,6 @@ type EnrollResponse struct {
 	Apikey string `json:"apikey" bson:"apikey" yaml:"apikey" faker:"-"`
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
-	// CompletedAt Last time the agent completed setup
-	CompletedAt int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
@@ -602,7 +598,6 @@ func (o *EnrollResponse) ToMap(avro ...bool) map[string]interface{} {
 	return map[string]interface{}{
 		"apikey":       toEnrollResponseObject(o.Apikey, isavro, false, "string"),
 		"architecture": toEnrollResponseObject(o.Architecture, isavro, false, "string"),
-		"completed_ts": toEnrollResponseObject(o.CompletedAt, isavro, false, "long"),
 		"customer_id":  toEnrollResponseObject(o.CustomerID, isavro, false, "string"),
 		"data":         toEnrollResponseObject(o.Data, isavro, true, "string"),
 		"date":         toEnrollResponseObject(o.Date, isavro, false, "date"),
@@ -657,19 +652,6 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.Architecture = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["completed_ts"].(int64); ok {
-		o.CompletedAt = val
-	} else {
-		val := kv["completed_ts"]
-		if val == nil {
-			o.CompletedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.CompletedAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
@@ -967,7 +949,6 @@ func (o *EnrollResponse) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Apikey)
 	args = append(args, o.Architecture)
-	args = append(args, o.CompletedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.Date)
@@ -1012,10 +993,6 @@ func GetEnrollResponseAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "completed_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
@@ -1026,7 +1003,7 @@ func GetEnrollResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date of the event", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "distro",
