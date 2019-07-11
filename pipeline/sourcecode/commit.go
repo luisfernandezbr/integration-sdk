@@ -1298,7 +1298,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "author",
-				"type": map[string]interface{}{"type": "record", "name": "author", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"doc": "the corporate team id", "type": "string", "name": "team_id"}}, "doc": "the author that authored the commit"},
+				"type": map[string]interface{}{"name": "author", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the author that authored the commit", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "author_ref_id",
@@ -1318,7 +1318,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "committer",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the committer that commmitted the commit", "type": "record", "name": "committer"},
+				"type": map[string]interface{}{"type": "record", "name": "committer", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the committer that commmitted the commit"},
 			},
 			map[string]interface{}{
 				"name": "committer_ref_id",
@@ -1350,7 +1350,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"name": "additions", "doc": "the number of additions for the commit file", "type": "long"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"doc": "the unique id for the commit", "type": "string", "name": "commit_id"}, map[string]interface{}{"name": "complexity", "doc": "the complexity value for the file change", "type": "long"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"name": "filename", "doc": "the filename", "type": "string"}, map[string]interface{}{"doc": "the language that was detected for the file", "type": "string", "name": "language"}, map[string]interface{}{"name": "license", "doc": "the license which was detected for the file", "type": "string"}, map[string]interface{}{"doc": "the license confidence from the detection engine", "type": "float", "name": "license_confidence"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"name": "renamed", "doc": "if the file was renamed", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"name": "repo_id", "doc": "the unique id for the repo", "type": "string"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit"}, "type": "array", "name": "files"},
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the number of additions for the commit file", "type": "long", "name": "additions"}, map[string]interface{}{"doc": "indicates if the file was detected to be a binary file", "type": "boolean", "name": "binary"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"doc": "the unique id for the commit", "type": "string", "name": "commit_id"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"name": "renamed_from", "doc": "the original file name", "type": "string"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"name": "status", "doc": "the status of the change", "type": "string"}}, "doc": "the files touched by this commit", "type": "record", "name": "files"}},
 			},
 			map[string]interface{}{
 				"name": "files_changed",
@@ -1366,7 +1366,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "issue_id",
-				"type": map[string]interface{}{"type": "array", "name": "issue_id", "items": "string"},
+				"type": map[string]interface{}{"name": "issue_id", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "linked",
@@ -1781,12 +1781,14 @@ func NewCommitConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.sourcecode.Commit")
 			}
+
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
 			ch <- &CommitReceiveEvent{&object, msg, false}
 			return nil
 		},

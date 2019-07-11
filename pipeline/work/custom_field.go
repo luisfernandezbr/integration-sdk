@@ -609,7 +609,7 @@ func GetCustomFieldAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -995,12 +995,14 @@ func NewCustomFieldConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.work.CustomField")
 			}
+
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
 			ch <- &CustomFieldReceiveEvent{&object, msg, false}
 			return nil
 		},

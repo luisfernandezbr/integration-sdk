@@ -999,7 +999,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1059,7 +1059,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "tags"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "title",
@@ -1441,12 +1441,14 @@ func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for work.Issue")
 			}
+
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
 			ch <- &IssueReceiveEvent{&object, msg, false}
 			return nil
 		},

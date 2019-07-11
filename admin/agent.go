@@ -44,8 +44,6 @@ const (
 )
 
 const (
-	// AgentApikeyColumn is the apikey column name
-	AgentApikeyColumn = "apikey"
 	// AgentCompletedAtColumn is the completed_ts column name
 	AgentCompletedAtColumn = "completed_ts"
 	// AgentCreatedAtColumn is the created_ts column name
@@ -66,11 +64,9 @@ const (
 	AgentUUIDColumn = "uuid"
 )
 
-// Agent Agent metadata
+// Agent Agent metadata for an enrolled agent
 type Agent struct {
-	// Apikey The apikey for this agent to use
-	Apikey string `json:"apikey" bson:"apikey" yaml:"apikey" faker:"-"`
-	// CompletedAt Last time the agent completed
+	// CompletedAt Last time the agent completed setup
 	CompletedAt int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
 	// CreatedAt the date the record was created in Epoch time
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
@@ -442,7 +438,6 @@ func (o *Agent) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"apikey":           toAgentObject(o.Apikey, isavro, false, "string"),
 		"completed_ts":     toAgentObject(o.CompletedAt, isavro, false, "long"),
 		"created_ts":       toAgentObject(o.CreatedAt, isavro, false, "long"),
 		"customer_id":      toAgentObject(o.CustomerID, isavro, false, "string"),
@@ -461,19 +456,6 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-	if val, ok := kv["apikey"].(string); ok {
-		o.Apikey = val
-	} else {
-		val := kv["apikey"]
-		if val == nil {
-			o.Apikey = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Apikey = fmt.Sprintf("%v", val)
-		}
 	}
 	if val, ok := kv["completed_ts"].(int64); ok {
 		o.CompletedAt = val
@@ -598,7 +580,6 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Agent) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Apikey)
 	args = append(args, o.CompletedAt)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
@@ -667,10 +648,6 @@ func GetAgentAvroSchemaSpec() string {
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "apikey",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -1073,12 +1050,14 @@ func NewAgentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for admin.Agent")
 			}
+
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
 			ch <- &AgentReceiveEvent{&object, msg, false}
 			return nil
 		},

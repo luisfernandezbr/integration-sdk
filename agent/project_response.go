@@ -1102,7 +1102,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event", "type": "record", "name": "date"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1151,7 +1151,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"name": "active", "doc": "the status of the project", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "project created timestamp"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"doc": "the name of the project", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"name": "url", "doc": "the url to the project home page", "type": "string"}}, "doc": "the projects exported"}},
+				"type": map[string]interface{}{"name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "project created timestamp"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"name": "identifier", "doc": "the common identifier for the project", "type": "string"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1551,12 +1551,14 @@ func NewProjectResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for agent.ProjectResponse")
 			}
+
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
 			ch <- &ProjectResponseReceiveEvent{&object, msg, false}
 			return nil
 		},

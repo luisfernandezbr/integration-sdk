@@ -1047,7 +1047,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"name": "blank", "doc": "if the line is a blank line", "type": "boolean"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"name": "comment", "doc": "if the line is a comment", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"doc": "if the line is a blank line", "type": "boolean", "name": "blank"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"name": "comment", "doc": "if the line is a comment", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions", "type": "record", "name": "lines"}},
 			},
 			map[string]interface{}{
 				"name": "loc",
@@ -1451,12 +1451,14 @@ func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Blame")
 			}
+
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
 			ch <- &BlameReceiveEvent{&object, msg, false}
 			return nil
 		},

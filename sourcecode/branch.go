@@ -1166,12 +1166,14 @@ func NewBranchConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Branch")
 			}
+
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
 			ch <- &BranchReceiveEvent{&object, msg, false}
 			return nil
 		},

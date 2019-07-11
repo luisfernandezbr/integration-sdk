@@ -790,7 +790,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "children_ids",
-				"type": map[string]interface{}{"type": "array", "name": "children_ids", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "children_ids"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
@@ -818,7 +818,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "parent_ids",
-				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "parent_ids"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1196,12 +1196,14 @@ func NewTeamConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 			default:
 				return fmt.Errorf("unsure of the encoding since it was not set for customer.Team")
 			}
+
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.Add(cfg.TTL).Sub(time.Now()) < 0 {
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
+
 			ch <- &TeamReceiveEvent{&object, msg, false}
 			return nil
 		},

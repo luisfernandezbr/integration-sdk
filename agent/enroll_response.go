@@ -31,70 +31,68 @@ import (
 )
 
 const (
-	// IntegrationResponseTopic is the default topic name
-	IntegrationResponseTopic datamodel.TopicNameType = "agent_IntegrationResponse_topic"
+	// EnrollResponseTopic is the default topic name
+	EnrollResponseTopic datamodel.TopicNameType = "agent_EnrollResponse_topic"
 
-	// IntegrationResponseStream is the default stream name
-	IntegrationResponseStream datamodel.TopicNameType = "agent_IntegrationResponse_stream"
+	// EnrollResponseStream is the default stream name
+	EnrollResponseStream datamodel.TopicNameType = "agent_EnrollResponse_stream"
 
-	// IntegrationResponseTable is the default table name
-	IntegrationResponseTable datamodel.TopicNameType = "agent_IntegrationResponse"
+	// EnrollResponseTable is the default table name
+	EnrollResponseTable datamodel.TopicNameType = "agent_EnrollResponse"
 
-	// IntegrationResponseModelName is the model name
-	IntegrationResponseModelName datamodel.ModelNameType = "agent.IntegrationResponse"
+	// EnrollResponseModelName is the model name
+	EnrollResponseModelName datamodel.ModelNameType = "agent.EnrollResponse"
 )
 
 const (
-	// IntegrationResponseArchitectureColumn is the architecture column name
-	IntegrationResponseArchitectureColumn = "architecture"
-	// IntegrationResponseAuthorizationColumn is the authorization column name
-	IntegrationResponseAuthorizationColumn = "authorization"
-	// IntegrationResponseCustomerIDColumn is the customer_id column name
-	IntegrationResponseCustomerIDColumn = "customer_id"
-	// IntegrationResponseDataColumn is the data column name
-	IntegrationResponseDataColumn = "data"
-	// IntegrationResponseDateColumn is the date column name
-	IntegrationResponseDateColumn = "date"
-	// IntegrationResponseDistroColumn is the distro column name
-	IntegrationResponseDistroColumn = "distro"
-	// IntegrationResponseErrorColumn is the error column name
-	IntegrationResponseErrorColumn = "error"
-	// IntegrationResponseFreeSpaceColumn is the free_space column name
-	IntegrationResponseFreeSpaceColumn = "free_space"
-	// IntegrationResponseGoVersionColumn is the go_version column name
-	IntegrationResponseGoVersionColumn = "go_version"
-	// IntegrationResponseHostnameColumn is the hostname column name
-	IntegrationResponseHostnameColumn = "hostname"
-	// IntegrationResponseIDColumn is the id column name
-	IntegrationResponseIDColumn = "id"
-	// IntegrationResponseIntegrationIDColumn is the integration_id column name
-	IntegrationResponseIntegrationIDColumn = "integration_id"
-	// IntegrationResponseMemoryColumn is the memory column name
-	IntegrationResponseMemoryColumn = "memory"
-	// IntegrationResponseMessageColumn is the message column name
-	IntegrationResponseMessageColumn = "message"
-	// IntegrationResponseNumCPUColumn is the num_cpu column name
-	IntegrationResponseNumCPUColumn = "num_cpu"
-	// IntegrationResponseOSColumn is the os column name
-	IntegrationResponseOSColumn = "os"
-	// IntegrationResponseRefIDColumn is the ref_id column name
-	IntegrationResponseRefIDColumn = "ref_id"
-	// IntegrationResponseRefTypeColumn is the ref_type column name
-	IntegrationResponseRefTypeColumn = "ref_type"
-	// IntegrationResponseRequestIDColumn is the request_id column name
-	IntegrationResponseRequestIDColumn = "request_id"
-	// IntegrationResponseSuccessColumn is the success column name
-	IntegrationResponseSuccessColumn = "success"
-	// IntegrationResponseTypeColumn is the type column name
-	IntegrationResponseTypeColumn = "type"
-	// IntegrationResponseUUIDColumn is the uuid column name
-	IntegrationResponseUUIDColumn = "uuid"
-	// IntegrationResponseVersionColumn is the version column name
-	IntegrationResponseVersionColumn = "version"
+	// EnrollResponseArchitectureColumn is the architecture column name
+	EnrollResponseArchitectureColumn = "architecture"
+	// EnrollResponseCompletedAtColumn is the completed_ts column name
+	EnrollResponseCompletedAtColumn = "completed_ts"
+	// EnrollResponseCustomerIDColumn is the customer_id column name
+	EnrollResponseCustomerIDColumn = "customer_id"
+	// EnrollResponseDataColumn is the data column name
+	EnrollResponseDataColumn = "data"
+	// EnrollResponseDateColumn is the date column name
+	EnrollResponseDateColumn = "date"
+	// EnrollResponseDistroColumn is the distro column name
+	EnrollResponseDistroColumn = "distro"
+	// EnrollResponseErrorColumn is the error column name
+	EnrollResponseErrorColumn = "error"
+	// EnrollResponseFreeSpaceColumn is the free_space column name
+	EnrollResponseFreeSpaceColumn = "free_space"
+	// EnrollResponseGoVersionColumn is the go_version column name
+	EnrollResponseGoVersionColumn = "go_version"
+	// EnrollResponseHostnameColumn is the hostname column name
+	EnrollResponseHostnameColumn = "hostname"
+	// EnrollResponseIDColumn is the id column name
+	EnrollResponseIDColumn = "id"
+	// EnrollResponseMemoryColumn is the memory column name
+	EnrollResponseMemoryColumn = "memory"
+	// EnrollResponseMessageColumn is the message column name
+	EnrollResponseMessageColumn = "message"
+	// EnrollResponseNumCPUColumn is the num_cpu column name
+	EnrollResponseNumCPUColumn = "num_cpu"
+	// EnrollResponseOSColumn is the os column name
+	EnrollResponseOSColumn = "os"
+	// EnrollResponseRefIDColumn is the ref_id column name
+	EnrollResponseRefIDColumn = "ref_id"
+	// EnrollResponseRefTypeColumn is the ref_type column name
+	EnrollResponseRefTypeColumn = "ref_type"
+	// EnrollResponseRequestIDColumn is the request_id column name
+	EnrollResponseRequestIDColumn = "request_id"
+	// EnrollResponseSuccessColumn is the success column name
+	EnrollResponseSuccessColumn = "success"
+	// EnrollResponseTypeColumn is the type column name
+	EnrollResponseTypeColumn = "type"
+	// EnrollResponseUUIDColumn is the uuid column name
+	EnrollResponseUUIDColumn = "uuid"
+	// EnrollResponseVersionColumn is the version column name
+	EnrollResponseVersionColumn = "version"
 )
 
-// IntegrationResponseDate represents the object structure for date
-type IntegrationResponseDate struct {
+// EnrollResponseDate represents the object structure for date
+type EnrollResponseDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -103,7 +101,7 @@ type IntegrationResponseDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *IntegrationResponseDate) ToMap() map[string]interface{} {
+func (o *EnrollResponseDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -115,10 +113,10 @@ func (o *IntegrationResponseDate) ToMap() map[string]interface{} {
 }
 
 // Type is the enumeration type for type
-type IntegrationResponseType int32
+type EnrollResponseType int32
 
 // String returns the string value for Type
-func (v IntegrationResponseType) String() string {
+func (v EnrollResponseType) String() string {
 	switch int32(v) {
 	case 0:
 		return "enroll"
@@ -138,31 +136,31 @@ func (v IntegrationResponseType) String() string {
 
 const (
 	// TypeEnroll is the enumeration value for enroll
-	IntegrationResponseTypeEnroll IntegrationResponseType = 0
+	EnrollResponseTypeEnroll EnrollResponseType = 0
 	// TypePing is the enumeration value for ping
-	IntegrationResponseTypePing IntegrationResponseType = 1
+	EnrollResponseTypePing EnrollResponseType = 1
 	// TypeCrash is the enumeration value for crash
-	IntegrationResponseTypeCrash IntegrationResponseType = 2
+	EnrollResponseTypeCrash EnrollResponseType = 2
 	// TypeIntegration is the enumeration value for integration
-	IntegrationResponseTypeIntegration IntegrationResponseType = 3
+	EnrollResponseTypeIntegration EnrollResponseType = 3
 	// TypeExport is the enumeration value for export
-	IntegrationResponseTypeExport IntegrationResponseType = 4
+	EnrollResponseTypeExport EnrollResponseType = 4
 	// TypeProject is the enumeration value for project
-	IntegrationResponseTypeProject IntegrationResponseType = 5
+	EnrollResponseTypeProject EnrollResponseType = 5
 )
 
-// IntegrationResponse an agent response to an action request adding an integration
-type IntegrationResponse struct {
+// EnrollResponse an agent response to an the enroll action
+type EnrollResponse struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
-	// Authorization the encrypted authorization data for this integration
-	Authorization string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	// CompletedAt Last time the agent completed setup
+	CompletedAt int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
 	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
 	// Date the date of the event
-	Date IntegrationResponseDate `json:"date" bson:"date" yaml:"date" faker:"-"`
+	Date EnrollResponseDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Distro the agent os distribution
 	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
@@ -175,8 +173,6 @@ type IntegrationResponse struct {
 	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// IntegrationID the integration id
-	IntegrationID string `json:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -194,7 +190,7 @@ type IntegrationResponse struct {
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
-	Type IntegrationResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type EnrollResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -204,22 +200,22 @@ type IntegrationResponse struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*IntegrationResponse)(nil)
+var _ datamodel.Model = (*EnrollResponse)(nil)
 
-func toIntegrationResponseObjectNil(isavro bool, isoptional bool) interface{} {
+func toEnrollResponseObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toEnrollResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return toIntegrationResponseObjectNil(isavro, isoptional)
+		return toEnrollResponseObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return toIntegrationResponseObjectNil(isavro, isoptional)
+		return toEnrollResponseObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
 		if isavro && isoptional {
 			return goavro.Union(avrotype, v)
@@ -228,7 +224,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -237,7 +233,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -246,7 +242,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -255,7 +251,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -264,7 +260,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -273,7 +269,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -282,7 +278,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -291,7 +287,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -300,7 +296,7 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
+				return toEnrollResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -314,9 +310,9 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 		return v
 	case *map[string]string:
 		return *v
-	case *IntegrationResponse:
+	case *EnrollResponse:
 		return v.ToMap()
-	case IntegrationResponse:
+	case EnrollResponse:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -332,78 +328,78 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toIntegrationResponseObject(av, isavro, false, ""))
+			arr = append(arr, toEnrollResponseObject(av, isavro, false, ""))
 		}
 		return arr
 
-	case IntegrationResponseDate:
-		vv := o.(IntegrationResponseDate)
+	case EnrollResponseDate:
+		vv := o.(EnrollResponseDate)
 		return vv.ToMap()
-	case *IntegrationResponseDate:
-		return (*o.(*IntegrationResponseDate)).ToMap()
-	case []IntegrationResponseDate:
+	case *EnrollResponseDate:
+		return (*o.(*EnrollResponseDate)).ToMap()
+	case []EnrollResponseDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]IntegrationResponseDate) {
+		for _, i := range o.([]EnrollResponseDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]IntegrationResponseDate:
+	case *[]EnrollResponseDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]IntegrationResponseDate)
+		vv := o.(*[]EnrollResponseDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case IntegrationResponseType:
+	case EnrollResponseType:
 		if !isavro {
-			return (o.(IntegrationResponseType)).String()
+			return (o.(EnrollResponseType)).String()
 		}
 		return map[string]string{
-			"agent.type": (o.(IntegrationResponseType)).String(),
+			"agent.type": (o.(EnrollResponseType)).String(),
 		}
-	case *IntegrationResponseType:
+	case *EnrollResponseType:
 		if !isavro {
-			return (o.(*IntegrationResponseType)).String()
+			return (o.(*EnrollResponseType)).String()
 		}
 		return map[string]string{
-			"agent.type": (o.(*IntegrationResponseType)).String(),
+			"agent.type": (o.(*EnrollResponseType)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of IntegrationResponse
-func (o *IntegrationResponse) String() string {
-	return fmt.Sprintf("agent.IntegrationResponse<%s>", o.ID)
+// String returns a string representation of EnrollResponse
+func (o *EnrollResponse) String() string {
+	return fmt.Sprintf("agent.EnrollResponse<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *IntegrationResponse) GetTopicName() datamodel.TopicNameType {
-	return IntegrationResponseTopic
+func (o *EnrollResponse) GetTopicName() datamodel.TopicNameType {
+	return EnrollResponseTopic
 }
 
 // GetModelName returns the name of the model
-func (o *IntegrationResponse) GetModelName() datamodel.ModelNameType {
-	return IntegrationResponseModelName
+func (o *EnrollResponse) GetModelName() datamodel.ModelNameType {
+	return EnrollResponseModelName
 }
 
-func (o *IntegrationResponse) setDefaults() {
+func (o *EnrollResponse) setDefaults() {
 	o.GetID()
 	o.GetRefID()
 	o.Hash()
 }
 
 // GetID returns the ID for the object
-func (o *IntegrationResponse) GetID() string {
+func (o *EnrollResponse) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("IntegrationResponse", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("EnrollResponse", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *IntegrationResponse) GetTopicKey() string {
+func (o *EnrollResponse) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -412,7 +408,7 @@ func (o *IntegrationResponse) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *IntegrationResponse) GetTimestamp() time.Time {
+func (o *EnrollResponse) GetTimestamp() time.Time {
 	var dt interface{} = o.Date
 	switch v := dt.(type) {
 	case int64:
@@ -425,40 +421,40 @@ func (o *IntegrationResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case IntegrationResponseDate:
+	case EnrollResponseDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
-	panic("not sure how to handle the date time format for IntegrationResponse")
+	panic("not sure how to handle the date time format for EnrollResponse")
 }
 
 // GetRefID returns the RefID for the object
-func (o *IntegrationResponse) GetRefID() string {
+func (o *EnrollResponse) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *IntegrationResponse) IsMaterialized() bool {
+func (o *EnrollResponse) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *IntegrationResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *EnrollResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *IntegrationResponse) IsEvented() bool {
+func (o *EnrollResponse) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *IntegrationResponse) SetEventHeaders(kv map[string]string) {
+func (o *EnrollResponse) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = IntegrationResponseModelName.String()
+	kv["model"] = EnrollResponseModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *IntegrationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *EnrollResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -480,26 +476,26 @@ func (o *IntegrationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *IntegrationResponse) GetStateKey() string {
+func (o *EnrollResponse) GetStateKey() string {
 	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *IntegrationResponse) GetCustomerID() string {
+func (o *EnrollResponse) GetCustomerID() string {
 	return o.CustomerID
 }
 
-// Clone returns an exact copy of IntegrationResponse
-func (o *IntegrationResponse) Clone() datamodel.Model {
-	c := new(IntegrationResponse)
+// Clone returns an exact copy of EnrollResponse
+func (o *EnrollResponse) Clone() datamodel.Model {
+	c := new(EnrollResponse)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *IntegrationResponse) Anon() datamodel.Model {
-	c := new(IntegrationResponse)
+func (o *EnrollResponse) Anon() datamodel.Model {
+	c := new(EnrollResponse)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -514,12 +510,12 @@ func (o *IntegrationResponse) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *IntegrationResponse) MarshalJSON() ([]byte, error) {
+func (o *EnrollResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *IntegrationResponse) UnmarshalJSON(data []byte) error {
+func (o *EnrollResponse) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -528,22 +524,22 @@ func (o *IntegrationResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecIntegrationResponse *goavro.Codec
+var cachedCodecEnrollResponse *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *IntegrationResponse) GetAvroCodec() *goavro.Codec {
-	if cachedCodecIntegrationResponse == nil {
-		c, err := GetIntegrationResponseAvroSchema()
+func (o *EnrollResponse) GetAvroCodec() *goavro.Codec {
+	if cachedCodecEnrollResponse == nil {
+		c, err := GetEnrollResponseAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecIntegrationResponse = c
+		cachedCodecEnrollResponse = c
 	}
-	return cachedCodecIntegrationResponse
+	return cachedCodecEnrollResponse
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *IntegrationResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *EnrollResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -557,7 +553,7 @@ func (o *IntegrationResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *IntegrationResponse) FromAvroBinary(value []byte) error {
+func (o *EnrollResponse) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -572,17 +568,17 @@ func (o *IntegrationResponse) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *IntegrationResponse) Stringify() string {
+func (o *EnrollResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two IntegrationResponse objects are equal
-func (o *IntegrationResponse) IsEqual(other *IntegrationResponse) bool {
+// IsEqual returns true if the two EnrollResponse objects are equal
+func (o *EnrollResponse) IsEqual(other *EnrollResponse) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
+func (o *EnrollResponse) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -591,35 +587,34 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"architecture":   toIntegrationResponseObject(o.Architecture, isavro, false, "string"),
-		"authorization":  toIntegrationResponseObject(o.Authorization, isavro, false, "string"),
-		"customer_id":    toIntegrationResponseObject(o.CustomerID, isavro, false, "string"),
-		"data":           toIntegrationResponseObject(o.Data, isavro, true, "string"),
-		"date":           toIntegrationResponseObject(o.Date, isavro, false, "date"),
-		"distro":         toIntegrationResponseObject(o.Distro, isavro, false, "string"),
-		"error":          toIntegrationResponseObject(o.Error, isavro, true, "string"),
-		"free_space":     toIntegrationResponseObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":     toIntegrationResponseObject(o.GoVersion, isavro, false, "string"),
-		"hostname":       toIntegrationResponseObject(o.Hostname, isavro, false, "string"),
-		"id":             toIntegrationResponseObject(o.ID, isavro, false, "string"),
-		"integration_id": toIntegrationResponseObject(o.IntegrationID, isavro, false, "string"),
-		"memory":         toIntegrationResponseObject(o.Memory, isavro, false, "long"),
-		"message":        toIntegrationResponseObject(o.Message, isavro, false, "string"),
-		"num_cpu":        toIntegrationResponseObject(o.NumCPU, isavro, false, "long"),
-		"os":             toIntegrationResponseObject(o.OS, isavro, false, "string"),
-		"ref_id":         toIntegrationResponseObject(o.RefID, isavro, false, "string"),
-		"ref_type":       toIntegrationResponseObject(o.RefType, isavro, false, "string"),
-		"request_id":     toIntegrationResponseObject(o.RequestID, isavro, false, "string"),
-		"success":        toIntegrationResponseObject(o.Success, isavro, false, "boolean"),
-		"type":           toIntegrationResponseObject(o.Type, isavro, false, "type"),
-		"uuid":           toIntegrationResponseObject(o.UUID, isavro, false, "string"),
-		"version":        toIntegrationResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":       toIntegrationResponseObject(o.Hashcode, isavro, false, "string"),
+		"architecture": toEnrollResponseObject(o.Architecture, isavro, false, "string"),
+		"completed_ts": toEnrollResponseObject(o.CompletedAt, isavro, false, "long"),
+		"customer_id":  toEnrollResponseObject(o.CustomerID, isavro, false, "string"),
+		"data":         toEnrollResponseObject(o.Data, isavro, true, "string"),
+		"date":         toEnrollResponseObject(o.Date, isavro, false, "date"),
+		"distro":       toEnrollResponseObject(o.Distro, isavro, false, "string"),
+		"error":        toEnrollResponseObject(o.Error, isavro, true, "string"),
+		"free_space":   toEnrollResponseObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":   toEnrollResponseObject(o.GoVersion, isavro, false, "string"),
+		"hostname":     toEnrollResponseObject(o.Hostname, isavro, false, "string"),
+		"id":           toEnrollResponseObject(o.ID, isavro, false, "string"),
+		"memory":       toEnrollResponseObject(o.Memory, isavro, false, "long"),
+		"message":      toEnrollResponseObject(o.Message, isavro, false, "string"),
+		"num_cpu":      toEnrollResponseObject(o.NumCPU, isavro, false, "long"),
+		"os":           toEnrollResponseObject(o.OS, isavro, false, "string"),
+		"ref_id":       toEnrollResponseObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toEnrollResponseObject(o.RefType, isavro, false, "string"),
+		"request_id":   toEnrollResponseObject(o.RequestID, isavro, false, "string"),
+		"success":      toEnrollResponseObject(o.Success, isavro, false, "boolean"),
+		"type":         toEnrollResponseObject(o.Type, isavro, false, "type"),
+		"uuid":         toEnrollResponseObject(o.UUID, isavro, false, "string"),
+		"version":      toEnrollResponseObject(o.Version, isavro, false, "string"),
+		"hashcode":     toEnrollResponseObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
+func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
@@ -637,17 +632,17 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 			o.Architecture = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["authorization"].(string); ok {
-		o.Authorization = val
+	if val, ok := kv["completed_ts"].(int64); ok {
+		o.CompletedAt = val
 	} else {
-		val := kv["authorization"]
+		val := kv["completed_ts"]
 		if val == nil {
-			o.Authorization = ""
+			o.CompletedAt = number.ToInt64Any(nil)
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
 			}
-			o.Authorization = fmt.Sprintf("%v", val)
+			o.CompletedAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
@@ -679,14 +674,14 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 			o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["date"].(IntegrationResponseDate); ok {
+	if val, ok := kv["date"].(EnrollResponseDate); ok {
 		o.Date = val
 	} else {
 		val := kv["date"]
 		if val == nil {
-			o.Date = IntegrationResponseDate{}
+			o.Date = EnrollResponseDate{}
 		} else {
-			o.Date = IntegrationResponseDate{}
+			o.Date = EnrollResponseDate{}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Date)
 
@@ -771,19 +766,6 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["integration_id"].(string); ok {
-		o.IntegrationID = val
-	} else {
-		val := kv["integration_id"]
-		if val == nil {
-			o.IntegrationID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.IntegrationID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["memory"].(int64); ok {
@@ -887,7 +869,7 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 			o.Success = number.ToBoolAny(val)
 		}
 	}
-	if val, ok := kv["type"].(IntegrationResponseType); ok {
+	if val, ok := kv["type"].(EnrollResponseType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -954,10 +936,10 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *IntegrationResponse) Hash() string {
+func (o *EnrollResponse) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
-	args = append(args, o.Authorization)
+	args = append(args, o.CompletedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.Date)
@@ -967,7 +949,6 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
-	args = append(args, o.IntegrationID)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
@@ -983,12 +964,12 @@ func (o *IntegrationResponse) Hash() string {
 	return o.Hashcode
 }
 
-// GetIntegrationResponseAvroSchemaSpec creates the avro schema specification for IntegrationResponse
-func GetIntegrationResponseAvroSchemaSpec() string {
+// GetEnrollResponseAvroSchemaSpec creates the avro schema specification for EnrollResponse
+func GetEnrollResponseAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "IntegrationResponse",
+		"name":      "EnrollResponse",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
@@ -999,8 +980,8 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "authorization",
-				"type": "string",
+				"name": "completed_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1013,7 +994,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1038,10 +1019,6 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "integration_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -1099,25 +1076,25 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 	return pjson.Stringify(spec, true)
 }
 
-// GetIntegrationResponseAvroSchema creates the avro schema for IntegrationResponse
-func GetIntegrationResponseAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetIntegrationResponseAvroSchemaSpec())
+// GetEnrollResponseAvroSchema creates the avro schema for EnrollResponse
+func GetEnrollResponseAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetEnrollResponseAvroSchemaSpec())
 }
 
-// TransformIntegrationResponseFunc is a function for transforming IntegrationResponse during processing
-type TransformIntegrationResponseFunc func(input *IntegrationResponse) (*IntegrationResponse, error)
+// TransformEnrollResponseFunc is a function for transforming EnrollResponse during processing
+type TransformEnrollResponseFunc func(input *EnrollResponse) (*EnrollResponse, error)
 
-// NewIntegrationResponsePipe creates a pipe for processing IntegrationResponse items
-func NewIntegrationResponsePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformIntegrationResponseFunc) <-chan bool {
+// NewEnrollResponsePipe creates a pipe for processing EnrollResponse items
+func NewEnrollResponsePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformEnrollResponseFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewIntegrationResponseInputStream(input, errors)
-	var stream chan IntegrationResponse
+	inch, indone := NewEnrollResponseInputStream(input, errors)
+	var stream chan EnrollResponse
 	if len(transforms) > 0 {
-		stream = make(chan IntegrationResponse, 1000)
+		stream = make(chan EnrollResponse, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewIntegrationResponseOutputStream(output, stream, errors)
+	outdone := NewEnrollResponseOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -1153,12 +1130,12 @@ func NewIntegrationResponsePipe(input io.ReadCloser, output io.WriteCloser, erro
 	return done
 }
 
-// NewIntegrationResponseInputStreamDir creates a channel for reading IntegrationResponse as JSON newlines from a directory of files
-func NewIntegrationResponseInputStreamDir(dir string, errors chan<- error, transforms ...TransformIntegrationResponseFunc) (chan IntegrationResponse, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/integration_response\\.json(\\.gz)?$"))
+// NewEnrollResponseInputStreamDir creates a channel for reading EnrollResponse as JSON newlines from a directory of files
+func NewEnrollResponseInputStreamDir(dir string, errors chan<- error, transforms ...TransformEnrollResponseFunc) (chan EnrollResponse, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/enroll_response\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan IntegrationResponse)
+		ch := make(chan EnrollResponse)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1166,16 +1143,16 @@ func NewIntegrationResponseInputStreamDir(dir string, errors chan<- error, trans
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for integration_response")
-		ch := make(chan IntegrationResponse)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for enroll_response")
+		ch := make(chan EnrollResponse)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewIntegrationResponseInputStreamFile(files[0], errors, transforms...)
+		return NewEnrollResponseInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan IntegrationResponse)
+		ch := make(chan EnrollResponse)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1183,12 +1160,12 @@ func NewIntegrationResponseInputStreamDir(dir string, errors chan<- error, trans
 	}
 }
 
-// NewIntegrationResponseInputStreamFile creates an channel for reading IntegrationResponse as JSON newlines from filename
-func NewIntegrationResponseInputStreamFile(filename string, errors chan<- error, transforms ...TransformIntegrationResponseFunc) (chan IntegrationResponse, <-chan bool) {
+// NewEnrollResponseInputStreamFile creates an channel for reading EnrollResponse as JSON newlines from filename
+func NewEnrollResponseInputStreamFile(filename string, errors chan<- error, transforms ...TransformEnrollResponseFunc) (chan EnrollResponse, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan IntegrationResponse)
+		ch := make(chan EnrollResponse)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1200,7 +1177,7 @@ func NewIntegrationResponseInputStreamFile(filename string, errors chan<- error,
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan IntegrationResponse)
+			ch := make(chan EnrollResponse)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -1208,13 +1185,13 @@ func NewIntegrationResponseInputStreamFile(filename string, errors chan<- error,
 		}
 		f = gz
 	}
-	return NewIntegrationResponseInputStream(f, errors, transforms...)
+	return NewEnrollResponseInputStream(f, errors, transforms...)
 }
 
-// NewIntegrationResponseInputStream creates an channel for reading IntegrationResponse as JSON newlines from stream
-func NewIntegrationResponseInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformIntegrationResponseFunc) (chan IntegrationResponse, <-chan bool) {
+// NewEnrollResponseInputStream creates an channel for reading EnrollResponse as JSON newlines from stream
+func NewEnrollResponseInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformEnrollResponseFunc) (chan EnrollResponse, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan IntegrationResponse, 1000)
+	ch := make(chan EnrollResponse, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -1227,7 +1204,7 @@ func NewIntegrationResponseInputStream(stream io.ReadCloser, errors chan<- error
 				errors <- err
 				return
 			}
-			var item IntegrationResponse
+			var item EnrollResponse
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -1253,9 +1230,9 @@ func NewIntegrationResponseInputStream(stream io.ReadCloser, errors chan<- error
 	return ch, done
 }
 
-// NewIntegrationResponseOutputStreamDir will output json newlines from channel and save in dir
-func NewIntegrationResponseOutputStreamDir(dir string, ch chan IntegrationResponse, errors chan<- error, transforms ...TransformIntegrationResponseFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/integration_response\\.json(\\.gz)?$")
+// NewEnrollResponseOutputStreamDir will output json newlines from channel and save in dir
+func NewEnrollResponseOutputStreamDir(dir string, ch chan EnrollResponse, errors chan<- error, transforms ...TransformEnrollResponseFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/enroll_response\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -1271,11 +1248,11 @@ func NewIntegrationResponseOutputStreamDir(dir string, ch chan IntegrationRespon
 		done <- true
 		return done
 	}
-	return NewIntegrationResponseOutputStream(gz, ch, errors, transforms...)
+	return NewEnrollResponseOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewIntegrationResponseOutputStream will output json newlines from channel to the stream
-func NewIntegrationResponseOutputStream(stream io.WriteCloser, ch chan IntegrationResponse, errors chan<- error, transforms ...TransformIntegrationResponseFunc) <-chan bool {
+// NewEnrollResponseOutputStream will output json newlines from channel to the stream
+func NewEnrollResponseOutputStream(stream io.WriteCloser, ch chan EnrollResponse, errors chan<- error, transforms ...TransformEnrollResponseFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -1315,59 +1292,59 @@ func NewIntegrationResponseOutputStream(stream io.WriteCloser, ch chan Integrati
 	return done
 }
 
-// IntegrationResponseSendEvent is an event detail for sending data
-type IntegrationResponseSendEvent struct {
-	IntegrationResponse *IntegrationResponse
-	headers             map[string]string
-	time                time.Time
-	key                 string
+// EnrollResponseSendEvent is an event detail for sending data
+type EnrollResponseSendEvent struct {
+	EnrollResponse *EnrollResponse
+	headers        map[string]string
+	time           time.Time
+	key            string
 }
 
-var _ datamodel.ModelSendEvent = (*IntegrationResponseSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*EnrollResponseSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *IntegrationResponseSendEvent) Key() string {
+func (e *EnrollResponseSendEvent) Key() string {
 	if e.key == "" {
-		return e.IntegrationResponse.GetID()
+		return e.EnrollResponse.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *IntegrationResponseSendEvent) Object() datamodel.Model {
-	return e.IntegrationResponse
+func (e *EnrollResponseSendEvent) Object() datamodel.Model {
+	return e.EnrollResponse
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *IntegrationResponseSendEvent) Headers() map[string]string {
+func (e *EnrollResponseSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *IntegrationResponseSendEvent) Timestamp() time.Time {
+func (e *EnrollResponseSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// IntegrationResponseSendEventOpts is a function handler for setting opts
-type IntegrationResponseSendEventOpts func(o *IntegrationResponseSendEvent)
+// EnrollResponseSendEventOpts is a function handler for setting opts
+type EnrollResponseSendEventOpts func(o *EnrollResponseSendEvent)
 
-// WithIntegrationResponseSendEventKey sets the key value to a value different than the object ID
-func WithIntegrationResponseSendEventKey(key string) IntegrationResponseSendEventOpts {
-	return func(o *IntegrationResponseSendEvent) {
+// WithEnrollResponseSendEventKey sets the key value to a value different than the object ID
+func WithEnrollResponseSendEventKey(key string) EnrollResponseSendEventOpts {
+	return func(o *EnrollResponseSendEvent) {
 		o.key = key
 	}
 }
 
-// WithIntegrationResponseSendEventTimestamp sets the timestamp value
-func WithIntegrationResponseSendEventTimestamp(tv time.Time) IntegrationResponseSendEventOpts {
-	return func(o *IntegrationResponseSendEvent) {
+// WithEnrollResponseSendEventTimestamp sets the timestamp value
+func WithEnrollResponseSendEventTimestamp(tv time.Time) EnrollResponseSendEventOpts {
+	return func(o *EnrollResponseSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithIntegrationResponseSendEventHeader sets the timestamp value
-func WithIntegrationResponseSendEventHeader(key, value string) IntegrationResponseSendEventOpts {
-	return func(o *IntegrationResponseSendEvent) {
+// WithEnrollResponseSendEventHeader sets the timestamp value
+func WithEnrollResponseSendEventHeader(key, value string) EnrollResponseSendEventOpts {
+	return func(o *EnrollResponseSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -1375,10 +1352,10 @@ func WithIntegrationResponseSendEventHeader(key, value string) IntegrationRespon
 	}
 }
 
-// NewIntegrationResponseSendEvent returns a new IntegrationResponseSendEvent instance
-func NewIntegrationResponseSendEvent(o *IntegrationResponse, opts ...IntegrationResponseSendEventOpts) *IntegrationResponseSendEvent {
-	res := &IntegrationResponseSendEvent{
-		IntegrationResponse: o,
+// NewEnrollResponseSendEvent returns a new EnrollResponseSendEvent instance
+func NewEnrollResponseSendEvent(o *EnrollResponse, opts ...EnrollResponseSendEventOpts) *EnrollResponseSendEvent {
+	res := &EnrollResponseSendEvent{
+		EnrollResponse: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -1388,8 +1365,8 @@ func NewIntegrationResponseSendEvent(o *IntegrationResponse, opts ...Integration
 	return res
 }
 
-// NewIntegrationResponseProducer will stream data from the channel
-func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewEnrollResponseProducer will stream data from the channel
+func NewEnrollResponseProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1402,7 +1379,7 @@ func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Produ
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*IntegrationResponse); ok {
+				if object, ok := item.Object().(*EnrollResponse); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1433,7 +1410,7 @@ func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Produ
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.IntegrationResponse but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.EnrollResponse but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -1441,22 +1418,22 @@ func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Produ
 	return done
 }
 
-// NewIntegrationResponseConsumer will stream data from the topic into the provided channel
-func NewIntegrationResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewEnrollResponseConsumer will stream data from the topic into the provided channel
+func NewEnrollResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object IntegrationResponse
+			var object EnrollResponse
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.IntegrationResponse: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.EnrollResponse: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.IntegrationResponse: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.EnrollResponse: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.IntegrationResponse")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.EnrollResponse")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -1466,51 +1443,51 @@ func NewIntegrationResponseConsumer(consumer eventing.Consumer, ch chan<- datamo
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &IntegrationResponseReceiveEvent{&object, msg, false}
+			ch <- &EnrollResponseReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object IntegrationResponse
+			var object EnrollResponse
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &IntegrationResponseReceiveEvent{nil, msg, true}
+			ch <- &EnrollResponseReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// IntegrationResponseReceiveEvent is an event detail for receiving data
-type IntegrationResponseReceiveEvent struct {
-	IntegrationResponse *IntegrationResponse
-	message             eventing.Message
-	eof                 bool
+// EnrollResponseReceiveEvent is an event detail for receiving data
+type EnrollResponseReceiveEvent struct {
+	EnrollResponse *EnrollResponse
+	message        eventing.Message
+	eof            bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*IntegrationResponseReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*EnrollResponseReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *IntegrationResponseReceiveEvent) Object() datamodel.Model {
-	return e.IntegrationResponse
+func (e *EnrollResponseReceiveEvent) Object() datamodel.Model {
+	return e.EnrollResponse
 }
 
 // Message returns the underlying message data for the event
-func (e *IntegrationResponseReceiveEvent) Message() eventing.Message {
+func (e *EnrollResponseReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *IntegrationResponseReceiveEvent) EOF() bool {
+func (e *EnrollResponseReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// IntegrationResponseProducer implements the datamodel.ModelEventProducer
-type IntegrationResponseProducer struct {
+// EnrollResponseProducer implements the datamodel.ModelEventProducer
+type EnrollResponseProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -1521,15 +1498,15 @@ type IntegrationResponseProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*IntegrationResponseProducer)(nil)
+var _ datamodel.ModelEventProducer = (*EnrollResponseProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *IntegrationResponseProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *EnrollResponseProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *IntegrationResponseProducer) Close() error {
+func (p *EnrollResponseProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1544,47 +1521,47 @@ func (p *IntegrationResponseProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *IntegrationResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *EnrollResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *IntegrationResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *EnrollResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &IntegrationResponseProducer{
+	return &EnrollResponseProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewIntegrationResponseProducer(newctx, producer, ch, errors, empty),
+		done:     NewEnrollResponseProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewIntegrationResponseProducerChannel returns a channel which can be used for producing Model events
-func NewIntegrationResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewIntegrationResponseProducerChannelSize(producer, 0, errors)
+// NewEnrollResponseProducerChannel returns a channel which can be used for producing Model events
+func NewEnrollResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewEnrollResponseProducerChannelSize(producer, 0, errors)
 }
 
-// NewIntegrationResponseProducerChannelSize returns a channel which can be used for producing Model events
-func NewIntegrationResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewEnrollResponseProducerChannelSize returns a channel which can be used for producing Model events
+func NewEnrollResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &IntegrationResponseProducer{
+	return &EnrollResponseProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewIntegrationResponseProducer(newctx, producer, ch, errors, empty),
+		done:     NewEnrollResponseProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// IntegrationResponseConsumer implements the datamodel.ModelEventConsumer
-type IntegrationResponseConsumer struct {
+// EnrollResponseConsumer implements the datamodel.ModelEventConsumer
+type EnrollResponseConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1592,15 +1569,15 @@ type IntegrationResponseConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*IntegrationResponseConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*EnrollResponseConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *IntegrationResponseConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *EnrollResponseConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *IntegrationResponseConsumer) Close() error {
+func (c *EnrollResponseConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1614,21 +1591,21 @@ func (c *IntegrationResponseConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *IntegrationResponse) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *EnrollResponse) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &IntegrationResponseConsumer{
+	return &EnrollResponseConsumer{
 		ch:       ch,
-		callback: NewIntegrationResponseConsumer(consumer, ch, errors),
+		callback: NewEnrollResponseConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewIntegrationResponseConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewIntegrationResponseConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewEnrollResponseConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewEnrollResponseConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &IntegrationResponseConsumer{
+	return &EnrollResponseConsumer{
 		ch:       ch,
-		callback: NewIntegrationResponseConsumer(consumer, ch, errors),
+		callback: NewEnrollResponseConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
