@@ -255,9 +255,15 @@ func (o *Team) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Team) setDefaults() {
-	o.Active = &emptyBool
-	o.ChildrenIds = []string{}
-	o.ParentIds = []string{}
+	if o.Active == nil {
+		o.Active = &emptyBool
+	}
+	if o.ChildrenIds == nil {
+		o.ChildrenIds = []string{}
+	}
+	if o.ParentIds == nil {
+		o.ParentIds = []string{}
+	}
 
 	o.GetID()
 	o.GetRefID()
@@ -822,7 +828,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "parent_ids",
-				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
+				"type": map[string]interface{}{"name": "parent_ids", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

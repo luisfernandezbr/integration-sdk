@@ -259,8 +259,12 @@ func (o *Branch) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Branch) setDefaults() {
-	o.BranchedFromCommits = []string{}
-	o.Commits = []string{}
+	if o.BranchedFromCommits == nil {
+		o.BranchedFromCommits = []string{}
+	}
+	if o.Commits == nil {
+		o.Commits = []string{}
+	}
 
 	o.GetID()
 	o.GetRefID()
@@ -763,11 +767,11 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"name": "commits", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

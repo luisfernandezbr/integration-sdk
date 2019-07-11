@@ -470,8 +470,12 @@ func (o *ProjectResponse) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *ProjectResponse) setDefaults() {
-	o.Data = &emptyString
-	o.Error = &emptyString
+	if o.Data == nil {
+		o.Data = &emptyString
+	}
+	if o.Error == nil {
+		o.Error = &emptyString
+	}
 	o.Projects = []ProjectResponseProjects{}
 
 	o.GetID()
@@ -1177,7 +1181,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "project created timestamp"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported", "type": "record"}},
+				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"doc": "the status of the project", "type": "boolean", "name": "active"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "project created timestamp"}, map[string]interface{}{"name": "description", "doc": "the description of the project", "type": "string"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"doc": "the name of the project", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"name": "url", "doc": "the url to the project home page", "type": "string"}}, "doc": "the projects exported"}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

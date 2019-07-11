@@ -289,8 +289,12 @@ func (o *Sprint) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Sprint) setDefaults() {
-	o.Completed = &emptyString
-	o.Ended = &emptyString
+	if o.Completed == nil {
+		o.Completed = &emptyString
+	}
+	if o.Ended == nil {
+		o.Ended = &emptyString
+	}
 
 	o.GetID()
 	o.GetRefID()

@@ -245,8 +245,12 @@ func (o *Project) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Project) setDefaults() {
-	o.Category = &emptyString
-	o.Description = &emptyString
+	if o.Category == nil {
+		o.Category = &emptyString
+	}
+	if o.Description == nil {
+		o.Description = &emptyString
+	}
 
 	o.GetID()
 	o.GetRefID()

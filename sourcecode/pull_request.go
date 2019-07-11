@@ -279,7 +279,9 @@ func (o *PullRequest) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *PullRequest) setDefaults() {
-	o.Commits = []string{}
+	if o.Commits == nil {
+		o.Commits = []string{}
+	}
 
 	o.GetID()
 	o.GetRefID()

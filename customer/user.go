@@ -296,17 +296,39 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *User) setDefaults() {
-	o.AvatarURL = &emptyString
-	o.CostCenterID = &emptyString
-	o.DeletedAt = &emptyInt
-	o.HiredAt = &emptyInt
-	o.Location = &emptyString
-	o.ManagerID = &emptyString
-	o.PrimaryTeamID = &emptyString
-	o.RoleIds = []string{}
-	o.TeamIds = []string{}
-	o.TerminatedAt = &emptyInt
-	o.Title = &emptyString
+	if o.AvatarURL == nil {
+		o.AvatarURL = &emptyString
+	}
+	if o.CostCenterID == nil {
+		o.CostCenterID = &emptyString
+	}
+	if o.DeletedAt == nil {
+		o.DeletedAt = &emptyInt
+	}
+	if o.HiredAt == nil {
+		o.HiredAt = &emptyInt
+	}
+	if o.Location == nil {
+		o.Location = &emptyString
+	}
+	if o.ManagerID == nil {
+		o.ManagerID = &emptyString
+	}
+	if o.PrimaryTeamID == nil {
+		o.PrimaryTeamID = &emptyString
+	}
+	if o.RoleIds == nil {
+		o.RoleIds = []string{}
+	}
+	if o.TeamIds == nil {
+		o.TeamIds = []string{}
+	}
+	if o.TerminatedAt == nil {
+		o.TerminatedAt = &emptyInt
+	}
+	if o.Title == nil {
+		o.Title = &emptyString
+	}
 
 	o.GetID()
 	o.GetRefID()
@@ -1077,11 +1099,11 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "role_ids",
-				"type": map[string]interface{}{"name": "role_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "role_ids"},
 			},
 			map[string]interface{}{
 				"name": "team_ids",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "team_ids"},
+				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name":    "terminated_ts",
