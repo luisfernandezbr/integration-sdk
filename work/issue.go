@@ -27,7 +27,6 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -70,10 +69,6 @@ const (
 	IssueIdentifierColumn = "identifier"
 	// IssueParentIDColumn is the parent_id column name
 	IssueParentIDColumn = "parent_id"
-	// IssuePlannedEndAtColumn is the planned_end_ts column name
-	IssuePlannedEndAtColumn = "planned_end_ts"
-	// IssuePlannedStartAtColumn is the planned_start_ts column name
-	IssuePlannedStartAtColumn = "planned_start_ts"
 	// IssuePriorityColumn is the priority column name
 	IssuePriorityColumn = "priority"
 	// IssueProjectIDColumn is the project_id column name
@@ -141,10 +136,6 @@ type Issue struct {
 	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
 	// ParentID parent issue id, if any
 	ParentID string `json:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
-	// PlannedEndAt the timestamp in UTC that the issue was planned to end
-	PlannedEndAt int64 `json:"planned_end_ts" bson:"planned_end_ts" yaml:"planned_end_ts" faker:"-"`
-	// PlannedStartAt the timestamp in UTC that the issue was planned to start
-	PlannedStartAt int64 `json:"planned_start_ts" bson:"planned_start_ts" yaml:"planned_start_ts" faker:"-"`
 	// Priority priority of the issue
 	Priority string `json:"priority" bson:"priority" yaml:"priority" faker:"-"`
 	// ProjectID unique project id
@@ -554,30 +545,28 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"assignee_ref_id":  toIssueObject(o.AssigneeRefID, isavro, false, "string"),
-		"created":          toIssueObject(o.Created, isavro, false, "string"),
-		"creator_ref_id":   toIssueObject(o.CreatorRefID, isavro, false, "string"),
-		"customFields":     toIssueObject(o.CustomFields, isavro, false, "customFields"),
-		"customer_id":      toIssueObject(o.CustomerID, isavro, false, "string"),
-		"due_date":         toIssueObject(o.DueDate, isavro, false, "string"),
-		"id":               toIssueObject(o.ID, isavro, false, "string"),
-		"identifier":       toIssueObject(o.Identifier, isavro, false, "string"),
-		"parent_id":        toIssueObject(o.ParentID, isavro, false, "string"),
-		"planned_end_ts":   toIssueObject(o.PlannedEndAt, isavro, false, "long"),
-		"planned_start_ts": toIssueObject(o.PlannedStartAt, isavro, false, "long"),
-		"priority":         toIssueObject(o.Priority, isavro, false, "string"),
-		"project_id":       toIssueObject(o.ProjectID, isavro, false, "string"),
-		"ref_id":           toIssueObject(o.RefID, isavro, false, "string"),
-		"ref_type":         toIssueObject(o.RefType, isavro, false, "string"),
-		"reporter_ref_id":  toIssueObject(o.ReporterRefID, isavro, false, "string"),
-		"resolution":       toIssueObject(o.Resolution, isavro, false, "string"),
-		"status":           toIssueObject(o.Status, isavro, false, "string"),
-		"tags":             toIssueObject(o.Tags, isavro, false, "tags"),
-		"title":            toIssueObject(o.Title, isavro, false, "string"),
-		"type":             toIssueObject(o.Type, isavro, false, "string"),
-		"updated":          toIssueObject(o.Updated, isavro, false, "string"),
-		"url":              toIssueObject(o.URL, isavro, false, "string"),
-		"hashcode":         toIssueObject(o.Hashcode, isavro, false, "string"),
+		"assignee_ref_id": toIssueObject(o.AssigneeRefID, isavro, false, "string"),
+		"created":         toIssueObject(o.Created, isavro, false, "string"),
+		"creator_ref_id":  toIssueObject(o.CreatorRefID, isavro, false, "string"),
+		"customFields":    toIssueObject(o.CustomFields, isavro, false, "customFields"),
+		"customer_id":     toIssueObject(o.CustomerID, isavro, false, "string"),
+		"due_date":        toIssueObject(o.DueDate, isavro, false, "string"),
+		"id":              toIssueObject(o.ID, isavro, false, "string"),
+		"identifier":      toIssueObject(o.Identifier, isavro, false, "string"),
+		"parent_id":       toIssueObject(o.ParentID, isavro, false, "string"),
+		"priority":        toIssueObject(o.Priority, isavro, false, "string"),
+		"project_id":      toIssueObject(o.ProjectID, isavro, false, "string"),
+		"ref_id":          toIssueObject(o.RefID, isavro, false, "string"),
+		"ref_type":        toIssueObject(o.RefType, isavro, false, "string"),
+		"reporter_ref_id": toIssueObject(o.ReporterRefID, isavro, false, "string"),
+		"resolution":      toIssueObject(o.Resolution, isavro, false, "string"),
+		"status":          toIssueObject(o.Status, isavro, false, "string"),
+		"tags":            toIssueObject(o.Tags, isavro, false, "tags"),
+		"title":           toIssueObject(o.Title, isavro, false, "string"),
+		"type":            toIssueObject(o.Type, isavro, false, "string"),
+		"updated":         toIssueObject(o.Updated, isavro, false, "string"),
+		"url":             toIssueObject(o.URL, isavro, false, "string"),
+		"hashcode":        toIssueObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -732,32 +721,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ParentID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["planned_end_ts"].(int64); ok {
-		o.PlannedEndAt = val
-	} else {
-		val := kv["planned_end_ts"]
-		if val == nil {
-			o.PlannedEndAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.PlannedEndAt = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["planned_start_ts"].(int64); ok {
-		o.PlannedStartAt = val
-	} else {
-		val := kv["planned_start_ts"]
-		if val == nil {
-			o.PlannedStartAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.PlannedStartAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["priority"].(string); ok {
@@ -965,8 +928,6 @@ func (o *Issue) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
 	args = append(args, o.ParentID)
-	args = append(args, o.PlannedEndAt)
-	args = append(args, o.PlannedStartAt)
 	args = append(args, o.Priority)
 	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
@@ -1008,7 +969,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values", "type": "record", "name": "customFields"}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1029,14 +990,6 @@ func GetIssueAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "parent_id",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "planned_end_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "planned_start_ts",
-				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "priority",
