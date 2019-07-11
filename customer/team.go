@@ -828,7 +828,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "parent_ids",
-				"type": map[string]interface{}{"name": "parent_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
