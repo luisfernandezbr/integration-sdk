@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -44,12 +45,12 @@ const (
 )
 
 const (
-	// SprintCompletedAtColumn is the completed_ts column name
-	SprintCompletedAtColumn = "completed_ts"
+	// SprintCompletedColumn is the completed column name
+	SprintCompletedColumn = "completed"
 	// SprintCustomerIDColumn is the customer_id column name
 	SprintCustomerIDColumn = "customer_id"
-	// SprintEndedAtColumn is the ended_ts column name
-	SprintEndedAtColumn = "ended_ts"
+	// SprintEndedColumn is the ended column name
+	SprintEndedColumn = "ended"
 	// SprintFetchedAtColumn is the fetched_ts column name
 	SprintFetchedAtColumn = "fetched_ts"
 	// SprintGoalColumn is the goal column name
@@ -62,8 +63,8 @@ const (
 	SprintRefIDColumn = "ref_id"
 	// SprintRefTypeColumn is the ref_type column name
 	SprintRefTypeColumn = "ref_type"
-	// SprintStartedAtColumn is the started_ts column name
-	SprintStartedAtColumn = "started_ts"
+	// SprintStartedColumn is the started column name
+	SprintStartedColumn = "started"
 	// SprintStatusColumn is the status column name
 	SprintStatusColumn = "status"
 )
@@ -95,12 +96,12 @@ const (
 
 // Sprint sprint details
 type Sprint struct {
-	// CompletedAt the timestamp in UTC that the sprint was completed
-	CompletedAt *int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
+	// Completed the timestamp in RFC3339 that the sprint was completed
+	Completed *string `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// EndedAt the timestamp in UTC that the sprint was ended
-	EndedAt *int64 `json:"ended_ts" bson:"ended_ts" yaml:"ended_ts" faker:"-"`
+	// Ended the timestamp in RFC3339 that the sprint was ended
+	Ended *string `json:"ended" bson:"ended" yaml:"ended" faker:"-"`
 	// FetchedAt data in epoch when the api was called
 	FetchedAt int64 `json:"fetched_ts" bson:"fetched_ts" yaml:"fetched_ts" faker:"-"`
 	// Goal the goal for the sprint
@@ -113,8 +114,8 @@ type Sprint struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// StartedAt the timestamp in UTC that the sprint was started
-	StartedAt int64 `json:"started_ts" bson:"started_ts" yaml:"started_ts" faker:"-"`
+	// Started the timestamp in RFC3339 that the sprint was started
+	Started string `json:"started" bson:"started" yaml:"started" faker:"-"`
 	// Status status of the sprint
 	Status SprintStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -488,18 +489,18 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"completed_ts": toSprintObject(o.CompletedAt, isavro, true, "long"),
-		"customer_id":  toSprintObject(o.CustomerID, isavro, false, "string"),
-		"ended_ts":     toSprintObject(o.EndedAt, isavro, true, "long"),
-		"fetched_ts":   toSprintObject(o.FetchedAt, isavro, false, "long"),
-		"goal":         toSprintObject(o.Goal, isavro, false, "string"),
-		"id":           toSprintObject(o.ID, isavro, false, "string"),
-		"name":         toSprintObject(o.Name, isavro, false, "string"),
-		"ref_id":       toSprintObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toSprintObject(o.RefType, isavro, false, "string"),
-		"started_ts":   toSprintObject(o.StartedAt, isavro, false, "long"),
-		"status":       toSprintObject(o.Status, isavro, false, "status"),
-		"hashcode":     toSprintObject(o.Hashcode, isavro, false, "string"),
+		"completed":   toSprintObject(o.Completed, isavro, true, "string"),
+		"customer_id": toSprintObject(o.CustomerID, isavro, false, "string"),
+		"ended":       toSprintObject(o.Ended, isavro, true, "string"),
+		"fetched_ts":  toSprintObject(o.FetchedAt, isavro, false, "long"),
+		"goal":        toSprintObject(o.Goal, isavro, false, "string"),
+		"id":          toSprintObject(o.ID, isavro, false, "string"),
+		"name":        toSprintObject(o.Name, isavro, false, "string"),
+		"ref_id":      toSprintObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toSprintObject(o.RefType, isavro, false, "string"),
+		"started":     toSprintObject(o.Started, isavro, false, "string"),
+		"status":      toSprintObject(o.Status, isavro, false, "status"),
+		"hashcode":    toSprintObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -509,20 +510,20 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["completed_ts"].(*int64); ok {
-		o.CompletedAt = val
-	} else if val, ok := kv["completed_ts"].(int64); ok {
-		o.CompletedAt = &val
+	if val, ok := kv["completed"].(*string); ok {
+		o.Completed = val
+	} else if val, ok := kv["completed"].(string); ok {
+		o.Completed = &val
 	} else {
-		val := kv["completed_ts"]
+		val := kv["completed"]
 		if val == nil {
-			o.CompletedAt = number.Int64Pointer(number.ToInt64Any(nil))
+			o.Completed = pstrings.Pointer("")
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["long"]
+				val = kv["string"]
 			}
-			o.CompletedAt = number.Int64Pointer(number.ToInt64Any(val))
+			o.Completed = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
@@ -538,20 +539,20 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["ended_ts"].(*int64); ok {
-		o.EndedAt = val
-	} else if val, ok := kv["ended_ts"].(int64); ok {
-		o.EndedAt = &val
+	if val, ok := kv["ended"].(*string); ok {
+		o.Ended = val
+	} else if val, ok := kv["ended"].(string); ok {
+		o.Ended = &val
 	} else {
-		val := kv["ended_ts"]
+		val := kv["ended"]
 		if val == nil {
-			o.EndedAt = number.Int64Pointer(number.ToInt64Any(nil))
+			o.Ended = pstrings.Pointer("")
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["long"]
+				val = kv["string"]
 			}
-			o.EndedAt = number.Int64Pointer(number.ToInt64Any(val))
+			o.Ended = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
 	if val, ok := kv["fetched_ts"].(int64); ok {
@@ -632,17 +633,17 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["started_ts"].(int64); ok {
-		o.StartedAt = val
+	if val, ok := kv["started"].(string); ok {
+		o.Started = val
 	} else {
-		val := kv["started_ts"]
+		val := kv["started"]
 		if val == nil {
-			o.StartedAt = number.ToInt64Any(nil)
+			o.Started = ""
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
 			}
-			o.StartedAt = number.ToInt64Any(val)
+			o.Started = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["status"].(SprintStatus); ok {
@@ -676,16 +677,16 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Sprint) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.CompletedAt)
+	args = append(args, o.Completed)
 	args = append(args, o.CustomerID)
-	args = append(args, o.EndedAt)
+	args = append(args, o.Ended)
 	args = append(args, o.FetchedAt)
 	args = append(args, o.Goal)
 	args = append(args, o.ID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.StartedAt)
+	args = append(args, o.Started)
 	args = append(args, o.Status)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -703,8 +704,8 @@ func GetSprintAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name":    "completed_ts",
-				"type":    []interface{}{"null", "long"},
+				"name":    "completed",
+				"type":    []interface{}{"null", "string"},
 				"default": nil,
 			},
 			map[string]interface{}{
@@ -712,8 +713,8 @@ func GetSprintAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name":    "ended_ts",
-				"type":    []interface{}{"null", "long"},
+				"name":    "ended",
+				"type":    []interface{}{"null", "string"},
 				"default": nil,
 			},
 			map[string]interface{}{
@@ -741,8 +742,8 @@ func GetSprintAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "started_ts",
-				"type": "long",
+				"name": "started",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "status",
