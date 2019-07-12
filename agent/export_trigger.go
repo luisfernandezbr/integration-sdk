@@ -29,42 +29,42 @@ import (
 )
 
 const (
-	// EnabledTopic is the default topic name
-	EnabledTopic datamodel.TopicNameType = "agent_Enabled_topic"
+	// ExportTriggerTopic is the default topic name
+	ExportTriggerTopic datamodel.TopicNameType = "agent_ExportTrigger_topic"
 
-	// EnabledStream is the default stream name
-	EnabledStream datamodel.TopicNameType = "agent_Enabled_stream"
+	// ExportTriggerStream is the default stream name
+	ExportTriggerStream datamodel.TopicNameType = "agent_ExportTrigger_stream"
 
-	// EnabledTable is the default table name
-	EnabledTable datamodel.TopicNameType = "agent_Enabled"
+	// ExportTriggerTable is the default table name
+	ExportTriggerTable datamodel.TopicNameType = "agent_ExportTrigger"
 
-	// EnabledModelName is the model name
-	EnabledModelName datamodel.ModelNameType = "agent.Enabled"
+	// ExportTriggerModelName is the model name
+	ExportTriggerModelName datamodel.ModelNameType = "agent.ExportTrigger"
 )
 
 const (
-	// EnabledCustomerIDColumn is the customer_id column name
-	EnabledCustomerIDColumn = "customer_id"
-	// EnabledDateColumn is the date column name
-	EnabledDateColumn = "date"
-	// EnabledDateColumnEpochColumn is the epoch column property of the Date name
-	EnabledDateColumnEpochColumn = "date->epoch"
-	// EnabledDateColumnOffsetColumn is the offset column property of the Date name
-	EnabledDateColumnOffsetColumn = "date->offset"
-	// EnabledDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	EnabledDateColumnRfc3339Column = "date->rfc3339"
-	// EnabledIDColumn is the id column name
-	EnabledIDColumn = "id"
-	// EnabledRefIDColumn is the ref_id column name
-	EnabledRefIDColumn = "ref_id"
-	// EnabledRefTypeColumn is the ref_type column name
-	EnabledRefTypeColumn = "ref_type"
-	// EnabledUUIDColumn is the uuid column name
-	EnabledUUIDColumn = "uuid"
+	// ExportTriggerCustomerIDColumn is the customer_id column name
+	ExportTriggerCustomerIDColumn = "customer_id"
+	// ExportTriggerDateColumn is the date column name
+	ExportTriggerDateColumn = "date"
+	// ExportTriggerDateColumnEpochColumn is the epoch column property of the Date name
+	ExportTriggerDateColumnEpochColumn = "date->epoch"
+	// ExportTriggerDateColumnOffsetColumn is the offset column property of the Date name
+	ExportTriggerDateColumnOffsetColumn = "date->offset"
+	// ExportTriggerDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	ExportTriggerDateColumnRfc3339Column = "date->rfc3339"
+	// ExportTriggerIDColumn is the id column name
+	ExportTriggerIDColumn = "id"
+	// ExportTriggerRefIDColumn is the ref_id column name
+	ExportTriggerRefIDColumn = "ref_id"
+	// ExportTriggerRefTypeColumn is the ref_type column name
+	ExportTriggerRefTypeColumn = "ref_type"
+	// ExportTriggerUUIDColumn is the uuid column name
+	ExportTriggerUUIDColumn = "uuid"
 )
 
-// EnabledDate represents the object structure for date
-type EnabledDate struct {
+// ExportTriggerDate represents the object structure for date
+type ExportTriggerDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -73,7 +73,7 @@ type EnabledDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *EnabledDate) ToMap() map[string]interface{} {
+func (o *ExportTriggerDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -84,12 +84,12 @@ func (o *EnabledDate) ToMap() map[string]interface{} {
 	}
 }
 
-// Enabled an agent event to indicate that it's enabled and ready for actions
-type Enabled struct {
+// ExportTrigger used to trigger an agent.ExportRequest
+type ExportTrigger struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Date the date when the request was made
-	Date EnabledDate `json:"date" bson:"date" yaml:"date" faker:"-"`
+	Date ExportTriggerDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// RefID the source system id for the model instance
@@ -103,22 +103,22 @@ type Enabled struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Enabled)(nil)
+var _ datamodel.Model = (*ExportTrigger)(nil)
 
-func toEnabledObjectNil(isavro bool, isoptional bool) interface{} {
+func toExportTriggerObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toExportTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return toEnabledObjectNil(isavro, isoptional)
+		return toExportTriggerObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return toEnabledObjectNil(isavro, isoptional)
+		return toExportTriggerObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
 		if isavro && isoptional {
 			return goavro.Union(avrotype, v)
@@ -127,7 +127,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -136,7 +136,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -145,7 +145,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -154,7 +154,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -163,7 +163,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -172,7 +172,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -181,7 +181,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -190,7 +190,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -199,7 +199,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
+				return toExportTriggerObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -213,9 +213,9 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		return v
 	case *map[string]string:
 		return *v
-	case *Enabled:
+	case *ExportTrigger:
 		return v.ToMap()
-	case Enabled:
+	case ExportTrigger:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -231,24 +231,24 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toEnabledObject(av, isavro, false, ""))
+			arr = append(arr, toExportTriggerObject(av, isavro, false, ""))
 		}
 		return arr
 
-	case EnabledDate:
-		vv := o.(EnabledDate)
+	case ExportTriggerDate:
+		vv := o.(ExportTriggerDate)
 		return vv.ToMap()
-	case *EnabledDate:
-		return (*o.(*EnabledDate)).ToMap()
-	case []EnabledDate:
+	case *ExportTriggerDate:
+		return (*o.(*ExportTriggerDate)).ToMap()
+	case []ExportTriggerDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]EnabledDate) {
+		for _, i := range o.([]ExportTriggerDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]EnabledDate:
+	case *[]ExportTriggerDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]EnabledDate)
+		vv := o.(*[]ExportTriggerDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -257,22 +257,22 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of Enabled
-func (o *Enabled) String() string {
-	return fmt.Sprintf("agent.Enabled<%s>", o.ID)
+// String returns a string representation of ExportTrigger
+func (o *ExportTrigger) String() string {
+	return fmt.Sprintf("agent.ExportTrigger<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Enabled) GetTopicName() datamodel.TopicNameType {
-	return EnabledTopic
+func (o *ExportTrigger) GetTopicName() datamodel.TopicNameType {
+	return ExportTriggerTopic
 }
 
 // GetModelName returns the name of the model
-func (o *Enabled) GetModelName() datamodel.ModelNameType {
-	return EnabledModelName
+func (o *ExportTrigger) GetModelName() datamodel.ModelNameType {
+	return ExportTriggerModelName
 }
 
-func (o *Enabled) setDefaults() {
+func (o *ExportTrigger) setDefaults() {
 
 	o.GetID()
 	o.GetRefID()
@@ -280,16 +280,16 @@ func (o *Enabled) setDefaults() {
 }
 
 // GetID returns the ID for the object
-func (o *Enabled) GetID() string {
+func (o *ExportTrigger) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Enabled", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("ExportTrigger", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Enabled) GetTopicKey() string {
+func (o *ExportTrigger) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -298,7 +298,7 @@ func (o *Enabled) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Enabled) GetTimestamp() time.Time {
+func (o *ExportTrigger) GetTimestamp() time.Time {
 	var dt interface{} = o.Date
 	switch v := dt.(type) {
 	case int64:
@@ -311,40 +311,40 @@ func (o *Enabled) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case EnabledDate:
+	case ExportTriggerDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
-	panic("not sure how to handle the date time format for Enabled")
+	panic("not sure how to handle the date time format for ExportTrigger")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Enabled) GetRefID() string {
+func (o *ExportTrigger) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Enabled) IsMaterialized() bool {
+func (o *ExportTrigger) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Enabled) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *ExportTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Enabled) IsEvented() bool {
+func (o *ExportTrigger) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Enabled) SetEventHeaders(kv map[string]string) {
+func (o *ExportTrigger) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = EnabledModelName.String()
+	kv["model"] = ExportTriggerModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Enabled) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *ExportTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -366,26 +366,26 @@ func (o *Enabled) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *Enabled) GetStateKey() string {
+func (o *ExportTrigger) GetStateKey() string {
 	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *Enabled) GetCustomerID() string {
+func (o *ExportTrigger) GetCustomerID() string {
 	return o.CustomerID
 }
 
-// Clone returns an exact copy of Enabled
-func (o *Enabled) Clone() datamodel.Model {
-	c := new(Enabled)
+// Clone returns an exact copy of ExportTrigger
+func (o *ExportTrigger) Clone() datamodel.Model {
+	c := new(ExportTrigger)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Enabled) Anon() datamodel.Model {
-	c := new(Enabled)
+func (o *ExportTrigger) Anon() datamodel.Model {
+	c := new(ExportTrigger)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -400,12 +400,12 @@ func (o *Enabled) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Enabled) MarshalJSON() ([]byte, error) {
+func (o *ExportTrigger) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Enabled) UnmarshalJSON(data []byte) error {
+func (o *ExportTrigger) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -414,22 +414,22 @@ func (o *Enabled) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecEnabled *goavro.Codec
+var cachedCodecExportTrigger *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *Enabled) GetAvroCodec() *goavro.Codec {
-	if cachedCodecEnabled == nil {
-		c, err := GetEnabledAvroSchema()
+func (o *ExportTrigger) GetAvroCodec() *goavro.Codec {
+	if cachedCodecExportTrigger == nil {
+		c, err := GetExportTriggerAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecEnabled = c
+		cachedCodecExportTrigger = c
 	}
-	return cachedCodecEnabled
+	return cachedCodecExportTrigger
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Enabled) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *ExportTrigger) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -443,7 +443,7 @@ func (o *Enabled) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Enabled) FromAvroBinary(value []byte) error {
+func (o *ExportTrigger) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -458,17 +458,17 @@ func (o *Enabled) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Enabled) Stringify() string {
+func (o *ExportTrigger) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Enabled objects are equal
-func (o *Enabled) IsEqual(other *Enabled) bool {
+// IsEqual returns true if the two ExportTrigger objects are equal
+func (o *ExportTrigger) IsEqual(other *ExportTrigger) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Enabled) ToMap(avro ...bool) map[string]interface{} {
+func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -477,18 +477,18 @@ func (o *Enabled) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id": toEnabledObject(o.CustomerID, isavro, false, "string"),
-		"date":        toEnabledObject(o.Date, isavro, false, "date"),
-		"id":          toEnabledObject(o.ID, isavro, false, "string"),
-		"ref_id":      toEnabledObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toEnabledObject(o.RefType, isavro, false, "string"),
-		"uuid":        toEnabledObject(o.UUID, isavro, false, "string"),
-		"hashcode":    toEnabledObject(o.Hashcode, isavro, false, "string"),
+		"customer_id": toExportTriggerObject(o.CustomerID, isavro, false, "string"),
+		"date":        toExportTriggerObject(o.Date, isavro, false, "date"),
+		"id":          toExportTriggerObject(o.ID, isavro, false, "string"),
+		"ref_id":      toExportTriggerObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toExportTriggerObject(o.RefType, isavro, false, "string"),
+		"uuid":        toExportTriggerObject(o.UUID, isavro, false, "string"),
+		"hashcode":    toExportTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Enabled) FromMap(kv map[string]interface{}) {
+func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
@@ -506,14 +506,14 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date"].(EnabledDate); ok {
+	if val, ok := kv["date"].(ExportTriggerDate); ok {
 		o.Date = val
 	} else {
 		val := kv["date"]
 		if val == nil {
-			o.Date = EnabledDate{}
+			o.Date = ExportTriggerDate{}
 		} else {
-			o.Date = EnabledDate{}
+			o.Date = ExportTriggerDate{}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Date)
 
@@ -575,7 +575,7 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Enabled) Hash() string {
+func (o *ExportTrigger) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Date)
@@ -587,12 +587,12 @@ func (o *Enabled) Hash() string {
 	return o.Hashcode
 }
 
-// GetEnabledAvroSchemaSpec creates the avro schema specification for Enabled
-func GetEnabledAvroSchemaSpec() string {
+// GetExportTriggerAvroSchemaSpec creates the avro schema specification for ExportTrigger
+func GetExportTriggerAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "Enabled",
+		"name":      "ExportTrigger",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
@@ -604,7 +604,7 @@ func GetEnabledAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -628,7 +628,7 @@ func GetEnabledAvroSchemaSpec() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Enabled) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *ExportTrigger) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
@@ -640,25 +640,25 @@ func (o *Enabled) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// GetEnabledAvroSchema creates the avro schema for Enabled
-func GetEnabledAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetEnabledAvroSchemaSpec())
+// GetExportTriggerAvroSchema creates the avro schema for ExportTrigger
+func GetExportTriggerAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetExportTriggerAvroSchemaSpec())
 }
 
-// TransformEnabledFunc is a function for transforming Enabled during processing
-type TransformEnabledFunc func(input *Enabled) (*Enabled, error)
+// TransformExportTriggerFunc is a function for transforming ExportTrigger during processing
+type TransformExportTriggerFunc func(input *ExportTrigger) (*ExportTrigger, error)
 
-// NewEnabledPipe creates a pipe for processing Enabled items
-func NewEnabledPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformEnabledFunc) <-chan bool {
+// NewExportTriggerPipe creates a pipe for processing ExportTrigger items
+func NewExportTriggerPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformExportTriggerFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewEnabledInputStream(input, errors)
-	var stream chan Enabled
+	inch, indone := NewExportTriggerInputStream(input, errors)
+	var stream chan ExportTrigger
 	if len(transforms) > 0 {
-		stream = make(chan Enabled, 1000)
+		stream = make(chan ExportTrigger, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewEnabledOutputStream(output, stream, errors)
+	outdone := NewExportTriggerOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -694,12 +694,12 @@ func NewEnabledPipe(input io.ReadCloser, output io.WriteCloser, errors chan erro
 	return done
 }
 
-// NewEnabledInputStreamDir creates a channel for reading Enabled as JSON newlines from a directory of files
-func NewEnabledInputStreamDir(dir string, errors chan<- error, transforms ...TransformEnabledFunc) (chan Enabled, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/enabled\\.json(\\.gz)?$"))
+// NewExportTriggerInputStreamDir creates a channel for reading ExportTrigger as JSON newlines from a directory of files
+func NewExportTriggerInputStreamDir(dir string, errors chan<- error, transforms ...TransformExportTriggerFunc) (chan ExportTrigger, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/export_trigger\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Enabled)
+		ch := make(chan ExportTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -707,16 +707,16 @@ func NewEnabledInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for enabled")
-		ch := make(chan Enabled)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for export_trigger")
+		ch := make(chan ExportTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewEnabledInputStreamFile(files[0], errors, transforms...)
+		return NewExportTriggerInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Enabled)
+		ch := make(chan ExportTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -724,12 +724,12 @@ func NewEnabledInputStreamDir(dir string, errors chan<- error, transforms ...Tra
 	}
 }
 
-// NewEnabledInputStreamFile creates an channel for reading Enabled as JSON newlines from filename
-func NewEnabledInputStreamFile(filename string, errors chan<- error, transforms ...TransformEnabledFunc) (chan Enabled, <-chan bool) {
+// NewExportTriggerInputStreamFile creates an channel for reading ExportTrigger as JSON newlines from filename
+func NewExportTriggerInputStreamFile(filename string, errors chan<- error, transforms ...TransformExportTriggerFunc) (chan ExportTrigger, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Enabled)
+		ch := make(chan ExportTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -741,7 +741,7 @@ func NewEnabledInputStreamFile(filename string, errors chan<- error, transforms 
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Enabled)
+			ch := make(chan ExportTrigger)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -749,13 +749,13 @@ func NewEnabledInputStreamFile(filename string, errors chan<- error, transforms 
 		}
 		f = gz
 	}
-	return NewEnabledInputStream(f, errors, transforms...)
+	return NewExportTriggerInputStream(f, errors, transforms...)
 }
 
-// NewEnabledInputStream creates an channel for reading Enabled as JSON newlines from stream
-func NewEnabledInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformEnabledFunc) (chan Enabled, <-chan bool) {
+// NewExportTriggerInputStream creates an channel for reading ExportTrigger as JSON newlines from stream
+func NewExportTriggerInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformExportTriggerFunc) (chan ExportTrigger, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Enabled, 1000)
+	ch := make(chan ExportTrigger, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -768,7 +768,7 @@ func NewEnabledInputStream(stream io.ReadCloser, errors chan<- error, transforms
 				errors <- err
 				return
 			}
-			var item Enabled
+			var item ExportTrigger
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -794,9 +794,9 @@ func NewEnabledInputStream(stream io.ReadCloser, errors chan<- error, transforms
 	return ch, done
 }
 
-// NewEnabledOutputStreamDir will output json newlines from channel and save in dir
-func NewEnabledOutputStreamDir(dir string, ch chan Enabled, errors chan<- error, transforms ...TransformEnabledFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/enabled\\.json(\\.gz)?$")
+// NewExportTriggerOutputStreamDir will output json newlines from channel and save in dir
+func NewExportTriggerOutputStreamDir(dir string, ch chan ExportTrigger, errors chan<- error, transforms ...TransformExportTriggerFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/export_trigger\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -812,11 +812,11 @@ func NewEnabledOutputStreamDir(dir string, ch chan Enabled, errors chan<- error,
 		done <- true
 		return done
 	}
-	return NewEnabledOutputStream(gz, ch, errors, transforms...)
+	return NewExportTriggerOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewEnabledOutputStream will output json newlines from channel to the stream
-func NewEnabledOutputStream(stream io.WriteCloser, ch chan Enabled, errors chan<- error, transforms ...TransformEnabledFunc) <-chan bool {
+// NewExportTriggerOutputStream will output json newlines from channel to the stream
+func NewExportTriggerOutputStream(stream io.WriteCloser, ch chan ExportTrigger, errors chan<- error, transforms ...TransformExportTriggerFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -856,59 +856,59 @@ func NewEnabledOutputStream(stream io.WriteCloser, ch chan Enabled, errors chan<
 	return done
 }
 
-// EnabledSendEvent is an event detail for sending data
-type EnabledSendEvent struct {
-	Enabled *Enabled
-	headers map[string]string
-	time    time.Time
-	key     string
+// ExportTriggerSendEvent is an event detail for sending data
+type ExportTriggerSendEvent struct {
+	ExportTrigger *ExportTrigger
+	headers       map[string]string
+	time          time.Time
+	key           string
 }
 
-var _ datamodel.ModelSendEvent = (*EnabledSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*ExportTriggerSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *EnabledSendEvent) Key() string {
+func (e *ExportTriggerSendEvent) Key() string {
 	if e.key == "" {
-		return e.Enabled.GetID()
+		return e.ExportTrigger.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *EnabledSendEvent) Object() datamodel.Model {
-	return e.Enabled
+func (e *ExportTriggerSendEvent) Object() datamodel.Model {
+	return e.ExportTrigger
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *EnabledSendEvent) Headers() map[string]string {
+func (e *ExportTriggerSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *EnabledSendEvent) Timestamp() time.Time {
+func (e *ExportTriggerSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// EnabledSendEventOpts is a function handler for setting opts
-type EnabledSendEventOpts func(o *EnabledSendEvent)
+// ExportTriggerSendEventOpts is a function handler for setting opts
+type ExportTriggerSendEventOpts func(o *ExportTriggerSendEvent)
 
-// WithEnabledSendEventKey sets the key value to a value different than the object ID
-func WithEnabledSendEventKey(key string) EnabledSendEventOpts {
-	return func(o *EnabledSendEvent) {
+// WithExportTriggerSendEventKey sets the key value to a value different than the object ID
+func WithExportTriggerSendEventKey(key string) ExportTriggerSendEventOpts {
+	return func(o *ExportTriggerSendEvent) {
 		o.key = key
 	}
 }
 
-// WithEnabledSendEventTimestamp sets the timestamp value
-func WithEnabledSendEventTimestamp(tv time.Time) EnabledSendEventOpts {
-	return func(o *EnabledSendEvent) {
+// WithExportTriggerSendEventTimestamp sets the timestamp value
+func WithExportTriggerSendEventTimestamp(tv time.Time) ExportTriggerSendEventOpts {
+	return func(o *ExportTriggerSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithEnabledSendEventHeader sets the timestamp value
-func WithEnabledSendEventHeader(key, value string) EnabledSendEventOpts {
-	return func(o *EnabledSendEvent) {
+// WithExportTriggerSendEventHeader sets the timestamp value
+func WithExportTriggerSendEventHeader(key, value string) ExportTriggerSendEventOpts {
+	return func(o *ExportTriggerSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -916,10 +916,10 @@ func WithEnabledSendEventHeader(key, value string) EnabledSendEventOpts {
 	}
 }
 
-// NewEnabledSendEvent returns a new EnabledSendEvent instance
-func NewEnabledSendEvent(o *Enabled, opts ...EnabledSendEventOpts) *EnabledSendEvent {
-	res := &EnabledSendEvent{
-		Enabled: o,
+// NewExportTriggerSendEvent returns a new ExportTriggerSendEvent instance
+func NewExportTriggerSendEvent(o *ExportTrigger, opts ...ExportTriggerSendEventOpts) *ExportTriggerSendEvent {
+	res := &ExportTriggerSendEvent{
+		ExportTrigger: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -929,8 +929,8 @@ func NewEnabledSendEvent(o *Enabled, opts ...EnabledSendEventOpts) *EnabledSendE
 	return res
 }
 
-// NewEnabledProducer will stream data from the channel
-func NewEnabledProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewExportTriggerProducer will stream data from the channel
+func NewExportTriggerProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -943,7 +943,7 @@ func NewEnabledProducer(ctx context.Context, producer eventing.Producer, ch <-ch
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*Enabled); ok {
+				if object, ok := item.Object().(*ExportTrigger); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -974,7 +974,7 @@ func NewEnabledProducer(ctx context.Context, producer eventing.Producer, ch <-ch
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Enabled but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.ExportTrigger but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -982,22 +982,22 @@ func NewEnabledProducer(ctx context.Context, producer eventing.Producer, ch <-ch
 	return done
 }
 
-// NewEnabledConsumer will stream data from the topic into the provided channel
-func NewEnabledConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewExportTriggerConsumer will stream data from the topic into the provided channel
+func NewExportTriggerConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object Enabled
+			var object ExportTrigger
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.Enabled: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.ExportTrigger: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.Enabled: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.ExportTrigger: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.Enabled")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.ExportTrigger")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -1007,51 +1007,51 @@ func NewEnabledConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRec
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &EnabledReceiveEvent{&object, msg, false}
+			ch <- &ExportTriggerReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Enabled
+			var object ExportTrigger
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &EnabledReceiveEvent{nil, msg, true}
+			ch <- &ExportTriggerReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// EnabledReceiveEvent is an event detail for receiving data
-type EnabledReceiveEvent struct {
-	Enabled *Enabled
-	message eventing.Message
-	eof     bool
+// ExportTriggerReceiveEvent is an event detail for receiving data
+type ExportTriggerReceiveEvent struct {
+	ExportTrigger *ExportTrigger
+	message       eventing.Message
+	eof           bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*EnabledReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*ExportTriggerReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *EnabledReceiveEvent) Object() datamodel.Model {
-	return e.Enabled
+func (e *ExportTriggerReceiveEvent) Object() datamodel.Model {
+	return e.ExportTrigger
 }
 
 // Message returns the underlying message data for the event
-func (e *EnabledReceiveEvent) Message() eventing.Message {
+func (e *ExportTriggerReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *EnabledReceiveEvent) EOF() bool {
+func (e *ExportTriggerReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// EnabledProducer implements the datamodel.ModelEventProducer
-type EnabledProducer struct {
+// ExportTriggerProducer implements the datamodel.ModelEventProducer
+type ExportTriggerProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -1062,15 +1062,15 @@ type EnabledProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*EnabledProducer)(nil)
+var _ datamodel.ModelEventProducer = (*ExportTriggerProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *EnabledProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *ExportTriggerProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *EnabledProducer) Close() error {
+func (p *ExportTriggerProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1085,47 +1085,47 @@ func (p *EnabledProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Enabled) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *ExportTrigger) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Enabled) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *ExportTrigger) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &EnabledProducer{
+	return &ExportTriggerProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewEnabledProducer(newctx, producer, ch, errors, empty),
+		done:     NewExportTriggerProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewEnabledProducerChannel returns a channel which can be used for producing Model events
-func NewEnabledProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewEnabledProducerChannelSize(producer, 0, errors)
+// NewExportTriggerProducerChannel returns a channel which can be used for producing Model events
+func NewExportTriggerProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewExportTriggerProducerChannelSize(producer, 0, errors)
 }
 
-// NewEnabledProducerChannelSize returns a channel which can be used for producing Model events
-func NewEnabledProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewExportTriggerProducerChannelSize returns a channel which can be used for producing Model events
+func NewExportTriggerProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &EnabledProducer{
+	return &ExportTriggerProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewEnabledProducer(newctx, producer, ch, errors, empty),
+		done:     NewExportTriggerProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// EnabledConsumer implements the datamodel.ModelEventConsumer
-type EnabledConsumer struct {
+// ExportTriggerConsumer implements the datamodel.ModelEventConsumer
+type ExportTriggerConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1133,15 +1133,15 @@ type EnabledConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*EnabledConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*ExportTriggerConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *EnabledConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *ExportTriggerConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *EnabledConsumer) Close() error {
+func (c *ExportTriggerConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1155,21 +1155,21 @@ func (c *EnabledConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Enabled) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *ExportTrigger) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &EnabledConsumer{
+	return &ExportTriggerConsumer{
 		ch:       ch,
-		callback: NewEnabledConsumer(consumer, ch, errors),
+		callback: NewExportTriggerConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewEnabledConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewEnabledConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewExportTriggerConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewExportTriggerConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &EnabledConsumer{
+	return &ExportTriggerConsumer{
 		ch:       ch,
-		callback: NewEnabledConsumer(consumer, ch, errors),
+		callback: NewExportTriggerConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
