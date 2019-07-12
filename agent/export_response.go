@@ -79,6 +79,8 @@ const (
 	ExportResponseHostnameColumn = "hostname"
 	// ExportResponseIDColumn is the id column name
 	ExportResponseIDColumn = "id"
+	// ExportResponseJobIDColumn is the job_id column name
+	ExportResponseJobIDColumn = "job_id"
 	// ExportResponseMemoryColumn is the memory column name
 	ExportResponseMemoryColumn = "memory"
 	// ExportResponseMessageColumn is the message column name
@@ -235,6 +237,8 @@ type ExportResponse struct {
 	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// JobID The job ID
+	JobID string `json:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -705,6 +709,7 @@ func (o *ExportResponse) ToMap(avro ...bool) map[string]interface{} {
 		"go_version":   toExportResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":     toExportResponseObject(o.Hostname, isavro, false, "string"),
 		"id":           toExportResponseObject(o.ID, isavro, false, "string"),
+		"job_id":       toExportResponseObject(o.JobID, isavro, false, "string"),
 		"memory":       toExportResponseObject(o.Memory, isavro, false, "long"),
 		"message":      toExportResponseObject(o.Message, isavro, false, "string"),
 		"num_cpu":      toExportResponseObject(o.NumCPU, isavro, false, "long"),
@@ -874,6 +879,19 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["job_id"].(string); ok {
+		o.JobID = val
+	} else {
+		val := kv["job_id"]
+		if val == nil {
+			o.JobID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.JobID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["memory"].(int64); ok {
@@ -1070,6 +1088,7 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.JobID)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
@@ -1112,7 +1131,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1120,7 +1139,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date"},
+				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the export end date"},
 			},
 			map[string]interface{}{
 				"name":    "error",
@@ -1141,6 +1160,10 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "job_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -1173,7 +1196,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "start_date",
-				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export start date"},
+				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export start date"},
 			},
 			map[string]interface{}{
 				"name": "success",
