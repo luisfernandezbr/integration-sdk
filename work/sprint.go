@@ -203,11 +203,11 @@ const (
 // Sprint sprint details
 type Sprint struct {
 	// Completed the date that the sprint was completed
-	Completed *SprintCompleted `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
+	Completed SprintCompleted `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Ended the date that the sprint was ended
-	Ended *SprintEnded `json:"ended" bson:"ended" yaml:"ended" faker:"-"`
+	Ended SprintEnded `json:"ended" bson:"ended" yaml:"ended" faker:"-"`
 	// Fetched date in when the api was called
 	Fetched SprintFetched `json:"fetched" bson:"fetched" yaml:"fetched" faker:"-"`
 	// Goal the goal for the sprint
@@ -467,12 +467,6 @@ func (o *Sprint) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Sprint) setDefaults() {
-	if o.Completed == nil {
-		o.Completed = &SprintCompleted{}
-	}
-	if o.Ended == nil {
-		o.Ended = &SprintEnded{}
-	}
 
 	o.GetID()
 	o.GetRefID()
@@ -678,9 +672,9 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"completed":   toSprintObject(o.Completed, isavro, true, "completed"),
+		"completed":   toSprintObject(o.Completed, isavro, false, "completed"),
 		"customer_id": toSprintObject(o.CustomerID, isavro, false, "string"),
-		"ended":       toSprintObject(o.Ended, isavro, true, "ended"),
+		"ended":       toSprintObject(o.Ended, isavro, false, "ended"),
 		"fetched":     toSprintObject(o.Fetched, isavro, false, "fetched"),
 		"goal":        toSprintObject(o.Goal, isavro, false, "string"),
 		"id":          toSprintObject(o.ID, isavro, false, "string"),
@@ -699,22 +693,25 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["completed"].(*SprintCompleted); ok {
+	if val, ok := kv["completed"].(SprintCompleted); ok {
 		o.Completed = val
-	} else if val, ok := kv["completed"].(SprintCompleted); ok {
-		o.Completed = &val
 	} else {
 		val := kv["completed"]
 		if val == nil {
-			o.Completed = &SprintCompleted{}
+			o.Completed = SprintCompleted{}
 		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["SprintCompleted"]
+			o.Completed = SprintCompleted{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
 			}
-			o.Completed = &SprintCompleted{}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, o.Completed)
+			json.Unmarshal(b, &o.Completed)
 
 		}
 	}
@@ -731,22 +728,25 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["ended"].(*SprintEnded); ok {
+	if val, ok := kv["ended"].(SprintEnded); ok {
 		o.Ended = val
-	} else if val, ok := kv["ended"].(SprintEnded); ok {
-		o.Ended = &val
 	} else {
 		val := kv["ended"]
 		if val == nil {
-			o.Ended = &SprintEnded{}
+			o.Ended = SprintEnded{}
 		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["SprintEnded"]
+			o.Ended = SprintEnded{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
 			}
-			o.Ended = &SprintEnded{}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, o.Ended)
+			json.Unmarshal(b, &o.Ended)
 
 		}
 	}
@@ -758,6 +758,15 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.Fetched = SprintFetched{}
 		} else {
 			o.Fetched = SprintFetched{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Fetched)
 
@@ -836,6 +845,15 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.Started = SprintStarted{}
 		} else {
 			o.Started = SprintStarted{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Started)
 
@@ -899,22 +917,20 @@ func GetSprintAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name":    "completed",
-				"type":    []interface{}{"null", map[string]interface{}{"type": "record", "name": "completed", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was completed"}},
-				"default": nil,
+				"name": "completed",
+				"type": map[string]interface{}{"type": "record", "name": "completed", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was completed"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name":    "ended",
-				"type":    []interface{}{"null", map[string]interface{}{"type": "record", "name": "ended", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date that the sprint was ended"}},
-				"default": nil,
+				"name": "ended",
+				"type": map[string]interface{}{"type": "record", "name": "ended", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was ended"},
 			},
 			map[string]interface{}{
 				"name": "fetched",
-				"type": map[string]interface{}{"name": "fetched", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "date in when the api was called", "type": "record"},
+				"type": map[string]interface{}{"doc": "date in when the api was called", "type": "record", "name": "fetched", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "goal",
@@ -938,7 +954,7 @@ func GetSprintAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "started",
-				"type": map[string]interface{}{"type": "record", "name": "started", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was started"},
+				"type": map[string]interface{}{"name": "started", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date that the sprint was started", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "status",

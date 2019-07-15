@@ -602,6 +602,15 @@ func (o *Change) FromMap(kv map[string]interface{}) {
 			o.Date = ChangeDate{}
 		} else {
 			o.Date = ChangeDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Date)
 

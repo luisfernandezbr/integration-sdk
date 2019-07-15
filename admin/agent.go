@@ -513,6 +513,15 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 			o.Completed = AgentCompleted{}
 		} else {
 			o.Completed = AgentCompleted{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Completed)
 
