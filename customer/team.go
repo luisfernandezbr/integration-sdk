@@ -802,7 +802,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "children_ids",
-				"type": map[string]interface{}{"type": "array", "name": "children_ids", "items": "string"},
+				"type": map[string]interface{}{"name": "children_ids", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
