@@ -345,7 +345,9 @@ func (o *Project) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *Project) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of Project

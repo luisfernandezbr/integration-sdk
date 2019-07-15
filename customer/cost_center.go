@@ -339,7 +339,9 @@ func (o *CostCenter) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *CostCenter) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of CostCenter

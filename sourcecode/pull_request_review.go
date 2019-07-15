@@ -348,7 +348,9 @@ func (o *PullRequestReview) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *PullRequestReview) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of PullRequestReview

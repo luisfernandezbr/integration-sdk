@@ -417,7 +417,9 @@ func (o *User) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *User) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of User

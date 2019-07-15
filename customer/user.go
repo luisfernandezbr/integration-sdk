@@ -423,7 +423,9 @@ func (o *User) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *User) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of User
@@ -1099,7 +1101,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "role_ids",
-				"type": map[string]interface{}{"type": "array", "name": "role_ids", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "role_ids"},
 			},
 			map[string]interface{}{
 				"name": "team_ids",

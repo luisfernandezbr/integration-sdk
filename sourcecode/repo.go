@@ -341,7 +341,9 @@ func (o *Repo) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *Repo) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of Repo

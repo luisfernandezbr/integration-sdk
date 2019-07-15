@@ -312,7 +312,9 @@ func (o *CustomField) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *CustomField) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of CustomField

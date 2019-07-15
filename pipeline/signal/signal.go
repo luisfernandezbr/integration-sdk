@@ -417,7 +417,9 @@ func (o *Signal) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *Signal) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of Signal

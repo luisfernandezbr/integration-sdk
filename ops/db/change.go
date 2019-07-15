@@ -373,7 +373,9 @@ func (o *Change) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *Change) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of Change

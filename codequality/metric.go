@@ -335,7 +335,9 @@ func (o *Metric) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *Metric) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of Metric

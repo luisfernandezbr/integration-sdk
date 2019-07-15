@@ -358,7 +358,9 @@ func (o *Team) GetStateKey() string {
 
 // GetCustomerID will return the customer_id
 func (o *Team) GetCustomerID() string {
+
 	return o.CustomerID
+
 }
 
 // Clone returns an exact copy of Team
