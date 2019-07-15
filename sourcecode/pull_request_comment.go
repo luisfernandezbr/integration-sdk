@@ -282,7 +282,9 @@ func toPullRequestCommentObject(o interface{}, isavro bool, isoptional bool, avr
 		vv := o.(PullRequestCommentCreated)
 		return vv.ToMap()
 	case *PullRequestCommentCreated:
-		return (*o.(*PullRequestCommentCreated)).ToMap()
+		return map[string]interface{}{
+			"sourcecode.created": (*o.(*PullRequestCommentCreated)).ToMap(),
+		}
 	case []PullRequestCommentCreated:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]PullRequestCommentCreated) {
@@ -300,7 +302,9 @@ func toPullRequestCommentObject(o interface{}, isavro bool, isoptional bool, avr
 		vv := o.(PullRequestCommentUpdated)
 		return vv.ToMap()
 	case *PullRequestCommentUpdated:
-		return (*o.(*PullRequestCommentUpdated)).ToMap()
+		return map[string]interface{}{
+			"sourcecode.updated": (*o.(*PullRequestCommentUpdated)).ToMap(),
+		}
 	case []PullRequestCommentUpdated:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]PullRequestCommentUpdated) {
@@ -782,7 +786,7 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated",
-				"type": map[string]interface{}{"type": "record", "name": "updated", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the comment was closed"},
+				"type": map[string]interface{}{"doc": "the timestamp in UTC that the comment was closed", "type": "record", "name": "updated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "user_ref_id",

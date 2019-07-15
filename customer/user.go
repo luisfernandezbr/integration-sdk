@@ -361,7 +361,9 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		vv := o.(UserDeleted)
 		return vv.ToMap()
 	case *UserDeleted:
-		return (*o.(*UserDeleted)).ToMap()
+		return map[string]interface{}{
+			"customer.deleted": (*o.(*UserDeleted)).ToMap(),
+		}
 	case []UserDeleted:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]UserDeleted) {
@@ -379,7 +381,9 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		vv := o.(UserHired)
 		return vv.ToMap()
 	case *UserHired:
-		return (*o.(*UserHired)).ToMap()
+		return map[string]interface{}{
+			"customer.hired": (*o.(*UserHired)).ToMap(),
+		}
 	case []UserHired:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]UserHired) {
@@ -397,7 +401,9 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		vv := o.(UserTerminated)
 		return vv.ToMap()
 	case *UserTerminated:
-		return (*o.(*UserTerminated)).ToMap()
+		return map[string]interface{}{
+			"customer.terminated": (*o.(*UserTerminated)).ToMap(),
+		}
 	case []UserTerminated:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]UserTerminated) {
@@ -1204,7 +1210,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "hired",
-				"type": map[string]interface{}{"type": "record", "name": "hired", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "when the user was hired in epoch timestamp"},
+				"type": map[string]interface{}{"type": "record", "name": "hired", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1247,11 +1253,11 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "team_ids",
-				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "team_ids"},
 			},
 			map[string]interface{}{
 				"name": "terminated",
-				"type": map[string]interface{}{"type": "record", "name": "terminated", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was terminated in epoch timestamp"},
+				"type": map[string]interface{}{"type": "record", "name": "terminated", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "when the user was terminated in epoch timestamp"},
 			},
 			map[string]interface{}{
 				"name":    "title",

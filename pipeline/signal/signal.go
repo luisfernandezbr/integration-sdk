@@ -272,7 +272,9 @@ func toSignalObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		vv := o.(SignalDate)
 		return vv.ToMap()
 	case *SignalDate:
-		return (*o.(*SignalDate)).ToMap()
+		return map[string]interface{}{
+			"pipeline.signal.date": (*o.(*SignalDate)).ToMap(),
+		}
 	case []SignalDate:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]SignalDate) {
@@ -772,7 +774,7 @@ func GetSignalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the signal was calculated"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the signal was calculated"},
 			},
 			map[string]interface{}{
 				"name": "id",

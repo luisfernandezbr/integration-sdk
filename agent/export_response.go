@@ -404,7 +404,9 @@ func toExportResponseObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		vv := o.(ExportResponseDate)
 		return vv.ToMap()
 	case *ExportResponseDate:
-		return (*o.(*ExportResponseDate)).ToMap()
+		return map[string]interface{}{
+			"agent.date": (*o.(*ExportResponseDate)).ToMap(),
+		}
 	case []ExportResponseDate:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]ExportResponseDate) {
@@ -422,7 +424,9 @@ func toExportResponseObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		vv := o.(ExportResponseEndDate)
 		return vv.ToMap()
 	case *ExportResponseEndDate:
-		return (*o.(*ExportResponseEndDate)).ToMap()
+		return map[string]interface{}{
+			"agent.end_date": (*o.(*ExportResponseEndDate)).ToMap(),
+		}
 	case []ExportResponseEndDate:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]ExportResponseEndDate) {
@@ -440,7 +444,9 @@ func toExportResponseObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		vv := o.(ExportResponseStartDate)
 		return vv.ToMap()
 	case *ExportResponseStartDate:
-		return (*o.(*ExportResponseStartDate)).ToMap()
+		return map[string]interface{}{
+			"agent.start_date": (*o.(*ExportResponseStartDate)).ToMap(),
+		}
 	case []ExportResponseStartDate:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]ExportResponseStartDate) {
@@ -1160,7 +1166,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "distro",
@@ -1168,7 +1174,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"doc": "the export end date", "type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the export end date"},
 			},
 			map[string]interface{}{
 				"name":    "error",
@@ -1225,7 +1231,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "start_date",
-				"type": map[string]interface{}{"name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export start date", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export start date"},
 			},
 			map[string]interface{}{
 				"name": "success",

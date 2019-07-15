@@ -286,7 +286,9 @@ func toChangeObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		vv := o.(ChangeDate)
 		return vv.ToMap()
 	case *ChangeDate:
-		return (*o.(*ChangeDate)).ToMap()
+		return map[string]interface{}{
+			"ops.db.date": (*o.(*ChangeDate)).ToMap(),
+		}
 	case []ChangeDate:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]ChangeDate) {

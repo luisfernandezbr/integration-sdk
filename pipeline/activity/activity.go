@@ -321,7 +321,9 @@ func toActivityObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 		vv := o.(ActivityDate)
 		return vv.ToMap()
 	case *ActivityDate:
-		return (*o.(*ActivityDate)).ToMap()
+		return map[string]interface{}{
+			"pipeline.activity.date": (*o.(*ActivityDate)).ToMap(),
+		}
 	case []ActivityDate:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]ActivityDate) {
@@ -353,7 +355,9 @@ func toActivityObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 		vv := o.(ActivityUser)
 		return vv.ToMap()
 	case *ActivityUser:
-		return (*o.(*ActivityUser)).ToMap()
+		return map[string]interface{}{
+			"pipeline.activity.user": (*o.(*ActivityUser)).ToMap(),
+		}
 	case []ActivityUser:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]ActivityUser) {
@@ -806,7 +810,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
 			},
 			map[string]interface{}{
 				"name": "id",

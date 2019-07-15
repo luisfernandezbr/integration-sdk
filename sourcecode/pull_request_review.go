@@ -251,7 +251,9 @@ func toPullRequestReviewObject(o interface{}, isavro bool, isoptional bool, avro
 		vv := o.(PullRequestReviewCreated)
 		return vv.ToMap()
 	case *PullRequestReviewCreated:
-		return (*o.(*PullRequestReviewCreated)).ToMap()
+		return map[string]interface{}{
+			"sourcecode.created": (*o.(*PullRequestReviewCreated)).ToMap(),
+		}
 	case []PullRequestReviewCreated:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]PullRequestReviewCreated) {
@@ -677,7 +679,7 @@ func GetPullRequestReviewAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created",
-				"type": map[string]interface{}{"type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the review was created"},
+				"type": map[string]interface{}{"doc": "the timestamp in UTC that the review was created", "type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

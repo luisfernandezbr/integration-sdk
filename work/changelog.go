@@ -272,7 +272,9 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 		vv := o.(ChangelogCreated)
 		return vv.ToMap()
 	case *ChangelogCreated:
-		return (*o.(*ChangelogCreated)).ToMap()
+		return map[string]interface{}{
+			"work.created": (*o.(*ChangelogCreated)).ToMap(),
+		}
 	case []ChangelogCreated:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]ChangelogCreated) {
@@ -764,7 +766,7 @@ func GetChangelogAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created",
-				"type": map[string]interface{}{"type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when this change was created"},
+				"type": map[string]interface{}{"type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when this change was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

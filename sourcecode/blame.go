@@ -372,7 +372,9 @@ func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		vv := o.(BlameDate)
 		return vv.ToMap()
 	case *BlameDate:
-		return (*o.(*BlameDate)).ToMap()
+		return map[string]interface{}{
+			"sourcecode.date": (*o.(*BlameDate)).ToMap(),
+		}
 	case []BlameDate:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]BlameDate) {
@@ -390,7 +392,9 @@ func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		vv := o.(BlameLines)
 		return vv.ToMap()
 	case *BlameLines:
-		return (*o.(*BlameLines)).ToMap()
+		return map[string]interface{}{
+			"sourcecode.lines": (*o.(*BlameLines)).ToMap(),
+		}
 	case []BlameLines:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]BlameLines) {
@@ -1072,7 +1076,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"},
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"},
 			},
 			map[string]interface{}{
 				"name": "excluded",
@@ -1101,7 +1105,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"doc": "if the line is a comment", "type": "boolean", "name": "comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}}, "doc": "the individual line attributions"}},
 			},
 			map[string]interface{}{
 				"name": "loc",

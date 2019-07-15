@@ -242,7 +242,9 @@ func toCustomFieldObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		vv := o.(CustomFieldDate)
 		return vv.ToMap()
 	case *CustomFieldDate:
-		return (*o.(*CustomFieldDate)).ToMap()
+		return map[string]interface{}{
+			"pipeline.work.date": (*o.(*CustomFieldDate)).ToMap(),
+		}
 	case []CustomFieldDate:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]CustomFieldDate) {
@@ -627,7 +629,7 @@ func GetCustomFieldAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field", "type": "record"},
+				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "id",
