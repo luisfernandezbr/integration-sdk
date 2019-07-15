@@ -61,8 +61,12 @@ const (
 	CommitComplexityColumn = "complexity"
 	// CommitCreatedColumn is the created column name
 	CommitCreatedColumn = "created"
-	// CommitCreatedAtColumn is the created_ts column name
-	CommitCreatedAtColumn = "created_ts"
+	// CommitCreatedColumnEpochColumn is the epoch column property of the Created name
+	CommitCreatedColumnEpochColumn = "created->epoch"
+	// CommitCreatedColumnOffsetColumn is the offset column property of the Created name
+	CommitCreatedColumnOffsetColumn = "created->offset"
+	// CommitCreatedColumnRfc3339Column is the rfc3339 column property of the Created name
+	CommitCreatedColumnRfc3339Column = "created->rfc3339"
 	// CommitCustomerIDColumn is the customer_id column name
 	CommitCustomerIDColumn = "customer_id"
 	// CommitDeletionsColumn is the deletions column name
@@ -83,8 +87,8 @@ const (
 	CommitFilesColumnCommitIDColumn = "files->commit_id"
 	// CommitFilesColumnComplexityColumn is the complexity column property of the Files name
 	CommitFilesColumnComplexityColumn = "files->complexity"
-	// CommitFilesColumnCreatedAtColumn is the created_ts column property of the Files name
-	CommitFilesColumnCreatedAtColumn = "files->created_ts"
+	// CommitFilesColumnCreatedColumn is the created column property of the Files name
+	CommitFilesColumnCreatedColumn = "files->created"
 	// CommitFilesColumnDeletionsColumn is the deletions column property of the Files name
 	CommitFilesColumnDeletionsColumn = "files->deletions"
 	// CommitFilesColumnExcludedColumn is the excluded column property of the Files name
@@ -145,6 +149,27 @@ const (
 	CommitURLColumn = "url"
 )
 
+// CommitCreated represents the object structure for created
+type CommitCreated struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *CommitCreated) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
 // CommitFiles represents the object structure for files
 type CommitFiles struct {
 	// Additions the number of additions for the commit file
@@ -159,8 +184,8 @@ type CommitFiles struct {
 	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
 	// Complexity the complexity value for the file change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
-	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Created the timestamp in UTC that the commit was created
+	Created CommitCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// Deletions the number of deletions for the commit file
 	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// Excluded if the file was excluded from processing
@@ -209,8 +234,8 @@ func (o *CommitFiles) ToMap() map[string]interface{} {
 		"commit_id": o.CommitID,
 		// Complexity the complexity value for the file change
 		"complexity": o.Complexity,
-		// CreatedAt the timestamp in UTC that the commit was created
-		"created_ts": o.CreatedAt,
+		// Created the timestamp in UTC that the commit was created
+		"created": o.Created,
 		// Deletions the number of deletions for the commit file
 		"deletions": o.Deletions,
 		// Excluded if the file was excluded from processing
@@ -262,10 +287,8 @@ type Commit struct {
 	CommitterRefID string `json:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
 	// Complexity the complexity value for the change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
-	// Created date in rfc3339 format
-	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
-	// CreatedAt the timestamp in UTC that the commit was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Created the timestamp in UTC that the commit was created
+	Created CommitCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Deletions the number of deletions for the commit
@@ -437,6 +460,24 @@ func toCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		}
 		return arr
 
+	case CommitCreated:
+		vv := o.(CommitCreated)
+		return vv.ToMap()
+	case *CommitCreated:
+		return (*o.(*CommitCreated)).ToMap()
+	case []CommitCreated:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]CommitCreated) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]CommitCreated:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]CommitCreated)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	case CommitFiles:
 		vv := o.(CommitFiles)
 		return vv.ToMap()
@@ -504,7 +545,7 @@ func (o *Commit) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Commit) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedAt
+	var dt interface{} = o.Created
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -516,6 +557,8 @@ func (o *Commit) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case CommitCreated:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Commit")
 }
@@ -560,7 +603,7 @@ func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "created_ts",
+		Timestamp:         "created",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -693,8 +736,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"comments":         toCommitObject(o.Comments, isavro, false, "long"),
 		"committer_ref_id": toCommitObject(o.CommitterRefID, isavro, false, "string"),
 		"complexity":       toCommitObject(o.Complexity, isavro, false, "long"),
-		"created":          toCommitObject(o.Created, isavro, false, "string"),
-		"created_ts":       toCommitObject(o.CreatedAt, isavro, false, "long"),
+		"created":          toCommitObject(o.Created, isavro, false, "created"),
 		"customer_id":      toCommitObject(o.CustomerID, isavro, false, "string"),
 		"deletions":        toCommitObject(o.Deletions, isavro, false, "long"),
 		"excluded":         toCommitObject(o.Excluded, isavro, false, "boolean"),
@@ -813,30 +855,17 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.Complexity = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["created"].(string); ok {
+	if val, ok := kv["created"].(CommitCreated); ok {
 		o.Created = val
 	} else {
 		val := kv["created"]
 		if val == nil {
-			o.Created = ""
+			o.Created = CommitCreated{}
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Created = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.CreatedAt = number.ToInt64Any(val)
+			o.Created = CommitCreated{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Created)
+
 		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
@@ -1098,7 +1127,6 @@ func (o *Commit) Hash() string {
 	args = append(args, o.CommitterRefID)
 	args = append(args, o.Complexity)
 	args = append(args, o.Created)
-	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Deletions)
 	args = append(args, o.Excluded)
@@ -1161,11 +1189,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
+				"type": map[string]interface{}{"doc": "the timestamp in UTC that the commit was created", "type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1181,7 +1205,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"doc": "the number of blank lines in the file", "type": "long", "name": "blanks"}, map[string]interface{}{"name": "comments", "doc": "the number of comment lines in the file", "type": "long"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": "long", "name": "created_ts", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"name": "filename", "doc": "the filename", "type": "string"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"doc": "the order value for the file in the change set", "type": "long", "name": "ordinal"}, map[string]interface{}{"doc": "if the file was renamed", "type": "boolean", "name": "renamed"}, map[string]interface{}{"doc": "the original file name", "type": "string", "name": "renamed_from"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"doc": "the status of the change", "type": "string", "name": "status"}}, "doc": "the files touched by this commit"}},
+				"type": map[string]interface{}{"items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the number of additions for the commit file", "type": "long", "name": "additions"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"name": "blanks", "doc": "the number of blank lines in the file", "type": "long"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"name": "commit_id", "doc": "the unique id for the commit", "type": "string"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"name": "created", "doc": "the timestamp in UTC that the commit was created", "type": map[string]interface{}{"type": "record", "name": "files.created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the commit was created"}}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"doc": "the license which was detected for the file", "type": "string", "name": "license"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"doc": "the number of lines in the file", "type": "long", "name": "loc"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"name": "renamed", "doc": "if the file was renamed", "type": "boolean"}, map[string]interface{}{"doc": "the original file name", "type": "string", "name": "renamed_from"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit", "type": "record", "name": "files"}, "type": "array", "name": "files"},
 			},
 			map[string]interface{}{
 				"name": "files_changed",

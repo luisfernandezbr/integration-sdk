@@ -46,8 +46,12 @@ const (
 const (
 	// ChangelogCreatedColumn is the created column name
 	ChangelogCreatedColumn = "created"
-	// ChangelogCreatedAtColumn is the created_ts column name
-	ChangelogCreatedAtColumn = "created_ts"
+	// ChangelogCreatedColumnEpochColumn is the epoch column property of the Created name
+	ChangelogCreatedColumnEpochColumn = "created->epoch"
+	// ChangelogCreatedColumnOffsetColumn is the offset column property of the Created name
+	ChangelogCreatedColumnOffsetColumn = "created->offset"
+	// ChangelogCreatedColumnRfc3339Column is the rfc3339 column property of the Created name
+	ChangelogCreatedColumnRfc3339Column = "created->rfc3339"
 	// ChangelogCustomerIDColumn is the customer_id column name
 	ChangelogCustomerIDColumn = "customer_id"
 	// ChangelogFieldColumn is the field column name
@@ -76,12 +80,31 @@ const (
 	ChangelogUserIDColumn = "user_id"
 )
 
+// ChangelogCreated represents the object structure for created
+type ChangelogCreated struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *ChangelogCreated) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
 // Changelog change log
 type Changelog struct {
-	// Created date in rfc3339 format
-	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
-	// CreatedAt the timestamp in UTC when this change was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Created the date when this change was created
+	Created ChangelogCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Field name of the field that was changed
@@ -245,6 +268,24 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 		}
 		return arr
 
+	case ChangelogCreated:
+		vv := o.(ChangelogCreated)
+		return vv.ToMap()
+	case *ChangelogCreated:
+		return (*o.(*ChangelogCreated)).ToMap()
+	case []ChangelogCreated:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]ChangelogCreated) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]ChangelogCreated:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]ChangelogCreated)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -291,7 +332,7 @@ func (o *Changelog) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Changelog) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedAt
+	var dt interface{} = o.Created
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -303,6 +344,8 @@ func (o *Changelog) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case ChangelogCreated:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Changelog")
 }
@@ -346,7 +389,7 @@ func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "issue_id",
-		Timestamp:         "created_ts",
+		Timestamp:         "created",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -469,8 +512,7 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"created":     toChangelogObject(o.Created, isavro, false, "string"),
-		"created_ts":  toChangelogObject(o.CreatedAt, isavro, false, "long"),
+		"created":     toChangelogObject(o.Created, isavro, false, "created"),
 		"customer_id": toChangelogObject(o.CustomerID, isavro, false, "string"),
 		"field":       toChangelogObject(o.Field, isavro, false, "string"),
 		"field_type":  toChangelogObject(o.FieldType, isavro, false, "string"),
@@ -494,30 +536,17 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["created"].(string); ok {
+	if val, ok := kv["created"].(ChangelogCreated); ok {
 		o.Created = val
 	} else {
 		val := kv["created"]
 		if val == nil {
-			o.Created = ""
+			o.Created = ChangelogCreated{}
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Created = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.CreatedAt = number.ToInt64Any(val)
+			o.Created = ChangelogCreated{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Created)
+
 		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
@@ -696,7 +725,6 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 func (o *Changelog) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Created)
-	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Field)
 	args = append(args, o.FieldType)
@@ -727,11 +755,7 @@ func GetChangelogAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
+				"type": map[string]interface{}{"type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when this change was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

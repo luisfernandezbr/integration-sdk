@@ -58,8 +58,12 @@ const (
 	BlameCustomerIDColumn = "customer_id"
 	// BlameDateColumn is the date column name
 	BlameDateColumn = "date"
-	// BlameDateAtColumn is the date_ts column name
-	BlameDateAtColumn = "date_ts"
+	// BlameDateColumnEpochColumn is the epoch column property of the Date name
+	BlameDateColumnEpochColumn = "date->epoch"
+	// BlameDateColumnOffsetColumn is the offset column property of the Date name
+	BlameDateColumnOffsetColumn = "date->offset"
+	// BlameDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	BlameDateColumnRfc3339Column = "date->rfc3339"
 	// BlameExcludedColumn is the excluded column name
 	BlameExcludedColumn = "excluded"
 	// BlameExcludedReasonColumn is the excluded_reason column name
@@ -103,6 +107,27 @@ const (
 	// BlameStatusColumn is the status column name
 	BlameStatusColumn = "status"
 )
+
+// BlameDate represents the object structure for date
+type BlameDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *BlameDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
 
 // BlameLines represents the object structure for lines
 type BlameLines struct {
@@ -174,10 +199,8 @@ type Blame struct {
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Date the date of the change in RFC3339 format
-	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
-	// DateAt the date of the change
-	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
+	// Date the date of the change
+	Date BlameDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Excluded if the result was excluded
 	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
 	// ExcludedReason why the result was excluded
@@ -345,6 +368,24 @@ func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		}
 		return arr
 
+	case BlameDate:
+		vv := o.(BlameDate)
+		return vv.ToMap()
+	case *BlameDate:
+		return (*o.(*BlameDate)).ToMap()
+	case []BlameDate:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]BlameDate) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]BlameDate:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]BlameDate)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	case BlameLines:
 		vv := o.(BlameLines)
 		return vv.ToMap()
@@ -429,7 +470,7 @@ func (o *Blame) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Blame) GetTimestamp() time.Time {
-	var dt interface{} = o.DateAt
+	var dt interface{} = o.Date
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -441,6 +482,8 @@ func (o *Blame) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case BlameDate:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Blame")
 }
@@ -484,7 +527,7 @@ func (o *Blame) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "date_ts",
+		Timestamp:         "date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -615,8 +658,7 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 		"commit_id":       toBlameObject(o.CommitID, isavro, false, "string"),
 		"complexity":      toBlameObject(o.Complexity, isavro, false, "long"),
 		"customer_id":     toBlameObject(o.CustomerID, isavro, false, "string"),
-		"date":            toBlameObject(o.Date, isavro, false, "string"),
-		"date_ts":         toBlameObject(o.DateAt, isavro, false, "long"),
+		"date":            toBlameObject(o.Date, isavro, false, "date"),
 		"excluded":        toBlameObject(o.Excluded, isavro, false, "boolean"),
 		"excluded_reason": toBlameObject(o.ExcludedReason, isavro, false, "string"),
 		"filename":        toBlameObject(o.Filename, isavro, false, "string"),
@@ -707,30 +749,17 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date"].(string); ok {
+	if val, ok := kv["date"].(BlameDate); ok {
 		o.Date = val
 	} else {
 		val := kv["date"]
 		if val == nil {
-			o.Date = ""
+			o.Date = BlameDate{}
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Date = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["date_ts"].(int64); ok {
-		o.DateAt = val
-	} else {
-		val := kv["date_ts"]
-		if val == nil {
-			o.DateAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.DateAt = number.ToInt64Any(val)
+			o.Date = BlameDate{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Date)
+
 		}
 	}
 	if val, ok := kv["excluded"].(bool); ok {
@@ -982,7 +1011,6 @@ func (o *Blame) Hash() string {
 	args = append(args, o.Complexity)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Date)
-	args = append(args, o.DateAt)
 	args = append(args, o.Excluded)
 	args = append(args, o.ExcludedReason)
 	args = append(args, o.Filename)
@@ -1035,11 +1063,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "date_ts",
-				"type": "long",
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"},
 			},
 			map[string]interface{}{
 				"name": "excluded",
@@ -1068,7 +1092,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}, "type": "array", "name": "lines"},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
 			},
 			map[string]interface{}{
 				"name": "loc",

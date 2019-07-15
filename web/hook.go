@@ -26,7 +26,6 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -46,8 +45,14 @@ const (
 const (
 	// HookDataColumn is the data column name
 	HookDataColumn = "data"
-	// HookDateAtColumn is the date_ts column name
-	HookDateAtColumn = "date_ts"
+	// HookDateColumn is the date column name
+	HookDateColumn = "date"
+	// HookDateColumnEpochColumn is the epoch column property of the Date name
+	HookDateColumnEpochColumn = "date->epoch"
+	// HookDateColumnOffsetColumn is the offset column property of the Date name
+	HookDateColumnOffsetColumn = "date->offset"
+	// HookDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	HookDateColumnRfc3339Column = "date->rfc3339"
 	// HookHeadersColumn is the headers column name
 	HookHeadersColumn = "headers"
 	// HookIDColumn is the id column name
@@ -58,12 +63,33 @@ const (
 	HookTokenColumn = "token"
 )
 
+// HookDate represents the object structure for date
+type HookDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *HookDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
 // Hook hook is a webhook event which is received from an external source
 type Hook struct {
 	// Data the webhook data payload base64 encoded
 	Data string `json:"data" bson:"data" yaml:"data" faker:"-"`
-	// DateAt the date when the hook was received in UTC format
-	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
+	// Date the date when the hook was received
+	Date HookDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Headers the headers of the incoming webhook
 	Headers map[string]string `json:"headers" bson:"headers" yaml:"headers" faker:"-"`
 	// ID the primary key for this model instance
@@ -209,6 +235,24 @@ func toHookObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		}
 		return arr
 
+	case HookDate:
+		vv := o.(HookDate)
+		return vv.ToMap()
+	case *HookDate:
+		return (*o.(*HookDate)).ToMap()
+	case []HookDate:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]HookDate) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]HookDate:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]HookDate)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -236,7 +280,7 @@ func (o *Hook) setDefaults() {
 // GetID returns the ID for the object
 func (o *Hook) GetID() string {
 	if o.ID == "" {
-		o.ID = hash.Values(o.System, o.Token, o.DateAt)
+		o.ID = hash.Values(o.System, o.Token, o.Date.Epoch)
 	}
 	return o.ID
 }
@@ -252,7 +296,7 @@ func (o *Hook) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Hook) GetTimestamp() time.Time {
-	var dt interface{} = o.DateAt
+	var dt interface{} = o.Date
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -264,6 +308,8 @@ func (o *Hook) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case HookDate:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Hook")
 }
@@ -301,7 +347,7 @@ func (o *Hook) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "system",
-		Timestamp:         "date_ts",
+		Timestamp:         "date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -421,7 +467,7 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults()
 	return map[string]interface{}{
 		"data":    toHookObject(o.Data, isavro, false, "string"),
-		"date_ts": toHookObject(o.DateAt, isavro, false, "long"),
+		"date":    toHookObject(o.Date, isavro, false, "date"),
 		"headers": toHookObject(o.Headers, isavro, false, "string"),
 		"id":      toHookObject(o.ID, isavro, false, "string"),
 		"system":  toHookObject(o.System, isavro, false, "string"),
@@ -448,17 +494,17 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 			o.Data = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date_ts"].(int64); ok {
-		o.DateAt = val
+	if val, ok := kv["date"].(HookDate); ok {
+		o.Date = val
 	} else {
-		val := kv["date_ts"]
+		val := kv["date"]
 		if val == nil {
-			o.DateAt = number.ToInt64Any(nil)
+			o.Date = HookDate{}
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.DateAt = number.ToInt64Any(val)
+			o.Date = HookDate{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Date)
+
 		}
 	}
 	if val := kv["headers"]; val != nil {
@@ -536,8 +582,8 @@ func GetHookAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date_ts",
-				"type": "long",
+				"name": "date",
+				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the hook was received", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "headers",

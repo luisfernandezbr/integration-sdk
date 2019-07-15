@@ -26,7 +26,6 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -46,8 +45,14 @@ const (
 const (
 	// PullRequestCommentBodyColumn is the body column name
 	PullRequestCommentBodyColumn = "body"
-	// PullRequestCommentCreatedAtColumn is the created_ts column name
-	PullRequestCommentCreatedAtColumn = "created_ts"
+	// PullRequestCommentCreatedColumn is the created column name
+	PullRequestCommentCreatedColumn = "created"
+	// PullRequestCommentCreatedColumnEpochColumn is the epoch column property of the Created name
+	PullRequestCommentCreatedColumnEpochColumn = "created->epoch"
+	// PullRequestCommentCreatedColumnOffsetColumn is the offset column property of the Created name
+	PullRequestCommentCreatedColumnOffsetColumn = "created->offset"
+	// PullRequestCommentCreatedColumnRfc3339Column is the rfc3339 column property of the Created name
+	PullRequestCommentCreatedColumnRfc3339Column = "created->rfc3339"
 	// PullRequestCommentCustomerIDColumn is the customer_id column name
 	PullRequestCommentCustomerIDColumn = "customer_id"
 	// PullRequestCommentIDColumn is the id column name
@@ -60,18 +65,66 @@ const (
 	PullRequestCommentRefTypeColumn = "ref_type"
 	// PullRequestCommentRepoIDColumn is the repo_id column name
 	PullRequestCommentRepoIDColumn = "repo_id"
-	// PullRequestCommentUpdatedAtColumn is the updated_ts column name
-	PullRequestCommentUpdatedAtColumn = "updated_ts"
+	// PullRequestCommentUpdatedColumn is the updated column name
+	PullRequestCommentUpdatedColumn = "updated"
+	// PullRequestCommentUpdatedColumnEpochColumn is the epoch column property of the Updated name
+	PullRequestCommentUpdatedColumnEpochColumn = "updated->epoch"
+	// PullRequestCommentUpdatedColumnOffsetColumn is the offset column property of the Updated name
+	PullRequestCommentUpdatedColumnOffsetColumn = "updated->offset"
+	// PullRequestCommentUpdatedColumnRfc3339Column is the rfc3339 column property of the Updated name
+	PullRequestCommentUpdatedColumnRfc3339Column = "updated->rfc3339"
 	// PullRequestCommentUserRefIDColumn is the user_ref_id column name
 	PullRequestCommentUserRefIDColumn = "user_ref_id"
 )
+
+// PullRequestCommentCreated represents the object structure for created
+type PullRequestCommentCreated struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *PullRequestCommentCreated) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
+// PullRequestCommentUpdated represents the object structure for updated
+type PullRequestCommentUpdated struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *PullRequestCommentUpdated) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
 
 // PullRequestComment the comment for a given pull request
 type PullRequestComment struct {
 	// Body the body of the comment
 	Body string `json:"body" bson:"body" yaml:"body" faker:"commit_message"`
-	// CreatedAt the timestamp in UTC that the comment was created
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	// Created the timestamp in UTC that the comment was created
+	Created PullRequestCommentCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
@@ -84,8 +137,8 @@ type PullRequestComment struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
-	// UpdatedAt the timestamp in UTC that the comment was closed
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Updated the timestamp in UTC that the comment was closed
+	Updated PullRequestCommentUpdated `json:"updated" bson:"updated" yaml:"updated" faker:"-"`
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -225,6 +278,42 @@ func toPullRequestCommentObject(o interface{}, isavro bool, isoptional bool, avr
 		}
 		return arr
 
+	case PullRequestCommentCreated:
+		vv := o.(PullRequestCommentCreated)
+		return vv.ToMap()
+	case *PullRequestCommentCreated:
+		return (*o.(*PullRequestCommentCreated)).ToMap()
+	case []PullRequestCommentCreated:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]PullRequestCommentCreated) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]PullRequestCommentCreated:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]PullRequestCommentCreated)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case PullRequestCommentUpdated:
+		vv := o.(PullRequestCommentUpdated)
+		return vv.ToMap()
+	case *PullRequestCommentUpdated:
+		return (*o.(*PullRequestCommentUpdated)).ToMap()
+	case []PullRequestCommentUpdated:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]PullRequestCommentUpdated) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]PullRequestCommentUpdated:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]PullRequestCommentUpdated)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -271,7 +360,7 @@ func (o *PullRequestComment) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequestComment) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
+	var dt interface{} = o.Updated
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -283,6 +372,8 @@ func (o *PullRequestComment) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case PullRequestCommentUpdated:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for PullRequestComment")
 }
@@ -335,7 +426,7 @@ func (o *PullRequestComment) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "updated_ts",
+		Timestamp:         "updated",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -459,14 +550,14 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults()
 	return map[string]interface{}{
 		"body":            toPullRequestCommentObject(o.Body, isavro, false, "string"),
-		"created_ts":      toPullRequestCommentObject(o.CreatedAt, isavro, false, "long"),
+		"created":         toPullRequestCommentObject(o.Created, isavro, false, "created"),
 		"customer_id":     toPullRequestCommentObject(o.CustomerID, isavro, false, "string"),
 		"id":              toPullRequestCommentObject(o.ID, isavro, false, "string"),
 		"pull_request_id": toPullRequestCommentObject(o.PullRequestID, isavro, false, "string"),
 		"ref_id":          toPullRequestCommentObject(o.RefID, isavro, false, "string"),
 		"ref_type":        toPullRequestCommentObject(o.RefType, isavro, false, "string"),
 		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
-		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, isavro, false, "long"),
+		"updated":         toPullRequestCommentObject(o.Updated, isavro, false, "updated"),
 		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, isavro, false, "string"),
 		"hashcode":        toPullRequestCommentObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -491,17 +582,17 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 			o.Body = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
+	if val, ok := kv["created"].(PullRequestCommentCreated); ok {
+		o.Created = val
 	} else {
-		val := kv["created_ts"]
+		val := kv["created"]
 		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
+			o.Created = PullRequestCommentCreated{}
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.CreatedAt = number.ToInt64Any(val)
+			o.Created = PullRequestCommentCreated{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Created)
+
 		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
@@ -582,17 +673,17 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
+	if val, ok := kv["updated"].(PullRequestCommentUpdated); ok {
+		o.Updated = val
 	} else {
-		val := kv["updated_ts"]
+		val := kv["updated"]
 		if val == nil {
-			o.UpdatedAt = number.ToInt64Any(nil)
+			o.Updated = PullRequestCommentUpdated{}
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.UpdatedAt = number.ToInt64Any(val)
+			o.Updated = PullRequestCommentUpdated{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Updated)
+
 		}
 	}
 	if val, ok := kv["user_ref_id"].(string); ok {
@@ -615,14 +706,14 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 func (o *PullRequestComment) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Body)
-	args = append(args, o.CreatedAt)
+	args = append(args, o.Created)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
-	args = append(args, o.UpdatedAt)
+	args = append(args, o.Updated)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -644,8 +735,8 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
+				"name": "created",
+				"type": map[string]interface{}{"type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the timestamp in UTC that the comment was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -672,8 +763,8 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
+				"name": "updated",
+				"type": map[string]interface{}{"name": "updated", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the comment was closed", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "user_ref_id",

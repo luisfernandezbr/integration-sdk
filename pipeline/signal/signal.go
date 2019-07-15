@@ -56,8 +56,6 @@ const (
 	SignalDateColumnOffsetColumn = "date->offset"
 	// SignalDateColumnRfc3339Column is the rfc3339 column property of the Date name
 	SignalDateColumnRfc3339Column = "date->rfc3339"
-	// SignalDateAtColumn is the date_ts column name
-	SignalDateAtColumn = "date_ts"
 	// SignalIDColumn is the id column name
 	SignalIDColumn = "id"
 	// SignalMetadataColumn is the metadata column name
@@ -109,10 +107,8 @@ type Signal struct {
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Date date object
+	// Date the date when the signal was calculated
 	Date SignalDate `json:"date" bson:"date" yaml:"date" faker:"-"`
-	// DateAt the date when the signal was calculated
-	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Metadata the metadata for the signal
@@ -336,7 +332,7 @@ func (o *Signal) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Signal) GetTimestamp() time.Time {
-	var dt interface{} = o.DateAt
+	var dt interface{} = o.Date
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -348,6 +344,8 @@ func (o *Signal) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case SignalDate:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Signal")
 }
@@ -400,7 +398,7 @@ func (o *Signal) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "date_ts",
+		Timestamp:         "date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -526,7 +524,6 @@ func (o *Signal) ToMap(avro ...bool) map[string]interface{} {
 		"active":          toSignalObject(o.Active, isavro, false, "boolean"),
 		"customer_id":     toSignalObject(o.CustomerID, isavro, false, "string"),
 		"date":            toSignalObject(o.Date, isavro, false, "date"),
-		"date_ts":         toSignalObject(o.DateAt, isavro, false, "long"),
 		"id":              toSignalObject(o.ID, isavro, false, "string"),
 		"metadata":        toSignalObject(o.Metadata, isavro, false, "string"),
 		"name":            toSignalObject(o.Name, isavro, false, "string"),
@@ -582,19 +579,6 @@ func (o *Signal) FromMap(kv map[string]interface{}) {
 			b, _ := json.Marshal(val)
 			json.Unmarshal(b, &o.Date)
 
-		}
-	}
-	if val, ok := kv["date_ts"].(int64); ok {
-		o.DateAt = val
-	} else {
-		val := kv["date_ts"]
-		if val == nil {
-			o.DateAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.DateAt = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -743,7 +727,6 @@ func (o *Signal) Hash() string {
 	args = append(args, o.Active)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Date)
-	args = append(args, o.DateAt)
 	args = append(args, o.ID)
 	args = append(args, o.Metadata)
 	args = append(args, o.Name)
@@ -780,11 +763,7 @@ func GetSignalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "date",
-				"type": map[string]interface{}{"name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "date_ts",
-				"type": "long",
+				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the signal was calculated"},
 			},
 			map[string]interface{}{
 				"name": "id",

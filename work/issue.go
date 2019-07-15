@@ -49,6 +49,12 @@ const (
 	IssueAssigneeRefIDColumn = "assignee_ref_id"
 	// IssueCreatedColumn is the created column name
 	IssueCreatedColumn = "created"
+	// IssueCreatedColumnEpochColumn is the epoch column property of the Created name
+	IssueCreatedColumnEpochColumn = "created->epoch"
+	// IssueCreatedColumnOffsetColumn is the offset column property of the Created name
+	IssueCreatedColumnOffsetColumn = "created->offset"
+	// IssueCreatedColumnRfc3339Column is the rfc3339 column property of the Created name
+	IssueCreatedColumnRfc3339Column = "created->rfc3339"
 	// IssueCreatorRefIDColumn is the creator_ref_id column name
 	IssueCreatorRefIDColumn = "creator_ref_id"
 	// IssueCustomFieldsColumn is the customFields column name
@@ -63,6 +69,12 @@ const (
 	IssueCustomerIDColumn = "customer_id"
 	// IssueDueDateColumn is the due_date column name
 	IssueDueDateColumn = "due_date"
+	// IssueDueDateColumnEpochColumn is the epoch column property of the DueDate name
+	IssueDueDateColumnEpochColumn = "due_date->epoch"
+	// IssueDueDateColumnOffsetColumn is the offset column property of the DueDate name
+	IssueDueDateColumnOffsetColumn = "due_date->offset"
+	// IssueDueDateColumnRfc3339Column is the rfc3339 column property of the DueDate name
+	IssueDueDateColumnRfc3339Column = "due_date->rfc3339"
 	// IssueIDColumn is the id column name
 	IssueIDColumn = "id"
 	// IssueIdentifierColumn is the identifier column name
@@ -91,9 +103,36 @@ const (
 	IssueTypeColumn = "type"
 	// IssueUpdatedColumn is the updated column name
 	IssueUpdatedColumn = "updated"
+	// IssueUpdatedColumnEpochColumn is the epoch column property of the Updated name
+	IssueUpdatedColumnEpochColumn = "updated->epoch"
+	// IssueUpdatedColumnOffsetColumn is the offset column property of the Updated name
+	IssueUpdatedColumnOffsetColumn = "updated->offset"
+	// IssueUpdatedColumnRfc3339Column is the rfc3339 column property of the Updated name
+	IssueUpdatedColumnRfc3339Column = "updated->rfc3339"
 	// IssueURLColumn is the url column name
 	IssueURLColumn = "url"
 )
+
+// IssueCreated represents the object structure for created
+type IssueCreated struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *IssueCreated) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
 
 // IssueCustomFields represents the object structure for customFields
 type IssueCustomFields struct {
@@ -116,12 +155,54 @@ func (o *IssueCustomFields) ToMap() map[string]interface{} {
 	}
 }
 
+// IssueDueDate represents the object structure for due_date
+type IssueDueDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *IssueDueDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
+// IssueUpdated represents the object structure for updated
+type IssueUpdated struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *IssueUpdated) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
 // Issue the issue is a specific work item for a project
 type Issue struct {
 	// AssigneeRefID user id of the assignee
 	AssigneeRefID string `json:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
 	// Created the date that the issue was created
-	Created string `json:"created" bson:"created" yaml:"created" faker:"-"`
+	Created IssueCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// CreatorRefID user id of the creator
 	CreatorRefID string `json:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
 	// CustomFields list of custom fields and their values
@@ -129,7 +210,7 @@ type Issue struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DueDate due date of the issue
-	DueDate string `json:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
+	DueDate IssueDueDate `json:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the issue
@@ -157,7 +238,7 @@ type Issue struct {
 	// Type type of issue
 	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// Updated the date that the issue was updated
-	Updated string `json:"updated" bson:"updated" yaml:"updated" faker:"-"`
+	Updated IssueUpdated `json:"updated" bson:"updated" yaml:"updated" faker:"-"`
 	// URL the url to the issue page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -297,6 +378,24 @@ func toIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		}
 		return arr
 
+	case IssueCreated:
+		vv := o.(IssueCreated)
+		return vv.ToMap()
+	case *IssueCreated:
+		return (*o.(*IssueCreated)).ToMap()
+	case []IssueCreated:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]IssueCreated) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]IssueCreated:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]IssueCreated)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	case IssueCustomFields:
 		vv := o.(IssueCustomFields)
 		return vv.ToMap()
@@ -311,6 +410,42 @@ func toIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *[]IssueCustomFields:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]IssueCustomFields)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case IssueDueDate:
+		vv := o.(IssueDueDate)
+		return vv.ToMap()
+	case *IssueDueDate:
+		return (*o.(*IssueDueDate)).ToMap()
+	case []IssueDueDate:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]IssueDueDate) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]IssueDueDate:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]IssueDueDate)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case IssueUpdated:
+		vv := o.(IssueUpdated)
+		return vv.ToMap()
+	case *IssueUpdated:
+		return (*o.(*IssueUpdated)).ToMap()
+	case []IssueUpdated:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]IssueUpdated) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]IssueUpdated:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]IssueUpdated)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -379,6 +514,8 @@ func (o *Issue) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case IssueUpdated:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Issue")
 }
@@ -552,11 +689,11 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults()
 	return map[string]interface{}{
 		"assignee_ref_id": toIssueObject(o.AssigneeRefID, isavro, false, "string"),
-		"created":         toIssueObject(o.Created, isavro, false, "string"),
+		"created":         toIssueObject(o.Created, isavro, false, "created"),
 		"creator_ref_id":  toIssueObject(o.CreatorRefID, isavro, false, "string"),
 		"customFields":    toIssueObject(o.CustomFields, isavro, false, "customFields"),
 		"customer_id":     toIssueObject(o.CustomerID, isavro, false, "string"),
-		"due_date":        toIssueObject(o.DueDate, isavro, false, "string"),
+		"due_date":        toIssueObject(o.DueDate, isavro, false, "due_date"),
 		"id":              toIssueObject(o.ID, isavro, false, "string"),
 		"identifier":      toIssueObject(o.Identifier, isavro, false, "string"),
 		"parent_id":       toIssueObject(o.ParentID, isavro, false, "string"),
@@ -570,7 +707,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"tags":            toIssueObject(o.Tags, isavro, false, "tags"),
 		"title":           toIssueObject(o.Title, isavro, false, "string"),
 		"type":            toIssueObject(o.Type, isavro, false, "string"),
-		"updated":         toIssueObject(o.Updated, isavro, false, "string"),
+		"updated":         toIssueObject(o.Updated, isavro, false, "updated"),
 		"url":             toIssueObject(o.URL, isavro, false, "string"),
 		"hashcode":        toIssueObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -595,17 +732,17 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.AssigneeRefID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["created"].(string); ok {
+	if val, ok := kv["created"].(IssueCreated); ok {
 		o.Created = val
 	} else {
 		val := kv["created"]
 		if val == nil {
-			o.Created = ""
+			o.Created = IssueCreated{}
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Created = fmt.Sprintf("%v", val)
+			o.Created = IssueCreated{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Created)
+
 		}
 	}
 	if val, ok := kv["creator_ref_id"].(string); ok {
@@ -677,17 +814,17 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["due_date"].(string); ok {
+	if val, ok := kv["due_date"].(IssueDueDate); ok {
 		o.DueDate = val
 	} else {
 		val := kv["due_date"]
 		if val == nil {
-			o.DueDate = ""
+			o.DueDate = IssueDueDate{}
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.DueDate = fmt.Sprintf("%v", val)
+			o.DueDate = IssueDueDate{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.DueDate)
+
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -893,17 +1030,17 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.Type = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["updated"].(string); ok {
+	if val, ok := kv["updated"].(IssueUpdated); ok {
 		o.Updated = val
 	} else {
 		val := kv["updated"]
 		if val == nil {
-			o.Updated = ""
+			o.Updated = IssueUpdated{}
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Updated = fmt.Sprintf("%v", val)
+			o.Updated = IssueUpdated{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Updated)
+
 		}
 	}
 	if val, ok := kv["url"].(string); ok {
@@ -967,7 +1104,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created",
-				"type": "string",
+				"type": map[string]interface{}{"type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date that the issue was created"},
 			},
 			map[string]interface{}{
 				"name": "creator_ref_id",
@@ -975,7 +1112,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the id of the custom field", "type": "string"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the id of the custom field", "type": "string"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"doc": "the value of the custom field", "type": "string", "name": "value"}}, "doc": "list of custom fields and their values"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -983,7 +1120,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "due_date",
-				"type": "string",
+				"type": map[string]interface{}{"type": "record", "name": "due_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "due date of the issue"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1027,7 +1164,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "title",
@@ -1039,7 +1176,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated",
-				"type": "string",
+				"type": map[string]interface{}{"type": "record", "name": "updated", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the issue was updated"},
 			},
 			map[string]interface{}{
 				"name": "url",

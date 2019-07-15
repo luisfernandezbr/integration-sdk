@@ -26,7 +26,6 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -46,8 +45,14 @@ const (
 const (
 	// MetricCustomerIDColumn is the customer_id column name
 	MetricCustomerIDColumn = "customer_id"
-	// MetricDateAtColumn is the date_ts column name
-	MetricDateAtColumn = "date_ts"
+	// MetricDateColumn is the date column name
+	MetricDateColumn = "date"
+	// MetricDateColumnEpochColumn is the epoch column property of the Date name
+	MetricDateColumnEpochColumn = "date->epoch"
+	// MetricDateColumnOffsetColumn is the offset column property of the Date name
+	MetricDateColumnOffsetColumn = "date->offset"
+	// MetricDateColumnRfc3339Column is the rfc3339 column property of the Date name
+	MetricDateColumnRfc3339Column = "date->rfc3339"
 	// MetricIDColumn is the id column name
 	MetricIDColumn = "id"
 	// MetricNameColumn is the name column name
@@ -62,12 +67,33 @@ const (
 	MetricValueColumn = "value"
 )
 
+// MetricDate represents the object structure for date
+type MetricDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *MetricDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
 // Metric individual metric details
 type Metric struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// DateAt the date when the metric was created
-	DateAt int64 `json:"date_ts" bson:"date_ts" yaml:"date_ts" faker:"-"`
+	// Date the date when the metric was created
+	Date MetricDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the metric name
@@ -217,6 +243,24 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		}
 		return arr
 
+	case MetricDate:
+		vv := o.(MetricDate)
+		return vv.ToMap()
+	case *MetricDate:
+		return (*o.(*MetricDate)).ToMap()
+	case []MetricDate:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]MetricDate) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]MetricDate:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]MetricDate)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -263,7 +307,7 @@ func (o *Metric) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Metric) GetTimestamp() time.Time {
-	var dt interface{} = o.DateAt
+	var dt interface{} = o.Date
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -275,6 +319,8 @@ func (o *Metric) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case MetricDate:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Metric")
 }
@@ -318,7 +364,7 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "date_ts",
+		Timestamp:         "date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -442,7 +488,7 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults()
 	return map[string]interface{}{
 		"customer_id": toMetricObject(o.CustomerID, isavro, false, "string"),
-		"date_ts":     toMetricObject(o.DateAt, isavro, false, "long"),
+		"date":        toMetricObject(o.Date, isavro, false, "date"),
 		"id":          toMetricObject(o.ID, isavro, false, "string"),
 		"name":        toMetricObject(o.Name, isavro, false, "string"),
 		"project_id":  toMetricObject(o.ProjectID, isavro, false, "string"),
@@ -472,17 +518,17 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date_ts"].(int64); ok {
-		o.DateAt = val
+	if val, ok := kv["date"].(MetricDate); ok {
+		o.Date = val
 	} else {
-		val := kv["date_ts"]
+		val := kv["date"]
 		if val == nil {
-			o.DateAt = number.ToInt64Any(nil)
+			o.Date = MetricDate{}
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.DateAt = number.ToInt64Any(val)
+			o.Date = MetricDate{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Date)
+
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -570,7 +616,7 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 func (o *Metric) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
-	args = append(args, o.DateAt)
+	args = append(args, o.Date)
 	args = append(args, o.ID)
 	args = append(args, o.Name)
 	args = append(args, o.ProjectID)
@@ -597,8 +643,8 @@ func GetMetricAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date_ts",
-				"type": "long",
+				"name": "date",
+				"type": map[string]interface{}{"doc": "the date when the metric was created", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "id",

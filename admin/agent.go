@@ -44,8 +44,14 @@ const (
 )
 
 const (
-	// AgentCompletedAtColumn is the completed_ts column name
-	AgentCompletedAtColumn = "completed_ts"
+	// AgentCompletedColumn is the completed column name
+	AgentCompletedColumn = "completed"
+	// AgentCompletedColumnEpochColumn is the epoch column property of the Completed name
+	AgentCompletedColumnEpochColumn = "completed->epoch"
+	// AgentCompletedColumnOffsetColumn is the offset column property of the Completed name
+	AgentCompletedColumnOffsetColumn = "completed->offset"
+	// AgentCompletedColumnRfc3339Column is the rfc3339 column property of the Completed name
+	AgentCompletedColumnRfc3339Column = "completed->rfc3339"
 	// AgentCreatedAtColumn is the created_ts column name
 	AgentCreatedAtColumn = "created_ts"
 	// AgentCustomerIDColumn is the customer_id column name
@@ -64,10 +70,31 @@ const (
 	AgentUUIDColumn = "uuid"
 )
 
+// AgentCompleted represents the object structure for completed
+type AgentCompleted struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *AgentCompleted) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
 // Agent Agent metadata for an enrolled agent
 type Agent struct {
-	// CompletedAt Last time the agent completed setup
-	CompletedAt int64 `json:"completed_ts" bson:"completed_ts" yaml:"completed_ts" faker:"-"`
+	// Completed Last time the agent completed setup
+	Completed AgentCompleted `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
 	// CreatedAt the date the record was created in Epoch time
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -221,6 +248,24 @@ func toAgentObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		}
 		return arr
 
+	case AgentCompleted:
+		vv := o.(AgentCompleted)
+		return vv.ToMap()
+	case *AgentCompleted:
+		return (*o.(*AgentCompleted)).ToMap()
+	case []AgentCompleted:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]AgentCompleted) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]AgentCompleted:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]AgentCompleted)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -441,7 +486,7 @@ func (o *Agent) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"completed_ts":     toAgentObject(o.CompletedAt, isavro, false, "long"),
+		"completed":        toAgentObject(o.Completed, isavro, false, "completed"),
 		"created_ts":       toAgentObject(o.CreatedAt, isavro, false, "long"),
 		"customer_id":      toAgentObject(o.CustomerID, isavro, false, "string"),
 		"id":               toAgentObject(o.ID, isavro, false, "string"),
@@ -460,17 +505,17 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["completed_ts"].(int64); ok {
-		o.CompletedAt = val
+	if val, ok := kv["completed"].(AgentCompleted); ok {
+		o.Completed = val
 	} else {
-		val := kv["completed_ts"]
+		val := kv["completed"]
 		if val == nil {
-			o.CompletedAt = number.ToInt64Any(nil)
+			o.Completed = AgentCompleted{}
 		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.CompletedAt = number.ToInt64Any(val)
+			o.Completed = AgentCompleted{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Completed)
+
 		}
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
@@ -583,7 +628,7 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Agent) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.CompletedAt)
+	args = append(args, o.Completed)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
@@ -654,8 +699,8 @@ func GetAgentAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "completed_ts",
-				"type": "long",
+				"name": "completed",
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Last time the agent completed setup", "type": "record", "name": "completed"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

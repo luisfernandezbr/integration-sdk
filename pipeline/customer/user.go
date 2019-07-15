@@ -56,12 +56,24 @@ const (
 	UserCostCenterIDColumn = "cost_center_id"
 	// UserCustomerIDColumn is the customer_id column name
 	UserCustomerIDColumn = "customer_id"
-	// UserDeletedAtColumn is the deleted_ts column name
-	UserDeletedAtColumn = "deleted_ts"
+	// UserDeletedColumn is the deleted column name
+	UserDeletedColumn = "deleted"
+	// UserDeletedColumnEpochColumn is the epoch column property of the Deleted name
+	UserDeletedColumnEpochColumn = "deleted->epoch"
+	// UserDeletedColumnOffsetColumn is the offset column property of the Deleted name
+	UserDeletedColumnOffsetColumn = "deleted->offset"
+	// UserDeletedColumnRfc3339Column is the rfc3339 column property of the Deleted name
+	UserDeletedColumnRfc3339Column = "deleted->rfc3339"
 	// UserEmailColumn is the email column name
 	UserEmailColumn = "email"
-	// UserHiredAtColumn is the hired_ts column name
-	UserHiredAtColumn = "hired_ts"
+	// UserHiredColumn is the hired column name
+	UserHiredColumn = "hired"
+	// UserHiredColumnEpochColumn is the epoch column property of the Hired name
+	UserHiredColumnEpochColumn = "hired->epoch"
+	// UserHiredColumnOffsetColumn is the offset column property of the Hired name
+	UserHiredColumnOffsetColumn = "hired->offset"
+	// UserHiredColumnRfc3339Column is the rfc3339 column property of the Hired name
+	UserHiredColumnRfc3339Column = "hired->rfc3339"
 	// UserIDColumn is the id column name
 	UserIDColumn = "id"
 	// UserLocationColumn is the location column name
@@ -82,13 +94,82 @@ const (
 	UserRoleIdsColumn = "role_ids"
 	// UserTeamIdsColumn is the team_ids column name
 	UserTeamIdsColumn = "team_ids"
-	// UserTerminatedAtColumn is the terminated_ts column name
-	UserTerminatedAtColumn = "terminated_ts"
+	// UserTerminatedColumn is the terminated column name
+	UserTerminatedColumn = "terminated"
+	// UserTerminatedColumnEpochColumn is the epoch column property of the Terminated name
+	UserTerminatedColumnEpochColumn = "terminated->epoch"
+	// UserTerminatedColumnOffsetColumn is the offset column property of the Terminated name
+	UserTerminatedColumnOffsetColumn = "terminated->offset"
+	// UserTerminatedColumnRfc3339Column is the rfc3339 column property of the Terminated name
+	UserTerminatedColumnRfc3339Column = "terminated->rfc3339"
 	// UserTitleColumn is the title column name
 	UserTitleColumn = "title"
 	// UserTrackableColumn is the trackable column name
 	UserTrackableColumn = "trackable"
 )
+
+// UserDeleted represents the object structure for deleted
+type UserDeleted struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *UserDeleted) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
+// UserHired represents the object structure for hired
+type UserHired struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *UserHired) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
+// UserTerminated represents the object structure for terminated
+type UserTerminated struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *UserTerminated) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
 
 // User the enriched customer user record
 type User struct {
@@ -102,12 +183,12 @@ type User struct {
 	CostCenterID *string `json:"cost_center_id" bson:"cost_center_id" yaml:"cost_center_id" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// DeletedAt when the user record was deleted in epoch timestamp
-	DeletedAt *int64 `json:"deleted_ts" bson:"deleted_ts" yaml:"deleted_ts" faker:"-"`
+	// Deleted when the user record was deleted in epoch timestamp
+	Deleted *UserDeleted `json:"deleted" bson:"deleted" yaml:"deleted" faker:"-"`
 	// Email the email of the user
 	Email string `json:"email" bson:"email" yaml:"email" faker:"email"`
-	// HiredAt when the user was hired in epoch timestamp
-	HiredAt *int64 `json:"hired_ts" bson:"hired_ts" yaml:"hired_ts" faker:"-"`
+	// Hired when the user was hired in epoch timestamp
+	Hired *UserHired `json:"hired" bson:"hired" yaml:"hired" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Location the location of the user
@@ -128,8 +209,8 @@ type User struct {
 	RoleIds []string `json:"role_ids" bson:"role_ids" yaml:"role_ids" faker:"-"`
 	// TeamIds the team ids that the user is part of
 	TeamIds []string `json:"team_ids" bson:"team_ids" yaml:"team_ids" faker:"-"`
-	// TerminatedAt when the user was terminated in epoch timestamp
-	TerminatedAt *int64 `json:"terminated_ts" bson:"terminated_ts" yaml:"terminated_ts" faker:"-"`
+	// Terminated when the user was terminated in epoch timestamp
+	Terminated *UserTerminated `json:"terminated" bson:"terminated" yaml:"terminated" faker:"-"`
 	// Title the title of the user
 	Title *string `json:"title" bson:"title" yaml:"title" faker:"jobtitle"`
 	// Trackable if true, the user is trackable in the pinpoint system
@@ -271,6 +352,60 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		}
 		return arr
 
+	case UserDeleted:
+		vv := o.(UserDeleted)
+		return vv.ToMap()
+	case *UserDeleted:
+		return (*o.(*UserDeleted)).ToMap()
+	case []UserDeleted:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]UserDeleted) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]UserDeleted:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]UserDeleted)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case UserHired:
+		vv := o.(UserHired)
+		return vv.ToMap()
+	case *UserHired:
+		return (*o.(*UserHired)).ToMap()
+	case []UserHired:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]UserHired) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]UserHired:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]UserHired)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case UserTerminated:
+		vv := o.(UserTerminated)
+		return vv.ToMap()
+	case *UserTerminated:
+		return (*o.(*UserTerminated)).ToMap()
+	case []UserTerminated:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]UserTerminated) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]UserTerminated:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]UserTerminated)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -297,11 +432,11 @@ func (o *User) setDefaults() {
 	if o.CostCenterID == nil {
 		o.CostCenterID = &emptyString
 	}
-	if o.DeletedAt == nil {
-		o.DeletedAt = &emptyInt
+	if o.Deleted == nil {
+		o.Deleted = &UserDeleted{}
 	}
-	if o.HiredAt == nil {
-		o.HiredAt = &emptyInt
+	if o.Hired == nil {
+		o.Hired = &UserHired{}
 	}
 	if o.Location == nil {
 		o.Location = &emptyString
@@ -318,8 +453,8 @@ func (o *User) setDefaults() {
 	if o.TeamIds == nil {
 		o.TeamIds = []string{}
 	}
-	if o.TerminatedAt == nil {
-		o.TerminatedAt = &emptyInt
+	if o.Terminated == nil {
+		o.Terminated = &UserTerminated{}
 	}
 	if o.Title == nil {
 		o.Title = &emptyString
@@ -525,9 +660,9 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"cost":            toUserObject(o.Cost, isavro, false, "float"),
 		"cost_center_id":  toUserObject(o.CostCenterID, isavro, true, "string"),
 		"customer_id":     toUserObject(o.CustomerID, isavro, false, "string"),
-		"deleted_ts":      toUserObject(o.DeletedAt, isavro, true, "long"),
+		"deleted":         toUserObject(o.Deleted, isavro, true, "deleted"),
 		"email":           toUserObject(o.Email, isavro, false, "string"),
-		"hired_ts":        toUserObject(o.HiredAt, isavro, true, "long"),
+		"hired":           toUserObject(o.Hired, isavro, true, "hired"),
 		"id":              toUserObject(o.ID, isavro, false, "string"),
 		"location":        toUserObject(o.Location, isavro, true, "string"),
 		"manager_id":      toUserObject(o.ManagerID, isavro, true, "string"),
@@ -538,7 +673,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":        toUserObject(o.RefType, isavro, false, "string"),
 		"role_ids":        toUserObject(o.RoleIds, isavro, false, "role_ids"),
 		"team_ids":        toUserObject(o.TeamIds, isavro, false, "team_ids"),
-		"terminated_ts":   toUserObject(o.TerminatedAt, isavro, true, "long"),
+		"terminated":      toUserObject(o.Terminated, isavro, true, "terminated"),
 		"title":           toUserObject(o.Title, isavro, true, "string"),
 		"trackable":       toUserObject(o.Trackable, isavro, false, "boolean"),
 		"hashcode":        toUserObject(o.Hashcode, isavro, false, "string"),
@@ -616,20 +751,23 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["deleted_ts"].(*int64); ok {
-		o.DeletedAt = val
-	} else if val, ok := kv["deleted_ts"].(int64); ok {
-		o.DeletedAt = &val
+	if val, ok := kv["deleted"].(*UserDeleted); ok {
+		o.Deleted = val
+	} else if val, ok := kv["deleted"].(UserDeleted); ok {
+		o.Deleted = &val
 	} else {
-		val := kv["deleted_ts"]
+		val := kv["deleted"]
 		if val == nil {
-			o.DeletedAt = number.Int64Pointer(number.ToInt64Any(nil))
+			o.Deleted = &UserDeleted{}
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["long"]
+				val = kv["UserDeleted"]
 			}
-			o.DeletedAt = number.Int64Pointer(number.ToInt64Any(val))
+			o.Deleted = &UserDeleted{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, o.Deleted)
+
 		}
 	}
 	if val, ok := kv["email"].(string); ok {
@@ -645,20 +783,23 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Email = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["hired_ts"].(*int64); ok {
-		o.HiredAt = val
-	} else if val, ok := kv["hired_ts"].(int64); ok {
-		o.HiredAt = &val
+	if val, ok := kv["hired"].(*UserHired); ok {
+		o.Hired = val
+	} else if val, ok := kv["hired"].(UserHired); ok {
+		o.Hired = &val
 	} else {
-		val := kv["hired_ts"]
+		val := kv["hired"]
 		if val == nil {
-			o.HiredAt = number.Int64Pointer(number.ToInt64Any(nil))
+			o.Hired = &UserHired{}
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["long"]
+				val = kv["UserHired"]
 			}
-			o.HiredAt = number.Int64Pointer(number.ToInt64Any(val))
+			o.Hired = &UserHired{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, o.Hired)
+
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -865,20 +1006,23 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	if o.TeamIds == nil {
 		o.TeamIds = make([]string, 0)
 	}
-	if val, ok := kv["terminated_ts"].(*int64); ok {
-		o.TerminatedAt = val
-	} else if val, ok := kv["terminated_ts"].(int64); ok {
-		o.TerminatedAt = &val
+	if val, ok := kv["terminated"].(*UserTerminated); ok {
+		o.Terminated = val
+	} else if val, ok := kv["terminated"].(UserTerminated); ok {
+		o.Terminated = &val
 	} else {
-		val := kv["terminated_ts"]
+		val := kv["terminated"]
 		if val == nil {
-			o.TerminatedAt = number.Int64Pointer(number.ToInt64Any(nil))
+			o.Terminated = &UserTerminated{}
 		} else {
 			// if coming in as avro union, convert it back
 			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["long"]
+				val = kv["UserTerminated"]
 			}
-			o.TerminatedAt = number.Int64Pointer(number.ToInt64Any(val))
+			o.Terminated = &UserTerminated{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, o.Terminated)
+
 		}
 	}
 	if val, ok := kv["title"].(*string); ok {
@@ -918,9 +1062,9 @@ func (o *User) Hash() string {
 	args = append(args, o.Cost)
 	args = append(args, o.CostCenterID)
 	args = append(args, o.CustomerID)
-	args = append(args, o.DeletedAt)
+	args = append(args, o.Deleted)
 	args = append(args, o.Email)
-	args = append(args, o.HiredAt)
+	args = append(args, o.Hired)
 	args = append(args, o.ID)
 	args = append(args, o.Location)
 	args = append(args, o.ManagerID)
@@ -931,7 +1075,7 @@ func (o *User) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RoleIds)
 	args = append(args, o.TeamIds)
-	args = append(args, o.TerminatedAt)
+	args = append(args, o.Terminated)
 	args = append(args, o.Title)
 	args = append(args, o.Trackable)
 	o.Hashcode = hash.Values(args...)
@@ -972,8 +1116,8 @@ func GetUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name":    "deleted_ts",
-				"type":    []interface{}{"null", "long"},
+				"name":    "deleted",
+				"type":    []interface{}{"null", map[string]interface{}{"type": "record", "name": "deleted", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "when the user record was deleted in epoch timestamp"}},
 				"default": nil,
 			},
 			map[string]interface{}{
@@ -981,8 +1125,8 @@ func GetUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name":    "hired_ts",
-				"type":    []interface{}{"null", "long"},
+				"name":    "hired",
+				"type":    []interface{}{"null", map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp", "type": "record", "name": "hired"}},
 				"default": nil,
 			},
 			map[string]interface{}{
@@ -1029,8 +1173,8 @@ func GetUserAvroSchemaSpec() string {
 				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
 			},
 			map[string]interface{}{
-				"name":    "terminated_ts",
-				"type":    []interface{}{"null", "long"},
+				"name":    "terminated",
+				"type":    []interface{}{"null", map[string]interface{}{"type": "record", "name": "terminated", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was terminated in epoch timestamp"}},
 				"default": nil,
 			},
 			map[string]interface{}{

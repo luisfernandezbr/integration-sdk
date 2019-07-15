@@ -44,6 +44,14 @@ const (
 )
 
 const (
+	// ACLGrantCreatedColumn is the created column name
+	ACLGrantCreatedColumn = "created"
+	// ACLGrantCreatedColumnEpochColumn is the epoch column property of the Created name
+	ACLGrantCreatedColumnEpochColumn = "created->epoch"
+	// ACLGrantCreatedColumnOffsetColumn is the offset column property of the Created name
+	ACLGrantCreatedColumnOffsetColumn = "created->offset"
+	// ACLGrantCreatedColumnRfc3339Column is the rfc3339 column property of the Created name
+	ACLGrantCreatedColumnRfc3339Column = "created->rfc3339"
 	// ACLGrantCreatedAtColumn is the created_ts column name
 	ACLGrantCreatedAtColumn = "created_ts"
 	// ACLGrantCustomerIDColumn is the customer_id column name
@@ -63,6 +71,27 @@ const (
 	// ACLGrantUpdatedAtColumn is the updated_ts column name
 	ACLGrantUpdatedAtColumn = "updated_ts"
 )
+
+// ACLGrantCreated represents the object structure for created
+type ACLGrantCreated struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *ACLGrantCreated) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
 
 // Permission is the enumeration type for permission
 type ACLGrantPermission int32
@@ -91,6 +120,8 @@ const (
 
 // ACLGrant a ACL grant controls permisson for a specific role to a resource
 type ACLGrant struct {
+	// Created the created date
+	Created ACLGrantCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
 	// CreatedAt the date the record was created in Epoch time
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -246,6 +277,24 @@ func toACLGrantObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 		}
 		return arr
 
+	case ACLGrantCreated:
+		vv := o.(ACLGrantCreated)
+		return vv.ToMap()
+	case *ACLGrantCreated:
+		return (*o.(*ACLGrantCreated)).ToMap()
+	case []ACLGrantCreated:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]ACLGrantCreated) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]ACLGrantCreated:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]ACLGrantCreated)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	case ACLGrantPermission:
 		if !isavro {
 			return (o.(ACLGrantPermission)).String()
@@ -306,7 +355,7 @@ func (o *ACLGrant) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ACLGrant) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedAt
+	var dt interface{} = o.Created
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -318,6 +367,8 @@ func (o *ACLGrant) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case ACLGrantCreated:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ACLGrant")
 }
@@ -370,7 +421,7 @@ func (o *ACLGrant) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "created_ts",
+		Timestamp:         "created",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -493,6 +544,7 @@ func (o *ACLGrant) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
+		"created":     toACLGrantObject(o.Created, isavro, false, "created"),
 		"created_ts":  toACLGrantObject(o.CreatedAt, isavro, false, "long"),
 		"customer_id": toACLGrantObject(o.CustomerID, isavro, false, "string"),
 		"id":          toACLGrantObject(o.ID, isavro, false, "string"),
@@ -511,6 +563,19 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["created"].(ACLGrantCreated); ok {
+		o.Created = val
+	} else {
+		val := kv["created"]
+		if val == nil {
+			o.Created = ACLGrantCreated{}
+		} else {
+			o.Created = ACLGrantCreated{}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.Created)
+
+		}
 	}
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
@@ -647,6 +712,7 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *ACLGrant) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Created)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
@@ -716,6 +782,10 @@ func GetACLGrantAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "created",
+				"type": map[string]interface{}{"type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the created date"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
