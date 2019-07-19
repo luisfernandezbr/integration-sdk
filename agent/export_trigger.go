@@ -45,26 +45,26 @@ const (
 const (
 	// ExportTriggerCustomerIDColumn is the customer_id column name
 	ExportTriggerCustomerIDColumn = "customer_id"
-	// ExportTriggerDateColumn is the date column name
-	ExportTriggerDateColumn = "date"
-	// ExportTriggerDateColumnEpochColumn is the epoch column property of the Date name
-	ExportTriggerDateColumnEpochColumn = "date->epoch"
-	// ExportTriggerDateColumnOffsetColumn is the offset column property of the Date name
-	ExportTriggerDateColumnOffsetColumn = "date->offset"
-	// ExportTriggerDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	ExportTriggerDateColumnRfc3339Column = "date->rfc3339"
 	// ExportTriggerIDColumn is the id column name
 	ExportTriggerIDColumn = "id"
 	// ExportTriggerRefIDColumn is the ref_id column name
 	ExportTriggerRefIDColumn = "ref_id"
 	// ExportTriggerRefTypeColumn is the ref_type column name
 	ExportTriggerRefTypeColumn = "ref_type"
+	// ExportTriggerRequestDateColumn is the request_date column name
+	ExportTriggerRequestDateColumn = "request_date"
+	// ExportTriggerRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	ExportTriggerRequestDateColumnEpochColumn = "request_date->epoch"
+	// ExportTriggerRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	ExportTriggerRequestDateColumnOffsetColumn = "request_date->offset"
+	// ExportTriggerRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	ExportTriggerRequestDateColumnRfc3339Column = "request_date->rfc3339"
 	// ExportTriggerUUIDColumn is the uuid column name
 	ExportTriggerUUIDColumn = "uuid"
 )
 
-// ExportTriggerDate represents the object structure for date
-type ExportTriggerDate struct {
+// ExportTriggerRequestDate represents the object structure for request_date
+type ExportTriggerRequestDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -73,7 +73,7 @@ type ExportTriggerDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ExportTriggerDate) ToMap() map[string]interface{} {
+func (o *ExportTriggerRequestDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -88,14 +88,14 @@ func (o *ExportTriggerDate) ToMap() map[string]interface{} {
 type ExportTrigger struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Date the date when the request was made
-	Date ExportTriggerDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RequestDate the date when the request was made
+	RequestDate ExportTriggerRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -235,22 +235,22 @@ func toExportTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype
 		}
 		return arr
 
-	case ExportTriggerDate:
-		vv := o.(ExportTriggerDate)
+	case ExportTriggerRequestDate:
+		vv := o.(ExportTriggerRequestDate)
 		return vv.ToMap()
-	case *ExportTriggerDate:
+	case *ExportTriggerRequestDate:
 		return map[string]interface{}{
-			"agent.date": (*o.(*ExportTriggerDate)).ToMap(),
+			"agent.request_date": (*o.(*ExportTriggerRequestDate)).ToMap(),
 		}
-	case []ExportTriggerDate:
+	case []ExportTriggerRequestDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportTriggerDate) {
+		for _, i := range o.([]ExportTriggerRequestDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]ExportTriggerDate:
+	case *[]ExportTriggerRequestDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportTriggerDate)
+		vv := o.(*[]ExportTriggerRequestDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -301,7 +301,7 @@ func (o *ExportTrigger) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportTrigger) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.RequestDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -313,7 +313,7 @@ func (o *ExportTrigger) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ExportTriggerDate:
+	case ExportTriggerRequestDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ExportTrigger")
@@ -358,7 +358,7 @@ func (o *ExportTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "request_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -481,13 +481,13 @@ func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id": toExportTriggerObject(o.CustomerID, isavro, false, "string"),
-		"date":        toExportTriggerObject(o.Date, isavro, false, "date"),
-		"id":          toExportTriggerObject(o.ID, isavro, false, "string"),
-		"ref_id":      toExportTriggerObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toExportTriggerObject(o.RefType, isavro, false, "string"),
-		"uuid":        toExportTriggerObject(o.UUID, isavro, false, "string"),
-		"hashcode":    toExportTriggerObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":  toExportTriggerObject(o.CustomerID, isavro, false, "string"),
+		"id":           toExportTriggerObject(o.ID, isavro, false, "string"),
+		"ref_id":       toExportTriggerObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toExportTriggerObject(o.RefType, isavro, false, "string"),
+		"request_date": toExportTriggerObject(o.RequestDate, isavro, false, "request_date"),
+		"uuid":         toExportTriggerObject(o.UUID, isavro, false, "string"),
+		"hashcode":     toExportTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -508,28 +508,6 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.CustomerID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["date"].(ExportTriggerDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = ExportTriggerDate{}
-		} else {
-			o.Date = ExportTriggerDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -571,6 +549,28 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["request_date"].(ExportTriggerRequestDate); ok {
+		o.RequestDate = val
+	} else {
+		val := kv["request_date"]
+		if val == nil {
+			o.RequestDate = ExportTriggerRequestDate{}
+		} else {
+			o.RequestDate = ExportTriggerRequestDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.RequestDate)
+
+		}
+	}
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -591,10 +591,10 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 func (o *ExportTrigger) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Date)
 	args = append(args, o.ID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RequestDate)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -616,10 +616,6 @@ func GetExportTriggerAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made", "type": "record", "name": "date"},
-			},
-			map[string]interface{}{
 				"name": "id",
 				"type": "string",
 			},
@@ -630,6 +626,10 @@ func GetExportTriggerAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "request_date",
+				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

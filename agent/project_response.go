@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -52,18 +53,18 @@ const (
 	ProjectResponseCustomerIDColumn = "customer_id"
 	// ProjectResponseDataColumn is the data column name
 	ProjectResponseDataColumn = "data"
-	// ProjectResponseDateColumn is the date column name
-	ProjectResponseDateColumn = "date"
-	// ProjectResponseDateColumnEpochColumn is the epoch column property of the Date name
-	ProjectResponseDateColumnEpochColumn = "date->epoch"
-	// ProjectResponseDateColumnOffsetColumn is the offset column property of the Date name
-	ProjectResponseDateColumnOffsetColumn = "date->offset"
-	// ProjectResponseDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	ProjectResponseDateColumnRfc3339Column = "date->rfc3339"
 	// ProjectResponseDistroColumn is the distro column name
 	ProjectResponseDistroColumn = "distro"
 	// ProjectResponseErrorColumn is the error column name
 	ProjectResponseErrorColumn = "error"
+	// ProjectResponseEventDateColumn is the event_date column name
+	ProjectResponseEventDateColumn = "event_date"
+	// ProjectResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	ProjectResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// ProjectResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	ProjectResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// ProjectResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	ProjectResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// ProjectResponseFreeSpaceColumn is the free_space column name
 	ProjectResponseFreeSpaceColumn = "free_space"
 	// ProjectResponseGoVersionColumn is the go_version column name
@@ -88,8 +89,8 @@ const (
 	ProjectResponseProjectsColumnActiveColumn = "projects->active"
 	// ProjectResponseProjectsColumnCategoryColumn is the category column property of the Projects name
 	ProjectResponseProjectsColumnCategoryColumn = "projects->category"
-	// ProjectResponseProjectsColumnCreatedColumn is the created column property of the Projects name
-	ProjectResponseProjectsColumnCreatedColumn = "projects->created"
+	// ProjectResponseProjectsColumnCreatedDateColumn is the created_date column property of the Projects name
+	ProjectResponseProjectsColumnCreatedDateColumn = "projects->created_date"
 	// ProjectResponseProjectsColumnDescriptionColumn is the description column property of the Projects name
 	ProjectResponseProjectsColumnDescriptionColumn = "projects->description"
 	// ProjectResponseProjectsColumnIdentifierColumn is the identifier column property of the Projects name
@@ -122,8 +123,8 @@ const (
 	ProjectResponseVersionColumn = "version"
 )
 
-// ProjectResponseCreated represents the object structure for created
-type ProjectResponseCreated struct {
+// ProjectResponseCreatedDate represents the object structure for created_date
+type ProjectResponseCreatedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -132,7 +133,7 @@ type ProjectResponseCreated struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ProjectResponseCreated) ToMap() map[string]interface{} {
+func (o *ProjectResponseCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -143,8 +144,8 @@ func (o *ProjectResponseCreated) ToMap() map[string]interface{} {
 	}
 }
 
-// ProjectResponseDate represents the object structure for date
-type ProjectResponseDate struct {
+// ProjectResponseEventDate represents the object structure for event_date
+type ProjectResponseEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -153,7 +154,7 @@ type ProjectResponseDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ProjectResponseDate) ToMap() map[string]interface{} {
+func (o *ProjectResponseEventDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -166,8 +167,8 @@ func (o *ProjectResponseDate) ToMap() map[string]interface{} {
 
 // ProjectResponseLastIssue represents the object structure for last_issue
 type ProjectResponseLastIssue struct {
-	// Created the date of the change
-	Created ProjectResponseCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
+	// CreatedDate the date of the change
+	CreatedDate ProjectResponseCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// Identifier the issue key from the source
 	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// IssueID issue id
@@ -178,8 +179,8 @@ type ProjectResponseLastIssue struct {
 
 func (o *ProjectResponseLastIssue) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		// Created the date of the change
-		"created": o.Created,
+		// CreatedDate the date of the change
+		"created_date": o.CreatedDate,
 		// Identifier the issue key from the source
 		"identifier": o.Identifier,
 		// IssueID issue id
@@ -192,9 +193,9 @@ func (o *ProjectResponseLastIssue) ToMap() map[string]interface{} {
 // ProjectResponseLastUser represents the object structure for last_user
 type ProjectResponseLastUser struct {
 	// AvatarURL the avatar url
-	AvatarURL string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"-"`
+	AvatarURL string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"true"`
 	// Name the user name
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" bson:"name" yaml:"name" faker:"true"`
 	// UserID the work project user id
 	UserID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
 }
@@ -216,8 +217,8 @@ type ProjectResponseProjects struct {
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Category the project category
 	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
-	// Created the date of the change
-	Created ProjectResponseCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
+	// CreatedDate the date of the change
+	CreatedDate ProjectResponseCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// Description the description of the project
 	Description *string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// Identifier the common identifier for the project
@@ -242,8 +243,8 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 		"active": o.Active,
 		// Category the project category
 		"category": o.Category,
-		// Created the date of the change
-		"created": o.Created,
+		// CreatedDate the date of the change
+		"created_date": o.CreatedDate,
 		// Description the description of the project
 		"description": o.Description,
 		// Identifier the common identifier for the project
@@ -263,7 +264,7 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 	}
 }
 
-// Type is the enumeration type for type
+// ProjectResponseType is the enumeration type for type
 type ProjectResponseType int32
 
 // String returns the string value for Type
@@ -281,6 +282,10 @@ func (v ProjectResponseType) String() string {
 		return "export"
 	case 5:
 		return "project"
+	case 6:
+		return "user"
+	case 7:
+		return "repo"
 	}
 	return "unset"
 }
@@ -298,6 +303,10 @@ const (
 	ProjectResponseTypeExport ProjectResponseType = 4
 	// TypeProject is the enumeration value for project
 	ProjectResponseTypeProject ProjectResponseType = 5
+	// TypeUser is the enumeration value for user
+	ProjectResponseTypeUser ProjectResponseType = 6
+	// TypeRepo is the enumeration value for repo
+	ProjectResponseTypeRepo ProjectResponseType = 7
 )
 
 // ProjectResponse an agent response to an action request adding project(s)
@@ -308,12 +317,12 @@ type ProjectResponse struct {
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
 	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
-	// Date the date of the event
-	Date ProjectResponseDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Distro the agent os distribution
 	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
 	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	// EventDate the date of the event
+	EventDate ProjectResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -485,42 +494,42 @@ func toProjectResponseObject(o interface{}, isavro bool, isoptional bool, avroty
 		}
 		return arr
 
-	case ProjectResponseCreated:
-		vv := o.(ProjectResponseCreated)
+	case ProjectResponseCreatedDate:
+		vv := o.(ProjectResponseCreatedDate)
 		return vv.ToMap()
-	case *ProjectResponseCreated:
+	case *ProjectResponseCreatedDate:
 		return map[string]interface{}{
-			"agent.created": (*o.(*ProjectResponseCreated)).ToMap(),
+			"agent.created_date": (*o.(*ProjectResponseCreatedDate)).ToMap(),
 		}
-	case []ProjectResponseCreated:
+	case []ProjectResponseCreatedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectResponseCreated) {
+		for _, i := range o.([]ProjectResponseCreatedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]ProjectResponseCreated:
+	case *[]ProjectResponseCreatedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectResponseCreated)
+		vv := o.(*[]ProjectResponseCreatedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case ProjectResponseDate:
-		vv := o.(ProjectResponseDate)
+	case ProjectResponseEventDate:
+		vv := o.(ProjectResponseEventDate)
 		return vv.ToMap()
-	case *ProjectResponseDate:
+	case *ProjectResponseEventDate:
 		return map[string]interface{}{
-			"agent.date": (*o.(*ProjectResponseDate)).ToMap(),
+			"agent.event_date": (*o.(*ProjectResponseEventDate)).ToMap(),
 		}
-	case []ProjectResponseDate:
+	case []ProjectResponseEventDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectResponseDate) {
+		for _, i := range o.([]ProjectResponseEventDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]ProjectResponseDate:
+	case *[]ProjectResponseEventDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectResponseDate)
+		vv := o.(*[]ProjectResponseEventDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -654,7 +663,7 @@ func (o *ProjectResponse) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ProjectResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.EventDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -666,7 +675,7 @@ func (o *ProjectResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ProjectResponseDate:
+	case ProjectResponseEventDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ProjectResponse")
@@ -711,7 +720,7 @@ func (o *ProjectResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "event_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -840,9 +849,9 @@ func (o *ProjectResponse) ToMap(avro ...bool) map[string]interface{} {
 		"architecture":   toProjectResponseObject(o.Architecture, isavro, false, "string"),
 		"customer_id":    toProjectResponseObject(o.CustomerID, isavro, false, "string"),
 		"data":           toProjectResponseObject(o.Data, isavro, true, "string"),
-		"date":           toProjectResponseObject(o.Date, isavro, false, "date"),
 		"distro":         toProjectResponseObject(o.Distro, isavro, false, "string"),
 		"error":          toProjectResponseObject(o.Error, isavro, true, "string"),
+		"event_date":     toProjectResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":     toProjectResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":     toProjectResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":       toProjectResponseObject(o.Hostname, isavro, false, "string"),
@@ -912,28 +921,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 			o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["date"].(ProjectResponseDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = ProjectResponseDate{}
-		} else {
-			o.Date = ProjectResponseDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
-		}
-	}
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -961,6 +948,28 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["event_date"].(ProjectResponseEventDate); ok {
+		o.EventDate = val
+	} else {
+		val := kv["event_date"]
+		if val == nil {
+			o.EventDate = ProjectResponseEventDate{}
+		} else {
+			o.EventDate = ProjectResponseEventDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.EventDate)
+
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -1090,6 +1099,9 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 					if av, ok := ae.(ProjectResponseProjects); ok {
 						na = append(na, av)
 					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
 						b, _ := json.Marshal(ae)
 						var av ProjectResponseProjects
 						if err := json.Unmarshal(b, &av); err != nil {
@@ -1190,6 +1202,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 4
 			case "project":
 				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1206,6 +1222,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 4
 			case "project":
 				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
 			}
 		}
 	}
@@ -1244,9 +1264,9 @@ func (o *ProjectResponse) Hash() string {
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
-	args = append(args, o.Date)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
+	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1293,10 +1313,6 @@ func GetProjectResponseAvroSchemaSpec() string {
 				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
-			},
-			map[string]interface{}{
 				"name": "distro",
 				"type": "string",
 			},
@@ -1304,6 +1320,10 @@ func GetProjectResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "event_date",
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1343,7 +1363,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"items": map[string]interface{}{"name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date of the change", "type": "record", "name": "projects.created"}, "name": "created", "doc": "the date of the change"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"name": "last_issue", "doc": "last issue for this project", "type": map[string]interface{}{"doc": "last issue for this project", "type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"doc": "the date of the change", "type": map[string]interface{}{"type": "record", "name": "last_issue.created", "fields": []interface{}{}, "doc": "the date of the change"}, "name": "created"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the issue key from the source"}, map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"doc": "the last user", "type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the user name"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}}, "doc": "the last user"}, "name": "last_user"}}}}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}, map[string]interface{}{"name": "name", "doc": "the user name", "type": "string"}, map[string]interface{}{"doc": "the work project user id", "type": "string", "name": "user_id"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "long", "name": "total_issues", "doc": "the total issues count for the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported", "type": "record"}, "type": "array", "name": "projects"},
+				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"doc": "the projects exported", "type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"doc": "the project category", "type": "string", "name": "category"}, map[string]interface{}{"name": "created_date", "doc": "the date of the change", "type": map[string]interface{}{"doc": "the date of the change", "type": "record", "name": "projects.created_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}}}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"doc": "last issue for this project", "type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{}, "doc": "the date of the change", "type": "record", "name": "last_issue.created_date"}, "name": "created_date", "doc": "the date of the change"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the issue key from the source"}, map[string]interface{}{"name": "issue_id", "doc": "issue id", "type": "string"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"doc": "the work project user id", "type": "string", "name": "user_id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the user name"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}}, "doc": "last issue for this project"}, "name": "last_issue"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the user name"}, map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "long", "name": "total_issues", "doc": "the total issues count for the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1367,7 +1387,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 					map[string]interface{}{
 						"type":    "enum",
 						"name":    "type",
-						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project"},
+						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "user", "repo"},
 					},
 				},
 			},

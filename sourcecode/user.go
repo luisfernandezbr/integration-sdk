@@ -68,7 +68,7 @@ const (
 	UserUsernameColumn = "username"
 )
 
-// Type is the enumeration type for type
+// UserType is the enumeration type for type
 type UserType int32
 
 // String returns the string value for Type

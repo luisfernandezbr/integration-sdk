@@ -28,6 +28,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -518,6 +519,9 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 					if av, ok := ae.(string); ok {
 						na = append(na, av)
 					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
 						b, _ := json.Marshal(ae)
 						var av string
 						if err := json.Unmarshal(b, &av); err != nil {
@@ -640,6 +644,9 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 					if av, ok := ae.(string); ok {
 						na = append(na, av)
 					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
 						b, _ := json.Marshal(ae)
 						var av string
 						if err := json.Unmarshal(b, &av); err != nil {
@@ -830,7 +837,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "parent_ids",
-				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "parent_ids"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

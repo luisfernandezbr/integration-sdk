@@ -43,16 +43,16 @@ const (
 )
 
 const (
+	// ActivityActivityDateColumn is the activity_date column name
+	ActivityActivityDateColumn = "activity_date"
+	// ActivityActivityDateColumnEpochColumn is the epoch column property of the ActivityDate name
+	ActivityActivityDateColumnEpochColumn = "activity_date->epoch"
+	// ActivityActivityDateColumnOffsetColumn is the offset column property of the ActivityDate name
+	ActivityActivityDateColumnOffsetColumn = "activity_date->offset"
+	// ActivityActivityDateColumnRfc3339Column is the rfc3339 column property of the ActivityDate name
+	ActivityActivityDateColumnRfc3339Column = "activity_date->rfc3339"
 	// ActivityCustomerIDColumn is the customer_id column name
 	ActivityCustomerIDColumn = "customer_id"
-	// ActivityDateColumn is the date column name
-	ActivityDateColumn = "date"
-	// ActivityDateColumnEpochColumn is the epoch column property of the Date name
-	ActivityDateColumnEpochColumn = "date->epoch"
-	// ActivityDateColumnOffsetColumn is the offset column property of the Date name
-	ActivityDateColumnOffsetColumn = "date->offset"
-	// ActivityDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	ActivityDateColumnRfc3339Column = "date->rfc3339"
 	// ActivityIDColumn is the id column name
 	ActivityIDColumn = "id"
 	// ActivityRefIDColumn is the ref_id column name
@@ -69,8 +69,8 @@ const (
 	ActivityUserColumnTeamIDColumn = "user->team_id"
 )
 
-// ActivityDate represents the object structure for date
-type ActivityDate struct {
+// ActivityActivityDate represents the object structure for activity_date
+type ActivityActivityDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -79,7 +79,7 @@ type ActivityDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ActivityDate) ToMap() map[string]interface{} {
+func (o *ActivityActivityDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -90,7 +90,7 @@ func (o *ActivityDate) ToMap() map[string]interface{} {
 	}
 }
 
-// Type is the enumeration type for type
+// ActivityType is the enumeration type for type
 type ActivityType int32
 
 // String returns the string value for Type
@@ -166,10 +166,10 @@ func (o *ActivityUser) ToMap() map[string]interface{} {
 
 // Activity activity table is a log of activity accross all integrations
 type Activity struct {
+	// ActivityDate date object
+	ActivityDate ActivityActivityDate `json:"activity_date" bson:"activity_date" yaml:"activity_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Date date object
-	Date ActivityDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// RefID the source system id for the model instance
@@ -317,22 +317,22 @@ func toActivityObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 		}
 		return arr
 
-	case ActivityDate:
-		vv := o.(ActivityDate)
+	case ActivityActivityDate:
+		vv := o.(ActivityActivityDate)
 		return vv.ToMap()
-	case *ActivityDate:
+	case *ActivityActivityDate:
 		return map[string]interface{}{
-			"pipeline.activity.date": (*o.(*ActivityDate)).ToMap(),
+			"pipeline.activity.activity_date": (*o.(*ActivityActivityDate)).ToMap(),
 		}
-	case []ActivityDate:
+	case []ActivityActivityDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]ActivityDate) {
+		for _, i := range o.([]ActivityActivityDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]ActivityDate:
+	case *[]ActivityActivityDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]ActivityDate)
+		vv := o.(*[]ActivityActivityDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -417,7 +417,7 @@ func (o *Activity) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Activity) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.ActivityDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -429,7 +429,7 @@ func (o *Activity) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ActivityDate:
+	case ActivityActivityDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Activity")
@@ -483,7 +483,7 @@ func (o *Activity) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "date",
+		Timestamp:         "activity_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -606,14 +606,14 @@ func (o *Activity) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id": toActivityObject(o.CustomerID, isavro, false, "string"),
-		"date":        toActivityObject(o.Date, isavro, false, "date"),
-		"id":          toActivityObject(o.ID, isavro, false, "string"),
-		"ref_id":      toActivityObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toActivityObject(o.RefType, isavro, false, "string"),
-		"type":        toActivityObject(o.Type, isavro, false, "type"),
-		"user":        toActivityObject(o.User, isavro, false, "user"),
-		"hashcode":    toActivityObject(o.Hashcode, isavro, false, "string"),
+		"activity_date": toActivityObject(o.ActivityDate, isavro, false, "activity_date"),
+		"customer_id":   toActivityObject(o.CustomerID, isavro, false, "string"),
+		"id":            toActivityObject(o.ID, isavro, false, "string"),
+		"ref_id":        toActivityObject(o.RefID, isavro, false, "string"),
+		"ref_type":      toActivityObject(o.RefType, isavro, false, "string"),
+		"type":          toActivityObject(o.Type, isavro, false, "type"),
+		"user":          toActivityObject(o.User, isavro, false, "user"),
+		"hashcode":      toActivityObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -622,6 +622,28 @@ func (o *Activity) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["activity_date"].(ActivityActivityDate); ok {
+		o.ActivityDate = val
+	} else {
+		val := kv["activity_date"]
+		if val == nil {
+			o.ActivityDate = ActivityActivityDate{}
+		} else {
+			o.ActivityDate = ActivityActivityDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.ActivityDate)
+
+		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
@@ -634,28 +656,6 @@ func (o *Activity) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.CustomerID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["date"].(ActivityDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = ActivityDate{}
-		} else {
-			o.Date = ActivityDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -782,8 +782,8 @@ func (o *Activity) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Activity) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.ActivityDate)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Date)
 	args = append(args, o.ID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
@@ -805,12 +805,12 @@ func GetActivityAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
+				"name": "activity_date",
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object", "type": "record", "name": "activity_date"},
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"doc": "date object", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"name": "customer_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "id",

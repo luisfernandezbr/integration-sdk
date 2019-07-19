@@ -26,6 +26,8 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -45,12 +47,20 @@ const (
 )
 
 const (
+	// UserActiveColumn is the active column name
+	UserActiveColumn = "active"
 	// UserAvatarURLColumn is the avatar_url column name
 	UserAvatarURLColumn = "avatar_url"
 	// UserCustomerIDColumn is the customer_id column name
 	UserCustomerIDColumn = "customer_id"
 	// UserEmailsColumn is the emails column name
 	UserEmailsColumn = "emails"
+	// UserGroupsColumn is the groups column name
+	UserGroupsColumn = "groups"
+	// UserGroupsColumnGroupIDColumn is the group_id column property of the Groups name
+	UserGroupsColumnGroupIDColumn = "groups->group_id"
+	// UserGroupsColumnNameColumn is the name column property of the Groups name
+	UserGroupsColumnNameColumn = "groups->name"
 	// UserIDColumn is the id column name
 	UserIDColumn = "id"
 	// UserNameColumn is the name column name
@@ -63,14 +73,35 @@ const (
 	UserUsernameColumn = "username"
 )
 
+// UserGroups represents the object structure for groups
+type UserGroups struct {
+	// GroupID Group id
+	GroupID string `json:"group_id" bson:"group_id" yaml:"group_id" faker:"-"`
+	// Name Group name
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+}
+
+func (o *UserGroups) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// GroupID Group id
+		"group_id": o.GroupID,
+		// Name Group name
+		"name": o.Name,
+	}
+}
+
 // User a user from a source system
 type User struct {
+	// Active if user is active
+	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// AvatarURL the url to users avatar
 	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Emails the email for the user
 	Emails []string `json:"emails" bson:"emails" yaml:"emails" faker:"-"`
+	// Groups Group names
+	Groups []UserGroups `json:"groups" bson:"groups" yaml:"groups" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the user
@@ -218,6 +249,26 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		}
 		return arr
 
+	case UserGroups:
+		vv := o.(UserGroups)
+		return vv.ToMap()
+	case *UserGroups:
+		return map[string]interface{}{
+			"pipeline.integration.groups": (*o.(*UserGroups)).ToMap(),
+		}
+	case []UserGroups:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]UserGroups) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]UserGroups:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]UserGroups)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -243,6 +294,9 @@ func (o *User) setDefaults() {
 	}
 	if o.Emails == nil {
 		o.Emails = []string{}
+	}
+	if o.Groups == nil {
+		o.Groups = []UserGroups{}
 	}
 
 	o.GetID()
@@ -444,12 +498,17 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		if o.Emails == nil {
 			o.Emails = make([]string, 0)
 		}
+		if o.Groups == nil {
+			o.Groups = make([]UserGroups, 0)
+		}
 	}
 	o.setDefaults()
 	return map[string]interface{}{
+		"active":      toUserObject(o.Active, isavro, false, "boolean"),
 		"avatar_url":  toUserObject(o.AvatarURL, isavro, true, "string"),
 		"customer_id": toUserObject(o.CustomerID, isavro, false, "string"),
 		"emails":      toUserObject(o.Emails, isavro, false, "emails"),
+		"groups":      toUserObject(o.Groups, isavro, false, "groups"),
 		"id":          toUserObject(o.ID, isavro, false, "string"),
 		"name":        toUserObject(o.Name, isavro, false, "string"),
 		"ref_id":      toUserObject(o.RefID, isavro, false, "string"),
@@ -464,6 +523,16 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		val := kv["active"]
+		if val == nil {
+			o.Active = number.ToBoolAny(nil)
+		} else {
+			o.Active = number.ToBoolAny(val)
+		}
 	}
 	if val, ok := kv["avatar_url"].(*string); ok {
 		o.AvatarURL = val
@@ -504,6 +573,9 @@ func (o *User) FromMap(kv map[string]interface{}) {
 					if av, ok := ae.(string); ok {
 						na = append(na, av)
 					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
 						b, _ := json.Marshal(ae)
 						var av string
 						if err := json.Unmarshal(b, &av); err != nil {
@@ -540,6 +612,52 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	}
 	if o.Emails == nil {
 		o.Emails = make([]string, 0)
+	}
+	if val := kv["groups"]; val != nil {
+		na := make([]UserGroups, 0)
+		if a, ok := val.([]UserGroups); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(UserGroups); ok {
+						na = append(na, av)
+					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
+						b, _ := json.Marshal(ae)
+						var av UserGroups
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for groups field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(UserGroups); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av UserGroups
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for groups field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for groups field")
+			}
+		}
+		o.Groups = na
+	} else {
+		o.Groups = []UserGroups{}
+	}
+	if o.Groups == nil {
+		o.Groups = make([]UserGroups, 0)
 	}
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
@@ -612,9 +730,11 @@ func (o *User) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *User) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.AvatarURL)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Emails)
+	args = append(args, o.Groups)
 	args = append(args, o.ID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
@@ -636,6 +756,10 @@ func GetUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "active",
+				"type": "boolean",
+			},
+			map[string]interface{}{
 				"name":    "avatar_url",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
@@ -647,6 +771,10 @@ func GetUserAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "emails",
 				"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"},
+			},
+			map[string]interface{}{
+				"name": "groups",
+				"type": map[string]interface{}{"name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "id",

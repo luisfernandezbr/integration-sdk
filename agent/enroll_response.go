@@ -53,18 +53,18 @@ const (
 	EnrollResponseCustomerIDColumn = "customer_id"
 	// EnrollResponseDataColumn is the data column name
 	EnrollResponseDataColumn = "data"
-	// EnrollResponseDateColumn is the date column name
-	EnrollResponseDateColumn = "date"
-	// EnrollResponseDateColumnEpochColumn is the epoch column property of the Date name
-	EnrollResponseDateColumnEpochColumn = "date->epoch"
-	// EnrollResponseDateColumnOffsetColumn is the offset column property of the Date name
-	EnrollResponseDateColumnOffsetColumn = "date->offset"
-	// EnrollResponseDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	EnrollResponseDateColumnRfc3339Column = "date->rfc3339"
 	// EnrollResponseDistroColumn is the distro column name
 	EnrollResponseDistroColumn = "distro"
 	// EnrollResponseErrorColumn is the error column name
 	EnrollResponseErrorColumn = "error"
+	// EnrollResponseEventDateColumn is the event_date column name
+	EnrollResponseEventDateColumn = "event_date"
+	// EnrollResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	EnrollResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// EnrollResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	EnrollResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// EnrollResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	EnrollResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// EnrollResponseFreeSpaceColumn is the free_space column name
 	EnrollResponseFreeSpaceColumn = "free_space"
 	// EnrollResponseGoVersionColumn is the go_version column name
@@ -97,8 +97,8 @@ const (
 	EnrollResponseVersionColumn = "version"
 )
 
-// EnrollResponseDate represents the object structure for date
-type EnrollResponseDate struct {
+// EnrollResponseEventDate represents the object structure for event_date
+type EnrollResponseEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -107,7 +107,7 @@ type EnrollResponseDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *EnrollResponseDate) ToMap() map[string]interface{} {
+func (o *EnrollResponseEventDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -118,7 +118,7 @@ func (o *EnrollResponseDate) ToMap() map[string]interface{} {
 	}
 }
 
-// Type is the enumeration type for type
+// EnrollResponseType is the enumeration type for type
 type EnrollResponseType int32
 
 // String returns the string value for Type
@@ -136,6 +136,10 @@ func (v EnrollResponseType) String() string {
 		return "export"
 	case 5:
 		return "project"
+	case 6:
+		return "user"
+	case 7:
+		return "repo"
 	}
 	return "unset"
 }
@@ -153,6 +157,10 @@ const (
 	EnrollResponseTypeExport EnrollResponseType = 4
 	// TypeProject is the enumeration value for project
 	EnrollResponseTypeProject EnrollResponseType = 5
+	// TypeUser is the enumeration value for user
+	EnrollResponseTypeUser EnrollResponseType = 6
+	// TypeRepo is the enumeration value for repo
+	EnrollResponseTypeRepo EnrollResponseType = 7
 )
 
 // EnrollResponse an agent response to an the enroll action
@@ -165,12 +173,12 @@ type EnrollResponse struct {
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
 	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
-	// Date the date of the event
-	Date EnrollResponseDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Distro the agent os distribution
 	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
 	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	// EventDate the date of the event
+	EventDate EnrollResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -338,22 +346,22 @@ func toEnrollResponseObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		}
 		return arr
 
-	case EnrollResponseDate:
-		vv := o.(EnrollResponseDate)
+	case EnrollResponseEventDate:
+		vv := o.(EnrollResponseEventDate)
 		return vv.ToMap()
-	case *EnrollResponseDate:
+	case *EnrollResponseEventDate:
 		return map[string]interface{}{
-			"agent.date": (*o.(*EnrollResponseDate)).ToMap(),
+			"agent.event_date": (*o.(*EnrollResponseEventDate)).ToMap(),
 		}
-	case []EnrollResponseDate:
+	case []EnrollResponseEventDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]EnrollResponseDate) {
+		for _, i := range o.([]EnrollResponseEventDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]EnrollResponseDate:
+	case *[]EnrollResponseEventDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]EnrollResponseDate)
+		vv := o.(*[]EnrollResponseEventDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -424,7 +432,7 @@ func (o *EnrollResponse) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *EnrollResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.EventDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -436,7 +444,7 @@ func (o *EnrollResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case EnrollResponseDate:
+	case EnrollResponseEventDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for EnrollResponse")
@@ -481,7 +489,7 @@ func (o *EnrollResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "event_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -608,9 +616,9 @@ func (o *EnrollResponse) ToMap(avro ...bool) map[string]interface{} {
 		"architecture": toEnrollResponseObject(o.Architecture, isavro, false, "string"),
 		"customer_id":  toEnrollResponseObject(o.CustomerID, isavro, false, "string"),
 		"data":         toEnrollResponseObject(o.Data, isavro, true, "string"),
-		"date":         toEnrollResponseObject(o.Date, isavro, false, "date"),
 		"distro":       toEnrollResponseObject(o.Distro, isavro, false, "string"),
 		"error":        toEnrollResponseObject(o.Error, isavro, true, "string"),
+		"event_date":   toEnrollResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":   toEnrollResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":   toEnrollResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":     toEnrollResponseObject(o.Hostname, isavro, false, "string"),
@@ -691,28 +699,6 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 			o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["date"].(EnrollResponseDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = EnrollResponseDate{}
-		} else {
-			o.Date = EnrollResponseDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
-		}
-	}
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -740,6 +726,28 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["event_date"].(EnrollResponseEventDate); ok {
+		o.EventDate = val
+	} else {
+		val := kv["event_date"]
+		if val == nil {
+			o.EventDate = EnrollResponseEventDate{}
+		} else {
+			o.EventDate = EnrollResponseEventDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.EventDate)
+
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -913,6 +921,10 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 4
 			case "project":
 				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -929,6 +941,10 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 4
 			case "project":
 				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
 			}
 		}
 	}
@@ -968,9 +984,9 @@ func (o *EnrollResponse) Hash() string {
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
-	args = append(args, o.Date)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
+	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1019,10 +1035,6 @@ func GetEnrollResponseAvroSchemaSpec() string {
 				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event"},
-			},
-			map[string]interface{}{
 				"name": "distro",
 				"type": "string",
 			},
@@ -1030,6 +1042,10 @@ func GetEnrollResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "event_date",
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1085,7 +1101,7 @@ func GetEnrollResponseAvroSchemaSpec() string {
 					map[string]interface{}{
 						"type":    "enum",
 						"name":    "type",
-						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project"},
+						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "user", "repo"},
 					},
 				},
 			},

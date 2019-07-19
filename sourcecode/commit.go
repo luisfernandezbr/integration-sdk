@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -59,14 +60,14 @@ const (
 	CommitCommitterRefIDColumn = "committer_ref_id"
 	// CommitComplexityColumn is the complexity column name
 	CommitComplexityColumn = "complexity"
-	// CommitCreatedColumn is the created column name
-	CommitCreatedColumn = "created"
-	// CommitCreatedColumnEpochColumn is the epoch column property of the Created name
-	CommitCreatedColumnEpochColumn = "created->epoch"
-	// CommitCreatedColumnOffsetColumn is the offset column property of the Created name
-	CommitCreatedColumnOffsetColumn = "created->offset"
-	// CommitCreatedColumnRfc3339Column is the rfc3339 column property of the Created name
-	CommitCreatedColumnRfc3339Column = "created->rfc3339"
+	// CommitCreatedDateColumn is the created_date column name
+	CommitCreatedDateColumn = "created_date"
+	// CommitCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
+	CommitCreatedDateColumnEpochColumn = "created_date->epoch"
+	// CommitCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
+	CommitCreatedDateColumnOffsetColumn = "created_date->offset"
+	// CommitCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
+	CommitCreatedDateColumnRfc3339Column = "created_date->rfc3339"
 	// CommitCustomerIDColumn is the customer_id column name
 	CommitCustomerIDColumn = "customer_id"
 	// CommitDeletionsColumn is the deletions column name
@@ -87,8 +88,8 @@ const (
 	CommitFilesColumnCommitIDColumn = "files->commit_id"
 	// CommitFilesColumnComplexityColumn is the complexity column property of the Files name
 	CommitFilesColumnComplexityColumn = "files->complexity"
-	// CommitFilesColumnCreatedColumn is the created column property of the Files name
-	CommitFilesColumnCreatedColumn = "files->created"
+	// CommitFilesColumnCreatedDateColumn is the created_date column property of the Files name
+	CommitFilesColumnCreatedDateColumn = "files->created_date"
 	// CommitFilesColumnDeletionsColumn is the deletions column property of the Files name
 	CommitFilesColumnDeletionsColumn = "files->deletions"
 	// CommitFilesColumnExcludedColumn is the excluded column property of the Files name
@@ -149,8 +150,8 @@ const (
 	CommitURLColumn = "url"
 )
 
-// CommitCreated represents the object structure for created
-type CommitCreated struct {
+// CommitCreatedDate represents the object structure for created_date
+type CommitCreatedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -159,7 +160,7 @@ type CommitCreated struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *CommitCreated) ToMap() map[string]interface{} {
+func (o *CommitCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -184,8 +185,8 @@ type CommitFiles struct {
 	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
 	// Complexity the complexity value for the file change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
-	// Created the timestamp in UTC that the commit was created
-	Created CommitCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
+	// CreatedDate the timestamp in UTC that the commit was created
+	CreatedDate CommitCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// Deletions the number of deletions for the commit file
 	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// Excluded if the file was excluded from processing
@@ -234,8 +235,8 @@ func (o *CommitFiles) ToMap() map[string]interface{} {
 		"commit_id": o.CommitID,
 		// Complexity the complexity value for the file change
 		"complexity": o.Complexity,
-		// Created the timestamp in UTC that the commit was created
-		"created": o.Created,
+		// CreatedDate the timestamp in UTC that the commit was created
+		"created_date": o.CreatedDate,
 		// Deletions the number of deletions for the commit file
 		"deletions": o.Deletions,
 		// Excluded if the file was excluded from processing
@@ -287,8 +288,8 @@ type Commit struct {
 	CommitterRefID string `json:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
 	// Complexity the complexity value for the change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
-	// Created the timestamp in UTC that the commit was created
-	Created CommitCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
+	// CreatedDate the timestamp in UTC that the commit was created
+	CreatedDate CommitCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Deletions the number of deletions for the commit
@@ -460,22 +461,22 @@ func toCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		}
 		return arr
 
-	case CommitCreated:
-		vv := o.(CommitCreated)
+	case CommitCreatedDate:
+		vv := o.(CommitCreatedDate)
 		return vv.ToMap()
-	case *CommitCreated:
+	case *CommitCreatedDate:
 		return map[string]interface{}{
-			"sourcecode.created": (*o.(*CommitCreated)).ToMap(),
+			"sourcecode.created_date": (*o.(*CommitCreatedDate)).ToMap(),
 		}
-	case []CommitCreated:
+	case []CommitCreatedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]CommitCreated) {
+		for _, i := range o.([]CommitCreatedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]CommitCreated:
+	case *[]CommitCreatedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]CommitCreated)
+		vv := o.(*[]CommitCreatedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -549,7 +550,7 @@ func (o *Commit) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Commit) GetTimestamp() time.Time {
-	var dt interface{} = o.Created
+	var dt interface{} = o.CreatedDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -561,7 +562,7 @@ func (o *Commit) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case CommitCreated:
+	case CommitCreatedDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Commit")
@@ -607,7 +608,7 @@ func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "created",
+		Timestamp:         "created_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -740,7 +741,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"comments":         toCommitObject(o.Comments, isavro, false, "long"),
 		"committer_ref_id": toCommitObject(o.CommitterRefID, isavro, false, "string"),
 		"complexity":       toCommitObject(o.Complexity, isavro, false, "long"),
-		"created":          toCommitObject(o.Created, isavro, false, "created"),
+		"created_date":     toCommitObject(o.CreatedDate, isavro, false, "created_date"),
 		"customer_id":      toCommitObject(o.CustomerID, isavro, false, "string"),
 		"deletions":        toCommitObject(o.Deletions, isavro, false, "long"),
 		"excluded":         toCommitObject(o.Excluded, isavro, false, "boolean"),
@@ -859,14 +860,14 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.Complexity = number.ToInt64Any(val)
 		}
 	}
-	if val, ok := kv["created"].(CommitCreated); ok {
-		o.Created = val
+	if val, ok := kv["created_date"].(CommitCreatedDate); ok {
+		o.CreatedDate = val
 	} else {
-		val := kv["created"]
+		val := kv["created_date"]
 		if val == nil {
-			o.Created = CommitCreated{}
+			o.CreatedDate = CommitCreatedDate{}
 		} else {
-			o.Created = CommitCreated{}
+			o.CreatedDate = CommitCreatedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -877,7 +878,7 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Created)
+			json.Unmarshal(b, &o.CreatedDate)
 
 		}
 	}
@@ -927,6 +928,9 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 					if av, ok := ae.(CommitFiles); ok {
 						na = append(na, av)
 					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
 						b, _ := json.Marshal(ae)
 						var av CommitFiles
 						if err := json.Unmarshal(b, &av); err != nil {
@@ -1139,7 +1143,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Comments)
 	args = append(args, o.CommitterRefID)
 	args = append(args, o.Complexity)
-	args = append(args, o.Created)
+	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Deletions)
 	args = append(args, o.Excluded)
@@ -1201,8 +1205,8 @@ func GetCommitAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "created",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the commit was created", "type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"name": "created_date",
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the commit was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1218,7 +1222,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "files.created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the commit was created"}, "name": "created", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"doc": "the license confidence from the detection engine", "type": "float", "name": "license_confidence"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"doc": "the order value for the file in the change set", "type": "long", "name": "ordinal"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit", "type": "record", "name": "files"}, "type": "array", "name": "files"},
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"doc": "the number of additions for the commit file", "type": "long", "name": "additions"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "files.created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the timestamp in UTC that the commit was created"}, "name": "created_date", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"name": "excluded", "doc": "if the file was excluded from processing", "type": "boolean"}, map[string]interface{}{"doc": "if the file was excluded, the reason", "type": "string", "name": "excluded_reason"}, map[string]interface{}{"name": "filename", "doc": "the filename", "type": "string"}, map[string]interface{}{"name": "language", "doc": "the language that was detected for the file", "type": "string"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"doc": "the final file name", "type": "string", "name": "renamed_to"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"doc": "the size of the file", "type": "long", "name": "size"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit"}},
 			},
 			map[string]interface{}{
 				"name": "files_changed",

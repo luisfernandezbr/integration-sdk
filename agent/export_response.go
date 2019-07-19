@@ -51,14 +51,6 @@ const (
 	ExportResponseCustomerIDColumn = "customer_id"
 	// ExportResponseDataColumn is the data column name
 	ExportResponseDataColumn = "data"
-	// ExportResponseDateColumn is the date column name
-	ExportResponseDateColumn = "date"
-	// ExportResponseDateColumnEpochColumn is the epoch column property of the Date name
-	ExportResponseDateColumnEpochColumn = "date->epoch"
-	// ExportResponseDateColumnOffsetColumn is the offset column property of the Date name
-	ExportResponseDateColumnOffsetColumn = "date->offset"
-	// ExportResponseDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	ExportResponseDateColumnRfc3339Column = "date->rfc3339"
 	// ExportResponseDistroColumn is the distro column name
 	ExportResponseDistroColumn = "distro"
 	// ExportResponseEndDateColumn is the end_date column name
@@ -71,6 +63,14 @@ const (
 	ExportResponseEndDateColumnRfc3339Column = "end_date->rfc3339"
 	// ExportResponseErrorColumn is the error column name
 	ExportResponseErrorColumn = "error"
+	// ExportResponseEventDateColumn is the event_date column name
+	ExportResponseEventDateColumn = "event_date"
+	// ExportResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	ExportResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// ExportResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	ExportResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// ExportResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	ExportResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// ExportResponseFreeSpaceColumn is the free_space column name
 	ExportResponseFreeSpaceColumn = "free_space"
 	// ExportResponseGoVersionColumn is the go_version column name
@@ -113,27 +113,6 @@ const (
 	ExportResponseVersionColumn = "version"
 )
 
-// ExportResponseDate represents the object structure for date
-type ExportResponseDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func (o *ExportResponseDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
-	}
-}
-
 // ExportResponseEndDate represents the object structure for end_date
 type ExportResponseEndDate struct {
 	// Epoch the date in epoch format
@@ -145,6 +124,27 @@ type ExportResponseEndDate struct {
 }
 
 func (o *ExportResponseEndDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
+// ExportResponseEventDate represents the object structure for event_date
+type ExportResponseEventDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *ExportResponseEventDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -176,7 +176,7 @@ func (o *ExportResponseStartDate) ToMap() map[string]interface{} {
 	}
 }
 
-// Type is the enumeration type for type
+// ExportResponseType is the enumeration type for type
 type ExportResponseType int32
 
 // String returns the string value for Type
@@ -194,6 +194,10 @@ func (v ExportResponseType) String() string {
 		return "export"
 	case 5:
 		return "project"
+	case 6:
+		return "user"
+	case 7:
+		return "repo"
 	}
 	return "unset"
 }
@@ -211,6 +215,10 @@ const (
 	ExportResponseTypeExport ExportResponseType = 4
 	// TypeProject is the enumeration value for project
 	ExportResponseTypeProject ExportResponseType = 5
+	// TypeUser is the enumeration value for user
+	ExportResponseTypeUser ExportResponseType = 6
+	// TypeRepo is the enumeration value for repo
+	ExportResponseTypeRepo ExportResponseType = 7
 )
 
 // ExportResponse an agent response to an action request for export
@@ -221,14 +229,14 @@ type ExportResponse struct {
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
 	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
-	// Date the date of the event
-	Date ExportResponseDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Distro the agent os distribution
 	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// EndDate the export end date
 	EndDate ExportResponseEndDate `json:"end_date" bson:"end_date" yaml:"end_date" faker:"-"`
 	// Error an error message related to this event
 	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	// EventDate the date of the event
+	EventDate ExportResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -400,26 +408,6 @@ func toExportResponseObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		}
 		return arr
 
-	case ExportResponseDate:
-		vv := o.(ExportResponseDate)
-		return vv.ToMap()
-	case *ExportResponseDate:
-		return map[string]interface{}{
-			"agent.date": (*o.(*ExportResponseDate)).ToMap(),
-		}
-	case []ExportResponseDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportResponseDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportResponseDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportResponseDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ExportResponseEndDate:
 		vv := o.(ExportResponseEndDate)
 		return vv.ToMap()
@@ -436,6 +424,26 @@ func toExportResponseObject(o interface{}, isavro bool, isoptional bool, avrotyp
 	case *[]ExportResponseEndDate:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]ExportResponseEndDate)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case ExportResponseEventDate:
+		vv := o.(ExportResponseEventDate)
+		return vv.ToMap()
+	case *ExportResponseEventDate:
+		return map[string]interface{}{
+			"agent.event_date": (*o.(*ExportResponseEventDate)).ToMap(),
+		}
+	case []ExportResponseEventDate:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]ExportResponseEventDate) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]ExportResponseEventDate:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]ExportResponseEventDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -526,7 +534,7 @@ func (o *ExportResponse) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.EventDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -538,7 +546,7 @@ func (o *ExportResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ExportResponseDate:
+	case ExportResponseEventDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ExportResponse")
@@ -583,7 +591,7 @@ func (o *ExportResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "event_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -709,10 +717,10 @@ func (o *ExportResponse) ToMap(avro ...bool) map[string]interface{} {
 		"architecture": toExportResponseObject(o.Architecture, isavro, false, "string"),
 		"customer_id":  toExportResponseObject(o.CustomerID, isavro, false, "string"),
 		"data":         toExportResponseObject(o.Data, isavro, true, "string"),
-		"date":         toExportResponseObject(o.Date, isavro, false, "date"),
 		"distro":       toExportResponseObject(o.Distro, isavro, false, "string"),
 		"end_date":     toExportResponseObject(o.EndDate, isavro, false, "end_date"),
 		"error":        toExportResponseObject(o.Error, isavro, true, "string"),
+		"event_date":   toExportResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":   toExportResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":   toExportResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":     toExportResponseObject(o.Hostname, isavro, false, "string"),
@@ -782,28 +790,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 			o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["date"].(ExportResponseDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = ExportResponseDate{}
-		} else {
-			o.Date = ExportResponseDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
-		}
-	}
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -853,6 +839,28 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["event_date"].(ExportResponseEventDate); ok {
+		o.EventDate = val
+	} else {
+		val := kv["event_date"]
+		if val == nil {
+			o.EventDate = ExportResponseEventDate{}
+		} else {
+			o.EventDate = ExportResponseEventDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.EventDate)
+
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -1061,6 +1069,10 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 4
 			case "project":
 				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1077,6 +1089,10 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 4
 			case "project":
 				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
 			}
 		}
 	}
@@ -1115,10 +1131,10 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
-	args = append(args, o.Date)
 	args = append(args, o.Distro)
 	args = append(args, o.EndDate)
 	args = append(args, o.Error)
+	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1165,21 +1181,21 @@ func GetExportResponseAvroSchemaSpec() string {
 				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
-			},
-			map[string]interface{}{
 				"name": "distro",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"doc": "the export end date", "type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date"},
 			},
 			map[string]interface{}{
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "event_date",
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1231,7 +1247,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "start_date",
-				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export start date"},
+				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export start date"},
 			},
 			map[string]interface{}{
 				"name": "success",
@@ -1243,7 +1259,7 @@ func GetExportResponseAvroSchemaSpec() string {
 					map[string]interface{}{
 						"type":    "enum",
 						"name":    "type",
-						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project"},
+						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "user", "repo"},
 					},
 				},
 			},

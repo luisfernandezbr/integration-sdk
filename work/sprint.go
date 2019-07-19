@@ -43,32 +43,32 @@ const (
 )
 
 const (
-	// SprintCompletedColumn is the completed column name
-	SprintCompletedColumn = "completed"
-	// SprintCompletedColumnEpochColumn is the epoch column property of the Completed name
-	SprintCompletedColumnEpochColumn = "completed->epoch"
-	// SprintCompletedColumnOffsetColumn is the offset column property of the Completed name
-	SprintCompletedColumnOffsetColumn = "completed->offset"
-	// SprintCompletedColumnRfc3339Column is the rfc3339 column property of the Completed name
-	SprintCompletedColumnRfc3339Column = "completed->rfc3339"
+	// SprintCompletedDateColumn is the completed_date column name
+	SprintCompletedDateColumn = "completed_date"
+	// SprintCompletedDateColumnEpochColumn is the epoch column property of the CompletedDate name
+	SprintCompletedDateColumnEpochColumn = "completed_date->epoch"
+	// SprintCompletedDateColumnOffsetColumn is the offset column property of the CompletedDate name
+	SprintCompletedDateColumnOffsetColumn = "completed_date->offset"
+	// SprintCompletedDateColumnRfc3339Column is the rfc3339 column property of the CompletedDate name
+	SprintCompletedDateColumnRfc3339Column = "completed_date->rfc3339"
 	// SprintCustomerIDColumn is the customer_id column name
 	SprintCustomerIDColumn = "customer_id"
-	// SprintEndedColumn is the ended column name
-	SprintEndedColumn = "ended"
-	// SprintEndedColumnEpochColumn is the epoch column property of the Ended name
-	SprintEndedColumnEpochColumn = "ended->epoch"
-	// SprintEndedColumnOffsetColumn is the offset column property of the Ended name
-	SprintEndedColumnOffsetColumn = "ended->offset"
-	// SprintEndedColumnRfc3339Column is the rfc3339 column property of the Ended name
-	SprintEndedColumnRfc3339Column = "ended->rfc3339"
-	// SprintFetchedColumn is the fetched column name
-	SprintFetchedColumn = "fetched"
-	// SprintFetchedColumnEpochColumn is the epoch column property of the Fetched name
-	SprintFetchedColumnEpochColumn = "fetched->epoch"
-	// SprintFetchedColumnOffsetColumn is the offset column property of the Fetched name
-	SprintFetchedColumnOffsetColumn = "fetched->offset"
-	// SprintFetchedColumnRfc3339Column is the rfc3339 column property of the Fetched name
-	SprintFetchedColumnRfc3339Column = "fetched->rfc3339"
+	// SprintEndedDateColumn is the ended_date column name
+	SprintEndedDateColumn = "ended_date"
+	// SprintEndedDateColumnEpochColumn is the epoch column property of the EndedDate name
+	SprintEndedDateColumnEpochColumn = "ended_date->epoch"
+	// SprintEndedDateColumnOffsetColumn is the offset column property of the EndedDate name
+	SprintEndedDateColumnOffsetColumn = "ended_date->offset"
+	// SprintEndedDateColumnRfc3339Column is the rfc3339 column property of the EndedDate name
+	SprintEndedDateColumnRfc3339Column = "ended_date->rfc3339"
+	// SprintFetchedDateColumn is the fetched_date column name
+	SprintFetchedDateColumn = "fetched_date"
+	// SprintFetchedDateColumnEpochColumn is the epoch column property of the FetchedDate name
+	SprintFetchedDateColumnEpochColumn = "fetched_date->epoch"
+	// SprintFetchedDateColumnOffsetColumn is the offset column property of the FetchedDate name
+	SprintFetchedDateColumnOffsetColumn = "fetched_date->offset"
+	// SprintFetchedDateColumnRfc3339Column is the rfc3339 column property of the FetchedDate name
+	SprintFetchedDateColumnRfc3339Column = "fetched_date->rfc3339"
 	// SprintGoalColumn is the goal column name
 	SprintGoalColumn = "goal"
 	// SprintIDColumn is the id column name
@@ -79,20 +79,20 @@ const (
 	SprintRefIDColumn = "ref_id"
 	// SprintRefTypeColumn is the ref_type column name
 	SprintRefTypeColumn = "ref_type"
-	// SprintStartedColumn is the started column name
-	SprintStartedColumn = "started"
-	// SprintStartedColumnEpochColumn is the epoch column property of the Started name
-	SprintStartedColumnEpochColumn = "started->epoch"
-	// SprintStartedColumnOffsetColumn is the offset column property of the Started name
-	SprintStartedColumnOffsetColumn = "started->offset"
-	// SprintStartedColumnRfc3339Column is the rfc3339 column property of the Started name
-	SprintStartedColumnRfc3339Column = "started->rfc3339"
+	// SprintStartedDateColumn is the started_date column name
+	SprintStartedDateColumn = "started_date"
+	// SprintStartedDateColumnEpochColumn is the epoch column property of the StartedDate name
+	SprintStartedDateColumnEpochColumn = "started_date->epoch"
+	// SprintStartedDateColumnOffsetColumn is the offset column property of the StartedDate name
+	SprintStartedDateColumnOffsetColumn = "started_date->offset"
+	// SprintStartedDateColumnRfc3339Column is the rfc3339 column property of the StartedDate name
+	SprintStartedDateColumnRfc3339Column = "started_date->rfc3339"
 	// SprintStatusColumn is the status column name
 	SprintStatusColumn = "status"
 )
 
-// SprintCompleted represents the object structure for completed
-type SprintCompleted struct {
+// SprintCompletedDate represents the object structure for completed_date
+type SprintCompletedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -101,7 +101,7 @@ type SprintCompleted struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *SprintCompleted) ToMap() map[string]interface{} {
+func (o *SprintCompletedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -112,8 +112,8 @@ func (o *SprintCompleted) ToMap() map[string]interface{} {
 	}
 }
 
-// SprintEnded represents the object structure for ended
-type SprintEnded struct {
+// SprintEndedDate represents the object structure for ended_date
+type SprintEndedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -122,7 +122,7 @@ type SprintEnded struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *SprintEnded) ToMap() map[string]interface{} {
+func (o *SprintEndedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -133,8 +133,8 @@ func (o *SprintEnded) ToMap() map[string]interface{} {
 	}
 }
 
-// SprintFetched represents the object structure for fetched
-type SprintFetched struct {
+// SprintFetchedDate represents the object structure for fetched_date
+type SprintFetchedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -143,7 +143,7 @@ type SprintFetched struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *SprintFetched) ToMap() map[string]interface{} {
+func (o *SprintFetchedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -154,8 +154,8 @@ func (o *SprintFetched) ToMap() map[string]interface{} {
 	}
 }
 
-// SprintStarted represents the object structure for started
-type SprintStarted struct {
+// SprintStartedDate represents the object structure for started_date
+type SprintStartedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -164,7 +164,7 @@ type SprintStarted struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *SprintStarted) ToMap() map[string]interface{} {
+func (o *SprintStartedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -175,7 +175,7 @@ func (o *SprintStarted) ToMap() map[string]interface{} {
 	}
 }
 
-// Status is the enumeration type for status
+// SprintStatus is the enumeration type for status
 type SprintStatus int32
 
 // String returns the string value for Status
@@ -202,14 +202,14 @@ const (
 
 // Sprint sprint details
 type Sprint struct {
-	// Completed the date that the sprint was completed
-	Completed SprintCompleted `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
+	// CompletedDate the date that the sprint was completed
+	CompletedDate SprintCompletedDate `json:"completed_date" bson:"completed_date" yaml:"completed_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Ended the date that the sprint was ended
-	Ended SprintEnded `json:"ended" bson:"ended" yaml:"ended" faker:"-"`
-	// Fetched date in when the api was called
-	Fetched SprintFetched `json:"fetched" bson:"fetched" yaml:"fetched" faker:"-"`
+	// EndedDate the date that the sprint was ended
+	EndedDate SprintEndedDate `json:"ended_date" bson:"ended_date" yaml:"ended_date" faker:"-"`
+	// FetchedDate date in when the api was called
+	FetchedDate SprintFetchedDate `json:"fetched_date" bson:"fetched_date" yaml:"fetched_date" faker:"-"`
 	// Goal the goal for the sprint
 	Goal string `json:"goal" bson:"goal" yaml:"goal" faker:"-"`
 	// ID the primary key for the model instance
@@ -220,8 +220,8 @@ type Sprint struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// Started the date that the sprint was started
-	Started SprintStarted `json:"started" bson:"started" yaml:"started" faker:"-"`
+	// StartedDate the date that the sprint was started
+	StartedDate SprintStartedDate `json:"started_date" bson:"started_date" yaml:"started_date" faker:"-"`
 	// Status status of the sprint
 	Status SprintStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -361,82 +361,82 @@ func toSprintObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		}
 		return arr
 
-	case SprintCompleted:
-		vv := o.(SprintCompleted)
+	case SprintCompletedDate:
+		vv := o.(SprintCompletedDate)
 		return vv.ToMap()
-	case *SprintCompleted:
+	case *SprintCompletedDate:
 		return map[string]interface{}{
-			"work.completed": (*o.(*SprintCompleted)).ToMap(),
+			"work.completed_date": (*o.(*SprintCompletedDate)).ToMap(),
 		}
-	case []SprintCompleted:
+	case []SprintCompletedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]SprintCompleted) {
+		for _, i := range o.([]SprintCompletedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]SprintCompleted:
+	case *[]SprintCompletedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]SprintCompleted)
+		vv := o.(*[]SprintCompletedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case SprintEnded:
-		vv := o.(SprintEnded)
+	case SprintEndedDate:
+		vv := o.(SprintEndedDate)
 		return vv.ToMap()
-	case *SprintEnded:
+	case *SprintEndedDate:
 		return map[string]interface{}{
-			"work.ended": (*o.(*SprintEnded)).ToMap(),
+			"work.ended_date": (*o.(*SprintEndedDate)).ToMap(),
 		}
-	case []SprintEnded:
+	case []SprintEndedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]SprintEnded) {
+		for _, i := range o.([]SprintEndedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]SprintEnded:
+	case *[]SprintEndedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]SprintEnded)
+		vv := o.(*[]SprintEndedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case SprintFetched:
-		vv := o.(SprintFetched)
+	case SprintFetchedDate:
+		vv := o.(SprintFetchedDate)
 		return vv.ToMap()
-	case *SprintFetched:
+	case *SprintFetchedDate:
 		return map[string]interface{}{
-			"work.fetched": (*o.(*SprintFetched)).ToMap(),
+			"work.fetched_date": (*o.(*SprintFetchedDate)).ToMap(),
 		}
-	case []SprintFetched:
+	case []SprintFetchedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]SprintFetched) {
+		for _, i := range o.([]SprintFetchedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]SprintFetched:
+	case *[]SprintFetchedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]SprintFetched)
+		vv := o.(*[]SprintFetchedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case SprintStarted:
-		vv := o.(SprintStarted)
+	case SprintStartedDate:
+		vv := o.(SprintStartedDate)
 		return vv.ToMap()
-	case *SprintStarted:
+	case *SprintStartedDate:
 		return map[string]interface{}{
-			"work.started": (*o.(*SprintStarted)).ToMap(),
+			"work.started_date": (*o.(*SprintStartedDate)).ToMap(),
 		}
-	case []SprintStarted:
+	case []SprintStartedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]SprintStarted) {
+		for _, i := range o.([]SprintStartedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]SprintStarted:
+	case *[]SprintStartedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]SprintStarted)
+		vv := o.(*[]SprintStartedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -500,7 +500,7 @@ func (o *Sprint) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Sprint) GetTimestamp() time.Time {
-	var dt interface{} = o.Fetched
+	var dt interface{} = o.FetchedDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -512,7 +512,7 @@ func (o *Sprint) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case SprintFetched:
+	case SprintFetchedDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Sprint")
@@ -557,7 +557,7 @@ func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "fetched",
+		Timestamp:         "fetched_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -680,18 +680,18 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"completed":   toSprintObject(o.Completed, isavro, false, "completed"),
-		"customer_id": toSprintObject(o.CustomerID, isavro, false, "string"),
-		"ended":       toSprintObject(o.Ended, isavro, false, "ended"),
-		"fetched":     toSprintObject(o.Fetched, isavro, false, "fetched"),
-		"goal":        toSprintObject(o.Goal, isavro, false, "string"),
-		"id":          toSprintObject(o.ID, isavro, false, "string"),
-		"name":        toSprintObject(o.Name, isavro, false, "string"),
-		"ref_id":      toSprintObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toSprintObject(o.RefType, isavro, false, "string"),
-		"started":     toSprintObject(o.Started, isavro, false, "started"),
-		"status":      toSprintObject(o.Status, isavro, false, "status"),
-		"hashcode":    toSprintObject(o.Hashcode, isavro, false, "string"),
+		"completed_date": toSprintObject(o.CompletedDate, isavro, false, "completed_date"),
+		"customer_id":    toSprintObject(o.CustomerID, isavro, false, "string"),
+		"ended_date":     toSprintObject(o.EndedDate, isavro, false, "ended_date"),
+		"fetched_date":   toSprintObject(o.FetchedDate, isavro, false, "fetched_date"),
+		"goal":           toSprintObject(o.Goal, isavro, false, "string"),
+		"id":             toSprintObject(o.ID, isavro, false, "string"),
+		"name":           toSprintObject(o.Name, isavro, false, "string"),
+		"ref_id":         toSprintObject(o.RefID, isavro, false, "string"),
+		"ref_type":       toSprintObject(o.RefType, isavro, false, "string"),
+		"started_date":   toSprintObject(o.StartedDate, isavro, false, "started_date"),
+		"status":         toSprintObject(o.Status, isavro, false, "status"),
+		"hashcode":       toSprintObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -701,14 +701,14 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["completed"].(SprintCompleted); ok {
-		o.Completed = val
+	if val, ok := kv["completed_date"].(SprintCompletedDate); ok {
+		o.CompletedDate = val
 	} else {
-		val := kv["completed"]
+		val := kv["completed_date"]
 		if val == nil {
-			o.Completed = SprintCompleted{}
+			o.CompletedDate = SprintCompletedDate{}
 		} else {
-			o.Completed = SprintCompleted{}
+			o.CompletedDate = SprintCompletedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -719,7 +719,7 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Completed)
+			json.Unmarshal(b, &o.CompletedDate)
 
 		}
 	}
@@ -736,14 +736,14 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["ended"].(SprintEnded); ok {
-		o.Ended = val
+	if val, ok := kv["ended_date"].(SprintEndedDate); ok {
+		o.EndedDate = val
 	} else {
-		val := kv["ended"]
+		val := kv["ended_date"]
 		if val == nil {
-			o.Ended = SprintEnded{}
+			o.EndedDate = SprintEndedDate{}
 		} else {
-			o.Ended = SprintEnded{}
+			o.EndedDate = SprintEndedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -754,18 +754,18 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Ended)
+			json.Unmarshal(b, &o.EndedDate)
 
 		}
 	}
-	if val, ok := kv["fetched"].(SprintFetched); ok {
-		o.Fetched = val
+	if val, ok := kv["fetched_date"].(SprintFetchedDate); ok {
+		o.FetchedDate = val
 	} else {
-		val := kv["fetched"]
+		val := kv["fetched_date"]
 		if val == nil {
-			o.Fetched = SprintFetched{}
+			o.FetchedDate = SprintFetchedDate{}
 		} else {
-			o.Fetched = SprintFetched{}
+			o.FetchedDate = SprintFetchedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -776,7 +776,7 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Fetched)
+			json.Unmarshal(b, &o.FetchedDate)
 
 		}
 	}
@@ -845,14 +845,14 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["started"].(SprintStarted); ok {
-		o.Started = val
+	if val, ok := kv["started_date"].(SprintStartedDate); ok {
+		o.StartedDate = val
 	} else {
-		val := kv["started"]
+		val := kv["started_date"]
 		if val == nil {
-			o.Started = SprintStarted{}
+			o.StartedDate = SprintStartedDate{}
 		} else {
-			o.Started = SprintStarted{}
+			o.StartedDate = SprintStartedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -863,7 +863,7 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Started)
+			json.Unmarshal(b, &o.StartedDate)
 
 		}
 	}
@@ -898,16 +898,16 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Sprint) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Completed)
+	args = append(args, o.CompletedDate)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Ended)
-	args = append(args, o.Fetched)
+	args = append(args, o.EndedDate)
+	args = append(args, o.FetchedDate)
 	args = append(args, o.Goal)
 	args = append(args, o.ID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.Started)
+	args = append(args, o.StartedDate)
 	args = append(args, o.Status)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -925,20 +925,20 @@ func GetSprintAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "completed",
-				"type": map[string]interface{}{"name": "completed", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was completed", "type": "record"},
+				"name": "completed_date",
+				"type": map[string]interface{}{"type": "record", "name": "completed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was completed"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "ended",
-				"type": map[string]interface{}{"name": "ended", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was ended", "type": "record"},
+				"name": "ended_date",
+				"type": map[string]interface{}{"doc": "the date that the sprint was ended", "type": "record", "name": "ended_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
-				"name": "fetched",
-				"type": map[string]interface{}{"type": "record", "name": "fetched", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date in when the api was called"},
+				"name": "fetched_date",
+				"type": map[string]interface{}{"type": "record", "name": "fetched_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date in when the api was called"},
 			},
 			map[string]interface{}{
 				"name": "goal",
@@ -961,8 +961,8 @@ func GetSprintAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "started",
-				"type": map[string]interface{}{"type": "record", "name": "started", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was started"},
+				"name": "started_date",
+				"type": map[string]interface{}{"type": "record", "name": "started_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was started"},
 			},
 			map[string]interface{}{
 				"name": "status",

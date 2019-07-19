@@ -45,22 +45,22 @@ const (
 const (
 	// EnrollRequestCodeColumn is the code column name
 	EnrollRequestCodeColumn = "code"
-	// EnrollRequestDateColumn is the date column name
-	EnrollRequestDateColumn = "date"
-	// EnrollRequestDateColumnEpochColumn is the epoch column property of the Date name
-	EnrollRequestDateColumnEpochColumn = "date->epoch"
-	// EnrollRequestDateColumnOffsetColumn is the offset column property of the Date name
-	EnrollRequestDateColumnOffsetColumn = "date->offset"
-	// EnrollRequestDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	EnrollRequestDateColumnRfc3339Column = "date->rfc3339"
 	// EnrollRequestIDColumn is the id column name
 	EnrollRequestIDColumn = "id"
+	// EnrollRequestRequestDateColumn is the request_date column name
+	EnrollRequestRequestDateColumn = "request_date"
+	// EnrollRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	EnrollRequestRequestDateColumnEpochColumn = "request_date->epoch"
+	// EnrollRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	EnrollRequestRequestDateColumnOffsetColumn = "request_date->offset"
+	// EnrollRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	EnrollRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
 	// EnrollRequestUUIDColumn is the uuid column name
 	EnrollRequestUUIDColumn = "uuid"
 )
 
-// EnrollRequestDate represents the object structure for date
-type EnrollRequestDate struct {
+// EnrollRequestRequestDate represents the object structure for request_date
+type EnrollRequestRequestDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -69,7 +69,7 @@ type EnrollRequestDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *EnrollRequestDate) ToMap() map[string]interface{} {
+func (o *EnrollRequestRequestDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -84,10 +84,10 @@ func (o *EnrollRequestDate) ToMap() map[string]interface{} {
 type EnrollRequest struct {
 	// Code The agent enrollment code
 	Code string `json:"code" bson:"code" yaml:"code" faker:"-"`
-	// Date the date when the request was made
-	Date EnrollRequestDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for this model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// RequestDate the date when the request was made
+	RequestDate EnrollRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -227,22 +227,22 @@ func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 		}
 		return arr
 
-	case EnrollRequestDate:
-		vv := o.(EnrollRequestDate)
+	case EnrollRequestRequestDate:
+		vv := o.(EnrollRequestRequestDate)
 		return vv.ToMap()
-	case *EnrollRequestDate:
+	case *EnrollRequestRequestDate:
 		return map[string]interface{}{
-			"agent.date": (*o.(*EnrollRequestDate)).ToMap(),
+			"agent.request_date": (*o.(*EnrollRequestRequestDate)).ToMap(),
 		}
-	case []EnrollRequestDate:
+	case []EnrollRequestRequestDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]EnrollRequestDate) {
+		for _, i := range o.([]EnrollRequestRequestDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]EnrollRequestDate:
+	case *[]EnrollRequestRequestDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]EnrollRequestDate)
+		vv := o.(*[]EnrollRequestRequestDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -290,7 +290,7 @@ func (o *EnrollRequest) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *EnrollRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.RequestDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -302,7 +302,7 @@ func (o *EnrollRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case EnrollRequestDate:
+	case EnrollRequestRequestDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for EnrollRequest")
@@ -341,7 +341,7 @@ func (o *EnrollRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "request_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -457,10 +457,10 @@ func (o *EnrollRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"code": toEnrollRequestObject(o.Code, isavro, false, "string"),
-		"date": toEnrollRequestObject(o.Date, isavro, false, "date"),
-		"id":   toEnrollRequestObject(o.ID, isavro, false, "string"),
-		"uuid": toEnrollRequestObject(o.UUID, isavro, false, "string"),
+		"code":         toEnrollRequestObject(o.Code, isavro, false, "string"),
+		"id":           toEnrollRequestObject(o.ID, isavro, false, "string"),
+		"request_date": toEnrollRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"uuid":         toEnrollRequestObject(o.UUID, isavro, false, "string"),
 	}
 }
 
@@ -483,28 +483,6 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 			o.Code = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date"].(EnrollRequestDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = EnrollRequestDate{}
-		} else {
-			o.Date = EnrollRequestDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
-		}
-	}
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -516,6 +494,28 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["request_date"].(EnrollRequestRequestDate); ok {
+		o.RequestDate = val
+	} else {
+		val := kv["request_date"]
+		if val == nil {
+			o.RequestDate = EnrollRequestRequestDate{}
+		} else {
+			o.RequestDate = EnrollRequestRequestDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.RequestDate)
+
 		}
 	}
 	if val, ok := kv["uuid"].(string); ok {
@@ -546,12 +546,12 @@ func GetEnrollRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date when the request was made"},
-			},
-			map[string]interface{}{
 				"name": "id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "request_date",
+				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

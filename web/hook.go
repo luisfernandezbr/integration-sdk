@@ -45,26 +45,26 @@ const (
 const (
 	// HookDataColumn is the data column name
 	HookDataColumn = "data"
-	// HookDateColumn is the date column name
-	HookDateColumn = "date"
-	// HookDateColumnEpochColumn is the epoch column property of the Date name
-	HookDateColumnEpochColumn = "date->epoch"
-	// HookDateColumnOffsetColumn is the offset column property of the Date name
-	HookDateColumnOffsetColumn = "date->offset"
-	// HookDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	HookDateColumnRfc3339Column = "date->rfc3339"
 	// HookHeadersColumn is the headers column name
 	HookHeadersColumn = "headers"
 	// HookIDColumn is the id column name
 	HookIDColumn = "id"
+	// HookReceivedDateColumn is the received_date column name
+	HookReceivedDateColumn = "received_date"
+	// HookReceivedDateColumnEpochColumn is the epoch column property of the ReceivedDate name
+	HookReceivedDateColumnEpochColumn = "received_date->epoch"
+	// HookReceivedDateColumnOffsetColumn is the offset column property of the ReceivedDate name
+	HookReceivedDateColumnOffsetColumn = "received_date->offset"
+	// HookReceivedDateColumnRfc3339Column is the rfc3339 column property of the ReceivedDate name
+	HookReceivedDateColumnRfc3339Column = "received_date->rfc3339"
 	// HookSystemColumn is the system column name
 	HookSystemColumn = "system"
 	// HookTokenColumn is the token column name
 	HookTokenColumn = "token"
 )
 
-// HookDate represents the object structure for date
-type HookDate struct {
+// HookReceivedDate represents the object structure for received_date
+type HookReceivedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -73,7 +73,7 @@ type HookDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *HookDate) ToMap() map[string]interface{} {
+func (o *HookReceivedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -88,12 +88,12 @@ func (o *HookDate) ToMap() map[string]interface{} {
 type Hook struct {
 	// Data the webhook data payload base64 encoded
 	Data string `json:"data" bson:"data" yaml:"data" faker:"-"`
-	// Date the date when the hook was received
-	Date HookDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Headers the headers of the incoming webhook
 	Headers map[string]string `json:"headers" bson:"headers" yaml:"headers" faker:"-"`
 	// ID the primary key for this model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// ReceivedDate the date when the hook was received
+	ReceivedDate HookReceivedDate `json:"received_date" bson:"received_date" yaml:"received_date" faker:"-"`
 	// System the name of the system sending the hook
 	System string `json:"system" bson:"system" yaml:"system" faker:"-"`
 	// Token the token part of the url
@@ -235,22 +235,22 @@ func toHookObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		}
 		return arr
 
-	case HookDate:
-		vv := o.(HookDate)
+	case HookReceivedDate:
+		vv := o.(HookReceivedDate)
 		return vv.ToMap()
-	case *HookDate:
+	case *HookReceivedDate:
 		return map[string]interface{}{
-			"web.date": (*o.(*HookDate)).ToMap(),
+			"web.received_date": (*o.(*HookReceivedDate)).ToMap(),
 		}
-	case []HookDate:
+	case []HookReceivedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]HookDate) {
+		for _, i := range o.([]HookReceivedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]HookDate:
+	case *[]HookReceivedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]HookDate)
+		vv := o.(*[]HookReceivedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -282,7 +282,7 @@ func (o *Hook) setDefaults() {
 // GetID returns the ID for the object
 func (o *Hook) GetID() string {
 	if o.ID == "" {
-		o.ID = hash.Values(o.System, o.Token, o.Date.Epoch)
+		o.ID = hash.Values(o.System, o.Token, o.ReceivedDate.Epoch)
 	}
 	return o.ID
 }
@@ -298,7 +298,7 @@ func (o *Hook) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Hook) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.ReceivedDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -310,7 +310,7 @@ func (o *Hook) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case HookDate:
+	case HookReceivedDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Hook")
@@ -349,7 +349,7 @@ func (o *Hook) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "system",
-		Timestamp:         "date",
+		Timestamp:         "received_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -468,12 +468,12 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"data":    toHookObject(o.Data, isavro, false, "string"),
-		"date":    toHookObject(o.Date, isavro, false, "date"),
-		"headers": toHookObject(o.Headers, isavro, false, "string"),
-		"id":      toHookObject(o.ID, isavro, false, "string"),
-		"system":  toHookObject(o.System, isavro, false, "string"),
-		"token":   toHookObject(o.Token, isavro, false, "string"),
+		"data":          toHookObject(o.Data, isavro, false, "string"),
+		"headers":       toHookObject(o.Headers, isavro, false, "string"),
+		"id":            toHookObject(o.ID, isavro, false, "string"),
+		"received_date": toHookObject(o.ReceivedDate, isavro, false, "received_date"),
+		"system":        toHookObject(o.System, isavro, false, "string"),
+		"token":         toHookObject(o.Token, isavro, false, "string"),
 	}
 }
 
@@ -494,28 +494,6 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.Data = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["date"].(HookDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = HookDate{}
-		} else {
-			o.Date = HookDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
 		}
 	}
 	if val := kv["headers"]; val != nil {
@@ -550,6 +528,28 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["received_date"].(HookReceivedDate); ok {
+		o.ReceivedDate = val
+	} else {
+		val := kv["received_date"]
+		if val == nil {
+			o.ReceivedDate = HookReceivedDate{}
+		} else {
+			o.ReceivedDate = HookReceivedDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.ReceivedDate)
+
 		}
 	}
 	if val, ok := kv["system"].(string); ok {
@@ -593,10 +593,6 @@ func GetHookAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the hook was received"},
-			},
-			map[string]interface{}{
 				"name": "headers",
 				"type": map[string]interface{}{
 					"type":   "map",
@@ -606,6 +602,10 @@ func GetHookAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "received_date",
+				"type": map[string]interface{}{"type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date when the hook was received"},
 			},
 			map[string]interface{}{
 				"name": "system",

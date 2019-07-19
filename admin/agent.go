@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -44,18 +45,20 @@ const (
 )
 
 const (
-	// AgentCompletedColumn is the completed column name
-	AgentCompletedColumn = "completed"
-	// AgentCompletedColumnEpochColumn is the epoch column property of the Completed name
-	AgentCompletedColumnEpochColumn = "completed->epoch"
-	// AgentCompletedColumnOffsetColumn is the offset column property of the Completed name
-	AgentCompletedColumnOffsetColumn = "completed->offset"
-	// AgentCompletedColumnRfc3339Column is the rfc3339 column property of the Completed name
-	AgentCompletedColumnRfc3339Column = "completed->rfc3339"
+	// AgentCompletedDateColumn is the completed_date column name
+	AgentCompletedDateColumn = "completed_date"
+	// AgentCompletedDateColumnEpochColumn is the epoch column property of the CompletedDate name
+	AgentCompletedDateColumnEpochColumn = "completed_date->epoch"
+	// AgentCompletedDateColumnOffsetColumn is the offset column property of the CompletedDate name
+	AgentCompletedDateColumnOffsetColumn = "completed_date->offset"
+	// AgentCompletedDateColumnRfc3339Column is the rfc3339 column property of the CompletedDate name
+	AgentCompletedDateColumnRfc3339Column = "completed_date->rfc3339"
 	// AgentCreatedAtColumn is the created_ts column name
 	AgentCreatedAtColumn = "created_ts"
 	// AgentCustomerIDColumn is the customer_id column name
 	AgentCustomerIDColumn = "customer_id"
+	// AgentErrorColumn is the error column name
+	AgentErrorColumn = "error"
 	// AgentIDColumn is the id column name
 	AgentIDColumn = "id"
 	// AgentRefIDColumn is the ref_id column name
@@ -70,8 +73,8 @@ const (
 	AgentUUIDColumn = "uuid"
 )
 
-// AgentCompleted represents the object structure for completed
-type AgentCompleted struct {
+// AgentCompletedDate represents the object structure for completed_date
+type AgentCompletedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -80,7 +83,7 @@ type AgentCompleted struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *AgentCompleted) ToMap() map[string]interface{} {
+func (o *AgentCompletedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -93,12 +96,14 @@ func (o *AgentCompleted) ToMap() map[string]interface{} {
 
 // Agent Agent metadata for an enrolled agent
 type Agent struct {
-	// Completed Last time the agent completed setup
-	Completed AgentCompleted `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
+	// CompletedDate Last time the agent completed setup
+	CompletedDate AgentCompletedDate `json:"completed_date" bson:"completed_date" yaml:"completed_date" faker:"-"`
 	// CreatedAt the date the record was created in Epoch time
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Error Message if the agent is currently erroring out
+	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// RefID the source system id for the model instance
@@ -248,22 +253,22 @@ func toAgentObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		}
 		return arr
 
-	case AgentCompleted:
-		vv := o.(AgentCompleted)
+	case AgentCompletedDate:
+		vv := o.(AgentCompletedDate)
 		return vv.ToMap()
-	case *AgentCompleted:
+	case *AgentCompletedDate:
 		return map[string]interface{}{
-			"admin.completed": (*o.(*AgentCompleted)).ToMap(),
+			"admin.completed_date": (*o.(*AgentCompletedDate)).ToMap(),
 		}
-	case []AgentCompleted:
+	case []AgentCompletedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]AgentCompleted) {
+		for _, i := range o.([]AgentCompletedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]AgentCompleted:
+	case *[]AgentCompletedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]AgentCompleted)
+		vv := o.(*[]AgentCompletedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -288,6 +293,9 @@ func (o *Agent) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Agent) setDefaults() {
+	if o.Error == nil {
+		o.Error = &emptyString
+	}
 
 	o.GetID()
 	o.GetRefID()
@@ -488,9 +496,10 @@ func (o *Agent) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"completed":        toAgentObject(o.Completed, isavro, false, "completed"),
+		"completed_date":   toAgentObject(o.CompletedDate, isavro, false, "completed_date"),
 		"created_ts":       toAgentObject(o.CreatedAt, isavro, false, "long"),
 		"customer_id":      toAgentObject(o.CustomerID, isavro, false, "string"),
+		"error":            toAgentObject(o.Error, isavro, true, "string"),
 		"id":               toAgentObject(o.ID, isavro, false, "string"),
 		"ref_id":           toAgentObject(o.RefID, isavro, false, "string"),
 		"ref_type":         toAgentObject(o.RefType, isavro, false, "string"),
@@ -507,14 +516,14 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["completed"].(AgentCompleted); ok {
-		o.Completed = val
+	if val, ok := kv["completed_date"].(AgentCompletedDate); ok {
+		o.CompletedDate = val
 	} else {
-		val := kv["completed"]
+		val := kv["completed_date"]
 		if val == nil {
-			o.Completed = AgentCompleted{}
+			o.CompletedDate = AgentCompletedDate{}
 		} else {
-			o.Completed = AgentCompleted{}
+			o.CompletedDate = AgentCompletedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -525,7 +534,7 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Completed)
+			json.Unmarshal(b, &o.CompletedDate)
 
 		}
 	}
@@ -553,6 +562,22 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.CustomerID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["error"].(*string); ok {
+		o.Error = val
+	} else if val, ok := kv["error"].(string); ok {
+		o.Error = &val
+	} else {
+		val := kv["error"]
+		if val == nil {
+			o.Error = pstrings.Pointer("")
+		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
+			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -639,9 +664,10 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Agent) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Completed)
+	args = append(args, o.CompletedDate)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
+	args = append(args, o.Error)
 	args = append(args, o.ID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
@@ -710,8 +736,8 @@ func GetAgentAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "completed",
-				"type": map[string]interface{}{"type": "record", "name": "completed", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Last time the agent completed setup"},
+				"name": "completed_date",
+				"type": map[string]interface{}{"type": "record", "name": "completed_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "Last time the agent completed setup"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
@@ -720,6 +746,11 @@ func GetAgentAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name":    "error",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
 				"name": "id",

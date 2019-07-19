@@ -53,18 +53,18 @@ const (
 	IntegrationResponseCustomerIDColumn = "customer_id"
 	// IntegrationResponseDataColumn is the data column name
 	IntegrationResponseDataColumn = "data"
-	// IntegrationResponseDateColumn is the date column name
-	IntegrationResponseDateColumn = "date"
-	// IntegrationResponseDateColumnEpochColumn is the epoch column property of the Date name
-	IntegrationResponseDateColumnEpochColumn = "date->epoch"
-	// IntegrationResponseDateColumnOffsetColumn is the offset column property of the Date name
-	IntegrationResponseDateColumnOffsetColumn = "date->offset"
-	// IntegrationResponseDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	IntegrationResponseDateColumnRfc3339Column = "date->rfc3339"
 	// IntegrationResponseDistroColumn is the distro column name
 	IntegrationResponseDistroColumn = "distro"
 	// IntegrationResponseErrorColumn is the error column name
 	IntegrationResponseErrorColumn = "error"
+	// IntegrationResponseEventDateColumn is the event_date column name
+	IntegrationResponseEventDateColumn = "event_date"
+	// IntegrationResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	IntegrationResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// IntegrationResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	IntegrationResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// IntegrationResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	IntegrationResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// IntegrationResponseFreeSpaceColumn is the free_space column name
 	IntegrationResponseFreeSpaceColumn = "free_space"
 	// IntegrationResponseGoVersionColumn is the go_version column name
@@ -99,8 +99,8 @@ const (
 	IntegrationResponseVersionColumn = "version"
 )
 
-// IntegrationResponseDate represents the object structure for date
-type IntegrationResponseDate struct {
+// IntegrationResponseEventDate represents the object structure for event_date
+type IntegrationResponseEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -109,7 +109,7 @@ type IntegrationResponseDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *IntegrationResponseDate) ToMap() map[string]interface{} {
+func (o *IntegrationResponseEventDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -120,7 +120,7 @@ func (o *IntegrationResponseDate) ToMap() map[string]interface{} {
 	}
 }
 
-// Type is the enumeration type for type
+// IntegrationResponseType is the enumeration type for type
 type IntegrationResponseType int32
 
 // String returns the string value for Type
@@ -138,6 +138,10 @@ func (v IntegrationResponseType) String() string {
 		return "export"
 	case 5:
 		return "project"
+	case 6:
+		return "user"
+	case 7:
+		return "repo"
 	}
 	return "unset"
 }
@@ -155,6 +159,10 @@ const (
 	IntegrationResponseTypeExport IntegrationResponseType = 4
 	// TypeProject is the enumeration value for project
 	IntegrationResponseTypeProject IntegrationResponseType = 5
+	// TypeUser is the enumeration value for user
+	IntegrationResponseTypeUser IntegrationResponseType = 6
+	// TypeRepo is the enumeration value for repo
+	IntegrationResponseTypeRepo IntegrationResponseType = 7
 )
 
 // IntegrationResponse an agent response to an action request adding an integration
@@ -167,12 +175,12 @@ type IntegrationResponse struct {
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
 	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
-	// Date the date of the event
-	Date IntegrationResponseDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// Distro the agent os distribution
 	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
 	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	// EventDate the date of the event
+	EventDate IntegrationResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -342,22 +350,22 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 		}
 		return arr
 
-	case IntegrationResponseDate:
-		vv := o.(IntegrationResponseDate)
+	case IntegrationResponseEventDate:
+		vv := o.(IntegrationResponseEventDate)
 		return vv.ToMap()
-	case *IntegrationResponseDate:
+	case *IntegrationResponseEventDate:
 		return map[string]interface{}{
-			"agent.date": (*o.(*IntegrationResponseDate)).ToMap(),
+			"agent.event_date": (*o.(*IntegrationResponseEventDate)).ToMap(),
 		}
-	case []IntegrationResponseDate:
+	case []IntegrationResponseEventDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]IntegrationResponseDate) {
+		for _, i := range o.([]IntegrationResponseEventDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]IntegrationResponseDate:
+	case *[]IntegrationResponseEventDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]IntegrationResponseDate)
+		vv := o.(*[]IntegrationResponseEventDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -428,7 +436,7 @@ func (o *IntegrationResponse) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *IntegrationResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.EventDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -440,7 +448,7 @@ func (o *IntegrationResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case IntegrationResponseDate:
+	case IntegrationResponseEventDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for IntegrationResponse")
@@ -485,7 +493,7 @@ func (o *IntegrationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "event_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -612,9 +620,9 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 		"authorization":  toIntegrationResponseObject(o.Authorization, isavro, false, "string"),
 		"customer_id":    toIntegrationResponseObject(o.CustomerID, isavro, false, "string"),
 		"data":           toIntegrationResponseObject(o.Data, isavro, true, "string"),
-		"date":           toIntegrationResponseObject(o.Date, isavro, false, "date"),
 		"distro":         toIntegrationResponseObject(o.Distro, isavro, false, "string"),
 		"error":          toIntegrationResponseObject(o.Error, isavro, true, "string"),
+		"event_date":     toIntegrationResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":     toIntegrationResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":     toIntegrationResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":       toIntegrationResponseObject(o.Hostname, isavro, false, "string"),
@@ -696,28 +704,6 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 			o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["date"].(IntegrationResponseDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = IntegrationResponseDate{}
-		} else {
-			o.Date = IntegrationResponseDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
-		}
-	}
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -745,6 +731,28 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["event_date"].(IntegrationResponseEventDate); ok {
+		o.EventDate = val
+	} else {
+		val := kv["event_date"]
+		if val == nil {
+			o.EventDate = IntegrationResponseEventDate{}
+		} else {
+			o.EventDate = IntegrationResponseEventDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.EventDate)
+
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -931,6 +939,10 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 4
 			case "project":
 				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -947,6 +959,10 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 4
 			case "project":
 				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
 			}
 		}
 	}
@@ -986,9 +1002,9 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.Authorization)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
-	args = append(args, o.Date)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
+	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1038,10 +1054,6 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 				"default": nil,
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
-			},
-			map[string]interface{}{
 				"name": "distro",
 				"type": "string",
 			},
@@ -1049,6 +1061,10 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "event_date",
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1108,7 +1124,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 					map[string]interface{}{
 						"type":    "enum",
 						"name":    "type",
-						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project"},
+						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "user", "repo"},
 					},
 				},
 			},

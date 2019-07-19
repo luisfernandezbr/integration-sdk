@@ -44,28 +44,28 @@ const (
 const (
 	// CustomFieldCustomerIDColumn is the customer_id column name
 	CustomFieldCustomerIDColumn = "customer_id"
-	// CustomFieldDateColumn is the date column name
-	CustomFieldDateColumn = "date"
-	// CustomFieldDateColumnEpochColumn is the epoch column property of the Date name
-	CustomFieldDateColumnEpochColumn = "date->epoch"
-	// CustomFieldDateColumnOffsetColumn is the offset column property of the Date name
-	CustomFieldDateColumnOffsetColumn = "date->offset"
-	// CustomFieldDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	CustomFieldDateColumnRfc3339Column = "date->rfc3339"
 	// CustomFieldIDColumn is the id column name
 	CustomFieldIDColumn = "id"
 	// CustomFieldKeyColumn is the key column name
 	CustomFieldKeyColumn = "key"
 	// CustomFieldNameColumn is the name column name
 	CustomFieldNameColumn = "name"
+	// CustomFieldProcessingDateColumn is the processing_date column name
+	CustomFieldProcessingDateColumn = "processing_date"
+	// CustomFieldProcessingDateColumnEpochColumn is the epoch column property of the ProcessingDate name
+	CustomFieldProcessingDateColumnEpochColumn = "processing_date->epoch"
+	// CustomFieldProcessingDateColumnOffsetColumn is the offset column property of the ProcessingDate name
+	CustomFieldProcessingDateColumnOffsetColumn = "processing_date->offset"
+	// CustomFieldProcessingDateColumnRfc3339Column is the rfc3339 column property of the ProcessingDate name
+	CustomFieldProcessingDateColumnRfc3339Column = "processing_date->rfc3339"
 	// CustomFieldRefIDColumn is the ref_id column name
 	CustomFieldRefIDColumn = "ref_id"
 	// CustomFieldRefTypeColumn is the ref_type column name
 	CustomFieldRefTypeColumn = "ref_type"
 )
 
-// CustomFieldDate represents the object structure for date
-type CustomFieldDate struct {
+// CustomFieldProcessingDate represents the object structure for processing_date
+type CustomFieldProcessingDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -74,7 +74,7 @@ type CustomFieldDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *CustomFieldDate) ToMap() map[string]interface{} {
+func (o *CustomFieldProcessingDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -89,14 +89,14 @@ func (o *CustomFieldDate) ToMap() map[string]interface{} {
 type CustomField struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Date date of processing a custom field
-	Date CustomFieldDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Key key of the field
 	Key string `json:"key" bson:"key" yaml:"key" faker:"-"`
 	// Name the name of the field
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	// ProcessingDate date of processing a custom field
+	ProcessingDate CustomFieldProcessingDate `json:"processing_date" bson:"processing_date" yaml:"processing_date" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -238,22 +238,22 @@ func toCustomFieldObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		}
 		return arr
 
-	case CustomFieldDate:
-		vv := o.(CustomFieldDate)
+	case CustomFieldProcessingDate:
+		vv := o.(CustomFieldProcessingDate)
 		return vv.ToMap()
-	case *CustomFieldDate:
+	case *CustomFieldProcessingDate:
 		return map[string]interface{}{
-			"pipeline.work.date": (*o.(*CustomFieldDate)).ToMap(),
+			"pipeline.work.processing_date": (*o.(*CustomFieldProcessingDate)).ToMap(),
 		}
-	case []CustomFieldDate:
+	case []CustomFieldProcessingDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]CustomFieldDate) {
+		for _, i := range o.([]CustomFieldProcessingDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]CustomFieldDate:
+	case *[]CustomFieldProcessingDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]CustomFieldDate)
+		vv := o.(*[]CustomFieldProcessingDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -478,14 +478,14 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id": toCustomFieldObject(o.CustomerID, isavro, false, "string"),
-		"date":        toCustomFieldObject(o.Date, isavro, false, "date"),
-		"id":          toCustomFieldObject(o.ID, isavro, false, "string"),
-		"key":         toCustomFieldObject(o.Key, isavro, false, "string"),
-		"name":        toCustomFieldObject(o.Name, isavro, false, "string"),
-		"ref_id":      toCustomFieldObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toCustomFieldObject(o.RefType, isavro, false, "string"),
-		"hashcode":    toCustomFieldObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":     toCustomFieldObject(o.CustomerID, isavro, false, "string"),
+		"id":              toCustomFieldObject(o.ID, isavro, false, "string"),
+		"key":             toCustomFieldObject(o.Key, isavro, false, "string"),
+		"name":            toCustomFieldObject(o.Name, isavro, false, "string"),
+		"processing_date": toCustomFieldObject(o.ProcessingDate, isavro, false, "processing_date"),
+		"ref_id":          toCustomFieldObject(o.RefID, isavro, false, "string"),
+		"ref_type":        toCustomFieldObject(o.RefType, isavro, false, "string"),
+		"hashcode":        toCustomFieldObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -506,28 +506,6 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.CustomerID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["date"].(CustomFieldDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = CustomFieldDate{}
-		} else {
-			o.Date = CustomFieldDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -569,6 +547,28 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["processing_date"].(CustomFieldProcessingDate); ok {
+		o.ProcessingDate = val
+	} else {
+		val := kv["processing_date"]
+		if val == nil {
+			o.ProcessingDate = CustomFieldProcessingDate{}
+		} else {
+			o.ProcessingDate = CustomFieldProcessingDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.ProcessingDate)
+
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -602,10 +602,10 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 func (o *CustomField) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Date)
 	args = append(args, o.ID)
 	args = append(args, o.Key)
 	args = append(args, o.Name)
+	args = append(args, o.ProcessingDate)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	o.Hashcode = hash.Values(args...)
@@ -628,10 +628,6 @@ func GetCustomFieldAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"doc": "date of processing a custom field", "type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
-			},
-			map[string]interface{}{
 				"name": "id",
 				"type": "string",
 			},
@@ -642,6 +638,10 @@ func GetCustomFieldAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "name",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "processing_date",
+				"type": map[string]interface{}{"type": "record", "name": "processing_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

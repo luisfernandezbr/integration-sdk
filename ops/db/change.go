@@ -45,18 +45,18 @@ const (
 const (
 	// ChangeActionColumn is the action column name
 	ChangeActionColumn = "action"
+	// ChangeChangeDateColumn is the change_date column name
+	ChangeChangeDateColumn = "change_date"
+	// ChangeChangeDateColumnEpochColumn is the epoch column property of the ChangeDate name
+	ChangeChangeDateColumnEpochColumn = "change_date->epoch"
+	// ChangeChangeDateColumnOffsetColumn is the offset column property of the ChangeDate name
+	ChangeChangeDateColumnOffsetColumn = "change_date->offset"
+	// ChangeChangeDateColumnRfc3339Column is the rfc3339 column property of the ChangeDate name
+	ChangeChangeDateColumnRfc3339Column = "change_date->rfc3339"
 	// ChangeCustomerIDColumn is the customer_id column name
 	ChangeCustomerIDColumn = "customer_id"
 	// ChangeDataColumn is the data column name
 	ChangeDataColumn = "data"
-	// ChangeDateColumn is the date column name
-	ChangeDateColumn = "date"
-	// ChangeDateColumnEpochColumn is the epoch column property of the Date name
-	ChangeDateColumnEpochColumn = "date->epoch"
-	// ChangeDateColumnOffsetColumn is the offset column property of the Date name
-	ChangeDateColumnOffsetColumn = "date->offset"
-	// ChangeDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	ChangeDateColumnRfc3339Column = "date->rfc3339"
 	// ChangeIDColumn is the id column name
 	ChangeIDColumn = "id"
 	// ChangeModelColumn is the model column name
@@ -67,7 +67,7 @@ const (
 	ChangeRefTypeColumn = "ref_type"
 )
 
-// Action is the enumeration type for action
+// ChangeAction is the enumeration type for action
 type ChangeAction int32
 
 // String returns the string value for Action
@@ -92,8 +92,8 @@ const (
 	ChangeActionDelete ChangeAction = 2
 )
 
-// ChangeDate represents the object structure for date
-type ChangeDate struct {
+// ChangeChangeDate represents the object structure for change_date
+type ChangeChangeDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -102,7 +102,7 @@ type ChangeDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ChangeDate) ToMap() map[string]interface{} {
+func (o *ChangeChangeDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -117,12 +117,12 @@ func (o *ChangeDate) ToMap() map[string]interface{} {
 type Change struct {
 	// Action the action that was taken
 	Action ChangeAction `json:"action" bson:"action" yaml:"action" faker:"-"`
+	// ChangeDate the date when the change was made
+	ChangeDate ChangeChangeDate `json:"change_date" bson:"change_date" yaml:"change_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data the data payload of the change
 	Data string `json:"data" bson:"data" yaml:"data" faker:"-"`
-	// Date the date when the change was made
-	Date ChangeDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Model the name of the model
@@ -282,22 +282,22 @@ func toChangeObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		return map[string]string{
 			"ops.db.action": (o.(*ChangeAction)).String(),
 		}
-	case ChangeDate:
-		vv := o.(ChangeDate)
+	case ChangeChangeDate:
+		vv := o.(ChangeChangeDate)
 		return vv.ToMap()
-	case *ChangeDate:
+	case *ChangeChangeDate:
 		return map[string]interface{}{
-			"ops.db.date": (*o.(*ChangeDate)).ToMap(),
+			"ops.db.change_date": (*o.(*ChangeChangeDate)).ToMap(),
 		}
-	case []ChangeDate:
+	case []ChangeChangeDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]ChangeDate) {
+		for _, i := range o.([]ChangeChangeDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]ChangeDate:
+	case *[]ChangeChangeDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]ChangeDate)
+		vv := o.(*[]ChangeChangeDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -331,7 +331,7 @@ func (o *Change) setDefaults() {
 // GetID returns the ID for the object
 func (o *Change) GetID() string {
 	if o.ID == "" {
-		o.ID = hash.Values(o.CustomerID, o.Model, o.Action, o.Date.Epoch)
+		o.ID = hash.Values(o.CustomerID, o.Model, o.Action, o.ChangeDate.Epoch)
 	}
 	return o.ID
 }
@@ -347,7 +347,7 @@ func (o *Change) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Change) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.ChangeDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -359,7 +359,7 @@ func (o *Change) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ChangeDate:
+	case ChangeChangeDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Change")
@@ -404,7 +404,7 @@ func (o *Change) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "model",
-		Timestamp:         "date",
+		Timestamp:         "change_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -528,9 +528,9 @@ func (o *Change) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults()
 	return map[string]interface{}{
 		"action":      toChangeObject(o.Action, isavro, false, "action"),
+		"change_date": toChangeObject(o.ChangeDate, isavro, false, "change_date"),
 		"customer_id": toChangeObject(o.CustomerID, isavro, false, "string"),
 		"data":        toChangeObject(o.Data, isavro, false, "string"),
-		"date":        toChangeObject(o.Date, isavro, false, "date"),
 		"id":          toChangeObject(o.ID, isavro, false, "string"),
 		"model":       toChangeObject(o.Model, isavro, false, "string"),
 		"ref_id":      toChangeObject(o.RefID, isavro, false, "string"),
@@ -570,6 +570,28 @@ func (o *Change) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["change_date"].(ChangeChangeDate); ok {
+		o.ChangeDate = val
+	} else {
+		val := kv["change_date"]
+		if val == nil {
+			o.ChangeDate = ChangeChangeDate{}
+		} else {
+			o.ChangeDate = ChangeChangeDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.ChangeDate)
+
+		}
+	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -594,28 +616,6 @@ func (o *Change) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.Data = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["date"].(ChangeDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = ChangeDate{}
-		} else {
-			o.Date = ChangeDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -677,9 +677,9 @@ func (o *Change) FromMap(kv map[string]interface{}) {
 func (o *Change) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Action)
+	args = append(args, o.ChangeDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
-	args = append(args, o.Date)
 	args = append(args, o.ID)
 	args = append(args, o.Model)
 	args = append(args, o.RefID)
@@ -710,16 +710,16 @@ func GetChangeAvroSchemaSpec() string {
 				},
 			},
 			map[string]interface{}{
+				"name": "change_date",
+				"type": map[string]interface{}{"type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the change was made"},
+			},
+			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "data",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the change was made", "type": "record", "name": "date"},
 			},
 			map[string]interface{}{
 				"name": "id",

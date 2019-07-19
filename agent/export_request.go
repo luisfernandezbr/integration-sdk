@@ -26,6 +26,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -47,14 +48,6 @@ const (
 const (
 	// ExportRequestCustomerIDColumn is the customer_id column name
 	ExportRequestCustomerIDColumn = "customer_id"
-	// ExportRequestDateColumn is the date column name
-	ExportRequestDateColumn = "date"
-	// ExportRequestDateColumnEpochColumn is the epoch column property of the Date name
-	ExportRequestDateColumnEpochColumn = "date->epoch"
-	// ExportRequestDateColumnOffsetColumn is the offset column property of the Date name
-	ExportRequestDateColumnOffsetColumn = "date->offset"
-	// ExportRequestDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	ExportRequestDateColumnRfc3339Column = "date->rfc3339"
 	// ExportRequestIDColumn is the id column name
 	ExportRequestIDColumn = "id"
 	// ExportRequestIntegrationsColumn is the integrations column name
@@ -85,6 +78,14 @@ const (
 	ExportRequestRefIDColumn = "ref_id"
 	// ExportRequestRefTypeColumn is the ref_type column name
 	ExportRequestRefTypeColumn = "ref_type"
+	// ExportRequestRequestDateColumn is the request_date column name
+	ExportRequestRequestDateColumn = "request_date"
+	// ExportRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	ExportRequestRequestDateColumnEpochColumn = "request_date->epoch"
+	// ExportRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	ExportRequestRequestDateColumnOffsetColumn = "request_date->offset"
+	// ExportRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	ExportRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
 	// ExportRequestUploadURLColumn is the upload_url column name
 	ExportRequestUploadURLColumn = "upload_url"
 	// ExportRequestUUIDColumn is the uuid column name
@@ -125,27 +126,6 @@ func (o *ExportRequestAuthorization) ToMap() map[string]interface{} {
 		"url": o.URL,
 		// Username Username for instance, if relevant
 		"username": o.Username,
-	}
-}
-
-// ExportRequestDate represents the object structure for date
-type ExportRequestDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func (o *ExportRequestDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
 	}
 }
 
@@ -194,7 +174,7 @@ func (o *ExportRequestIntegrations) ToMap() map[string]interface{} {
 	}
 }
 
-// Location is the enumeration type for location
+// ExportRequestLocation is the enumeration type for location
 type ExportRequestLocation int32
 
 // String returns the string value for Location
@@ -236,6 +216,27 @@ func (o *ExportRequestProgress) ToMap() map[string]interface{} {
 	}
 }
 
+// ExportRequestRequestDate represents the object structure for request_date
+type ExportRequestRequestDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *ExportRequestRequestDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
 // ExportRequestValidatedDate represents the object structure for validated_date
 type ExportRequestValidatedDate struct {
 	// Epoch the date in epoch format
@@ -261,8 +262,6 @@ func (o *ExportRequestValidatedDate) ToMap() map[string]interface{} {
 type ExportRequest struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Date the date when the request was made
-	Date ExportRequestDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integrations The integrations that should be exported and their current configuration
@@ -275,6 +274,8 @@ type ExportRequest struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RequestDate the date when the request was made
+	RequestDate ExportRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UploadURL The one time upload URL to use for uploading a job to the Pinpoint cloud
 	UploadURL *string `json:"upload_url" bson:"upload_url" yaml:"upload_url" faker:"-"`
 	// UUID the agent unique identifier
@@ -436,26 +437,6 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case ExportRequestDate:
-		vv := o.(ExportRequestDate)
-		return vv.ToMap()
-	case *ExportRequestDate:
-		return map[string]interface{}{
-			"agent.date": (*o.(*ExportRequestDate)).ToMap(),
-		}
-	case []ExportRequestDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportRequestDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportRequestDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportRequestDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ExportRequestIntegrations:
 		vv := o.(ExportRequestIntegrations)
 		return vv.ToMap()
@@ -506,6 +487,26 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *[]ExportRequestProgress:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]ExportRequestProgress)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case ExportRequestRequestDate:
+		vv := o.(ExportRequestRequestDate)
+		return vv.ToMap()
+	case *ExportRequestRequestDate:
+		return map[string]interface{}{
+			"agent.request_date": (*o.(*ExportRequestRequestDate)).ToMap(),
+		}
+	case []ExportRequestRequestDate:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]ExportRequestRequestDate) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]ExportRequestRequestDate:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]ExportRequestRequestDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -582,7 +583,7 @@ func (o *ExportRequest) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.RequestDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -594,7 +595,7 @@ func (o *ExportRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ExportRequestDate:
+	case ExportRequestRequestDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ExportRequest")
@@ -639,7 +640,7 @@ func (o *ExportRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "request_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -766,13 +767,13 @@ func (o *ExportRequest) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults()
 	return map[string]interface{}{
 		"customer_id":  toExportRequestObject(o.CustomerID, isavro, false, "string"),
-		"date":         toExportRequestObject(o.Date, isavro, false, "date"),
 		"id":           toExportRequestObject(o.ID, isavro, false, "string"),
 		"integrations": toExportRequestObject(o.Integrations, isavro, false, "integrations"),
 		"job_id":       toExportRequestObject(o.JobID, isavro, false, "string"),
 		"location":     toExportRequestObject(o.Location, isavro, false, "location"),
 		"ref_id":       toExportRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toExportRequestObject(o.RefType, isavro, false, "string"),
+		"request_date": toExportRequestObject(o.RequestDate, isavro, false, "request_date"),
 		"upload_url":   toExportRequestObject(o.UploadURL, isavro, true, "string"),
 		"uuid":         toExportRequestObject(o.UUID, isavro, false, "string"),
 		"hashcode":     toExportRequestObject(o.Hashcode, isavro, false, "string"),
@@ -798,28 +799,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date"].(ExportRequestDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = ExportRequestDate{}
-		} else {
-			o.Date = ExportRequestDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
-		}
-	}
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -843,6 +822,9 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 					if av, ok := ae.(ExportRequestIntegrations); ok {
 						na = append(na, av)
 					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
 						b, _ := json.Marshal(ae)
 						var av ExportRequestIntegrations
 						if err := json.Unmarshal(b, &av); err != nil {
@@ -936,6 +918,28 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["request_date"].(ExportRequestRequestDate); ok {
+		o.RequestDate = val
+	} else {
+		val := kv["request_date"]
+		if val == nil {
+			o.RequestDate = ExportRequestRequestDate{}
+		} else {
+			o.RequestDate = ExportRequestRequestDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.RequestDate)
+
+		}
+	}
 	if val, ok := kv["upload_url"].(*string); ok {
 		o.UploadURL = val
 	} else if val, ok := kv["upload_url"].(string); ok {
@@ -972,13 +976,13 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 func (o *ExportRequest) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Date)
 	args = append(args, o.ID)
 	args = append(args, o.Integrations)
 	args = append(args, o.JobID)
 	args = append(args, o.Location)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RequestDate)
 	args = append(args, o.UploadURL)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
@@ -1001,16 +1005,12 @@ func GetExportRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"type": "record", "name": "date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made"},
-			},
-			map[string]interface{}{
 				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "integrations",
-				"type": map[string]interface{}{"items": map[string]interface{}{"name": "integrations", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "type": "boolean", "name": "active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"doc": "API Token for instance, if relevant", "type": "string", "name": "api_token"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"doc": "Password for instance, if relevant", "type": "string", "name": "password"}, map[string]interface{}{"name": "refresh_token", "doc": "Refresh token", "type": "string"}, map[string]interface{}{"doc": "URL of instance if relevant", "type": "string", "name": "url"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"name": "exclusions", "items": "string", "type": "array"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"name": "total", "doc": "The total amount to be processed", "type": "long"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.validated_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "The integrations that should be exported and their current configuration", "type": "record"}, "type": "array", "name": "integrations"},
+				"type": map[string]interface{}{"type": "array", "name": "integrations", "items": map[string]interface{}{"type": "record", "name": "integrations", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.authorization", "fields": []interface{}{map[string]interface{}{"doc": "Access token", "type": "string", "name": "access_token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"doc": "Password for instance, if relevant", "type": "string", "name": "password"}, map[string]interface{}{"doc": "Refresh token", "type": "string", "name": "refresh_token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"name": "errored", "doc": "If authorization failed by the agent", "type": "boolean"}, map[string]interface{}{"doc": "The exclusion list for this integration", "type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions"}, map[string]interface{}{"doc": "The user friendly name of the integration", "type": "string", "name": "name"}, map[string]interface{}{"type": map[string]interface{}{"name": "integrations.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}, "doc": "Agent processing progress", "type": "record"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.validated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "The integrations that should be exported and their current configuration"}},
 			},
 			map[string]interface{}{
 				"name": "job_id",
@@ -1033,6 +1033,10 @@ func GetExportRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "request_date",
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record", "name": "request_date"},
 			},
 			map[string]interface{}{
 				"name":    "upload_url",

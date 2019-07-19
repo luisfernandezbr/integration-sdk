@@ -26,6 +26,8 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -43,28 +45,58 @@ const (
 )
 
 const (
+	// EnabledArchitectureColumn is the architecture column name
+	EnabledArchitectureColumn = "architecture"
 	// EnabledCustomerIDColumn is the customer_id column name
 	EnabledCustomerIDColumn = "customer_id"
-	// EnabledDateColumn is the date column name
-	EnabledDateColumn = "date"
-	// EnabledDateColumnEpochColumn is the epoch column property of the Date name
-	EnabledDateColumnEpochColumn = "date->epoch"
-	// EnabledDateColumnOffsetColumn is the offset column property of the Date name
-	EnabledDateColumnOffsetColumn = "date->offset"
-	// EnabledDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	EnabledDateColumnRfc3339Column = "date->rfc3339"
+	// EnabledDataColumn is the data column name
+	EnabledDataColumn = "data"
+	// EnabledDistroColumn is the distro column name
+	EnabledDistroColumn = "distro"
+	// EnabledErrorColumn is the error column name
+	EnabledErrorColumn = "error"
+	// EnabledEventDateColumn is the event_date column name
+	EnabledEventDateColumn = "event_date"
+	// EnabledEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	EnabledEventDateColumnEpochColumn = "event_date->epoch"
+	// EnabledEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	EnabledEventDateColumnOffsetColumn = "event_date->offset"
+	// EnabledEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	EnabledEventDateColumnRfc3339Column = "event_date->rfc3339"
+	// EnabledFreeSpaceColumn is the free_space column name
+	EnabledFreeSpaceColumn = "free_space"
+	// EnabledGoVersionColumn is the go_version column name
+	EnabledGoVersionColumn = "go_version"
+	// EnabledHostnameColumn is the hostname column name
+	EnabledHostnameColumn = "hostname"
 	// EnabledIDColumn is the id column name
 	EnabledIDColumn = "id"
+	// EnabledMemoryColumn is the memory column name
+	EnabledMemoryColumn = "memory"
+	// EnabledMessageColumn is the message column name
+	EnabledMessageColumn = "message"
+	// EnabledNumCPUColumn is the num_cpu column name
+	EnabledNumCPUColumn = "num_cpu"
+	// EnabledOSColumn is the os column name
+	EnabledOSColumn = "os"
 	// EnabledRefIDColumn is the ref_id column name
 	EnabledRefIDColumn = "ref_id"
 	// EnabledRefTypeColumn is the ref_type column name
 	EnabledRefTypeColumn = "ref_type"
+	// EnabledRequestIDColumn is the request_id column name
+	EnabledRequestIDColumn = "request_id"
+	// EnabledSuccessColumn is the success column name
+	EnabledSuccessColumn = "success"
+	// EnabledTypeColumn is the type column name
+	EnabledTypeColumn = "type"
 	// EnabledUUIDColumn is the uuid column name
 	EnabledUUIDColumn = "uuid"
+	// EnabledVersionColumn is the version column name
+	EnabledVersionColumn = "version"
 )
 
-// EnabledDate represents the object structure for date
-type EnabledDate struct {
+// EnabledEventDate represents the object structure for event_date
+type EnabledEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -73,7 +105,7 @@ type EnabledDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *EnabledDate) ToMap() map[string]interface{} {
+func (o *EnabledEventDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -84,20 +116,95 @@ func (o *EnabledDate) ToMap() map[string]interface{} {
 	}
 }
 
+// EnabledType is the enumeration type for type
+type EnabledType int32
+
+// String returns the string value for Type
+func (v EnabledType) String() string {
+	switch int32(v) {
+	case 0:
+		return "enroll"
+	case 1:
+		return "ping"
+	case 2:
+		return "crash"
+	case 3:
+		return "integration"
+	case 4:
+		return "export"
+	case 5:
+		return "project"
+	case 6:
+		return "user"
+	case 7:
+		return "repo"
+	}
+	return "unset"
+}
+
+const (
+	// TypeEnroll is the enumeration value for enroll
+	EnabledTypeEnroll EnabledType = 0
+	// TypePing is the enumeration value for ping
+	EnabledTypePing EnabledType = 1
+	// TypeCrash is the enumeration value for crash
+	EnabledTypeCrash EnabledType = 2
+	// TypeIntegration is the enumeration value for integration
+	EnabledTypeIntegration EnabledType = 3
+	// TypeExport is the enumeration value for export
+	EnabledTypeExport EnabledType = 4
+	// TypeProject is the enumeration value for project
+	EnabledTypeProject EnabledType = 5
+	// TypeUser is the enumeration value for user
+	EnabledTypeUser EnabledType = 6
+	// TypeRepo is the enumeration value for repo
+	EnabledTypeRepo EnabledType = 7
+)
+
 // Enabled an agent event to indicate that it's enabled and ready for actions
 type Enabled struct {
+	// Architecture the architecture of the agent machine
+	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Date the date when the request was made
-	Date EnabledDate `json:"date" bson:"date" yaml:"date" faker:"-"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
+	// Distro the agent os distribution
+	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	// Error an error message related to this event
+	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	// EventDate the date of the event
+	EventDate EnabledEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion string `json:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	// Hostname the agent hostname
+	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	// Message a message related to this event
+	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU int64 `json:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	// OS the agent operating system
+	OS string `json:"os" bson:"os" yaml:"os" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RequestID the request id that this response is correlated to
+	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	// Success if the response was successful
+	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	// Type the type of event
+	Type EnabledType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	// Version the agent version
+	Version string `json:"version" bson:"version" yaml:"version" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -235,26 +342,40 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		}
 		return arr
 
-	case EnabledDate:
-		vv := o.(EnabledDate)
+	case EnabledEventDate:
+		vv := o.(EnabledEventDate)
 		return vv.ToMap()
-	case *EnabledDate:
+	case *EnabledEventDate:
 		return map[string]interface{}{
-			"agent.date": (*o.(*EnabledDate)).ToMap(),
+			"agent.event_date": (*o.(*EnabledEventDate)).ToMap(),
 		}
-	case []EnabledDate:
+	case []EnabledEventDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]EnabledDate) {
+		for _, i := range o.([]EnabledEventDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]EnabledDate:
+	case *[]EnabledEventDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]EnabledDate)
+		vv := o.(*[]EnabledEventDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
+	case EnabledType:
+		if !isavro {
+			return (o.(EnabledType)).String()
+		}
+		return map[string]string{
+			"agent.type": (o.(EnabledType)).String(),
+		}
+	case *EnabledType:
+		if !isavro {
+			return (o.(*EnabledType)).String()
+		}
+		return map[string]string{
+			"agent.type": (o.(*EnabledType)).String(),
+		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -275,6 +396,12 @@ func (o *Enabled) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Enabled) setDefaults() {
+	if o.Data == nil {
+		o.Data = &emptyString
+	}
+	if o.Error == nil {
+		o.Error = &emptyString
+	}
 
 	o.GetID()
 	o.GetRefID()
@@ -301,7 +428,7 @@ func (o *Enabled) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Enabled) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.EventDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -313,7 +440,7 @@ func (o *Enabled) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case EnabledDate:
+	case EnabledEventDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Enabled")
@@ -358,7 +485,7 @@ func (o *Enabled) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "event_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -481,13 +608,28 @@ func (o *Enabled) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id": toEnabledObject(o.CustomerID, isavro, false, "string"),
-		"date":        toEnabledObject(o.Date, isavro, false, "date"),
-		"id":          toEnabledObject(o.ID, isavro, false, "string"),
-		"ref_id":      toEnabledObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toEnabledObject(o.RefType, isavro, false, "string"),
-		"uuid":        toEnabledObject(o.UUID, isavro, false, "string"),
-		"hashcode":    toEnabledObject(o.Hashcode, isavro, false, "string"),
+		"architecture": toEnabledObject(o.Architecture, isavro, false, "string"),
+		"customer_id":  toEnabledObject(o.CustomerID, isavro, false, "string"),
+		"data":         toEnabledObject(o.Data, isavro, true, "string"),
+		"distro":       toEnabledObject(o.Distro, isavro, false, "string"),
+		"error":        toEnabledObject(o.Error, isavro, true, "string"),
+		"event_date":   toEnabledObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":   toEnabledObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":   toEnabledObject(o.GoVersion, isavro, false, "string"),
+		"hostname":     toEnabledObject(o.Hostname, isavro, false, "string"),
+		"id":           toEnabledObject(o.ID, isavro, false, "string"),
+		"memory":       toEnabledObject(o.Memory, isavro, false, "long"),
+		"message":      toEnabledObject(o.Message, isavro, false, "string"),
+		"num_cpu":      toEnabledObject(o.NumCPU, isavro, false, "long"),
+		"os":           toEnabledObject(o.OS, isavro, false, "string"),
+		"ref_id":       toEnabledObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toEnabledObject(o.RefType, isavro, false, "string"),
+		"request_id":   toEnabledObject(o.RequestID, isavro, false, "string"),
+		"success":      toEnabledObject(o.Success, isavro, false, "boolean"),
+		"type":         toEnabledObject(o.Type, isavro, false, "type"),
+		"uuid":         toEnabledObject(o.UUID, isavro, false, "string"),
+		"version":      toEnabledObject(o.Version, isavro, false, "string"),
+		"hashcode":     toEnabledObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -496,6 +638,19 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["architecture"].(string); ok {
+		o.Architecture = val
+	} else {
+		val := kv["architecture"]
+		if val == nil {
+			o.Architecture = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Architecture = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
@@ -510,14 +665,59 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["date"].(EnabledDate); ok {
-		o.Date = val
+	if val, ok := kv["data"].(*string); ok {
+		o.Data = val
+	} else if val, ok := kv["data"].(string); ok {
+		o.Data = &val
 	} else {
-		val := kv["date"]
+		val := kv["data"]
 		if val == nil {
-			o.Date = EnabledDate{}
+			o.Data = pstrings.Pointer("")
 		} else {
-			o.Date = EnabledDate{}
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
+			o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["distro"].(string); ok {
+		o.Distro = val
+	} else {
+		val := kv["distro"]
+		if val == nil {
+			o.Distro = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Distro = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["error"].(*string); ok {
+		o.Error = val
+	} else if val, ok := kv["error"].(string); ok {
+		o.Error = &val
+	} else {
+		val := kv["error"]
+		if val == nil {
+			o.Error = pstrings.Pointer("")
+		} else {
+			// if coming in as avro union, convert it back
+			if kv, ok := val.(map[string]interface{}); ok {
+				val = kv["string"]
+			}
+			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["event_date"].(EnabledEventDate); ok {
+		o.EventDate = val
+	} else {
+		val := kv["event_date"]
+		if val == nil {
+			o.EventDate = EnabledEventDate{}
+		} else {
+			o.EventDate = EnabledEventDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -528,8 +728,47 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
+			json.Unmarshal(b, &o.EventDate)
 
+		}
+	}
+	if val, ok := kv["free_space"].(int64); ok {
+		o.FreeSpace = val
+	} else {
+		val := kv["free_space"]
+		if val == nil {
+			o.FreeSpace = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.FreeSpace = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["go_version"].(string); ok {
+		o.GoVersion = val
+	} else {
+		val := kv["go_version"]
+		if val == nil {
+			o.GoVersion = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.GoVersion = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["hostname"].(string); ok {
+		o.Hostname = val
+	} else {
+		val := kv["hostname"]
+		if val == nil {
+			o.Hostname = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Hostname = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -543,6 +782,58 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["memory"].(int64); ok {
+		o.Memory = val
+	} else {
+		val := kv["memory"]
+		if val == nil {
+			o.Memory = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.Memory = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["message"].(string); ok {
+		o.Message = val
+	} else {
+		val := kv["message"]
+		if val == nil {
+			o.Message = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Message = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["num_cpu"].(int64); ok {
+		o.NumCPU = val
+	} else {
+		val := kv["num_cpu"]
+		if val == nil {
+			o.NumCPU = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.NumCPU = number.ToInt64Any(val)
+		}
+	}
+	if val, ok := kv["os"].(string); ok {
+		o.OS = val
+	} else {
+		val := kv["os"]
+		if val == nil {
+			o.OS = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.OS = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -571,6 +862,74 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["request_id"].(string); ok {
+		o.RequestID = val
+	} else {
+		val := kv["request_id"]
+		if val == nil {
+			o.RequestID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RequestID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["success"].(bool); ok {
+		o.Success = val
+	} else {
+		val := kv["success"]
+		if val == nil {
+			o.Success = number.ToBoolAny(nil)
+		} else {
+			o.Success = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["type"].(EnabledType); ok {
+		o.Type = val
+	} else {
+		if em, ok := kv["type"].(map[string]interface{}); ok {
+			ev := em["agent.type"].(string)
+			switch ev {
+			case "enroll":
+				o.Type = 0
+			case "ping":
+				o.Type = 1
+			case "crash":
+				o.Type = 2
+			case "integration":
+				o.Type = 3
+			case "export":
+				o.Type = 4
+			case "project":
+				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
+			}
+		}
+		if em, ok := kv["type"].(string); ok {
+			switch em {
+			case "enroll":
+				o.Type = 0
+			case "ping":
+				o.Type = 1
+			case "crash":
+				o.Type = 2
+			case "integration":
+				o.Type = 3
+			case "export":
+				o.Type = 4
+			case "project":
+				o.Type = 5
+			case "user":
+				o.Type = 6
+			case "repo":
+				o.Type = 7
+			}
+		}
+	}
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -584,18 +943,46 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 			o.UUID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["version"].(string); ok {
+		o.Version = val
+	} else {
+		val := kv["version"]
+		if val == nil {
+			o.Version = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.Version = fmt.Sprintf("%v", val)
+		}
+	}
 	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object
 func (o *Enabled) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Date)
+	args = append(args, o.Data)
+	args = append(args, o.Distro)
+	args = append(args, o.Error)
+	args = append(args, o.EventDate)
+	args = append(args, o.FreeSpace)
+	args = append(args, o.GoVersion)
+	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.Memory)
+	args = append(args, o.Message)
+	args = append(args, o.NumCPU)
+	args = append(args, o.OS)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RequestID)
+	args = append(args, o.Success)
+	args = append(args, o.Type)
 	args = append(args, o.UUID)
+	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -612,15 +999,61 @@ func GetEnabledAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "architecture",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made", "type": "record", "name": "date"},
+				"name":    "data",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "distro",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name":    "error",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "event_date",
+				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+			},
+			map[string]interface{}{
+				"name": "free_space",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "go_version",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "hostname",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "memory",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "message",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "num_cpu",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "os",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -632,7 +1065,29 @@ func GetEnabledAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "request_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "success",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "type",
+				"type": []interface{}{
+					map[string]interface{}{
+						"type":    "enum",
+						"name":    "type",
+						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "user", "repo"},
+					},
+				},
+			},
+			map[string]interface{}{
 				"name": "uuid",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "version",
 				"type": "string",
 			},
 		},

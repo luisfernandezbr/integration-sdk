@@ -45,14 +45,6 @@ const (
 const (
 	// ProjectRequestCustomerIDColumn is the customer_id column name
 	ProjectRequestCustomerIDColumn = "customer_id"
-	// ProjectRequestDateColumn is the date column name
-	ProjectRequestDateColumn = "date"
-	// ProjectRequestDateColumnEpochColumn is the epoch column property of the Date name
-	ProjectRequestDateColumnEpochColumn = "date->epoch"
-	// ProjectRequestDateColumnOffsetColumn is the offset column property of the Date name
-	ProjectRequestDateColumnOffsetColumn = "date->offset"
-	// ProjectRequestDateColumnRfc3339Column is the rfc3339 column property of the Date name
-	ProjectRequestDateColumnRfc3339Column = "date->rfc3339"
 	// ProjectRequestIDColumn is the id column name
 	ProjectRequestIDColumn = "id"
 	// ProjectRequestIntegrationColumn is the integration column name
@@ -81,6 +73,14 @@ const (
 	ProjectRequestRefIDColumn = "ref_id"
 	// ProjectRequestRefTypeColumn is the ref_type column name
 	ProjectRequestRefTypeColumn = "ref_type"
+	// ProjectRequestRequestDateColumn is the request_date column name
+	ProjectRequestRequestDateColumn = "request_date"
+	// ProjectRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	ProjectRequestRequestDateColumnEpochColumn = "request_date->epoch"
+	// ProjectRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	ProjectRequestRequestDateColumnOffsetColumn = "request_date->offset"
+	// ProjectRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	ProjectRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
 	// ProjectRequestUUIDColumn is the uuid column name
 	ProjectRequestUUIDColumn = "uuid"
 )
@@ -119,27 +119,6 @@ func (o *ProjectRequestAuthorization) ToMap() map[string]interface{} {
 		"url": o.URL,
 		// Username Username for instance, if relevant
 		"username": o.Username,
-	}
-}
-
-// ProjectRequestDate represents the object structure for date
-type ProjectRequestDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func (o *ProjectRequestDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
 	}
 }
 
@@ -188,7 +167,7 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 	}
 }
 
-// Location is the enumeration type for location
+// ProjectRequestLocation is the enumeration type for location
 type ProjectRequestLocation int32
 
 // String returns the string value for Location
@@ -230,6 +209,27 @@ func (o *ProjectRequestProgress) ToMap() map[string]interface{} {
 	}
 }
 
+// ProjectRequestRequestDate represents the object structure for request_date
+type ProjectRequestRequestDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func (o *ProjectRequestRequestDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+	}
+}
+
 // ProjectRequestValidatedDate represents the object structure for validated_date
 type ProjectRequestValidatedDate struct {
 	// Epoch the date in epoch format
@@ -255,8 +255,6 @@ func (o *ProjectRequestValidatedDate) ToMap() map[string]interface{} {
 type ProjectRequest struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Date the date when the request was made
-	Date ProjectRequestDate `json:"date" bson:"date" yaml:"date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to use
@@ -267,6 +265,8 @@ type ProjectRequest struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RequestDate the date when the request was made
+	RequestDate ProjectRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -426,26 +426,6 @@ func toProjectRequestObject(o interface{}, isavro bool, isoptional bool, avrotyp
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case ProjectRequestDate:
-		vv := o.(ProjectRequestDate)
-		return vv.ToMap()
-	case *ProjectRequestDate:
-		return map[string]interface{}{
-			"agent.date": (*o.(*ProjectRequestDate)).ToMap(),
-		}
-	case []ProjectRequestDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectRequestDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ProjectRequestDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectRequestDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ProjectRequestIntegration:
 		vv := o.(ProjectRequestIntegration)
 		return vv.ToMap()
@@ -496,6 +476,26 @@ func toProjectRequestObject(o interface{}, isavro bool, isoptional bool, avrotyp
 	case *[]ProjectRequestProgress:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]ProjectRequestProgress)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case ProjectRequestRequestDate:
+		vv := o.(ProjectRequestRequestDate)
+		return vv.ToMap()
+	case *ProjectRequestRequestDate:
+		return map[string]interface{}{
+			"agent.request_date": (*o.(*ProjectRequestRequestDate)).ToMap(),
+		}
+	case []ProjectRequestRequestDate:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]ProjectRequestRequestDate) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]ProjectRequestRequestDate:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]ProjectRequestRequestDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -599,7 +599,7 @@ func (o *ProjectRequest) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ProjectRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.Date
+	var dt interface{} = o.RequestDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -611,7 +611,7 @@ func (o *ProjectRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ProjectRequestDate:
+	case ProjectRequestRequestDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ProjectRequest")
@@ -656,7 +656,7 @@ func (o *ProjectRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "date",
+		Timestamp:         "request_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -779,15 +779,15 @@ func (o *ProjectRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id": toProjectRequestObject(o.CustomerID, isavro, false, "string"),
-		"date":        toProjectRequestObject(o.Date, isavro, false, "date"),
-		"id":          toProjectRequestObject(o.ID, isavro, false, "string"),
-		"integration": toProjectRequestObject(o.Integration, isavro, false, "integration"),
-		"location":    toProjectRequestObject(o.Location, isavro, false, "location"),
-		"ref_id":      toProjectRequestObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toProjectRequestObject(o.RefType, isavro, false, "string"),
-		"uuid":        toProjectRequestObject(o.UUID, isavro, false, "string"),
-		"hashcode":    toProjectRequestObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":  toProjectRequestObject(o.CustomerID, isavro, false, "string"),
+		"id":           toProjectRequestObject(o.ID, isavro, false, "string"),
+		"integration":  toProjectRequestObject(o.Integration, isavro, false, "integration"),
+		"location":     toProjectRequestObject(o.Location, isavro, false, "location"),
+		"ref_id":       toProjectRequestObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toProjectRequestObject(o.RefType, isavro, false, "string"),
+		"request_date": toProjectRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"uuid":         toProjectRequestObject(o.UUID, isavro, false, "string"),
+		"hashcode":     toProjectRequestObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -808,28 +808,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.CustomerID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["date"].(ProjectRequestDate); ok {
-		o.Date = val
-	} else {
-		val := kv["date"]
-		if val == nil {
-			o.Date = ProjectRequestDate{}
-		} else {
-			o.Date = ProjectRequestDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Date)
-
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -914,6 +892,28 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["request_date"].(ProjectRequestRequestDate); ok {
+		o.RequestDate = val
+	} else {
+		val := kv["request_date"]
+		if val == nil {
+			o.RequestDate = ProjectRequestRequestDate{}
+		} else {
+			o.RequestDate = ProjectRequestRequestDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.RequestDate)
+
+		}
+	}
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -934,12 +934,12 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 func (o *ProjectRequest) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
-	args = append(args, o.Date)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
 	args = append(args, o.Location)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RequestDate)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -961,16 +961,12 @@ func GetProjectRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record", "name": "date"},
-			},
-			map[string]interface{}{
 				"name": "id",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"doc": "Access token", "type": "string", "name": "access_token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"name": "url", "doc": "URL of instance if relevant", "type": "string"}, map[string]interface{}{"name": "username", "doc": "Username for instance, if relevant", "type": "string"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"items": "string", "type": "array", "name": "exclusions"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Agent processing progress", "type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use"},
+				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"name": "api_token", "doc": "API Token for instance, if relevant", "type": "string"}, map[string]interface{}{"name": "authorization", "doc": "the agents encrypted authorization", "type": "string"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"doc": "URL of instance if relevant", "type": "string", "name": "url"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Agent processing progress", "type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"name": "message", "doc": "Any relevant messaging during processing", "type": "string"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"name": "validated_date", "doc": "Date when validated", "type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Date when validated"}}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use"},
 			},
 			map[string]interface{}{
 				"name": "location",
@@ -989,6 +985,10 @@ func GetProjectRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "request_date",
+				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

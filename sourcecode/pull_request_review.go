@@ -43,14 +43,14 @@ const (
 )
 
 const (
-	// PullRequestReviewCreatedColumn is the created column name
-	PullRequestReviewCreatedColumn = "created"
-	// PullRequestReviewCreatedColumnEpochColumn is the epoch column property of the Created name
-	PullRequestReviewCreatedColumnEpochColumn = "created->epoch"
-	// PullRequestReviewCreatedColumnOffsetColumn is the offset column property of the Created name
-	PullRequestReviewCreatedColumnOffsetColumn = "created->offset"
-	// PullRequestReviewCreatedColumnRfc3339Column is the rfc3339 column property of the Created name
-	PullRequestReviewCreatedColumnRfc3339Column = "created->rfc3339"
+	// PullRequestReviewCreatedDateColumn is the created_date column name
+	PullRequestReviewCreatedDateColumn = "created_date"
+	// PullRequestReviewCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
+	PullRequestReviewCreatedDateColumnEpochColumn = "created_date->epoch"
+	// PullRequestReviewCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
+	PullRequestReviewCreatedDateColumnOffsetColumn = "created_date->offset"
+	// PullRequestReviewCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
+	PullRequestReviewCreatedDateColumnRfc3339Column = "created_date->rfc3339"
 	// PullRequestReviewCustomerIDColumn is the customer_id column name
 	PullRequestReviewCustomerIDColumn = "customer_id"
 	// PullRequestReviewIDColumn is the id column name
@@ -69,8 +69,8 @@ const (
 	PullRequestReviewUserRefIDColumn = "user_ref_id"
 )
 
-// PullRequestReviewCreated represents the object structure for created
-type PullRequestReviewCreated struct {
+// PullRequestReviewCreatedDate represents the object structure for created_date
+type PullRequestReviewCreatedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -79,7 +79,7 @@ type PullRequestReviewCreated struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *PullRequestReviewCreated) ToMap() map[string]interface{} {
+func (o *PullRequestReviewCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -92,8 +92,8 @@ func (o *PullRequestReviewCreated) ToMap() map[string]interface{} {
 
 // PullRequestReview the review for a given pull request
 type PullRequestReview struct {
-	// Created the timestamp in UTC that the review was created
-	Created PullRequestReviewCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
+	// CreatedDate the timestamp in UTC that the review was created
+	CreatedDate PullRequestReviewCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
@@ -247,22 +247,22 @@ func toPullRequestReviewObject(o interface{}, isavro bool, isoptional bool, avro
 		}
 		return arr
 
-	case PullRequestReviewCreated:
-		vv := o.(PullRequestReviewCreated)
+	case PullRequestReviewCreatedDate:
+		vv := o.(PullRequestReviewCreatedDate)
 		return vv.ToMap()
-	case *PullRequestReviewCreated:
+	case *PullRequestReviewCreatedDate:
 		return map[string]interface{}{
-			"sourcecode.created": (*o.(*PullRequestReviewCreated)).ToMap(),
+			"sourcecode.created_date": (*o.(*PullRequestReviewCreatedDate)).ToMap(),
 		}
-	case []PullRequestReviewCreated:
+	case []PullRequestReviewCreatedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]PullRequestReviewCreated) {
+		for _, i := range o.([]PullRequestReviewCreatedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]PullRequestReviewCreated:
+	case *[]PullRequestReviewCreatedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]PullRequestReviewCreated)
+		vv := o.(*[]PullRequestReviewCreatedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -313,7 +313,7 @@ func (o *PullRequestReview) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequestReview) GetTimestamp() time.Time {
-	var dt interface{} = o.Created
+	var dt interface{} = o.CreatedDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -325,7 +325,7 @@ func (o *PullRequestReview) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case PullRequestReviewCreated:
+	case PullRequestReviewCreatedDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for PullRequestReview")
@@ -379,7 +379,7 @@ func (o *PullRequestReview) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "created",
+		Timestamp:         "created_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -502,7 +502,7 @@ func (o *PullRequestReview) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"created":         toPullRequestReviewObject(o.Created, isavro, false, "created"),
+		"created_date":    toPullRequestReviewObject(o.CreatedDate, isavro, false, "created_date"),
 		"customer_id":     toPullRequestReviewObject(o.CustomerID, isavro, false, "string"),
 		"id":              toPullRequestReviewObject(o.ID, isavro, false, "string"),
 		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, isavro, false, "string"),
@@ -521,14 +521,14 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["created"].(PullRequestReviewCreated); ok {
-		o.Created = val
+	if val, ok := kv["created_date"].(PullRequestReviewCreatedDate); ok {
+		o.CreatedDate = val
 	} else {
-		val := kv["created"]
+		val := kv["created_date"]
 		if val == nil {
-			o.Created = PullRequestReviewCreated{}
+			o.CreatedDate = PullRequestReviewCreatedDate{}
 		} else {
-			o.Created = PullRequestReviewCreated{}
+			o.CreatedDate = PullRequestReviewCreatedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -539,7 +539,7 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Created)
+			json.Unmarshal(b, &o.CreatedDate)
 
 		}
 	}
@@ -653,7 +653,7 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequestReview) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Created)
+	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.PullRequestID)
@@ -678,8 +678,8 @@ func GetPullRequestReviewAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "created",
-				"type": map[string]interface{}{"type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the review was created"},
+				"name": "created_date",
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the timestamp in UTC that the review was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

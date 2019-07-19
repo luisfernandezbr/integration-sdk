@@ -27,72 +27,94 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
-	// EventTopic is the default topic name
-	EventTopic datamodel.TopicNameType = "agent_Event_topic"
+	// UserResponseTopic is the default topic name
+	UserResponseTopic datamodel.TopicNameType = "agent_UserResponse_topic"
 
-	// EventStream is the default stream name
-	EventStream datamodel.TopicNameType = "agent_Event_stream"
+	// UserResponseStream is the default stream name
+	UserResponseStream datamodel.TopicNameType = "agent_UserResponse_stream"
 
-	// EventTable is the default table name
-	EventTable datamodel.TopicNameType = "agent_Event"
+	// UserResponseTable is the default table name
+	UserResponseTable datamodel.TopicNameType = "agent_UserResponse"
 
-	// EventModelName is the model name
-	EventModelName datamodel.ModelNameType = "agent.Event"
+	// UserResponseModelName is the model name
+	UserResponseModelName datamodel.ModelNameType = "agent.UserResponse"
 )
 
 const (
-	// EventArchitectureColumn is the architecture column name
-	EventArchitectureColumn = "architecture"
-	// EventCustomerIDColumn is the customer_id column name
-	EventCustomerIDColumn = "customer_id"
-	// EventDataColumn is the data column name
-	EventDataColumn = "data"
-	// EventDistroColumn is the distro column name
-	EventDistroColumn = "distro"
-	// EventErrorColumn is the error column name
-	EventErrorColumn = "error"
-	// EventEventDateColumn is the event_date column name
-	EventEventDateColumn = "event_date"
-	// EventEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	EventEventDateColumnEpochColumn = "event_date->epoch"
-	// EventEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	EventEventDateColumnOffsetColumn = "event_date->offset"
-	// EventEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	EventEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// EventFreeSpaceColumn is the free_space column name
-	EventFreeSpaceColumn = "free_space"
-	// EventGoVersionColumn is the go_version column name
-	EventGoVersionColumn = "go_version"
-	// EventHostnameColumn is the hostname column name
-	EventHostnameColumn = "hostname"
-	// EventIDColumn is the id column name
-	EventIDColumn = "id"
-	// EventMemoryColumn is the memory column name
-	EventMemoryColumn = "memory"
-	// EventMessageColumn is the message column name
-	EventMessageColumn = "message"
-	// EventNumCPUColumn is the num_cpu column name
-	EventNumCPUColumn = "num_cpu"
-	// EventOSColumn is the os column name
-	EventOSColumn = "os"
-	// EventRefIDColumn is the ref_id column name
-	EventRefIDColumn = "ref_id"
-	// EventRefTypeColumn is the ref_type column name
-	EventRefTypeColumn = "ref_type"
-	// EventTypeColumn is the type column name
-	EventTypeColumn = "type"
-	// EventUUIDColumn is the uuid column name
-	EventUUIDColumn = "uuid"
-	// EventVersionColumn is the version column name
-	EventVersionColumn = "version"
+	// UserResponseArchitectureColumn is the architecture column name
+	UserResponseArchitectureColumn = "architecture"
+	// UserResponseCustomerIDColumn is the customer_id column name
+	UserResponseCustomerIDColumn = "customer_id"
+	// UserResponseDataColumn is the data column name
+	UserResponseDataColumn = "data"
+	// UserResponseDistroColumn is the distro column name
+	UserResponseDistroColumn = "distro"
+	// UserResponseErrorColumn is the error column name
+	UserResponseErrorColumn = "error"
+	// UserResponseEventDateColumn is the event_date column name
+	UserResponseEventDateColumn = "event_date"
+	// UserResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	UserResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// UserResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	UserResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// UserResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	UserResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
+	// UserResponseFreeSpaceColumn is the free_space column name
+	UserResponseFreeSpaceColumn = "free_space"
+	// UserResponseGoVersionColumn is the go_version column name
+	UserResponseGoVersionColumn = "go_version"
+	// UserResponseHostnameColumn is the hostname column name
+	UserResponseHostnameColumn = "hostname"
+	// UserResponseIDColumn is the id column name
+	UserResponseIDColumn = "id"
+	// UserResponseIntegrationIDColumn is the integration_id column name
+	UserResponseIntegrationIDColumn = "integration_id"
+	// UserResponseMemoryColumn is the memory column name
+	UserResponseMemoryColumn = "memory"
+	// UserResponseMessageColumn is the message column name
+	UserResponseMessageColumn = "message"
+	// UserResponseNumCPUColumn is the num_cpu column name
+	UserResponseNumCPUColumn = "num_cpu"
+	// UserResponseOSColumn is the os column name
+	UserResponseOSColumn = "os"
+	// UserResponseRefIDColumn is the ref_id column name
+	UserResponseRefIDColumn = "ref_id"
+	// UserResponseRefTypeColumn is the ref_type column name
+	UserResponseRefTypeColumn = "ref_type"
+	// UserResponseRequestIDColumn is the request_id column name
+	UserResponseRequestIDColumn = "request_id"
+	// UserResponseSuccessColumn is the success column name
+	UserResponseSuccessColumn = "success"
+	// UserResponseTypeColumn is the type column name
+	UserResponseTypeColumn = "type"
+	// UserResponseUsersColumn is the users column name
+	UserResponseUsersColumn = "users"
+	// UserResponseUsersColumnActiveColumn is the active column property of the Users name
+	UserResponseUsersColumnActiveColumn = "users->active"
+	// UserResponseUsersColumnAvatarURLColumn is the avatar_url column property of the Users name
+	UserResponseUsersColumnAvatarURLColumn = "users->avatar_url"
+	// UserResponseUsersColumnEmailsColumn is the emails column property of the Users name
+	UserResponseUsersColumnEmailsColumn = "users->emails"
+	// UserResponseUsersColumnGroupsColumn is the groups column property of the Users name
+	UserResponseUsersColumnGroupsColumn = "users->groups"
+	// UserResponseUsersColumnNameColumn is the name column property of the Users name
+	UserResponseUsersColumnNameColumn = "users->name"
+	// UserResponseUsersColumnUsernameColumn is the username column property of the Users name
+	UserResponseUsersColumnUsernameColumn = "users->username"
+	// UserResponseUUIDColumn is the uuid column name
+	UserResponseUUIDColumn = "uuid"
+	// UserResponseVersionColumn is the version column name
+	UserResponseVersionColumn = "version"
 )
 
-// EventEventDate represents the object structure for event_date
-type EventEventDate struct {
+// UserResponseEventDate represents the object structure for event_date
+type UserResponseEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -101,7 +123,7 @@ type EventEventDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *EventEventDate) ToMap() map[string]interface{} {
+func (o *UserResponseEventDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -112,11 +134,28 @@ func (o *EventEventDate) ToMap() map[string]interface{} {
 	}
 }
 
-// EventType is the enumeration type for type
-type EventType int32
+// UserResponseGroups represents the object structure for groups
+type UserResponseGroups struct {
+	// GroupID Group id
+	GroupID string `json:"group_id" bson:"group_id" yaml:"group_id" faker:"-"`
+	// Name Group name
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+}
+
+func (o *UserResponseGroups) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// GroupID Group id
+		"group_id": o.GroupID,
+		// Name Group name
+		"name": o.Name,
+	}
+}
+
+// UserResponseType is the enumeration type for type
+type UserResponseType int32
 
 // String returns the string value for Type
-func (v EventType) String() string {
+func (v UserResponseType) String() string {
 	switch int32(v) {
 	case 0:
 		return "enroll"
@@ -140,25 +179,58 @@ func (v EventType) String() string {
 
 const (
 	// TypeEnroll is the enumeration value for enroll
-	EventTypeEnroll EventType = 0
+	UserResponseTypeEnroll UserResponseType = 0
 	// TypePing is the enumeration value for ping
-	EventTypePing EventType = 1
+	UserResponseTypePing UserResponseType = 1
 	// TypeCrash is the enumeration value for crash
-	EventTypeCrash EventType = 2
+	UserResponseTypeCrash UserResponseType = 2
 	// TypeIntegration is the enumeration value for integration
-	EventTypeIntegration EventType = 3
+	UserResponseTypeIntegration UserResponseType = 3
 	// TypeExport is the enumeration value for export
-	EventTypeExport EventType = 4
+	UserResponseTypeExport UserResponseType = 4
 	// TypeProject is the enumeration value for project
-	EventTypeProject EventType = 5
+	UserResponseTypeProject UserResponseType = 5
 	// TypeUser is the enumeration value for user
-	EventTypeUser EventType = 6
+	UserResponseTypeUser UserResponseType = 6
 	// TypeRepo is the enumeration value for repo
-	EventTypeRepo EventType = 7
+	UserResponseTypeRepo UserResponseType = 7
 )
 
-// Event event data sent from the agent
-type Event struct {
+// UserResponseUsers represents the object structure for users
+type UserResponseUsers struct {
+	// Active if user is active
+	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	// AvatarURL the url to users avatar
+	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
+	// Emails the email for the user
+	Emails []string `json:"emails" bson:"emails" yaml:"emails" faker:"-"`
+	// Groups Group names
+	Groups []UserResponseGroups `json:"groups" bson:"groups" yaml:"groups" faker:"-"`
+	// Name the name of the user
+	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
+	// Username the username of the user
+	Username string `json:"username" bson:"username" yaml:"username" faker:"username"`
+}
+
+func (o *UserResponseUsers) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Active if user is active
+		"active": o.Active,
+		// AvatarURL the url to users avatar
+		"avatar_url": o.AvatarURL,
+		// Emails the email for the user
+		"emails": o.Emails,
+		// Groups Group names
+		"groups": o.Groups,
+		// Name the name of the user
+		"name": o.Name,
+		// Username the username of the user
+		"username": o.Username,
+	}
+}
+
+// UserResponse an agent response to an action request adding user(s)
+type UserResponse struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -170,7 +242,7 @@ type Event struct {
 	// Error an error message related to this event
 	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
 	// EventDate the date of the event
-	EventDate EventEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate UserResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -179,6 +251,8 @@ type Event struct {
 	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationID the integration id
+	IntegrationID string `json:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -191,8 +265,14 @@ type Event struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RequestID the request id that this response is correlated to
+	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	// Success if the response was successful
+	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
-	Type EventType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type UserResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	// Users the exported users
+	Users []UserResponseUsers `json:"users" bson:"users" yaml:"users" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -202,22 +282,22 @@ type Event struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Event)(nil)
+var _ datamodel.Model = (*UserResponse)(nil)
 
-func toEventObjectNil(isavro bool, isoptional bool) interface{} {
+func toUserResponseObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toUserResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if o == nil {
-		return toEventObjectNil(isavro, isoptional)
+		return toUserResponseObjectNil(isavro, isoptional)
 	}
 	switch v := o.(type) {
 	case nil:
-		return toEventObjectNil(isavro, isoptional)
+		return toUserResponseObjectNil(isavro, isoptional)
 	case string, int, int8, int16, int32, int64, float32, float64, bool:
 		if isavro && isoptional {
 			return goavro.Union(avrotype, v)
@@ -226,7 +306,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *string:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -235,7 +315,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *int:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -244,7 +324,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *int8:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -253,7 +333,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *int16:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -262,7 +342,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *int32:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -271,7 +351,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *int64:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -280,7 +360,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *float32:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -289,7 +369,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *float64:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -298,7 +378,7 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case *bool:
 		if isavro && isoptional {
 			if v == nil {
-				return toEventObjectNil(isavro, isoptional)
+				return toUserResponseObjectNil(isavro, isoptional)
 			}
 			pv := *v
 			return goavro.Union(avrotype, pv)
@@ -312,9 +392,9 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		return v
 	case *map[string]string:
 		return *v
-	case *Event:
+	case *UserResponse:
 		return v.ToMap()
-	case Event:
+	case UserResponse:
 		return v.ToMap()
 	case []string, []int64, []float64, []bool:
 		return o
@@ -330,69 +410,112 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		a := o.([]interface{})
 		arr := make([]interface{}, 0)
 		for _, av := range a {
-			arr = append(arr, toEventObject(av, isavro, false, ""))
+			arr = append(arr, toUserResponseObject(av, isavro, false, ""))
 		}
 		return arr
 
-	case EventEventDate:
-		vv := o.(EventEventDate)
+	case UserResponseEventDate:
+		vv := o.(UserResponseEventDate)
 		return vv.ToMap()
-	case *EventEventDate:
+	case *UserResponseEventDate:
 		return map[string]interface{}{
-			"agent.event_date": (*o.(*EventEventDate)).ToMap(),
+			"agent.event_date": (*o.(*UserResponseEventDate)).ToMap(),
 		}
-	case []EventEventDate:
+	case []UserResponseEventDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]EventEventDate) {
+		for _, i := range o.([]UserResponseEventDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]EventEventDate:
+	case *[]UserResponseEventDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]EventEventDate)
+		vv := o.(*[]UserResponseEventDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case EventType:
+	case UserResponseGroups:
+		vv := o.(UserResponseGroups)
+		return vv.ToMap()
+	case *UserResponseGroups:
+		return map[string]interface{}{
+			"agent.groups": (*o.(*UserResponseGroups)).ToMap(),
+		}
+	case []UserResponseGroups:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]UserResponseGroups) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]UserResponseGroups:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]UserResponseGroups)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case UserResponseType:
 		if !isavro {
-			return (o.(EventType)).String()
+			return (o.(UserResponseType)).String()
 		}
 		return map[string]string{
-			"agent.type": (o.(EventType)).String(),
+			"agent.type": (o.(UserResponseType)).String(),
 		}
-	case *EventType:
+	case *UserResponseType:
 		if !isavro {
-			return (o.(*EventType)).String()
+			return (o.(*UserResponseType)).String()
 		}
 		return map[string]string{
-			"agent.type": (o.(*EventType)).String(),
+			"agent.type": (o.(*UserResponseType)).String(),
 		}
+	case UserResponseUsers:
+		vv := o.(UserResponseUsers)
+		return vv.ToMap()
+	case *UserResponseUsers:
+		return map[string]interface{}{
+			"agent.users": (*o.(*UserResponseUsers)).ToMap(),
+		}
+	case []UserResponseUsers:
+		arr := make([]interface{}, 0)
+		for _, i := range o.([]UserResponseUsers) {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+	case *[]UserResponseUsers:
+		arr := make([]interface{}, 0)
+		vv := o.(*[]UserResponseUsers)
+		for _, i := range *vv {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of Event
-func (o *Event) String() string {
-	return fmt.Sprintf("agent.Event<%s>", o.ID)
+// String returns a string representation of UserResponse
+func (o *UserResponse) String() string {
+	return fmt.Sprintf("agent.UserResponse<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Event) GetTopicName() datamodel.TopicNameType {
-	return EventTopic
+func (o *UserResponse) GetTopicName() datamodel.TopicNameType {
+	return UserResponseTopic
 }
 
 // GetModelName returns the name of the model
-func (o *Event) GetModelName() datamodel.ModelNameType {
-	return EventModelName
+func (o *UserResponse) GetModelName() datamodel.ModelNameType {
+	return UserResponseModelName
 }
 
-func (o *Event) setDefaults() {
+func (o *UserResponse) setDefaults() {
 	if o.Data == nil {
 		o.Data = &emptyString
 	}
 	if o.Error == nil {
 		o.Error = &emptyString
+	}
+	if o.Users == nil {
+		o.Users = []UserResponseUsers{}
 	}
 
 	o.GetID()
@@ -401,16 +524,16 @@ func (o *Event) setDefaults() {
 }
 
 // GetID returns the ID for the object
-func (o *Event) GetID() string {
+func (o *UserResponse) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Event", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("UserResponse", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Event) GetTopicKey() string {
+func (o *UserResponse) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -419,7 +542,7 @@ func (o *Event) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Event) GetTimestamp() time.Time {
+func (o *UserResponse) GetTimestamp() time.Time {
 	var dt interface{} = o.EventDate
 	switch v := dt.(type) {
 	case int64:
@@ -432,40 +555,40 @@ func (o *Event) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case EventEventDate:
+	case UserResponseEventDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
-	panic("not sure how to handle the date time format for Event")
+	panic("not sure how to handle the date time format for UserResponse")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Event) GetRefID() string {
+func (o *UserResponse) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Event) IsMaterialized() bool {
+func (o *UserResponse) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Event) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *UserResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Event) IsEvented() bool {
+func (o *UserResponse) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Event) SetEventHeaders(kv map[string]string) {
+func (o *UserResponse) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = EventModelName.String()
+	kv["model"] = UserResponseModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Event) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *UserResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -487,28 +610,28 @@ func (o *Event) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *Event) GetStateKey() string {
+func (o *UserResponse) GetStateKey() string {
 	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *Event) GetCustomerID() string {
+func (o *UserResponse) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Event
-func (o *Event) Clone() datamodel.Model {
-	c := new(Event)
+// Clone returns an exact copy of UserResponse
+func (o *UserResponse) Clone() datamodel.Model {
+	c := new(UserResponse)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Event) Anon() datamodel.Model {
-	c := new(Event)
+func (o *UserResponse) Anon() datamodel.Model {
+	c := new(UserResponse)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -523,12 +646,12 @@ func (o *Event) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Event) MarshalJSON() ([]byte, error) {
+func (o *UserResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Event) UnmarshalJSON(data []byte) error {
+func (o *UserResponse) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -537,22 +660,22 @@ func (o *Event) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecEvent *goavro.Codec
+var cachedCodecUserResponse *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *Event) GetAvroCodec() *goavro.Codec {
-	if cachedCodecEvent == nil {
-		c, err := GetEventAvroSchema()
+func (o *UserResponse) GetAvroCodec() *goavro.Codec {
+	if cachedCodecUserResponse == nil {
+		c, err := GetUserResponseAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecEvent = c
+		cachedCodecUserResponse = c
 	}
-	return cachedCodecEvent
+	return cachedCodecUserResponse
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Event) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *UserResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -566,7 +689,7 @@ func (o *Event) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Event) FromAvroBinary(value []byte) error {
+func (o *UserResponse) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -581,50 +704,57 @@ func (o *Event) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Event) Stringify() string {
+func (o *UserResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Event objects are equal
-func (o *Event) IsEqual(other *Event) bool {
+// IsEqual returns true if the two UserResponse objects are equal
+func (o *UserResponse) IsEqual(other *UserResponse) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Event) ToMap(avro ...bool) map[string]interface{} {
+func (o *UserResponse) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
 	}
 	if isavro {
+		if o.Users == nil {
+			o.Users = make([]UserResponseUsers, 0)
+		}
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"architecture": toEventObject(o.Architecture, isavro, false, "string"),
-		"customer_id":  toEventObject(o.CustomerID, isavro, false, "string"),
-		"data":         toEventObject(o.Data, isavro, true, "string"),
-		"distro":       toEventObject(o.Distro, isavro, false, "string"),
-		"error":        toEventObject(o.Error, isavro, true, "string"),
-		"event_date":   toEventObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":   toEventObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":   toEventObject(o.GoVersion, isavro, false, "string"),
-		"hostname":     toEventObject(o.Hostname, isavro, false, "string"),
-		"id":           toEventObject(o.ID, isavro, false, "string"),
-		"memory":       toEventObject(o.Memory, isavro, false, "long"),
-		"message":      toEventObject(o.Message, isavro, false, "string"),
-		"num_cpu":      toEventObject(o.NumCPU, isavro, false, "long"),
-		"os":           toEventObject(o.OS, isavro, false, "string"),
-		"ref_id":       toEventObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toEventObject(o.RefType, isavro, false, "string"),
-		"type":         toEventObject(o.Type, isavro, false, "type"),
-		"uuid":         toEventObject(o.UUID, isavro, false, "string"),
-		"version":      toEventObject(o.Version, isavro, false, "string"),
-		"hashcode":     toEventObject(o.Hashcode, isavro, false, "string"),
+		"architecture":   toUserResponseObject(o.Architecture, isavro, false, "string"),
+		"customer_id":    toUserResponseObject(o.CustomerID, isavro, false, "string"),
+		"data":           toUserResponseObject(o.Data, isavro, true, "string"),
+		"distro":         toUserResponseObject(o.Distro, isavro, false, "string"),
+		"error":          toUserResponseObject(o.Error, isavro, true, "string"),
+		"event_date":     toUserResponseObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":     toUserResponseObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":     toUserResponseObject(o.GoVersion, isavro, false, "string"),
+		"hostname":       toUserResponseObject(o.Hostname, isavro, false, "string"),
+		"id":             toUserResponseObject(o.ID, isavro, false, "string"),
+		"integration_id": toUserResponseObject(o.IntegrationID, isavro, false, "string"),
+		"memory":         toUserResponseObject(o.Memory, isavro, false, "long"),
+		"message":        toUserResponseObject(o.Message, isavro, false, "string"),
+		"num_cpu":        toUserResponseObject(o.NumCPU, isavro, false, "long"),
+		"os":             toUserResponseObject(o.OS, isavro, false, "string"),
+		"ref_id":         toUserResponseObject(o.RefID, isavro, false, "string"),
+		"ref_type":       toUserResponseObject(o.RefType, isavro, false, "string"),
+		"request_id":     toUserResponseObject(o.RequestID, isavro, false, "string"),
+		"success":        toUserResponseObject(o.Success, isavro, false, "boolean"),
+		"type":           toUserResponseObject(o.Type, isavro, false, "type"),
+		"users":          toUserResponseObject(o.Users, isavro, false, "users"),
+		"uuid":           toUserResponseObject(o.UUID, isavro, false, "string"),
+		"version":        toUserResponseObject(o.Version, isavro, false, "string"),
+		"hashcode":       toUserResponseObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Event) FromMap(kv map[string]interface{}) {
+func (o *UserResponse) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
@@ -700,14 +830,14 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	if val, ok := kv["event_date"].(EventEventDate); ok {
+	if val, ok := kv["event_date"].(UserResponseEventDate); ok {
 		o.EventDate = val
 	} else {
 		val := kv["event_date"]
 		if val == nil {
-			o.EventDate = EventEventDate{}
+			o.EventDate = UserResponseEventDate{}
 		} else {
-			o.EventDate = EventEventDate{}
+			o.EventDate = UserResponseEventDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -772,6 +902,19 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.ID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = val
+	} else {
+		val := kv["integration_id"]
+		if val == nil {
+			o.IntegrationID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.IntegrationID = fmt.Sprintf("%v", val)
 		}
 	}
 	if val, ok := kv["memory"].(int64); ok {
@@ -852,7 +995,30 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["type"].(EventType); ok {
+	if val, ok := kv["request_id"].(string); ok {
+		o.RequestID = val
+	} else {
+		val := kv["request_id"]
+		if val == nil {
+			o.RequestID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.RequestID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["success"].(bool); ok {
+		o.Success = val
+	} else {
+		val := kv["success"]
+		if val == nil {
+			o.Success = number.ToBoolAny(nil)
+		} else {
+			o.Success = number.ToBoolAny(val)
+		}
+	}
+	if val, ok := kv["type"].(UserResponseType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -897,6 +1063,52 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val := kv["users"]; val != nil {
+		na := make([]UserResponseUsers, 0)
+		if a, ok := val.([]UserResponseUsers); ok {
+			na = append(na, a...)
+		} else {
+			if a, ok := val.([]interface{}); ok {
+				for _, ae := range a {
+					if av, ok := ae.(UserResponseUsers); ok {
+						na = append(na, av)
+					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
+						b, _ := json.Marshal(ae)
+						var av UserResponseUsers
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for users field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else if a, ok := val.(primitive.A); ok {
+				for _, ae := range a {
+					if av, ok := ae.(UserResponseUsers); ok {
+						na = append(na, av)
+					} else {
+						b, _ := json.Marshal(ae)
+						var av UserResponseUsers
+						if err := json.Unmarshal(b, &av); err != nil {
+							panic("unsupported type for users field entry: " + reflect.TypeOf(ae).String())
+						}
+						na = append(na, av)
+					}
+				}
+			} else {
+				fmt.Println(reflect.TypeOf(val).String())
+				panic("unsupported type for users field")
+			}
+		}
+		o.Users = na
+	} else {
+		o.Users = []UserResponseUsers{}
+	}
+	if o.Users == nil {
+		o.Users = make([]UserResponseUsers, 0)
+	}
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -927,7 +1139,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Event) Hash() string {
+func (o *UserResponse) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
@@ -939,25 +1151,29 @@ func (o *Event) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationID)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
 	args = append(args, o.OS)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RequestID)
+	args = append(args, o.Success)
 	args = append(args, o.Type)
+	args = append(args, o.Users)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// GetEventAvroSchemaSpec creates the avro schema specification for Event
-func GetEventAvroSchemaSpec() string {
+// GetUserResponseAvroSchemaSpec creates the avro schema specification for UserResponse
+func GetUserResponseAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "Event",
+		"name":      "UserResponse",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
@@ -987,7 +1203,7 @@ func GetEventAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1003,6 +1219,10 @@ func GetEventAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "integration_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -1030,6 +1250,14 @@ func GetEventAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "request_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "success",
+				"type": "boolean",
+			},
+			map[string]interface{}{
 				"name": "type",
 				"type": []interface{}{
 					map[string]interface{}{
@@ -1038,6 +1266,10 @@ func GetEventAvroSchemaSpec() string {
 						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "user", "repo"},
 					},
 				},
+			},
+			map[string]interface{}{
+				"name": "users",
+				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"name": "users", "fields": []interface{}{map[string]interface{}{"doc": "if user is active", "type": "boolean", "name": "active"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}, "name": "emails", "doc": "the email for the user"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}}, "name": "groups", "doc": "Group names"}, map[string]interface{}{"doc": "the name of the user", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "uuid",
@@ -1053,7 +1285,7 @@ func GetEventAvroSchemaSpec() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Event) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *UserResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
@@ -1065,25 +1297,25 @@ func (o *Event) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// GetEventAvroSchema creates the avro schema for Event
-func GetEventAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetEventAvroSchemaSpec())
+// GetUserResponseAvroSchema creates the avro schema for UserResponse
+func GetUserResponseAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetUserResponseAvroSchemaSpec())
 }
 
-// TransformEventFunc is a function for transforming Event during processing
-type TransformEventFunc func(input *Event) (*Event, error)
+// TransformUserResponseFunc is a function for transforming UserResponse during processing
+type TransformUserResponseFunc func(input *UserResponse) (*UserResponse, error)
 
-// NewEventPipe creates a pipe for processing Event items
-func NewEventPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformEventFunc) <-chan bool {
+// NewUserResponsePipe creates a pipe for processing UserResponse items
+func NewUserResponsePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformUserResponseFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewEventInputStream(input, errors)
-	var stream chan Event
+	inch, indone := NewUserResponseInputStream(input, errors)
+	var stream chan UserResponse
 	if len(transforms) > 0 {
-		stream = make(chan Event, 1000)
+		stream = make(chan UserResponse, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewEventOutputStream(output, stream, errors)
+	outdone := NewUserResponseOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -1119,12 +1351,12 @@ func NewEventPipe(input io.ReadCloser, output io.WriteCloser, errors chan error,
 	return done
 }
 
-// NewEventInputStreamDir creates a channel for reading Event as JSON newlines from a directory of files
-func NewEventInputStreamDir(dir string, errors chan<- error, transforms ...TransformEventFunc) (chan Event, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/event\\.json(\\.gz)?$"))
+// NewUserResponseInputStreamDir creates a channel for reading UserResponse as JSON newlines from a directory of files
+func NewUserResponseInputStreamDir(dir string, errors chan<- error, transforms ...TransformUserResponseFunc) (chan UserResponse, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/user_response\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Event)
+		ch := make(chan UserResponse)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1132,16 +1364,16 @@ func NewEventInputStreamDir(dir string, errors chan<- error, transforms ...Trans
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for event")
-		ch := make(chan Event)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for user_response")
+		ch := make(chan UserResponse)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewEventInputStreamFile(files[0], errors, transforms...)
+		return NewUserResponseInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Event)
+		ch := make(chan UserResponse)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1149,12 +1381,12 @@ func NewEventInputStreamDir(dir string, errors chan<- error, transforms ...Trans
 	}
 }
 
-// NewEventInputStreamFile creates an channel for reading Event as JSON newlines from filename
-func NewEventInputStreamFile(filename string, errors chan<- error, transforms ...TransformEventFunc) (chan Event, <-chan bool) {
+// NewUserResponseInputStreamFile creates an channel for reading UserResponse as JSON newlines from filename
+func NewUserResponseInputStreamFile(filename string, errors chan<- error, transforms ...TransformUserResponseFunc) (chan UserResponse, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Event)
+		ch := make(chan UserResponse)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1166,7 +1398,7 @@ func NewEventInputStreamFile(filename string, errors chan<- error, transforms ..
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Event)
+			ch := make(chan UserResponse)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -1174,13 +1406,13 @@ func NewEventInputStreamFile(filename string, errors chan<- error, transforms ..
 		}
 		f = gz
 	}
-	return NewEventInputStream(f, errors, transforms...)
+	return NewUserResponseInputStream(f, errors, transforms...)
 }
 
-// NewEventInputStream creates an channel for reading Event as JSON newlines from stream
-func NewEventInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformEventFunc) (chan Event, <-chan bool) {
+// NewUserResponseInputStream creates an channel for reading UserResponse as JSON newlines from stream
+func NewUserResponseInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformUserResponseFunc) (chan UserResponse, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Event, 1000)
+	ch := make(chan UserResponse, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -1193,7 +1425,7 @@ func NewEventInputStream(stream io.ReadCloser, errors chan<- error, transforms .
 				errors <- err
 				return
 			}
-			var item Event
+			var item UserResponse
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -1219,9 +1451,9 @@ func NewEventInputStream(stream io.ReadCloser, errors chan<- error, transforms .
 	return ch, done
 }
 
-// NewEventOutputStreamDir will output json newlines from channel and save in dir
-func NewEventOutputStreamDir(dir string, ch chan Event, errors chan<- error, transforms ...TransformEventFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/event\\.json(\\.gz)?$")
+// NewUserResponseOutputStreamDir will output json newlines from channel and save in dir
+func NewUserResponseOutputStreamDir(dir string, ch chan UserResponse, errors chan<- error, transforms ...TransformUserResponseFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/user_response\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -1237,11 +1469,11 @@ func NewEventOutputStreamDir(dir string, ch chan Event, errors chan<- error, tra
 		done <- true
 		return done
 	}
-	return NewEventOutputStream(gz, ch, errors, transforms...)
+	return NewUserResponseOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewEventOutputStream will output json newlines from channel to the stream
-func NewEventOutputStream(stream io.WriteCloser, ch chan Event, errors chan<- error, transforms ...TransformEventFunc) <-chan bool {
+// NewUserResponseOutputStream will output json newlines from channel to the stream
+func NewUserResponseOutputStream(stream io.WriteCloser, ch chan UserResponse, errors chan<- error, transforms ...TransformUserResponseFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -1281,59 +1513,59 @@ func NewEventOutputStream(stream io.WriteCloser, ch chan Event, errors chan<- er
 	return done
 }
 
-// EventSendEvent is an event detail for sending data
-type EventSendEvent struct {
-	Event   *Event
-	headers map[string]string
-	time    time.Time
-	key     string
+// UserResponseSendEvent is an event detail for sending data
+type UserResponseSendEvent struct {
+	UserResponse *UserResponse
+	headers      map[string]string
+	time         time.Time
+	key          string
 }
 
-var _ datamodel.ModelSendEvent = (*EventSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*UserResponseSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *EventSendEvent) Key() string {
+func (e *UserResponseSendEvent) Key() string {
 	if e.key == "" {
-		return e.Event.GetID()
+		return e.UserResponse.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *EventSendEvent) Object() datamodel.Model {
-	return e.Event
+func (e *UserResponseSendEvent) Object() datamodel.Model {
+	return e.UserResponse
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *EventSendEvent) Headers() map[string]string {
+func (e *UserResponseSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *EventSendEvent) Timestamp() time.Time {
+func (e *UserResponseSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// EventSendEventOpts is a function handler for setting opts
-type EventSendEventOpts func(o *EventSendEvent)
+// UserResponseSendEventOpts is a function handler for setting opts
+type UserResponseSendEventOpts func(o *UserResponseSendEvent)
 
-// WithEventSendEventKey sets the key value to a value different than the object ID
-func WithEventSendEventKey(key string) EventSendEventOpts {
-	return func(o *EventSendEvent) {
+// WithUserResponseSendEventKey sets the key value to a value different than the object ID
+func WithUserResponseSendEventKey(key string) UserResponseSendEventOpts {
+	return func(o *UserResponseSendEvent) {
 		o.key = key
 	}
 }
 
-// WithEventSendEventTimestamp sets the timestamp value
-func WithEventSendEventTimestamp(tv time.Time) EventSendEventOpts {
-	return func(o *EventSendEvent) {
+// WithUserResponseSendEventTimestamp sets the timestamp value
+func WithUserResponseSendEventTimestamp(tv time.Time) UserResponseSendEventOpts {
+	return func(o *UserResponseSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithEventSendEventHeader sets the timestamp value
-func WithEventSendEventHeader(key, value string) EventSendEventOpts {
-	return func(o *EventSendEvent) {
+// WithUserResponseSendEventHeader sets the timestamp value
+func WithUserResponseSendEventHeader(key, value string) UserResponseSendEventOpts {
+	return func(o *UserResponseSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -1341,10 +1573,10 @@ func WithEventSendEventHeader(key, value string) EventSendEventOpts {
 	}
 }
 
-// NewEventSendEvent returns a new EventSendEvent instance
-func NewEventSendEvent(o *Event, opts ...EventSendEventOpts) *EventSendEvent {
-	res := &EventSendEvent{
-		Event: o,
+// NewUserResponseSendEvent returns a new UserResponseSendEvent instance
+func NewUserResponseSendEvent(o *UserResponse, opts ...UserResponseSendEventOpts) *UserResponseSendEvent {
+	res := &UserResponseSendEvent{
+		UserResponse: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -1354,8 +1586,8 @@ func NewEventSendEvent(o *Event, opts ...EventSendEventOpts) *EventSendEvent {
 	return res
 }
 
-// NewEventProducer will stream data from the channel
-func NewEventProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewUserResponseProducer will stream data from the channel
+func NewUserResponseProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1368,7 +1600,7 @@ func NewEventProducer(ctx context.Context, producer eventing.Producer, ch <-chan
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*Event); ok {
+				if object, ok := item.Object().(*UserResponse); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1399,7 +1631,7 @@ func NewEventProducer(ctx context.Context, producer eventing.Producer, ch <-chan
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Event but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.UserResponse but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -1407,22 +1639,22 @@ func NewEventProducer(ctx context.Context, producer eventing.Producer, ch <-chan
 	return done
 }
 
-// NewEventConsumer will stream data from the topic into the provided channel
-func NewEventConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewUserResponseConsumer will stream data from the topic into the provided channel
+func NewUserResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object Event
+			var object UserResponse
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.Event: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.UserResponse: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.Event: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.UserResponse: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.Event")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.UserResponse")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -1432,51 +1664,51 @@ func NewEventConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRecei
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &EventReceiveEvent{&object, msg, false}
+			ch <- &UserResponseReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Event
+			var object UserResponse
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &EventReceiveEvent{nil, msg, true}
+			ch <- &UserResponseReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// EventReceiveEvent is an event detail for receiving data
-type EventReceiveEvent struct {
-	Event   *Event
-	message eventing.Message
-	eof     bool
+// UserResponseReceiveEvent is an event detail for receiving data
+type UserResponseReceiveEvent struct {
+	UserResponse *UserResponse
+	message      eventing.Message
+	eof          bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*EventReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*UserResponseReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *EventReceiveEvent) Object() datamodel.Model {
-	return e.Event
+func (e *UserResponseReceiveEvent) Object() datamodel.Model {
+	return e.UserResponse
 }
 
 // Message returns the underlying message data for the event
-func (e *EventReceiveEvent) Message() eventing.Message {
+func (e *UserResponseReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *EventReceiveEvent) EOF() bool {
+func (e *UserResponseReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// EventProducer implements the datamodel.ModelEventProducer
-type EventProducer struct {
+// UserResponseProducer implements the datamodel.ModelEventProducer
+type UserResponseProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -1487,15 +1719,15 @@ type EventProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*EventProducer)(nil)
+var _ datamodel.ModelEventProducer = (*UserResponseProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *EventProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *UserResponseProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *EventProducer) Close() error {
+func (p *UserResponseProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1510,47 +1742,47 @@ func (p *EventProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Event) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *UserResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Event) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *UserResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &EventProducer{
+	return &UserResponseProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewEventProducer(newctx, producer, ch, errors, empty),
+		done:     NewUserResponseProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewEventProducerChannel returns a channel which can be used for producing Model events
-func NewEventProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewEventProducerChannelSize(producer, 0, errors)
+// NewUserResponseProducerChannel returns a channel which can be used for producing Model events
+func NewUserResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewUserResponseProducerChannelSize(producer, 0, errors)
 }
 
-// NewEventProducerChannelSize returns a channel which can be used for producing Model events
-func NewEventProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewUserResponseProducerChannelSize returns a channel which can be used for producing Model events
+func NewUserResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &EventProducer{
+	return &UserResponseProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewEventProducer(newctx, producer, ch, errors, empty),
+		done:     NewUserResponseProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// EventConsumer implements the datamodel.ModelEventConsumer
-type EventConsumer struct {
+// UserResponseConsumer implements the datamodel.ModelEventConsumer
+type UserResponseConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1558,15 +1790,15 @@ type EventConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*EventConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*UserResponseConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *EventConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *UserResponseConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *EventConsumer) Close() error {
+func (c *UserResponseConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1580,21 +1812,21 @@ func (c *EventConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Event) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *UserResponse) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &EventConsumer{
+	return &UserResponseConsumer{
 		ch:       ch,
-		callback: NewEventConsumer(consumer, ch, errors),
+		callback: NewUserResponseConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewEventConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewEventConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewUserResponseConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewUserResponseConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &EventConsumer{
+	return &UserResponseConsumer{
 		ch:       ch,
-		callback: NewEventConsumer(consumer, ch, errors),
+		callback: NewUserResponseConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }

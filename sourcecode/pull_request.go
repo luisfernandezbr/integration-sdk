@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/slice"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -45,26 +46,26 @@ const (
 )
 
 const (
-	// PullRequestClosedColumn is the closed column name
-	PullRequestClosedColumn = "closed"
-	// PullRequestClosedColumnEpochColumn is the epoch column property of the Closed name
-	PullRequestClosedColumnEpochColumn = "closed->epoch"
-	// PullRequestClosedColumnOffsetColumn is the offset column property of the Closed name
-	PullRequestClosedColumnOffsetColumn = "closed->offset"
-	// PullRequestClosedColumnRfc3339Column is the rfc3339 column property of the Closed name
-	PullRequestClosedColumnRfc3339Column = "closed->rfc3339"
 	// PullRequestClosedByRefIDColumn is the closed_by_ref_id column name
 	PullRequestClosedByRefIDColumn = "closed_by_ref_id"
+	// PullRequestClosedDateColumn is the closed_date column name
+	PullRequestClosedDateColumn = "closed_date"
+	// PullRequestClosedDateColumnEpochColumn is the epoch column property of the ClosedDate name
+	PullRequestClosedDateColumnEpochColumn = "closed_date->epoch"
+	// PullRequestClosedDateColumnOffsetColumn is the offset column property of the ClosedDate name
+	PullRequestClosedDateColumnOffsetColumn = "closed_date->offset"
+	// PullRequestClosedDateColumnRfc3339Column is the rfc3339 column property of the ClosedDate name
+	PullRequestClosedDateColumnRfc3339Column = "closed_date->rfc3339"
 	// PullRequestCommitsColumn is the commits column name
 	PullRequestCommitsColumn = "commits"
-	// PullRequestCreatedColumn is the created column name
-	PullRequestCreatedColumn = "created"
-	// PullRequestCreatedColumnEpochColumn is the epoch column property of the Created name
-	PullRequestCreatedColumnEpochColumn = "created->epoch"
-	// PullRequestCreatedColumnOffsetColumn is the offset column property of the Created name
-	PullRequestCreatedColumnOffsetColumn = "created->offset"
-	// PullRequestCreatedColumnRfc3339Column is the rfc3339 column property of the Created name
-	PullRequestCreatedColumnRfc3339Column = "created->rfc3339"
+	// PullRequestCreatedDateColumn is the created_date column name
+	PullRequestCreatedDateColumn = "created_date"
+	// PullRequestCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
+	PullRequestCreatedDateColumnEpochColumn = "created_date->epoch"
+	// PullRequestCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
+	PullRequestCreatedDateColumnOffsetColumn = "created_date->offset"
+	// PullRequestCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
+	PullRequestCreatedDateColumnRfc3339Column = "created_date->rfc3339"
 	// PullRequestCustomerIDColumn is the customer_id column name
 	PullRequestCustomerIDColumn = "customer_id"
 	// PullRequestDescriptionColumn is the description column name
@@ -73,16 +74,16 @@ const (
 	PullRequestIDColumn = "id"
 	// PullRequestMergeShaColumn is the merge_sha column name
 	PullRequestMergeShaColumn = "merge_sha"
-	// PullRequestMergedColumn is the merged column name
-	PullRequestMergedColumn = "merged"
-	// PullRequestMergedColumnEpochColumn is the epoch column property of the Merged name
-	PullRequestMergedColumnEpochColumn = "merged->epoch"
-	// PullRequestMergedColumnOffsetColumn is the offset column property of the Merged name
-	PullRequestMergedColumnOffsetColumn = "merged->offset"
-	// PullRequestMergedColumnRfc3339Column is the rfc3339 column property of the Merged name
-	PullRequestMergedColumnRfc3339Column = "merged->rfc3339"
 	// PullRequestMergedByRefIDColumn is the merged_by_ref_id column name
 	PullRequestMergedByRefIDColumn = "merged_by_ref_id"
+	// PullRequestMergedDateColumn is the merged_date column name
+	PullRequestMergedDateColumn = "merged_date"
+	// PullRequestMergedDateColumnEpochColumn is the epoch column property of the MergedDate name
+	PullRequestMergedDateColumnEpochColumn = "merged_date->epoch"
+	// PullRequestMergedDateColumnOffsetColumn is the offset column property of the MergedDate name
+	PullRequestMergedDateColumnOffsetColumn = "merged_date->offset"
+	// PullRequestMergedDateColumnRfc3339Column is the rfc3339 column property of the MergedDate name
+	PullRequestMergedDateColumnRfc3339Column = "merged_date->rfc3339"
 	// PullRequestRefIDColumn is the ref_id column name
 	PullRequestRefIDColumn = "ref_id"
 	// PullRequestRefTypeColumn is the ref_type column name
@@ -93,22 +94,22 @@ const (
 	PullRequestStatusColumn = "status"
 	// PullRequestTitleColumn is the title column name
 	PullRequestTitleColumn = "title"
-	// PullRequestUpdatedColumn is the updated column name
-	PullRequestUpdatedColumn = "updated"
-	// PullRequestUpdatedColumnEpochColumn is the epoch column property of the Updated name
-	PullRequestUpdatedColumnEpochColumn = "updated->epoch"
-	// PullRequestUpdatedColumnOffsetColumn is the offset column property of the Updated name
-	PullRequestUpdatedColumnOffsetColumn = "updated->offset"
-	// PullRequestUpdatedColumnRfc3339Column is the rfc3339 column property of the Updated name
-	PullRequestUpdatedColumnRfc3339Column = "updated->rfc3339"
+	// PullRequestUpdatedDateColumn is the updated_date column name
+	PullRequestUpdatedDateColumn = "updated_date"
+	// PullRequestUpdatedDateColumnEpochColumn is the epoch column property of the UpdatedDate name
+	PullRequestUpdatedDateColumnEpochColumn = "updated_date->epoch"
+	// PullRequestUpdatedDateColumnOffsetColumn is the offset column property of the UpdatedDate name
+	PullRequestUpdatedDateColumnOffsetColumn = "updated_date->offset"
+	// PullRequestUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
+	PullRequestUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
 	// PullRequestURLColumn is the url column name
 	PullRequestURLColumn = "url"
 	// PullRequestUserRefIDColumn is the user_ref_id column name
 	PullRequestUserRefIDColumn = "user_ref_id"
 )
 
-// PullRequestClosed represents the object structure for closed
-type PullRequestClosed struct {
+// PullRequestClosedDate represents the object structure for closed_date
+type PullRequestClosedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -117,7 +118,7 @@ type PullRequestClosed struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *PullRequestClosed) ToMap() map[string]interface{} {
+func (o *PullRequestClosedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -128,8 +129,8 @@ func (o *PullRequestClosed) ToMap() map[string]interface{} {
 	}
 }
 
-// PullRequestCreated represents the object structure for created
-type PullRequestCreated struct {
+// PullRequestCreatedDate represents the object structure for created_date
+type PullRequestCreatedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -138,7 +139,7 @@ type PullRequestCreated struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *PullRequestCreated) ToMap() map[string]interface{} {
+func (o *PullRequestCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -149,8 +150,8 @@ func (o *PullRequestCreated) ToMap() map[string]interface{} {
 	}
 }
 
-// PullRequestMerged represents the object structure for merged
-type PullRequestMerged struct {
+// PullRequestMergedDate represents the object structure for merged_date
+type PullRequestMergedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -159,7 +160,7 @@ type PullRequestMerged struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *PullRequestMerged) ToMap() map[string]interface{} {
+func (o *PullRequestMergedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -170,8 +171,8 @@ func (o *PullRequestMerged) ToMap() map[string]interface{} {
 	}
 }
 
-// PullRequestUpdated represents the object structure for updated
-type PullRequestUpdated struct {
+// PullRequestUpdatedDate represents the object structure for updated_date
+type PullRequestUpdatedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -180,7 +181,7 @@ type PullRequestUpdated struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *PullRequestUpdated) ToMap() map[string]interface{} {
+func (o *PullRequestUpdatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -193,14 +194,14 @@ func (o *PullRequestUpdated) ToMap() map[string]interface{} {
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
-	// Closed the timestamp in UTC that the pull request was closed
-	Closed PullRequestClosed `json:"closed" bson:"closed" yaml:"closed" faker:"-"`
 	// ClosedByRefID the id of user who closed the pull request
 	ClosedByRefID string `json:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
+	// ClosedDate the timestamp in UTC that the pull request was closed
+	ClosedDate PullRequestClosedDate `json:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
 	// Commits the commits in the pull request
 	Commits []string `json:"commits" bson:"commits" yaml:"commits" faker:"-"`
-	// Created the timestamp in UTC that the pull request was created
-	Created PullRequestCreated `json:"created" bson:"created" yaml:"created" faker:"-"`
+	// CreatedDate the timestamp in UTC that the pull request was created
+	CreatedDate PullRequestCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the pull request
@@ -209,10 +210,10 @@ type PullRequest struct {
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// MergeSha the sha of the merge commit
 	MergeSha string `json:"merge_sha" bson:"merge_sha" yaml:"merge_sha" faker:"-"`
-	// Merged the timestamp in UTC that the pull request was merged
-	Merged PullRequestMerged `json:"merged" bson:"merged" yaml:"merged" faker:"-"`
 	// MergedByRefID the id of user who merged the pull request
 	MergedByRefID string `json:"merged_by_ref_id" bson:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
+	// MergedDate the timestamp in UTC that the pull request was merged
+	MergedDate PullRequestMergedDate `json:"merged_date" bson:"merged_date" yaml:"merged_date" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -223,8 +224,8 @@ type PullRequest struct {
 	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// Title the title of the pull request
 	Title string `json:"title" bson:"title" yaml:"title" faker:"commit_message"`
-	// Updated the timestamp in UTC that the pull request was closed
-	Updated PullRequestUpdated `json:"updated" bson:"updated" yaml:"updated" faker:"-"`
+	// UpdatedDate the timestamp in UTC that the pull request was closed
+	UpdatedDate PullRequestUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// URL the url to the pull request home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// UserRefID the user ref_id in the source system
@@ -366,82 +367,82 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		}
 		return arr
 
-	case PullRequestClosed:
-		vv := o.(PullRequestClosed)
+	case PullRequestClosedDate:
+		vv := o.(PullRequestClosedDate)
 		return vv.ToMap()
-	case *PullRequestClosed:
+	case *PullRequestClosedDate:
 		return map[string]interface{}{
-			"sourcecode.closed": (*o.(*PullRequestClosed)).ToMap(),
+			"sourcecode.closed_date": (*o.(*PullRequestClosedDate)).ToMap(),
 		}
-	case []PullRequestClosed:
+	case []PullRequestClosedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]PullRequestClosed) {
+		for _, i := range o.([]PullRequestClosedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]PullRequestClosed:
+	case *[]PullRequestClosedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]PullRequestClosed)
+		vv := o.(*[]PullRequestClosedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case PullRequestCreated:
-		vv := o.(PullRequestCreated)
+	case PullRequestCreatedDate:
+		vv := o.(PullRequestCreatedDate)
 		return vv.ToMap()
-	case *PullRequestCreated:
+	case *PullRequestCreatedDate:
 		return map[string]interface{}{
-			"sourcecode.created": (*o.(*PullRequestCreated)).ToMap(),
+			"sourcecode.created_date": (*o.(*PullRequestCreatedDate)).ToMap(),
 		}
-	case []PullRequestCreated:
+	case []PullRequestCreatedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]PullRequestCreated) {
+		for _, i := range o.([]PullRequestCreatedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]PullRequestCreated:
+	case *[]PullRequestCreatedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]PullRequestCreated)
+		vv := o.(*[]PullRequestCreatedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case PullRequestMerged:
-		vv := o.(PullRequestMerged)
+	case PullRequestMergedDate:
+		vv := o.(PullRequestMergedDate)
 		return vv.ToMap()
-	case *PullRequestMerged:
+	case *PullRequestMergedDate:
 		return map[string]interface{}{
-			"sourcecode.merged": (*o.(*PullRequestMerged)).ToMap(),
+			"sourcecode.merged_date": (*o.(*PullRequestMergedDate)).ToMap(),
 		}
-	case []PullRequestMerged:
+	case []PullRequestMergedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]PullRequestMerged) {
+		for _, i := range o.([]PullRequestMergedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]PullRequestMerged:
+	case *[]PullRequestMergedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]PullRequestMerged)
+		vv := o.(*[]PullRequestMergedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case PullRequestUpdated:
-		vv := o.(PullRequestUpdated)
+	case PullRequestUpdatedDate:
+		vv := o.(PullRequestUpdatedDate)
 		return vv.ToMap()
-	case *PullRequestUpdated:
+	case *PullRequestUpdatedDate:
 		return map[string]interface{}{
-			"sourcecode.updated": (*o.(*PullRequestUpdated)).ToMap(),
+			"sourcecode.updated_date": (*o.(*PullRequestUpdatedDate)).ToMap(),
 		}
-	case []PullRequestUpdated:
+	case []PullRequestUpdatedDate:
 		arr := make([]interface{}, 0)
-		for _, i := range o.([]PullRequestUpdated) {
+		for _, i := range o.([]PullRequestUpdatedDate) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]PullRequestUpdated:
+	case *[]PullRequestUpdatedDate:
 		arr := make([]interface{}, 0)
-		vv := o.(*[]PullRequestUpdated)
+		vv := o.(*[]PullRequestUpdatedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -495,7 +496,7 @@ func (o *PullRequest) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.Updated
+	var dt interface{} = o.UpdatedDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -507,7 +508,7 @@ func (o *PullRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case PullRequestUpdated:
+	case PullRequestUpdatedDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for PullRequest")
@@ -561,7 +562,7 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "updated",
+		Timestamp:         "updated_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -687,22 +688,22 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"closed":           toPullRequestObject(o.Closed, isavro, false, "closed"),
 		"closed_by_ref_id": toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
+		"closed_date":      toPullRequestObject(o.ClosedDate, isavro, false, "closed_date"),
 		"commits":          toPullRequestObject(o.Commits, isavro, false, "commits"),
-		"created":          toPullRequestObject(o.Created, isavro, false, "created"),
+		"created_date":     toPullRequestObject(o.CreatedDate, isavro, false, "created_date"),
 		"customer_id":      toPullRequestObject(o.CustomerID, isavro, false, "string"),
 		"description":      toPullRequestObject(o.Description, isavro, false, "string"),
 		"id":               toPullRequestObject(o.ID, isavro, false, "string"),
 		"merge_sha":        toPullRequestObject(o.MergeSha, isavro, false, "string"),
-		"merged":           toPullRequestObject(o.Merged, isavro, false, "merged"),
 		"merged_by_ref_id": toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
+		"merged_date":      toPullRequestObject(o.MergedDate, isavro, false, "merged_date"),
 		"ref_id":           toPullRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":         toPullRequestObject(o.RefType, isavro, false, "string"),
 		"repo_id":          toPullRequestObject(o.RepoID, isavro, false, "string"),
 		"status":           toPullRequestObject(o.Status, isavro, false, "string"),
 		"title":            toPullRequestObject(o.Title, isavro, false, "string"),
-		"updated":          toPullRequestObject(o.Updated, isavro, false, "updated"),
+		"updated_date":     toPullRequestObject(o.UpdatedDate, isavro, false, "updated_date"),
 		"url":              toPullRequestObject(o.URL, isavro, false, "string"),
 		"user_ref_id":      toPullRequestObject(o.UserRefID, isavro, false, "string"),
 		"hashcode":         toPullRequestObject(o.Hashcode, isavro, false, "string"),
@@ -714,28 +715,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-	if val, ok := kv["closed"].(PullRequestClosed); ok {
-		o.Closed = val
-	} else {
-		val := kv["closed"]
-		if val == nil {
-			o.Closed = PullRequestClosed{}
-		} else {
-			o.Closed = PullRequestClosed{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Closed)
-
-		}
 	}
 	if val, ok := kv["closed_by_ref_id"].(string); ok {
 		o.ClosedByRefID = val
@@ -750,6 +729,28 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.ClosedByRefID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["closed_date"].(PullRequestClosedDate); ok {
+		o.ClosedDate = val
+	} else {
+		val := kv["closed_date"]
+		if val == nil {
+			o.ClosedDate = PullRequestClosedDate{}
+		} else {
+			o.ClosedDate = PullRequestClosedDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.ClosedDate)
+
+		}
+	}
 	if val := kv["commits"]; val != nil {
 		na := make([]string, 0)
 		if a, ok := val.([]string); ok {
@@ -760,6 +761,9 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 					if av, ok := ae.(string); ok {
 						na = append(na, av)
 					} else {
+						if badMap, ok := ae.(map[interface{}]interface{}); ok {
+							ae = slice.ConvertToStringToInterface(badMap)
+						}
 						b, _ := json.Marshal(ae)
 						var av string
 						if err := json.Unmarshal(b, &av); err != nil {
@@ -797,14 +801,14 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	if o.Commits == nil {
 		o.Commits = make([]string, 0)
 	}
-	if val, ok := kv["created"].(PullRequestCreated); ok {
-		o.Created = val
+	if val, ok := kv["created_date"].(PullRequestCreatedDate); ok {
+		o.CreatedDate = val
 	} else {
-		val := kv["created"]
+		val := kv["created_date"]
 		if val == nil {
-			o.Created = PullRequestCreated{}
+			o.CreatedDate = PullRequestCreatedDate{}
 		} else {
-			o.Created = PullRequestCreated{}
+			o.CreatedDate = PullRequestCreatedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -815,7 +819,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Created)
+			json.Unmarshal(b, &o.CreatedDate)
 
 		}
 	}
@@ -871,28 +875,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.MergeSha = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["merged"].(PullRequestMerged); ok {
-		o.Merged = val
-	} else {
-		val := kv["merged"]
-		if val == nil {
-			o.Merged = PullRequestMerged{}
-		} else {
-			o.Merged = PullRequestMerged{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Merged)
-
-		}
-	}
 	if val, ok := kv["merged_by_ref_id"].(string); ok {
 		o.MergedByRefID = val
 	} else {
@@ -904,6 +886,28 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.MergedByRefID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["merged_date"].(PullRequestMergedDate); ok {
+		o.MergedDate = val
+	} else {
+		val := kv["merged_date"]
+		if val == nil {
+			o.MergedDate = PullRequestMergedDate{}
+		} else {
+			o.MergedDate = PullRequestMergedDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.MergedDate)
+
 		}
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -971,14 +975,14 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.Title = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["updated"].(PullRequestUpdated); ok {
-		o.Updated = val
+	if val, ok := kv["updated_date"].(PullRequestUpdatedDate); ok {
+		o.UpdatedDate = val
 	} else {
-		val := kv["updated"]
+		val := kv["updated_date"]
 		if val == nil {
-			o.Updated = PullRequestUpdated{}
+			o.UpdatedDate = PullRequestUpdatedDate{}
 		} else {
-			o.Updated = PullRequestUpdated{}
+			o.UpdatedDate = PullRequestUpdatedDate{}
 			if m, ok := val.(map[interface{}]interface{}); ok {
 				si := make(map[string]interface{})
 				for k, v := range m {
@@ -989,7 +993,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 				val = si
 			}
 			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Updated)
+			json.Unmarshal(b, &o.UpdatedDate)
 
 		}
 	}
@@ -1025,22 +1029,22 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequest) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Closed)
 	args = append(args, o.ClosedByRefID)
+	args = append(args, o.ClosedDate)
 	args = append(args, o.Commits)
-	args = append(args, o.Created)
+	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
 	args = append(args, o.MergeSha)
-	args = append(args, o.Merged)
 	args = append(args, o.MergedByRefID)
+	args = append(args, o.MergedDate)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
 	args = append(args, o.Status)
 	args = append(args, o.Title)
-	args = append(args, o.Updated)
+	args = append(args, o.UpdatedDate)
 	args = append(args, o.URL)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
@@ -1059,20 +1063,20 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "closed",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "type": "record", "name": "closed", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
-			},
-			map[string]interface{}{
 				"name": "closed_by_ref_id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "closed_date",
+				"type": map[string]interface{}{"type": "record", "name": "closed_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed"},
 			},
 			map[string]interface{}{
 				"name": "commits",
 				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
-				"name": "created",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was created", "type": "record", "name": "created", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"name": "created_date",
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was created", "type": "record", "name": "created_date"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1091,12 +1095,12 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "merged",
-				"type": map[string]interface{}{"type": "record", "name": "merged", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged"},
-			},
-			map[string]interface{}{
 				"name": "merged_by_ref_id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "merged_date",
+				"type": map[string]interface{}{"type": "record", "name": "merged_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1119,8 +1123,8 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "updated",
-				"type": map[string]interface{}{"name": "updated", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed", "type": "record"},
+				"name": "updated_date",
+				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed"},
 			},
 			map[string]interface{}{
 				"name": "url",
