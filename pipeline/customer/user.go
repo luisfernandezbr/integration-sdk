@@ -1173,7 +1173,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "deleted_date",
-				"type": map[string]interface{}{"type": "record", "name": "deleted_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "when the user record was deleted in epoch timestamp"},
+				"type": map[string]interface{}{"type": "record", "name": "deleted_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user record was deleted in epoch timestamp"},
 			},
 			map[string]interface{}{
 				"name": "email",
@@ -1181,7 +1181,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "hired_date",
-				"type": map[string]interface{}{"type": "record", "name": "hired_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "when the user was hired in epoch timestamp"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp", "type": "record", "name": "hired_date"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1220,11 +1220,11 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "role_ids",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "role_ids"},
+				"type": map[string]interface{}{"type": "array", "name": "role_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "team_ids",
-				"type": map[string]interface{}{"name": "team_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "terminated_date",

@@ -64,6 +64,8 @@ const (
 	SignalNameColumn = "name"
 	// SignalPercentileRankColumn is the percentile_rank column name
 	SignalPercentileRankColumn = "percentile_rank"
+	// SignalPriorSignalIDColumn is the prior_signal_id column name
+	SignalPriorSignalIDColumn = "prior_signal_id"
 	// SignalRefIDColumn is the ref_id column name
 	SignalRefIDColumn = "ref_id"
 	// SignalRefKeyColumn is the ref_key column name
@@ -117,6 +119,8 @@ type Signal struct {
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// PercentileRank the percentile_rank for the signal
 	PercentileRank float64 `json:"percentile_rank" bson:"percentile_rank" yaml:"percentile_rank" faker:"-"`
+	// PriorSignalID the signal for the prior time interval
+	PriorSignalID string `json:"prior_signal_id" bson:"prior_signal_id" yaml:"prior_signal_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefKey the ref_key for the signal
@@ -529,6 +533,7 @@ func (o *Signal) ToMap(avro ...bool) map[string]interface{} {
 		"metadata":        toSignalObject(o.Metadata, isavro, false, "string"),
 		"name":            toSignalObject(o.Name, isavro, false, "string"),
 		"percentile_rank": toSignalObject(o.PercentileRank, isavro, false, "double"),
+		"prior_signal_id": toSignalObject(o.PriorSignalID, isavro, false, "string"),
 		"ref_id":          toSignalObject(o.RefID, isavro, false, "string"),
 		"ref_key":         toSignalObject(o.RefKey, isavro, false, "string"),
 		"ref_name":        toSignalObject(o.RefName, isavro, false, "string"),
@@ -640,6 +645,19 @@ func (o *Signal) FromMap(kv map[string]interface{}) {
 			o.PercentileRank = number.ToFloat64Any(val)
 		}
 	}
+	if val, ok := kv["prior_signal_id"].(string); ok {
+		o.PriorSignalID = val
+	} else {
+		val := kv["prior_signal_id"]
+		if val == nil {
+			o.PriorSignalID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.PriorSignalID = fmt.Sprintf("%v", val)
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -741,6 +759,7 @@ func (o *Signal) Hash() string {
 	args = append(args, o.Metadata)
 	args = append(args, o.Name)
 	args = append(args, o.PercentileRank)
+	args = append(args, o.PriorSignalID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefKey)
 	args = append(args, o.RefName)
@@ -769,7 +788,7 @@ func GetSignalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "calculated_date",
-				"type": map[string]interface{}{"doc": "the date when the signal was calculated", "type": "record", "name": "calculated_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"type": "record", "name": "calculated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the signal was calculated"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -790,6 +809,10 @@ func GetSignalAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "percentile_rank",
 				"type": "double",
+			},
+			map[string]interface{}{
+				"name": "prior_signal_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "ref_id",

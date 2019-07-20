@@ -806,7 +806,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "activity_date",
-				"type": map[string]interface{}{"type": "record", "name": "activity_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
+				"type": map[string]interface{}{"type": "record", "name": "activity_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -836,7 +836,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "user",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the user related to the activity", "type": "record", "name": "user"},
+				"type": map[string]interface{}{"type": "record", "name": "user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the user related to the activity"},
 			},
 		},
 	}
