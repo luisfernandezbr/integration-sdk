@@ -770,11 +770,11 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "emails",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "emails"},
+				"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "groups",
-				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}},
+				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"doc": "Group names", "type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"name": "group_id", "doc": "Group id", "type": "string"}, map[string]interface{}{"name": "name", "doc": "Group name", "type": "string"}}}},
 			},
 			map[string]interface{}{
 				"name": "id",
