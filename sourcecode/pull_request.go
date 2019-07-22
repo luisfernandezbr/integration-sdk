@@ -108,6 +108,18 @@ const (
 	PullRequestUserRefIDColumn = "user_ref_id"
 )
 
+// 0 closed_by_ref_id
+// closed_by_ref_id {"description":"the id of user who closed the pull request","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"closed_by_ref_id","relation":false,"subtype":"","type":"string"}
+
+// 1 closed_date
+// closed_date {"description":"the timestamp in UTC that the pull request was closed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"closed_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // PullRequestClosedDate represents the object structure for closed_date
 type PullRequestClosedDate struct {
 	// Epoch the date in epoch format
@@ -128,6 +140,18 @@ func (o *PullRequestClosedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 2 commits
+// commits {"description":"the commits in the pull request","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"commits","relation":true,"subtype":"","type":"string"}
+
+// 3 created_date
+// created_date {"description":"the timestamp in UTC that the pull request was created","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // PullRequestCreatedDate represents the object structure for created_date
 type PullRequestCreatedDate struct {
@@ -150,6 +174,30 @@ func (o *PullRequestCreatedDate) ToMap() map[string]interface{} {
 	}
 }
 
+// 4 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 5 description
+// description {"description":"the description of the pull request","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
+
+// 6 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 7 merge_sha
+// merge_sha {"description":"the sha of the merge commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"merge_sha","relation":false,"subtype":"","type":"string"}
+
+// 8 merged_by_ref_id
+// merged_by_ref_id {"description":"the id of user who merged the pull request","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"merged_by_ref_id","relation":false,"subtype":"","type":"string"}
+
+// 9 merged_date
+// merged_date {"description":"the timestamp in UTC that the pull request was merged","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"merged_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // PullRequestMergedDate represents the object structure for merged_date
 type PullRequestMergedDate struct {
 	// Epoch the date in epoch format
@@ -171,6 +219,34 @@ func (o *PullRequestMergedDate) ToMap() map[string]interface{} {
 	}
 }
 
+// 10 pull_request_comments
+
+// 11 pull_request_reviews
+
+// 12 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 13 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 14 repo_id
+// repo_id {"description":"the unique id for the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"repo_id","relation":true,"subtype":"","type":"string"}
+
+// 15 status
+// status {"description":"the status of the pull request","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"status","relation":false,"subtype":"","type":"string"}
+
+// 16 title
+// title {"description":"the title of the pull request","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"title","relation":false,"subtype":"","type":"string"}
+
+// 17 updated_date
+// updated_date {"description":"the timestamp in UTC that the pull request was closed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"updated_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // PullRequestUpdatedDate represents the object structure for updated_date
 type PullRequestUpdatedDate struct {
 	// Epoch the date in epoch format
@@ -191,6 +267,12 @@ func (o *PullRequestUpdatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 18 url
+// url {"description":"the url to the pull request home page","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
+
+// 19 user_ref_id
+// user_ref_id {"description":"the user ref_id in the source system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"user_ref_id","relation":false,"subtype":"","type":"string"}
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
@@ -1068,15 +1150,15 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "closed_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "type": "record", "name": "closed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"name": "closed_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "commits"},
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was created", "type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was created", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1100,7 +1182,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "merged_date",
-				"type": map[string]interface{}{"type": "record", "name": "merged_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the timestamp in UTC that the pull request was merged"},
+				"type": map[string]interface{}{"type": "record", "name": "merged_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1124,7 +1206,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the timestamp in UTC that the pull request was closed"},
 			},
 			map[string]interface{}{
 				"name": "url",

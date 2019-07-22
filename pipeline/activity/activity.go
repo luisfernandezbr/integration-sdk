@@ -69,6 +69,15 @@ const (
 	ActivityUserColumnTeamIDColumn = "user->team_id"
 )
 
+// 0 activity_date
+// activity_date {"description":"date object","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"activity_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // ActivityActivityDate represents the object structure for activity_date
 type ActivityActivityDate struct {
 	// Epoch the date in epoch format
@@ -89,6 +98,21 @@ func (o *ActivityActivityDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 1 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 2 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 3 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 4 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 5 type
+// type {"description":"the type of activity","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"type","relation":false,"subtype":"","type":"enum"}
 
 // ActivityType is the enumeration type for type
 type ActivityType int32
@@ -146,6 +170,13 @@ const (
 	// TypeUnlinkedCommit is the enumeration value for unlinked_commit
 	ActivityTypeUnlinkedCommit ActivityType = 10
 )
+
+// 6 user
+// user {"description":"the user related to the activity","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"user","relation":true,"subtype":"","type":"object"}
+
+// id {"description":"the corporate user id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":true,"subtype":"","type":"string"}
+
+// team_id {"description":"the corporate team id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"team_id","relation":true,"subtype":"","type":"string"}
 
 // ActivityUser represents the object structure for user
 type ActivityUser struct {
@@ -805,7 +836,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "activity_date",
-				"type": map[string]interface{}{"type": "record", "name": "activity_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object", "type": "record", "name": "activity_date"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -835,7 +866,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "user",
-				"type": map[string]interface{}{"doc": "the user related to the activity", "type": "record", "name": "user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"doc": "the corporate team id", "type": "string", "name": "team_id"}}},
+				"type": map[string]interface{}{"type": "record", "name": "user", "fields": []interface{}{map[string]interface{}{"doc": "the corporate user id", "type": "string", "name": "id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the user related to the activity"},
 			},
 		},
 	}

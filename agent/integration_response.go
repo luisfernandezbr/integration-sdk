@@ -57,14 +57,6 @@ const (
 	IntegrationResponseDistroColumn = "distro"
 	// IntegrationResponseErrorColumn is the error column name
 	IntegrationResponseErrorColumn = "error"
-	// IntegrationResponseEventDateColumn is the event_date column name
-	IntegrationResponseEventDateColumn = "event_date"
-	// IntegrationResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	IntegrationResponseEventDateColumnEpochColumn = "event_date->epoch"
-	// IntegrationResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	IntegrationResponseEventDateColumnOffsetColumn = "event_date->offset"
-	// IntegrationResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	IntegrationResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// IntegrationResponseFreeSpaceColumn is the free_space column name
 	IntegrationResponseFreeSpaceColumn = "free_space"
 	// IntegrationResponseGoVersionColumn is the go_version column name
@@ -99,6 +91,33 @@ const (
 	IntegrationResponseVersionColumn = "version"
 )
 
+// 0 architecture
+// architecture {"description":"the architecture of the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"architecture","relation":false,"subtype":"","type":"string"}
+
+// 1 authorization
+// authorization {"description":"the encrypted authorization data for this integration","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"authorization","relation":false,"subtype":"","type":"string"}
+
+// 2 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 3 data
+// data {"description":"extra data that is specific about this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"data","relation":false,"subtype":"","type":"string"}
+
+// 4 distro
+// distro {"description":"the agent os distribution","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"distro","relation":false,"subtype":"","type":"string"}
+
+// 5 error
+// error {"description":"an error message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
+
+// 6 event_date
+// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // IntegrationResponseEventDate represents the object structure for event_date
 type IntegrationResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -119,6 +138,48 @@ func (o *IntegrationResponseEventDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 7 free_space
+// free_space {"description":"the amount of free space in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"free_space","relation":false,"subtype":"","type":"long"}
+
+// 8 go_version
+// go_version {"description":"the go version that the agent build was built with","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"go_version","relation":false,"subtype":"","type":"string"}
+
+// 9 hostname
+// hostname {"description":"the agent hostname","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"hostname","relation":false,"subtype":"","type":"string"}
+
+// 10 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 11 integration_id
+// integration_id {"description":"the integration id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"integration_id","relation":false,"subtype":"","type":"string"}
+
+// 12 memory
+// memory {"description":"the amount of memory in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"memory","relation":false,"subtype":"","type":"long"}
+
+// 13 message
+// message {"description":"a message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+
+// 14 num_cpu
+// num_cpu {"description":"the number of CPU the agent is running","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"num_cpu","relation":false,"subtype":"","type":"int"}
+
+// 15 os
+// os {"description":"the agent operating system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"os","relation":false,"subtype":"","type":"string"}
+
+// 16 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 17 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 18 request_id
+// request_id {"description":"the request id that this response is correlated to","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"request_id","relation":false,"subtype":"","type":"string"}
+
+// 19 success
+// success {"description":"if the response was successful","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"success","relation":false,"subtype":"","type":"boolean"}
+
+// 20 type
+// type {"description":"the type of event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"type","relation":false,"subtype":"","type":"enum"}
 
 // IntegrationResponseType is the enumeration type for type
 type IntegrationResponseType int32
@@ -164,6 +225,12 @@ const (
 	// TypeUser is the enumeration value for user
 	IntegrationResponseTypeUser IntegrationResponseType = 7
 )
+
+// 21 uuid
+// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
+
+// 22 version
+// version {"description":"the agent version","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"version","relation":false,"subtype":"","type":"string"}
 
 // IntegrationResponse an agent response to an action request adding an integration
 type IntegrationResponse struct {
@@ -622,7 +689,6 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 		"data":           toIntegrationResponseObject(o.Data, isavro, true, "string"),
 		"distro":         toIntegrationResponseObject(o.Distro, isavro, false, "string"),
 		"error":          toIntegrationResponseObject(o.Error, isavro, true, "string"),
-		"event_date":     toIntegrationResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":     toIntegrationResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":     toIntegrationResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":       toIntegrationResponseObject(o.Hostname, isavro, false, "string"),
@@ -731,28 +797,6 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["event_date"].(IntegrationResponseEventDate); ok {
-		o.EventDate = val
-	} else {
-		val := kv["event_date"]
-		if val == nil {
-			o.EventDate = IntegrationResponseEventDate{}
-		} else {
-			o.EventDate = IntegrationResponseEventDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.EventDate)
-
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -1004,7 +1048,6 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
-	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1061,10 +1104,6 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",

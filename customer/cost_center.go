@@ -66,6 +66,38 @@ const (
 	CostCenterUpdatedAtColumn = "updated_ts"
 )
 
+// 0 active
+// active {"description":"whether the cost center is tracked in pinpoint","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// 1 cost
+// cost {"description":"the cost value of the cost center","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"cost","relation":false,"subtype":"","type":"float"}
+
+// 2 created_ts
+// created_ts {"description":"the date the record was created in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"created_ts","relation":false,"subtype":"","type":"int"}
+
+// 3 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 4 description
+// description {"description":"the description for the cost center","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
+
+// 5 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 6 name
+// name {"description":"the name of the cost center","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// 7 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 8 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 9 updated_ts
+// updated_ts {"description":"the date the record was updated in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"updated_ts","relation":false,"subtype":"","type":"int"}
+
+// 10 users
+
 // CostCenter a cost center represents information about users and their cost
 type CostCenter struct {
 	// Active whether the cost center is tracked in pinpoint

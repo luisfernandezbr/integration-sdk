@@ -56,6 +56,24 @@ const (
 	ProjectRefTypeColumn = "ref_type"
 )
 
+// 0 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 1 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 2 identifier
+// identifier {"description":"the common identifier of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"identifier","relation":false,"subtype":"","type":"string"}
+
+// 3 name
+// name {"description":"the name of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// 4 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 5 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
 // Project project information
 type Project struct {
 	// CustomerID the customer id for the model instance

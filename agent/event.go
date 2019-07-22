@@ -91,6 +91,30 @@ const (
 	EventVersionColumn = "version"
 )
 
+// 0 architecture
+// architecture {"description":"the architecture of the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"architecture","relation":false,"subtype":"","type":"string"}
+
+// 1 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 2 data
+// data {"description":"extra data that is specific about this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"data","relation":false,"subtype":"","type":"string"}
+
+// 3 distro
+// distro {"description":"the agent os distribution","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"distro","relation":false,"subtype":"","type":"string"}
+
+// 4 error
+// error {"description":"an error message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
+
+// 5 event_date
+// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // EventEventDate represents the object structure for event_date
 type EventEventDate struct {
 	// Epoch the date in epoch format
@@ -111,6 +135,39 @@ func (o *EventEventDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 6 free_space
+// free_space {"description":"the amount of free space in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"free_space","relation":false,"subtype":"","type":"long"}
+
+// 7 go_version
+// go_version {"description":"the go version that the agent build was built with","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"go_version","relation":false,"subtype":"","type":"string"}
+
+// 8 hostname
+// hostname {"description":"the agent hostname","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"hostname","relation":false,"subtype":"","type":"string"}
+
+// 9 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 10 memory
+// memory {"description":"the amount of memory in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"memory","relation":false,"subtype":"","type":"long"}
+
+// 11 message
+// message {"description":"a message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+
+// 12 num_cpu
+// num_cpu {"description":"the number of CPU the agent is running","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"num_cpu","relation":false,"subtype":"","type":"int"}
+
+// 13 os
+// os {"description":"the agent operating system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"os","relation":false,"subtype":"","type":"string"}
+
+// 14 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 15 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 16 type
+// type {"description":"the type of event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"type","relation":false,"subtype":"","type":"enum"}
 
 // EventType is the enumeration type for type
 type EventType int32
@@ -156,6 +213,12 @@ const (
 	// TypeUser is the enumeration value for user
 	EventTypeUser EventType = 7
 )
+
+// 17 uuid
+// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
+
+// 18 version
+// version {"description":"the agent version","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"version","relation":false,"subtype":"","type":"string"}
 
 // Event event data sent from the agent
 type Event struct {
@@ -987,7 +1050,7 @@ func GetEventAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "free_space",

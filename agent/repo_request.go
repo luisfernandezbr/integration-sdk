@@ -85,49 +85,144 @@ const (
 	RepoRequestUUIDColumn = "uuid"
 )
 
-// RepoRequestAuthorization represents the object structure for authorization
-type RepoRequestAuthorization struct {
+// 0 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 1 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 2 integration
+// integration {"description":"the integration details to use","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"integration","relation":false,"subtype":"object","type":"object"}
+
+// active {"description":"If true, the integration is still active","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// authorization {"description":"Authorization information","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"authorization","relation":false,"subtype":"","type":"object"}
+
+// access_token {"description":"Access token","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"access_token","relation":false,"subtype":"","type":"string"}
+
+// refresh_token {"description":"Refresh token","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"refresh_token","relation":false,"subtype":"","type":"string"}
+
+// url {"description":"URL of instance if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
+
+// username {"description":"Username for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"username","relation":false,"subtype":"","type":"string"}
+
+// password {"description":"Password for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"password","relation":false,"subtype":"","type":"string"}
+
+// api_token {"description":"API Token for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"api_token","relation":false,"subtype":"","type":"string"}
+
+// authorization {"description":"the agents encrypted authorization","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"authorization","relation":false,"subtype":"","type":"string"}
+
+// RepoRequestIntegrationAuthorization represents the object structure for authorization
+type RepoRequestIntegrationAuthorization struct {
 	// AccessToken Access token
 	AccessToken *string `json:"access_token" bson:"access_token" yaml:"access_token" faker:"-"`
-	// APIToken API Token for instance, if relevant
-	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
-	// Authorization the agents encrypted authorization
-	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
-	// Password Password for instance, if relevant
-	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
 	// RefreshToken Refresh token
 	RefreshToken *string `json:"refresh_token" bson:"refresh_token" yaml:"refresh_token" faker:"-"`
 	// URL URL of instance if relevant
 	URL *string `json:"url" bson:"url" yaml:"url" faker:"-"`
 	// Username Username for instance, if relevant
 	Username *string `json:"username" bson:"username" yaml:"username" faker:"-"`
+	// Password Password for instance, if relevant
+	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
+	// APIToken API Token for instance, if relevant
+	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
+	// Authorization the agents encrypted authorization
+	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 }
 
-func (o *RepoRequestAuthorization) ToMap() map[string]interface{} {
+func (o *RepoRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// AccessToken Access token
 		"access_token": o.AccessToken,
-		// APIToken API Token for instance, if relevant
-		"api_token": o.APIToken,
-		// Authorization the agents encrypted authorization
-		"authorization": o.Authorization,
-		// Password Password for instance, if relevant
-		"password": o.Password,
 		// RefreshToken Refresh token
 		"refresh_token": o.RefreshToken,
 		// URL URL of instance if relevant
 		"url": o.URL,
 		// Username Username for instance, if relevant
 		"username": o.Username,
+		// Password Password for instance, if relevant
+		"password": o.Password,
+		// APIToken API Token for instance, if relevant
+		"api_token": o.APIToken,
+		// Authorization the agents encrypted authorization
+		"authorization": o.Authorization,
 	}
 }
+
+// errored {"description":"If authorization failed by the agent","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"errored","relation":false,"subtype":"","type":"boolean"}
+
+// exclusions {"description":"The exclusion list for this integration","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"exclusions","relation":false,"subtype":"","type":"string"}
+
+// name {"description":"The user friendly name of the integration","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// progress {"description":"Agent processing progress","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"progress","relation":false,"subtype":"","type":"object"}
+
+// message {"description":"Any relevant messaging during processing","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+
+// total {"description":"The total amount to be processed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"total","relation":false,"subtype":"","type":"int"}
+
+// completed {"description":"The total amount processed thus far","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"completed","relation":false,"subtype":"","type":"int"}
+
+// RepoRequestIntegrationProgress represents the object structure for progress
+type RepoRequestIntegrationProgress struct {
+	// Message Any relevant messaging during processing
+	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	// Total The total amount to be processed
+	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
+	// Completed The total amount processed thus far
+	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
+}
+
+func (o *RepoRequestIntegrationProgress) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Message Any relevant messaging during processing
+		"message": o.Message,
+		// Total The total amount to be processed
+		"total": o.Total,
+		// Completed The total amount processed thus far
+		"completed": o.Completed,
+	}
+}
+
+// validated {"description":"If the validation has been run against this instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"validated","relation":false,"subtype":"","type":"boolean"}
+
+// validated_date {"description":"Date when validated","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"validated_date","relation":false,"subtype":"","type":"object"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// RepoRequestIntegrationValidatedDate represents the object structure for validated_date
+type RepoRequestIntegrationValidatedDate struct {
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+}
+
+func (o *RepoRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+	}
+}
+
+// validation_message {"description":"The validation message from the agent","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"validation_message","relation":false,"subtype":"","type":"string"}
 
 // RepoRequestIntegration represents the object structure for integration
 type RepoRequestIntegration struct {
 	// Active If true, the integration is still active
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
-	Authorization RepoRequestAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization RepoRequestIntegrationAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// Errored If authorization failed by the agent
 	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
 	// Exclusions The exclusion list for this integration
@@ -135,11 +230,11 @@ type RepoRequestIntegration struct {
 	// Name The user friendly name of the integration
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
-	Progress RepoRequestProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	Progress RepoRequestIntegrationProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
 	// ValidatedDate Date when validated
-	ValidatedDate RepoRequestValidatedDate `json:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
+	ValidatedDate RepoRequestIntegrationValidatedDate `json:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
 	// ValidationMessage The validation message from the agent
 	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
 }
@@ -167,6 +262,9 @@ func (o *RepoRequestIntegration) ToMap() map[string]interface{} {
 	}
 }
 
+// 3 location
+// location {"description":"The location of this integration (on-premise / private or cloud)","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"location","relation":false,"subtype":"","type":"enum"}
+
 // RepoRequestLocation is the enumeration type for location
 type RepoRequestLocation int32
 
@@ -188,26 +286,20 @@ const (
 	RepoRequestLocationCloud RepoRequestLocation = 1
 )
 
-// RepoRequestProgress represents the object structure for progress
-type RepoRequestProgress struct {
-	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
-	// Message Any relevant messaging during processing
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
-	// Total The total amount to be processed
-	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
-}
+// 4 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
 
-func (o *RepoRequestProgress) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Completed The total amount processed thus far
-		"completed": o.Completed,
-		// Message Any relevant messaging during processing
-		"message": o.Message,
-		// Total The total amount to be processed
-		"total": o.Total,
-	}
-}
+// 5 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 6 request_date
+// request_date {"description":"the date when the request was made","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"request_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // RepoRequestRequestDate represents the object structure for request_date
 type RepoRequestRequestDate struct {
@@ -230,26 +322,8 @@ func (o *RepoRequestRequestDate) ToMap() map[string]interface{} {
 	}
 }
 
-// RepoRequestValidatedDate represents the object structure for validated_date
-type RepoRequestValidatedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func (o *RepoRequestValidatedDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
-	}
-}
+// 7 uuid
+// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
 
 // RepoRequest an agent action to request adding new repos
 type RepoRequest struct {
@@ -406,26 +480,6 @@ func toRepoRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		}
 		return arr
 
-	case RepoRequestAuthorization:
-		vv := o.(RepoRequestAuthorization)
-		return vv.ToMap()
-	case *RepoRequestAuthorization:
-		return map[string]interface{}{
-			"agent.authorization": (*o.(*RepoRequestAuthorization)).ToMap(),
-		}
-	case []RepoRequestAuthorization:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]RepoRequestAuthorization) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]RepoRequestAuthorization:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]RepoRequestAuthorization)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case RepoRequestIntegration:
 		vv := o.(RepoRequestIntegration)
 		return vv.ToMap()
@@ -460,26 +514,6 @@ func toRepoRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		return map[string]string{
 			"agent.location": (o.(*RepoRequestLocation)).String(),
 		}
-	case RepoRequestProgress:
-		vv := o.(RepoRequestProgress)
-		return vv.ToMap()
-	case *RepoRequestProgress:
-		return map[string]interface{}{
-			"agent.progress": (*o.(*RepoRequestProgress)).ToMap(),
-		}
-	case []RepoRequestProgress:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]RepoRequestProgress) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]RepoRequestProgress:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]RepoRequestProgress)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case RepoRequestRequestDate:
 		vv := o.(RepoRequestRequestDate)
 		return vv.ToMap()
@@ -496,26 +530,6 @@ func toRepoRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case *[]RepoRequestRequestDate:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]RepoRequestRequestDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case RepoRequestValidatedDate:
-		vv := o.(RepoRequestValidatedDate)
-		return vv.ToMap()
-	case *RepoRequestValidatedDate:
-		return map[string]interface{}{
-			"agent.validated_date": (*o.(*RepoRequestValidatedDate)).ToMap(),
-		}
-	case []RepoRequestValidatedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]RepoRequestValidatedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]RepoRequestValidatedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]RepoRequestValidatedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -543,15 +557,6 @@ func (o *RepoRequest) setDefaults() {
 	if o.Integration.Authorization.AccessToken == nil {
 		o.Integration.Authorization.AccessToken = &emptyString
 	}
-	if o.Integration.Authorization.APIToken == nil {
-		o.Integration.Authorization.APIToken = &emptyString
-	}
-	if o.Integration.Authorization.Authorization == nil {
-		o.Integration.Authorization.Authorization = &emptyString
-	}
-	if o.Integration.Authorization.Password == nil {
-		o.Integration.Authorization.Password = &emptyString
-	}
 	if o.Integration.Authorization.RefreshToken == nil {
 		o.Integration.Authorization.RefreshToken = &emptyString
 	}
@@ -560,6 +565,15 @@ func (o *RepoRequest) setDefaults() {
 	}
 	if o.Integration.Authorization.Username == nil {
 		o.Integration.Authorization.Username = &emptyString
+	}
+	if o.Integration.Authorization.Password == nil {
+		o.Integration.Authorization.Password = &emptyString
+	}
+	if o.Integration.Authorization.APIToken == nil {
+		o.Integration.Authorization.APIToken = &emptyString
+	}
+	if o.Integration.Authorization.Authorization == nil {
+		o.Integration.Authorization.Authorization = &emptyString
 	}
 	if o.Integration.Errored == nil {
 		o.Integration.Errored = &emptyBool
@@ -966,7 +980,7 @@ func GetRepoRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"doc": "the integration details to use", "type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Authorization information", "type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"doc": "Agent processing progress", "type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}, "doc": "Agent processing progress"}, "name": "progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"doc": "Date when validated", "type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Date when validated"}, "name": "validated_date"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}},
+				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"name": "url", "doc": "URL of instance if relevant", "type": "string"}, map[string]interface{}{"doc": "Username for instance, if relevant", "type": "string", "name": "username"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"name": "authorization", "doc": "the agents encrypted authorization", "type": "string"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"items": "string", "type": "array", "name": "exclusions"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Agent processing progress", "type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"doc": "The total amount processed thus far", "type": "long", "name": "completed"}}}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"doc": "If the validation has been run against this instance", "type": "boolean", "name": "validated"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}, map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}}, "doc": "Date when validated", "type": "record", "name": "integration.validated_date"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use"},
 			},
 			map[string]interface{}{
 				"name": "location",
@@ -988,7 +1002,7 @@ func GetRepoRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

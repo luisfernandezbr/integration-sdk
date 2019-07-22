@@ -109,6 +109,18 @@ const (
 	BlameStatusColumn = "status"
 )
 
+// 0 blanks
+// blanks {"description":"the count of blank lines in the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"blanks","relation":false,"subtype":"","type":"int"}
+
+// 1 change_date
+// change_date {"description":"the date of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"change_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // BlameChangeDate represents the object structure for change_date
 type BlameChangeDate struct {
 	// Epoch the date in epoch format
@@ -129,6 +141,51 @@ func (o *BlameChangeDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 2 comments
+// comments {"description":"the count of comment lines in the file based on language rules","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"comments","relation":false,"subtype":"","type":"int"}
+
+// 3 commit_id
+// commit_id {"description":"the commit ID","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"commit_id","relation":false,"subtype":"","type":"string"}
+
+// 4 complexity
+// complexity {"description":"the cyclomatic complexity for the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"complexity","relation":false,"subtype":"","type":"int"}
+
+// 5 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 6 excluded
+// excluded {"description":"if the result was excluded","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"excluded","relation":false,"subtype":"","type":"boolean"}
+
+// 7 excluded_reason
+// excluded_reason {"description":"why the result was excluded","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"excluded_reason","relation":false,"subtype":"","type":"string"}
+
+// 8 filename
+// filename {"description":"the filename","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"filename","relation":false,"subtype":"","type":"string"}
+
+// 9 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 10 language
+// language {"description":"the detected language","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"language","relation":false,"subtype":"","type":"string"}
+
+// 11 license
+// license {"description":"if a license was detected in the file, what was the license SPDX","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"license","relation":false,"subtype":"","type":"string"}
+
+// 12 lines
+// lines {"description":"the individual line attributions","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"lines","relation":false,"subtype":"","type":"object"}
+
+// author_ref_id {"description":"the author ref_id of this line when last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"author_ref_id","relation":false,"subtype":"","type":"string"}
+
+// blank {"description":"if the line is a blank line","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"blank","relation":false,"subtype":"","type":"boolean"}
+
+// code {"description":"if the line is sourcecode","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"code","relation":false,"subtype":"","type":"boolean"}
+
+// comment {"description":"if the line is a comment","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"comment","relation":false,"subtype":"","type":"boolean"}
+
+// date {"description":"the change date in RFC3339 format of this line when last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"date","relation":false,"subtype":"","type":"string"}
+
+// sha {"description":"the sha when this line was last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"sha","relation":false,"subtype":"","type":"string"}
 
 // BlameLines represents the object structure for lines
 type BlameLines struct {
@@ -162,6 +219,30 @@ func (o *BlameLines) ToMap() map[string]interface{} {
 		"sha": o.Sha,
 	}
 }
+
+// 13 loc
+// loc {"description":"the count of lines in the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"loc","relation":false,"subtype":"","type":"int"}
+
+// 14 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 15 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 16 repo_id
+// repo_id {"description":"the unique id for the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"repo_id","relation":false,"subtype":"","type":"string"}
+
+// 17 sha
+// sha {"description":"the commit SHA","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"sha","relation":false,"subtype":"","type":"string"}
+
+// 18 size
+// size {"description":"the size of the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"size","relation":false,"subtype":"","type":"int"}
+
+// 19 sloc
+// sloc {"description":"the count of source lines in the file based on language rules","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"sloc","relation":false,"subtype":"","type":"int"}
+
+// 20 status
+// status {"description":"the status of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"status","relation":false,"subtype":"","type":"enum"}
 
 // BlameStatus is the enumeration type for status
 type BlameStatus int32
@@ -1064,7 +1145,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "change_date",
-				"type": map[string]interface{}{"doc": "the date of the change", "type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"},
 			},
 			map[string]interface{}{
 				"name": "comments",
@@ -1109,7 +1190,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"doc": "the author ref_id of this line when last changed", "type": "string", "name": "author_ref_id"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"doc": "if the line is sourcecode", "type": "boolean", "name": "code"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "type": "string", "name": "date"}, map[string]interface{}{"name": "sha", "doc": "the sha when this line was last changed", "type": "string"}}, "doc": "the individual line attributions"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "loc",

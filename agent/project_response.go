@@ -89,16 +89,12 @@ const (
 	ProjectResponseProjectsColumnActiveColumn = "projects->active"
 	// ProjectResponseProjectsColumnCategoryColumn is the category column property of the Projects name
 	ProjectResponseProjectsColumnCategoryColumn = "projects->category"
-	// ProjectResponseProjectsColumnCreatedDateColumn is the created_date column property of the Projects name
-	ProjectResponseProjectsColumnCreatedDateColumn = "projects->created_date"
 	// ProjectResponseProjectsColumnDescriptionColumn is the description column property of the Projects name
 	ProjectResponseProjectsColumnDescriptionColumn = "projects->description"
 	// ProjectResponseProjectsColumnIdentifierColumn is the identifier column property of the Projects name
 	ProjectResponseProjectsColumnIdentifierColumn = "projects->identifier"
 	// ProjectResponseProjectsColumnLastIssueColumn is the last_issue column property of the Projects name
 	ProjectResponseProjectsColumnLastIssueColumn = "projects->last_issue"
-	// ProjectResponseProjectsColumnLastUserColumn is the last_user column property of the Projects name
-	ProjectResponseProjectsColumnLastUserColumn = "projects->last_user"
 	// ProjectResponseProjectsColumnNameColumn is the name column property of the Projects name
 	ProjectResponseProjectsColumnNameColumn = "projects->name"
 	// ProjectResponseProjectsColumnProjectIDColumn is the project_id column property of the Projects name
@@ -123,26 +119,83 @@ const (
 	ProjectResponseVersionColumn = "version"
 )
 
-// ProjectResponseCreatedDate represents the object structure for created_date
-type ProjectResponseCreatedDate struct {
+// 0 architecture
+// architecture {"description":"the architecture of the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"architecture","relation":false,"subtype":"","type":"string"}
+
+// 1 created_date
+// created_date {"description":"the date of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"created_date","relation":false,"subtype":"","type":"common.Date"}
+
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
+// ProjectResponseLastIssueCreatedDate represents the object structure for created_date
+type ProjectResponseLastIssueCreatedDate struct {
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ProjectResponseCreatedDate) ToMap() map[string]interface{} {
+func (o *ProjectResponseLastIssueCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
+		// CustomerID the customer id for the model instance
+		"customer_id": o.CustomerID,
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
+		// ID the primary key for the model instance
+		"id": o.ID,
 		// Offset the timezone offset from GMT
 		"offset": o.Offset,
+		// RefID the source system id for the model instance
+		"ref_id": o.RefID,
+		// RefType the source system identifier for the model instance
+		"ref_type": o.RefType,
 		// Rfc3339 the date in RFC3339 format
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 2 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 3 data
+// data {"description":"extra data that is specific about this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"data","relation":false,"subtype":"","type":"string"}
+
+// 4 distro
+// distro {"description":"the agent os distribution","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"distro","relation":false,"subtype":"","type":"string"}
+
+// 5 error
+// error {"description":"an error message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
+
+// 6 event_date
+// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ProjectResponseEventDate represents the object structure for event_date
 type ProjectResponseEventDate struct {
@@ -165,51 +218,113 @@ func (o *ProjectResponseEventDate) ToMap() map[string]interface{} {
 	}
 }
 
-// ProjectResponseLastIssue represents the object structure for last_issue
-type ProjectResponseLastIssue struct {
-	// CreatedDate the date of the change
-	CreatedDate ProjectResponseCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
-	// Identifier the issue key from the source
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
-	// IssueID issue id
-	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
-	// LastUser the last user
-	LastUser ProjectResponseLastUser `json:"last_user" bson:"last_user" yaml:"last_user" faker:"-"`
+// 7 free_space
+// free_space {"description":"the amount of free space in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"free_space","relation":false,"subtype":"","type":"long"}
+
+// 8 go_version
+// go_version {"description":"the go version that the agent build was built with","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"go_version","relation":false,"subtype":"","type":"string"}
+
+// 9 hostname
+// hostname {"description":"the agent hostname","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"hostname","relation":false,"subtype":"","type":"string"}
+
+// 10 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 11 integration_id
+// integration_id {"description":"the integration id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"integration_id","relation":false,"subtype":"","type":"string"}
+
+// 12 memory
+// memory {"description":"the amount of memory in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"memory","relation":false,"subtype":"","type":"long"}
+
+// 13 message
+// message {"description":"a message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+
+// 14 num_cpu
+// num_cpu {"description":"the number of CPU the agent is running","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"num_cpu","relation":false,"subtype":"","type":"int"}
+
+// 15 os
+// os {"description":"the agent operating system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"os","relation":false,"subtype":"","type":"string"}
+
+// 16 projects
+// projects {"description":"the projects exported","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"projects","relation":false,"subtype":"admin.Project","type":"object"}
+
+// active {"description":"the status of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// category {"description":"the project category","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"category","relation":false,"subtype":"","type":"string"}
+
+// description {"description":"the description of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
+
+// identifier {"description":"the common identifier for the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"identifier","relation":false,"subtype":"","type":"string"}
+
+// last_issue {"description":"last issue for this project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"last_issue","relation":false,"subtype":"","type":"object"}
+
+// issue_id {"description":"issue id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"issue_id","relation":false,"subtype":"","type":"string"}
+
+// identifier {"description":"the issue key from the source","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"identifier","relation":false,"subtype":"","type":"string"}
+
+// created_date {"description":"the date of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"created_date","relation":false,"subtype":"","type":"common.Date"}
+
+// last_user {"description":"the last user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"last_user","relation":false,"subtype":"","type":"object"}
+
+// user_id {"description":"the work project user id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"user_id","relation":false,"subtype":"","type":"string"}
+
+// name {"description":"the user name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// avatar_url {"description":"the avatar url","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"avatar_url","relation":false,"subtype":"","type":"string"}
+
+// ProjectResponseLastIssueLastUser represents the object structure for last_user
+type ProjectResponseLastIssueLastUser struct {
+	// UserID the work project user id
+	UserID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
+	// Name the user name
+	Name string `json:"name" bson:"name" yaml:"name" faker:"name"`
+	// AvatarURL the avatar url
+	AvatarURL string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 }
 
-func (o *ProjectResponseLastIssue) ToMap() map[string]interface{} {
+func (o *ProjectResponseLastIssueLastUser) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		// CreatedDate the date of the change
-		"created_date": o.CreatedDate,
-		// Identifier the issue key from the source
-		"identifier": o.Identifier,
+		// UserID the work project user id
+		"user_id": o.UserID,
+		// Name the user name
+		"name": o.Name,
+		// AvatarURL the avatar url
+		"avatar_url": o.AvatarURL,
+	}
+}
+
+// ProjectResponseProjectsLastIssue represents the object structure for last_issue
+type ProjectResponseProjectsLastIssue struct {
+	// IssueID issue id
+	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
+	// Identifier the issue key from the source
+	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	// CreatedDate the date of the change
+	CreatedDate ProjectResponseLastIssueCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	// LastUser the last user
+	LastUser ProjectResponseLastIssueLastUser `json:"last_user" bson:"last_user" yaml:"last_user" faker:"-"`
+}
+
+func (o *ProjectResponseProjectsLastIssue) ToMap() map[string]interface{} {
+	return map[string]interface{}{
 		// IssueID issue id
 		"issue_id": o.IssueID,
+		// Identifier the issue key from the source
+		"identifier": o.Identifier,
+		// CreatedDate the date of the change
+		"created_date": o.CreatedDate,
 		// LastUser the last user
 		"last_user": o.LastUser,
 	}
 }
 
-// ProjectResponseLastUser represents the object structure for last_user
-type ProjectResponseLastUser struct {
-	// AvatarURL the avatar url
-	AvatarURL string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
-	// Name the user name
-	Name string `json:"name" bson:"name" yaml:"name" faker:"name"`
-	// UserID the work project user id
-	UserID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
-}
+// name {"description":"the name of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
 
-func (o *ProjectResponseLastUser) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// AvatarURL the avatar url
-		"avatar_url": o.AvatarURL,
-		// Name the user name
-		"name": o.Name,
-		// UserID the work project user id
-		"user_id": o.UserID,
-	}
-}
+// project_id {"description":"the id of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"project_id","relation":false,"subtype":"","type":"string"}
+
+// total_issues {"description":"the total issues count for the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"total_issues","relation":false,"subtype":"","type":"int"}
+
+// url {"description":"the url to the project home page","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
 
 // ProjectResponseProjects represents the object structure for projects
 type ProjectResponseProjects struct {
@@ -217,16 +332,12 @@ type ProjectResponseProjects struct {
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Category the project category
 	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
-	// CreatedDate the date of the change
-	CreatedDate ProjectResponseCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// Description the description of the project
 	Description *string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// Identifier the common identifier for the project
 	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// LastIssue last issue for this project
-	LastIssue ProjectResponseLastIssue `json:"last_issue" bson:"last_issue" yaml:"last_issue" faker:"-"`
-	// LastUser the last user
-	LastUser ProjectResponseLastUser `json:"last_user" bson:"last_user" yaml:"last_user" faker:"-"`
+	LastIssue ProjectResponseProjectsLastIssue `json:"last_issue" bson:"last_issue" yaml:"last_issue" faker:"-"`
 	// Name the name of the project
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// ProjectID the id of the project
@@ -243,16 +354,12 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 		"active": o.Active,
 		// Category the project category
 		"category": o.Category,
-		// CreatedDate the date of the change
-		"created_date": o.CreatedDate,
 		// Description the description of the project
 		"description": o.Description,
 		// Identifier the common identifier for the project
 		"identifier": o.Identifier,
 		// LastIssue last issue for this project
 		"last_issue": o.LastIssue,
-		// LastUser the last user
-		"last_user": o.LastUser,
 		// Name the name of the project
 		"name": o.Name,
 		// ProjectID the id of the project
@@ -263,6 +370,21 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 		"url": o.URL,
 	}
 }
+
+// 17 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 18 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 19 request_id
+// request_id {"description":"the request id that this response is correlated to","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"request_id","relation":false,"subtype":"","type":"string"}
+
+// 20 success
+// success {"description":"if the response was successful","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"success","relation":false,"subtype":"","type":"boolean"}
+
+// 21 type
+// type {"description":"the type of event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"type","relation":false,"subtype":"","type":"enum"}
 
 // ProjectResponseType is the enumeration type for type
 type ProjectResponseType int32
@@ -309,10 +431,18 @@ const (
 	ProjectResponseTypeUser ProjectResponseType = 7
 )
 
+// 22 uuid
+// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
+
+// 23 version
+// version {"description":"the agent version","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"version","relation":false,"subtype":"","type":"string"}
+
 // ProjectResponse an agent response to an action request adding project(s)
 type ProjectResponse struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	// LastIssueCreatedDate the date of the change
+	LastIssueCreatedDate ProjectResponseLastIssueCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
@@ -494,26 +624,6 @@ func toProjectResponseObject(o interface{}, isavro bool, isoptional bool, avroty
 		}
 		return arr
 
-	case ProjectResponseCreatedDate:
-		vv := o.(ProjectResponseCreatedDate)
-		return vv.ToMap()
-	case *ProjectResponseCreatedDate:
-		return map[string]interface{}{
-			"agent.created_date": (*o.(*ProjectResponseCreatedDate)).ToMap(),
-		}
-	case []ProjectResponseCreatedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectResponseCreatedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ProjectResponseCreatedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectResponseCreatedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ProjectResponseEventDate:
 		vv := o.(ProjectResponseEventDate)
 		return vv.ToMap()
@@ -530,46 +640,6 @@ func toProjectResponseObject(o interface{}, isavro bool, isoptional bool, avroty
 	case *[]ProjectResponseEventDate:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]ProjectResponseEventDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case ProjectResponseLastIssue:
-		vv := o.(ProjectResponseLastIssue)
-		return vv.ToMap()
-	case *ProjectResponseLastIssue:
-		return map[string]interface{}{
-			"agent.last_issue": (*o.(*ProjectResponseLastIssue)).ToMap(),
-		}
-	case []ProjectResponseLastIssue:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectResponseLastIssue) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ProjectResponseLastIssue:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectResponseLastIssue)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case ProjectResponseLastUser:
-		vv := o.(ProjectResponseLastUser)
-		return vv.ToMap()
-	case *ProjectResponseLastUser:
-		return map[string]interface{}{
-			"agent.last_user": (*o.(*ProjectResponseLastUser)).ToMap(),
-		}
-	case []ProjectResponseLastUser:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectResponseLastUser) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ProjectResponseLastUser:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectResponseLastUser)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -1323,7 +1393,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1363,7 +1433,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"doc": "the projects exported", "type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"doc": "the project category", "type": "string", "name": "category"}, map[string]interface{}{"name": "created_date", "doc": "the date of the change", "type": map[string]interface{}{"type": "record", "name": "projects.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"}}, map[string]interface{}{"name": "description", "doc": "the description of the project", "type": "string"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"name": "last_issue", "doc": "last issue for this project", "type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"doc": "the date of the change", "type": map[string]interface{}{"type": "record", "name": "last_issue.created_date", "fields": []interface{}{}, "doc": "the date of the change"}, "name": "created_date"}, map[string]interface{}{"doc": "the issue key from the source", "type": "string", "name": "identifier"}, map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"name": "last_user", "doc": "the last user", "type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}, map[string]interface{}{"name": "name", "doc": "the user name", "type": "string"}, map[string]interface{}{"name": "avatar_url", "doc": "the avatar url", "type": "string"}}, "doc": "the last user"}}}, "doc": "last issue for this project"}}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the user name"}, map[string]interface{}{"name": "user_id", "doc": "the work project user id", "type": "string"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "long", "name": "total_issues", "doc": "the total issues count for the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}}},
+				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"doc": "the status of the project", "type": "boolean", "name": "active"}, map[string]interface{}{"name": "category", "doc": "the project category", "type": "string"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"doc": "the common identifier for the project", "type": "string", "name": "identifier"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"name": "identifier", "doc": "the issue key from the source", "type": "string"}, map[string]interface{}{"type": map[string]interface{}{"name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change", "type": "record"}, "name": "created_date", "doc": "the date of the change"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"name": "user_id", "doc": "the work project user id", "type": "string"}, map[string]interface{}{"name": "name", "doc": "the user name", "type": "string"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}}, "doc": "last issue for this project"}, "name": "last_issue", "doc": "last issue for this project"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"doc": "the id of the project", "type": "string", "name": "project_id"}, map[string]interface{}{"doc": "the total issues count for the project", "type": "long", "name": "total_issues"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

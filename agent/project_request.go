@@ -85,49 +85,144 @@ const (
 	ProjectRequestUUIDColumn = "uuid"
 )
 
-// ProjectRequestAuthorization represents the object structure for authorization
-type ProjectRequestAuthorization struct {
+// 0 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 1 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 2 integration
+// integration {"description":"the integration details to use","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"integration","relation":false,"subtype":"object","type":"object"}
+
+// active {"description":"If true, the integration is still active","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// authorization {"description":"Authorization information","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"authorization","relation":false,"subtype":"","type":"object"}
+
+// access_token {"description":"Access token","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"access_token","relation":false,"subtype":"","type":"string"}
+
+// refresh_token {"description":"Refresh token","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"refresh_token","relation":false,"subtype":"","type":"string"}
+
+// url {"description":"URL of instance if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
+
+// username {"description":"Username for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"username","relation":false,"subtype":"","type":"string"}
+
+// password {"description":"Password for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"password","relation":false,"subtype":"","type":"string"}
+
+// api_token {"description":"API Token for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"api_token","relation":false,"subtype":"","type":"string"}
+
+// authorization {"description":"the agents encrypted authorization","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"authorization","relation":false,"subtype":"","type":"string"}
+
+// ProjectRequestIntegrationAuthorization represents the object structure for authorization
+type ProjectRequestIntegrationAuthorization struct {
 	// AccessToken Access token
 	AccessToken *string `json:"access_token" bson:"access_token" yaml:"access_token" faker:"-"`
-	// APIToken API Token for instance, if relevant
-	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
-	// Authorization the agents encrypted authorization
-	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
-	// Password Password for instance, if relevant
-	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
 	// RefreshToken Refresh token
 	RefreshToken *string `json:"refresh_token" bson:"refresh_token" yaml:"refresh_token" faker:"-"`
 	// URL URL of instance if relevant
 	URL *string `json:"url" bson:"url" yaml:"url" faker:"-"`
 	// Username Username for instance, if relevant
 	Username *string `json:"username" bson:"username" yaml:"username" faker:"-"`
+	// Password Password for instance, if relevant
+	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
+	// APIToken API Token for instance, if relevant
+	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
+	// Authorization the agents encrypted authorization
+	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 }
 
-func (o *ProjectRequestAuthorization) ToMap() map[string]interface{} {
+func (o *ProjectRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// AccessToken Access token
 		"access_token": o.AccessToken,
-		// APIToken API Token for instance, if relevant
-		"api_token": o.APIToken,
-		// Authorization the agents encrypted authorization
-		"authorization": o.Authorization,
-		// Password Password for instance, if relevant
-		"password": o.Password,
 		// RefreshToken Refresh token
 		"refresh_token": o.RefreshToken,
 		// URL URL of instance if relevant
 		"url": o.URL,
 		// Username Username for instance, if relevant
 		"username": o.Username,
+		// Password Password for instance, if relevant
+		"password": o.Password,
+		// APIToken API Token for instance, if relevant
+		"api_token": o.APIToken,
+		// Authorization the agents encrypted authorization
+		"authorization": o.Authorization,
 	}
 }
+
+// errored {"description":"If authorization failed by the agent","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"errored","relation":false,"subtype":"","type":"boolean"}
+
+// exclusions {"description":"The exclusion list for this integration","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"exclusions","relation":false,"subtype":"","type":"string"}
+
+// name {"description":"The user friendly name of the integration","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// progress {"description":"Agent processing progress","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"progress","relation":false,"subtype":"","type":"object"}
+
+// message {"description":"Any relevant messaging during processing","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+
+// total {"description":"The total amount to be processed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"total","relation":false,"subtype":"","type":"int"}
+
+// completed {"description":"The total amount processed thus far","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"completed","relation":false,"subtype":"","type":"int"}
+
+// ProjectRequestIntegrationProgress represents the object structure for progress
+type ProjectRequestIntegrationProgress struct {
+	// Message Any relevant messaging during processing
+	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	// Total The total amount to be processed
+	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
+	// Completed The total amount processed thus far
+	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
+}
+
+func (o *ProjectRequestIntegrationProgress) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Message Any relevant messaging during processing
+		"message": o.Message,
+		// Total The total amount to be processed
+		"total": o.Total,
+		// Completed The total amount processed thus far
+		"completed": o.Completed,
+	}
+}
+
+// validated {"description":"If the validation has been run against this instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"validated","relation":false,"subtype":"","type":"boolean"}
+
+// validated_date {"description":"Date when validated","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"validated_date","relation":false,"subtype":"","type":"object"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// ProjectRequestIntegrationValidatedDate represents the object structure for validated_date
+type ProjectRequestIntegrationValidatedDate struct {
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+}
+
+func (o *ProjectRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+	}
+}
+
+// validation_message {"description":"The validation message from the agent","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"validation_message","relation":false,"subtype":"","type":"string"}
 
 // ProjectRequestIntegration represents the object structure for integration
 type ProjectRequestIntegration struct {
 	// Active If true, the integration is still active
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
-	Authorization ProjectRequestAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization ProjectRequestIntegrationAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// Errored If authorization failed by the agent
 	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
 	// Exclusions The exclusion list for this integration
@@ -135,11 +230,11 @@ type ProjectRequestIntegration struct {
 	// Name The user friendly name of the integration
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
-	Progress ProjectRequestProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	Progress ProjectRequestIntegrationProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
 	// ValidatedDate Date when validated
-	ValidatedDate ProjectRequestValidatedDate `json:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
+	ValidatedDate ProjectRequestIntegrationValidatedDate `json:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
 	// ValidationMessage The validation message from the agent
 	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
 }
@@ -167,6 +262,9 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 	}
 }
 
+// 3 location
+// location {"description":"The location of this integration (on-premise / private or cloud)","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"location","relation":false,"subtype":"","type":"enum"}
+
 // ProjectRequestLocation is the enumeration type for location
 type ProjectRequestLocation int32
 
@@ -188,26 +286,20 @@ const (
 	ProjectRequestLocationCloud ProjectRequestLocation = 1
 )
 
-// ProjectRequestProgress represents the object structure for progress
-type ProjectRequestProgress struct {
-	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
-	// Message Any relevant messaging during processing
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
-	// Total The total amount to be processed
-	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
-}
+// 4 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
 
-func (o *ProjectRequestProgress) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Completed The total amount processed thus far
-		"completed": o.Completed,
-		// Message Any relevant messaging during processing
-		"message": o.Message,
-		// Total The total amount to be processed
-		"total": o.Total,
-	}
-}
+// 5 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 6 request_date
+// request_date {"description":"the date when the request was made","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"request_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ProjectRequestRequestDate represents the object structure for request_date
 type ProjectRequestRequestDate struct {
@@ -230,26 +322,8 @@ func (o *ProjectRequestRequestDate) ToMap() map[string]interface{} {
 	}
 }
 
-// ProjectRequestValidatedDate represents the object structure for validated_date
-type ProjectRequestValidatedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func (o *ProjectRequestValidatedDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
-	}
-}
+// 7 uuid
+// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
 
 // ProjectRequest an agent action to request adding new projects
 type ProjectRequest struct {
@@ -406,26 +480,6 @@ func toProjectRequestObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		}
 		return arr
 
-	case ProjectRequestAuthorization:
-		vv := o.(ProjectRequestAuthorization)
-		return vv.ToMap()
-	case *ProjectRequestAuthorization:
-		return map[string]interface{}{
-			"agent.authorization": (*o.(*ProjectRequestAuthorization)).ToMap(),
-		}
-	case []ProjectRequestAuthorization:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectRequestAuthorization) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ProjectRequestAuthorization:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectRequestAuthorization)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ProjectRequestIntegration:
 		vv := o.(ProjectRequestIntegration)
 		return vv.ToMap()
@@ -460,26 +514,6 @@ func toProjectRequestObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		return map[string]string{
 			"agent.location": (o.(*ProjectRequestLocation)).String(),
 		}
-	case ProjectRequestProgress:
-		vv := o.(ProjectRequestProgress)
-		return vv.ToMap()
-	case *ProjectRequestProgress:
-		return map[string]interface{}{
-			"agent.progress": (*o.(*ProjectRequestProgress)).ToMap(),
-		}
-	case []ProjectRequestProgress:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectRequestProgress) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ProjectRequestProgress:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectRequestProgress)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ProjectRequestRequestDate:
 		vv := o.(ProjectRequestRequestDate)
 		return vv.ToMap()
@@ -496,26 +530,6 @@ func toProjectRequestObject(o interface{}, isavro bool, isoptional bool, avrotyp
 	case *[]ProjectRequestRequestDate:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]ProjectRequestRequestDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case ProjectRequestValidatedDate:
-		vv := o.(ProjectRequestValidatedDate)
-		return vv.ToMap()
-	case *ProjectRequestValidatedDate:
-		return map[string]interface{}{
-			"agent.validated_date": (*o.(*ProjectRequestValidatedDate)).ToMap(),
-		}
-	case []ProjectRequestValidatedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectRequestValidatedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ProjectRequestValidatedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ProjectRequestValidatedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -543,15 +557,6 @@ func (o *ProjectRequest) setDefaults() {
 	if o.Integration.Authorization.AccessToken == nil {
 		o.Integration.Authorization.AccessToken = &emptyString
 	}
-	if o.Integration.Authorization.APIToken == nil {
-		o.Integration.Authorization.APIToken = &emptyString
-	}
-	if o.Integration.Authorization.Authorization == nil {
-		o.Integration.Authorization.Authorization = &emptyString
-	}
-	if o.Integration.Authorization.Password == nil {
-		o.Integration.Authorization.Password = &emptyString
-	}
 	if o.Integration.Authorization.RefreshToken == nil {
 		o.Integration.Authorization.RefreshToken = &emptyString
 	}
@@ -560,6 +565,15 @@ func (o *ProjectRequest) setDefaults() {
 	}
 	if o.Integration.Authorization.Username == nil {
 		o.Integration.Authorization.Username = &emptyString
+	}
+	if o.Integration.Authorization.Password == nil {
+		o.Integration.Authorization.Password = &emptyString
+	}
+	if o.Integration.Authorization.APIToken == nil {
+		o.Integration.Authorization.APIToken = &emptyString
+	}
+	if o.Integration.Authorization.Authorization == nil {
+		o.Integration.Authorization.Authorization = &emptyString
 	}
 	if o.Integration.Errored == nil {
 		o.Integration.Errored = &emptyBool
@@ -966,7 +980,7 @@ func GetProjectRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"doc": "the agents encrypted authorization", "type": "string", "name": "authorization"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"name": "errored", "doc": "If authorization failed by the agent", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"name": "exclusions", "items": "string", "type": "array"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"name": "name", "doc": "The user friendly name of the integration", "type": "string"}, map[string]interface{}{"name": "progress", "doc": "Agent processing progress", "type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"name": "completed", "doc": "The total amount processed thus far", "type": "long"}, map[string]interface{}{"doc": "Any relevant messaging during processing", "type": "string", "name": "message"}, map[string]interface{}{"name": "total", "doc": "The total amount to be processed", "type": "long"}}, "doc": "Agent processing progress"}}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Date when validated", "type": "record", "name": "integration.validated_date"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use", "type": "record"},
+				"type": map[string]interface{}{"name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}}, "doc": "Authorization information", "type": "record", "name": "integration.authorization"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"name": "errored", "doc": "If authorization failed by the agent", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "location",
@@ -988,7 +1002,7 @@ func GetProjectRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

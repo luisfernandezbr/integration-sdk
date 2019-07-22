@@ -150,6 +150,36 @@ const (
 	CommitURLColumn = "url"
 )
 
+// 0 additions
+// additions {"description":"the number of additions for the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"additions","relation":false,"subtype":"","type":"int"}
+
+// 1 author_ref_id
+// author_ref_id {"description":"the author ref_id in the source system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"author_ref_id","relation":false,"subtype":"","type":"string"}
+
+// 2 blanks
+// blanks {"description":"the number of blank lines in the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"blanks","relation":false,"subtype":"","type":"int"}
+
+// 3 branch
+// branch {"description":"the branch that the commit was made to","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"branch","relation":false,"subtype":"","type":"string"}
+
+// 4 comments
+// comments {"description":"the number of comment lines in the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"comments","relation":false,"subtype":"","type":"int"}
+
+// 5 committer_ref_id
+// committer_ref_id {"description":"the committer ref_id in the source system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"committer_ref_id","relation":false,"subtype":"","type":"string"}
+
+// 6 complexity
+// complexity {"description":"the complexity value for the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"complexity","relation":false,"subtype":"","type":"int"}
+
+// 7 created_date
+// created_date {"description":"date when the commit was created","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // CommitCreatedDate represents the object structure for created_date
 type CommitCreatedDate struct {
 	// Epoch the date in epoch format
@@ -171,6 +201,91 @@ func (o *CommitCreatedDate) ToMap() map[string]interface{} {
 	}
 }
 
+// 8 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 9 deletions
+// deletions {"description":"the number of deletions for the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"deletions","relation":false,"subtype":"","type":"int"}
+
+// 10 excluded
+// excluded {"description":"if the commit was excluded","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"excluded","relation":false,"subtype":"","type":"boolean"}
+
+// 11 files
+// files {"description":"the files touched by this commit","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"files","relation":false,"subtype":"","type":"object"}
+
+// additions {"description":"the number of additions for the commit file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"additions","relation":false,"subtype":"","type":"int"}
+
+// binary {"description":"indicates if the file was detected to be a binary file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"binary","relation":false,"subtype":"","type":"boolean"}
+
+// blanks {"description":"the number of blank lines in the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"blanks","relation":false,"subtype":"","type":"int"}
+
+// comments {"description":"the number of comment lines in the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"comments","relation":false,"subtype":"","type":"int"}
+
+// commit_id {"description":"the unique id for the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"commit_id","relation":false,"subtype":"","type":"string"}
+
+// complexity {"description":"the complexity value for the file change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"complexity","relation":false,"subtype":"","type":"int"}
+
+// created_date {"description":"the timestamp in UTC that the commit was created","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// CommitFilesCreatedDate represents the object structure for created_date
+type CommitFilesCreatedDate struct {
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+}
+
+func (o *CommitFilesCreatedDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+	}
+}
+
+// deletions {"description":"the number of deletions for the commit file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"deletions","relation":false,"subtype":"","type":"int"}
+
+// excluded {"description":"if the file was excluded from processing","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"excluded","relation":false,"subtype":"","type":"boolean"}
+
+// excluded_reason {"description":"if the file was excluded, the reason","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"excluded_reason","relation":false,"subtype":"","type":"string"}
+
+// filename {"description":"the filename","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"filename","relation":false,"subtype":"","type":"string"}
+
+// language {"description":"the language that was detected for the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"language","relation":false,"subtype":"","type":"string"}
+
+// license {"description":"the license which was detected for the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"license","relation":false,"subtype":"","type":"string"}
+
+// license_confidence {"description":"the license confidence from the detection engine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"license_confidence","relation":false,"subtype":"","type":"float"}
+
+// loc {"description":"the number of lines in the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"loc","relation":false,"subtype":"","type":"int"}
+
+// ordinal {"description":"the order value for the file in the change set","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ordinal","relation":false,"subtype":"","type":"int"}
+
+// renamed {"description":"if the file was renamed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"renamed","relation":false,"subtype":"","type":"boolean"}
+
+// renamed_from {"description":"the original file name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"renamed_from","relation":false,"subtype":"","type":"string"}
+
+// renamed_to {"description":"the final file name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"renamed_to","relation":false,"subtype":"","type":"string"}
+
+// repo_id {"description":"the unique id for the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"repo_id","relation":false,"subtype":"","type":"string"}
+
+// size {"description":"the size of the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"size","relation":false,"subtype":"","type":"int"}
+
+// sloc {"description":"the number of source lines in the file","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"sloc","relation":false,"subtype":"","type":"int"}
+
+// status {"description":"the status of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"status","relation":false,"subtype":"","type":"string"}
+
 // CommitFiles represents the object structure for files
 type CommitFiles struct {
 	// Additions the number of additions for the commit file
@@ -186,7 +301,7 @@ type CommitFiles struct {
 	// Complexity the complexity value for the file change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
 	// CreatedDate the timestamp in UTC that the commit was created
-	CreatedDate CommitCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate CommitFilesCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// Deletions the number of deletions for the commit file
 	Deletions int64 `json:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// Excluded if the file was excluded from processing
@@ -272,6 +387,45 @@ func (o *CommitFiles) ToMap() map[string]interface{} {
 	}
 }
 
+// 12 files_changed
+// files_changed {"description":"the number of files changed for the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"files_changed","relation":false,"subtype":"","type":"int"}
+
+// 13 gpg_signed
+// gpg_signed {"description":"if the commit was signed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"gpg_signed","relation":false,"subtype":"","type":"boolean"}
+
+// 14 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 15 loc
+// loc {"description":"the number of lines in the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"loc","relation":false,"subtype":"","type":"int"}
+
+// 16 message
+// message {"description":"the commit message","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+
+// 17 ordinal
+// ordinal {"description":"the order of the commit in the commit stream","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ordinal","relation":false,"subtype":"","type":"int"}
+
+// 18 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 19 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 20 repo_id
+// repo_id {"description":"the unique id for the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"repo_id","relation":true,"subtype":"","type":"string"}
+
+// 21 sha
+// sha {"description":"the unique sha for the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"sha","relation":false,"subtype":"","type":"string"}
+
+// 22 size
+// size {"description":"the size of all files in the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"size","relation":false,"subtype":"","type":"int"}
+
+// 23 sloc
+// sloc {"description":"the number of source lines in the commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"sloc","relation":false,"subtype":"","type":"int"}
+
+// 24 url
+// url {"description":"the url to the commit detail","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
+
 // Commit the commit is a specific change in a repo
 type Commit struct {
 	// Additions the number of additions for the commit
@@ -288,7 +442,7 @@ type Commit struct {
 	CommitterRefID string `json:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
 	// Complexity the complexity value for the change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
-	// CreatedDate the timestamp in UTC that the commit was created
+	// CreatedDate date when the commit was created
 	CreatedDate CommitCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -1206,7 +1360,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the timestamp in UTC that the commit was created"},
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "date when the commit was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1222,7 +1376,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"doc": "the complexity value for the file change", "type": "long", "name": "complexity"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "files.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the timestamp in UTC that the commit was created"}, "name": "created_date", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"name": "excluded_reason", "doc": "if the file was excluded, the reason", "type": "string"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"type": "float", "name": "license_confidence", "doc": "the license confidence from the detection engine"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit"}, "type": "array", "name": "files"},
+				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"doc": "the files touched by this commit", "type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"name": "binary", "doc": "indicates if the file was detected to be a binary file", "type": "boolean"}, map[string]interface{}{"name": "blanks", "doc": "the number of blank lines in the file", "type": "long"}, map[string]interface{}{"doc": "the number of comment lines in the file", "type": "long", "name": "comments"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"doc": "the complexity value for the file change", "type": "long", "name": "complexity"}, map[string]interface{}{"type": map[string]interface{}{"doc": "the timestamp in UTC that the commit was created", "type": "record", "name": "files.created_date", "fields": []interface{}{map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}}}, "name": "created_date", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"name": "license_confidence", "doc": "the license confidence from the detection engine", "type": "float"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"type": "string", "name": "renamed_from", "doc": "the original file name"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"name": "repo_id", "doc": "the unique id for the repo", "type": "string"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}}},
 			},
 			map[string]interface{}{
 				"name": "files_changed",

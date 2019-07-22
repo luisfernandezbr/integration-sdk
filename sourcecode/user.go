@@ -68,6 +68,36 @@ const (
 	UserUsernameColumn = "username"
 )
 
+// 0 associated_ref_id
+// associated_ref_id {"description":"the ref id associated for this user in another system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"associated_ref_id","relation":false,"subtype":"","type":"string"}
+
+// 1 avatar_url
+// avatar_url {"description":"the url to users avatar","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"avatar_url","relation":false,"subtype":"","type":"string"}
+
+// 2 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 3 email
+// email {"description":"the email for the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"email","relation":false,"subtype":"","type":"string"}
+
+// 4 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 5 member
+// member {"description":"if the user is a member of organization","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"member","relation":false,"subtype":"","type":"boolean"}
+
+// 6 name
+// name {"description":"the name of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// 7 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 8 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 9 type
+// type {"description":"type of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"type","relation":false,"subtype":"","type":"enum"}
+
 // UserType is the enumeration type for type
 type UserType int32
 
@@ -92,6 +122,9 @@ const (
 	// TypeDeletedSpecialUser is the enumeration value for deleted_special_user
 	UserTypeDeletedSpecialUser UserType = 2
 )
+
+// 10 username
+// username {"description":"username of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"username","relation":false,"subtype":"","type":"string"}
 
 // User the source code user
 type User struct {

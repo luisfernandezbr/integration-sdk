@@ -73,6 +73,25 @@ const (
 	UserUsernameColumn = "username"
 )
 
+// 0 active
+// active {"description":"if user is active","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// 1 avatar_url
+// avatar_url {"description":"the url to users avatar","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"avatar_url","relation":false,"subtype":"","type":"string"}
+
+// 2 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 3 emails
+// emails {"description":"the email for the user","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"emails","relation":false,"subtype":"","type":"string"}
+
+// 4 groups
+// groups {"description":"Group names","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"groups","relation":false,"subtype":"","type":"object"}
+
+// group_id {"description":"Group id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"group_id","relation":false,"subtype":"","type":"string"}
+
+// name {"description":"Group name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
 // UserGroups represents the object structure for groups
 type UserGroups struct {
 	// GroupID Group id
@@ -89,6 +108,21 @@ func (o *UserGroups) ToMap() map[string]interface{} {
 		"name": o.Name,
 	}
 }
+
+// 5 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 6 name
+// name {"description":"the name of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// 7 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 8 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 9 username
+// username {"description":"the username of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"username","relation":false,"subtype":"","type":"string"}
 
 // User a user from a source system
 type User struct {
@@ -770,11 +804,11 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "emails",
-				"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"},
+				"type": map[string]interface{}{"name": "emails", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "groups",
-				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"doc": "Group names", "type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"name": "group_id", "doc": "Group id", "type": "string"}, map[string]interface{}{"name": "name", "doc": "Group name", "type": "string"}}}},
+				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"doc": "Group id", "type": "string", "name": "group_id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}},
 			},
 			map[string]interface{}{
 				"name": "id",

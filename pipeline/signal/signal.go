@@ -82,6 +82,18 @@ const (
 	SignalValueColumn = "value"
 )
 
+// 0 active
+// active {"description":"the active state for the signal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// 1 calculated_date
+// calculated_date {"description":"the date when the signal was calculated","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"calculated_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // SignalCalculatedDate represents the object structure for calculated_date
 type SignalCalculatedDate struct {
 	// Epoch the date in epoch format
@@ -102,6 +114,45 @@ func (o *SignalCalculatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 2 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 3 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 4 metadata
+// metadata {"description":"the metadata for the signal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"metadata","relation":false,"subtype":"","type":"string"}
+
+// 5 name
+// name {"description":"the name for the signal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// 6 percentile_rank
+// percentile_rank {"description":"the percentile_rank for the signal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"percentile_rank","relation":false,"subtype":"","type":"double"}
+
+// 7 prior_signal_id
+// prior_signal_id {"description":"the signal for the prior time interval","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"prior_signal_id","relation":false,"subtype":"","type":"string"}
+
+// 8 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 9 ref_key
+// ref_key {"description":"the ref_key for the signal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_key","relation":false,"subtype":"","type":"string"}
+
+// 10 ref_name
+// ref_name {"description":"the name of the entity for which the signal was calculated","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_name","relation":false,"subtype":"","type":"string"}
+
+// 11 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 12 time_unit
+// time_unit {"description":"the time unit for the signal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"time_unit","relation":false,"subtype":"","type":"int"}
+
+// 13 trend
+// trend {"description":"the trend detail for the signal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"trend","relation":false,"subtype":"","type":"string"}
+
+// 14 value
+// value {"description":"the value for the signal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"value","relation":false,"subtype":"","type":"double"}
 
 // Signal signal table contains all the calculated data from the data analytics system
 type Signal struct {
@@ -788,7 +839,7 @@ func GetSignalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "calculated_date",
-				"type": map[string]interface{}{"type": "record", "name": "calculated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the signal was calculated"},
+				"type": map[string]interface{}{"type": "record", "name": "calculated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the signal was calculated"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

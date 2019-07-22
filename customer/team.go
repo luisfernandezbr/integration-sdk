@@ -73,6 +73,50 @@ const (
 	TeamUpdatedAtColumn = "updated_ts"
 )
 
+// 0 active
+// active {"description":"whether the team is tracked in pinpoint","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// 1 activities
+
+// 2 children_ids
+// children_ids {"description":"the children_ids for this team","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"children_ids","relation":true,"subtype":"","type":"string"}
+
+// 3 commits
+
+// 4 created_ts
+// created_ts {"description":"the date the record was created in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"created_ts","relation":false,"subtype":"","type":"int"}
+
+// 5 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 6 description
+// description {"description":"the description of the team","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
+
+// 7 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 8 leaf
+// leaf {"description":"True when team has no children_ids","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"leaf","relation":false,"subtype":"","type":"boolean"}
+
+// 9 name
+// name {"description":"the name of the team","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// 10 parent_ids
+// parent_ids {"description":"the parent_ids for this team","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"parent_ids","relation":true,"subtype":"","type":"string"}
+
+// 11 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 12 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 13 teams
+
+// 14 updated_ts
+// updated_ts {"description":"the date the record was updated in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"updated_ts","relation":false,"subtype":"","type":"int"}
+
+// 15 users
+
 // Team a team is a grouping of one or more users
 type Team struct {
 	// Active whether the team is tracked in pinpoint
@@ -809,7 +853,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "children_ids",
-				"type": map[string]interface{}{"type": "array", "name": "children_ids", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "children_ids"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

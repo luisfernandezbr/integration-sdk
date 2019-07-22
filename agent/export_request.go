@@ -92,49 +92,144 @@ const (
 	ExportRequestUUIDColumn = "uuid"
 )
 
-// ExportRequestAuthorization represents the object structure for authorization
-type ExportRequestAuthorization struct {
+// 0 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 1 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 2 integrations
+// integrations {"description":"The integrations that should be exported and their current configuration","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"integrations","relation":false,"subtype":"admin.Integration","type":"object"}
+
+// active {"description":"If true, the integration is still active","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// authorization {"description":"Authorization information","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"authorization","relation":false,"subtype":"","type":"object"}
+
+// access_token {"description":"Access token","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"access_token","relation":false,"subtype":"","type":"string"}
+
+// refresh_token {"description":"Refresh token","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"refresh_token","relation":false,"subtype":"","type":"string"}
+
+// url {"description":"URL of instance if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
+
+// username {"description":"Username for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"username","relation":false,"subtype":"","type":"string"}
+
+// password {"description":"Password for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"password","relation":false,"subtype":"","type":"string"}
+
+// api_token {"description":"API Token for instance, if relevant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"api_token","relation":false,"subtype":"","type":"string"}
+
+// authorization {"description":"the agents encrypted authorization","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"authorization","relation":false,"subtype":"","type":"string"}
+
+// ExportRequestIntegrationsAuthorization represents the object structure for authorization
+type ExportRequestIntegrationsAuthorization struct {
 	// AccessToken Access token
 	AccessToken *string `json:"access_token" bson:"access_token" yaml:"access_token" faker:"-"`
-	// APIToken API Token for instance, if relevant
-	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
-	// Authorization the agents encrypted authorization
-	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
-	// Password Password for instance, if relevant
-	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
 	// RefreshToken Refresh token
 	RefreshToken *string `json:"refresh_token" bson:"refresh_token" yaml:"refresh_token" faker:"-"`
 	// URL URL of instance if relevant
 	URL *string `json:"url" bson:"url" yaml:"url" faker:"-"`
 	// Username Username for instance, if relevant
 	Username *string `json:"username" bson:"username" yaml:"username" faker:"-"`
+	// Password Password for instance, if relevant
+	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
+	// APIToken API Token for instance, if relevant
+	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
+	// Authorization the agents encrypted authorization
+	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 }
 
-func (o *ExportRequestAuthorization) ToMap() map[string]interface{} {
+func (o *ExportRequestIntegrationsAuthorization) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// AccessToken Access token
 		"access_token": o.AccessToken,
-		// APIToken API Token for instance, if relevant
-		"api_token": o.APIToken,
-		// Authorization the agents encrypted authorization
-		"authorization": o.Authorization,
-		// Password Password for instance, if relevant
-		"password": o.Password,
 		// RefreshToken Refresh token
 		"refresh_token": o.RefreshToken,
 		// URL URL of instance if relevant
 		"url": o.URL,
 		// Username Username for instance, if relevant
 		"username": o.Username,
+		// Password Password for instance, if relevant
+		"password": o.Password,
+		// APIToken API Token for instance, if relevant
+		"api_token": o.APIToken,
+		// Authorization the agents encrypted authorization
+		"authorization": o.Authorization,
 	}
 }
+
+// errored {"description":"If authorization failed by the agent","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"errored","relation":false,"subtype":"","type":"boolean"}
+
+// exclusions {"description":"The exclusion list for this integration","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"exclusions","relation":false,"subtype":"","type":"string"}
+
+// name {"description":"The user friendly name of the integration","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// progress {"description":"Agent processing progress","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"progress","relation":false,"subtype":"","type":"object"}
+
+// message {"description":"Any relevant messaging during processing","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+
+// total {"description":"The total amount to be processed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"total","relation":false,"subtype":"","type":"int"}
+
+// completed {"description":"The total amount processed thus far","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"completed","relation":false,"subtype":"","type":"int"}
+
+// ExportRequestIntegrationsProgress represents the object structure for progress
+type ExportRequestIntegrationsProgress struct {
+	// Message Any relevant messaging during processing
+	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	// Total The total amount to be processed
+	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
+	// Completed The total amount processed thus far
+	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
+}
+
+func (o *ExportRequestIntegrationsProgress) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Message Any relevant messaging during processing
+		"message": o.Message,
+		// Total The total amount to be processed
+		"total": o.Total,
+		// Completed The total amount processed thus far
+		"completed": o.Completed,
+	}
+}
+
+// validated {"description":"If the validation has been run against this instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"validated","relation":false,"subtype":"","type":"boolean"}
+
+// validated_date {"description":"Date when validated","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"validated_date","relation":false,"subtype":"","type":"object"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// ExportRequestIntegrationsValidatedDate represents the object structure for validated_date
+type ExportRequestIntegrationsValidatedDate struct {
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+}
+
+func (o *ExportRequestIntegrationsValidatedDate) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
+		// Epoch the date in epoch format
+		"epoch": o.Epoch,
+		// Offset the timezone offset from GMT
+		"offset": o.Offset,
+	}
+}
+
+// validation_message {"description":"The validation message from the agent","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"validation_message","relation":false,"subtype":"","type":"string"}
 
 // ExportRequestIntegrations represents the object structure for integrations
 type ExportRequestIntegrations struct {
 	// Active If true, the integration is still active
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
-	Authorization ExportRequestAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization ExportRequestIntegrationsAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// Errored If authorization failed by the agent
 	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
 	// Exclusions The exclusion list for this integration
@@ -142,11 +237,11 @@ type ExportRequestIntegrations struct {
 	// Name The user friendly name of the integration
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
-	Progress ExportRequestProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	Progress ExportRequestIntegrationsProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
 	// ValidatedDate Date when validated
-	ValidatedDate ExportRequestValidatedDate `json:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
+	ValidatedDate ExportRequestIntegrationsValidatedDate `json:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
 	// ValidationMessage The validation message from the agent
 	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
 }
@@ -174,6 +269,12 @@ func (o *ExportRequestIntegrations) ToMap() map[string]interface{} {
 	}
 }
 
+// 3 job_id
+// job_id {"description":"The job ID","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"job_id","relation":false,"subtype":"","type":"string"}
+
+// 4 location
+// location {"description":"The location of this integration (on-premise / private or cloud)","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"location","relation":false,"subtype":"","type":"enum"}
+
 // ExportRequestLocation is the enumeration type for location
 type ExportRequestLocation int32
 
@@ -195,26 +296,20 @@ const (
 	ExportRequestLocationCloud ExportRequestLocation = 1
 )
 
-// ExportRequestProgress represents the object structure for progress
-type ExportRequestProgress struct {
-	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
-	// Message Any relevant messaging during processing
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
-	// Total The total amount to be processed
-	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
-}
+// 5 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
 
-func (o *ExportRequestProgress) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Completed The total amount processed thus far
-		"completed": o.Completed,
-		// Message Any relevant messaging during processing
-		"message": o.Message,
-		// Total The total amount to be processed
-		"total": o.Total,
-	}
-}
+// 6 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 7 request_date
+// request_date {"description":"the date when the request was made","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"request_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ExportRequestRequestDate represents the object structure for request_date
 type ExportRequestRequestDate struct {
@@ -237,26 +332,11 @@ func (o *ExportRequestRequestDate) ToMap() map[string]interface{} {
 	}
 }
 
-// ExportRequestValidatedDate represents the object structure for validated_date
-type ExportRequestValidatedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
+// 8 upload_url
+// upload_url {"description":"The one time upload URL to use for uploading a job to the Pinpoint cloud","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"upload_url","relation":false,"subtype":"","type":"string"}
 
-func (o *ExportRequestValidatedDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
-	}
-}
+// 9 uuid
+// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
 
 // ExportRequest an agent action to request an export
 type ExportRequest struct {
@@ -417,26 +497,6 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 		}
 		return arr
 
-	case ExportRequestAuthorization:
-		vv := o.(ExportRequestAuthorization)
-		return vv.ToMap()
-	case *ExportRequestAuthorization:
-		return map[string]interface{}{
-			"agent.authorization": (*o.(*ExportRequestAuthorization)).ToMap(),
-		}
-	case []ExportRequestAuthorization:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportRequestAuthorization) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportRequestAuthorization:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportRequestAuthorization)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ExportRequestIntegrations:
 		vv := o.(ExportRequestIntegrations)
 		return vv.ToMap()
@@ -471,26 +531,6 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 		return map[string]string{
 			"agent.location": (o.(*ExportRequestLocation)).String(),
 		}
-	case ExportRequestProgress:
-		vv := o.(ExportRequestProgress)
-		return vv.ToMap()
-	case *ExportRequestProgress:
-		return map[string]interface{}{
-			"agent.progress": (*o.(*ExportRequestProgress)).ToMap(),
-		}
-	case []ExportRequestProgress:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportRequestProgress) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportRequestProgress:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportRequestProgress)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ExportRequestRequestDate:
 		vv := o.(ExportRequestRequestDate)
 		return vv.ToMap()
@@ -507,26 +547,6 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *[]ExportRequestRequestDate:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]ExportRequestRequestDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case ExportRequestValidatedDate:
-		vv := o.(ExportRequestValidatedDate)
-		return vv.ToMap()
-	case *ExportRequestValidatedDate:
-		return map[string]interface{}{
-			"agent.validated_date": (*o.(*ExportRequestValidatedDate)).ToMap(),
-		}
-	case []ExportRequestValidatedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportRequestValidatedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportRequestValidatedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportRequestValidatedDate)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -1010,7 +1030,7 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integrations",
-				"type": map[string]interface{}{"type": "array", "name": "integrations", "items": map[string]interface{}{"doc": "The integrations that should be exported and their current configuration", "type": "record", "name": "integrations", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"doc": "Username for instance, if relevant", "type": "string", "name": "username"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"name": "errored", "doc": "If authorization failed by the agent", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"items": "string", "type": "array", "name": "exclusions"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"name": "integrations.progress", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}, map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}}, "doc": "Agent processing progress", "type": "record"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"name": "validated_date", "doc": "Date when validated", "type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Date when validated", "type": "record", "name": "integrations.validated_date"}}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}}},
+				"type": map[string]interface{}{"type": "array", "name": "integrations", "items": map[string]interface{}{"name": "integrations", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"doc": "Refresh token", "type": "string", "name": "refresh_token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"name": "completed", "doc": "The total amount processed thus far", "type": "long"}}, "doc": "Agent processing progress", "type": "record", "name": "integrations.progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integrations.validated_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}, map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "The integrations that should be exported and their current configuration", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "job_id",
@@ -1036,7 +1056,7 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name":    "upload_url",

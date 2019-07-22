@@ -80,6 +80,15 @@ const (
 	ChangelogUserIDColumn = "user_id"
 )
 
+// 0 created_date
+// created_date {"description":"the date when this change was created","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // ChangelogCreatedDate represents the object structure for created_date
 type ChangelogCreatedDate struct {
 	// Epoch the date in epoch format
@@ -100,6 +109,45 @@ func (o *ChangelogCreatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 1 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 2 field
+// field {"description":"name of the field that was changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"field","relation":false,"subtype":"","type":"string"}
+
+// 3 field_type
+// field_type {"description":"type of the field that was changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"field_type","relation":false,"subtype":"","type":"string"}
+
+// 4 from
+// from {"description":"id of the change from","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"from","relation":false,"subtype":"","type":"string"}
+
+// 5 from_string
+// from_string {"description":"name of the change from","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"from_string","relation":false,"subtype":"","type":"string"}
+
+// 6 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 7 issue_id
+// issue_id {"description":"id of the issue","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"issue_id","relation":false,"subtype":"","type":"string"}
+
+// 8 ordinal
+// ordinal {"description":"so we can order correctly in queries since dates could be equal","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ordinal","relation":false,"subtype":"","type":"int"}
+
+// 9 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 10 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 11 to
+// to {"description":"id of the change to","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"to","relation":false,"subtype":"","type":"string"}
+
+// 12 to_string
+// to_string {"description":"name of the change to","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"to_string","relation":false,"subtype":"","type":"string"}
+
+// 13 user_id
+// user_id {"description":"id of the user of this change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"user_id","relation":false,"subtype":"","type":"string"}
 
 // Changelog change log
 type Changelog struct {
@@ -766,7 +814,7 @@ func GetChangelogAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when this change was created"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when this change was created", "type": "record", "name": "created_date"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

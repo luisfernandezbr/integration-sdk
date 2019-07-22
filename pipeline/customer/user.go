@@ -57,24 +57,8 @@ const (
 	UserCostCenterIDColumn = "cost_center_id"
 	// UserCustomerIDColumn is the customer_id column name
 	UserCustomerIDColumn = "customer_id"
-	// UserDeletedDateColumn is the deleted_date column name
-	UserDeletedDateColumn = "deleted_date"
-	// UserDeletedDateColumnEpochColumn is the epoch column property of the DeletedDate name
-	UserDeletedDateColumnEpochColumn = "deleted_date->epoch"
-	// UserDeletedDateColumnOffsetColumn is the offset column property of the DeletedDate name
-	UserDeletedDateColumnOffsetColumn = "deleted_date->offset"
-	// UserDeletedDateColumnRfc3339Column is the rfc3339 column property of the DeletedDate name
-	UserDeletedDateColumnRfc3339Column = "deleted_date->rfc3339"
 	// UserEmailColumn is the email column name
 	UserEmailColumn = "email"
-	// UserHiredDateColumn is the hired_date column name
-	UserHiredDateColumn = "hired_date"
-	// UserHiredDateColumnEpochColumn is the epoch column property of the HiredDate name
-	UserHiredDateColumnEpochColumn = "hired_date->epoch"
-	// UserHiredDateColumnOffsetColumn is the offset column property of the HiredDate name
-	UserHiredDateColumnOffsetColumn = "hired_date->offset"
-	// UserHiredDateColumnRfc3339Column is the rfc3339 column property of the HiredDate name
-	UserHiredDateColumnRfc3339Column = "hired_date->rfc3339"
 	// UserIDColumn is the id column name
 	UserIDColumn = "id"
 	// UserLocationColumn is the location column name
@@ -95,19 +79,35 @@ const (
 	UserRoleIdsColumn = "role_ids"
 	// UserTeamIdsColumn is the team_ids column name
 	UserTeamIdsColumn = "team_ids"
-	// UserTerminatedDateColumn is the terminated_date column name
-	UserTerminatedDateColumn = "terminated_date"
-	// UserTerminatedDateColumnEpochColumn is the epoch column property of the TerminatedDate name
-	UserTerminatedDateColumnEpochColumn = "terminated_date->epoch"
-	// UserTerminatedDateColumnOffsetColumn is the offset column property of the TerminatedDate name
-	UserTerminatedDateColumnOffsetColumn = "terminated_date->offset"
-	// UserTerminatedDateColumnRfc3339Column is the rfc3339 column property of the TerminatedDate name
-	UserTerminatedDateColumnRfc3339Column = "terminated_date->rfc3339"
 	// UserTitleColumn is the title column name
 	UserTitleColumn = "title"
 	// UserTrackableColumn is the trackable column name
 	UserTrackableColumn = "trackable"
 )
+
+// 0 active
+// active {"description":"if true, the user is active and able to login","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// 1 avatar_url
+// avatar_url {"description":"the user avatar url","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"avatar_url","relation":false,"subtype":"","type":"string"}
+
+// 2 cost
+// cost {"description":"the cost of this user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"cost","relation":false,"subtype":"","type":"float"}
+
+// 3 cost_center_id
+// cost_center_id {"description":"the id of the cost center","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"cost_center_id","relation":true,"subtype":"","type":"string"}
+
+// 4 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 5 deleted_date
+// deleted_date {"description":"when the user record was deleted in epoch timestamp","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"deleted_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // UserDeletedDate represents the object structure for deleted_date
 type UserDeletedDate struct {
@@ -130,6 +130,18 @@ func (o *UserDeletedDate) ToMap() map[string]interface{} {
 	}
 }
 
+// 6 email
+// email {"description":"the email of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"email","relation":false,"subtype":"","type":"string"}
+
+// 7 hired_date
+// hired_date {"description":"when the user was hired in epoch timestamp","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"hired_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // UserHiredDate represents the object structure for hired_date
 type UserHiredDate struct {
 	// Epoch the date in epoch format
@@ -151,6 +163,45 @@ func (o *UserHiredDate) ToMap() map[string]interface{} {
 	}
 }
 
+// 8 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 9 location
+// location {"description":"the location of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"location","relation":false,"subtype":"","type":"string"}
+
+// 10 manager_id
+// manager_id {"description":"the manager user id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"manager_id","relation":true,"subtype":"","type":"string"}
+
+// 11 name
+// name {"description":"name of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// 12 owner
+// owner {"description":"if true, the user is an owner of the account","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"owner","relation":false,"subtype":"","type":"boolean"}
+
+// 13 primary_team_id
+// primary_team_id {"description":"the team id of the user's primary team","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"primary_team_id","relation":true,"subtype":"","type":"string"}
+
+// 14 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 15 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 16 role_ids
+// role_ids {"description":"the auth role ids for the user","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"role_ids","relation":true,"subtype":"","type":"string"}
+
+// 17 team_ids
+// team_ids {"description":"the team ids that the user is part of","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"team_ids","relation":true,"subtype":"","type":"string"}
+
+// 18 terminated_date
+// terminated_date {"description":"when the user was terminated in epoch timestamp","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"terminated_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // UserTerminatedDate represents the object structure for terminated_date
 type UserTerminatedDate struct {
 	// Epoch the date in epoch format
@@ -171,6 +222,12 @@ func (o *UserTerminatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 19 title
+// title {"description":"the title of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"title","relation":false,"subtype":"","type":"string"}
+
+// 20 trackable
+// trackable {"description":"if true, the user is trackable in the pinpoint system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"trackable","relation":false,"subtype":"","type":"boolean"}
 
 // User the enriched customer user record
 type User struct {
@@ -658,9 +715,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"cost":            toUserObject(o.Cost, isavro, false, "float"),
 		"cost_center_id":  toUserObject(o.CostCenterID, isavro, true, "string"),
 		"customer_id":     toUserObject(o.CustomerID, isavro, false, "string"),
-		"deleted_date":    toUserObject(o.DeletedDate, isavro, false, "deleted_date"),
 		"email":           toUserObject(o.Email, isavro, false, "string"),
-		"hired_date":      toUserObject(o.HiredDate, isavro, false, "hired_date"),
 		"id":              toUserObject(o.ID, isavro, false, "string"),
 		"location":        toUserObject(o.Location, isavro, true, "string"),
 		"manager_id":      toUserObject(o.ManagerID, isavro, true, "string"),
@@ -671,7 +726,6 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":        toUserObject(o.RefType, isavro, false, "string"),
 		"role_ids":        toUserObject(o.RoleIds, isavro, false, "role_ids"),
 		"team_ids":        toUserObject(o.TeamIds, isavro, false, "team_ids"),
-		"terminated_date": toUserObject(o.TerminatedDate, isavro, false, "terminated_date"),
 		"title":           toUserObject(o.Title, isavro, true, "string"),
 		"trackable":       toUserObject(o.Trackable, isavro, false, "boolean"),
 		"hashcode":        toUserObject(o.Hashcode, isavro, false, "string"),
@@ -749,28 +803,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["deleted_date"].(UserDeletedDate); ok {
-		o.DeletedDate = val
-	} else {
-		val := kv["deleted_date"]
-		if val == nil {
-			o.DeletedDate = UserDeletedDate{}
-		} else {
-			o.DeletedDate = UserDeletedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.DeletedDate)
-
-		}
-	}
 	if val, ok := kv["email"].(string); ok {
 		o.Email = val
 	} else {
@@ -782,28 +814,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.Email = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["hired_date"].(UserHiredDate); ok {
-		o.HiredDate = val
-	} else {
-		val := kv["hired_date"]
-		if val == nil {
-			o.HiredDate = UserHiredDate{}
-		} else {
-			o.HiredDate = UserHiredDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.HiredDate)
-
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -1016,28 +1026,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	if o.TeamIds == nil {
 		o.TeamIds = make([]string, 0)
 	}
-	if val, ok := kv["terminated_date"].(UserTerminatedDate); ok {
-		o.TerminatedDate = val
-	} else {
-		val := kv["terminated_date"]
-		if val == nil {
-			o.TerminatedDate = UserTerminatedDate{}
-		} else {
-			o.TerminatedDate = UserTerminatedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.TerminatedDate)
-
-		}
-	}
 	if val, ok := kv["title"].(*string); ok {
 		o.Title = val
 	} else if val, ok := kv["title"].(string); ok {
@@ -1075,9 +1063,7 @@ func (o *User) Hash() string {
 	args = append(args, o.Cost)
 	args = append(args, o.CostCenterID)
 	args = append(args, o.CustomerID)
-	args = append(args, o.DeletedDate)
 	args = append(args, o.Email)
-	args = append(args, o.HiredDate)
 	args = append(args, o.ID)
 	args = append(args, o.Location)
 	args = append(args, o.ManagerID)
@@ -1088,7 +1074,6 @@ func (o *User) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RoleIds)
 	args = append(args, o.TeamIds)
-	args = append(args, o.TerminatedDate)
 	args = append(args, o.Title)
 	args = append(args, o.Trackable)
 	o.Hashcode = hash.Values(args...)
@@ -1129,16 +1114,8 @@ func GetUserAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "deleted_date",
-				"type": map[string]interface{}{"doc": "when the user record was deleted in epoch timestamp", "type": "record", "name": "deleted_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
-			},
-			map[string]interface{}{
 				"name": "email",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hired_date",
-				"type": map[string]interface{}{"type": "record", "name": "hired_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1182,10 +1159,6 @@ func GetUserAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "team_ids",
 				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
-			},
-			map[string]interface{}{
-				"name": "terminated_date",
-				"type": map[string]interface{}{"doc": "when the user was terminated in epoch timestamp", "type": "record", "name": "terminated_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name":    "title",

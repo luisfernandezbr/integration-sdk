@@ -57,14 +57,6 @@ const (
 	UserResponseDistroColumn = "distro"
 	// UserResponseErrorColumn is the error column name
 	UserResponseErrorColumn = "error"
-	// UserResponseEventDateColumn is the event_date column name
-	UserResponseEventDateColumn = "event_date"
-	// UserResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	UserResponseEventDateColumnEpochColumn = "event_date->epoch"
-	// UserResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	UserResponseEventDateColumnOffsetColumn = "event_date->offset"
-	// UserResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	UserResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// UserResponseFreeSpaceColumn is the free_space column name
 	UserResponseFreeSpaceColumn = "free_space"
 	// UserResponseGoVersionColumn is the go_version column name
@@ -113,6 +105,30 @@ const (
 	UserResponseVersionColumn = "version"
 )
 
+// 0 architecture
+// architecture {"description":"the architecture of the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"architecture","relation":false,"subtype":"","type":"string"}
+
+// 1 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 2 data
+// data {"description":"extra data that is specific about this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"data","relation":false,"subtype":"","type":"string"}
+
+// 3 distro
+// distro {"description":"the agent os distribution","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"distro","relation":false,"subtype":"","type":"string"}
+
+// 4 error
+// error {"description":"an error message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
+
+// 5 event_date
+// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // UserResponseEventDate represents the object structure for event_date
 type UserResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -134,22 +150,47 @@ func (o *UserResponseEventDate) ToMap() map[string]interface{} {
 	}
 }
 
-// UserResponseGroups represents the object structure for groups
-type UserResponseGroups struct {
-	// GroupID Group id
-	GroupID string `json:"group_id" bson:"group_id" yaml:"group_id" faker:"-"`
-	// Name Group name
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
-}
+// 6 free_space
+// free_space {"description":"the amount of free space in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"free_space","relation":false,"subtype":"","type":"long"}
 
-func (o *UserResponseGroups) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// GroupID Group id
-		"group_id": o.GroupID,
-		// Name Group name
-		"name": o.Name,
-	}
-}
+// 7 go_version
+// go_version {"description":"the go version that the agent build was built with","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"go_version","relation":false,"subtype":"","type":"string"}
+
+// 8 hostname
+// hostname {"description":"the agent hostname","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"hostname","relation":false,"subtype":"","type":"string"}
+
+// 9 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 10 integration_id
+// integration_id {"description":"the integration id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"integration_id","relation":false,"subtype":"","type":"string"}
+
+// 11 memory
+// memory {"description":"the amount of memory in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"memory","relation":false,"subtype":"","type":"long"}
+
+// 12 message
+// message {"description":"a message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+
+// 13 num_cpu
+// num_cpu {"description":"the number of CPU the agent is running","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"num_cpu","relation":false,"subtype":"","type":"int"}
+
+// 14 os
+// os {"description":"the agent operating system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"os","relation":false,"subtype":"","type":"string"}
+
+// 15 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 16 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 17 request_id
+// request_id {"description":"the request id that this response is correlated to","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"request_id","relation":false,"subtype":"","type":"string"}
+
+// 18 success
+// success {"description":"if the response was successful","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"success","relation":false,"subtype":"","type":"boolean"}
+
+// 19 type
+// type {"description":"the type of event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"type","relation":false,"subtype":"","type":"enum"}
 
 // UserResponseType is the enumeration type for type
 type UserResponseType int32
@@ -196,6 +237,42 @@ const (
 	UserResponseTypeUser UserResponseType = 7
 )
 
+// 20 users
+// users {"description":"the exported users","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"users","relation":false,"subtype":"pipeline.integration.User","type":"object"}
+
+// active {"description":"if user is active","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+
+// avatar_url {"description":"the url to users avatar","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"avatar_url","relation":false,"subtype":"","type":"string"}
+
+// emails {"description":"the email for the user","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"emails","relation":false,"subtype":"","type":"string"}
+
+// groups {"description":"Group names","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"groups","relation":false,"subtype":"","type":"object"}
+
+// group_id {"description":"Group id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"group_id","relation":false,"subtype":"","type":"string"}
+
+// name {"description":"Group name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// UserResponseUsersGroups represents the object structure for groups
+type UserResponseUsersGroups struct {
+	// GroupID Group id
+	GroupID string `json:"group_id" bson:"group_id" yaml:"group_id" faker:"-"`
+	// Name Group name
+	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+}
+
+func (o *UserResponseUsersGroups) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		// GroupID Group id
+		"group_id": o.GroupID,
+		// Name Group name
+		"name": o.Name,
+	}
+}
+
+// name {"description":"the name of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// username {"description":"the username of the user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"username","relation":false,"subtype":"","type":"string"}
+
 // UserResponseUsers represents the object structure for users
 type UserResponseUsers struct {
 	// Active if user is active
@@ -205,7 +282,7 @@ type UserResponseUsers struct {
 	// Emails the email for the user
 	Emails []string `json:"emails" bson:"emails" yaml:"emails" faker:"-"`
 	// Groups Group names
-	Groups []UserResponseGroups `json:"groups" bson:"groups" yaml:"groups" faker:"-"`
+	Groups []UserResponseUsersGroups `json:"groups" bson:"groups" yaml:"groups" faker:"-"`
 	// Name the name of the user
 	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
 	// Username the username of the user
@@ -228,6 +305,12 @@ func (o *UserResponseUsers) ToMap() map[string]interface{} {
 		"username": o.Username,
 	}
 }
+
+// 21 uuid
+// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
+
+// 22 version
+// version {"description":"the agent version","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"version","relation":false,"subtype":"","type":"string"}
 
 // UserResponse an agent response to an action request adding user(s)
 type UserResponse struct {
@@ -430,26 +513,6 @@ func toUserResponseObject(o interface{}, isavro bool, isoptional bool, avrotype 
 	case *[]UserResponseEventDate:
 		arr := make([]interface{}, 0)
 		vv := o.(*[]UserResponseEventDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case UserResponseGroups:
-		vv := o.(UserResponseGroups)
-		return vv.ToMap()
-	case *UserResponseGroups:
-		return map[string]interface{}{
-			"agent.groups": (*o.(*UserResponseGroups)).ToMap(),
-		}
-	case []UserResponseGroups:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]UserResponseGroups) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]UserResponseGroups:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]UserResponseGroups)
 		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
@@ -731,7 +794,6 @@ func (o *UserResponse) ToMap(avro ...bool) map[string]interface{} {
 		"data":           toUserResponseObject(o.Data, isavro, true, "string"),
 		"distro":         toUserResponseObject(o.Distro, isavro, false, "string"),
 		"error":          toUserResponseObject(o.Error, isavro, true, "string"),
-		"event_date":     toUserResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":     toUserResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":     toUserResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":       toUserResponseObject(o.Hostname, isavro, false, "string"),
@@ -828,28 +890,6 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["event_date"].(UserResponseEventDate); ok {
-		o.EventDate = val
-	} else {
-		val := kv["event_date"]
-		if val == nil {
-			o.EventDate = UserResponseEventDate{}
-		} else {
-			o.EventDate = UserResponseEventDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.EventDate)
-
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -1146,7 +1186,6 @@ func (o *UserResponse) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
-	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1200,10 +1239,6 @@ func GetUserResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1269,7 +1304,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "users",
-				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"name": "emails", "doc": "the email for the user", "type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}}, map[string]interface{}{"doc": "Group names", "type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"doc": "Group names", "type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}}}, "name": "groups"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users"}},
+				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"type": map[string]interface{}{"name": "emails", "items": "string", "type": "array"}, "name": "emails", "doc": "the email for the user"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}}, "name": "groups", "doc": "Group names"}, map[string]interface{}{"name": "name", "doc": "the name of the user", "type": "string"}, map[string]interface{}{"doc": "the username of the user", "type": "string", "name": "username"}}, "doc": "the exported users"}},
 			},
 			map[string]interface{}{
 				"name": "uuid",

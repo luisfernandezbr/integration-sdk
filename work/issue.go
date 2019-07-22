@@ -114,6 +114,18 @@ const (
 	IssueURLColumn = "url"
 )
 
+// 0 assignee_ref_id
+// assignee_ref_id {"description":"user id of the assignee","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"assignee_ref_id","relation":false,"subtype":"","type":"string"}
+
+// 1 created_date
+// created_date {"description":"the date that the issue was created","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // IssueCreatedDate represents the object structure for created_date
 type IssueCreatedDate struct {
 	// Epoch the date in epoch format
@@ -134,6 +146,18 @@ func (o *IssueCreatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 2 creator_ref_id
+// creator_ref_id {"description":"user id of the creator","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"creator_ref_id","relation":false,"subtype":"","type":"string"}
+
+// 3 customFields
+// customFields {"description":"list of custom fields and their values","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"customFields","relation":false,"subtype":"","type":"object"}
+
+// id {"description":"the id of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// name {"description":"the name of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// value {"description":"the value of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"value","relation":false,"subtype":"","type":"string"}
 
 // IssueCustomFields represents the object structure for customFields
 type IssueCustomFields struct {
@@ -156,6 +180,18 @@ func (o *IssueCustomFields) ToMap() map[string]interface{} {
 	}
 }
 
+// 4 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 5 due_date
+// due_date {"description":"due date of the issue","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"due_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // IssueDueDate represents the object structure for due_date
 type IssueDueDate struct {
 	// Epoch the date in epoch format
@@ -177,6 +213,54 @@ func (o *IssueDueDate) ToMap() map[string]interface{} {
 	}
 }
 
+// 6 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 7 identifier
+// identifier {"description":"the common identifier for the issue","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"identifier","relation":false,"subtype":"","type":"string"}
+
+// 8 parent_id
+// parent_id {"description":"parent issue id, if any","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"parent_id","relation":true,"subtype":"","type":"string"}
+
+// 9 priority
+// priority {"description":"priority of the issue","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"priority","relation":false,"subtype":"","type":"string"}
+
+// 10 project_id
+// project_id {"description":"unique project id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"project_id","relation":true,"subtype":"","type":"string"}
+
+// 11 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 12 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 13 reporter_ref_id
+// reporter_ref_id {"description":"user id of the reporter","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"reporter_ref_id","relation":false,"subtype":"","type":"string"}
+
+// 14 resolution
+// resolution {"description":"resolution of the issue","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"resolution","relation":false,"subtype":"","type":"string"}
+
+// 15 status
+// status {"description":"status of the issue","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"status","relation":false,"subtype":"","type":"string"}
+
+// 16 tags
+// tags {"description":"tags on the issue","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"tags","relation":false,"subtype":"","type":"string"}
+
+// 17 title
+// title {"description":"the issue title","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"title","relation":false,"subtype":"","type":"string"}
+
+// 18 type
+// type {"description":"type of issue","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"type","relation":false,"subtype":"","type":"string"}
+
+// 19 updated_date
+// updated_date {"description":"the date that the issue was updated","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"updated_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // IssueUpdatedDate represents the object structure for updated_date
 type IssueUpdatedDate struct {
 	// Epoch the date in epoch format
@@ -197,6 +281,9 @@ func (o *IssueUpdatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 20 url
+// url {"description":"the url to the issue page","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
 
 // Issue the issue is a specific work item for a project
 type Issue struct {
@@ -1146,7 +1233,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the issue was created"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date that the issue was created", "type": "record", "name": "created_date"},
 			},
 			map[string]interface{}{
 				"name": "creator_ref_id",
@@ -1154,7 +1241,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values", "type": "record", "name": "customFields"}},
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"name": "customFields", "fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the id of the custom field", "type": "string"}, map[string]interface{}{"doc": "the name of the custom field", "type": "string", "name": "name"}, map[string]interface{}{"doc": "the value of the custom field", "type": "string", "name": "value"}}, "doc": "list of custom fields and their values", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1162,7 +1249,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "due_date",
-				"type": map[string]interface{}{"type": "record", "name": "due_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "due date of the issue"},
+				"type": map[string]interface{}{"type": "record", "name": "due_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "due date of the issue"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1206,7 +1293,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "title",
@@ -1218,7 +1305,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_date",
-				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the issue was updated"},
+				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the issue was updated"},
 			},
 			map[string]interface{}{
 				"name": "url",

@@ -75,6 +75,45 @@ const (
 	BranchRepoIDColumn = "repo_id"
 )
 
+// 0 ahead_default_count
+// ahead_default_count {"description":"ahead default count","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ahead_default_count","relation":false,"subtype":"","type":"int"}
+
+// 1 behind_default_count
+// behind_default_count {"description":"behind default count","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"behind_default_count","relation":false,"subtype":"","type":"int"}
+
+// 2 branched_from_commits
+// branched_from_commits {"description":"branched from commits","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"branched_from_commits","relation":false,"subtype":"","type":"string"}
+
+// 3 commits
+// commits {"description":"list of commits on this branch","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"commits","relation":false,"subtype":"","type":"string"}
+
+// 4 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 5 default
+// default {"description":"wether is the default branch or not","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"default","relation":false,"subtype":"","type":"boolean"}
+
+// 6 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 7 merge_commit
+// merge_commit {"description":"commit from the merge","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"merge_commit","relation":false,"subtype":"","type":"string"}
+
+// 8 merged
+// merged {"description":"wether it has been merged","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"merged","relation":false,"subtype":"","type":"boolean"}
+
+// 9 name
+// name {"description":"name of the branch","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+
+// 10 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 11 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 12 repo_id
+// repo_id {"description":"the unique id for the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"repo_id","relation":true,"subtype":"","type":"string"}
+
 // Branch git branches
 type Branch struct {
 	// AheadDefaultCount ahead default count
@@ -780,7 +819,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "commits"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

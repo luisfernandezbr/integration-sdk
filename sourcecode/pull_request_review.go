@@ -69,6 +69,15 @@ const (
 	PullRequestReviewUserRefIDColumn = "user_ref_id"
 )
 
+// 0 created_date
+// created_date {"description":"the timestamp in UTC that the review was created","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
+
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+
 // PullRequestReviewCreatedDate represents the object structure for created_date
 type PullRequestReviewCreatedDate struct {
 	// Epoch the date in epoch format
@@ -89,6 +98,30 @@ func (o *PullRequestReviewCreatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
+
+// 1 customer_id
+// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+
+// 2 id
+// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+
+// 3 pull_request_id
+// pull_request_id {"description":"the pull request this review is associated with","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"pull_request_id","relation":true,"subtype":"","type":"string"}
+
+// 4 ref_id
+// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
+
+// 5 ref_type
+// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
+
+// 6 repo_id
+// repo_id {"description":"the unique id for the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"repo_id","relation":false,"subtype":"","type":"string"}
+
+// 7 state
+// state {"description":"the state of the review","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"state","relation":false,"subtype":"","type":"string"}
+
+// 8 user_ref_id
+// user_ref_id {"description":"the user ref_id in the source system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"user_ref_id","relation":false,"subtype":"","type":"string"}
 
 // PullRequestReview the review for a given pull request
 type PullRequestReview struct {
@@ -679,7 +712,7 @@ func GetPullRequestReviewAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the review was created"},
+				"type": map[string]interface{}{"doc": "the timestamp in UTC that the review was created", "type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
