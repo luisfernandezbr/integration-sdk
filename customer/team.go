@@ -110,12 +110,10 @@ const (
 // 12 ref_type
 // ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
 
-// 13 teams
-
-// 14 updated_ts
+// 13 updated_ts
 // updated_ts {"description":"the date the record was updated in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"updated_ts","relation":false,"subtype":"","type":"int"}
 
-// 15 users
+// 14 users
 
 // Team a team is a grouping of one or more users
 type Team struct {
@@ -853,7 +851,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "children_ids",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "children_ids"},
+				"type": map[string]interface{}{"type": "array", "name": "children_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
@@ -881,7 +879,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "parent_ids",
-				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "parent_ids"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

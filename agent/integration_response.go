@@ -57,6 +57,14 @@ const (
 	IntegrationResponseDistroColumn = "distro"
 	// IntegrationResponseErrorColumn is the error column name
 	IntegrationResponseErrorColumn = "error"
+	// IntegrationResponseEventDateColumn is the event_date column name
+	IntegrationResponseEventDateColumn = "event_date"
+	// IntegrationResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	IntegrationResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// IntegrationResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	IntegrationResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// IntegrationResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	IntegrationResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// IntegrationResponseFreeSpaceColumn is the free_space column name
 	IntegrationResponseFreeSpaceColumn = "free_space"
 	// IntegrationResponseGoVersionColumn is the go_version column name
@@ -110,7 +118,7 @@ const (
 // error {"description":"an error message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
 
 // 6 event_date
-// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
+// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
 
 // epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
@@ -689,6 +697,7 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 		"data":           toIntegrationResponseObject(o.Data, isavro, true, "string"),
 		"distro":         toIntegrationResponseObject(o.Distro, isavro, false, "string"),
 		"error":          toIntegrationResponseObject(o.Error, isavro, true, "string"),
+		"event_date":     toIntegrationResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":     toIntegrationResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":     toIntegrationResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":       toIntegrationResponseObject(o.Hostname, isavro, false, "string"),
@@ -797,6 +806,28 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["event_date"].(IntegrationResponseEventDate); ok {
+		o.EventDate = val
+	} else {
+		val := kv["event_date"]
+		if val == nil {
+			o.EventDate = IntegrationResponseEventDate{}
+		} else {
+			o.EventDate = IntegrationResponseEventDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.EventDate)
+
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -1048,6 +1079,7 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
+	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1104,6 +1136,10 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "event_date",
+				"type": map[string]interface{}{"name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "free_space",

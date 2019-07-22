@@ -55,14 +55,6 @@ const (
 	EnabledDistroColumn = "distro"
 	// EnabledErrorColumn is the error column name
 	EnabledErrorColumn = "error"
-	// EnabledEventDateColumn is the event_date column name
-	EnabledEventDateColumn = "event_date"
-	// EnabledEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	EnabledEventDateColumnEpochColumn = "event_date->epoch"
-	// EnabledEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	EnabledEventDateColumnOffsetColumn = "event_date->offset"
-	// EnabledEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	EnabledEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// EnabledFreeSpaceColumn is the free_space column name
 	EnabledFreeSpaceColumn = "free_space"
 	// EnabledGoVersionColumn is the go_version column name
@@ -111,7 +103,7 @@ const (
 // error {"description":"an error message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
 
 // 5 event_date
-// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
+// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
 
 // epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
@@ -682,7 +674,6 @@ func (o *Enabled) ToMap(avro ...bool) map[string]interface{} {
 		"data":         toEnabledObject(o.Data, isavro, true, "string"),
 		"distro":       toEnabledObject(o.Distro, isavro, false, "string"),
 		"error":        toEnabledObject(o.Error, isavro, true, "string"),
-		"event_date":   toEnabledObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":   toEnabledObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":   toEnabledObject(o.GoVersion, isavro, false, "string"),
 		"hostname":     toEnabledObject(o.Hostname, isavro, false, "string"),
@@ -777,28 +768,6 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["event_date"].(EnabledEventDate); ok {
-		o.EventDate = val
-	} else {
-		val := kv["event_date"]
-		if val == nil {
-			o.EventDate = EnabledEventDate{}
-		} else {
-			o.EventDate = EnabledEventDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.EventDate)
-
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -1036,7 +1005,6 @@ func (o *Enabled) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
-	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1088,10 +1056,6 @@ func GetEnabledAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",

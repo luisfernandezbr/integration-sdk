@@ -73,6 +73,14 @@ const (
 	UserRequestRefIDColumn = "ref_id"
 	// UserRequestRefTypeColumn is the ref_type column name
 	UserRequestRefTypeColumn = "ref_type"
+	// UserRequestRequestDateColumn is the request_date column name
+	UserRequestRequestDateColumn = "request_date"
+	// UserRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	UserRequestRequestDateColumnEpochColumn = "request_date->epoch"
+	// UserRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	UserRequestRequestDateColumnOffsetColumn = "request_date->offset"
+	// UserRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	UserRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
 	// UserRequestUUIDColumn is the uuid column name
 	UserRequestUUIDColumn = "uuid"
 )
@@ -285,7 +293,7 @@ const (
 // ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
 
 // 6 request_date
-// request_date {"description":"the date when the request was made","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"request_date","relation":false,"subtype":"","type":"object"}
+// request_date {"description":"the date when the request was made","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"request_date","relation":false,"subtype":"","type":"object"}
 
 // epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
@@ -785,14 +793,15 @@ func (o *UserRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id": toUserRequestObject(o.CustomerID, isavro, false, "string"),
-		"id":          toUserRequestObject(o.ID, isavro, false, "string"),
-		"integration": toUserRequestObject(o.Integration, isavro, false, "integration"),
-		"location":    toUserRequestObject(o.Location, isavro, false, "location"),
-		"ref_id":      toUserRequestObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toUserRequestObject(o.RefType, isavro, false, "string"),
-		"uuid":        toUserRequestObject(o.UUID, isavro, false, "string"),
-		"hashcode":    toUserRequestObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":  toUserRequestObject(o.CustomerID, isavro, false, "string"),
+		"id":           toUserRequestObject(o.ID, isavro, false, "string"),
+		"integration":  toUserRequestObject(o.Integration, isavro, false, "integration"),
+		"location":     toUserRequestObject(o.Location, isavro, false, "location"),
+		"ref_id":       toUserRequestObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toUserRequestObject(o.RefType, isavro, false, "string"),
+		"request_date": toUserRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"uuid":         toUserRequestObject(o.UUID, isavro, false, "string"),
+		"hashcode":     toUserRequestObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -897,6 +906,28 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["request_date"].(UserRequestRequestDate); ok {
+		o.RequestDate = val
+	} else {
+		val := kv["request_date"]
+		if val == nil {
+			o.RequestDate = UserRequestRequestDate{}
+		} else {
+			o.RequestDate = UserRequestRequestDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.RequestDate)
+
+		}
+	}
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -922,6 +953,7 @@ func (o *UserRequest) Hash() string {
 	args = append(args, o.Location)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RequestDate)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -948,7 +980,7 @@ func GetUserRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"name": "password", "doc": "Password for instance, if relevant", "type": "string"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"name": "exclusions", "doc": "The exclusion list for this integration", "type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"name": "message", "doc": "Any relevant messaging during processing", "type": "string"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"doc": "If the validation has been run against this instance", "type": "boolean", "name": "validated"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use", "type": "record", "name": "integration"},
+				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"name": "active", "doc": "If true, the integration is still active", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Authorization information", "type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"name": "access_token", "doc": "Access token", "type": "string"}, map[string]interface{}{"type": "string", "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": "string", "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "authorization", "doc": "the agents encrypted authorization"}}}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"items": "string", "type": "array", "name": "exclusions"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use"},
 			},
 			map[string]interface{}{
 				"name": "location",
@@ -967,6 +999,10 @@ func GetUserRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "request_date",
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record", "name": "request_date"},
 			},
 			map[string]interface{}{
 				"name": "uuid",
