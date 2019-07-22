@@ -55,6 +55,14 @@ const (
 	EnabledDistroColumn = "distro"
 	// EnabledErrorColumn is the error column name
 	EnabledErrorColumn = "error"
+	// EnabledEventDateColumn is the event_date column name
+	EnabledEventDateColumn = "event_date"
+	// EnabledEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	EnabledEventDateColumnEpochColumn = "event_date->epoch"
+	// EnabledEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	EnabledEventDateColumnOffsetColumn = "event_date->offset"
+	// EnabledEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	EnabledEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// EnabledFreeSpaceColumn is the free_space column name
 	EnabledFreeSpaceColumn = "free_space"
 	// EnabledGoVersionColumn is the go_version column name
@@ -105,11 +113,11 @@ const (
 // 5 event_date
 // event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // EnabledEventDate represents the object structure for event_date
 type EnabledEventDate struct {
@@ -281,161 +289,25 @@ func toEnabledObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toEnabledObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toEnabledObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnabledObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *Enabled:
 		return v.ToMap()
 	case Enabled:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toEnabledObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case EnabledEventDate:
 		vv := o.(EnabledEventDate)
 		return vv.ToMap()
-	case *EnabledEventDate:
-		return map[string]interface{}{
-			"agent.event_date": (*o.(*EnabledEventDate)).ToMap(),
-		}
-	case []EnabledEventDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]EnabledEventDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]EnabledEventDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]EnabledEventDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case EnabledType:
 		if !isavro {
 			return (o.(EnabledType)).String()
 		}
 		return map[string]string{
 			"agent.type": (o.(EnabledType)).String(),
-		}
-	case *EnabledType:
-		if !isavro {
-			return (o.(*EnabledType)).String()
-		}
-		return map[string]string{
-			"agent.type": (o.(*EnabledType)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -651,6 +523,7 @@ func (o *Enabled) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *Enabled) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 

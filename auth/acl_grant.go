@@ -75,11 +75,11 @@ const (
 // 0 created_date
 // created_date {"description":"the created date","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ACLGrantCreatedDate represents the object structure for created_date
 type ACLGrantCreatedDate struct {
@@ -191,161 +191,25 @@ func toACLGrantObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toACLGrantObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toACLGrantObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toACLGrantObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toACLGrantObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *ACLGrant:
 		return v.ToMap()
 	case ACLGrant:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toACLGrantObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case ACLGrantCreatedDate:
 		vv := o.(ACLGrantCreatedDate)
 		return vv.ToMap()
-	case *ACLGrantCreatedDate:
-		return map[string]interface{}{
-			"auth.created_date": (*o.(*ACLGrantCreatedDate)).ToMap(),
-		}
-	case []ACLGrantCreatedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ACLGrantCreatedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ACLGrantCreatedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ACLGrantCreatedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ACLGrantPermission:
 		if !isavro {
 			return (o.(ACLGrantPermission)).String()
 		}
 		return map[string]string{
 			"auth.permission": (o.(ACLGrantPermission)).String(),
-		}
-	case *ACLGrantPermission:
-		if !isavro {
-			return (o.(*ACLGrantPermission)).String()
-		}
-		return map[string]string{
-			"auth.permission": (o.(*ACLGrantPermission)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -564,6 +428,7 @@ func (o *ACLGrant) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *ACLGrant) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -832,7 +697,7 @@ func GetACLGrantAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the created date"},
+				"type": map[string]interface{}{"name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the created date", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

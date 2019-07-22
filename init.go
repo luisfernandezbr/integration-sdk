@@ -26,93 +26,181 @@ import (
 func New(name datamodel.ModelNameType) datamodel.Model {
 	switch name {
 	case "admin.Agent":
-		return new(dm_admin.Agent)
+		o := new(dm_admin.Agent)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Enabled":
-		return new(dm_agent.Enabled)
+		o := new(dm_agent.Enabled)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.EnrollRequest":
-		return new(dm_agent.EnrollRequest)
+		o := new(dm_agent.EnrollRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.EnrollResponse":
-		return new(dm_agent.EnrollResponse)
+		o := new(dm_agent.EnrollResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Event":
-		return new(dm_agent.Event)
+		o := new(dm_agent.Event)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.ExportRequest":
-		return new(dm_agent.ExportRequest)
+		o := new(dm_agent.ExportRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.ExportResponse":
-		return new(dm_agent.ExportResponse)
+		o := new(dm_agent.ExportResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.ExportTrigger":
-		return new(dm_agent.ExportTrigger)
+		o := new(dm_agent.ExportTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.IntegrationRequest":
-		return new(dm_agent.IntegrationRequest)
+		o := new(dm_agent.IntegrationRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.IntegrationResponse":
-		return new(dm_agent.IntegrationResponse)
+		o := new(dm_agent.IntegrationResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.ProjectRequest":
-		return new(dm_agent.ProjectRequest)
+		o := new(dm_agent.ProjectRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.ProjectResponse":
-		return new(dm_agent.ProjectResponse)
+		o := new(dm_agent.ProjectResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.RepoRequest":
-		return new(dm_agent.RepoRequest)
+		o := new(dm_agent.RepoRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.RepoResponse":
-		return new(dm_agent.RepoResponse)
+		o := new(dm_agent.RepoResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.UserRequest":
-		return new(dm_agent.UserRequest)
+		o := new(dm_agent.UserRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.UserResponse":
-		return new(dm_agent.UserResponse)
+		o := new(dm_agent.UserResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "auth.ACLGrant":
-		return new(dm_auth.ACLGrant)
+		o := new(dm_auth.ACLGrant)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "codequality.Metric":
-		return new(dm_codequality.Metric)
+		o := new(dm_codequality.Metric)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "codequality.Project":
-		return new(dm_codequality.Project)
+		o := new(dm_codequality.Project)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "customer.CostCenter":
-		return new(dm_customer.CostCenter)
+		o := new(dm_customer.CostCenter)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "customer.Team":
-		return new(dm_customer.Team)
+		o := new(dm_customer.Team)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "customer.User":
-		return new(dm_customer.User)
+		o := new(dm_customer.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "ops.db.Change":
-		return new(dm_ops_db.Change)
+		o := new(dm_ops_db.Change)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline.activity.Activity":
-		return new(dm_pipeline_activity.Activity)
+		o := new(dm_pipeline_activity.Activity)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline.customer.User":
-		return new(dm_pipeline_customer.User)
+		o := new(dm_pipeline_customer.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline.integration.User":
-		return new(dm_pipeline_integration.User)
+		o := new(dm_pipeline_integration.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline.signal.Signal":
-		return new(dm_pipeline_signal.Signal)
+		o := new(dm_pipeline_signal.Signal)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline.sourcecode.Commit":
-		return new(dm_pipeline_sourcecode.Commit)
+		o := new(dm_pipeline_sourcecode.Commit)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline.work.CustomField":
-		return new(dm_pipeline_work.CustomField)
+		o := new(dm_pipeline_work.CustomField)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.Blame":
-		return new(dm_sourcecode.Blame)
+		o := new(dm_sourcecode.Blame)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.Branch":
-		return new(dm_sourcecode.Branch)
+		o := new(dm_sourcecode.Branch)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.Commit":
-		return new(dm_sourcecode.Commit)
+		o := new(dm_sourcecode.Commit)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.PullRequest":
-		return new(dm_sourcecode.PullRequest)
+		o := new(dm_sourcecode.PullRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.PullRequestComment":
-		return new(dm_sourcecode.PullRequestComment)
+		o := new(dm_sourcecode.PullRequestComment)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.PullRequestReview":
-		return new(dm_sourcecode.PullRequestReview)
+		o := new(dm_sourcecode.PullRequestReview)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.Repo":
-		return new(dm_sourcecode.Repo)
+		o := new(dm_sourcecode.Repo)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.User":
-		return new(dm_sourcecode.User)
+		o := new(dm_sourcecode.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "web.Hook":
-		return new(dm_web.Hook)
+		o := new(dm_web.Hook)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.Changelog":
-		return new(dm_work.Changelog)
+		o := new(dm_work.Changelog)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.CustomField":
-		return new(dm_work.CustomField)
+		o := new(dm_work.CustomField)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.Issue":
-		return new(dm_work.Issue)
+		o := new(dm_work.Issue)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.Project":
-		return new(dm_work.Project)
+		o := new(dm_work.Project)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.Sprint":
-		return new(dm_work.Sprint)
+		o := new(dm_work.Sprint)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.User":
-		return new(dm_work.User)
+		o := new(dm_work.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	}
 	return nil
 }
@@ -121,93 +209,181 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
 	case "admin_Agent_topic":
-		return new(dm_admin.Agent)
+		o := new(dm_admin.Agent)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_Enabled_topic":
-		return new(dm_agent.Enabled)
+		o := new(dm_agent.Enabled)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_EnrollRequest_topic":
-		return new(dm_agent.EnrollRequest)
+		o := new(dm_agent.EnrollRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_EnrollResponse_topic":
-		return new(dm_agent.EnrollResponse)
+		o := new(dm_agent.EnrollResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_Event_topic":
-		return new(dm_agent.Event)
+		o := new(dm_agent.Event)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_ExportRequest_topic":
-		return new(dm_agent.ExportRequest)
+		o := new(dm_agent.ExportRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_ExportResponse_topic":
-		return new(dm_agent.ExportResponse)
+		o := new(dm_agent.ExportResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_ExportTrigger_topic":
-		return new(dm_agent.ExportTrigger)
+		o := new(dm_agent.ExportTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_IntegrationRequest_topic":
-		return new(dm_agent.IntegrationRequest)
+		o := new(dm_agent.IntegrationRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_IntegrationResponse_topic":
-		return new(dm_agent.IntegrationResponse)
+		o := new(dm_agent.IntegrationResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_ProjectRequest_topic":
-		return new(dm_agent.ProjectRequest)
+		o := new(dm_agent.ProjectRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_ProjectResponse_topic":
-		return new(dm_agent.ProjectResponse)
+		o := new(dm_agent.ProjectResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_RepoRequest_topic":
-		return new(dm_agent.RepoRequest)
+		o := new(dm_agent.RepoRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_RepoResponse_topic":
-		return new(dm_agent.RepoResponse)
+		o := new(dm_agent.RepoResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_UserRequest_topic":
-		return new(dm_agent.UserRequest)
+		o := new(dm_agent.UserRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_UserResponse_topic":
-		return new(dm_agent.UserResponse)
+		o := new(dm_agent.UserResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "auth_ACLGrant_topic":
-		return new(dm_auth.ACLGrant)
+		o := new(dm_auth.ACLGrant)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "codequality_Metric_topic":
-		return new(dm_codequality.Metric)
+		o := new(dm_codequality.Metric)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "codequality_Project_topic":
-		return new(dm_codequality.Project)
+		o := new(dm_codequality.Project)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "customer_CostCenter_topic":
-		return new(dm_customer.CostCenter)
+		o := new(dm_customer.CostCenter)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "customer_Team_topic":
-		return new(dm_customer.Team)
+		o := new(dm_customer.Team)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "customer_User_topic":
-		return new(dm_customer.User)
+		o := new(dm_customer.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "ops_db_Change_topic":
-		return new(dm_ops_db.Change)
+		o := new(dm_ops_db.Change)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline_activity_Activity_topic":
-		return new(dm_pipeline_activity.Activity)
+		o := new(dm_pipeline_activity.Activity)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline_customer_User_topic":
-		return new(dm_pipeline_customer.User)
+		o := new(dm_pipeline_customer.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline_integration_User_topic":
-		return new(dm_pipeline_integration.User)
+		o := new(dm_pipeline_integration.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline_signal_Signal_topic":
-		return new(dm_pipeline_signal.Signal)
+		o := new(dm_pipeline_signal.Signal)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline_sourcecode_Commit_topic":
-		return new(dm_pipeline_sourcecode.Commit)
+		o := new(dm_pipeline_sourcecode.Commit)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline_work_CustomField_topic":
-		return new(dm_pipeline_work.CustomField)
+		o := new(dm_pipeline_work.CustomField)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_Blame_topic":
-		return new(dm_sourcecode.Blame)
+		o := new(dm_sourcecode.Blame)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_Branch_topic":
-		return new(dm_sourcecode.Branch)
+		o := new(dm_sourcecode.Branch)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_Commit_topic":
-		return new(dm_sourcecode.Commit)
+		o := new(dm_sourcecode.Commit)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_PullRequest_topic":
-		return new(dm_sourcecode.PullRequest)
+		o := new(dm_sourcecode.PullRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_PullRequestComment_topic":
-		return new(dm_sourcecode.PullRequestComment)
+		o := new(dm_sourcecode.PullRequestComment)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_PullRequestReview_topic":
-		return new(dm_sourcecode.PullRequestReview)
+		o := new(dm_sourcecode.PullRequestReview)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_Repo_topic":
-		return new(dm_sourcecode.Repo)
+		o := new(dm_sourcecode.Repo)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_User_topic":
-		return new(dm_sourcecode.User)
+		o := new(dm_sourcecode.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "web_Hook_topic":
-		return new(dm_web.Hook)
+		o := new(dm_web.Hook)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_Changelog_topic":
-		return new(dm_work.Changelog)
+		o := new(dm_work.Changelog)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_CustomField_topic":
-		return new(dm_work.CustomField)
+		o := new(dm_work.CustomField)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_Issue_topic":
-		return new(dm_work.Issue)
+		o := new(dm_work.Issue)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_Project_topic":
-		return new(dm_work.Project)
+		o := new(dm_work.Project)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_Sprint_topic":
-		return new(dm_work.Sprint)
+		o := new(dm_work.Sprint)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_User_topic":
-		return new(dm_work.User)
+		o := new(dm_work.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	}
 	return nil
 }

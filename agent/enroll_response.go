@@ -57,6 +57,14 @@ const (
 	EnrollResponseDistroColumn = "distro"
 	// EnrollResponseErrorColumn is the error column name
 	EnrollResponseErrorColumn = "error"
+	// EnrollResponseEventDateColumn is the event_date column name
+	EnrollResponseEventDateColumn = "event_date"
+	// EnrollResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	EnrollResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// EnrollResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	EnrollResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// EnrollResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	EnrollResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// EnrollResponseFreeSpaceColumn is the free_space column name
 	EnrollResponseFreeSpaceColumn = "free_space"
 	// EnrollResponseGoVersionColumn is the go_version column name
@@ -110,11 +118,11 @@ const (
 // 6 event_date
 // event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // EnrollResponseEventDate represents the object structure for event_date
 type EnrollResponseEventDate struct {
@@ -288,161 +296,25 @@ func toEnrollResponseObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toEnrollResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toEnrollResponseObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toEnrollResponseObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toEnrollResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *EnrollResponse:
 		return v.ToMap()
 	case EnrollResponse:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toEnrollResponseObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case EnrollResponseEventDate:
 		vv := o.(EnrollResponseEventDate)
 		return vv.ToMap()
-	case *EnrollResponseEventDate:
-		return map[string]interface{}{
-			"agent.event_date": (*o.(*EnrollResponseEventDate)).ToMap(),
-		}
-	case []EnrollResponseEventDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]EnrollResponseEventDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]EnrollResponseEventDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]EnrollResponseEventDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case EnrollResponseType:
 		if !isavro {
 			return (o.(EnrollResponseType)).String()
 		}
 		return map[string]string{
 			"agent.type": (o.(EnrollResponseType)).String(),
-		}
-	case *EnrollResponseType:
-		if !isavro {
-			return (o.(*EnrollResponseType)).String()
-		}
-		return map[string]string{
-			"agent.type": (o.(*EnrollResponseType)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -658,6 +530,7 @@ func (o *EnrollResponse) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *EnrollResponse) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 

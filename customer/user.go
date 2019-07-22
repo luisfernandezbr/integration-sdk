@@ -130,11 +130,11 @@ const (
 // 5 deleted_date
 // deleted_date {"description":"when the user record was deleted in epoch timestamp","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"deleted_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // UserDeletedDate represents the object structure for deleted_date
 type UserDeletedDate struct {
@@ -163,11 +163,11 @@ func (o *UserDeletedDate) ToMap() map[string]interface{} {
 // 7 hired_date
 // hired_date {"description":"when the user was hired in epoch timestamp","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"hired_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // UserHiredDate represents the object structure for hired_date
 type UserHiredDate struct {
@@ -223,11 +223,11 @@ func (o *UserHiredDate) ToMap() map[string]interface{} {
 // 18 terminated_date
 // terminated_date {"description":"when the user was terminated in epoch timestamp","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"terminated_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // UserTerminatedDate represents the object structure for terminated_date
 type UserTerminatedDate struct {
@@ -320,188 +320,25 @@ func toUserObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toUserObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toUserObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *User:
 		return v.ToMap()
 	case User:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toUserObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case UserDeletedDate:
 		vv := o.(UserDeletedDate)
 		return vv.ToMap()
-	case *UserDeletedDate:
-		return map[string]interface{}{
-			"customer.deleted_date": (*o.(*UserDeletedDate)).ToMap(),
-		}
-	case []UserDeletedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]UserDeletedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]UserDeletedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]UserDeletedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case UserHiredDate:
 		vv := o.(UserHiredDate)
 		return vv.ToMap()
-	case *UserHiredDate:
-		return map[string]interface{}{
-			"customer.hired_date": (*o.(*UserHiredDate)).ToMap(),
-		}
-	case []UserHiredDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]UserHiredDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]UserHiredDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]UserHiredDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case UserTerminatedDate:
 		vv := o.(UserTerminatedDate)
 		return vv.ToMap()
-	case *UserTerminatedDate:
-		return map[string]interface{}{
-			"customer.terminated_date": (*o.(*UserTerminatedDate)).ToMap(),
-		}
-	case []UserTerminatedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]UserTerminatedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]UserTerminatedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]UserTerminatedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -728,6 +565,7 @@ func (o *User) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *User) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -1293,7 +1131,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "deleted_date",
-				"type": map[string]interface{}{"type": "record", "name": "deleted_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "when the user record was deleted in epoch timestamp"},
+				"type": map[string]interface{}{"name": "deleted_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user record was deleted in epoch timestamp", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "email",
@@ -1301,7 +1139,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "hired_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp", "type": "record", "name": "hired_date"},
+				"type": map[string]interface{}{"type": "record", "name": "hired_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1340,15 +1178,15 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "role_ids",
-				"type": map[string]interface{}{"name": "role_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "role_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "team_ids",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "team_ids"},
+				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "terminated_date",
-				"type": map[string]interface{}{"type": "record", "name": "terminated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "when the user was terminated in epoch timestamp"},
+				"type": map[string]interface{}{"type": "record", "name": "terminated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was terminated in epoch timestamp"},
 			},
 			map[string]interface{}{
 				"name":    "title",

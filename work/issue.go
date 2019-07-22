@@ -120,11 +120,11 @@ const (
 // 1 created_date
 // created_date {"description":"the date that the issue was created","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // IssueCreatedDate represents the object structure for created_date
 type IssueCreatedDate struct {
@@ -153,11 +153,11 @@ func (o *IssueCreatedDate) ToMap() map[string]interface{} {
 // 3 customFields
 // customFields {"description":"list of custom fields and their values","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"customFields","relation":false,"subtype":"","type":"object"}
 
-// id {"description":"the id of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+// id {"description":"the id of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
 
-// name {"description":"the name of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+// name {"description":"the name of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
 
-// value {"description":"the value of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"value","relation":false,"subtype":"","type":"string"}
+// value {"description":"the value of the custom field","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"value","relation":false,"subtype":"","type":"string"}
 
 // IssueCustomFields represents the object structure for customFields
 type IssueCustomFields struct {
@@ -186,11 +186,11 @@ func (o *IssueCustomFields) ToMap() map[string]interface{} {
 // 5 due_date
 // due_date {"description":"due date of the issue","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"due_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // IssueDueDate represents the object structure for due_date
 type IssueDueDate struct {
@@ -255,11 +255,11 @@ func (o *IssueDueDate) ToMap() map[string]interface{} {
 // 19 updated_date
 // updated_date {"description":"the date that the issue was updated","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"updated_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // IssueUpdatedDate represents the object structure for updated_date
 type IssueUpdatedDate struct {
@@ -344,208 +344,31 @@ func toIssueObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toIssueObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toIssueObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toIssueObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *Issue:
 		return v.ToMap()
 	case Issue:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toIssueObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case IssueCreatedDate:
 		vv := o.(IssueCreatedDate)
 		return vv.ToMap()
-	case *IssueCreatedDate:
-		return map[string]interface{}{
-			"work.created_date": (*o.(*IssueCreatedDate)).ToMap(),
-		}
-	case []IssueCreatedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]IssueCreatedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]IssueCreatedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]IssueCreatedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case IssueCustomFields:
-		vv := o.(IssueCustomFields)
-		return vv.ToMap()
-	case *IssueCustomFields:
-		return map[string]interface{}{
-			"work.customFields": (*o.(*IssueCustomFields)).ToMap(),
-		}
 	case []IssueCustomFields:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]IssueCustomFields) {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
-	case *[]IssueCustomFields:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]IssueCustomFields)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case IssueDueDate:
 		vv := o.(IssueDueDate)
 		return vv.ToMap()
-	case *IssueDueDate:
-		return map[string]interface{}{
-			"work.due_date": (*o.(*IssueDueDate)).ToMap(),
-		}
-	case []IssueDueDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]IssueDueDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]IssueDueDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]IssueDueDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case IssueUpdatedDate:
 		vv := o.(IssueUpdatedDate)
 		return vv.ToMap()
-	case *IssueUpdatedDate:
-		return map[string]interface{}{
-			"work.updated_date": (*o.(*IssueUpdatedDate)).ToMap(),
-		}
-	case []IssueUpdatedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]IssueUpdatedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]IssueUpdatedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]IssueUpdatedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -760,6 +583,7 @@ func (o *Issue) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *Issue) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -1233,7 +1057,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"doc": "the date that the issue was created", "type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}},
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date that the issue was created"},
 			},
 			map[string]interface{}{
 				"name": "creator_ref_id",
@@ -1249,7 +1073,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "due_date",
-				"type": map[string]interface{}{"type": "record", "name": "due_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "due date of the issue"},
+				"type": map[string]interface{}{"type": "record", "name": "due_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "due date of the issue"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1293,7 +1117,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "tags"},
+				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "title",
@@ -1305,7 +1129,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the issue was updated", "type": "record", "name": "updated_date"},
+				"type": map[string]interface{}{"doc": "the date that the issue was updated", "type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "url",

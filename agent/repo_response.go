@@ -49,6 +49,8 @@ const (
 const (
 	// RepoResponseArchitectureColumn is the architecture column name
 	RepoResponseArchitectureColumn = "architecture"
+	// RepoResponseCreatedDateColumn is the created_date column name
+	RepoResponseCreatedDateColumn = "created_date"
 	// RepoResponseCustomerIDColumn is the customer_id column name
 	RepoResponseCustomerIDColumn = "customer_id"
 	// RepoResponseDataColumn is the data column name
@@ -57,6 +59,14 @@ const (
 	RepoResponseDistroColumn = "distro"
 	// RepoResponseErrorColumn is the error column name
 	RepoResponseErrorColumn = "error"
+	// RepoResponseEventDateColumn is the event_date column name
+	RepoResponseEventDateColumn = "event_date"
+	// RepoResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	RepoResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// RepoResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	RepoResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// RepoResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	RepoResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// RepoResponseFreeSpaceColumn is the free_space column name
 	RepoResponseFreeSpaceColumn = "free_space"
 	// RepoResponseGoVersionColumn is the go_version column name
@@ -111,52 +121,28 @@ const (
 // 1 created_date
 // created_date {"description":"the timestamp of the latest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"created_date","relation":false,"subtype":"","type":"common.Date"}
 
-// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
-
-// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
-// RepoResponseLastCommitCreatedDate represents the object structure for created_date
-type RepoResponseLastCommitCreatedDate struct {
-	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+// RepoResponseReposLastCommitCreatedDate represents the object structure for created_date
+type RepoResponseReposLastCommitCreatedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *RepoResponseLastCommitCreatedDate) ToMap() map[string]interface{} {
+func (o *RepoResponseReposLastCommitCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		// CustomerID the customer id for the model instance
-		"customer_id": o.CustomerID,
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
-		// ID the primary key for the model instance
-		"id": o.ID,
 		// Offset the timezone offset from GMT
 		"offset": o.Offset,
-		// RefID the source system id for the model instance
-		"ref_id": o.RefID,
-		// RefType the source system identifier for the model instance
-		"ref_type": o.RefType,
 		// Rfc3339 the date in RFC3339 format
 		"rfc3339": o.Rfc3339,
 	}
@@ -177,11 +163,11 @@ func (o *RepoResponseLastCommitCreatedDate) ToMap() map[string]interface{} {
 // 6 event_date
 // event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // RepoResponseEventDate represents the object structure for event_date
 type RepoResponseEventDate struct {
@@ -240,61 +226,61 @@ func (o *RepoResponseEventDate) ToMap() map[string]interface{} {
 // 18 repos
 // repos {"description":"the repos exported","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"repos","relation":false,"subtype":"admin.Repo","type":"object"}
 
-// active {"description":"the status of the repo determined by an Admin","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
+// active {"description":"the status of the repo determined by an Admin","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
 
-// created_date {"description":"the creation date","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
+// created_date {"description":"the creation date","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // RepoResponseReposCreatedDate represents the object structure for created_date
 type RepoResponseReposCreatedDate struct {
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func (o *RepoResponseReposCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
 		// Offset the timezone offset from GMT
 		"offset": o.Offset,
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": o.Rfc3339,
 	}
 }
 
-// description {"description":"the description of the repository","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
+// description {"description":"the description of the repository","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
 
-// language {"description":"the programming language defined for the repository","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"language","relation":false,"subtype":"","type":"string"}
+// language {"description":"the programming language defined for the repository","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"language","relation":false,"subtype":"","type":"string"}
 
-// last_commit {"description":"the most recent commit to the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"last_commit","relation":false,"subtype":"","type":"object"}
+// last_commit {"description":"the most recent commit to the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"last_commit","relation":false,"subtype":"","type":"object"}
 
-// commit_id {"description":"the id of the latest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"commit_id","relation":false,"subtype":"","type":"string"}
+// commit_id {"description":"the id of the latest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"commit_id","relation":false,"subtype":"","type":"string"}
 
-// url {"description":"the url of the lastest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
+// url {"description":"the url of the lastest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
 
-// message {"description":"the commit message of the latest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
+// message {"description":"the commit message of the latest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
 
 // created_date {"description":"the timestamp of the latest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"created_date","relation":false,"subtype":"","type":"common.Date"}
 
-// author {"description":"the author of the latest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"author","relation":false,"subtype":"","type":"object"}
+// author {"description":"the author of the latest commit","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"author","relation":false,"subtype":"","type":"object"}
 
-// name {"description":"the author name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+// name {"description":"the author name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
 
-// email {"description":"the email of the author","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"email","relation":false,"subtype":"","type":"string"}
+// email {"description":"the email of the author","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"email","relation":false,"subtype":"","type":"string"}
 
-// avatar_url {"description":"the avatar_url for the author","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"avatar_url","relation":false,"subtype":"","type":"string"}
+// avatar_url {"description":"the avatar_url for the author","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"avatar_url","relation":false,"subtype":"","type":"string"}
 
-// RepoResponseLastCommitAuthor represents the object structure for author
-type RepoResponseLastCommitAuthor struct {
+// RepoResponseReposLastCommitAuthor represents the object structure for author
+type RepoResponseReposLastCommitAuthor struct {
 	// Name the author name
 	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
 	// Email the email of the author
@@ -303,7 +289,7 @@ type RepoResponseLastCommitAuthor struct {
 	AvatarURL string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 }
 
-func (o *RepoResponseLastCommitAuthor) ToMap() map[string]interface{} {
+func (o *RepoResponseReposLastCommitAuthor) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Name the author name
 		"name": o.Name,
@@ -323,9 +309,9 @@ type RepoResponseReposLastCommit struct {
 	// Message the commit message of the latest commit
 	Message string `json:"message" bson:"message" yaml:"message" faker:"commit_message"`
 	// CreatedDate the timestamp of the latest commit
-	CreatedDate RepoResponseLastCommitCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate RepoResponseReposLastCommitCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// Author the author of the latest commit
-	Author RepoResponseLastCommitAuthor `json:"author" bson:"author" yaml:"author" faker:"-"`
+	Author RepoResponseReposLastCommitAuthor `json:"author" bson:"author" yaml:"author" faker:"-"`
 }
 
 func (o *RepoResponseReposLastCommit) ToMap() map[string]interface{} {
@@ -343,7 +329,7 @@ func (o *RepoResponseReposLastCommit) ToMap() map[string]interface{} {
 	}
 }
 
-// name {"description":"the name of the repository","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+// name {"description":"the name of the repository","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
 
 // RepoResponseRepos represents the object structure for repos
 type RepoResponseRepos struct {
@@ -442,8 +428,8 @@ const (
 type RepoResponse struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
-	// LastCommitCreatedDate the timestamp of the latest commit
-	LastCommitCreatedDate RepoResponseLastCommitCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	// ReposLastCommitCreatedDate the timestamp of the latest commit
+	ReposLastCommitCreatedDate RepoResponseReposLastCommitCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
@@ -503,165 +489,22 @@ func toRepoResponseObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toRepoResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toRepoResponseObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toRepoResponseObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toRepoResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *RepoResponse:
 		return v.ToMap()
 	case RepoResponse:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toRepoResponseObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case RepoResponseEventDate:
 		vv := o.(RepoResponseEventDate)
 		return vv.ToMap()
-	case *RepoResponseEventDate:
-		return map[string]interface{}{
-			"agent.event_date": (*o.(*RepoResponseEventDate)).ToMap(),
-		}
-	case []RepoResponseEventDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]RepoResponseEventDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]RepoResponseEventDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]RepoResponseEventDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case RepoResponseRepos:
-		vv := o.(RepoResponseRepos)
-		return vv.ToMap()
-	case *RepoResponseRepos:
-		return map[string]interface{}{
-			"agent.repos": (*o.(*RepoResponseRepos)).ToMap(),
-		}
 	case []RepoResponseRepos:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]RepoResponseRepos) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]RepoResponseRepos:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]RepoResponseRepos)
-		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
@@ -671,13 +514,6 @@ func toRepoResponseObject(o interface{}, isavro bool, isoptional bool, avrotype 
 		}
 		return map[string]string{
 			"agent.type": (o.(RepoResponseType)).String(),
-		}
-	case *RepoResponseType:
-		if !isavro {
-			return (o.(*RepoResponseType)).String()
-		}
-		return map[string]string{
-			"agent.type": (o.(*RepoResponseType)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -896,6 +732,7 @@ func (o *RepoResponse) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *RepoResponse) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -1414,7 +1251,7 @@ func GetRepoResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "repos",
-				"type": map[string]interface{}{"type": "array", "name": "repos", "items": map[string]interface{}{"type": "record", "name": "repos", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the repo determined by an Admin"}, map[string]interface{}{"name": "created_date", "doc": "the creation date", "type": map[string]interface{}{"name": "repos.created_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}, map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}}, "doc": "the creation date", "type": "record"}}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the repository"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the programming language defined for the repository"}, map[string]interface{}{"type": map[string]interface{}{"name": "repos.last_commit", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the id of the latest commit"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url of the lastest commit"}, map[string]interface{}{"type": "string", "name": "message", "doc": "the commit message of the latest commit"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_commit.created_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp of the latest commit"}, "name": "created_date", "doc": "the timestamp of the latest commit"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_commit.author", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "name", "doc": "the author name"}, map[string]interface{}{"type": "string", "name": "email", "doc": "the email of the author"}, map[string]interface{}{"doc": "the avatar_url for the author", "type": "string", "name": "avatar_url"}}, "doc": "the author of the latest commit"}, "name": "author", "doc": "the author of the latest commit"}}, "doc": "the most recent commit to the repo", "type": "record"}, "name": "last_commit", "doc": "the most recent commit to the repo"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the repository"}}, "doc": "the repos exported"}},
+				"type": map[string]interface{}{"type": "array", "name": "repos", "items": map[string]interface{}{"type": "record", "name": "repos", "fields": []interface{}{map[string]interface{}{"name": "active", "doc": "the status of the repo determined by an Admin", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "repos.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the creation date"}, "name": "created_date", "doc": "the creation date"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the repository"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the programming language defined for the repository"}, map[string]interface{}{"name": "last_commit", "doc": "the most recent commit to the repo", "type": map[string]interface{}{"doc": "the most recent commit to the repo", "type": "record", "name": "repos.last_commit", "fields": []interface{}{map[string]interface{}{"doc": "the id of the latest commit", "type": "string", "name": "commit_id"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url of the lastest commit"}, map[string]interface{}{"type": "string", "name": "message", "doc": "the commit message of the latest commit"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_commit.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp of the latest commit"}, "name": "created_date", "doc": "the timestamp of the latest commit"}, map[string]interface{}{"name": "author", "doc": "the author of the latest commit", "type": map[string]interface{}{"type": "record", "name": "last_commit.author", "fields": []interface{}{map[string]interface{}{"doc": "the author name", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "email", "doc": "the email of the author"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar_url for the author"}}, "doc": "the author of the latest commit"}}}}}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the repository"}}, "doc": "the repos exported"}},
 			},
 			map[string]interface{}{
 				"name": "request_id",

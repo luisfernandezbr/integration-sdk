@@ -88,9 +88,9 @@ const (
 // 4 groups
 // groups {"description":"Group names","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"groups","relation":false,"subtype":"","type":"object"}
 
-// group_id {"description":"Group id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"group_id","relation":false,"subtype":"","type":"string"}
+// group_id {"description":"Group id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"group_id","relation":false,"subtype":"","type":"string"}
 
-// name {"description":"Group name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
+// name {"description":"Group name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
 
 // UserGroups represents the object structure for groups
 type UserGroups struct {
@@ -161,145 +161,19 @@ func toUserObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toUserObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toUserObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toUserObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *User:
 		return v.ToMap()
 	case User:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toUserObject(av, isavro, false, ""))
-		}
-		return arr
 
-	case UserGroups:
-		vv := o.(UserGroups)
-		return vv.ToMap()
-	case *UserGroups:
-		return map[string]interface{}{
-			"pipeline.integration.groups": (*o.(*UserGroups)).ToMap(),
-		}
 	case []UserGroups:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]UserGroups) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]UserGroups:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]UserGroups)
-		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
@@ -514,6 +388,7 @@ func (o *User) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *User) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -804,11 +679,11 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "emails",
-				"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"},
+				"type": map[string]interface{}{"name": "emails", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "groups",
-				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"doc": "Group names", "type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}}},
+				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"doc": "Group names", "type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"doc": "Group name", "type": "string", "name": "name"}}}},
 			},
 			map[string]interface{}{
 				"name": "id",

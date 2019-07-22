@@ -118,13 +118,13 @@ const (
 // error {"description":"an error message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
 
 // 6 event_date
-// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
+// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // IntegrationResponseEventDate represents the object structure for event_date
 type IntegrationResponseEventDate struct {
@@ -303,161 +303,25 @@ func toIntegrationResponseObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toIntegrationResponseObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toIntegrationResponseObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toIntegrationResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *IntegrationResponse:
 		return v.ToMap()
 	case IntegrationResponse:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toIntegrationResponseObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case IntegrationResponseEventDate:
 		vv := o.(IntegrationResponseEventDate)
 		return vv.ToMap()
-	case *IntegrationResponseEventDate:
-		return map[string]interface{}{
-			"agent.event_date": (*o.(*IntegrationResponseEventDate)).ToMap(),
-		}
-	case []IntegrationResponseEventDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]IntegrationResponseEventDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]IntegrationResponseEventDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]IntegrationResponseEventDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case IntegrationResponseType:
 		if !isavro {
 			return (o.(IntegrationResponseType)).String()
 		}
 		return map[string]string{
 			"agent.type": (o.(IntegrationResponseType)).String(),
-		}
-	case *IntegrationResponseType:
-		if !isavro {
-			return (o.(*IntegrationResponseType)).String()
-		}
-		return map[string]string{
-			"agent.type": (o.(*IntegrationResponseType)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -673,6 +537,7 @@ func (o *IntegrationResponse) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *IntegrationResponse) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -697,7 +562,6 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 		"data":           toIntegrationResponseObject(o.Data, isavro, true, "string"),
 		"distro":         toIntegrationResponseObject(o.Distro, isavro, false, "string"),
 		"error":          toIntegrationResponseObject(o.Error, isavro, true, "string"),
-		"event_date":     toIntegrationResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":     toIntegrationResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":     toIntegrationResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":       toIntegrationResponseObject(o.Hostname, isavro, false, "string"),
@@ -806,28 +670,6 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["event_date"].(IntegrationResponseEventDate); ok {
-		o.EventDate = val
-	} else {
-		val := kv["event_date"]
-		if val == nil {
-			o.EventDate = IntegrationResponseEventDate{}
-		} else {
-			o.EventDate = IntegrationResponseEventDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.EventDate)
-
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -1079,7 +921,6 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
-	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1136,10 +977,6 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "free_space",

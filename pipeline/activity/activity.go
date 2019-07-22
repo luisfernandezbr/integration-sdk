@@ -72,11 +72,11 @@ const (
 // 0 activity_date
 // activity_date {"description":"date object","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"activity_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ActivityActivityDate represents the object structure for activity_date
 type ActivityActivityDate struct {
@@ -174,9 +174,9 @@ const (
 // 6 user
 // user {"description":"the user related to the activity","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"user","relation":true,"subtype":"","type":"object"}
 
-// id {"description":"the corporate user id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":true,"subtype":"","type":"string"}
+// id {"description":"the corporate user id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"id","relation":true,"subtype":"","type":"string"}
 
-// team_id {"description":"the corporate team id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"team_id","relation":true,"subtype":"","type":"string"}
+// team_id {"description":"the corporate team id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"team_id","relation":true,"subtype":"","type":"string"}
 
 // ActivityUser represents the object structure for user
 type ActivityUser struct {
@@ -226,148 +226,19 @@ func toActivityObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toActivityObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toActivityObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toActivityObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toActivityObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *Activity:
 		return v.ToMap()
 	case Activity:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toActivityObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case ActivityActivityDate:
 		vv := o.(ActivityActivityDate)
 		return vv.ToMap()
-	case *ActivityActivityDate:
-		return map[string]interface{}{
-			"pipeline.activity.activity_date": (*o.(*ActivityActivityDate)).ToMap(),
-		}
-	case []ActivityActivityDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ActivityActivityDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ActivityActivityDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ActivityActivityDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ActivityType:
 		if !isavro {
 			return (o.(ActivityType)).String()
@@ -375,33 +246,9 @@ func toActivityObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 		return map[string]string{
 			"pipeline.activity.type": (o.(ActivityType)).String(),
 		}
-	case *ActivityType:
-		if !isavro {
-			return (o.(*ActivityType)).String()
-		}
-		return map[string]string{
-			"pipeline.activity.type": (o.(*ActivityType)).String(),
-		}
 	case ActivityUser:
 		vv := o.(ActivityUser)
 		return vv.ToMap()
-	case *ActivityUser:
-		return map[string]interface{}{
-			"pipeline.activity.user": (*o.(*ActivityUser)).ToMap(),
-		}
-	case []ActivityUser:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ActivityUser) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ActivityUser:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ActivityUser)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -618,6 +465,7 @@ func (o *Activity) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *Activity) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -836,7 +684,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "activity_date",
-				"type": map[string]interface{}{"type": "record", "name": "activity_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "date object"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object", "type": "record", "name": "activity_date"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -866,7 +714,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "user",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "id", "doc": "the corporate user id", "type": "string"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the user related to the activity", "type": "record", "name": "user"},
+				"type": map[string]interface{}{"type": "record", "name": "user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the corporate user id"}, map[string]interface{}{"type": "string", "name": "team_id", "doc": "the corporate team id"}}, "doc": "the user related to the activity"},
 			},
 		},
 	}

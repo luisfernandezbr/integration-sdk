@@ -115,11 +115,11 @@ const (
 // 1 change_date
 // change_date {"description":"the date of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"change_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // BlameChangeDate represents the object structure for change_date
 type BlameChangeDate struct {
@@ -175,17 +175,17 @@ func (o *BlameChangeDate) ToMap() map[string]interface{} {
 // 12 lines
 // lines {"description":"the individual line attributions","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"lines","relation":false,"subtype":"","type":"object"}
 
-// author_ref_id {"description":"the author ref_id of this line when last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"author_ref_id","relation":false,"subtype":"","type":"string"}
+// author_ref_id {"description":"the author ref_id of this line when last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"author_ref_id","relation":false,"subtype":"","type":"string"}
 
-// blank {"description":"if the line is a blank line","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"blank","relation":false,"subtype":"","type":"boolean"}
+// blank {"description":"if the line is a blank line","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"blank","relation":false,"subtype":"","type":"boolean"}
 
-// code {"description":"if the line is sourcecode","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"code","relation":false,"subtype":"","type":"boolean"}
+// code {"description":"if the line is sourcecode","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"code","relation":false,"subtype":"","type":"boolean"}
 
-// comment {"description":"if the line is a comment","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"comment","relation":false,"subtype":"","type":"boolean"}
+// comment {"description":"if the line is a comment","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"comment","relation":false,"subtype":"","type":"boolean"}
 
-// date {"description":"the change date in RFC3339 format of this line when last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"date","relation":false,"subtype":"","type":"string"}
+// date {"description":"the change date in RFC3339 format of this line when last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"date","relation":false,"subtype":"","type":"string"}
 
-// sha {"description":"the sha when this line was last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"sha","relation":false,"subtype":"","type":"string"}
+// sha {"description":"the sha when this line was last changed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"sha","relation":false,"subtype":"","type":"string"}
 
 // BlameLines represents the object structure for lines
 type BlameLines struct {
@@ -328,165 +328,22 @@ func toBlameObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toBlameObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toBlameObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toBlameObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *Blame:
 		return v.ToMap()
 	case Blame:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toBlameObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case BlameChangeDate:
 		vv := o.(BlameChangeDate)
 		return vv.ToMap()
-	case *BlameChangeDate:
-		return map[string]interface{}{
-			"sourcecode.change_date": (*o.(*BlameChangeDate)).ToMap(),
-		}
-	case []BlameChangeDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]BlameChangeDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]BlameChangeDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]BlameChangeDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case BlameLines:
-		vv := o.(BlameLines)
-		return vv.ToMap()
-	case *BlameLines:
-		return map[string]interface{}{
-			"sourcecode.lines": (*o.(*BlameLines)).ToMap(),
-		}
 	case []BlameLines:
 		arr := make([]interface{}, 0)
 		for _, i := range o.([]BlameLines) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]BlameLines:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]BlameLines)
-		for _, i := range *vv {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
@@ -496,13 +353,6 @@ func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		}
 		return map[string]string{
 			"sourcecode.status": (o.(BlameStatus)).String(),
-		}
-	case *BlameStatus:
-		if !isavro {
-			return (o.(*BlameStatus)).String()
-		}
-		return map[string]string{
-			"sourcecode.status": (o.(*BlameStatus)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -718,6 +568,7 @@ func (o *Blame) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *Blame) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -1145,7 +996,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "change_date",
-				"type": map[string]interface{}{"type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"},
+				"type": map[string]interface{}{"name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "comments",
@@ -1190,7 +1041,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"doc": "if the line is a comment", "type": "boolean", "name": "comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions", "type": "record", "name": "lines"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
 			},
 			map[string]interface{}{
 				"name": "loc",

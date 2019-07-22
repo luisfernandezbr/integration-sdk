@@ -94,11 +94,11 @@ const (
 // 0 completed_date
 // completed_date {"description":"the date that the sprint was completed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"completed_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // SprintCompletedDate represents the object structure for completed_date
 type SprintCompletedDate struct {
@@ -127,11 +127,11 @@ func (o *SprintCompletedDate) ToMap() map[string]interface{} {
 // 2 ended_date
 // ended_date {"description":"the date that the sprint was ended","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"ended_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // SprintEndedDate represents the object structure for ended_date
 type SprintEndedDate struct {
@@ -157,11 +157,11 @@ func (o *SprintEndedDate) ToMap() map[string]interface{} {
 // 3 fetched_date
 // fetched_date {"description":"date in when the api was called","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"fetched_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // SprintFetchedDate represents the object structure for fetched_date
 type SprintFetchedDate struct {
@@ -202,11 +202,11 @@ func (o *SprintFetchedDate) ToMap() map[string]interface{} {
 // 9 started_date
 // started_date {"description":"the date that the sprint was started","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"started_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // SprintStartedDate represents the object structure for started_date
 type SprintStartedDate struct {
@@ -296,221 +296,34 @@ func toSprintObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toSprintObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toSprintObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toSprintObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toSprintObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *Sprint:
 		return v.ToMap()
 	case Sprint:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toSprintObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case SprintCompletedDate:
 		vv := o.(SprintCompletedDate)
 		return vv.ToMap()
-	case *SprintCompletedDate:
-		return map[string]interface{}{
-			"work.completed_date": (*o.(*SprintCompletedDate)).ToMap(),
-		}
-	case []SprintCompletedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]SprintCompletedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]SprintCompletedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]SprintCompletedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case SprintEndedDate:
 		vv := o.(SprintEndedDate)
 		return vv.ToMap()
-	case *SprintEndedDate:
-		return map[string]interface{}{
-			"work.ended_date": (*o.(*SprintEndedDate)).ToMap(),
-		}
-	case []SprintEndedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]SprintEndedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]SprintEndedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]SprintEndedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case SprintFetchedDate:
 		vv := o.(SprintFetchedDate)
 		return vv.ToMap()
-	case *SprintFetchedDate:
-		return map[string]interface{}{
-			"work.fetched_date": (*o.(*SprintFetchedDate)).ToMap(),
-		}
-	case []SprintFetchedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]SprintFetchedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]SprintFetchedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]SprintFetchedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case SprintStartedDate:
 		vv := o.(SprintStartedDate)
 		return vv.ToMap()
-	case *SprintStartedDate:
-		return map[string]interface{}{
-			"work.started_date": (*o.(*SprintStartedDate)).ToMap(),
-		}
-	case []SprintStartedDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]SprintStartedDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]SprintStartedDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]SprintStartedDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case SprintStatus:
 		if !isavro {
 			return (o.(SprintStatus)).String()
 		}
 		return map[string]string{
 			"work.status": (o.(SprintStatus)).String(),
-		}
-	case *SprintStatus:
-		if !isavro {
-			return (o.(*SprintStatus)).String()
-		}
-		return map[string]string{
-			"work.status": (o.(*SprintStatus)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -719,6 +532,7 @@ func (o *Sprint) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *Sprint) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -983,7 +797,7 @@ func GetSprintAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "completed_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was completed", "type": "record", "name": "completed_date"},
+				"type": map[string]interface{}{"type": "record", "name": "completed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date that the sprint was completed"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -991,11 +805,11 @@ func GetSprintAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "ended_date",
-				"type": map[string]interface{}{"type": "record", "name": "ended_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was ended"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date that the sprint was ended", "type": "record", "name": "ended_date"},
 			},
 			map[string]interface{}{
 				"name": "fetched_date",
-				"type": map[string]interface{}{"type": "record", "name": "fetched_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date in when the api was called"},
+				"type": map[string]interface{}{"type": "record", "name": "fetched_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date in when the api was called"},
 			},
 			map[string]interface{}{
 				"name": "goal",
@@ -1019,7 +833,7 @@ func GetSprintAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "started_date",
-				"type": map[string]interface{}{"type": "record", "name": "started_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was started"},
+				"type": map[string]interface{}{"name": "started_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was started", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "status",

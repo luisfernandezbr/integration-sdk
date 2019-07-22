@@ -63,6 +63,14 @@ const (
 	ExportResponseEndDateColumnRfc3339Column = "end_date->rfc3339"
 	// ExportResponseErrorColumn is the error column name
 	ExportResponseErrorColumn = "error"
+	// ExportResponseEventDateColumn is the event_date column name
+	ExportResponseEventDateColumn = "event_date"
+	// ExportResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	ExportResponseEventDateColumnEpochColumn = "event_date->epoch"
+	// ExportResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	ExportResponseEventDateColumnOffsetColumn = "event_date->offset"
+	// ExportResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	ExportResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
 	// ExportResponseFreeSpaceColumn is the free_space column name
 	ExportResponseFreeSpaceColumn = "free_space"
 	// ExportResponseGoVersionColumn is the go_version column name
@@ -120,11 +128,11 @@ const (
 // 4 end_date
 // end_date {"description":"the export end date","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"end_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ExportResponseEndDate represents the object structure for end_date
 type ExportResponseEndDate struct {
@@ -153,11 +161,11 @@ func (o *ExportResponseEndDate) ToMap() map[string]interface{} {
 // 6 event_date
 // event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ExportResponseEventDate represents the object structure for event_date
 type ExportResponseEventDate struct {
@@ -219,11 +227,11 @@ func (o *ExportResponseEventDate) ToMap() map[string]interface{} {
 // 19 start_date
 // start_date {"description":"the export start date","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"start_date","relation":false,"subtype":"","type":"object"}
 
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
+// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
 
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
+// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
 
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
+// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ExportResponseStartDate represents the object structure for start_date
 type ExportResponseStartDate struct {
@@ -368,201 +376,31 @@ func toExportResponseObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toExportResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if o == nil {
-		return toExportResponseObjectNil(isavro, isoptional)
+
+	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+		return res
 	}
 	switch v := o.(type) {
-	case nil:
-		return toExportResponseObjectNil(isavro, isoptional)
-	case string, int, int8, int16, int32, int64, float32, float64, bool:
-		if isavro && isoptional {
-			return goavro.Union(avrotype, v)
-		}
-		return v
-	case *string:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int8:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int16:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int32:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *int64:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float32:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *float64:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case *bool:
-		if isavro && isoptional {
-			if v == nil {
-				return toExportResponseObjectNil(isavro, isoptional)
-			}
-			pv := *v
-			return goavro.Union(avrotype, pv)
-		}
-		return v
-	case map[string]interface{}:
-		return o
-	case *map[string]interface{}:
-		return v
-	case map[string]string:
-		return v
-	case *map[string]string:
-		return *v
 	case *ExportResponse:
 		return v.ToMap()
 	case ExportResponse:
 		return v.ToMap()
-	case []string, []int64, []float64, []bool:
-		return o
-	case *[]string:
-		return (*(o.(*[]string)))
-	case *[]int64:
-		return (*(o.(*[]int64)))
-	case *[]float64:
-		return (*(o.(*[]float64)))
-	case *[]bool:
-		return (*(o.(*[]bool)))
-	case []interface{}:
-		a := o.([]interface{})
-		arr := make([]interface{}, 0)
-		for _, av := range a {
-			arr = append(arr, toExportResponseObject(av, isavro, false, ""))
-		}
-		return arr
 
 	case ExportResponseEndDate:
 		vv := o.(ExportResponseEndDate)
 		return vv.ToMap()
-	case *ExportResponseEndDate:
-		return map[string]interface{}{
-			"agent.end_date": (*o.(*ExportResponseEndDate)).ToMap(),
-		}
-	case []ExportResponseEndDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportResponseEndDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportResponseEndDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportResponseEndDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ExportResponseEventDate:
 		vv := o.(ExportResponseEventDate)
 		return vv.ToMap()
-	case *ExportResponseEventDate:
-		return map[string]interface{}{
-			"agent.event_date": (*o.(*ExportResponseEventDate)).ToMap(),
-		}
-	case []ExportResponseEventDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportResponseEventDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportResponseEventDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportResponseEventDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ExportResponseStartDate:
 		vv := o.(ExportResponseStartDate)
 		return vv.ToMap()
-	case *ExportResponseStartDate:
-		return map[string]interface{}{
-			"agent.start_date": (*o.(*ExportResponseStartDate)).ToMap(),
-		}
-	case []ExportResponseStartDate:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ExportResponseStartDate) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case *[]ExportResponseStartDate:
-		arr := make([]interface{}, 0)
-		vv := o.(*[]ExportResponseStartDate)
-		for _, i := range *vv {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 	case ExportResponseType:
 		if !isavro {
 			return (o.(ExportResponseType)).String()
 		}
 		return map[string]string{
 			"agent.type": (o.(ExportResponseType)).String(),
-		}
-	case *ExportResponseType:
-		if !isavro {
-			return (o.(*ExportResponseType)).String()
-		}
-		return map[string]string{
-			"agent.type": (o.(*ExportResponseType)).String(),
 		}
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
@@ -778,6 +616,7 @@ func (o *ExportResponse) FromAvroBinary(value []byte) error {
 
 // Stringify returns the object in JSON format as a string
 func (o *ExportResponse) Stringify() string {
+	o.Hash()
 	return pjson.Stringify(o)
 }
 
@@ -1244,7 +1083,7 @@ func GetExportResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the export end date"},
+				"type": map[string]interface{}{"name": "end_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the export end date", "type": "record"},
 			},
 			map[string]interface{}{
 				"name":    "error",
