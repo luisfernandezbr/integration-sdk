@@ -22,6 +22,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -55,6 +56,8 @@ const (
 	UserCostColumn = "cost"
 	// UserCostCenterIDColumn is the cost_center_id column name
 	UserCostCenterIDColumn = "cost_center_id"
+	// UserCreatedAtColumn is the created_ts column name
+	UserCreatedAtColumn = "created_ts"
 	// UserCustomerIDColumn is the customer_id column name
 	UserCustomerIDColumn = "customer_id"
 	// UserDeletedDateColumn is the deleted_date column name
@@ -107,6 +110,8 @@ const (
 	UserTitleColumn = "title"
 	// UserTrackableColumn is the trackable column name
 	UserTrackableColumn = "trackable"
+	// UserUpdatedAtColumn is the updated_ts column name
+	UserUpdatedAtColumn = "updated_ts"
 )
 
 // UserDeletedDate represents the object structure for deleted_date
@@ -182,6 +187,8 @@ type User struct {
 	Cost float64 `json:"cost" bson:"cost" yaml:"cost" faker:"-"`
 	// CostCenterID the id of the cost center
 	CostCenterID *string `json:"cost_center_id" bson:"cost_center_id" yaml:"cost_center_id" faker:"-"`
+	// CreatedAt the date the record was created in Epoch time
+	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DeletedDate when the user record was deleted in epoch timestamp
@@ -216,6 +223,8 @@ type User struct {
 	Title *string `json:"title" bson:"title" yaml:"title" faker:"jobtitle"`
 	// Trackable if true, the user is trackable in the pinpoint system
 	Trackable bool `json:"trackable" bson:"trackable" yaml:"trackable" faker:"-"`
+	// UpdatedAt the date the record was updated in Epoch time
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -495,8 +504,11 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"avatar_url":      toUserObject(o.AvatarURL, isavro, true, "string"),
 		"cost":            toUserObject(o.Cost, isavro, false, "float"),
 		"cost_center_id":  toUserObject(o.CostCenterID, isavro, true, "string"),
+		"created_ts":      toUserObject(o.CreatedAt, isavro, false, "long"),
 		"customer_id":     toUserObject(o.CustomerID, isavro, false, "string"),
+		"deleted_date":    toUserObject(o.DeletedDate, isavro, false, "deleted_date"),
 		"email":           toUserObject(o.Email, isavro, false, "string"),
+		"hired_date":      toUserObject(o.HiredDate, isavro, false, "hired_date"),
 		"id":              toUserObject(o.ID, isavro, false, "string"),
 		"location":        toUserObject(o.Location, isavro, true, "string"),
 		"manager_id":      toUserObject(o.ManagerID, isavro, true, "string"),
@@ -507,8 +519,10 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":        toUserObject(o.RefType, isavro, false, "string"),
 		"role_ids":        toUserObject(o.RoleIds, isavro, false, "role_ids"),
 		"team_ids":        toUserObject(o.TeamIds, isavro, false, "team_ids"),
+		"terminated_date": toUserObject(o.TerminatedDate, isavro, false, "terminated_date"),
 		"title":           toUserObject(o.Title, isavro, true, "string"),
 		"trackable":       toUserObject(o.Trackable, isavro, false, "boolean"),
+		"updated_ts":      toUserObject(o.UpdatedAt, isavro, false, "long"),
 		"hashcode":        toUserObject(o.Hashcode, isavro, false, "string"),
 	}
 }
@@ -571,6 +585,19 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.CostCenterID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+	if val, ok := kv["created_ts"].(int64); ok {
+		o.CreatedAt = val
+	} else {
+		val := kv["created_ts"]
+		if val == nil {
+			o.CreatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.CreatedAt = number.ToInt64Any(val)
+		}
+	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -584,6 +611,28 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+	if val, ok := kv["deleted_date"].(UserDeletedDate); ok {
+		o.DeletedDate = val
+	} else {
+		val := kv["deleted_date"]
+		if val == nil {
+			o.DeletedDate = UserDeletedDate{}
+		} else {
+			o.DeletedDate = UserDeletedDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.DeletedDate)
+
+		}
+	}
 	if val, ok := kv["email"].(string); ok {
 		o.Email = val
 	} else {
@@ -595,6 +644,28 @@ func (o *User) FromMap(kv map[string]interface{}) {
 				val = pjson.Stringify(m)
 			}
 			o.Email = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["hired_date"].(UserHiredDate); ok {
+		o.HiredDate = val
+	} else {
+		val := kv["hired_date"]
+		if val == nil {
+			o.HiredDate = UserHiredDate{}
+		} else {
+			o.HiredDate = UserHiredDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.HiredDate)
+
 		}
 	}
 	if val, ok := kv["id"].(string); ok {
@@ -807,6 +878,28 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	if o.TeamIds == nil {
 		o.TeamIds = make([]string, 0)
 	}
+	if val, ok := kv["terminated_date"].(UserTerminatedDate); ok {
+		o.TerminatedDate = val
+	} else {
+		val := kv["terminated_date"]
+		if val == nil {
+			o.TerminatedDate = UserTerminatedDate{}
+		} else {
+			o.TerminatedDate = UserTerminatedDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.TerminatedDate)
+
+		}
+	}
 	if val, ok := kv["title"].(*string); ok {
 		o.Title = val
 	} else if val, ok := kv["title"].(string); ok {
@@ -833,6 +926,19 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			o.Trackable = number.ToBoolAny(val)
 		}
 	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		val := kv["updated_ts"]
+		if val == nil {
+			o.UpdatedAt = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
+			}
+			o.UpdatedAt = number.ToInt64Any(val)
+		}
+	}
 	o.setDefaults()
 }
 
@@ -843,8 +949,11 @@ func (o *User) Hash() string {
 	args = append(args, o.AvatarURL)
 	args = append(args, o.Cost)
 	args = append(args, o.CostCenterID)
+	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
+	args = append(args, o.DeletedDate)
 	args = append(args, o.Email)
+	args = append(args, o.HiredDate)
 	args = append(args, o.ID)
 	args = append(args, o.Location)
 	args = append(args, o.ManagerID)
@@ -855,8 +964,10 @@ func (o *User) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RoleIds)
 	args = append(args, o.TeamIds)
+	args = append(args, o.TerminatedDate)
 	args = append(args, o.Title)
 	args = append(args, o.Trackable)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -891,12 +1002,24 @@ func GetUserAvroSchemaSpec() string {
 				"default": nil,
 			},
 			map[string]interface{}{
+				"name": "created_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
 				"name": "customer_id",
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "deleted_date",
+				"type": map[string]interface{}{"type": "record", "name": "deleted_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "when the user record was deleted in epoch timestamp"},
+			},
+			map[string]interface{}{
 				"name": "email",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "hired_date",
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "when the user was hired in epoch timestamp", "type": "record", "name": "hired_date"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -942,6 +1065,10 @@ func GetUserAvroSchemaSpec() string {
 				"type": map[string]interface{}{"type": "array", "name": "team_ids", "items": "string"},
 			},
 			map[string]interface{}{
+				"name": "terminated_date",
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was terminated in epoch timestamp", "type": "record", "name": "terminated_date"},
+			},
+			map[string]interface{}{
 				"name":    "title",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
@@ -949,6 +1076,10 @@ func GetUserAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "trackable",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 		},
 	}
