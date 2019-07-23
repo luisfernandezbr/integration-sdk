@@ -73,15 +73,6 @@ const (
 	AgentUUIDColumn = "uuid"
 )
 
-// 0 completed_date
-// completed_date {"description":"Last time the agent completed setup","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"completed_date","relation":false,"subtype":"","type":"object"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
 // AgentCompletedDate represents the object structure for completed_date
 type AgentCompletedDate struct {
 	// Epoch the date in epoch format
@@ -102,33 +93,6 @@ func (o *AgentCompletedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
-
-// 1 created_ts
-// created_ts {"description":"the date the record was created in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"created_ts","relation":false,"subtype":"","type":"int"}
-
-// 2 customer_id
-// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
-
-// 3 error
-// error {"description":"Message if the agent is currently erroring out","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
-
-// 4 id
-// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 5 ref_id
-// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
-
-// 6 ref_type
-// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
-
-// 7 rerun_historical
-// rerun_historical {"description":"Last re-run of historical data","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"rerun_historical","relation":false,"subtype":"","type":"int"}
-
-// 8 updated_ts
-// updated_ts {"description":"the date the record was updated in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"updated_ts","relation":false,"subtype":"","type":"int"}
-
-// 9 uuid
-// uuid {"description":"The uuid","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
 
 // Agent Agent metadata for an enrolled agent
 type Agent struct {
@@ -645,7 +609,7 @@ func GetAgentAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "completed_date",
-				"type": map[string]interface{}{"type": "record", "name": "completed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "Last time the agent completed setup"},
+				"type": map[string]interface{}{"name": "completed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Last time the agent completed setup", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

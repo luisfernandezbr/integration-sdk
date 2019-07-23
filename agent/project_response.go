@@ -121,59 +121,42 @@ const (
 	ProjectResponseVersionColumn = "version"
 )
 
-// 0 architecture
-// architecture {"description":"the architecture of the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"architecture","relation":false,"subtype":"","type":"string"}
-
-// 1 created_date
-// created_date {"description":"the date of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"created_date","relation":false,"subtype":"","type":"common.Date"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
 // ProjectResponseProjectsLastIssueCreatedDate represents the object structure for created_date
 type ProjectResponseProjectsLastIssueCreatedDate struct {
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func (o *ProjectResponseProjectsLastIssueCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
+		// CustomerID the customer id for the model instance
+		"customer_id": o.CustomerID,
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
+		// ID the primary key for the model instance
+		"id": o.ID,
 		// Offset the timezone offset from GMT
 		"offset": o.Offset,
+		// RefID the source system id for the model instance
+		"ref_id": o.RefID,
+		// RefType the source system identifier for the model instance
+		"ref_type": o.RefType,
 		// Rfc3339 the date in RFC3339 format
 		"rfc3339": o.Rfc3339,
 	}
 }
-
-// 2 customer_id
-// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
-
-// 3 data
-// data {"description":"extra data that is specific about this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"data","relation":false,"subtype":"","type":"string"}
-
-// 4 distro
-// distro {"description":"the agent os distribution","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"distro","relation":false,"subtype":"","type":"string"}
-
-// 5 error
-// error {"description":"an error message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"error","relation":false,"subtype":"","type":"string"}
-
-// 6 event_date
-// event_date {"description":"the date of the event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"event_date","relation":false,"subtype":"","type":"object"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
 
 // ProjectResponseEventDate represents the object structure for event_date
 type ProjectResponseEventDate struct {
@@ -195,60 +178,6 @@ func (o *ProjectResponseEventDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
-
-// 7 free_space
-// free_space {"description":"the amount of free space in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"free_space","relation":false,"subtype":"","type":"long"}
-
-// 8 go_version
-// go_version {"description":"the go version that the agent build was built with","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"go_version","relation":false,"subtype":"","type":"string"}
-
-// 9 hostname
-// hostname {"description":"the agent hostname","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"hostname","relation":false,"subtype":"","type":"string"}
-
-// 10 id
-// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 11 integration_id
-// integration_id {"description":"the integration id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"integration_id","relation":false,"subtype":"","type":"string"}
-
-// 12 memory
-// memory {"description":"the amount of memory in bytes for the agent machine","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"memory","relation":false,"subtype":"","type":"long"}
-
-// 13 message
-// message {"description":"a message related to this event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"message","relation":false,"subtype":"","type":"string"}
-
-// 14 num_cpu
-// num_cpu {"description":"the number of CPU the agent is running","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"num_cpu","relation":false,"subtype":"","type":"int"}
-
-// 15 os
-// os {"description":"the agent operating system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"os","relation":false,"subtype":"","type":"string"}
-
-// 16 projects
-// projects {"description":"the projects exported","is_array":true,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"projects","relation":false,"subtype":"admin.Project","type":"object"}
-
-// active {"description":"the status of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
-
-// category {"description":"the project category","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"category","relation":false,"subtype":"","type":"string"}
-
-// description {"description":"the description of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
-
-// identifier {"description":"the common identifier for the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"identifier","relation":false,"subtype":"","type":"string"}
-
-// last_issue {"description":"last issue for this project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"last_issue","relation":false,"subtype":"","type":"object"}
-
-// issue_id {"description":"issue id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"issue_id","relation":false,"subtype":"","type":"string"}
-
-// identifier {"description":"the issue key from the source","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"identifier","relation":false,"subtype":"","type":"string"}
-
-// created_date {"description":"the date of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"created_date","relation":false,"subtype":"","type":"common.Date"}
-
-// last_user {"description":"the last user","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":true,"name":"last_user","relation":false,"subtype":"","type":"object"}
-
-// user_id {"description":"the work project user id","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"user_id","relation":false,"subtype":"","type":"string"}
-
-// name {"description":"the user name","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
-
-// avatar_url {"description":"the avatar url","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"avatar_url","relation":false,"subtype":"","type":"string"}
 
 // ProjectResponseProjectsLastIssueLastUser represents the object structure for last_user
 type ProjectResponseProjectsLastIssueLastUser struct {
@@ -296,14 +225,6 @@ func (o *ProjectResponseProjectsLastIssue) ToMap() map[string]interface{} {
 	}
 }
 
-// name {"description":"the name of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
-
-// project_id {"description":"the id of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"project_id","relation":false,"subtype":"","type":"string"}
-
-// total_issues {"description":"the total issues count for the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"total_issues","relation":false,"subtype":"","type":"int"}
-
-// url {"description":"the url to the project home page","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
-
 // ProjectResponseProjects represents the object structure for projects
 type ProjectResponseProjects struct {
 	// Active the status of the project
@@ -349,21 +270,6 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 	}
 }
 
-// 17 ref_id
-// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
-
-// 18 ref_type
-// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
-
-// 19 request_id
-// request_id {"description":"the request id that this response is correlated to","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"request_id","relation":false,"subtype":"","type":"string"}
-
-// 20 success
-// success {"description":"if the response was successful","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"success","relation":false,"subtype":"","type":"boolean"}
-
-// 21 type
-// type {"description":"the type of event","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"type","relation":false,"subtype":"","type":"enum"}
-
 // ProjectResponseType is the enumeration type for type
 type ProjectResponseType int32
 
@@ -408,12 +314,6 @@ const (
 	// TypeUser is the enumeration value for user
 	ProjectResponseTypeUser ProjectResponseType = 7
 )
-
-// 22 uuid
-// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
-
-// 23 version
-// version {"description":"the agent version","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"version","relation":false,"subtype":"","type":"string"}
 
 // ProjectResponse an agent response to an action request adding project(s)
 type ProjectResponse struct {
@@ -503,9 +403,8 @@ func toProjectResponseObject(o interface{}, isavro bool, isoptional bool, avroty
 		if !isavro {
 			return (o.(ProjectResponseType)).String()
 		}
-		return map[string]string{
-			"agent.type": (o.(ProjectResponseType)).String(),
-		}
+		return (o.(ProjectResponseType)).String()
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -1234,7 +1133,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"name": "category", "doc": "the project category", "type": "string"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the issue key from the source"}, map[string]interface{}{"type": map[string]interface{}{"doc": "the date of the change", "type": "record", "name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}}, "name": "created_date", "doc": "the date of the change"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"doc": "the work project user id", "type": "string", "name": "user_id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the user name"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}}, "doc": "last issue for this project"}, "name": "last_issue", "doc": "last issue for this project"}, map[string]interface{}{"doc": "the name of the project", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "long", "name": "total_issues", "doc": "the total issues count for the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}},
+				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"name": "projects", "fields": []interface{}{map[string]interface{}{"name": "active", "doc": "the status of the project", "type": "boolean"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"doc": "the issue key from the source", "type": "string", "name": "identifier"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"doc": "the customer id for the model instance", "type": "string", "name": "customer_id"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"name": "ref_id", "doc": "the source system id for the model instance", "type": "string"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"}, "name": "created_date", "doc": "the date of the change"}, map[string]interface{}{"name": "last_user", "doc": "the last user", "type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}, map[string]interface{}{"name": "name", "doc": "the user name", "type": "string"}, map[string]interface{}{"doc": "the avatar url", "type": "string", "name": "avatar_url"}}, "doc": "the last user"}}}, "doc": "last issue for this project"}, "name": "last_issue", "doc": "last issue for this project"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"doc": "the id of the project", "type": "string", "name": "project_id"}, map[string]interface{}{"name": "total_issues", "doc": "the total issues count for the project", "type": "long"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1254,12 +1153,10 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "type",
-				"type": []interface{}{
-					map[string]interface{}{
-						"type":    "enum",
-						"name":    "type",
-						"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "repo", "user"},
-					},
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "type",
+					"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "repo", "user"},
 				},
 			},
 			map[string]interface{}{

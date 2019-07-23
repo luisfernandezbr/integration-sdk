@@ -65,42 +65,6 @@ const (
 	RepoURLColumn = "url"
 )
 
-// 0 active
-// active {"description":"the status of the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
-
-// 1 branches
-
-// 2 commits
-
-// 3 customer_id
-// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
-
-// 4 default_branch
-// default_branch {"description":"the repo default branch","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"default_branch","relation":false,"subtype":"","type":"string"}
-
-// 5 description
-// description {"description":"brief explanation of the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
-
-// 6 id
-// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 7 language
-// language {"description":"the programming language the source code is primarily written in","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"language","relation":false,"subtype":"","type":"string"}
-
-// 8 name
-// name {"description":"the name of the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
-
-// 9 pull_requests
-
-// 10 ref_id
-// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
-
-// 11 ref_type
-// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
-
-// 12 url
-// url {"description":"the url to the repo home page","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
-
 // Repo the repo holds source code
 type Repo struct {
 	// Active the status of the repo

@@ -66,36 +66,6 @@ const (
 	ProjectURLColumn = "url"
 )
 
-// 0 active
-// active {"description":"the status of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"active","relation":false,"subtype":"","type":"boolean"}
-
-// 1 category
-// category {"description":"the project category","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"category","relation":false,"subtype":"","type":"string"}
-
-// 2 customer_id
-// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
-
-// 3 description
-// description {"description":"the description of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"description","relation":false,"subtype":"","type":"string"}
-
-// 4 id
-// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 5 identifier
-// identifier {"description":"the common identifier for the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"identifier","relation":false,"subtype":"","type":"string"}
-
-// 6 name
-// name {"description":"the name of the project","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"name","relation":false,"subtype":"","type":"string"}
-
-// 7 ref_id
-// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
-
-// 8 ref_type
-// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
-
-// 9 url
-// url {"description":"the url to the project home page","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"url","relation":false,"subtype":"","type":"string"}
-
 // Project the project holds work
 type Project struct {
 	// Active the status of the project

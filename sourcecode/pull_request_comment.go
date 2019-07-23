@@ -77,18 +77,6 @@ const (
 	PullRequestCommentUserRefIDColumn = "user_ref_id"
 )
 
-// 0 body
-// body {"description":"the body of the comment","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"body","relation":false,"subtype":"","type":"string"}
-
-// 1 created_date
-// created_date {"description":"the timestamp in UTC that the comment was created","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
 // PullRequestCommentCreatedDate represents the object structure for created_date
 type PullRequestCommentCreatedDate struct {
 	// Epoch the date in epoch format
@@ -110,33 +98,6 @@ func (o *PullRequestCommentCreatedDate) ToMap() map[string]interface{} {
 	}
 }
 
-// 2 customer_id
-// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
-
-// 3 id
-// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 4 pull_request_id
-// pull_request_id {"description":"the pull request this comment is associated with","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"pull_request_id","relation":true,"subtype":"","type":"string"}
-
-// 5 ref_id
-// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
-
-// 6 ref_type
-// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
-
-// 7 repo_id
-// repo_id {"description":"the unique id for the repo","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"repo_id","relation":false,"subtype":"","type":"string"}
-
-// 8 updated_date
-// updated_date {"description":"the timestamp in UTC that the comment was closed","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"updated_date","relation":false,"subtype":"","type":"object"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
 // PullRequestCommentUpdatedDate represents the object structure for updated_date
 type PullRequestCommentUpdatedDate struct {
 	// Epoch the date in epoch format
@@ -157,9 +118,6 @@ func (o *PullRequestCommentUpdatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
-
-// 9 user_ref_id
-// user_ref_id {"description":"the user ref_id in the source system","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"user_ref_id","relation":false,"subtype":"","type":"string"}
 
 // PullRequestComment the comment for a given pull request
 type PullRequestComment struct {
@@ -655,7 +613,7 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the comment was created"},
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the comment was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -683,7 +641,7 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_date",
-				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the comment was closed"},
+				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the timestamp in UTC that the comment was closed"},
 			},
 			map[string]interface{}{
 				"name": "user_ref_id",

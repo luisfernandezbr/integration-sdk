@@ -63,24 +63,6 @@ const (
 	HookTokenColumn = "token"
 )
 
-// 0 data
-// data {"description":"the webhook data payload base64 encoded","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"data","relation":false,"subtype":"","type":"string"}
-
-// 1 headers
-// headers {"description":"the headers of the incoming webhook","is_array":false,"is_hidden":false,"is_map":true,"is_nested":false,"is_object":false,"name":"headers","relation":false,"subtype":"","type":"string"}
-
-// 2 id
-// id {"description":"the primary key for this model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 3 received_date
-// received_date {"description":"the date when the hook was received","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"received_date","relation":false,"subtype":"","type":"object"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
 // HookReceivedDate represents the object structure for received_date
 type HookReceivedDate struct {
 	// Epoch the date in epoch format
@@ -101,12 +83,6 @@ func (o *HookReceivedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
-
-// 4 system
-// system {"description":"the name of the system sending the hook","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"system","relation":false,"subtype":"","type":"string"}
-
-// 5 token
-// token {"description":"the token part of the url","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"token","relation":false,"subtype":"","type":"string"}
 
 // Hook hook is a webhook event which is received from an external source
 type Hook struct {
@@ -500,7 +476,7 @@ func GetHookAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "received_date",
-				"type": map[string]interface{}{"type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the hook was received"},
+				"type": map[string]interface{}{"type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the hook was received"},
 			},
 			map[string]interface{}{
 				"name": "system",

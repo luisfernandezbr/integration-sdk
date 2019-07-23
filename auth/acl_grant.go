@@ -72,15 +72,6 @@ const (
 	ACLGrantUpdatedAtColumn = "updated_ts"
 )
 
-// 0 created_date
-// created_date {"description":"the created date","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"created_date","relation":false,"subtype":"","type":"object"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
 // ACLGrantCreatedDate represents the object structure for created_date
 type ACLGrantCreatedDate struct {
 	// Epoch the date in epoch format
@@ -101,18 +92,6 @@ func (o *ACLGrantCreatedDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
-
-// 1 created_ts
-// created_ts {"description":"the date the record was created in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"created_ts","relation":false,"subtype":"","type":"int"}
-
-// 2 customer_id
-// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
-
-// 3 id
-// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 4 permission
-// permission {"description":"the permission that the grant provides","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"permission","relation":false,"subtype":"","type":"enum"}
 
 // ACLGrantPermission is the enumeration type for permission
 type ACLGrantPermission int32
@@ -138,21 +117,6 @@ const (
 	// PermissionReadwrite is the enumeration value for readwrite
 	ACLGrantPermissionReadwrite ACLGrantPermission = 2
 )
-
-// 5 ref_id
-// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
-
-// 6 ref_type
-// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
-
-// 7 resource_id
-// resource_id {"description":"the resource id for the grant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"resource_id","relation":true,"subtype":"","type":"string"}
-
-// 8 role_id
-// role_id {"description":"the role id for the grant","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"role_id","relation":true,"subtype":"","type":"string"}
-
-// 9 updated_ts
-// updated_ts {"description":"the date the record was updated in Epoch time","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"updated_ts","relation":false,"subtype":"","type":"int"}
 
 // ACLGrant a ACL grant controls permisson for a specific role to a resource
 type ACLGrant struct {
@@ -208,9 +172,8 @@ func toACLGrantObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 		if !isavro {
 			return (o.(ACLGrantPermission)).String()
 		}
-		return map[string]string{
-			"auth.permission": (o.(ACLGrantPermission)).String(),
-		}
+		return (o.(ACLGrantPermission)).String()
+
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
@@ -697,7 +660,7 @@ func GetACLGrantAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the created date", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the created date"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
@@ -713,12 +676,10 @@ func GetACLGrantAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "permission",
-				"type": []interface{}{
-					map[string]interface{}{
-						"type":    "enum",
-						"name":    "permission",
-						"symbols": []interface{}{"admin", "read", "readwrite"},
-					},
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "permission",
+					"symbols": []interface{}{"admin", "read", "readwrite"},
 				},
 			},
 			map[string]interface{}{

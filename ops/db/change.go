@@ -67,9 +67,6 @@ const (
 	ChangeRefTypeColumn = "ref_type"
 )
 
-// 0 action
-// action {"description":"the action that was taken","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"action","relation":false,"subtype":"","type":"enum"}
-
 // ChangeAction is the enumeration type for action
 type ChangeAction int32
 
@@ -95,15 +92,6 @@ const (
 	ChangeActionDelete ChangeAction = 2
 )
 
-// 1 change_date
-// change_date {"description":"the date when the change was made","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"change_date","relation":false,"subtype":"","type":"object"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
 // ChangeChangeDate represents the object structure for change_date
 type ChangeChangeDate struct {
 	// Epoch the date in epoch format
@@ -124,24 +112,6 @@ func (o *ChangeChangeDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
-
-// 2 customer_id
-// customer_id {"description":"the customer id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"customer_id","relation":true,"subtype":"","type":"string"}
-
-// 3 data
-// data {"description":"the data payload of the change","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"data","relation":false,"subtype":"","type":"string"}
-
-// 4 id
-// id {"description":"the primary key for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 5 model
-// model {"description":"the name of the model","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"model","relation":false,"subtype":"","type":"string"}
-
-// 6 ref_id
-// ref_id {"description":"the source system id for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_id","relation":false,"subtype":"","type":"string"}
-
-// 7 ref_type
-// ref_type {"description":"the source system identifier for the model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"ref_type","relation":false,"subtype":"","type":"string"}
 
 // Change db change will contain all the changes to a specific data model from the DB
 type Change struct {
@@ -190,9 +160,8 @@ func toChangeObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		if !isavro {
 			return (o.(ChangeAction)).String()
 		}
-		return map[string]string{
-			"ops.db.action": (o.(ChangeAction)).String(),
-		}
+		return (o.(ChangeAction)).String()
+
 	case ChangeChangeDate:
 		vv := o.(ChangeChangeDate)
 		return vv.ToMap()
@@ -596,17 +565,15 @@ func GetChangeAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "action",
-				"type": []interface{}{
-					map[string]interface{}{
-						"type":    "enum",
-						"name":    "action",
-						"symbols": []interface{}{"create", "update", "delete"},
-					},
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "action",
+					"symbols": []interface{}{"create", "update", "delete"},
 				},
 			},
 			map[string]interface{}{
 				"name": "change_date",
-				"type": map[string]interface{}{"type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the change was made"},
+				"type": map[string]interface{}{"type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the change was made"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

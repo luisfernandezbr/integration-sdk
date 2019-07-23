@@ -59,21 +59,6 @@ const (
 	EnrollRequestUUIDColumn = "uuid"
 )
 
-// 0 code
-// code {"description":"The agent enrollment code","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"code","relation":false,"subtype":"","type":"string"}
-
-// 1 id
-// id {"description":"the primary key for this model instance","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"id","relation":false,"subtype":"","type":"string"}
-
-// 2 request_date
-// request_date {"description":"the date when the request was made","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":true,"name":"request_date","relation":false,"subtype":"","type":"object"}
-
-// epoch {"description":"the date in epoch format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"epoch","relation":false,"subtype":"","type":"int"}
-
-// offset {"description":"the timezone offset from GMT","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"offset","relation":false,"subtype":"","type":"int"}
-
-// rfc3339 {"description":"the date in RFC3339 format","is_array":false,"is_hidden":false,"is_map":false,"is_nested":true,"is_object":false,"name":"rfc3339","relation":false,"subtype":"","type":"string"}
-
 // EnrollRequestRequestDate represents the object structure for request_date
 type EnrollRequestRequestDate struct {
 	// Epoch the date in epoch format
@@ -94,9 +79,6 @@ func (o *EnrollRequestRequestDate) ToMap() map[string]interface{} {
 		"rfc3339": o.Rfc3339,
 	}
 }
-
-// 3 uuid
-// uuid {"description":"the agent unique identifier","is_array":false,"is_hidden":false,"is_map":false,"is_nested":false,"is_object":false,"name":"uuid","relation":false,"subtype":"","type":"string"}
 
 // EnrollRequest an agent request to enroll a new agent machine
 type EnrollRequest struct {
@@ -440,7 +422,7 @@ func GetEnrollRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date when the request was made", "type": "record", "name": "request_date"},
+				"type": map[string]interface{}{"doc": "the date when the request was made", "type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}},
 			},
 			map[string]interface{}{
 				"name": "uuid",
