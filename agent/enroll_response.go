@@ -482,6 +482,7 @@ func (o *EnrollResponse) ToMap(avro ...bool) map[string]interface{} {
 		"data":         toEnrollResponseObject(o.Data, isavro, true, "string"),
 		"distro":       toEnrollResponseObject(o.Distro, isavro, false, "string"),
 		"error":        toEnrollResponseObject(o.Error, isavro, true, "string"),
+		"event_date":   toEnrollResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":   toEnrollResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":   toEnrollResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":     toEnrollResponseObject(o.Hostname, isavro, false, "string"),
@@ -589,6 +590,28 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["event_date"].(EnrollResponseEventDate); ok {
+		o.EventDate = val
+	} else {
+		val := kv["event_date"]
+		if val == nil {
+			o.EventDate = EnrollResponseEventDate{}
+		} else {
+			o.EventDate = EnrollResponseEventDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.EventDate)
+
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -827,6 +850,7 @@ func (o *EnrollResponse) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
+	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -882,6 +906,10 @@ func GetEnrollResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "event_date",
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
