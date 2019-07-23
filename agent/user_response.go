@@ -561,6 +561,7 @@ func (o *UserResponse) ToMap(avro ...bool) map[string]interface{} {
 		"data":           toUserResponseObject(o.Data, isavro, true, "string"),
 		"distro":         toUserResponseObject(o.Distro, isavro, false, "string"),
 		"error":          toUserResponseObject(o.Error, isavro, true, "string"),
+		"event_date":     toUserResponseObject(o.EventDate, isavro, false, "event_date"),
 		"free_space":     toUserResponseObject(o.FreeSpace, isavro, false, "long"),
 		"go_version":     toUserResponseObject(o.GoVersion, isavro, false, "string"),
 		"hostname":       toUserResponseObject(o.Hostname, isavro, false, "string"),
@@ -657,6 +658,28 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 				val = kv["string"]
 			}
 			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+		}
+	}
+	if val, ok := kv["event_date"].(UserResponseEventDate); ok {
+		o.EventDate = val
+	} else {
+		val := kv["event_date"]
+		if val == nil {
+			o.EventDate = UserResponseEventDate{}
+		} else {
+			o.EventDate = UserResponseEventDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.EventDate)
+
 		}
 	}
 	if val, ok := kv["free_space"].(int64); ok {
@@ -953,6 +976,7 @@ func (o *UserResponse) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
+	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1006,6 +1030,10 @@ func GetUserResponseAvroSchemaSpec() string {
 				"name":    "error",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "event_date",
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1069,7 +1097,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "users",
-				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"doc": "the url to users avatar", "type": "string", "name": "avatar_url"}, map[string]interface{}{"doc": "the email for the user", "type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}, "name": "emails"}, map[string]interface{}{"name": "groups", "doc": "Group names", "type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}}}, map[string]interface{}{"name": "name", "doc": "the name of the user", "type": "string"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users"}},
+				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"doc": "the email for the user", "type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}, "name": "emails"}, map[string]interface{}{"name": "groups", "doc": "Group names", "type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}}}, map[string]interface{}{"name": "name", "doc": "the name of the user", "type": "string"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "uuid",

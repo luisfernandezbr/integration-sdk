@@ -353,13 +353,12 @@ func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"customer_id":  toExportTriggerObject(o.CustomerID, isavro, false, "string"),
-		"id":           toExportTriggerObject(o.ID, isavro, false, "string"),
-		"ref_id":       toExportTriggerObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toExportTriggerObject(o.RefType, isavro, false, "string"),
-		"request_date": toExportTriggerObject(o.RequestDate, isavro, false, "request_date"),
-		"uuid":         toExportTriggerObject(o.UUID, isavro, false, "string"),
-		"hashcode":     toExportTriggerObject(o.Hashcode, isavro, false, "string"),
+		"customer_id": toExportTriggerObject(o.CustomerID, isavro, false, "string"),
+		"id":          toExportTriggerObject(o.ID, isavro, false, "string"),
+		"ref_id":      toExportTriggerObject(o.RefID, isavro, false, "string"),
+		"ref_type":    toExportTriggerObject(o.RefType, isavro, false, "string"),
+		"uuid":        toExportTriggerObject(o.UUID, isavro, false, "string"),
+		"hashcode":    toExportTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -421,28 +420,6 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["request_date"].(ExportTriggerRequestDate); ok {
-		o.RequestDate = val
-	} else {
-		val := kv["request_date"]
-		if val == nil {
-			o.RequestDate = ExportTriggerRequestDate{}
-		} else {
-			o.RequestDate = ExportTriggerRequestDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.RequestDate)
-
-		}
-	}
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -466,7 +443,6 @@ func (o *ExportTrigger) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.RequestDate)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -498,10 +474,6 @@ func GetExportTriggerAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "request_date",
-				"type": map[string]interface{}{"name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "uuid",
