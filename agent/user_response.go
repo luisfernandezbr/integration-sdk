@@ -1033,7 +1033,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1097,7 +1097,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "users",
-				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"doc": "the exported users", "type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"name": "avatar_url", "doc": "the url to users avatar", "type": "string"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}, "name": "emails", "doc": "the email for the user"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"doc": "Group id", "type": "string", "name": "group_id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}}, "name": "groups", "doc": "Group names"}, map[string]interface{}{"name": "name", "doc": "the name of the user", "type": "string"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}}},
+				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"type": map[string]interface{}{"items": "string", "type": "array", "name": "emails"}, "name": "emails", "doc": "the email for the user"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"name": "group_id", "doc": "Group id", "type": "string"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}}, "name": "groups", "doc": "Group names"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users"}},
 			},
 			map[string]interface{}{
 				"name": "uuid",
