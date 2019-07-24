@@ -14,6 +14,7 @@ import (
 	dm_pipeline_activity "github.com/pinpt/go-datamodel/pipeline/activity"
 	dm_pipeline_customer "github.com/pinpt/go-datamodel/pipeline/customer"
 	dm_pipeline_integration "github.com/pinpt/go-datamodel/pipeline/integration"
+	dm_pipeline_reprocess "github.com/pinpt/go-datamodel/pipeline/reprocess"
 	dm_pipeline_signal "github.com/pinpt/go-datamodel/pipeline/signal"
 	dm_pipeline_sourcecode "github.com/pinpt/go-datamodel/pipeline/sourcecode"
 	dm_pipeline_work "github.com/pinpt/go-datamodel/pipeline/work"
@@ -127,6 +128,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "pipeline.integration.User":
 		o := new(dm_pipeline_integration.User)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "pipeline.reprocess.MaterializedLog":
+		o := new(dm_pipeline_reprocess.MaterializedLog)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "pipeline.signal.Interval":
@@ -312,6 +317,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_pipeline_integration.User)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "pipeline_reprocess_MaterializedLog_topic":
+		o := new(dm_pipeline_reprocess.MaterializedLog)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline_signal_Interval_topic":
 		o := new(dm_pipeline_signal.Interval)
 		o.FromMap(map[string]interface{}{})
@@ -441,6 +450,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("pipeline_activity_Activity_topic"),
 		datamodel.TopicNameType("pipeline_customer_User_topic"),
 		datamodel.TopicNameType("pipeline_integration_User_topic"),
+		datamodel.TopicNameType("pipeline_reprocess_MaterializedLog_topic"),
 		datamodel.TopicNameType("pipeline_signal_Interval_topic"),
 		datamodel.TopicNameType("pipeline_sourcecode_Commit_topic"),
 		datamodel.TopicNameType("pipeline_work_CustomField_topic"),
@@ -491,6 +501,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("pipeline.activity.Activity"),
 		datamodel.ModelNameType("pipeline.customer.User"),
 		datamodel.ModelNameType("pipeline.integration.User"),
+		datamodel.ModelNameType("pipeline.reprocess.MaterializedLog"),
 		datamodel.ModelNameType("pipeline.signal.Interval"),
 		datamodel.ModelNameType("pipeline.sourcecode.Commit"),
 		datamodel.ModelNameType("pipeline.work.CustomField"),

@@ -1,7 +1,7 @@
 // DO NOT EDIT -- generated code
 
-// Package codequality - the system which contains code quality
-package codequality
+// Package reprocess - the pipeline models
+package reprocess
 
 import (
 	"bufio"
@@ -26,134 +26,101 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
-	// MetricTopic is the default topic name
-	MetricTopic datamodel.TopicNameType = "codequality_Metric_topic"
+	// MaterializedLogTopic is the default topic name
+	MaterializedLogTopic datamodel.TopicNameType = "pipeline_reprocess_MaterializedLog_topic"
 
-	// MetricStream is the default stream name
-	MetricStream datamodel.TopicNameType = "codequality_Metric_stream"
+	// MaterializedLogStream is the default stream name
+	MaterializedLogStream datamodel.TopicNameType = "pipeline_reprocess_MaterializedLog_stream"
 
-	// MetricTable is the default table name
-	MetricTable datamodel.TopicNameType = "codequality_Metric"
+	// MaterializedLogTable is the default table name
+	MaterializedLogTable datamodel.TopicNameType = "pipeline_reprocess_MaterializedLog"
 
-	// MetricModelName is the model name
-	MetricModelName datamodel.ModelNameType = "codequality.Metric"
+	// MaterializedLogModelName is the model name
+	MaterializedLogModelName datamodel.ModelNameType = "pipeline.reprocess.MaterializedLog"
 )
 
 const (
-	// MetricCreatedDateColumn is the created_date column name
-	MetricCreatedDateColumn = "created_date"
-	// MetricCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	MetricCreatedDateColumnEpochColumn = "created_date->epoch"
-	// MetricCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	MetricCreatedDateColumnOffsetColumn = "created_date->offset"
-	// MetricCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	MetricCreatedDateColumnRfc3339Column = "created_date->rfc3339"
-	// MetricCustomerIDColumn is the customer_id column name
-	MetricCustomerIDColumn = "customer_id"
-	// MetricIDColumn is the id column name
-	MetricIDColumn = "id"
-	// MetricNameColumn is the name column name
-	MetricNameColumn = "name"
-	// MetricProjectIDColumn is the project_id column name
-	MetricProjectIDColumn = "project_id"
-	// MetricRefIDColumn is the ref_id column name
-	MetricRefIDColumn = "ref_id"
-	// MetricRefTypeColumn is the ref_type column name
-	MetricRefTypeColumn = "ref_type"
-	// MetricValueColumn is the value column name
-	MetricValueColumn = "value"
+	// MaterializedLogCustomerIDColumn is the customer_id column name
+	MaterializedLogCustomerIDColumn = "customer_id"
+	// MaterializedLogIDColumn is the id column name
+	MaterializedLogIDColumn = "id"
+	// MaterializedLogModelColumn is the model column name
+	MaterializedLogModelColumn = "model"
+	// MaterializedLogRecordCountColumn is the record_count column name
+	MaterializedLogRecordCountColumn = "record_count"
+	// MaterializedLogRefIDColumn is the ref_id column name
+	MaterializedLogRefIDColumn = "ref_id"
+	// MaterializedLogRefTypeColumn is the ref_type column name
+	MaterializedLogRefTypeColumn = "ref_type"
+	// MaterializedLogSavedAtColumn is the saved_ts column name
+	MaterializedLogSavedAtColumn = "saved_ts"
 )
 
-// MetricCreatedDate represents the object structure for created_date
-type MetricCreatedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func (o *MetricCreatedDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
-	}
-}
-
-// Metric individual metric details
-type Metric struct {
-	// CreatedDate the date when the metric was created
-	CreatedDate MetricCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+// MaterializedLog
+type MaterializedLog struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Name the metric name
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
-	// ProjectID the the project id
-	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	// Model the name of the model
+	Model string `json:"model" bson:"model" yaml:"model" faker:"-"`
+	// RecordCount count of records in batched save
+	RecordCount int64 `json:"record_count" bson:"record_count" yaml:"record_count" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// Value the value of the metric
-	Value string `json:"value" bson:"value" yaml:"value" faker:"-"`
+	// SavedAt timestamp of data persisted
+	SavedAt int64 `json:"saved_ts" bson:"saved_ts" yaml:"saved_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Metric)(nil)
+var _ datamodel.Model = (*MaterializedLog)(nil)
 
-func toMetricObjectNil(isavro bool, isoptional bool) interface{} {
+func toMaterializedLogObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toMaterializedLogObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 
 	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
 		return res
 	}
 	switch v := o.(type) {
-	case *Metric:
+	case *MaterializedLog:
 		return v.ToMap()
-	case Metric:
+	case MaterializedLog:
 		return v.ToMap()
 
-	case MetricCreatedDate:
-		vv := o.(MetricCreatedDate)
-		return vv.ToMap()
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of Metric
-func (o *Metric) String() string {
-	return fmt.Sprintf("codequality.Metric<%s>", o.ID)
+// String returns a string representation of MaterializedLog
+func (o *MaterializedLog) String() string {
+	return fmt.Sprintf("pipeline.reprocess.MaterializedLog<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Metric) GetTopicName() datamodel.TopicNameType {
-	return MetricTopic
+func (o *MaterializedLog) GetTopicName() datamodel.TopicNameType {
+	return MaterializedLogTopic
 }
 
 // GetModelName returns the name of the model
-func (o *Metric) GetModelName() datamodel.ModelNameType {
-	return MetricModelName
+func (o *MaterializedLog) GetModelName() datamodel.ModelNameType {
+	return MaterializedLogModelName
 }
 
-func (o *Metric) setDefaults() {
+func (o *MaterializedLog) setDefaults() {
 
 	o.GetID()
 	o.GetRefID()
@@ -161,16 +128,16 @@ func (o *Metric) setDefaults() {
 }
 
 // GetID returns the ID for the object
-func (o *Metric) GetID() string {
+func (o *MaterializedLog) GetID() string {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Metric", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("MaterializedLog", o.CustomerID, o.RefType, o.GetRefID())
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Metric) GetTopicKey() string {
+func (o *MaterializedLog) GetTopicKey() string {
 	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
@@ -179,53 +146,38 @@ func (o *Metric) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Metric) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	case MetricCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
-	}
-	panic("not sure how to handle the date time format for Metric")
+func (o *MaterializedLog) GetTimestamp() time.Time {
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
-func (o *Metric) GetRefID() string {
+func (o *MaterializedLog) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Metric) IsMaterialized() bool {
+func (o *MaterializedLog) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Metric) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *MaterializedLog) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Metric) IsEvented() bool {
+func (o *MaterializedLog) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Metric) SetEventHeaders(kv map[string]string) {
+func (o *MaterializedLog) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = MetricModelName.String()
+	kv["model"] = MaterializedLogModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *MaterializedLog) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -237,7 +189,7 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "created_date",
+		Timestamp:         "",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -247,28 +199,28 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *Metric) GetStateKey() string {
+func (o *MaterializedLog) GetStateKey() string {
 	key := "id"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *Metric) GetCustomerID() string {
+func (o *MaterializedLog) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Metric
-func (o *Metric) Clone() datamodel.Model {
-	c := new(Metric)
+// Clone returns an exact copy of MaterializedLog
+func (o *MaterializedLog) Clone() datamodel.Model {
+	c := new(MaterializedLog)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Metric) Anon() datamodel.Model {
-	c := new(Metric)
+func (o *MaterializedLog) Anon() datamodel.Model {
+	c := new(MaterializedLog)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -283,12 +235,12 @@ func (o *Metric) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Metric) MarshalJSON() ([]byte, error) {
+func (o *MaterializedLog) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Metric) UnmarshalJSON(data []byte) error {
+func (o *MaterializedLog) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -297,22 +249,22 @@ func (o *Metric) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecMetric *goavro.Codec
+var cachedCodecMaterializedLog *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *Metric) GetAvroCodec() *goavro.Codec {
-	if cachedCodecMetric == nil {
-		c, err := GetMetricAvroSchema()
+func (o *MaterializedLog) GetAvroCodec() *goavro.Codec {
+	if cachedCodecMaterializedLog == nil {
+		c, err := GetMaterializedLogAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecMetric = c
+		cachedCodecMaterializedLog = c
 	}
-	return cachedCodecMetric
+	return cachedCodecMaterializedLog
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Metric) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *MaterializedLog) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -326,7 +278,7 @@ func (o *Metric) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Metric) FromAvroBinary(value []byte) error {
+func (o *MaterializedLog) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -341,18 +293,18 @@ func (o *Metric) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Metric) Stringify() string {
+func (o *MaterializedLog) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Metric objects are equal
-func (o *Metric) IsEqual(other *Metric) bool {
+// IsEqual returns true if the two MaterializedLog objects are equal
+func (o *MaterializedLog) IsEqual(other *MaterializedLog) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
+func (o *MaterializedLog) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -361,45 +313,22 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"created_date": toMetricObject(o.CreatedDate, isavro, false, "created_date"),
-		"customer_id":  toMetricObject(o.CustomerID, isavro, false, "string"),
-		"id":           toMetricObject(o.ID, isavro, false, "string"),
-		"name":         toMetricObject(o.Name, isavro, false, "string"),
-		"project_id":   toMetricObject(o.ProjectID, isavro, false, "string"),
-		"ref_id":       toMetricObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toMetricObject(o.RefType, isavro, false, "string"),
-		"value":        toMetricObject(o.Value, isavro, false, "string"),
-		"hashcode":     toMetricObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":  toMaterializedLogObject(o.CustomerID, isavro, false, "string"),
+		"id":           toMaterializedLogObject(o.ID, isavro, false, "string"),
+		"model":        toMaterializedLogObject(o.Model, isavro, false, "string"),
+		"record_count": toMaterializedLogObject(o.RecordCount, isavro, false, "long"),
+		"ref_id":       toMaterializedLogObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toMaterializedLogObject(o.RefType, isavro, false, "string"),
+		"saved_ts":     toMaterializedLogObject(o.SavedAt, isavro, false, "long"),
+		"hashcode":     toMaterializedLogObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Metric) FromMap(kv map[string]interface{}) {
+func (o *MaterializedLog) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-	if val, ok := kv["created_date"].(MetricCreatedDate); ok {
-		o.CreatedDate = val
-	} else {
-		val := kv["created_date"]
-		if val == nil {
-			o.CreatedDate = MetricCreatedDate{}
-		} else {
-			o.CreatedDate = MetricCreatedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.CreatedDate)
-
-		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
@@ -427,30 +356,30 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
+	if val, ok := kv["model"].(string); ok {
+		o.Model = val
 	} else {
-		val := kv["name"]
+		val := kv["model"]
 		if val == nil {
-			o.Name = ""
+			o.Model = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Name = fmt.Sprintf("%v", val)
+			o.Model = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["project_id"].(string); ok {
-		o.ProjectID = val
+	if val, ok := kv["record_count"].(int64); ok {
+		o.RecordCount = val
 	} else {
-		val := kv["project_id"]
+		val := kv["record_count"]
 		if val == nil {
-			o.ProjectID = ""
+			o.RecordCount = number.ToInt64Any(nil)
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
 			}
-			o.ProjectID = fmt.Sprintf("%v", val)
+			o.RecordCount = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["ref_id"].(string); ok {
@@ -479,51 +408,46 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["value"].(string); ok {
-		o.Value = val
+	if val, ok := kv["saved_ts"].(int64); ok {
+		o.SavedAt = val
 	} else {
-		val := kv["value"]
+		val := kv["saved_ts"]
 		if val == nil {
-			o.Value = ""
+			o.SavedAt = number.ToInt64Any(nil)
 		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
 			}
-			o.Value = fmt.Sprintf("%v", val)
+			o.SavedAt = number.ToInt64Any(val)
 		}
 	}
 	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object
-func (o *Metric) Hash() string {
+func (o *MaterializedLog) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
-	args = append(args, o.Name)
-	args = append(args, o.ProjectID)
+	args = append(args, o.Model)
+	args = append(args, o.RecordCount)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.Value)
+	args = append(args, o.SavedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// GetMetricAvroSchemaSpec creates the avro schema specification for Metric
-func GetMetricAvroSchemaSpec() string {
+// GetMaterializedLogAvroSchemaSpec creates the avro schema specification for MaterializedLog
+func GetMaterializedLogAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
-		"namespace": "codequality",
-		"name":      "Metric",
+		"namespace": "pipeline.reprocess",
+		"name":      "MaterializedLog",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the metric was created", "type": "record", "name": "created_date"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -534,12 +458,12 @@ func GetMetricAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "name",
+				"name": "model",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "project_id",
-				"type": "string",
+				"name": "record_count",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -550,8 +474,8 @@ func GetMetricAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "value",
-				"type": "string",
+				"name": "saved_ts",
+				"type": "long",
 			},
 		},
 	}
@@ -559,7 +483,7 @@ func GetMetricAvroSchemaSpec() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Metric) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *MaterializedLog) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
@@ -571,25 +495,25 @@ func (o *Metric) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// GetMetricAvroSchema creates the avro schema for Metric
-func GetMetricAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetMetricAvroSchemaSpec())
+// GetMaterializedLogAvroSchema creates the avro schema for MaterializedLog
+func GetMaterializedLogAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetMaterializedLogAvroSchemaSpec())
 }
 
-// TransformMetricFunc is a function for transforming Metric during processing
-type TransformMetricFunc func(input *Metric) (*Metric, error)
+// TransformMaterializedLogFunc is a function for transforming MaterializedLog during processing
+type TransformMaterializedLogFunc func(input *MaterializedLog) (*MaterializedLog, error)
 
-// NewMetricPipe creates a pipe for processing Metric items
-func NewMetricPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformMetricFunc) <-chan bool {
+// NewMaterializedLogPipe creates a pipe for processing MaterializedLog items
+func NewMaterializedLogPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformMaterializedLogFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewMetricInputStream(input, errors)
-	var stream chan Metric
+	inch, indone := NewMaterializedLogInputStream(input, errors)
+	var stream chan MaterializedLog
 	if len(transforms) > 0 {
-		stream = make(chan Metric, 1000)
+		stream = make(chan MaterializedLog, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewMetricOutputStream(output, stream, errors)
+	outdone := NewMaterializedLogOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -625,12 +549,12 @@ func NewMetricPipe(input io.ReadCloser, output io.WriteCloser, errors chan error
 	return done
 }
 
-// NewMetricInputStreamDir creates a channel for reading Metric as JSON newlines from a directory of files
-func NewMetricInputStreamDir(dir string, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/codequality/metric\\.json(\\.gz)?$"))
+// NewMaterializedLogInputStreamDir creates a channel for reading MaterializedLog as JSON newlines from a directory of files
+func NewMaterializedLogInputStreamDir(dir string, errors chan<- error, transforms ...TransformMaterializedLogFunc) (chan MaterializedLog, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/pipeline.reprocess/materialized_log\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Metric)
+		ch := make(chan MaterializedLog)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -638,16 +562,16 @@ func NewMetricInputStreamDir(dir string, errors chan<- error, transforms ...Tran
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for metric")
-		ch := make(chan Metric)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for materialized_log")
+		ch := make(chan MaterializedLog)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewMetricInputStreamFile(files[0], errors, transforms...)
+		return NewMaterializedLogInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Metric)
+		ch := make(chan MaterializedLog)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -655,12 +579,12 @@ func NewMetricInputStreamDir(dir string, errors chan<- error, transforms ...Tran
 	}
 }
 
-// NewMetricInputStreamFile creates an channel for reading Metric as JSON newlines from filename
-func NewMetricInputStreamFile(filename string, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
+// NewMaterializedLogInputStreamFile creates an channel for reading MaterializedLog as JSON newlines from filename
+func NewMaterializedLogInputStreamFile(filename string, errors chan<- error, transforms ...TransformMaterializedLogFunc) (chan MaterializedLog, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Metric)
+		ch := make(chan MaterializedLog)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -672,7 +596,7 @@ func NewMetricInputStreamFile(filename string, errors chan<- error, transforms .
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Metric)
+			ch := make(chan MaterializedLog)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -680,13 +604,13 @@ func NewMetricInputStreamFile(filename string, errors chan<- error, transforms .
 		}
 		f = gz
 	}
-	return NewMetricInputStream(f, errors, transforms...)
+	return NewMaterializedLogInputStream(f, errors, transforms...)
 }
 
-// NewMetricInputStream creates an channel for reading Metric as JSON newlines from stream
-func NewMetricInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
+// NewMaterializedLogInputStream creates an channel for reading MaterializedLog as JSON newlines from stream
+func NewMaterializedLogInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformMaterializedLogFunc) (chan MaterializedLog, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Metric, 1000)
+	ch := make(chan MaterializedLog, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -699,7 +623,7 @@ func NewMetricInputStream(stream io.ReadCloser, errors chan<- error, transforms 
 				errors <- err
 				return
 			}
-			var item Metric
+			var item MaterializedLog
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -725,9 +649,9 @@ func NewMetricInputStream(stream io.ReadCloser, errors chan<- error, transforms 
 	return ch, done
 }
 
-// NewMetricOutputStreamDir will output json newlines from channel and save in dir
-func NewMetricOutputStreamDir(dir string, ch chan Metric, errors chan<- error, transforms ...TransformMetricFunc) <-chan bool {
-	fp := filepath.Join(dir, "/codequality/metric\\.json(\\.gz)?$")
+// NewMaterializedLogOutputStreamDir will output json newlines from channel and save in dir
+func NewMaterializedLogOutputStreamDir(dir string, ch chan MaterializedLog, errors chan<- error, transforms ...TransformMaterializedLogFunc) <-chan bool {
+	fp := filepath.Join(dir, "/pipeline.reprocess/materialized_log\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -743,11 +667,11 @@ func NewMetricOutputStreamDir(dir string, ch chan Metric, errors chan<- error, t
 		done <- true
 		return done
 	}
-	return NewMetricOutputStream(gz, ch, errors, transforms...)
+	return NewMaterializedLogOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewMetricOutputStream will output json newlines from channel to the stream
-func NewMetricOutputStream(stream io.WriteCloser, ch chan Metric, errors chan<- error, transforms ...TransformMetricFunc) <-chan bool {
+// NewMaterializedLogOutputStream will output json newlines from channel to the stream
+func NewMaterializedLogOutputStream(stream io.WriteCloser, ch chan MaterializedLog, errors chan<- error, transforms ...TransformMaterializedLogFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -787,59 +711,59 @@ func NewMetricOutputStream(stream io.WriteCloser, ch chan Metric, errors chan<- 
 	return done
 }
 
-// MetricSendEvent is an event detail for sending data
-type MetricSendEvent struct {
-	Metric  *Metric
-	headers map[string]string
-	time    time.Time
-	key     string
+// MaterializedLogSendEvent is an event detail for sending data
+type MaterializedLogSendEvent struct {
+	MaterializedLog *MaterializedLog
+	headers         map[string]string
+	time            time.Time
+	key             string
 }
 
-var _ datamodel.ModelSendEvent = (*MetricSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*MaterializedLogSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *MetricSendEvent) Key() string {
+func (e *MaterializedLogSendEvent) Key() string {
 	if e.key == "" {
-		return e.Metric.GetID()
+		return e.MaterializedLog.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *MetricSendEvent) Object() datamodel.Model {
-	return e.Metric
+func (e *MaterializedLogSendEvent) Object() datamodel.Model {
+	return e.MaterializedLog
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *MetricSendEvent) Headers() map[string]string {
+func (e *MaterializedLogSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *MetricSendEvent) Timestamp() time.Time {
+func (e *MaterializedLogSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// MetricSendEventOpts is a function handler for setting opts
-type MetricSendEventOpts func(o *MetricSendEvent)
+// MaterializedLogSendEventOpts is a function handler for setting opts
+type MaterializedLogSendEventOpts func(o *MaterializedLogSendEvent)
 
-// WithMetricSendEventKey sets the key value to a value different than the object ID
-func WithMetricSendEventKey(key string) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
+// WithMaterializedLogSendEventKey sets the key value to a value different than the object ID
+func WithMaterializedLogSendEventKey(key string) MaterializedLogSendEventOpts {
+	return func(o *MaterializedLogSendEvent) {
 		o.key = key
 	}
 }
 
-// WithMetricSendEventTimestamp sets the timestamp value
-func WithMetricSendEventTimestamp(tv time.Time) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
+// WithMaterializedLogSendEventTimestamp sets the timestamp value
+func WithMaterializedLogSendEventTimestamp(tv time.Time) MaterializedLogSendEventOpts {
+	return func(o *MaterializedLogSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithMetricSendEventHeader sets the timestamp value
-func WithMetricSendEventHeader(key, value string) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
+// WithMaterializedLogSendEventHeader sets the timestamp value
+func WithMaterializedLogSendEventHeader(key, value string) MaterializedLogSendEventOpts {
+	return func(o *MaterializedLogSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -847,10 +771,10 @@ func WithMetricSendEventHeader(key, value string) MetricSendEventOpts {
 	}
 }
 
-// NewMetricSendEvent returns a new MetricSendEvent instance
-func NewMetricSendEvent(o *Metric, opts ...MetricSendEventOpts) *MetricSendEvent {
-	res := &MetricSendEvent{
-		Metric: o,
+// NewMaterializedLogSendEvent returns a new MaterializedLogSendEvent instance
+func NewMaterializedLogSendEvent(o *MaterializedLog, opts ...MaterializedLogSendEventOpts) *MaterializedLogSendEvent {
+	res := &MaterializedLogSendEvent{
+		MaterializedLog: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -860,8 +784,8 @@ func NewMetricSendEvent(o *Metric, opts ...MetricSendEventOpts) *MetricSendEvent
 	return res
 }
 
-// NewMetricProducer will stream data from the channel
-func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewMaterializedLogProducer will stream data from the channel
+func NewMaterializedLogProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -874,7 +798,7 @@ func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*Metric); ok {
+				if object, ok := item.Object().(*MaterializedLog); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -905,7 +829,7 @@ func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type codequality.Metric but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type pipeline.reprocess.MaterializedLog but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -913,22 +837,22 @@ func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 	return done
 }
 
-// NewMetricConsumer will stream data from the topic into the provided channel
-func NewMetricConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewMaterializedLogConsumer will stream data from the topic into the provided channel
+func NewMaterializedLogConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object Metric
+			var object MaterializedLog
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into codequality.Metric: %s", err)
+					return fmt.Errorf("error unmarshaling json data into pipeline.reprocess.MaterializedLog: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into codequality.Metric: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into pipeline.reprocess.MaterializedLog: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for codequality.Metric")
+				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.reprocess.MaterializedLog")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -938,51 +862,51 @@ func NewMetricConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &MetricReceiveEvent{&object, msg, false}
+			ch <- &MaterializedLogReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Metric
+			var object MaterializedLog
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &MetricReceiveEvent{nil, msg, true}
+			ch <- &MaterializedLogReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// MetricReceiveEvent is an event detail for receiving data
-type MetricReceiveEvent struct {
-	Metric  *Metric
-	message eventing.Message
-	eof     bool
+// MaterializedLogReceiveEvent is an event detail for receiving data
+type MaterializedLogReceiveEvent struct {
+	MaterializedLog *MaterializedLog
+	message         eventing.Message
+	eof             bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*MetricReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*MaterializedLogReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *MetricReceiveEvent) Object() datamodel.Model {
-	return e.Metric
+func (e *MaterializedLogReceiveEvent) Object() datamodel.Model {
+	return e.MaterializedLog
 }
 
 // Message returns the underlying message data for the event
-func (e *MetricReceiveEvent) Message() eventing.Message {
+func (e *MaterializedLogReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *MetricReceiveEvent) EOF() bool {
+func (e *MaterializedLogReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// MetricProducer implements the datamodel.ModelEventProducer
-type MetricProducer struct {
+// MaterializedLogProducer implements the datamodel.ModelEventProducer
+type MaterializedLogProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -993,15 +917,15 @@ type MetricProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*MetricProducer)(nil)
+var _ datamodel.ModelEventProducer = (*MaterializedLogProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *MetricProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *MaterializedLogProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *MetricProducer) Close() error {
+func (p *MaterializedLogProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1016,47 +940,47 @@ func (p *MetricProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Metric) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *MaterializedLog) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Metric) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *MaterializedLog) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &MetricProducer{
+	return &MaterializedLogProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewMetricProducer(newctx, producer, ch, errors, empty),
+		done:     NewMaterializedLogProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewMetricProducerChannel returns a channel which can be used for producing Model events
-func NewMetricProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewMetricProducerChannelSize(producer, 0, errors)
+// NewMaterializedLogProducerChannel returns a channel which can be used for producing Model events
+func NewMaterializedLogProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewMaterializedLogProducerChannelSize(producer, 0, errors)
 }
 
-// NewMetricProducerChannelSize returns a channel which can be used for producing Model events
-func NewMetricProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewMaterializedLogProducerChannelSize returns a channel which can be used for producing Model events
+func NewMaterializedLogProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &MetricProducer{
+	return &MaterializedLogProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewMetricProducer(newctx, producer, ch, errors, empty),
+		done:     NewMaterializedLogProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// MetricConsumer implements the datamodel.ModelEventConsumer
-type MetricConsumer struct {
+// MaterializedLogConsumer implements the datamodel.ModelEventConsumer
+type MaterializedLogConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1064,15 +988,15 @@ type MetricConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*MetricConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*MaterializedLogConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *MetricConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *MaterializedLogConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *MetricConsumer) Close() error {
+func (c *MaterializedLogConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1086,21 +1010,21 @@ func (c *MetricConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Metric) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *MaterializedLog) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &MetricConsumer{
+	return &MaterializedLogConsumer{
 		ch:       ch,
-		callback: NewMetricConsumer(consumer, ch, errors),
+		callback: NewMaterializedLogConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewMetricConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewMetricConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewMaterializedLogConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewMaterializedLogConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &MetricConsumer{
+	return &MaterializedLogConsumer{
 		ch:       ch,
-		callback: NewMetricConsumer(consumer, ch, errors),
+		callback: NewMaterializedLogConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
