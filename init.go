@@ -129,8 +129,8 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_pipeline_integration.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "pipeline.signal.Signal":
-		o := new(dm_pipeline_signal.Signal)
+	case "pipeline.signal.Interval":
+		o := new(dm_pipeline_signal.Interval)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "pipeline.sourcecode.Commit":
@@ -312,8 +312,8 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_pipeline_integration.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "pipeline_signal_Signal_topic":
-		o := new(dm_pipeline_signal.Signal)
+	case "pipeline_signal_Interval_topic":
+		o := new(dm_pipeline_signal.Interval)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "pipeline_sourcecode_Commit_topic":
@@ -398,7 +398,7 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("customer_User_topic"),
 		datamodel.TopicNameType("pipeline_activity_Activity_topic"),
 		datamodel.TopicNameType("pipeline_integration_User_topic"),
-		datamodel.TopicNameType("pipeline_signal_Signal_topic"),
+		datamodel.TopicNameType("pipeline_signal_Interval_topic"),
 		datamodel.TopicNameType("pipeline_sourcecode_Commit_topic"),
 		datamodel.TopicNameType("pipeline_work_CustomField_topic"),
 		datamodel.TopicNameType("sourcecode_Branch_topic"),
@@ -441,7 +441,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("pipeline_activity_Activity_topic"),
 		datamodel.TopicNameType("pipeline_customer_User_topic"),
 		datamodel.TopicNameType("pipeline_integration_User_topic"),
-		datamodel.TopicNameType("pipeline_signal_Signal_topic"),
+		datamodel.TopicNameType("pipeline_signal_Interval_topic"),
 		datamodel.TopicNameType("pipeline_sourcecode_Commit_topic"),
 		datamodel.TopicNameType("pipeline_work_CustomField_topic"),
 		datamodel.TopicNameType("sourcecode_Blame_topic"),
@@ -491,7 +491,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("pipeline.activity.Activity"),
 		datamodel.ModelNameType("pipeline.customer.User"),
 		datamodel.ModelNameType("pipeline.integration.User"),
-		datamodel.ModelNameType("pipeline.signal.Signal"),
+		datamodel.ModelNameType("pipeline.signal.Interval"),
 		datamodel.ModelNameType("pipeline.sourcecode.Commit"),
 		datamodel.ModelNameType("pipeline.work.CustomField"),
 		datamodel.ModelNameType("sourcecode.Blame"),

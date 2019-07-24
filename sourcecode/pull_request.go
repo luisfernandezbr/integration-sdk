@@ -58,6 +58,8 @@ const (
 	PullRequestClosedDateColumnRfc3339Column = "closed_date->rfc3339"
 	// PullRequestCommitsColumn is the commits column name
 	PullRequestCommitsColumn = "commits"
+	// PullRequestCreatedByRefIDColumn is the created_by_ref_id column name
+	PullRequestCreatedByRefIDColumn = "created_by_ref_id"
 	// PullRequestCreatedDateColumn is the created_date column name
 	PullRequestCreatedDateColumn = "created_date"
 	// PullRequestCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
@@ -104,8 +106,6 @@ const (
 	PullRequestUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
 	// PullRequestURLColumn is the url column name
 	PullRequestURLColumn = "url"
-	// PullRequestUserRefIDColumn is the user_ref_id column name
-	PullRequestUserRefIDColumn = "user_ref_id"
 )
 
 // PullRequestClosedDate represents the object structure for closed_date
@@ -200,6 +200,8 @@ type PullRequest struct {
 	ClosedDate PullRequestClosedDate `json:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
 	// Commits the commits in the pull request
 	Commits []string `json:"commits" bson:"commits" yaml:"commits" faker:"-"`
+	// CreatedByRefID the user ref_id in the source system
+	CreatedByRefID string `json:"created_by_ref_id" bson:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
 	// CreatedDate the timestamp in UTC that the pull request was created
 	CreatedDate PullRequestCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -228,8 +230,6 @@ type PullRequest struct {
 	UpdatedDate PullRequestUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// URL the url to the pull request home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
-	// UserRefID the user ref_id in the source system
-	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -509,25 +509,25 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"closed_by_ref_id": toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
-		"closed_date":      toPullRequestObject(o.ClosedDate, isavro, false, "closed_date"),
-		"commits":          toPullRequestObject(o.Commits, isavro, false, "commits"),
-		"created_date":     toPullRequestObject(o.CreatedDate, isavro, false, "created_date"),
-		"customer_id":      toPullRequestObject(o.CustomerID, isavro, false, "string"),
-		"description":      toPullRequestObject(o.Description, isavro, false, "string"),
-		"id":               toPullRequestObject(o.ID, isavro, false, "string"),
-		"merge_sha":        toPullRequestObject(o.MergeSha, isavro, false, "string"),
-		"merged_by_ref_id": toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
-		"merged_date":      toPullRequestObject(o.MergedDate, isavro, false, "merged_date"),
-		"ref_id":           toPullRequestObject(o.RefID, isavro, false, "string"),
-		"ref_type":         toPullRequestObject(o.RefType, isavro, false, "string"),
-		"repo_id":          toPullRequestObject(o.RepoID, isavro, false, "string"),
-		"status":           toPullRequestObject(o.Status, isavro, false, "string"),
-		"title":            toPullRequestObject(o.Title, isavro, false, "string"),
-		"updated_date":     toPullRequestObject(o.UpdatedDate, isavro, false, "updated_date"),
-		"url":              toPullRequestObject(o.URL, isavro, false, "string"),
-		"user_ref_id":      toPullRequestObject(o.UserRefID, isavro, false, "string"),
-		"hashcode":         toPullRequestObject(o.Hashcode, isavro, false, "string"),
+		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
+		"closed_date":       toPullRequestObject(o.ClosedDate, isavro, false, "closed_date"),
+		"commits":           toPullRequestObject(o.Commits, isavro, false, "commits"),
+		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, isavro, false, "string"),
+		"created_date":      toPullRequestObject(o.CreatedDate, isavro, false, "created_date"),
+		"customer_id":       toPullRequestObject(o.CustomerID, isavro, false, "string"),
+		"description":       toPullRequestObject(o.Description, isavro, false, "string"),
+		"id":                toPullRequestObject(o.ID, isavro, false, "string"),
+		"merge_sha":         toPullRequestObject(o.MergeSha, isavro, false, "string"),
+		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
+		"merged_date":       toPullRequestObject(o.MergedDate, isavro, false, "merged_date"),
+		"ref_id":            toPullRequestObject(o.RefID, isavro, false, "string"),
+		"ref_type":          toPullRequestObject(o.RefType, isavro, false, "string"),
+		"repo_id":           toPullRequestObject(o.RepoID, isavro, false, "string"),
+		"status":            toPullRequestObject(o.Status, isavro, false, "string"),
+		"title":             toPullRequestObject(o.Title, isavro, false, "string"),
+		"updated_date":      toPullRequestObject(o.UpdatedDate, isavro, false, "updated_date"),
+		"url":               toPullRequestObject(o.URL, isavro, false, "string"),
+		"hashcode":          toPullRequestObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -621,6 +621,19 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	}
 	if o.Commits == nil {
 		o.Commits = make([]string, 0)
+	}
+	if val, ok := kv["created_by_ref_id"].(string); ok {
+		o.CreatedByRefID = val
+	} else {
+		val := kv["created_by_ref_id"]
+		if val == nil {
+			o.CreatedByRefID = ""
+		} else {
+			if m, ok := val.(map[string]interface{}); ok {
+				val = pjson.Stringify(m)
+			}
+			o.CreatedByRefID = fmt.Sprintf("%v", val)
+		}
 	}
 	if val, ok := kv["created_date"].(PullRequestCreatedDate); ok {
 		o.CreatedDate = val
@@ -831,19 +844,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["user_ref_id"].(string); ok {
-		o.UserRefID = val
-	} else {
-		val := kv["user_ref_id"]
-		if val == nil {
-			o.UserRefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.UserRefID = fmt.Sprintf("%v", val)
-		}
-	}
 	o.setDefaults()
 }
 
@@ -853,6 +853,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.ClosedByRefID)
 	args = append(args, o.ClosedDate)
 	args = append(args, o.Commits)
+	args = append(args, o.CreatedByRefID)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
@@ -867,7 +868,6 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.Title)
 	args = append(args, o.UpdatedDate)
 	args = append(args, o.URL)
-	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -896,8 +896,12 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
+				"name": "created_by_ref_id",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was created"},
+				"type": map[string]interface{}{"name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was created", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -921,7 +925,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "merged_date",
-				"type": map[string]interface{}{"name": "merged_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged", "type": "record"},
+				"type": map[string]interface{}{"name": "merged_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -945,14 +949,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_date",
-				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed", "type": "record", "name": "updated_date"},
 			},
 			map[string]interface{}{
 				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "user_ref_id",
 				"type": "string",
 			},
 		},
