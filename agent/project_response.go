@@ -142,20 +142,36 @@ func (o *ProjectResponseEventDate) ToMap() map[string]interface{} {
 
 // ProjectResponseProjectsLastIssueCreatedDate represents the object structure for created_date
 type ProjectResponseProjectsLastIssueCreatedDate struct {
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func (o *ProjectResponseProjectsLastIssueCreatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
+		// CustomerID the customer id for the model instance
+		"customer_id": o.CustomerID,
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
+		// ID the primary key for the model instance
+		"id": o.ID,
 		// Offset the timezone offset from GMT
 		"offset": o.Offset,
+		// RefID the source system id for the model instance
+		"ref_id": o.RefID,
+		// RefType the source system identifier for the model instance
+		"ref_type": o.RefType,
 		// Rfc3339 the date in RFC3339 format
 		"rfc3339": o.Rfc3339,
 	}
@@ -1101,7 +1117,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1141,7 +1157,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"name": "last_issue", "doc": "last issue for this project", "type": map[string]interface{}{"name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the issue key from the source"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"}, "name": "created_date", "doc": "the date of the change"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}, map[string]interface{}{"name": "name", "doc": "the user name", "type": "string"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}}, "doc": "last issue for this project", "type": "record"}}, map[string]interface{}{"name": "name", "doc": "the name of the project", "type": "string"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"doc": "the total issues count for the project", "type": "long", "name": "total_issues"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}},
+				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"name": "active", "doc": "the status of the project", "type": "boolean"}, map[string]interface{}{"name": "category", "doc": "the project category", "type": "string"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"doc": "the common identifier for the project", "type": "string", "name": "identifier"}, map[string]interface{}{"name": "last_issue", "doc": "last issue for this project", "type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"doc": "the issue key from the source", "type": "string", "name": "identifier"}, map[string]interface{}{"doc": "the date of the change", "type": map[string]interface{}{"type": "record", "name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date of the change"}, "name": "created_date"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"doc": "the work project user id", "type": "string", "name": "user_id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the user name"}, map[string]interface{}{"name": "avatar_url", "doc": "the avatar url", "type": "string"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}}, "doc": "last issue for this project"}}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"name": "project_id", "doc": "the id of the project", "type": "string"}, map[string]interface{}{"type": "long", "name": "total_issues", "doc": "the total issues count for the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

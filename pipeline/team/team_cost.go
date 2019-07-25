@@ -1,7 +1,7 @@
 // DO NOT EDIT -- generated code
 
-// Package codequality - the system which contains code quality
-package codequality
+// Package team - team cost pipeline
+package team
 
 import (
 	"bufio"
@@ -26,49 +26,50 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
-	// MetricTopic is the default topic name
-	MetricTopic datamodel.TopicNameType = "codequality_Metric_topic"
+	// TeamCostTopic is the default topic name
+	TeamCostTopic datamodel.TopicNameType = "pipeline_team_TeamCost_topic"
 
-	// MetricStream is the default stream name
-	MetricStream datamodel.TopicNameType = "codequality_Metric_stream"
+	// TeamCostStream is the default stream name
+	TeamCostStream datamodel.TopicNameType = "pipeline_team_TeamCost_stream"
 
-	// MetricTable is the default table name
-	MetricTable datamodel.TopicNameType = "codequality_Metric"
+	// TeamCostTable is the default table name
+	TeamCostTable datamodel.TopicNameType = "pipeline_team_TeamCost"
 
-	// MetricModelName is the model name
-	MetricModelName datamodel.ModelNameType = "codequality.Metric"
+	// TeamCostModelName is the model name
+	TeamCostModelName datamodel.ModelNameType = "pipeline.team.TeamCost"
 )
 
 const (
-	// MetricCreatedDateColumn is the created_date column name
-	MetricCreatedDateColumn = "created_date"
-	// MetricCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	MetricCreatedDateColumnEpochColumn = "created_date->epoch"
-	// MetricCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	MetricCreatedDateColumnOffsetColumn = "created_date->offset"
-	// MetricCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	MetricCreatedDateColumnRfc3339Column = "created_date->rfc3339"
-	// MetricCustomerIDColumn is the customer_id column name
-	MetricCustomerIDColumn = "customer_id"
-	// MetricIDColumn is the id column name
-	MetricIDColumn = "id"
-	// MetricNameColumn is the name column name
-	MetricNameColumn = "name"
-	// MetricProjectIDColumn is the project_id column name
-	MetricProjectIDColumn = "project_id"
-	// MetricRefIDColumn is the ref_id column name
-	MetricRefIDColumn = "ref_id"
-	// MetricRefTypeColumn is the ref_type column name
-	MetricRefTypeColumn = "ref_type"
-	// MetricValueColumn is the value column name
-	MetricValueColumn = "value"
+	// TeamCostCostColumn is the cost column name
+	TeamCostCostColumn = "cost"
+	// TeamCostCountColumn is the count column name
+	TeamCostCountColumn = "count"
+	// TeamCostCustomerIDColumn is the customer_id column name
+	TeamCostCustomerIDColumn = "customer_id"
+	// TeamCostIDColumn is the id column name
+	TeamCostIDColumn = "id"
+	// TeamCostRefIDColumn is the ref_id column name
+	TeamCostRefIDColumn = "ref_id"
+	// TeamCostRefTypeColumn is the ref_type column name
+	TeamCostRefTypeColumn = "ref_type"
+	// TeamCostTeamIDColumn is the team_id column name
+	TeamCostTeamIDColumn = "team_id"
+	// TeamCostUpdatedDateColumn is the updated_date column name
+	TeamCostUpdatedDateColumn = "updated_date"
+	// TeamCostUpdatedDateColumnEpochColumn is the epoch column property of the UpdatedDate name
+	TeamCostUpdatedDateColumnEpochColumn = "updated_date->epoch"
+	// TeamCostUpdatedDateColumnOffsetColumn is the offset column property of the UpdatedDate name
+	TeamCostUpdatedDateColumnOffsetColumn = "updated_date->offset"
+	// TeamCostUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
+	TeamCostUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
 )
 
-// MetricCreatedDate represents the object structure for created_date
-type MetricCreatedDate struct {
+// TeamCostUpdatedDate represents the object structure for updated_date
+type TeamCostUpdatedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -77,7 +78,7 @@ type MetricCreatedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *MetricCreatedDate) ToMap() map[string]interface{} {
+func (o *TeamCostUpdatedDate) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Epoch the date in epoch format
 		"epoch": o.Epoch,
@@ -88,72 +89,72 @@ func (o *MetricCreatedDate) ToMap() map[string]interface{} {
 	}
 }
 
-// Metric individual metric details
-type Metric struct {
-	// CreatedDate the date when the metric was created
-	CreatedDate MetricCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+// TeamCost team cost
+type TeamCost struct {
+	// Cost the cost of the team
+	Cost float64 `json:"cost" bson:"cost" yaml:"cost" faker:"-"`
+	// Count the team count
+	Count int64 `json:"count" bson:"count" yaml:"count" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Name the metric name
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
-	// ProjectID the the project id
-	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// Value the value of the metric
-	Value string `json:"value" bson:"value" yaml:"value" faker:"-"`
+	// TeamID ref_id of the team
+	TeamID string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
+	// UpdatedDate date object
+	UpdatedDate TeamCostUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Metric)(nil)
+var _ datamodel.Model = (*TeamCost)(nil)
 
-func toMetricObjectNil(isavro bool, isoptional bool) interface{} {
+func toTeamCostObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toTeamCostObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 
 	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
 		return res
 	}
 	switch v := o.(type) {
-	case *Metric:
+	case *TeamCost:
 		return v.ToMap()
-	case Metric:
+	case TeamCost:
 		return v.ToMap()
 
-	case MetricCreatedDate:
-		vv := o.(MetricCreatedDate)
+	case TeamCostUpdatedDate:
+		vv := o.(TeamCostUpdatedDate)
 		return vv.ToMap()
 	}
 	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
-// String returns a string representation of Metric
-func (o *Metric) String() string {
-	return fmt.Sprintf("codequality.Metric<%s>", o.ID)
+// String returns a string representation of TeamCost
+func (o *TeamCost) String() string {
+	return fmt.Sprintf("pipeline.team.TeamCost<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Metric) GetTopicName() datamodel.TopicNameType {
-	return MetricTopic
+func (o *TeamCost) GetTopicName() datamodel.TopicNameType {
+	return TeamCostTopic
 }
 
 // GetModelName returns the name of the model
-func (o *Metric) GetModelName() datamodel.ModelNameType {
-	return MetricModelName
+func (o *TeamCost) GetModelName() datamodel.ModelNameType {
+	return TeamCostModelName
 }
 
-func (o *Metric) setDefaults() {
+func (o *TeamCost) setDefaults() {
 
 	o.GetID()
 	o.GetRefID()
@@ -161,16 +162,15 @@ func (o *Metric) setDefaults() {
 }
 
 // GetID returns the ID for the object
-func (o *Metric) GetID() string {
+func (o *TeamCost) GetID() string {
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Metric", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.TeamID)
 	}
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Metric) GetTopicKey() string {
+func (o *TeamCost) GetTopicKey() string {
 	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
@@ -179,8 +179,8 @@ func (o *Metric) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Metric) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
+func (o *TeamCost) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -192,40 +192,49 @@ func (o *Metric) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case MetricCreatedDate:
+	case TeamCostUpdatedDate:
 		return datetime.DateFromEpoch(v.Epoch)
 	}
-	panic("not sure how to handle the date time format for Metric")
+	panic("not sure how to handle the date time format for TeamCost")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Metric) GetRefID() string {
+func (o *TeamCost) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Metric) IsMaterialized() bool {
-	return false
+func (o *TeamCost) IsMaterialized() bool {
+	return true
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Metric) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
+func (o *TeamCost) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "id",
+		TableName: "pipeline_team_teamcost",
+		BatchSize: 5000,
+		IdleTime:  idletime,
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Metric) IsEvented() bool {
+func (o *TeamCost) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Metric) SetEventHeaders(kv map[string]string) {
+func (o *TeamCost) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = MetricModelName.String()
+	kv["model"] = TeamCostModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *TeamCost) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -237,7 +246,7 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "created_date",
+		Timestamp:         "updated_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -247,28 +256,28 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *Metric) GetStateKey() string {
+func (o *TeamCost) GetStateKey() string {
 	key := "id"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *Metric) GetCustomerID() string {
+func (o *TeamCost) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Metric
-func (o *Metric) Clone() datamodel.Model {
-	c := new(Metric)
+// Clone returns an exact copy of TeamCost
+func (o *TeamCost) Clone() datamodel.Model {
+	c := new(TeamCost)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Metric) Anon() datamodel.Model {
-	c := new(Metric)
+func (o *TeamCost) Anon() datamodel.Model {
+	c := new(TeamCost)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -283,12 +292,12 @@ func (o *Metric) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Metric) MarshalJSON() ([]byte, error) {
+func (o *TeamCost) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Metric) UnmarshalJSON(data []byte) error {
+func (o *TeamCost) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -297,22 +306,22 @@ func (o *Metric) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecMetric *goavro.Codec
+var cachedCodecTeamCost *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *Metric) GetAvroCodec() *goavro.Codec {
-	if cachedCodecMetric == nil {
-		c, err := GetMetricAvroSchema()
+func (o *TeamCost) GetAvroCodec() *goavro.Codec {
+	if cachedCodecTeamCost == nil {
+		c, err := GetTeamCostAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecMetric = c
+		cachedCodecTeamCost = c
 	}
-	return cachedCodecMetric
+	return cachedCodecTeamCost
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Metric) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *TeamCost) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -326,7 +335,7 @@ func (o *Metric) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Metric) FromAvroBinary(value []byte) error {
+func (o *TeamCost) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -341,18 +350,18 @@ func (o *Metric) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Metric) Stringify() string {
+func (o *TeamCost) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Metric objects are equal
-func (o *Metric) IsEqual(other *Metric) bool {
+// IsEqual returns true if the two TeamCost objects are equal
+func (o *TeamCost) IsEqual(other *TeamCost) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
+func (o *TeamCost) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -361,44 +370,45 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults()
 	return map[string]interface{}{
-		"created_date": toMetricObject(o.CreatedDate, isavro, false, "created_date"),
-		"customer_id":  toMetricObject(o.CustomerID, isavro, false, "string"),
-		"id":           toMetricObject(o.ID, isavro, false, "string"),
-		"name":         toMetricObject(o.Name, isavro, false, "string"),
-		"project_id":   toMetricObject(o.ProjectID, isavro, false, "string"),
-		"ref_id":       toMetricObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toMetricObject(o.RefType, isavro, false, "string"),
-		"value":        toMetricObject(o.Value, isavro, false, "string"),
-		"hashcode":     toMetricObject(o.Hashcode, isavro, false, "string"),
+		"cost":         toTeamCostObject(o.Cost, isavro, false, "float"),
+		"count":        toTeamCostObject(o.Count, isavro, false, "long"),
+		"customer_id":  toTeamCostObject(o.CustomerID, isavro, false, "string"),
+		"id":           toTeamCostObject(o.ID, isavro, false, "string"),
+		"ref_id":       toTeamCostObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toTeamCostObject(o.RefType, isavro, false, "string"),
+		"team_id":      toTeamCostObject(o.TeamID, isavro, false, "string"),
+		"updated_date": toTeamCostObject(o.UpdatedDate, isavro, false, "updated_date"),
+		"hashcode":     toTeamCostObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Metric) FromMap(kv map[string]interface{}) {
+func (o *TeamCost) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["created_date"].(MetricCreatedDate); ok {
-		o.CreatedDate = val
+	if val, ok := kv["cost"].(float64); ok {
+		o.Cost = val
 	} else {
-		val := kv["created_date"]
+		val := kv["cost"]
 		if val == nil {
-			o.CreatedDate = MetricCreatedDate{}
+			o.Cost = number.ToFloat64Any(nil)
 		} else {
-			o.CreatedDate = MetricCreatedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
+			o.Cost = number.ToFloat64Any(val)
+		}
+	}
+	if val, ok := kv["count"].(int64); ok {
+		o.Count = val
+	} else {
+		val := kv["count"]
+		if val == nil {
+			o.Count = number.ToInt64Any(nil)
+		} else {
+			if tv, ok := val.(time.Time); ok {
+				val = datetime.TimeToEpoch(tv)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.CreatedDate)
-
+			o.Count = number.ToInt64Any(val)
 		}
 	}
 	if val, ok := kv["customer_id"].(string); ok {
@@ -427,32 +437,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Name = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["project_id"].(string); ok {
-		o.ProjectID = val
-	} else {
-		val := kv["project_id"]
-		if val == nil {
-			o.ProjectID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.ProjectID = fmt.Sprintf("%v", val)
-		}
-	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -479,51 +463,77 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val, ok := kv["value"].(string); ok {
-		o.Value = val
+	if val, ok := kv["team_id"].(string); ok {
+		o.TeamID = val
 	} else {
-		val := kv["value"]
+		val := kv["team_id"]
 		if val == nil {
-			o.Value = ""
+			o.TeamID = ""
 		} else {
 			if m, ok := val.(map[string]interface{}); ok {
 				val = pjson.Stringify(m)
 			}
-			o.Value = fmt.Sprintf("%v", val)
+			o.TeamID = fmt.Sprintf("%v", val)
+		}
+	}
+	if val, ok := kv["updated_date"].(TeamCostUpdatedDate); ok {
+		o.UpdatedDate = val
+	} else {
+		val := kv["updated_date"]
+		if val == nil {
+			o.UpdatedDate = TeamCostUpdatedDate{}
+		} else {
+			o.UpdatedDate = TeamCostUpdatedDate{}
+			if m, ok := val.(map[interface{}]interface{}); ok {
+				si := make(map[string]interface{})
+				for k, v := range m {
+					if key, ok := k.(string); ok {
+						si[key] = v
+					}
+				}
+				val = si
+			}
+			b, _ := json.Marshal(val)
+			json.Unmarshal(b, &o.UpdatedDate)
+
 		}
 	}
 	o.setDefaults()
 }
 
 // Hash will return a hashcode for the object
-func (o *Metric) Hash() string {
+func (o *TeamCost) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.CreatedDate)
+	args = append(args, o.Cost)
+	args = append(args, o.Count)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
-	args = append(args, o.Name)
-	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.Value)
+	args = append(args, o.TeamID)
+	args = append(args, o.UpdatedDate)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// GetMetricAvroSchemaSpec creates the avro schema specification for Metric
-func GetMetricAvroSchemaSpec() string {
+// GetTeamCostAvroSchemaSpec creates the avro schema specification for TeamCost
+func GetTeamCostAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
-		"namespace": "codequality",
-		"name":      "Metric",
+		"namespace": "pipeline.team",
+		"name":      "TeamCost",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the metric was created"},
+				"name": "cost",
+				"type": "float",
+			},
+			map[string]interface{}{
+				"name": "count",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -531,14 +541,6 @@ func GetMetricAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "project_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -550,8 +552,12 @@ func GetMetricAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "value",
+				"name": "team_id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_date",
+				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
 			},
 		},
 	}
@@ -559,7 +565,7 @@ func GetMetricAvroSchemaSpec() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Metric) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *TeamCost) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
@@ -571,25 +577,25 @@ func (o *Metric) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// GetMetricAvroSchema creates the avro schema for Metric
-func GetMetricAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetMetricAvroSchemaSpec())
+// GetTeamCostAvroSchema creates the avro schema for TeamCost
+func GetTeamCostAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetTeamCostAvroSchemaSpec())
 }
 
-// TransformMetricFunc is a function for transforming Metric during processing
-type TransformMetricFunc func(input *Metric) (*Metric, error)
+// TransformTeamCostFunc is a function for transforming TeamCost during processing
+type TransformTeamCostFunc func(input *TeamCost) (*TeamCost, error)
 
-// NewMetricPipe creates a pipe for processing Metric items
-func NewMetricPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformMetricFunc) <-chan bool {
+// NewTeamCostPipe creates a pipe for processing TeamCost items
+func NewTeamCostPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformTeamCostFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewMetricInputStream(input, errors)
-	var stream chan Metric
+	inch, indone := NewTeamCostInputStream(input, errors)
+	var stream chan TeamCost
 	if len(transforms) > 0 {
-		stream = make(chan Metric, 1000)
+		stream = make(chan TeamCost, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewMetricOutputStream(output, stream, errors)
+	outdone := NewTeamCostOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -625,12 +631,12 @@ func NewMetricPipe(input io.ReadCloser, output io.WriteCloser, errors chan error
 	return done
 }
 
-// NewMetricInputStreamDir creates a channel for reading Metric as JSON newlines from a directory of files
-func NewMetricInputStreamDir(dir string, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/codequality/metric\\.json(\\.gz)?$"))
+// NewTeamCostInputStreamDir creates a channel for reading TeamCost as JSON newlines from a directory of files
+func NewTeamCostInputStreamDir(dir string, errors chan<- error, transforms ...TransformTeamCostFunc) (chan TeamCost, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/pipeline.team/team_cost\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Metric)
+		ch := make(chan TeamCost)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -638,16 +644,16 @@ func NewMetricInputStreamDir(dir string, errors chan<- error, transforms ...Tran
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for metric")
-		ch := make(chan Metric)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for team_cost")
+		ch := make(chan TeamCost)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewMetricInputStreamFile(files[0], errors, transforms...)
+		return NewTeamCostInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Metric)
+		ch := make(chan TeamCost)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -655,12 +661,12 @@ func NewMetricInputStreamDir(dir string, errors chan<- error, transforms ...Tran
 	}
 }
 
-// NewMetricInputStreamFile creates an channel for reading Metric as JSON newlines from filename
-func NewMetricInputStreamFile(filename string, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
+// NewTeamCostInputStreamFile creates an channel for reading TeamCost as JSON newlines from filename
+func NewTeamCostInputStreamFile(filename string, errors chan<- error, transforms ...TransformTeamCostFunc) (chan TeamCost, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Metric)
+		ch := make(chan TeamCost)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -672,7 +678,7 @@ func NewMetricInputStreamFile(filename string, errors chan<- error, transforms .
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Metric)
+			ch := make(chan TeamCost)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -680,13 +686,13 @@ func NewMetricInputStreamFile(filename string, errors chan<- error, transforms .
 		}
 		f = gz
 	}
-	return NewMetricInputStream(f, errors, transforms...)
+	return NewTeamCostInputStream(f, errors, transforms...)
 }
 
-// NewMetricInputStream creates an channel for reading Metric as JSON newlines from stream
-func NewMetricInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformMetricFunc) (chan Metric, <-chan bool) {
+// NewTeamCostInputStream creates an channel for reading TeamCost as JSON newlines from stream
+func NewTeamCostInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformTeamCostFunc) (chan TeamCost, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Metric, 1000)
+	ch := make(chan TeamCost, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -699,7 +705,7 @@ func NewMetricInputStream(stream io.ReadCloser, errors chan<- error, transforms 
 				errors <- err
 				return
 			}
-			var item Metric
+			var item TeamCost
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -725,9 +731,9 @@ func NewMetricInputStream(stream io.ReadCloser, errors chan<- error, transforms 
 	return ch, done
 }
 
-// NewMetricOutputStreamDir will output json newlines from channel and save in dir
-func NewMetricOutputStreamDir(dir string, ch chan Metric, errors chan<- error, transforms ...TransformMetricFunc) <-chan bool {
-	fp := filepath.Join(dir, "/codequality/metric\\.json(\\.gz)?$")
+// NewTeamCostOutputStreamDir will output json newlines from channel and save in dir
+func NewTeamCostOutputStreamDir(dir string, ch chan TeamCost, errors chan<- error, transforms ...TransformTeamCostFunc) <-chan bool {
+	fp := filepath.Join(dir, "/pipeline.team/team_cost\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -743,11 +749,11 @@ func NewMetricOutputStreamDir(dir string, ch chan Metric, errors chan<- error, t
 		done <- true
 		return done
 	}
-	return NewMetricOutputStream(gz, ch, errors, transforms...)
+	return NewTeamCostOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewMetricOutputStream will output json newlines from channel to the stream
-func NewMetricOutputStream(stream io.WriteCloser, ch chan Metric, errors chan<- error, transforms ...TransformMetricFunc) <-chan bool {
+// NewTeamCostOutputStream will output json newlines from channel to the stream
+func NewTeamCostOutputStream(stream io.WriteCloser, ch chan TeamCost, errors chan<- error, transforms ...TransformTeamCostFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -787,59 +793,59 @@ func NewMetricOutputStream(stream io.WriteCloser, ch chan Metric, errors chan<- 
 	return done
 }
 
-// MetricSendEvent is an event detail for sending data
-type MetricSendEvent struct {
-	Metric  *Metric
-	headers map[string]string
-	time    time.Time
-	key     string
+// TeamCostSendEvent is an event detail for sending data
+type TeamCostSendEvent struct {
+	TeamCost *TeamCost
+	headers  map[string]string
+	time     time.Time
+	key      string
 }
 
-var _ datamodel.ModelSendEvent = (*MetricSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*TeamCostSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *MetricSendEvent) Key() string {
+func (e *TeamCostSendEvent) Key() string {
 	if e.key == "" {
-		return e.Metric.GetID()
+		return e.TeamCost.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *MetricSendEvent) Object() datamodel.Model {
-	return e.Metric
+func (e *TeamCostSendEvent) Object() datamodel.Model {
+	return e.TeamCost
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *MetricSendEvent) Headers() map[string]string {
+func (e *TeamCostSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *MetricSendEvent) Timestamp() time.Time {
+func (e *TeamCostSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// MetricSendEventOpts is a function handler for setting opts
-type MetricSendEventOpts func(o *MetricSendEvent)
+// TeamCostSendEventOpts is a function handler for setting opts
+type TeamCostSendEventOpts func(o *TeamCostSendEvent)
 
-// WithMetricSendEventKey sets the key value to a value different than the object ID
-func WithMetricSendEventKey(key string) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
+// WithTeamCostSendEventKey sets the key value to a value different than the object ID
+func WithTeamCostSendEventKey(key string) TeamCostSendEventOpts {
+	return func(o *TeamCostSendEvent) {
 		o.key = key
 	}
 }
 
-// WithMetricSendEventTimestamp sets the timestamp value
-func WithMetricSendEventTimestamp(tv time.Time) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
+// WithTeamCostSendEventTimestamp sets the timestamp value
+func WithTeamCostSendEventTimestamp(tv time.Time) TeamCostSendEventOpts {
+	return func(o *TeamCostSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithMetricSendEventHeader sets the timestamp value
-func WithMetricSendEventHeader(key, value string) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
+// WithTeamCostSendEventHeader sets the timestamp value
+func WithTeamCostSendEventHeader(key, value string) TeamCostSendEventOpts {
+	return func(o *TeamCostSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -847,10 +853,10 @@ func WithMetricSendEventHeader(key, value string) MetricSendEventOpts {
 	}
 }
 
-// NewMetricSendEvent returns a new MetricSendEvent instance
-func NewMetricSendEvent(o *Metric, opts ...MetricSendEventOpts) *MetricSendEvent {
-	res := &MetricSendEvent{
-		Metric: o,
+// NewTeamCostSendEvent returns a new TeamCostSendEvent instance
+func NewTeamCostSendEvent(o *TeamCost, opts ...TeamCostSendEventOpts) *TeamCostSendEvent {
+	res := &TeamCostSendEvent{
+		TeamCost: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -860,8 +866,8 @@ func NewMetricSendEvent(o *Metric, opts ...MetricSendEventOpts) *MetricSendEvent
 	return res
 }
 
-// NewMetricProducer will stream data from the channel
-func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewTeamCostProducer will stream data from the channel
+func NewTeamCostProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -874,7 +880,7 @@ func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*Metric); ok {
+				if object, ok := item.Object().(*TeamCost); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -905,7 +911,7 @@ func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type codequality.Metric but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type pipeline.team.TeamCost but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -913,22 +919,22 @@ func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 	return done
 }
 
-// NewMetricConsumer will stream data from the topic into the provided channel
-func NewMetricConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewTeamCostConsumer will stream data from the topic into the provided channel
+func NewTeamCostConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object Metric
+			var object TeamCost
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into codequality.Metric: %s", err)
+					return fmt.Errorf("error unmarshaling json data into pipeline.team.TeamCost: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into codequality.Metric: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into pipeline.team.TeamCost: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for codequality.Metric")
+				return fmt.Errorf("unsure of the encoding since it was not set for pipeline.team.TeamCost")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -938,51 +944,51 @@ func NewMetricConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelRece
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &MetricReceiveEvent{&object, msg, false}
+			ch <- &TeamCostReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Metric
+			var object TeamCost
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &MetricReceiveEvent{nil, msg, true}
+			ch <- &TeamCostReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// MetricReceiveEvent is an event detail for receiving data
-type MetricReceiveEvent struct {
-	Metric  *Metric
-	message eventing.Message
-	eof     bool
+// TeamCostReceiveEvent is an event detail for receiving data
+type TeamCostReceiveEvent struct {
+	TeamCost *TeamCost
+	message  eventing.Message
+	eof      bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*MetricReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*TeamCostReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *MetricReceiveEvent) Object() datamodel.Model {
-	return e.Metric
+func (e *TeamCostReceiveEvent) Object() datamodel.Model {
+	return e.TeamCost
 }
 
 // Message returns the underlying message data for the event
-func (e *MetricReceiveEvent) Message() eventing.Message {
+func (e *TeamCostReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *MetricReceiveEvent) EOF() bool {
+func (e *TeamCostReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// MetricProducer implements the datamodel.ModelEventProducer
-type MetricProducer struct {
+// TeamCostProducer implements the datamodel.ModelEventProducer
+type TeamCostProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -993,15 +999,15 @@ type MetricProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*MetricProducer)(nil)
+var _ datamodel.ModelEventProducer = (*TeamCostProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *MetricProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *TeamCostProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *MetricProducer) Close() error {
+func (p *TeamCostProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1016,47 +1022,47 @@ func (p *MetricProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Metric) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *TeamCost) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Metric) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *TeamCost) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &MetricProducer{
+	return &TeamCostProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewMetricProducer(newctx, producer, ch, errors, empty),
+		done:     NewTeamCostProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewMetricProducerChannel returns a channel which can be used for producing Model events
-func NewMetricProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewMetricProducerChannelSize(producer, 0, errors)
+// NewTeamCostProducerChannel returns a channel which can be used for producing Model events
+func NewTeamCostProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewTeamCostProducerChannelSize(producer, 0, errors)
 }
 
-// NewMetricProducerChannelSize returns a channel which can be used for producing Model events
-func NewMetricProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewTeamCostProducerChannelSize returns a channel which can be used for producing Model events
+func NewTeamCostProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &MetricProducer{
+	return &TeamCostProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewMetricProducer(newctx, producer, ch, errors, empty),
+		done:     NewTeamCostProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// MetricConsumer implements the datamodel.ModelEventConsumer
-type MetricConsumer struct {
+// TeamCostConsumer implements the datamodel.ModelEventConsumer
+type TeamCostConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1064,15 +1070,15 @@ type MetricConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*MetricConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*TeamCostConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *MetricConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *TeamCostConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *MetricConsumer) Close() error {
+func (c *TeamCostConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1086,21 +1092,21 @@ func (c *MetricConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Metric) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *TeamCost) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &MetricConsumer{
+	return &TeamCostConsumer{
 		ch:       ch,
-		callback: NewMetricConsumer(consumer, ch, errors),
+		callback: NewTeamCostConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewMetricConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewMetricConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewTeamCostConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewTeamCostConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &MetricConsumer{
+	return &TeamCostConsumer{
 		ch:       ch,
-		callback: NewMetricConsumer(consumer, ch, errors),
+		callback: NewTeamCostConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }

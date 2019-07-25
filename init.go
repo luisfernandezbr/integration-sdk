@@ -17,6 +17,7 @@ import (
 	dm_pipeline_reprocess "github.com/pinpt/go-datamodel/pipeline/reprocess"
 	dm_pipeline_signal "github.com/pinpt/go-datamodel/pipeline/signal"
 	dm_pipeline_sourcecode "github.com/pinpt/go-datamodel/pipeline/sourcecode"
+	dm_pipeline_team "github.com/pinpt/go-datamodel/pipeline/team"
 	dm_pipeline_work "github.com/pinpt/go-datamodel/pipeline/work"
 	dm_sourcecode "github.com/pinpt/go-datamodel/sourcecode"
 	dm_web "github.com/pinpt/go-datamodel/web"
@@ -140,6 +141,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "pipeline.sourcecode.Commit":
 		o := new(dm_pipeline_sourcecode.Commit)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "pipeline.team.TeamCost":
+		o := new(dm_pipeline_team.TeamCost)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "pipeline.work.CustomField":
@@ -329,6 +334,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_pipeline_sourcecode.Commit)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "pipeline_team_TeamCost_topic":
+		o := new(dm_pipeline_team.TeamCost)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "pipeline_work_CustomField_topic":
 		o := new(dm_pipeline_work.CustomField)
 		o.FromMap(map[string]interface{}{})
@@ -409,6 +418,7 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("pipeline_integration_User_topic"),
 		datamodel.TopicNameType("pipeline_signal_Interval_topic"),
 		datamodel.TopicNameType("pipeline_sourcecode_Commit_topic"),
+		datamodel.TopicNameType("pipeline_team_TeamCost_topic"),
 		datamodel.TopicNameType("pipeline_work_CustomField_topic"),
 		datamodel.TopicNameType("sourcecode_Branch_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
@@ -453,6 +463,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("pipeline_reprocess_MaterializedLog_topic"),
 		datamodel.TopicNameType("pipeline_signal_Interval_topic"),
 		datamodel.TopicNameType("pipeline_sourcecode_Commit_topic"),
+		datamodel.TopicNameType("pipeline_team_TeamCost_topic"),
 		datamodel.TopicNameType("pipeline_work_CustomField_topic"),
 		datamodel.TopicNameType("sourcecode_Blame_topic"),
 		datamodel.TopicNameType("sourcecode_Branch_topic"),
@@ -504,6 +515,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("pipeline.reprocess.MaterializedLog"),
 		datamodel.ModelNameType("pipeline.signal.Interval"),
 		datamodel.ModelNameType("pipeline.sourcecode.Commit"),
+		datamodel.ModelNameType("pipeline.team.TeamCost"),
 		datamodel.ModelNameType("pipeline.work.CustomField"),
 		datamodel.ModelNameType("sourcecode.Blame"),
 		datamodel.ModelNameType("sourcecode.Branch"),

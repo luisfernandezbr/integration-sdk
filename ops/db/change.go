@@ -76,8 +76,10 @@ func (v ChangeAction) String() string {
 	case 0:
 		return "create"
 	case 1:
-		return "update"
+		return "upsert"
 	case 2:
+		return "update"
+	case 3:
 		return "delete"
 	}
 	return "unset"
@@ -86,10 +88,12 @@ func (v ChangeAction) String() string {
 const (
 	// ActionCreate is the enumeration value for create
 	ChangeActionCreate ChangeAction = 0
+	// ActionUpsert is the enumeration value for upsert
+	ChangeActionUpsert ChangeAction = 1
 	// ActionUpdate is the enumeration value for update
-	ChangeActionUpdate ChangeAction = 1
+	ChangeActionUpdate ChangeAction = 2
 	// ActionDelete is the enumeration value for delete
-	ChangeActionDelete ChangeAction = 2
+	ChangeActionDelete ChangeAction = 3
 )
 
 // ChangeChangeDate represents the object structure for change_date
@@ -417,20 +421,24 @@ func (o *Change) FromMap(kv map[string]interface{}) {
 			switch ev {
 			case "create":
 				o.Action = 0
-			case "update":
+			case "upsert":
 				o.Action = 1
-			case "delete":
+			case "update":
 				o.Action = 2
+			case "delete":
+				o.Action = 3
 			}
 		}
 		if em, ok := kv["action"].(string); ok {
 			switch em {
 			case "create":
 				o.Action = 0
-			case "update":
+			case "upsert":
 				o.Action = 1
-			case "delete":
+			case "update":
 				o.Action = 2
+			case "delete":
+				o.Action = 3
 			}
 		}
 	}
@@ -568,12 +576,12 @@ func GetChangeAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "action",
-					"symbols": []interface{}{"create", "update", "delete"},
+					"symbols": []interface{}{"create", "upsert", "update", "delete"},
 				},
 			},
 			map[string]interface{}{
 				"name": "change_date",
-				"type": map[string]interface{}{"doc": "the date when the change was made", "type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the change was made", "type": "record", "name": "change_date"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
