@@ -26,6 +26,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -69,15 +70,98 @@ type EnrollRequestRequestDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *EnrollRequestRequestDate) ToMap() map[string]interface{} {
+func toEnrollRequestRequestDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toEnrollRequestRequestDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => EnrollRequestRequestDate name => EnrollRequestRequestDate
+	switch v := o.(type) {
+	case *EnrollRequestRequestDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *EnrollRequestRequestDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toEnrollRequestRequestDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toEnrollRequestRequestDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toEnrollRequestRequestDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *EnrollRequestRequestDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *EnrollRequestRequestDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // EnrollRequest an agent request to enroll a new agent machine
@@ -105,21 +189,20 @@ func toEnrollRequestObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toEnrollRequestObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => EnrollRequest name => EnrollRequest
 	switch v := o.(type) {
 	case *EnrollRequest:
-		return v.ToMap()
-	case EnrollRequest:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case EnrollRequestRequestDate:
-		vv := o.(EnrollRequestRequestDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of EnrollRequest
@@ -137,9 +220,13 @@ func (o *EnrollRequest) GetModelName() datamodel.ModelNameType {
 	return EnrollRequestModelName
 }
 
-func (o *EnrollRequest) setDefaults() {
+func (o *EnrollRequest) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 }
 
 // GetID returns the ID for the object
@@ -326,7 +413,7 @@ func (o *EnrollRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"code":         toEnrollRequestObject(o.Code, isavro, false, "string"),
 		"id":           toEnrollRequestObject(o.ID, isavro, false, "string"),
@@ -337,72 +424,71 @@ func (o *EnrollRequest) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["code"].(string); ok {
 		o.Code = val
 	} else {
-		val := kv["code"]
-		if val == nil {
-			o.Code = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["code"]; ok {
+			if val == nil {
+				o.Code = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Code = fmt.Sprintf("%v", val)
 			}
-			o.Code = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.ID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["request_date"].(EnrollRequestRequestDate); ok {
-		o.RequestDate = val
-	} else {
-		val := kv["request_date"]
-		if val == nil {
-			o.RequestDate = EnrollRequestRequestDate{}
-		} else {
-			o.RequestDate = EnrollRequestRequestDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
 				}
-				val = si
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.RequestDate)
-
 		}
 	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(EnrollRequestRequestDate); ok {
+			// struct
+			o.RequestDate = sv
+		} else if sp, ok := val.(*EnrollRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = *sp
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
-		val := kv["uuid"]
-		if val == nil {
-			o.UUID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.UUID = fmt.Sprintf("%v", val)
 			}
-			o.UUID = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // GetEnrollRequestAvroSchemaSpec creates the avro schema specification for EnrollRequest
@@ -422,7 +508,7 @@ func GetEnrollRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

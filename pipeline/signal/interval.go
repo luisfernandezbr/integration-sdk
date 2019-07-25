@@ -92,15 +92,98 @@ type IntervalEndDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *IntervalEndDate) ToMap() map[string]interface{} {
+func toIntervalEndDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toIntervalEndDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => IntervalEndDate name => IntervalEndDate
+	switch v := o.(type) {
+	case *IntervalEndDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *IntervalEndDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toIntervalEndDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toIntervalEndDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toIntervalEndDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *IntervalEndDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntervalEndDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // IntervalPriorEndDate represents the object structure for prior_end_date
@@ -113,15 +196,98 @@ type IntervalPriorEndDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *IntervalPriorEndDate) ToMap() map[string]interface{} {
+func toIntervalPriorEndDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toIntervalPriorEndDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => IntervalPriorEndDate name => IntervalPriorEndDate
+	switch v := o.(type) {
+	case *IntervalPriorEndDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *IntervalPriorEndDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toIntervalPriorEndDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toIntervalPriorEndDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toIntervalPriorEndDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *IntervalPriorEndDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntervalPriorEndDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // IntervalPriorStartDate represents the object structure for prior_start_date
@@ -134,15 +300,98 @@ type IntervalPriorStartDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *IntervalPriorStartDate) ToMap() map[string]interface{} {
+func toIntervalPriorStartDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toIntervalPriorStartDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => IntervalPriorStartDate name => IntervalPriorStartDate
+	switch v := o.(type) {
+	case *IntervalPriorStartDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *IntervalPriorStartDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toIntervalPriorStartDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toIntervalPriorStartDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toIntervalPriorStartDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *IntervalPriorStartDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntervalPriorStartDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // IntervalStartDate represents the object structure for start_date
@@ -155,15 +404,98 @@ type IntervalStartDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *IntervalStartDate) ToMap() map[string]interface{} {
+func toIntervalStartDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toIntervalStartDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => IntervalStartDate name => IntervalStartDate
+	switch v := o.(type) {
+	case *IntervalStartDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *IntervalStartDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toIntervalStartDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toIntervalStartDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toIntervalStartDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *IntervalStartDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntervalStartDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // Interval time intervals for signal data
@@ -195,30 +527,29 @@ func toIntervalObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toIntervalObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => Interval name => Interval
 	switch v := o.(type) {
 	case *Interval:
-		return v.ToMap()
-	case Interval:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case IntervalEndDate:
-		vv := o.(IntervalEndDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
 	case IntervalPriorEndDate:
-		vv := o.(IntervalPriorEndDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
 	case IntervalPriorStartDate:
-		vv := o.(IntervalPriorStartDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
 	case IntervalStartDate:
-		vv := o.(IntervalStartDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Interval
@@ -236,9 +567,13 @@ func (o *Interval) GetModelName() datamodel.ModelNameType {
 	return IntervalModelName
 }
 
-func (o *Interval) setDefaults() {
+func (o *Interval) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 }
 
 // GetID returns the ID for the object
@@ -419,7 +754,7 @@ func (o *Interval) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"end_date":         toIntervalObject(o.EndDate, isavro, false, "end_date"),
 		"id":               toIntervalObject(o.ID, isavro, false, "string"),
@@ -432,125 +767,98 @@ func (o *Interval) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Interval) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["end_date"].(IntervalEndDate); ok {
-		o.EndDate = val
-	} else {
-		val := kv["end_date"]
-		if val == nil {
-			o.EndDate = IntervalEndDate{}
-		} else {
-			o.EndDate = IntervalEndDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.EndDate)
 
+	if val, ok := kv["end_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.EndDate.FromMap(kv)
+		} else if sv, ok := val.(IntervalEndDate); ok {
+			// struct
+			o.EndDate = sv
+		} else if sp, ok := val.(*IntervalEndDate); ok {
+			// struct pointer
+			o.EndDate = *sp
 		}
+	} else {
+		o.EndDate.FromMap(map[string]interface{}{})
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.ID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["prior_end_date"].(IntervalPriorEndDate); ok {
-		o.PriorEndDate = val
-	} else {
-		val := kv["prior_end_date"]
-		if val == nil {
-			o.PriorEndDate = IntervalPriorEndDate{}
-		} else {
-			o.PriorEndDate = IntervalPriorEndDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
 				}
-				val = si
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.PriorEndDate)
-
 		}
 	}
-	if val, ok := kv["prior_start_date"].(IntervalPriorStartDate); ok {
-		o.PriorStartDate = val
+
+	if val, ok := kv["prior_end_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.PriorEndDate.FromMap(kv)
+		} else if sv, ok := val.(IntervalPriorEndDate); ok {
+			// struct
+			o.PriorEndDate = sv
+		} else if sp, ok := val.(*IntervalPriorEndDate); ok {
+			// struct pointer
+			o.PriorEndDate = *sp
+		}
 	} else {
-		val := kv["prior_start_date"]
-		if val == nil {
-			o.PriorStartDate = IntervalPriorStartDate{}
-		} else {
-			o.PriorStartDate = IntervalPriorStartDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.PriorStartDate)
-
-		}
+		o.PriorEndDate.FromMap(map[string]interface{}{})
 	}
-	if val, ok := kv["start_date"].(IntervalStartDate); ok {
-		o.StartDate = val
+
+	if val, ok := kv["prior_start_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.PriorStartDate.FromMap(kv)
+		} else if sv, ok := val.(IntervalPriorStartDate); ok {
+			// struct
+			o.PriorStartDate = sv
+		} else if sp, ok := val.(*IntervalPriorStartDate); ok {
+			// struct pointer
+			o.PriorStartDate = *sp
+		}
 	} else {
-		val := kv["start_date"]
-		if val == nil {
-			o.StartDate = IntervalStartDate{}
-		} else {
-			o.StartDate = IntervalStartDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.StartDate)
-
-		}
+		o.PriorStartDate.FromMap(map[string]interface{}{})
 	}
+
+	if val, ok := kv["start_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.StartDate.FromMap(kv)
+		} else if sv, ok := val.(IntervalStartDate); ok {
+			// struct
+			o.StartDate = sv
+		} else if sp, ok := val.(*IntervalStartDate); ok {
+			// struct pointer
+			o.StartDate = *sp
+		}
+	} else {
+		o.StartDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["time_unit"].(int64); ok {
 		o.TimeUnit = val
 	} else {
-		val := kv["time_unit"]
-		if val == nil {
-			o.TimeUnit = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["time_unit"]; ok {
+			if val == nil {
+				o.TimeUnit = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.TimeUnit = number.ToInt64Any(val)
 			}
-			o.TimeUnit = number.ToInt64Any(val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // GetIntervalAvroSchemaSpec creates the avro schema specification for Interval
@@ -562,7 +870,7 @@ func GetIntervalAvroSchemaSpec() string {
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date at the end of the time interval - the current signal date"},
+				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the end of the time interval - the current signal date"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -570,11 +878,11 @@ func GetIntervalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "prior_end_date",
-				"type": map[string]interface{}{"type": "record", "name": "prior_end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the end of the prior interval - the prior signal date"},
+				"type": map[string]interface{}{"type": "record", "name": "prior_end_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date at the end of the prior interval - the prior signal date"},
 			},
 			map[string]interface{}{
 				"name": "prior_start_date",
-				"type": map[string]interface{}{"type": "record", "name": "prior_start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the start of the prior time interval"},
+				"type": map[string]interface{}{"name": "prior_start_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the start of the prior time interval", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "start_date",

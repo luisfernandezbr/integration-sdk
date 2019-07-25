@@ -27,9 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -129,36 +127,278 @@ type ProjectResponseEventDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ProjectResponseEventDate) ToMap() map[string]interface{} {
+func toProjectResponseEventDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectResponseEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectResponseEventDate name => ProjectResponseEventDate
+	switch v := o.(type) {
+	case *ProjectResponseEventDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectResponseEventDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toProjectResponseEventDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toProjectResponseEventDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toProjectResponseEventDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *ProjectResponseEventDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectResponseEventDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectResponseProjectsLastIssueCreatedDate represents the object structure for created_date
 type ProjectResponseProjectsLastIssueCreatedDate struct {
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ProjectResponseProjectsLastIssueCreatedDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+func toProjectResponseProjectsLastIssueCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
 	}
+	return nil
+}
+
+func toProjectResponseProjectsLastIssueCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectResponseProjectsLastIssueCreatedDate name => ProjectResponseProjectsLastIssueCreatedDate
+	switch v := o.(type) {
+	case *ProjectResponseProjectsLastIssueCreatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectResponseProjectsLastIssueCreatedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// CustomerID the customer id for the model instance
+		"customer_id": toProjectResponseProjectsLastIssueCreatedDateObject(o.CustomerID, isavro, false, "string"),
+		// Epoch the date in epoch format
+		"epoch": toProjectResponseProjectsLastIssueCreatedDateObject(o.Epoch, isavro, false, "long"),
+		// ID the primary key for the model instance
+		"id": toProjectResponseProjectsLastIssueCreatedDateObject(o.ID, isavro, false, "string"),
+		// Offset the timezone offset from GMT
+		"offset": toProjectResponseProjectsLastIssueCreatedDateObject(o.Offset, isavro, false, "long"),
+		// RefID the source system id for the model instance
+		"ref_id": toProjectResponseProjectsLastIssueCreatedDateObject(o.RefID, isavro, false, "string"),
+		// RefType the source system identifier for the model instance
+		"ref_type": toProjectResponseProjectsLastIssueCreatedDateObject(o.RefType, isavro, false, "string"),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toProjectResponseProjectsLastIssueCreatedDateObject(o.Rfc3339, isavro, false, "string"),
+	}
+}
+
+func (o *ProjectResponseProjectsLastIssueCreatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectResponseProjectsLastIssueCreatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectResponseProjectsLastIssueLastUser represents the object structure for last_user
@@ -171,15 +411,98 @@ type ProjectResponseProjectsLastIssueLastUser struct {
 	AvatarURL string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 }
 
-func (o *ProjectResponseProjectsLastIssueLastUser) ToMap() map[string]interface{} {
+func toProjectResponseProjectsLastIssueLastUserObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectResponseProjectsLastIssueLastUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectResponseProjectsLastIssueLastUser name => ProjectResponseProjectsLastIssueLastUser
+	switch v := o.(type) {
+	case *ProjectResponseProjectsLastIssueLastUser:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectResponseProjectsLastIssueLastUser) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// UserID the work project user id
-		"user_id": o.UserID,
+		"user_id": toProjectResponseProjectsLastIssueLastUserObject(o.UserID, isavro, false, "string"),
 		// Name the user name
-		"name": o.Name,
+		"name": toProjectResponseProjectsLastIssueLastUserObject(o.Name, isavro, false, "string"),
 		// AvatarURL the avatar url
-		"avatar_url": o.AvatarURL,
+		"avatar_url": toProjectResponseProjectsLastIssueLastUserObject(o.AvatarURL, isavro, false, "string"),
 	}
+}
+
+func (o *ProjectResponseProjectsLastIssueLastUser) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectResponseProjectsLastIssueLastUser) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["user_id"].(string); ok {
+		o.UserID = val
+	} else {
+		if val, ok := kv["user_id"]; ok {
+			if val == nil {
+				o.UserID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.UserID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["avatar_url"].(string); ok {
+		o.AvatarURL = val
+	} else {
+		if val, ok := kv["avatar_url"]; ok {
+			if val == nil {
+				o.AvatarURL = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.AvatarURL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectResponseProjectsLastIssue represents the object structure for last_issue
@@ -194,17 +517,119 @@ type ProjectResponseProjectsLastIssue struct {
 	LastUser ProjectResponseProjectsLastIssueLastUser `json:"last_user" bson:"last_user" yaml:"last_user" faker:"-"`
 }
 
-func (o *ProjectResponseProjectsLastIssue) ToMap() map[string]interface{} {
+func toProjectResponseProjectsLastIssueObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectResponseProjectsLastIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectResponseProjectsLastIssue name => ProjectResponseProjectsLastIssue
+	switch v := o.(type) {
+	case *ProjectResponseProjectsLastIssue:
+		return v.ToMap(isavro)
+
+	case ProjectResponseProjectsLastIssueCreatedDate:
+		return v.ToMap(isavro)
+
+	case ProjectResponseProjectsLastIssueLastUser:
+		return v.ToMap(isavro)
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectResponseProjectsLastIssue) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// IssueID issue id
-		"issue_id": o.IssueID,
+		"issue_id": toProjectResponseProjectsLastIssueObject(o.IssueID, isavro, false, "string"),
 		// Identifier the issue key from the source
-		"identifier": o.Identifier,
+		"identifier": toProjectResponseProjectsLastIssueObject(o.Identifier, isavro, false, "string"),
 		// CreatedDate the date of the change
-		"created_date": o.CreatedDate,
+		"created_date": toProjectResponseProjectsLastIssueObject(o.CreatedDate, isavro, false, "created_date"),
 		// LastUser the last user
-		"last_user": o.LastUser,
+		"last_user": toProjectResponseProjectsLastIssueObject(o.LastUser, isavro, false, "last_user"),
 	}
+}
+
+func (o *ProjectResponseProjectsLastIssue) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectResponseProjectsLastIssue) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["issue_id"].(string); ok {
+		o.IssueID = val
+	} else {
+		if val, ok := kv["issue_id"]; ok {
+			if val == nil {
+				o.IssueID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.IssueID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
+	} else {
+		if val, ok := kv["identifier"]; ok {
+			if val == nil {
+				o.Identifier = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Identifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectResponseProjectsLastIssueCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*ProjectResponseProjectsLastIssueCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_user"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastUser.FromMap(kv)
+		} else if sv, ok := val.(ProjectResponseProjectsLastIssueLastUser); ok {
+			// struct
+			o.LastUser = sv
+		} else if sp, ok := val.(*ProjectResponseProjectsLastIssueLastUser); ok {
+			// struct pointer
+			o.LastUser = *sp
+		}
+	} else {
+		o.LastUser.FromMap(map[string]interface{}{})
+	}
+
+	o.setDefaults(false)
 }
 
 // ProjectResponseProjects represents the object structure for projects
@@ -229,27 +654,205 @@ type ProjectResponseProjects struct {
 	URL string `json:"url" bson:"url" yaml:"url" faker:"-"`
 }
 
-func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
+func toProjectResponseProjectsObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectResponseProjectsObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectResponseProjects name => ProjectResponseProjects
+	switch v := o.(type) {
+	case *ProjectResponseProjects:
+		return v.ToMap(isavro)
+
+	case ProjectResponseProjectsLastIssue:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectResponseProjects) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Active the status of the project
-		"active": o.Active,
+		"active": toProjectResponseProjectsObject(o.Active, isavro, false, "boolean"),
 		// Category the project category
-		"category": o.Category,
+		"category": toProjectResponseProjectsObject(o.Category, isavro, true, "string"),
 		// Description the description of the project
-		"description": o.Description,
+		"description": toProjectResponseProjectsObject(o.Description, isavro, true, "string"),
 		// Identifier the common identifier for the project
-		"identifier": o.Identifier,
+		"identifier": toProjectResponseProjectsObject(o.Identifier, isavro, false, "string"),
 		// LastIssue last issue for this project
-		"last_issue": o.LastIssue,
+		"last_issue": toProjectResponseProjectsObject(o.LastIssue, isavro, false, "last_issue"),
 		// Name the name of the project
-		"name": o.Name,
+		"name": toProjectResponseProjectsObject(o.Name, isavro, false, "string"),
 		// ProjectID the id of the project
-		"project_id": o.ProjectID,
+		"project_id": toProjectResponseProjectsObject(o.ProjectID, isavro, false, "string"),
 		// TotalIssues the total issues count for the project
-		"total_issues": o.TotalIssues,
+		"total_issues": toProjectResponseProjectsObject(o.TotalIssues, isavro, false, "long"),
 		// URL the url to the project home page
-		"url": o.URL,
+		"url": toProjectResponseProjectsObject(o.URL, isavro, false, "string"),
 	}
+}
+
+func (o *ProjectResponseProjects) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = number.ToBoolAny(nil)
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["category"].(*string); ok {
+		o.Category = val
+	} else if val, ok := kv["category"].(string); ok {
+		o.Category = &val
+	} else {
+		if val, ok := kv["category"]; ok {
+			if val == nil {
+				o.Category = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Category = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
+	} else {
+		if val, ok := kv["identifier"]; ok {
+			if val == nil {
+				o.Identifier = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Identifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["last_issue"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastIssue.FromMap(kv)
+		} else if sv, ok := val.(ProjectResponseProjectsLastIssue); ok {
+			// struct
+			o.LastIssue = sv
+		} else if sp, ok := val.(*ProjectResponseProjectsLastIssue); ok {
+			// struct pointer
+			o.LastIssue = *sp
+		}
+	} else {
+		o.LastIssue.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = val
+	} else {
+		if val, ok := kv["project_id"]; ok {
+			if val == nil {
+				o.ProjectID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ProjectID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["total_issues"].(int64); ok {
+		o.TotalIssues = val
+	} else {
+		if val, ok := kv["total_issues"]; ok {
+			if val == nil {
+				o.TotalIssues = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.TotalIssues = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectResponseType is the enumeration type for type
@@ -259,21 +862,21 @@ type ProjectResponseType int32
 func (v ProjectResponseType) String() string {
 	switch int32(v) {
 	case 0:
-		return "enroll"
+		return "ENROLL"
 	case 1:
-		return "ping"
+		return "PING"
 	case 2:
-		return "crash"
+		return "CRASH"
 	case 3:
-		return "integration"
+		return "INTEGRATION"
 	case 4:
-		return "export"
+		return "EXPORT"
 	case 5:
-		return "project"
+		return "PROJECT"
 	case 6:
-		return "repo"
+		return "REPO"
 	case 7:
-		return "user"
+		return "USER"
 	}
 	return "unset"
 }
@@ -360,33 +963,27 @@ func toProjectResponseObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toProjectResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => ProjectResponse name => ProjectResponse
 	switch v := o.(type) {
 	case *ProjectResponse:
-		return v.ToMap()
-	case ProjectResponse:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case ProjectResponseEventDate:
-		vv := o.(ProjectResponseEventDate)
-		return vv.ToMap()
-	case []ProjectResponseProjects:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]ProjectResponseProjects) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case ProjectResponseType:
-		if !isavro {
-			return (o.(ProjectResponseType)).String()
-		}
-		return (o.(ProjectResponseType)).String()
+		return v.ToMap(isavro)
 
+	case []ProjectResponseProjects:
+		return v
+
+		// is nested enum Type
+	case ProjectResponseType:
+		return v.String()
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of ProjectResponse
@@ -404,7 +1001,7 @@ func (o *ProjectResponse) GetModelName() datamodel.ModelNameType {
 	return ProjectResponseModelName
 }
 
-func (o *ProjectResponse) setDefaults() {
+func (o *ProjectResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString
 	}
@@ -412,10 +1009,14 @@ func (o *ProjectResponse) setDefaults() {
 		o.Error = &emptyString
 	}
 	if o.Projects == nil {
-		o.Projects = []ProjectResponseProjects{}
+		o.Projects = make([]ProjectResponseProjects, 0)
 	}
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -622,7 +1223,7 @@ func (o *ProjectResponse) ToMap(avro ...bool) map[string]interface{} {
 			o.Projects = make([]ProjectResponseProjects, 0)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"architecture":   toProjectResponseObject(o.Architecture, isavro, false, "string"),
 		"customer_id":    toProjectResponseObject(o.CustomerID, isavro, false, "string"),
@@ -653,387 +1254,391 @@ func (o *ProjectResponse) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
 	} else {
-		val := kv["architecture"]
-		if val == nil {
-			o.Architecture = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["architecture"]; ok {
+			if val == nil {
+				o.Architecture = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Architecture = fmt.Sprintf("%v", val)
 			}
-			o.Architecture = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["data"].(*string); ok {
 		o.Data = val
 	} else if val, ok := kv["data"].(string); ok {
 		o.Data = &val
 	} else {
-		val := kv["data"]
-		if val == nil {
-			o.Data = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["data"]; ok {
+			if val == nil {
+				o.Data = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
-		val := kv["distro"]
-		if val == nil {
-			o.Distro = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["distro"]; ok {
+			if val == nil {
+				o.Distro = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Distro = fmt.Sprintf("%v", val)
 			}
-			o.Distro = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
 	} else if val, ok := kv["error"].(string); ok {
 		o.Error = &val
 	} else {
-		val := kv["error"]
-		if val == nil {
-			o.Error = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
-			}
-			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["event_date"].(ProjectResponseEventDate); ok {
-		o.EventDate = val
-	} else {
-		val := kv["event_date"]
-		if val == nil {
-			o.EventDate = ProjectResponseEventDate{}
-		} else {
-			o.EventDate = ProjectResponseEventDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["error"]; ok {
+			if val == nil {
+				o.Error = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				val = si
+				o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.EventDate)
-
 		}
 	}
+
+	if val, ok := kv["event_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.EventDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectResponseEventDate); ok {
+			// struct
+			o.EventDate = sv
+		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
+			// struct pointer
+			o.EventDate = *sp
+		}
+	} else {
+		o.EventDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["free_space"].(int64); ok {
 		o.FreeSpace = val
 	} else {
-		val := kv["free_space"]
-		if val == nil {
-			o.FreeSpace = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["free_space"]; ok {
+			if val == nil {
+				o.FreeSpace = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.FreeSpace = number.ToInt64Any(val)
 			}
-			o.FreeSpace = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["go_version"].(string); ok {
 		o.GoVersion = val
 	} else {
-		val := kv["go_version"]
-		if val == nil {
-			o.GoVersion = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["go_version"]; ok {
+			if val == nil {
+				o.GoVersion = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.GoVersion = fmt.Sprintf("%v", val)
 			}
-			o.GoVersion = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["hostname"].(string); ok {
 		o.Hostname = val
 	} else {
-		val := kv["hostname"]
-		if val == nil {
-			o.Hostname = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["hostname"]; ok {
+			if val == nil {
+				o.Hostname = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Hostname = fmt.Sprintf("%v", val)
 			}
-			o.Hostname = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["integration_id"].(string); ok {
 		o.IntegrationID = val
 	} else {
-		val := kv["integration_id"]
-		if val == nil {
-			o.IntegrationID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["integration_id"]; ok {
+			if val == nil {
+				o.IntegrationID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.IntegrationID = fmt.Sprintf("%v", val)
 			}
-			o.IntegrationID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["memory"].(int64); ok {
 		o.Memory = val
 	} else {
-		val := kv["memory"]
-		if val == nil {
-			o.Memory = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["memory"]; ok {
+			if val == nil {
+				o.Memory = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Memory = number.ToInt64Any(val)
 			}
-			o.Memory = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
-		val := kv["message"]
-		if val == nil {
-			o.Message = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Message = fmt.Sprintf("%v", val)
 			}
-			o.Message = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["num_cpu"].(int64); ok {
 		o.NumCPU = val
 	} else {
-		val := kv["num_cpu"]
-		if val == nil {
-			o.NumCPU = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["num_cpu"]; ok {
+			if val == nil {
+				o.NumCPU = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.NumCPU = number.ToInt64Any(val)
 			}
-			o.NumCPU = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["os"].(string); ok {
 		o.OS = val
 	} else {
-		val := kv["os"]
-		if val == nil {
-			o.OS = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.OS = fmt.Sprintf("%v", val)
-		}
-	}
-	if val := kv["projects"]; val != nil {
-		na := make([]ProjectResponseProjects, 0)
-		if a, ok := val.([]ProjectResponseProjects); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(ProjectResponseProjects); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av ProjectResponseProjects
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for projects field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(ProjectResponseProjects); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av ProjectResponseProjects
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for projects field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+		if val, ok := kv["os"]; ok {
+			if val == nil {
+				o.OS = ""
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for projects field")
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.OS = fmt.Sprintf("%v", val)
 			}
 		}
-		o.Projects = na
-	} else {
-		o.Projects = []ProjectResponseProjects{}
 	}
-	if o.Projects == nil {
+
+	if o == nil {
+
 		o.Projects = make([]ProjectResponseProjects, 0)
+
 	}
+	if val, ok := kv["projects"]; ok {
+		if sv, ok := val.([]ProjectResponseProjects); ok {
+			o.Projects = sv
+		} else if sp, ok := val.([]*ProjectResponseProjects); ok {
+			o.Projects = o.Projects[:0]
+			for _, e := range sp {
+				o.Projects = append(o.Projects, *e)
+			}
+		}
+	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["request_id"].(string); ok {
 		o.RequestID = val
 	} else {
-		val := kv["request_id"]
-		if val == nil {
-			o.RequestID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["request_id"]; ok {
+			if val == nil {
+				o.RequestID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RequestID = fmt.Sprintf("%v", val)
 			}
-			o.RequestID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
-		val := kv["success"]
-		if val == nil {
-			o.Success = number.ToBoolAny(nil)
-		} else {
-			o.Success = number.ToBoolAny(val)
+		if val, ok := kv["success"]; ok {
+			if val == nil {
+				o.Success = number.ToBoolAny(nil)
+			} else {
+				o.Success = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["type"].(ProjectResponseType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
 			ev := em["agent.type"].(string)
 			switch ev {
-			case "enroll":
+			case "enroll", "ENROLL":
 				o.Type = 0
-			case "ping":
+			case "ping", "PING":
 				o.Type = 1
-			case "crash":
+			case "crash", "CRASH":
 				o.Type = 2
-			case "integration":
+			case "integration", "INTEGRATION":
 				o.Type = 3
-			case "export":
+			case "export", "EXPORT":
 				o.Type = 4
-			case "project":
+			case "project", "PROJECT":
 				o.Type = 5
-			case "repo":
+			case "repo", "REPO":
 				o.Type = 6
-			case "user":
+			case "user", "USER":
 				o.Type = 7
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
 			switch em {
-			case "enroll":
+			case "enroll", "ENROLL":
 				o.Type = 0
-			case "ping":
+			case "ping", "PING":
 				o.Type = 1
-			case "crash":
+			case "crash", "CRASH":
 				o.Type = 2
-			case "integration":
+			case "integration", "INTEGRATION":
 				o.Type = 3
-			case "export":
+			case "export", "EXPORT":
 				o.Type = 4
-			case "project":
+			case "project", "PROJECT":
 				o.Type = 5
-			case "repo":
+			case "repo", "REPO":
 				o.Type = 6
-			case "user":
+			case "user", "USER":
 				o.Type = 7
 			}
 		}
 	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
-		val := kv["uuid"]
-		if val == nil {
-			o.UUID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.UUID = fmt.Sprintf("%v", val)
 			}
-			o.UUID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["version"].(string); ok {
 		o.Version = val
 	} else {
-		val := kv["version"]
-		if val == nil {
-			o.Version = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["version"]; ok {
+			if val == nil {
+				o.Version = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Version = fmt.Sprintf("%v", val)
 			}
-			o.Version = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -1101,7 +1706,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1141,7 +1746,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"type": "string", "name": "category", "doc": "the project category"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the project"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the issue key from the source"}, map[string]interface{}{"doc": "the date of the change", "type": map[string]interface{}{"type": "record", "name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"}, "name": "created_date"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}, map[string]interface{}{"name": "name", "doc": "the user name", "type": "string"}, map[string]interface{}{"doc": "the avatar url", "type": "string", "name": "avatar_url"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}}, "doc": "last issue for this project"}, "name": "last_issue", "doc": "last issue for this project"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"name": "project_id", "doc": "the id of the project", "type": "string"}, map[string]interface{}{"type": "long", "name": "total_issues", "doc": "the total issues count for the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}},
+				"type": map[string]interface{}{"items": map[string]interface{}{"name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"doc": "the project category", "default": nil, "type": []interface{}{"null", "string"}, "name": "category"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "description", "doc": "the description of the project"}, map[string]interface{}{"name": "identifier", "doc": "the common identifier for the project", "type": "string"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"doc": "the issue key from the source", "type": "string", "name": "identifier"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "id", "doc": "the primary key for the model instance", "type": "string"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"name": "ref_id", "doc": "the source system id for the model instance", "type": "string"}, map[string]interface{}{"name": "ref_type", "doc": "the source system identifier for the model instance", "type": "string"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date of the change"}, "name": "created_date", "doc": "the date of the change"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the user name"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}}, "doc": "the last user"}, "name": "last_user", "doc": "the last user"}}, "doc": "last issue for this project"}, "name": "last_issue", "doc": "last issue for this project"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "long", "name": "total_issues", "doc": "the total issues count for the project"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported", "type": "record"}, "type": "array", "name": "projects"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1164,7 +1769,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "repo", "user"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
 				},
 			},
 			map[string]interface{}{

@@ -85,18 +85,17 @@ func toCustomFieldObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toCustomFieldObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => CustomField name => CustomField
 	switch v := o.(type) {
 	case *CustomField:
-		return v.ToMap()
-	case CustomField:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of CustomField
@@ -114,9 +113,13 @@ func (o *CustomField) GetModelName() datamodel.ModelNameType {
 	return CustomFieldModelName
 }
 
-func (o *CustomField) setDefaults() {
+func (o *CustomField) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -305,7 +308,7 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"customer_id": toCustomFieldObject(o.CustomerID, isavro, false, "string"),
 		"id":          toCustomFieldObject(o.ID, isavro, false, "string"),
@@ -319,89 +322,102 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *CustomField) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["key"].(string); ok {
 		o.Key = val
 	} else {
-		val := kv["key"]
-		if val == nil {
-			o.Key = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["key"]; ok {
+			if val == nil {
+				o.Key = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Key = fmt.Sprintf("%v", val)
 			}
-			o.Key = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
 			}
-			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object

@@ -26,6 +26,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -77,15 +78,98 @@ type MetricCreatedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *MetricCreatedDate) ToMap() map[string]interface{} {
+func toMetricCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toMetricCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => MetricCreatedDate name => MetricCreatedDate
+	switch v := o.(type) {
+	case *MetricCreatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *MetricCreatedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toMetricCreatedDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toMetricCreatedDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toMetricCreatedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *MetricCreatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // Metric individual metric details
@@ -121,21 +205,20 @@ func toMetricObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => Metric name => Metric
 	switch v := o.(type) {
 	case *Metric:
-		return v.ToMap()
-	case Metric:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case MetricCreatedDate:
-		vv := o.(MetricCreatedDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Metric
@@ -153,9 +236,13 @@ func (o *Metric) GetModelName() datamodel.ModelNameType {
 	return MetricModelName
 }
 
-func (o *Metric) setDefaults() {
+func (o *Metric) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -359,7 +446,7 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"created_date": toMetricObject(o.CreatedDate, isavro, false, "created_date"),
 		"customer_id":  toMetricObject(o.CustomerID, isavro, false, "string"),
@@ -375,124 +462,131 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Metric) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["created_date"].(MetricCreatedDate); ok {
-		o.CreatedDate = val
-	} else {
-		val := kv["created_date"]
-		if val == nil {
-			o.CreatedDate = MetricCreatedDate{}
-		} else {
-			o.CreatedDate = MetricCreatedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.CreatedDate)
 
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(MetricCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*MetricCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
 		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
 			}
-			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["project_id"].(string); ok {
 		o.ProjectID = val
 	} else {
-		val := kv["project_id"]
-		if val == nil {
-			o.ProjectID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["project_id"]; ok {
+			if val == nil {
+				o.ProjectID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ProjectID = fmt.Sprintf("%v", val)
 			}
-			o.ProjectID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["value"].(string); ok {
 		o.Value = val
 	} else {
-		val := kv["value"]
-		if val == nil {
-			o.Value = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["value"]; ok {
+			if val == nil {
+				o.Value = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Value = fmt.Sprintf("%v", val)
 			}
-			o.Value = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -523,7 +617,7 @@ func GetMetricAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the metric was created"},
+				"type": map[string]interface{}{"doc": "the date when the metric was created", "type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

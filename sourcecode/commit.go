@@ -27,8 +27,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -160,15 +158,98 @@ type CommitCreatedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *CommitCreatedDate) ToMap() map[string]interface{} {
+func toCommitCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toCommitCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => CommitCreatedDate name => CommitCreatedDate
+	switch v := o.(type) {
+	case *CommitCreatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *CommitCreatedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toCommitCreatedDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toCommitCreatedDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toCommitCreatedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *CommitCreatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CommitCreatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // CommitFilesCreatedDate represents the object structure for created_date
@@ -181,15 +262,98 @@ type CommitFilesCreatedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *CommitFilesCreatedDate) ToMap() map[string]interface{} {
+func toCommitFilesCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toCommitFilesCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => CommitFilesCreatedDate name => CommitFilesCreatedDate
+	switch v := o.(type) {
+	case *CommitFilesCreatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *CommitFilesCreatedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toCommitFilesCreatedDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toCommitFilesCreatedDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toCommitFilesCreatedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *CommitFilesCreatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CommitFilesCreatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // CommitFiles represents the object structure for files
@@ -242,55 +406,428 @@ type CommitFiles struct {
 	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
 }
 
-func (o *CommitFiles) ToMap() map[string]interface{} {
+func toCommitFilesObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toCommitFilesObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => CommitFiles name => CommitFiles
+	switch v := o.(type) {
+	case *CommitFiles:
+		return v.ToMap(isavro)
+
+	case CommitFilesCreatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *CommitFiles) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Additions the number of additions for the commit file
-		"additions": o.Additions,
+		"additions": toCommitFilesObject(o.Additions, isavro, false, "long"),
 		// Binary indicates if the file was detected to be a binary file
-		"binary": o.Binary,
+		"binary": toCommitFilesObject(o.Binary, isavro, false, "boolean"),
 		// Blanks the number of blank lines in the file
-		"blanks": o.Blanks,
+		"blanks": toCommitFilesObject(o.Blanks, isavro, false, "long"),
 		// Comments the number of comment lines in the file
-		"comments": o.Comments,
+		"comments": toCommitFilesObject(o.Comments, isavro, false, "long"),
 		// CommitID the unique id for the commit
-		"commit_id": o.CommitID,
+		"commit_id": toCommitFilesObject(o.CommitID, isavro, false, "string"),
 		// Complexity the complexity value for the file change
-		"complexity": o.Complexity,
+		"complexity": toCommitFilesObject(o.Complexity, isavro, false, "long"),
 		// CreatedDate the timestamp in UTC that the commit was created
-		"created_date": o.CreatedDate,
+		"created_date": toCommitFilesObject(o.CreatedDate, isavro, false, "created_date"),
 		// Deletions the number of deletions for the commit file
-		"deletions": o.Deletions,
+		"deletions": toCommitFilesObject(o.Deletions, isavro, false, "long"),
 		// Excluded if the file was excluded from processing
-		"excluded": o.Excluded,
+		"excluded": toCommitFilesObject(o.Excluded, isavro, false, "boolean"),
 		// ExcludedReason if the file was excluded, the reason
-		"excluded_reason": o.ExcludedReason,
+		"excluded_reason": toCommitFilesObject(o.ExcludedReason, isavro, false, "string"),
 		// Filename the filename
-		"filename": o.Filename,
+		"filename": toCommitFilesObject(o.Filename, isavro, false, "string"),
 		// Language the language that was detected for the file
-		"language": o.Language,
+		"language": toCommitFilesObject(o.Language, isavro, false, "string"),
 		// License the license which was detected for the file
-		"license": o.License,
+		"license": toCommitFilesObject(o.License, isavro, false, "string"),
 		// LicenseConfidence the license confidence from the detection engine
-		"license_confidence": o.LicenseConfidence,
+		"license_confidence": toCommitFilesObject(o.LicenseConfidence, isavro, false, "float"),
 		// Loc the number of lines in the file
-		"loc": o.Loc,
+		"loc": toCommitFilesObject(o.Loc, isavro, false, "long"),
 		// Ordinal the order value for the file in the change set
-		"ordinal": o.Ordinal,
+		"ordinal": toCommitFilesObject(o.Ordinal, isavro, false, "long"),
 		// Renamed if the file was renamed
-		"renamed": o.Renamed,
+		"renamed": toCommitFilesObject(o.Renamed, isavro, false, "boolean"),
 		// RenamedFrom the original file name
-		"renamed_from": o.RenamedFrom,
+		"renamed_from": toCommitFilesObject(o.RenamedFrom, isavro, false, "string"),
 		// RenamedTo the final file name
-		"renamed_to": o.RenamedTo,
+		"renamed_to": toCommitFilesObject(o.RenamedTo, isavro, false, "string"),
 		// RepoID the unique id for the repo
-		"repo_id": o.RepoID,
+		"repo_id": toCommitFilesObject(o.RepoID, isavro, false, "string"),
 		// Size the size of the file
-		"size": o.Size,
+		"size": toCommitFilesObject(o.Size, isavro, false, "long"),
 		// Sloc the number of source lines in the file
-		"sloc": o.Sloc,
+		"sloc": toCommitFilesObject(o.Sloc, isavro, false, "long"),
 		// Status the status of the change
-		"status": o.Status,
+		"status": toCommitFilesObject(o.Status, isavro, false, "string"),
 	}
+}
+
+func (o *CommitFiles) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CommitFiles) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["additions"].(int64); ok {
+		o.Additions = val
+	} else {
+		if val, ok := kv["additions"]; ok {
+			if val == nil {
+				o.Additions = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Additions = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["binary"].(bool); ok {
+		o.Binary = val
+	} else {
+		if val, ok := kv["binary"]; ok {
+			if val == nil {
+				o.Binary = number.ToBoolAny(nil)
+			} else {
+				o.Binary = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["blanks"].(int64); ok {
+		o.Blanks = val
+	} else {
+		if val, ok := kv["blanks"]; ok {
+			if val == nil {
+				o.Blanks = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Blanks = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["comments"].(int64); ok {
+		o.Comments = val
+	} else {
+		if val, ok := kv["comments"]; ok {
+			if val == nil {
+				o.Comments = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Comments = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["commit_id"].(string); ok {
+		o.CommitID = val
+	} else {
+		if val, ok := kv["commit_id"]; ok {
+			if val == nil {
+				o.CommitID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CommitID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["complexity"].(int64); ok {
+		o.Complexity = val
+	} else {
+		if val, ok := kv["complexity"]; ok {
+			if val == nil {
+				o.Complexity = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Complexity = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(CommitFilesCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*CommitFilesCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["deletions"].(int64); ok {
+		o.Deletions = val
+	} else {
+		if val, ok := kv["deletions"]; ok {
+			if val == nil {
+				o.Deletions = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Deletions = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["excluded"].(bool); ok {
+		o.Excluded = val
+	} else {
+		if val, ok := kv["excluded"]; ok {
+			if val == nil {
+				o.Excluded = number.ToBoolAny(nil)
+			} else {
+				o.Excluded = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["excluded_reason"].(string); ok {
+		o.ExcludedReason = val
+	} else {
+		if val, ok := kv["excluded_reason"]; ok {
+			if val == nil {
+				o.ExcludedReason = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ExcludedReason = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["filename"].(string); ok {
+		o.Filename = val
+	} else {
+		if val, ok := kv["filename"]; ok {
+			if val == nil {
+				o.Filename = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Filename = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["language"].(string); ok {
+		o.Language = val
+	} else {
+		if val, ok := kv["language"]; ok {
+			if val == nil {
+				o.Language = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Language = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["license"].(string); ok {
+		o.License = val
+	} else {
+		if val, ok := kv["license"]; ok {
+			if val == nil {
+				o.License = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.License = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["license_confidence"].(float64); ok {
+		o.LicenseConfidence = val
+	} else {
+		if val, ok := kv["license_confidence"]; ok {
+			if val == nil {
+				o.LicenseConfidence = number.ToFloat64Any(nil)
+			} else {
+				o.LicenseConfidence = number.ToFloat64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["loc"].(int64); ok {
+		o.Loc = val
+	} else {
+		if val, ok := kv["loc"]; ok {
+			if val == nil {
+				o.Loc = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Loc = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["ordinal"].(int64); ok {
+		o.Ordinal = val
+	} else {
+		if val, ok := kv["ordinal"]; ok {
+			if val == nil {
+				o.Ordinal = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Ordinal = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["renamed"].(bool); ok {
+		o.Renamed = val
+	} else {
+		if val, ok := kv["renamed"]; ok {
+			if val == nil {
+				o.Renamed = number.ToBoolAny(nil)
+			} else {
+				o.Renamed = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["renamed_from"].(string); ok {
+		o.RenamedFrom = val
+	} else {
+		if val, ok := kv["renamed_from"]; ok {
+			if val == nil {
+				o.RenamedFrom = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RenamedFrom = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["renamed_to"].(string); ok {
+		o.RenamedTo = val
+	} else {
+		if val, ok := kv["renamed_to"]; ok {
+			if val == nil {
+				o.RenamedTo = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RenamedTo = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = val
+	} else {
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RepoID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["size"].(int64); ok {
+		o.Size = val
+	} else {
+		if val, ok := kv["size"]; ok {
+			if val == nil {
+				o.Size = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Size = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["sloc"].(int64); ok {
+		o.Sloc = val
+	} else {
+		if val, ok := kv["sloc"]; ok {
+			if val == nil {
+				o.Sloc = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Sloc = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["status"].(string); ok {
+		o.Status = val
+	} else {
+		if val, ok := kv["status"]; ok {
+			if val == nil {
+				o.Status = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Status = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // Commit the commit is a specific change in a repo
@@ -360,27 +897,23 @@ func toCommitObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => Commit name => Commit
 	switch v := o.(type) {
 	case *Commit:
-		return v.ToMap()
-	case Commit:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case CommitCreatedDate:
-		vv := o.(CommitCreatedDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
 	case []CommitFiles:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]CommitFiles) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
+		return v
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Commit
@@ -398,12 +931,16 @@ func (o *Commit) GetModelName() datamodel.ModelNameType {
 	return CommitModelName
 }
 
-func (o *Commit) setDefaults() {
+func (o *Commit) setDefaults(frommap bool) {
 	if o.Files == nil {
-		o.Files = []CommitFiles{}
+		o.Files = make([]CommitFiles, 0)
 	}
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -611,7 +1148,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 			o.Files = make([]CommitFiles, 0)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"additions":        toCommitObject(o.Additions, isavro, false, "long"),
 		"author_ref_id":    toCommitObject(o.AuthorRefID, isavro, false, "string"),
@@ -644,372 +1181,381 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Commit) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["additions"].(int64); ok {
 		o.Additions = val
 	} else {
-		val := kv["additions"]
-		if val == nil {
-			o.Additions = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["additions"]; ok {
+			if val == nil {
+				o.Additions = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Additions = number.ToInt64Any(val)
 			}
-			o.Additions = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["author_ref_id"].(string); ok {
 		o.AuthorRefID = val
 	} else {
-		val := kv["author_ref_id"]
-		if val == nil {
-			o.AuthorRefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["author_ref_id"]; ok {
+			if val == nil {
+				o.AuthorRefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.AuthorRefID = fmt.Sprintf("%v", val)
 			}
-			o.AuthorRefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["blanks"].(int64); ok {
 		o.Blanks = val
 	} else {
-		val := kv["blanks"]
-		if val == nil {
-			o.Blanks = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["blanks"]; ok {
+			if val == nil {
+				o.Blanks = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Blanks = number.ToInt64Any(val)
 			}
-			o.Blanks = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["branch"].(string); ok {
 		o.Branch = val
 	} else {
-		val := kv["branch"]
-		if val == nil {
-			o.Branch = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["branch"]; ok {
+			if val == nil {
+				o.Branch = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Branch = fmt.Sprintf("%v", val)
 			}
-			o.Branch = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["comments"].(int64); ok {
 		o.Comments = val
 	} else {
-		val := kv["comments"]
-		if val == nil {
-			o.Comments = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["comments"]; ok {
+			if val == nil {
+				o.Comments = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Comments = number.ToInt64Any(val)
 			}
-			o.Comments = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["committer_ref_id"].(string); ok {
 		o.CommitterRefID = val
 	} else {
-		val := kv["committer_ref_id"]
-		if val == nil {
-			o.CommitterRefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["committer_ref_id"]; ok {
+			if val == nil {
+				o.CommitterRefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CommitterRefID = fmt.Sprintf("%v", val)
 			}
-			o.CommitterRefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["complexity"].(int64); ok {
 		o.Complexity = val
 	} else {
-		val := kv["complexity"]
-		if val == nil {
-			o.Complexity = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.Complexity = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["created_date"].(CommitCreatedDate); ok {
-		o.CreatedDate = val
-	} else {
-		val := kv["created_date"]
-		if val == nil {
-			o.CreatedDate = CommitCreatedDate{}
-		} else {
-			o.CreatedDate = CommitCreatedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["complexity"]; ok {
+			if val == nil {
+				o.Complexity = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
 				}
-				val = si
+				o.Complexity = number.ToInt64Any(val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.CreatedDate)
-
 		}
 	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(CommitCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*CommitCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["deletions"].(int64); ok {
 		o.Deletions = val
 	} else {
-		val := kv["deletions"]
-		if val == nil {
-			o.Deletions = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["deletions"]; ok {
+			if val == nil {
+				o.Deletions = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Deletions = number.ToInt64Any(val)
 			}
-			o.Deletions = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["excluded"].(bool); ok {
 		o.Excluded = val
 	} else {
-		val := kv["excluded"]
-		if val == nil {
-			o.Excluded = number.ToBoolAny(nil)
-		} else {
-			o.Excluded = number.ToBoolAny(val)
-		}
-	}
-	if val := kv["files"]; val != nil {
-		na := make([]CommitFiles, 0)
-		if a, ok := val.([]CommitFiles); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(CommitFiles); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av CommitFiles
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for files field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(CommitFiles); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av CommitFiles
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for files field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+		if val, ok := kv["excluded"]; ok {
+			if val == nil {
+				o.Excluded = number.ToBoolAny(nil)
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for files field")
+				o.Excluded = number.ToBoolAny(val)
 			}
 		}
-		o.Files = na
-	} else {
-		o.Files = []CommitFiles{}
 	}
-	if o.Files == nil {
+
+	if o == nil {
+
 		o.Files = make([]CommitFiles, 0)
+
 	}
+	if val, ok := kv["files"]; ok {
+		if sv, ok := val.([]CommitFiles); ok {
+			o.Files = sv
+		} else if sp, ok := val.([]*CommitFiles); ok {
+			o.Files = o.Files[:0]
+			for _, e := range sp {
+				o.Files = append(o.Files, *e)
+			}
+		}
+	}
+
 	if val, ok := kv["files_changed"].(int64); ok {
 		o.FilesChanged = val
 	} else {
-		val := kv["files_changed"]
-		if val == nil {
-			o.FilesChanged = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["files_changed"]; ok {
+			if val == nil {
+				o.FilesChanged = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.FilesChanged = number.ToInt64Any(val)
 			}
-			o.FilesChanged = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["gpg_signed"].(bool); ok {
 		o.GpgSigned = val
 	} else {
-		val := kv["gpg_signed"]
-		if val == nil {
-			o.GpgSigned = number.ToBoolAny(nil)
-		} else {
-			o.GpgSigned = number.ToBoolAny(val)
+		if val, ok := kv["gpg_signed"]; ok {
+			if val == nil {
+				o.GpgSigned = number.ToBoolAny(nil)
+			} else {
+				o.GpgSigned = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["loc"].(int64); ok {
 		o.Loc = val
 	} else {
-		val := kv["loc"]
-		if val == nil {
-			o.Loc = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["loc"]; ok {
+			if val == nil {
+				o.Loc = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Loc = number.ToInt64Any(val)
 			}
-			o.Loc = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
-		val := kv["message"]
-		if val == nil {
-			o.Message = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Message = fmt.Sprintf("%v", val)
 			}
-			o.Message = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ordinal"].(int64); ok {
 		o.Ordinal = val
 	} else {
-		val := kv["ordinal"]
-		if val == nil {
-			o.Ordinal = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["ordinal"]; ok {
+			if val == nil {
+				o.Ordinal = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Ordinal = number.ToInt64Any(val)
 			}
-			o.Ordinal = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["repo_id"].(string); ok {
 		o.RepoID = val
 	} else {
-		val := kv["repo_id"]
-		if val == nil {
-			o.RepoID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RepoID = fmt.Sprintf("%v", val)
 			}
-			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["sha"].(string); ok {
 		o.Sha = val
 	} else {
-		val := kv["sha"]
-		if val == nil {
-			o.Sha = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["sha"]; ok {
+			if val == nil {
+				o.Sha = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Sha = fmt.Sprintf("%v", val)
 			}
-			o.Sha = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["size"].(int64); ok {
 		o.Size = val
 	} else {
-		val := kv["size"]
-		if val == nil {
-			o.Size = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["size"]; ok {
+			if val == nil {
+				o.Size = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Size = number.ToInt64Any(val)
 			}
-			o.Size = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["sloc"].(int64); ok {
 		o.Sloc = val
 	} else {
-		val := kv["sloc"]
-		if val == nil {
-			o.Sloc = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["sloc"]; ok {
+			if val == nil {
+				o.Sloc = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Sloc = number.ToInt64Any(val)
 			}
-			o.Sloc = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
-		val := kv["url"]
-		if val == nil {
-			o.URL = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.URL = fmt.Sprintf("%v", val)
 			}
-			o.URL = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -1085,7 +1631,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date when the commit was created"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "date when the commit was created", "type": "record", "name": "created_date"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1101,7 +1647,7 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "files",
-				"type": map[string]interface{}{"type": "array", "name": "files", "items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "binary", "doc": "indicates if the file was detected to be a binary file"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"type": "string", "name": "commit_id", "doc": "the unique id for the commit"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "files.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the commit was created"}, "name": "created_date", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"type": "string", "name": "excluded_reason", "doc": "if the file was excluded, the reason"}, map[string]interface{}{"type": "string", "name": "filename", "doc": "the filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"doc": "the license confidence from the detection engine", "type": "float", "name": "license_confidence"}, map[string]interface{}{"doc": "the number of lines in the file", "type": "long", "name": "loc"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"doc": "the original file name", "type": "string", "name": "renamed_from"}, map[string]interface{}{"name": "renamed_to", "doc": "the final file name", "type": "string"}, map[string]interface{}{"doc": "the unique id for the repo", "type": "string", "name": "repo_id"}, map[string]interface{}{"type": "long", "name": "size", "doc": "the size of the file"}, map[string]interface{}{"type": "long", "name": "sloc", "doc": "the number of source lines in the file"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit"}},
+				"type": map[string]interface{}{"items": map[string]interface{}{"type": "record", "name": "files", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "additions", "doc": "the number of additions for the commit file"}, map[string]interface{}{"doc": "indicates if the file was detected to be a binary file", "type": "boolean", "name": "binary"}, map[string]interface{}{"type": "long", "name": "blanks", "doc": "the number of blank lines in the file"}, map[string]interface{}{"type": "long", "name": "comments", "doc": "the number of comment lines in the file"}, map[string]interface{}{"name": "commit_id", "doc": "the unique id for the commit", "type": "string"}, map[string]interface{}{"type": "long", "name": "complexity", "doc": "the complexity value for the file change"}, map[string]interface{}{"type": map[string]interface{}{"name": "files.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the commit was created", "type": "record"}, "name": "created_date", "doc": "the timestamp in UTC that the commit was created"}, map[string]interface{}{"type": "long", "name": "deletions", "doc": "the number of deletions for the commit file"}, map[string]interface{}{"type": "boolean", "name": "excluded", "doc": "if the file was excluded from processing"}, map[string]interface{}{"doc": "if the file was excluded, the reason", "type": "string", "name": "excluded_reason"}, map[string]interface{}{"doc": "the filename", "type": "string", "name": "filename"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the language that was detected for the file"}, map[string]interface{}{"type": "string", "name": "license", "doc": "the license which was detected for the file"}, map[string]interface{}{"name": "license_confidence", "doc": "the license confidence from the detection engine", "type": "float"}, map[string]interface{}{"type": "long", "name": "loc", "doc": "the number of lines in the file"}, map[string]interface{}{"type": "long", "name": "ordinal", "doc": "the order value for the file in the change set"}, map[string]interface{}{"type": "boolean", "name": "renamed", "doc": "if the file was renamed"}, map[string]interface{}{"name": "renamed_from", "doc": "the original file name", "type": "string"}, map[string]interface{}{"type": "string", "name": "renamed_to", "doc": "the final file name"}, map[string]interface{}{"type": "string", "name": "repo_id", "doc": "the unique id for the repo"}, map[string]interface{}{"name": "size", "doc": "the size of the file", "type": "long"}, map[string]interface{}{"name": "sloc", "doc": "the number of source lines in the file", "type": "long"}, map[string]interface{}{"type": "string", "name": "status", "doc": "the status of the change"}}, "doc": "the files touched by this commit"}, "type": "array", "name": "files"},
 			},
 			map[string]interface{}{
 				"name": "files_changed",

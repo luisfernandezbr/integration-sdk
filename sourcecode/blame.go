@@ -27,9 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -119,15 +117,98 @@ type BlameChangeDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *BlameChangeDate) ToMap() map[string]interface{} {
+func toBlameChangeDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toBlameChangeDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => BlameChangeDate name => BlameChangeDate
+	switch v := o.(type) {
+	case *BlameChangeDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *BlameChangeDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toBlameChangeDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toBlameChangeDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toBlameChangeDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *BlameChangeDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *BlameChangeDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // BlameLines represents the object structure for lines
@@ -146,21 +227,140 @@ type BlameLines struct {
 	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
 }
 
-func (o *BlameLines) ToMap() map[string]interface{} {
+func toBlameLinesObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toBlameLinesObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => BlameLines name => BlameLines
+	switch v := o.(type) {
+	case *BlameLines:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *BlameLines) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// AuthorRefID the author ref_id of this line when last changed
-		"author_ref_id": o.AuthorRefID,
+		"author_ref_id": toBlameLinesObject(o.AuthorRefID, isavro, false, "string"),
 		// Blank if the line is a blank line
-		"blank": o.Blank,
+		"blank": toBlameLinesObject(o.Blank, isavro, false, "boolean"),
 		// Code if the line is sourcecode
-		"code": o.Code,
+		"code": toBlameLinesObject(o.Code, isavro, false, "boolean"),
 		// Comment if the line is a comment
-		"comment": o.Comment,
+		"comment": toBlameLinesObject(o.Comment, isavro, false, "boolean"),
 		// Date the change date in RFC3339 format of this line when last changed
-		"date": o.Date,
+		"date": toBlameLinesObject(o.Date, isavro, false, "string"),
 		// Sha the sha when this line was last changed
-		"sha": o.Sha,
+		"sha": toBlameLinesObject(o.Sha, isavro, false, "string"),
 	}
+}
+
+func (o *BlameLines) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *BlameLines) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["author_ref_id"].(string); ok {
+		o.AuthorRefID = val
+	} else {
+		if val, ok := kv["author_ref_id"]; ok {
+			if val == nil {
+				o.AuthorRefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.AuthorRefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["blank"].(bool); ok {
+		o.Blank = val
+	} else {
+		if val, ok := kv["blank"]; ok {
+			if val == nil {
+				o.Blank = number.ToBoolAny(nil)
+			} else {
+				o.Blank = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["code"].(bool); ok {
+		o.Code = val
+	} else {
+		if val, ok := kv["code"]; ok {
+			if val == nil {
+				o.Code = number.ToBoolAny(nil)
+			} else {
+				o.Code = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["comment"].(bool); ok {
+		o.Comment = val
+	} else {
+		if val, ok := kv["comment"]; ok {
+			if val == nil {
+				o.Comment = number.ToBoolAny(nil)
+			} else {
+				o.Comment = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["date"].(string); ok {
+		o.Date = val
+	} else {
+		if val, ok := kv["date"]; ok {
+			if val == nil {
+				o.Date = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Date = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["sha"].(string); ok {
+		o.Sha = val
+	} else {
+		if val, ok := kv["sha"]; ok {
+			if val == nil {
+				o.Sha = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Sha = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // BlameStatus is the enumeration type for status
@@ -170,11 +370,11 @@ type BlameStatus int32
 func (v BlameStatus) String() string {
 	switch int32(v) {
 	case 0:
-		return "added"
+		return "ADDED"
 	case 1:
-		return "modified"
+		return "MODIFIED"
 	case 2:
-		return "removed"
+		return "REMOVED"
 	}
 	return "unset"
 }
@@ -247,33 +447,26 @@ func toBlameObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => Blame name => Blame
 	switch v := o.(type) {
 	case *Blame:
-		return v.ToMap()
-	case Blame:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case BlameChangeDate:
-		vv := o.(BlameChangeDate)
-		return vv.ToMap()
-	case []BlameLines:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]BlameLines) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case BlameStatus:
-		if !isavro {
-			return (o.(BlameStatus)).String()
-		}
-		return (o.(BlameStatus)).String()
+		return v.ToMap(isavro)
 
+	case []BlameLines:
+		return v
+
+		// is nested enum Status
+	case BlameStatus:
+		return v.String()
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Blame
@@ -291,15 +484,19 @@ func (o *Blame) GetModelName() datamodel.ModelNameType {
 	return BlameModelName
 }
 
-func (o *Blame) setDefaults() {
+func (o *Blame) setDefaults(frommap bool) {
 	if o.License == nil {
 		o.License = &emptyString
 	}
 	if o.Lines == nil {
-		o.Lines = []BlameLines{}
+		o.Lines = make([]BlameLines, 0)
 	}
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -506,7 +703,7 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 			o.Lines = make([]BlameLines, 0)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"blanks":          toBlameObject(o.Blanks, isavro, false, "long"),
 		"change_date":     toBlameObject(o.ChangeDate, isavro, false, "change_date"),
@@ -535,338 +732,338 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Blame) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["blanks"].(int64); ok {
 		o.Blanks = val
 	} else {
-		val := kv["blanks"]
-		if val == nil {
-			o.Blanks = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
-			}
-			o.Blanks = number.ToInt64Any(val)
-		}
-	}
-	if val, ok := kv["change_date"].(BlameChangeDate); ok {
-		o.ChangeDate = val
-	} else {
-		val := kv["change_date"]
-		if val == nil {
-			o.ChangeDate = BlameChangeDate{}
-		} else {
-			o.ChangeDate = BlameChangeDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["blanks"]; ok {
+			if val == nil {
+				o.Blanks = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
 				}
-				val = si
+				o.Blanks = number.ToInt64Any(val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.ChangeDate)
-
 		}
 	}
+
+	if val, ok := kv["change_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ChangeDate.FromMap(kv)
+		} else if sv, ok := val.(BlameChangeDate); ok {
+			// struct
+			o.ChangeDate = sv
+		} else if sp, ok := val.(*BlameChangeDate); ok {
+			// struct pointer
+			o.ChangeDate = *sp
+		}
+	} else {
+		o.ChangeDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["comments"].(int64); ok {
 		o.Comments = val
 	} else {
-		val := kv["comments"]
-		if val == nil {
-			o.Comments = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["comments"]; ok {
+			if val == nil {
+				o.Comments = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Comments = number.ToInt64Any(val)
 			}
-			o.Comments = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["commit_id"].(string); ok {
 		o.CommitID = val
 	} else {
-		val := kv["commit_id"]
-		if val == nil {
-			o.CommitID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["commit_id"]; ok {
+			if val == nil {
+				o.CommitID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CommitID = fmt.Sprintf("%v", val)
 			}
-			o.CommitID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["complexity"].(int64); ok {
 		o.Complexity = val
 	} else {
-		val := kv["complexity"]
-		if val == nil {
-			o.Complexity = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["complexity"]; ok {
+			if val == nil {
+				o.Complexity = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Complexity = number.ToInt64Any(val)
 			}
-			o.Complexity = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["excluded"].(bool); ok {
 		o.Excluded = val
 	} else {
-		val := kv["excluded"]
-		if val == nil {
-			o.Excluded = number.ToBoolAny(nil)
-		} else {
-			o.Excluded = number.ToBoolAny(val)
+		if val, ok := kv["excluded"]; ok {
+			if val == nil {
+				o.Excluded = number.ToBoolAny(nil)
+			} else {
+				o.Excluded = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["excluded_reason"].(string); ok {
 		o.ExcludedReason = val
 	} else {
-		val := kv["excluded_reason"]
-		if val == nil {
-			o.ExcludedReason = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["excluded_reason"]; ok {
+			if val == nil {
+				o.ExcludedReason = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ExcludedReason = fmt.Sprintf("%v", val)
 			}
-			o.ExcludedReason = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["filename"].(string); ok {
 		o.Filename = val
 	} else {
-		val := kv["filename"]
-		if val == nil {
-			o.Filename = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["filename"]; ok {
+			if val == nil {
+				o.Filename = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Filename = fmt.Sprintf("%v", val)
 			}
-			o.Filename = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["language"].(string); ok {
 		o.Language = val
 	} else {
-		val := kv["language"]
-		if val == nil {
-			o.Language = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["language"]; ok {
+			if val == nil {
+				o.Language = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Language = fmt.Sprintf("%v", val)
 			}
-			o.Language = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["license"].(*string); ok {
 		o.License = val
 	} else if val, ok := kv["license"].(string); ok {
 		o.License = &val
 	} else {
-		val := kv["license"]
-		if val == nil {
-			o.License = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
-			}
-			o.License = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val := kv["lines"]; val != nil {
-		na := make([]BlameLines, 0)
-		if a, ok := val.([]BlameLines); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(BlameLines); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av BlameLines
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for lines field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(BlameLines); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av BlameLines
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for lines field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+		if val, ok := kv["license"]; ok {
+			if val == nil {
+				o.License = pstrings.Pointer("")
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for lines field")
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.License = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
-		o.Lines = na
-	} else {
-		o.Lines = []BlameLines{}
 	}
-	if o.Lines == nil {
+
+	if o == nil {
+
 		o.Lines = make([]BlameLines, 0)
+
 	}
+	if val, ok := kv["lines"]; ok {
+		if sv, ok := val.([]BlameLines); ok {
+			o.Lines = sv
+		} else if sp, ok := val.([]*BlameLines); ok {
+			o.Lines = o.Lines[:0]
+			for _, e := range sp {
+				o.Lines = append(o.Lines, *e)
+			}
+		}
+	}
+
 	if val, ok := kv["loc"].(int64); ok {
 		o.Loc = val
 	} else {
-		val := kv["loc"]
-		if val == nil {
-			o.Loc = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["loc"]; ok {
+			if val == nil {
+				o.Loc = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Loc = number.ToInt64Any(val)
 			}
-			o.Loc = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["repo_id"].(string); ok {
 		o.RepoID = val
 	} else {
-		val := kv["repo_id"]
-		if val == nil {
-			o.RepoID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RepoID = fmt.Sprintf("%v", val)
 			}
-			o.RepoID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["sha"].(string); ok {
 		o.Sha = val
 	} else {
-		val := kv["sha"]
-		if val == nil {
-			o.Sha = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["sha"]; ok {
+			if val == nil {
+				o.Sha = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Sha = fmt.Sprintf("%v", val)
 			}
-			o.Sha = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["size"].(int64); ok {
 		o.Size = val
 	} else {
-		val := kv["size"]
-		if val == nil {
-			o.Size = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["size"]; ok {
+			if val == nil {
+				o.Size = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Size = number.ToInt64Any(val)
 			}
-			o.Size = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["sloc"].(int64); ok {
 		o.Sloc = val
 	} else {
-		val := kv["sloc"]
-		if val == nil {
-			o.Sloc = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["sloc"]; ok {
+			if val == nil {
+				o.Sloc = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Sloc = number.ToInt64Any(val)
 			}
-			o.Sloc = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["status"].(BlameStatus); ok {
 		o.Status = val
 	} else {
 		if em, ok := kv["status"].(map[string]interface{}); ok {
 			ev := em["sourcecode.status"].(string)
 			switch ev {
-			case "added":
+			case "added", "ADDED":
 				o.Status = 0
-			case "modified":
+			case "modified", "MODIFIED":
 				o.Status = 1
-			case "removed":
+			case "removed", "REMOVED":
 				o.Status = 2
 			}
 		}
 		if em, ok := kv["status"].(string); ok {
 			switch em {
-			case "added":
+			case "added", "ADDED":
 				o.Status = 0
-			case "modified":
+			case "modified", "MODIFIED":
 				o.Status = 1
-			case "removed":
+			case "removed", "REMOVED":
 				o.Status = 2
 			}
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -914,7 +1111,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "change_date",
-				"type": map[string]interface{}{"type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"},
+				"type": map[string]interface{}{"doc": "the date of the change", "type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "comments",
@@ -959,7 +1156,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"name": "author_ref_id", "doc": "the author ref_id of this line when last changed", "type": "string"}, map[string]interface{}{"name": "blank", "doc": "if the line is a blank line", "type": "boolean"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"name": "author_ref_id", "doc": "the author ref_id of this line when last changed", "type": "string"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
 			},
 			map[string]interface{}{
 				"name": "loc",
@@ -994,7 +1191,7 @@ func GetBlameAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "status",
-					"symbols": []interface{}{"added", "modified", "removed"},
+					"symbols": []interface{}{"ADDED", "MODIFIED", "REMOVED"},
 				},
 			},
 		},

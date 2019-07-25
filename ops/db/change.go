@@ -26,6 +26,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -74,13 +75,13 @@ type ChangeAction int32
 func (v ChangeAction) String() string {
 	switch int32(v) {
 	case 0:
-		return "create"
+		return "CREATE"
 	case 1:
-		return "upsert"
+		return "UPSERT"
 	case 2:
-		return "update"
+		return "UPDATE"
 	case 3:
-		return "delete"
+		return "DELETE"
 	}
 	return "unset"
 }
@@ -106,15 +107,98 @@ type ChangeChangeDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ChangeChangeDate) ToMap() map[string]interface{} {
+func toChangeChangeDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toChangeChangeDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ChangeChangeDate name => ChangeChangeDate
+	switch v := o.(type) {
+	case *ChangeChangeDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ChangeChangeDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toChangeChangeDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toChangeChangeDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toChangeChangeDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *ChangeChangeDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ChangeChangeDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // Change db change will contain all the changes to a specific data model from the DB
@@ -150,27 +234,24 @@ func toChangeObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toChangeObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => Change name => Change
 	switch v := o.(type) {
 	case *Change:
-		return v.ToMap()
-	case Change:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
+		// is nested enum Action
 	case ChangeAction:
-		if !isavro {
-			return (o.(ChangeAction)).String()
-		}
-		return (o.(ChangeAction)).String()
+		return v.String()
 
 	case ChangeChangeDate:
-		vv := o.(ChangeChangeDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Change
@@ -188,9 +269,13 @@ func (o *Change) GetModelName() datamodel.ModelNameType {
 	return ChangeModelName
 }
 
-func (o *Change) setDefaults() {
+func (o *Change) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -393,7 +478,7 @@ func (o *Change) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"action":      toChangeObject(o.Action, isavro, false, "action"),
 		"change_date": toChangeObject(o.ChangeDate, isavro, false, "change_date"),
@@ -409,140 +494,146 @@ func (o *Change) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Change) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["action"].(ChangeAction); ok {
 		o.Action = val
 	} else {
 		if em, ok := kv["action"].(map[string]interface{}); ok {
 			ev := em["ops.db.action"].(string)
 			switch ev {
-			case "create":
+			case "create", "CREATE":
 				o.Action = 0
-			case "upsert":
+			case "upsert", "UPSERT":
 				o.Action = 1
-			case "update":
+			case "update", "UPDATE":
 				o.Action = 2
-			case "delete":
+			case "delete", "DELETE":
 				o.Action = 3
 			}
 		}
 		if em, ok := kv["action"].(string); ok {
 			switch em {
-			case "create":
+			case "create", "CREATE":
 				o.Action = 0
-			case "upsert":
+			case "upsert", "UPSERT":
 				o.Action = 1
-			case "update":
+			case "update", "UPDATE":
 				o.Action = 2
-			case "delete":
+			case "delete", "DELETE":
 				o.Action = 3
 			}
 		}
 	}
-	if val, ok := kv["change_date"].(ChangeChangeDate); ok {
-		o.ChangeDate = val
-	} else {
-		val := kv["change_date"]
-		if val == nil {
-			o.ChangeDate = ChangeChangeDate{}
-		} else {
-			o.ChangeDate = ChangeChangeDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.ChangeDate)
 
+	if val, ok := kv["change_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ChangeDate.FromMap(kv)
+		} else if sv, ok := val.(ChangeChangeDate); ok {
+			// struct
+			o.ChangeDate = sv
+		} else if sp, ok := val.(*ChangeChangeDate); ok {
+			// struct pointer
+			o.ChangeDate = *sp
 		}
+	} else {
+		o.ChangeDate.FromMap(map[string]interface{}{})
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["data"].(string); ok {
 		o.Data = val
 	} else {
-		val := kv["data"]
-		if val == nil {
-			o.Data = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["data"]; ok {
+			if val == nil {
+				o.Data = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Data = fmt.Sprintf("%v", val)
 			}
-			o.Data = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["model"].(string); ok {
 		o.Model = val
 	} else {
-		val := kv["model"]
-		if val == nil {
-			o.Model = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["model"]; ok {
+			if val == nil {
+				o.Model = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Model = fmt.Sprintf("%v", val)
 			}
-			o.Model = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -576,7 +667,7 @@ func GetChangeAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "action",
-					"symbols": []interface{}{"create", "upsert", "update", "delete"},
+					"symbols": []interface{}{"CREATE", "UPSERT", "UPDATE", "DELETE"},
 				},
 			},
 			map[string]interface{}{

@@ -114,18 +114,17 @@ func toTeamObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toTeamObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => Team name => Team
 	switch v := o.(type) {
 	case *Team:
-		return v.ToMap()
-	case Team:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Team
@@ -143,18 +142,36 @@ func (o *Team) GetModelName() datamodel.ModelNameType {
 	return TeamModelName
 }
 
-func (o *Team) setDefaults() {
+func (o *Team) setDefaults(frommap bool) {
 	if o.Active == nil {
 		o.Active = &emptyBool
 	}
 	if o.ChildrenIds == nil {
-		o.ChildrenIds = []string{}
+		o.ChildrenIds = make([]string, 0)
 	}
 	if o.ParentIds == nil {
-		o.ParentIds = []string{}
+		o.ParentIds = make([]string, 0)
 	}
 
 	o.GetID()
+
+	{
+		v := false
+
+		o.Active = &v
+
+	}
+
+	{
+		v := true
+
+		o.Leaf = v
+
+	}
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -358,7 +375,7 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 			o.ParentIds = make([]string, 0)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"active":       toTeamObject(o.Active, isavro, true, "boolean"),
 		"children_ids": toTeamObject(o.ChildrenIds, isavro, false, "children_ids"),
@@ -378,241 +395,264 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Team) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["active"].(*bool); ok {
 		o.Active = val
 	} else if val, ok := kv["active"].(bool); ok {
 		o.Active = &val
 	} else {
-		val := kv["active"]
-		if val == nil {
-			o.Active = number.BoolPointer(number.ToBoolAny(nil))
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["bool"]
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = number.BoolPointer(number.ToBoolAny(nil))
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
 			}
-			o.Active = number.BoolPointer(number.ToBoolAny(val))
 		}
 	}
-	if val := kv["children_ids"]; val != nil {
-		na := make([]string, 0)
-		if a, ok := val.([]string); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if s, ok := val.(string); ok {
-				for _, sv := range strings.Split(s, ",") {
-					na = append(na, strings.TrimSpace(sv))
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+
+	if val, ok := kv["children_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for children_ids field")
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for children_ids field")
+				}
 			}
+			o.ChildrenIds = na
 		}
-		o.ChildrenIds = na
-	} else {
-		o.ChildrenIds = []string{}
 	}
 	if o.ChildrenIds == nil {
 		o.ChildrenIds = make([]string, 0)
 	}
+
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["created_ts"]; ok {
+			if val == nil {
+				o.CreatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.CreatedAt = number.ToInt64Any(val)
 			}
-			o.CreatedAt = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["description"].(string); ok {
 		o.Description = val
 	} else {
-		val := kv["description"]
-		if val == nil {
-			o.Description = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Description = fmt.Sprintf("%v", val)
 			}
-			o.Description = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["leaf"].(bool); ok {
 		o.Leaf = val
 	} else {
-		val := kv["leaf"]
-		if val == nil {
-			o.Leaf = number.ToBoolAny(nil)
-		} else {
-			o.Leaf = number.ToBoolAny(val)
+		if val, ok := kv["leaf"]; ok {
+			if val == nil {
+				o.Leaf = number.ToBoolAny(nil)
+			} else {
+				o.Leaf = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
 			}
-			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
-	if val := kv["parent_ids"]; val != nil {
-		na := make([]string, 0)
-		if a, ok := val.([]string); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if s, ok := val.(string); ok {
-				for _, sv := range strings.Split(s, ",") {
-					na = append(na, strings.TrimSpace(sv))
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+
+	if val, ok := kv["parent_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for parent_ids field")
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for parent_ids field")
+				}
 			}
+			o.ParentIds = na
 		}
-		o.ParentIds = na
-	} else {
-		o.ParentIds = []string{}
 	}
 	if o.ParentIds == nil {
 		o.ParentIds = make([]string, 0)
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
-		val := kv["updated_ts"]
-		if val == nil {
-			o.UpdatedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
 			}
-			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -636,19 +676,19 @@ func (o *Team) Hash() string {
 
 // CreateTeam creates a new Team in the database
 func CreateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Create(ctx, o)
 }
 
 // DeleteTeam deletes a Team in the database
 func DeleteTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Delete(ctx, o)
 }
 
 // UpdateTeam updates a Team in the database
 func UpdateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Update(ctx, o)
 }
 

@@ -27,9 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -123,15 +121,98 @@ type RepoResponseEventDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *RepoResponseEventDate) ToMap() map[string]interface{} {
+func toRepoResponseEventDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toRepoResponseEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => RepoResponseEventDate name => RepoResponseEventDate
+	switch v := o.(type) {
+	case *RepoResponseEventDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *RepoResponseEventDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toRepoResponseEventDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toRepoResponseEventDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toRepoResponseEventDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *RepoResponseEventDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoResponseEventDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // RepoResponseReposCreatedDate represents the object structure for created_date
@@ -144,36 +225,278 @@ type RepoResponseReposCreatedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *RepoResponseReposCreatedDate) ToMap() map[string]interface{} {
+func toRepoResponseReposCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toRepoResponseReposCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => RepoResponseReposCreatedDate name => RepoResponseReposCreatedDate
+	switch v := o.(type) {
+	case *RepoResponseReposCreatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *RepoResponseReposCreatedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toRepoResponseReposCreatedDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toRepoResponseReposCreatedDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toRepoResponseReposCreatedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *RepoResponseReposCreatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoResponseReposCreatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // RepoResponseReposLastCommitCreatedDate represents the object structure for created_date
 type RepoResponseReposLastCommitCreatedDate struct {
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *RepoResponseReposLastCommitCreatedDate) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": o.Epoch,
-		// Offset the timezone offset from GMT
-		"offset": o.Offset,
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+func toRepoResponseReposLastCommitCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
 	}
+	return nil
+}
+
+func toRepoResponseReposLastCommitCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => RepoResponseReposLastCommitCreatedDate name => RepoResponseReposLastCommitCreatedDate
+	switch v := o.(type) {
+	case *RepoResponseReposLastCommitCreatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *RepoResponseReposLastCommitCreatedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// CustomerID the customer id for the model instance
+		"customer_id": toRepoResponseReposLastCommitCreatedDateObject(o.CustomerID, isavro, false, "string"),
+		// Epoch the date in epoch format
+		"epoch": toRepoResponseReposLastCommitCreatedDateObject(o.Epoch, isavro, false, "long"),
+		// ID the primary key for the model instance
+		"id": toRepoResponseReposLastCommitCreatedDateObject(o.ID, isavro, false, "string"),
+		// Offset the timezone offset from GMT
+		"offset": toRepoResponseReposLastCommitCreatedDateObject(o.Offset, isavro, false, "long"),
+		// RefID the source system id for the model instance
+		"ref_id": toRepoResponseReposLastCommitCreatedDateObject(o.RefID, isavro, false, "string"),
+		// RefType the source system identifier for the model instance
+		"ref_type": toRepoResponseReposLastCommitCreatedDateObject(o.RefType, isavro, false, "string"),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toRepoResponseReposLastCommitCreatedDateObject(o.Rfc3339, isavro, false, "string"),
+	}
+}
+
+func (o *RepoResponseReposLastCommitCreatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoResponseReposLastCommitCreatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // RepoResponseReposLastCommitAuthor represents the object structure for author
@@ -186,15 +509,98 @@ type RepoResponseReposLastCommitAuthor struct {
 	AvatarURL string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 }
 
-func (o *RepoResponseReposLastCommitAuthor) ToMap() map[string]interface{} {
+func toRepoResponseReposLastCommitAuthorObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toRepoResponseReposLastCommitAuthorObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => RepoResponseReposLastCommitAuthor name => RepoResponseReposLastCommitAuthor
+	switch v := o.(type) {
+	case *RepoResponseReposLastCommitAuthor:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *RepoResponseReposLastCommitAuthor) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Name the author name
-		"name": o.Name,
+		"name": toRepoResponseReposLastCommitAuthorObject(o.Name, isavro, false, "string"),
 		// Email the email of the author
-		"email": o.Email,
+		"email": toRepoResponseReposLastCommitAuthorObject(o.Email, isavro, false, "string"),
 		// AvatarURL the avatar_url for the author
-		"avatar_url": o.AvatarURL,
+		"avatar_url": toRepoResponseReposLastCommitAuthorObject(o.AvatarURL, isavro, false, "string"),
 	}
+}
+
+func (o *RepoResponseReposLastCommitAuthor) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoResponseReposLastCommitAuthor) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["email"].(string); ok {
+		o.Email = val
+	} else {
+		if val, ok := kv["email"]; ok {
+			if val == nil {
+				o.Email = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Email = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["avatar_url"].(string); ok {
+		o.AvatarURL = val
+	} else {
+		if val, ok := kv["avatar_url"]; ok {
+			if val == nil {
+				o.AvatarURL = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.AvatarURL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // RepoResponseReposLastCommit represents the object structure for last_commit
@@ -211,19 +617,136 @@ type RepoResponseReposLastCommit struct {
 	Author RepoResponseReposLastCommitAuthor `json:"author" bson:"author" yaml:"author" faker:"-"`
 }
 
-func (o *RepoResponseReposLastCommit) ToMap() map[string]interface{} {
+func toRepoResponseReposLastCommitObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toRepoResponseReposLastCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => RepoResponseReposLastCommit name => RepoResponseReposLastCommit
+	switch v := o.(type) {
+	case *RepoResponseReposLastCommit:
+		return v.ToMap(isavro)
+
+	case RepoResponseReposLastCommitCreatedDate:
+		return v.ToMap(isavro)
+
+	case RepoResponseReposLastCommitAuthor:
+		return v.ToMap(isavro)
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *RepoResponseReposLastCommit) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// CommitID the id of the latest commit
-		"commit_id": o.CommitID,
+		"commit_id": toRepoResponseReposLastCommitObject(o.CommitID, isavro, false, "string"),
 		// URL the url of the lastest commit
-		"url": o.URL,
+		"url": toRepoResponseReposLastCommitObject(o.URL, isavro, false, "string"),
 		// Message the commit message of the latest commit
-		"message": o.Message,
+		"message": toRepoResponseReposLastCommitObject(o.Message, isavro, false, "string"),
 		// CreatedDate the timestamp of the latest commit
-		"created_date": o.CreatedDate,
+		"created_date": toRepoResponseReposLastCommitObject(o.CreatedDate, isavro, false, "created_date"),
 		// Author the author of the latest commit
-		"author": o.Author,
+		"author": toRepoResponseReposLastCommitObject(o.Author, isavro, false, "author"),
 	}
+}
+
+func (o *RepoResponseReposLastCommit) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoResponseReposLastCommit) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["commit_id"].(string); ok {
+		o.CommitID = val
+	} else {
+		if val, ok := kv["commit_id"]; ok {
+			if val == nil {
+				o.CommitID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CommitID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["message"].(string); ok {
+		o.Message = val
+	} else {
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Message = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(RepoResponseReposLastCommitCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*RepoResponseReposLastCommitCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["author"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Author.FromMap(kv)
+		} else if sv, ok := val.(RepoResponseReposLastCommitAuthor); ok {
+			// struct
+			o.Author = sv
+		} else if sp, ok := val.(*RepoResponseReposLastCommitAuthor); ok {
+			// struct pointer
+			o.Author = *sp
+		}
+	} else {
+		o.Author.FromMap(map[string]interface{}{})
+	}
+
+	o.setDefaults(false)
 }
 
 // RepoResponseRepos represents the object structure for repos
@@ -242,21 +765,150 @@ type RepoResponseRepos struct {
 	Name string `json:"name" bson:"name" yaml:"name" faker:"repo"`
 }
 
-func (o *RepoResponseRepos) ToMap() map[string]interface{} {
+func toRepoResponseReposObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toRepoResponseReposObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => RepoResponseRepos name => RepoResponseRepos
+	switch v := o.(type) {
+	case *RepoResponseRepos:
+		return v.ToMap(isavro)
+
+	case RepoResponseReposCreatedDate:
+		return v.ToMap(isavro)
+
+	case RepoResponseReposLastCommit:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *RepoResponseRepos) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Active the status of the repo determined by an Admin
-		"active": o.Active,
+		"active": toRepoResponseReposObject(o.Active, isavro, false, "boolean"),
 		// CreatedDate the creation date
-		"created_date": o.CreatedDate,
+		"created_date": toRepoResponseReposObject(o.CreatedDate, isavro, false, "created_date"),
 		// Description the description of the repository
-		"description": o.Description,
+		"description": toRepoResponseReposObject(o.Description, isavro, false, "string"),
 		// Language the programming language defined for the repository
-		"language": o.Language,
+		"language": toRepoResponseReposObject(o.Language, isavro, false, "string"),
 		// LastCommit the most recent commit to the repo
-		"last_commit": o.LastCommit,
+		"last_commit": toRepoResponseReposObject(o.LastCommit, isavro, false, "last_commit"),
 		// Name the name of the repository
-		"name": o.Name,
+		"name": toRepoResponseReposObject(o.Name, isavro, false, "string"),
 	}
+}
+
+func (o *RepoResponseRepos) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoResponseRepos) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = number.ToBoolAny(nil)
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(RepoResponseReposCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*RepoResponseReposCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["language"].(string); ok {
+		o.Language = val
+	} else {
+		if val, ok := kv["language"]; ok {
+			if val == nil {
+				o.Language = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Language = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["last_commit"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastCommit.FromMap(kv)
+		} else if sv, ok := val.(RepoResponseReposLastCommit); ok {
+			// struct
+			o.LastCommit = sv
+		} else if sp, ok := val.(*RepoResponseReposLastCommit); ok {
+			// struct pointer
+			o.LastCommit = *sp
+		}
+	} else {
+		o.LastCommit.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // RepoResponseType is the enumeration type for type
@@ -266,21 +918,21 @@ type RepoResponseType int32
 func (v RepoResponseType) String() string {
 	switch int32(v) {
 	case 0:
-		return "enroll"
+		return "ENROLL"
 	case 1:
-		return "ping"
+		return "PING"
 	case 2:
-		return "crash"
+		return "CRASH"
 	case 3:
-		return "integration"
+		return "INTEGRATION"
 	case 4:
-		return "export"
+		return "EXPORT"
 	case 5:
-		return "project"
+		return "PROJECT"
 	case 6:
-		return "repo"
+		return "REPO"
 	case 7:
-		return "user"
+		return "USER"
 	}
 	return "unset"
 }
@@ -367,33 +1019,27 @@ func toRepoResponseObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toRepoResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => RepoResponse name => RepoResponse
 	switch v := o.(type) {
 	case *RepoResponse:
-		return v.ToMap()
-	case RepoResponse:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case RepoResponseEventDate:
-		vv := o.(RepoResponseEventDate)
-		return vv.ToMap()
-	case []RepoResponseRepos:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]RepoResponseRepos) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-	case RepoResponseType:
-		if !isavro {
-			return (o.(RepoResponseType)).String()
-		}
-		return (o.(RepoResponseType)).String()
+		return v.ToMap(isavro)
 
+	case []RepoResponseRepos:
+		return v
+
+		// is nested enum Type
+	case RepoResponseType:
+		return v.String()
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of RepoResponse
@@ -411,7 +1057,7 @@ func (o *RepoResponse) GetModelName() datamodel.ModelNameType {
 	return RepoResponseModelName
 }
 
-func (o *RepoResponse) setDefaults() {
+func (o *RepoResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString
 	}
@@ -419,10 +1065,14 @@ func (o *RepoResponse) setDefaults() {
 		o.Error = &emptyString
 	}
 	if o.Repos == nil {
-		o.Repos = []RepoResponseRepos{}
+		o.Repos = make([]RepoResponseRepos, 0)
 	}
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -629,7 +1279,7 @@ func (o *RepoResponse) ToMap(avro ...bool) map[string]interface{} {
 			o.Repos = make([]RepoResponseRepos, 0)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"architecture":   toRepoResponseObject(o.Architecture, isavro, false, "string"),
 		"customer_id":    toRepoResponseObject(o.CustomerID, isavro, false, "string"),
@@ -660,387 +1310,391 @@ func (o *RepoResponse) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *RepoResponse) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
 	} else {
-		val := kv["architecture"]
-		if val == nil {
-			o.Architecture = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["architecture"]; ok {
+			if val == nil {
+				o.Architecture = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Architecture = fmt.Sprintf("%v", val)
 			}
-			o.Architecture = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["data"].(*string); ok {
 		o.Data = val
 	} else if val, ok := kv["data"].(string); ok {
 		o.Data = &val
 	} else {
-		val := kv["data"]
-		if val == nil {
-			o.Data = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["data"]; ok {
+			if val == nil {
+				o.Data = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
-		val := kv["distro"]
-		if val == nil {
-			o.Distro = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["distro"]; ok {
+			if val == nil {
+				o.Distro = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Distro = fmt.Sprintf("%v", val)
 			}
-			o.Distro = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
 	} else if val, ok := kv["error"].(string); ok {
 		o.Error = &val
 	} else {
-		val := kv["error"]
-		if val == nil {
-			o.Error = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
-			}
-			o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
-		}
-	}
-	if val, ok := kv["event_date"].(RepoResponseEventDate); ok {
-		o.EventDate = val
-	} else {
-		val := kv["event_date"]
-		if val == nil {
-			o.EventDate = RepoResponseEventDate{}
-		} else {
-			o.EventDate = RepoResponseEventDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["error"]; ok {
+			if val == nil {
+				o.Error = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				val = si
+				o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.EventDate)
-
 		}
 	}
+
+	if val, ok := kv["event_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.EventDate.FromMap(kv)
+		} else if sv, ok := val.(RepoResponseEventDate); ok {
+			// struct
+			o.EventDate = sv
+		} else if sp, ok := val.(*RepoResponseEventDate); ok {
+			// struct pointer
+			o.EventDate = *sp
+		}
+	} else {
+		o.EventDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["free_space"].(int64); ok {
 		o.FreeSpace = val
 	} else {
-		val := kv["free_space"]
-		if val == nil {
-			o.FreeSpace = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["free_space"]; ok {
+			if val == nil {
+				o.FreeSpace = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.FreeSpace = number.ToInt64Any(val)
 			}
-			o.FreeSpace = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["go_version"].(string); ok {
 		o.GoVersion = val
 	} else {
-		val := kv["go_version"]
-		if val == nil {
-			o.GoVersion = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["go_version"]; ok {
+			if val == nil {
+				o.GoVersion = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.GoVersion = fmt.Sprintf("%v", val)
 			}
-			o.GoVersion = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["hostname"].(string); ok {
 		o.Hostname = val
 	} else {
-		val := kv["hostname"]
-		if val == nil {
-			o.Hostname = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["hostname"]; ok {
+			if val == nil {
+				o.Hostname = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Hostname = fmt.Sprintf("%v", val)
 			}
-			o.Hostname = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["integration_id"].(string); ok {
 		o.IntegrationID = val
 	} else {
-		val := kv["integration_id"]
-		if val == nil {
-			o.IntegrationID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["integration_id"]; ok {
+			if val == nil {
+				o.IntegrationID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.IntegrationID = fmt.Sprintf("%v", val)
 			}
-			o.IntegrationID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["memory"].(int64); ok {
 		o.Memory = val
 	} else {
-		val := kv["memory"]
-		if val == nil {
-			o.Memory = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["memory"]; ok {
+			if val == nil {
+				o.Memory = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Memory = number.ToInt64Any(val)
 			}
-			o.Memory = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
-		val := kv["message"]
-		if val == nil {
-			o.Message = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Message = fmt.Sprintf("%v", val)
 			}
-			o.Message = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["num_cpu"].(int64); ok {
 		o.NumCPU = val
 	} else {
-		val := kv["num_cpu"]
-		if val == nil {
-			o.NumCPU = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["num_cpu"]; ok {
+			if val == nil {
+				o.NumCPU = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.NumCPU = number.ToInt64Any(val)
 			}
-			o.NumCPU = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["os"].(string); ok {
 		o.OS = val
 	} else {
-		val := kv["os"]
-		if val == nil {
-			o.OS = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["os"]; ok {
+			if val == nil {
+				o.OS = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.OS = fmt.Sprintf("%v", val)
 			}
-			o.OS = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.RefType = fmt.Sprintf("%v", val)
-		}
-	}
-	if val := kv["repos"]; val != nil {
-		na := make([]RepoResponseRepos, 0)
-		if a, ok := val.([]RepoResponseRepos); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(RepoResponseRepos); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av RepoResponseRepos
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for repos field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(RepoResponseRepos); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av RepoResponseRepos
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for repos field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for repos field")
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
 		}
-		o.Repos = na
-	} else {
-		o.Repos = []RepoResponseRepos{}
 	}
-	if o.Repos == nil {
+
+	if o == nil {
+
 		o.Repos = make([]RepoResponseRepos, 0)
+
 	}
+	if val, ok := kv["repos"]; ok {
+		if sv, ok := val.([]RepoResponseRepos); ok {
+			o.Repos = sv
+		} else if sp, ok := val.([]*RepoResponseRepos); ok {
+			o.Repos = o.Repos[:0]
+			for _, e := range sp {
+				o.Repos = append(o.Repos, *e)
+			}
+		}
+	}
+
 	if val, ok := kv["request_id"].(string); ok {
 		o.RequestID = val
 	} else {
-		val := kv["request_id"]
-		if val == nil {
-			o.RequestID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["request_id"]; ok {
+			if val == nil {
+				o.RequestID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RequestID = fmt.Sprintf("%v", val)
 			}
-			o.RequestID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
-		val := kv["success"]
-		if val == nil {
-			o.Success = number.ToBoolAny(nil)
-		} else {
-			o.Success = number.ToBoolAny(val)
+		if val, ok := kv["success"]; ok {
+			if val == nil {
+				o.Success = number.ToBoolAny(nil)
+			} else {
+				o.Success = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["type"].(RepoResponseType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
 			ev := em["agent.type"].(string)
 			switch ev {
-			case "enroll":
+			case "enroll", "ENROLL":
 				o.Type = 0
-			case "ping":
+			case "ping", "PING":
 				o.Type = 1
-			case "crash":
+			case "crash", "CRASH":
 				o.Type = 2
-			case "integration":
+			case "integration", "INTEGRATION":
 				o.Type = 3
-			case "export":
+			case "export", "EXPORT":
 				o.Type = 4
-			case "project":
+			case "project", "PROJECT":
 				o.Type = 5
-			case "repo":
+			case "repo", "REPO":
 				o.Type = 6
-			case "user":
+			case "user", "USER":
 				o.Type = 7
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
 			switch em {
-			case "enroll":
+			case "enroll", "ENROLL":
 				o.Type = 0
-			case "ping":
+			case "ping", "PING":
 				o.Type = 1
-			case "crash":
+			case "crash", "CRASH":
 				o.Type = 2
-			case "integration":
+			case "integration", "INTEGRATION":
 				o.Type = 3
-			case "export":
+			case "export", "EXPORT":
 				o.Type = 4
-			case "project":
+			case "project", "PROJECT":
 				o.Type = 5
-			case "repo":
+			case "repo", "REPO":
 				o.Type = 6
-			case "user":
+			case "user", "USER":
 				o.Type = 7
 			}
 		}
 	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
-		val := kv["uuid"]
-		if val == nil {
-			o.UUID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.UUID = fmt.Sprintf("%v", val)
 			}
-			o.UUID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["version"].(string); ok {
 		o.Version = val
 	} else {
-		val := kv["version"]
-		if val == nil {
-			o.Version = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["version"]; ok {
+			if val == nil {
+				o.Version = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Version = fmt.Sprintf("%v", val)
 			}
-			o.Version = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -1108,7 +1762,7 @@ func GetRepoResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1156,7 +1810,7 @@ func GetRepoResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "repos",
-				"type": map[string]interface{}{"type": "array", "name": "repos", "items": map[string]interface{}{"doc": "the repos exported", "type": "record", "name": "repos", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the repo determined by an Admin"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "repos.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the creation date"}, "name": "created_date", "doc": "the creation date"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the repository"}, map[string]interface{}{"type": "string", "name": "language", "doc": "the programming language defined for the repository"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the id of the latest commit", "type": "string", "name": "commit_id"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url of the lastest commit"}, map[string]interface{}{"type": "string", "name": "message", "doc": "the commit message of the latest commit"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_commit.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the timestamp of the latest commit"}, "name": "created_date", "doc": "the timestamp of the latest commit"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "name", "doc": "the author name"}, map[string]interface{}{"type": "string", "name": "email", "doc": "the email of the author"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar_url for the author"}}, "doc": "the author of the latest commit", "type": "record", "name": "last_commit.author"}, "name": "author", "doc": "the author of the latest commit"}}, "doc": "the most recent commit to the repo", "type": "record", "name": "repos.last_commit"}, "name": "last_commit", "doc": "the most recent commit to the repo"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the repository"}}}},
+				"type": map[string]interface{}{"type": "array", "name": "repos", "items": map[string]interface{}{"name": "repos", "fields": []interface{}{map[string]interface{}{"name": "active", "doc": "the status of the repo determined by an Admin", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"name": "repos.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the creation date", "type": "record"}, "name": "created_date", "doc": "the creation date"}, map[string]interface{}{"type": "string", "name": "description", "doc": "the description of the repository"}, map[string]interface{}{"doc": "the programming language defined for the repository", "type": "string", "name": "language"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "repos.last_commit", "fields": []interface{}{map[string]interface{}{"name": "commit_id", "doc": "the id of the latest commit", "type": "string"}, map[string]interface{}{"doc": "the url of the lastest commit", "type": "string", "name": "url"}, map[string]interface{}{"type": "string", "name": "message", "doc": "the commit message of the latest commit"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_commit.created_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"name": "ref_type", "doc": "the source system identifier for the model instance", "type": "string"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the timestamp of the latest commit"}, "name": "created_date", "doc": "the timestamp of the latest commit"}, map[string]interface{}{"type": map[string]interface{}{"doc": "the author of the latest commit", "type": "record", "name": "last_commit.author", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "name", "doc": "the author name"}, map[string]interface{}{"type": "string", "name": "email", "doc": "the email of the author"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar_url for the author"}}}, "name": "author", "doc": "the author of the latest commit"}}, "doc": "the most recent commit to the repo"}, "name": "last_commit", "doc": "the most recent commit to the repo"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the repository"}}, "doc": "the repos exported", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "request_id",
@@ -1171,7 +1825,7 @@ func GetRepoResponseAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"enroll", "ping", "crash", "integration", "export", "project", "repo", "user"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
 				},
 			},
 			map[string]interface{}{

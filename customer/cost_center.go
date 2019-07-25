@@ -103,18 +103,17 @@ func toCostCenterObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toCostCenterObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => CostCenter name => CostCenter
 	switch v := o.(type) {
 	case *CostCenter:
-		return v.ToMap()
-	case CostCenter:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of CostCenter
@@ -132,9 +131,13 @@ func (o *CostCenter) GetModelName() datamodel.ModelNameType {
 	return CostCenterModelName
 }
 
-func (o *CostCenter) setDefaults() {
+func (o *CostCenter) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -332,7 +335,7 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"active":      toCostCenterObject(o.Active, isavro, false, "boolean"),
 		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),
@@ -350,135 +353,156 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *CostCenter) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
 	} else {
-		val := kv["active"]
-		if val == nil {
-			o.Active = number.ToBoolAny(nil)
-		} else {
-			o.Active = number.ToBoolAny(val)
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = number.ToBoolAny(nil)
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["cost"].(float64); ok {
 		o.Cost = val
 	} else {
-		val := kv["cost"]
-		if val == nil {
-			o.Cost = number.ToFloat64Any(nil)
-		} else {
-			o.Cost = number.ToFloat64Any(val)
+		if val, ok := kv["cost"]; ok {
+			if val == nil {
+				o.Cost = number.ToFloat64Any(nil)
+			} else {
+				o.Cost = number.ToFloat64Any(val)
+			}
 		}
 	}
+
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["created_ts"]; ok {
+			if val == nil {
+				o.CreatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.CreatedAt = number.ToInt64Any(val)
 			}
-			o.CreatedAt = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["description"].(string); ok {
 		o.Description = val
 	} else {
-		val := kv["description"]
-		if val == nil {
-			o.Description = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Description = fmt.Sprintf("%v", val)
 			}
-			o.Description = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
 			}
-			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
-		val := kv["updated_ts"]
-		if val == nil {
-			o.UpdatedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
 			}
-			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -500,19 +524,19 @@ func (o *CostCenter) Hash() string {
 
 // CreateCostCenter creates a new CostCenter in the database
 func CreateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Create(ctx, o)
 }
 
 // DeleteCostCenter deletes a CostCenter in the database
 func DeleteCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Delete(ctx, o)
 }
 
 // UpdateCostCenter updates a CostCenter in the database
 func UpdateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Update(ctx, o)
 }
 

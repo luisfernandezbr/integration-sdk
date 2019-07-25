@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -26,6 +27,10 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
+	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -103,23 +108,187 @@ type ProjectRequestIntegrationAuthorization struct {
 	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 }
 
-func (o *ProjectRequestIntegrationAuthorization) ToMap() map[string]interface{} {
+func toProjectRequestIntegrationAuthorizationObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectRequestIntegrationAuthorizationObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectRequestIntegrationAuthorization name => ProjectRequestIntegrationAuthorization
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationAuthorization:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectRequestIntegrationAuthorization) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// AccessToken Access token
-		"access_token": o.AccessToken,
+		"access_token": toProjectRequestIntegrationAuthorizationObject(o.AccessToken, isavro, true, "string"),
 		// RefreshToken Refresh token
-		"refresh_token": o.RefreshToken,
+		"refresh_token": toProjectRequestIntegrationAuthorizationObject(o.RefreshToken, isavro, true, "string"),
 		// URL URL of instance if relevant
-		"url": o.URL,
+		"url": toProjectRequestIntegrationAuthorizationObject(o.URL, isavro, true, "string"),
 		// Username Username for instance, if relevant
-		"username": o.Username,
+		"username": toProjectRequestIntegrationAuthorizationObject(o.Username, isavro, true, "string"),
 		// Password Password for instance, if relevant
-		"password": o.Password,
+		"password": toProjectRequestIntegrationAuthorizationObject(o.Password, isavro, true, "string"),
 		// APIToken API Token for instance, if relevant
-		"api_token": o.APIToken,
+		"api_token": toProjectRequestIntegrationAuthorizationObject(o.APIToken, isavro, true, "string"),
 		// Authorization the agents encrypted authorization
-		"authorization": o.Authorization,
+		"authorization": toProjectRequestIntegrationAuthorizationObject(o.Authorization, isavro, true, "string"),
 	}
+}
+
+func (o *ProjectRequestIntegrationAuthorization) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationAuthorization) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["access_token"].(*string); ok {
+		o.AccessToken = val
+	} else if val, ok := kv["access_token"].(string); ok {
+		o.AccessToken = &val
+	} else {
+		if val, ok := kv["access_token"]; ok {
+			if val == nil {
+				o.AccessToken = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AccessToken = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["refresh_token"].(*string); ok {
+		o.RefreshToken = val
+	} else if val, ok := kv["refresh_token"].(string); ok {
+		o.RefreshToken = &val
+	} else {
+		if val, ok := kv["refresh_token"]; ok {
+			if val == nil {
+				o.RefreshToken = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RefreshToken = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["username"].(*string); ok {
+		o.Username = val
+	} else if val, ok := kv["username"].(string); ok {
+		o.Username = &val
+	} else {
+		if val, ok := kv["username"]; ok {
+			if val == nil {
+				o.Username = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Username = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["password"].(*string); ok {
+		o.Password = val
+	} else if val, ok := kv["password"].(string); ok {
+		o.Password = &val
+	} else {
+		if val, ok := kv["password"]; ok {
+			if val == nil {
+				o.Password = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Password = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["api_token"].(*string); ok {
+		o.APIToken = val
+	} else if val, ok := kv["api_token"].(string); ok {
+		o.APIToken = &val
+	} else {
+		if val, ok := kv["api_token"]; ok {
+			if val == nil {
+				o.APIToken = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.APIToken = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["authorization"].(*string); ok {
+		o.Authorization = val
+	} else if val, ok := kv["authorization"].(string); ok {
+		o.Authorization = &val
+	} else {
+		if val, ok := kv["authorization"]; ok {
+			if val == nil {
+				o.Authorization = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Authorization = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectRequestIntegrationProgress represents the object structure for progress
@@ -132,15 +301,98 @@ type ProjectRequestIntegrationProgress struct {
 	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
 }
 
-func (o *ProjectRequestIntegrationProgress) ToMap() map[string]interface{} {
+func toProjectRequestIntegrationProgressObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectRequestIntegrationProgressObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectRequestIntegrationProgress name => ProjectRequestIntegrationProgress
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationProgress:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectRequestIntegrationProgress) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Message Any relevant messaging during processing
-		"message": o.Message,
+		"message": toProjectRequestIntegrationProgressObject(o.Message, isavro, false, "string"),
 		// Total The total amount to be processed
-		"total": o.Total,
+		"total": toProjectRequestIntegrationProgressObject(o.Total, isavro, false, "long"),
 		// Completed The total amount processed thus far
-		"completed": o.Completed,
+		"completed": toProjectRequestIntegrationProgressObject(o.Completed, isavro, false, "long"),
 	}
+}
+
+func (o *ProjectRequestIntegrationProgress) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["message"].(string); ok {
+		o.Message = val
+	} else {
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Message = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["total"].(int64); ok {
+		o.Total = val
+	} else {
+		if val, ok := kv["total"]; ok {
+			if val == nil {
+				o.Total = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Total = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["completed"].(int64); ok {
+		o.Completed = val
+	} else {
+		if val, ok := kv["completed"]; ok {
+			if val == nil {
+				o.Completed = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Completed = number.ToInt64Any(val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectRequestIntegrationValidatedDate represents the object structure for validated_date
@@ -153,15 +405,98 @@ type ProjectRequestIntegrationValidatedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ProjectRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
+func toProjectRequestIntegrationValidatedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectRequestIntegrationValidatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectRequestIntegrationValidatedDate name => ProjectRequestIntegrationValidatedDate
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationValidatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectRequestIntegrationValidatedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toProjectRequestIntegrationValidatedDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toProjectRequestIntegrationValidatedDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toProjectRequestIntegrationValidatedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *ProjectRequestIntegrationValidatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationValidatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectRequestIntegration represents the object structure for integration
@@ -186,27 +521,258 @@ type ProjectRequestIntegration struct {
 	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
 }
 
-func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
+func toProjectRequestIntegrationObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectRequestIntegrationObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectRequestIntegration name => ProjectRequestIntegration
+	switch v := o.(type) {
+	case *ProjectRequestIntegration:
+		return v.ToMap(isavro)
+
+	case ProjectRequestIntegrationAuthorization:
+		return v.ToMap(isavro)
+
+	case ProjectRequestIntegrationProgress:
+		return v.ToMap(isavro)
+
+	case ProjectRequestIntegrationValidatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectRequestIntegration) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Active If true, the integration is still active
-		"active": o.Active,
+		"active": toProjectRequestIntegrationObject(o.Active, isavro, false, "boolean"),
 		// Authorization Authorization information
-		"authorization": o.Authorization,
+		"authorization": toProjectRequestIntegrationObject(o.Authorization, isavro, false, "authorization"),
 		// Errored If authorization failed by the agent
-		"errored": o.Errored,
+		"errored": toProjectRequestIntegrationObject(o.Errored, isavro, true, "boolean"),
 		// Exclusions The exclusion list for this integration
-		"exclusions": o.Exclusions,
+		"exclusions": toProjectRequestIntegrationObject(o.Exclusions, isavro, false, "exclusions"),
 		// Name The user friendly name of the integration
-		"name": o.Name,
+		"name": toProjectRequestIntegrationObject(o.Name, isavro, false, "string"),
 		// Progress Agent processing progress
-		"progress": o.Progress,
+		"progress": toProjectRequestIntegrationObject(o.Progress, isavro, false, "progress"),
 		// Validated If the validation has been run against this instance
-		"validated": o.Validated,
+		"validated": toProjectRequestIntegrationObject(o.Validated, isavro, true, "boolean"),
 		// ValidatedDate Date when validated
-		"validated_date": o.ValidatedDate,
+		"validated_date": toProjectRequestIntegrationObject(o.ValidatedDate, isavro, false, "validated_date"),
 		// ValidationMessage The validation message from the agent
-		"validation_message": o.ValidationMessage,
+		"validation_message": toProjectRequestIntegrationObject(o.ValidationMessage, isavro, true, "string"),
 	}
+}
+
+func (o *ProjectRequestIntegration) setDefaults(frommap bool) {
+
+	if o.Errored == nil {
+		var v bool
+		o.Errored = &v
+	}
+
+	if o.Validated == nil {
+		var v bool
+		o.Validated = &v
+	}
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = number.ToBoolAny(nil)
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["authorization"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Authorization.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationAuthorization); ok {
+			// struct
+			o.Authorization = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationAuthorization); ok {
+			// struct pointer
+			o.Authorization = *sp
+		}
+	} else {
+		o.Authorization.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["errored"].(*bool); ok {
+		o.Errored = val
+	} else if val, ok := kv["errored"].(bool); ok {
+		o.Errored = &val
+	} else {
+		if val, ok := kv["errored"]; ok {
+			if val == nil {
+				o.Errored = number.BoolPointer(number.ToBoolAny(nil))
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Errored = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+
+	if val, ok := kv["exclusions"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for exclusions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for exclusions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for exclusions field")
+				}
+			}
+			o.Exclusions = na
+		}
+	}
+	if o.Exclusions == nil {
+		o.Exclusions = make([]string, 0)
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["progress"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Progress.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationProgress); ok {
+			// struct
+			o.Progress = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationProgress); ok {
+			// struct pointer
+			o.Progress = *sp
+		}
+	} else {
+		o.Progress.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["validated"].(*bool); ok {
+		o.Validated = val
+	} else if val, ok := kv["validated"].(bool); ok {
+		o.Validated = &val
+	} else {
+		if val, ok := kv["validated"]; ok {
+			if val == nil {
+				o.Validated = number.BoolPointer(number.ToBoolAny(nil))
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Validated = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+
+	if val, ok := kv["validated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ValidatedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationValidatedDate); ok {
+			// struct
+			o.ValidatedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationValidatedDate); ok {
+			// struct pointer
+			o.ValidatedDate = *sp
+		}
+	} else {
+		o.ValidatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["validation_message"].(*string); ok {
+		o.ValidationMessage = val
+	} else if val, ok := kv["validation_message"].(string); ok {
+		o.ValidationMessage = &val
+	} else {
+		if val, ok := kv["validation_message"]; ok {
+			if val == nil {
+				o.ValidationMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ValidationMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectRequestLocation is the enumeration type for location
@@ -216,9 +782,9 @@ type ProjectRequestLocation int32
 func (v ProjectRequestLocation) String() string {
 	switch int32(v) {
 	case 0:
-		return "private"
+		return "PRIVATE"
 	case 1:
-		return "cloud"
+		return "CLOUD"
 	}
 	return "unset"
 }
@@ -240,15 +806,98 @@ type ProjectRequestRequestDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ProjectRequestRequestDate) ToMap() map[string]interface{} {
+func toProjectRequestRequestDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toProjectRequestRequestDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ProjectRequestRequestDate name => ProjectRequestRequestDate
+	switch v := o.(type) {
+	case *ProjectRequestRequestDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ProjectRequestRequestDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toProjectRequestRequestDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toProjectRequestRequestDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toProjectRequestRequestDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *ProjectRequestRequestDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestRequestDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ProjectRequest an agent action to request adding new projects
@@ -284,30 +933,27 @@ func toProjectRequestObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toProjectRequestObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => ProjectRequest name => ProjectRequest
 	switch v := o.(type) {
 	case *ProjectRequest:
-		return v.ToMap()
-	case ProjectRequest:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case ProjectRequestIntegration:
-		vv := o.(ProjectRequestIntegration)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+		// is nested enum Location
 	case ProjectRequestLocation:
-		if !isavro {
-			return (o.(ProjectRequestLocation)).String()
-		}
-		return (o.(ProjectRequestLocation)).String()
+		return v.String()
 
 	case ProjectRequestRequestDate:
-		vv := o.(ProjectRequestRequestDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of ProjectRequest
@@ -325,9 +971,13 @@ func (o *ProjectRequest) GetModelName() datamodel.ModelNameType {
 	return ProjectRequestModelName
 }
 
-func (o *ProjectRequest) setDefaults() {
+func (o *ProjectRequest) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -531,7 +1181,7 @@ func (o *ProjectRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"customer_id":  toProjectRequestObject(o.CustomerID, isavro, false, "string"),
 		"id":           toProjectRequestObject(o.ID, isavro, false, "string"),
@@ -547,141 +1197,137 @@ func (o *ProjectRequest) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.ID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["integration"].(ProjectRequestIntegration); ok {
-		o.Integration = val
-	} else {
-		val := kv["integration"]
-		if val == nil {
-			o.Integration = ProjectRequestIntegration{}
-		} else {
-			o.Integration = ProjectRequestIntegration{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
 				}
-				val = si
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.Integration)
-
 		}
 	}
+
+	if val, ok := kv["integration"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Integration.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegration); ok {
+			// struct
+			o.Integration = sv
+		} else if sp, ok := val.(*ProjectRequestIntegration); ok {
+			// struct pointer
+			o.Integration = *sp
+		}
+	} else {
+		o.Integration.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["location"].(ProjectRequestLocation); ok {
 		o.Location = val
 	} else {
 		if em, ok := kv["location"].(map[string]interface{}); ok {
 			ev := em["agent.location"].(string)
 			switch ev {
-			case "private":
+			case "private", "PRIVATE":
 				o.Location = 0
-			case "cloud":
+			case "cloud", "CLOUD":
 				o.Location = 1
 			}
 		}
 		if em, ok := kv["location"].(string); ok {
 			switch em {
-			case "private":
+			case "private", "PRIVATE":
 				o.Location = 0
-			case "cloud":
+			case "cloud", "CLOUD":
 				o.Location = 1
 			}
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.RefType = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["request_date"].(ProjectRequestRequestDate); ok {
-		o.RequestDate = val
-	} else {
-		val := kv["request_date"]
-		if val == nil {
-			o.RequestDate = ProjectRequestRequestDate{}
-		} else {
-			o.RequestDate = ProjectRequestRequestDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
 				}
-				val = si
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.RequestDate)
-
 		}
 	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestRequestDate); ok {
+			// struct
+			o.RequestDate = sv
+		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = *sp
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
-		val := kv["uuid"]
-		if val == nil {
-			o.UUID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.UUID = fmt.Sprintf("%v", val)
 			}
-			o.UUID = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -720,14 +1366,14 @@ func GetProjectRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"name": "integration", "fields": []interface{}{map[string]interface{}{"name": "active", "doc": "If true, the integration is still active", "type": "boolean"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "access_token", "doc": "Access token"}, map[string]interface{}{"name": "refresh_token", "doc": "Refresh token", "type": "string"}, map[string]interface{}{"name": "url", "doc": "URL of instance if relevant", "type": "string"}, map[string]interface{}{"type": "string", "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"type": "string", "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"doc": "API Token for instance, if relevant", "type": "string", "name": "api_token"}, map[string]interface{}{"doc": "the agents encrypted authorization", "type": "string", "name": "authorization"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"type": "boolean", "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"doc": "Agent processing progress", "type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}}}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "boolean", "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Date when validated", "type": "record", "name": "integration.validated_date"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"type": "string", "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"type": []interface{}{"null", "string"}, "name": "access_token", "doc": "Access token", "default": nil}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "url", "doc": "URL of instance if relevant"}, map[string]interface{}{"type": []interface{}{"null", "string"}, "name": "username", "doc": "Username for instance, if relevant", "default": nil}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"name": "api_token", "doc": "API Token for instance, if relevant", "default": nil, "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "authorization", "doc": "the agents encrypted authorization"}}, "doc": "Authorization information", "type": "record"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "boolean"}, "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "boolean"}, "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to use"},
 			},
 			map[string]interface{}{
 				"name": "location",
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "location",
-					"symbols": []interface{}{"private", "cloud"},
+					"symbols": []interface{}{"PRIVATE", "CLOUD"},
 				},
 			},
 			map[string]interface{}{
@@ -740,7 +1386,7 @@ func GetProjectRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

@@ -26,6 +26,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -79,15 +80,98 @@ type ActivityActivityDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *ActivityActivityDate) ToMap() map[string]interface{} {
+func toActivityActivityDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toActivityActivityDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ActivityActivityDate name => ActivityActivityDate
+	switch v := o.(type) {
+	case *ActivityActivityDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ActivityActivityDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toActivityActivityDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toActivityActivityDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toActivityActivityDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *ActivityActivityDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ActivityActivityDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // ActivityType is the enumeration type for type
@@ -97,27 +181,27 @@ type ActivityType int32
 func (v ActivityType) String() string {
 	switch int32(v) {
 	case 0:
-		return "commit"
+		return "COMMIT"
 	case 1:
-		return "issue_created"
+		return "ISSUE_CREATED"
 	case 2:
-		return "issue_closed"
+		return "ISSUE_CLOSED"
 	case 3:
-		return "issue_status_change"
+		return "ISSUE_STATUS_CHANGE"
 	case 4:
-		return "issue_comment"
+		return "ISSUE_COMMENT"
 	case 5:
-		return "branch_created"
+		return "BRANCH_CREATED"
 	case 6:
-		return "pull_request_created"
+		return "PULL_REQUEST_CREATED"
 	case 7:
-		return "pull_request_merged"
+		return "PULL_REQUEST_MERGED"
 	case 8:
-		return "pull_request_reviewed"
+		return "PULL_REQUEST_REVIEWED"
 	case 9:
-		return "branch_merged"
+		return "BRANCH_MERGED"
 	case 10:
-		return "unlinked_commit"
+		return "UNLINKED_COMMIT"
 	}
 	return "unset"
 }
@@ -155,13 +239,81 @@ type ActivityUser struct {
 	TeamID string `json:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
 }
 
-func (o *ActivityUser) ToMap() map[string]interface{} {
+func toActivityUserObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toActivityUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => ActivityUser name => ActivityUser
+	switch v := o.(type) {
+	case *ActivityUser:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ActivityUser) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// ID the corporate user id
-		"id": o.ID,
+		"id": toActivityUserObject(o.ID, isavro, false, "string"),
 		// TeamID the corporate team id
-		"team_id": o.TeamID,
+		"team_id": toActivityUserObject(o.TeamID, isavro, false, "string"),
 	}
+}
+
+func (o *ActivityUser) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ActivityUser) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["team_id"].(string); ok {
+		o.TeamID = val
+	} else {
+		if val, ok := kv["team_id"]; ok {
+			if val == nil {
+				o.TeamID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.TeamID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // Activity activity table is a log of activity accross all integrations
@@ -195,30 +347,26 @@ func toActivityObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toActivityObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => Activity name => Activity
 	switch v := o.(type) {
 	case *Activity:
-		return v.ToMap()
-	case Activity:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case ActivityActivityDate:
-		vv := o.(ActivityActivityDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+		// is nested enum Type
 	case ActivityType:
-		if !isavro {
-			return (o.(ActivityType)).String()
-		}
-		return (o.(ActivityType)).String()
+		return v.String()
 
 	case ActivityUser:
-		vv := o.(ActivityUser)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Activity
@@ -236,9 +384,13 @@ func (o *Activity) GetModelName() datamodel.ModelNameType {
 	return ActivityModelName
 }
 
-func (o *Activity) setDefaults() {
+func (o *Activity) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -450,7 +602,7 @@ func (o *Activity) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"activity_date": toActivityObject(o.ActivityDate, isavro, false, "activity_date"),
 		"customer_id":   toActivityObject(o.CustomerID, isavro, false, "string"),
@@ -465,164 +617,159 @@ func (o *Activity) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Activity) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["activity_date"].(ActivityActivityDate); ok {
-		o.ActivityDate = val
-	} else {
-		val := kv["activity_date"]
-		if val == nil {
-			o.ActivityDate = ActivityActivityDate{}
-		} else {
-			o.ActivityDate = ActivityActivityDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.ActivityDate)
 
+	if val, ok := kv["activity_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ActivityDate.FromMap(kv)
+		} else if sv, ok := val.(ActivityActivityDate); ok {
+			// struct
+			o.ActivityDate = sv
+		} else if sp, ok := val.(*ActivityActivityDate); ok {
+			// struct pointer
+			o.ActivityDate = *sp
 		}
+	} else {
+		o.ActivityDate.FromMap(map[string]interface{}{})
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["type"].(ActivityType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
 			ev := em["pipeline.activity.type"].(string)
 			switch ev {
-			case "commit":
+			case "commit", "COMMIT":
 				o.Type = 0
-			case "issue_created":
+			case "issue_created", "ISSUE_CREATED":
 				o.Type = 1
-			case "issue_closed":
+			case "issue_closed", "ISSUE_CLOSED":
 				o.Type = 2
-			case "issue_status_change":
+			case "issue_status_change", "ISSUE_STATUS_CHANGE":
 				o.Type = 3
-			case "issue_comment":
+			case "issue_comment", "ISSUE_COMMENT":
 				o.Type = 4
-			case "branch_created":
+			case "branch_created", "BRANCH_CREATED":
 				o.Type = 5
-			case "pull_request_created":
+			case "pull_request_created", "PULL_REQUEST_CREATED":
 				o.Type = 6
-			case "pull_request_merged":
+			case "pull_request_merged", "PULL_REQUEST_MERGED":
 				o.Type = 7
-			case "pull_request_reviewed":
+			case "pull_request_reviewed", "PULL_REQUEST_REVIEWED":
 				o.Type = 8
-			case "branch_merged":
+			case "branch_merged", "BRANCH_MERGED":
 				o.Type = 9
-			case "unlinked_commit":
+			case "unlinked_commit", "UNLINKED_COMMIT":
 				o.Type = 10
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
 			switch em {
-			case "commit":
+			case "commit", "COMMIT":
 				o.Type = 0
-			case "issue_created":
+			case "issue_created", "ISSUE_CREATED":
 				o.Type = 1
-			case "issue_closed":
+			case "issue_closed", "ISSUE_CLOSED":
 				o.Type = 2
-			case "issue_status_change":
+			case "issue_status_change", "ISSUE_STATUS_CHANGE":
 				o.Type = 3
-			case "issue_comment":
+			case "issue_comment", "ISSUE_COMMENT":
 				o.Type = 4
-			case "branch_created":
+			case "branch_created", "BRANCH_CREATED":
 				o.Type = 5
-			case "pull_request_created":
+			case "pull_request_created", "PULL_REQUEST_CREATED":
 				o.Type = 6
-			case "pull_request_merged":
+			case "pull_request_merged", "PULL_REQUEST_MERGED":
 				o.Type = 7
-			case "pull_request_reviewed":
+			case "pull_request_reviewed", "PULL_REQUEST_REVIEWED":
 				o.Type = 8
-			case "branch_merged":
+			case "branch_merged", "BRANCH_MERGED":
 				o.Type = 9
-			case "unlinked_commit":
+			case "unlinked_commit", "UNLINKED_COMMIT":
 				o.Type = 10
 			}
 		}
 	}
-	if val, ok := kv["user"].(ActivityUser); ok {
-		o.User = val
-	} else {
-		val := kv["user"]
-		if val == nil {
-			o.User = ActivityUser{}
-		} else {
-			o.User = ActivityUser{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.User)
 
+	if val, ok := kv["user"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.User.FromMap(kv)
+		} else if sv, ok := val.(ActivityUser); ok {
+			// struct
+			o.User = sv
+		} else if sp, ok := val.(*ActivityUser); ok {
+			// struct pointer
+			o.User = *sp
 		}
+	} else {
+		o.User.FromMap(map[string]interface{}{})
 	}
-	o.setDefaults()
+
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -652,7 +799,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "activity_date",
-				"type": map[string]interface{}{"doc": "date object", "type": "record", "name": "activity_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"type": "record", "name": "activity_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -675,7 +822,7 @@ func GetActivityAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"commit", "issue_created", "issue_closed", "issue_status_change", "issue_comment", "branch_created", "pull_request_created", "pull_request_merged", "pull_request_reviewed", "branch_merged", "unlinked_commit"},
+					"symbols": []interface{}{"COMMIT", "ISSUE_CREATED", "ISSUE_CLOSED", "ISSUE_STATUS_CHANGE", "ISSUE_COMMENT", "BRANCH_CREATED", "PULL_REQUEST_CREATED", "PULL_REQUEST_MERGED", "PULL_REQUEST_REVIEWED", "BRANCH_MERGED", "UNLINKED_COMMIT"},
 				},
 			},
 			map[string]interface{}{

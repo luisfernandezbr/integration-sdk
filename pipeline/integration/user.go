@@ -81,13 +81,81 @@ type UserGroups struct {
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 }
 
-func (o *UserGroups) ToMap() map[string]interface{} {
+func toUserGroupsObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toUserGroupsObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => UserGroups name => UserGroups
+	switch v := o.(type) {
+	case *UserGroups:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *UserGroups) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// GroupID Group id
-		"group_id": o.GroupID,
+		"group_id": toUserGroupsObject(o.GroupID, isavro, false, "string"),
 		// Name Group name
-		"name": o.Name,
+		"name": toUserGroupsObject(o.Name, isavro, false, "string"),
 	}
+}
+
+func (o *UserGroups) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserGroups) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["group_id"].(string); ok {
+		o.GroupID = val
+	} else {
+		if val, ok := kv["group_id"]; ok {
+			if val == nil {
+				o.GroupID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.GroupID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // User a user from a source system
@@ -127,24 +195,20 @@ func toUserObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => User name => User
 	switch v := o.(type) {
 	case *User:
-		return v.ToMap()
-	case User:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case []UserGroups:
-		arr := make([]interface{}, 0)
-		for _, i := range o.([]UserGroups) {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
+		return v
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of User
@@ -162,18 +226,22 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 	return UserModelName
 }
 
-func (o *User) setDefaults() {
+func (o *User) setDefaults(frommap bool) {
 	if o.AvatarURL == nil {
 		o.AvatarURL = &emptyString
 	}
 	if o.Emails == nil {
-		o.Emails = []string{}
+		o.Emails = make([]string, 0)
 	}
 	if o.Groups == nil {
-		o.Groups = []UserGroups{}
+		o.Groups = make([]UserGroups, 0)
 	}
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -377,7 +445,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 			o.Groups = make([]UserGroups, 0)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"active":      toUserObject(o.Active, isavro, false, "boolean"),
 		"avatar_url":  toUserObject(o.AvatarURL, isavro, true, "string"),
@@ -395,211 +463,199 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *User) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
 	} else {
-		val := kv["active"]
-		if val == nil {
-			o.Active = number.ToBoolAny(nil)
-		} else {
-			o.Active = number.ToBoolAny(val)
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = number.ToBoolAny(nil)
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["avatar_url"].(*string); ok {
 		o.AvatarURL = val
 	} else if val, ok := kv["avatar_url"].(string); ok {
 		o.AvatarURL = &val
 	} else {
-		val := kv["avatar_url"]
-		if val == nil {
-			o.AvatarURL = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["avatar_url"]; ok {
+			if val == nil {
+				o.AvatarURL = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
-	if val := kv["emails"]; val != nil {
-		na := make([]string, 0)
-		if a, ok := val.([]string); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for emails field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if s, ok := val.(string); ok {
-				for _, sv := range strings.Split(s, ",") {
-					na = append(na, strings.TrimSpace(sv))
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for emails field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+
+	if val, ok := kv["emails"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for emails field")
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for emails field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for emails field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for emails field")
+				}
 			}
+			o.Emails = na
 		}
-		o.Emails = na
-	} else {
-		o.Emails = []string{}
 	}
 	if o.Emails == nil {
 		o.Emails = make([]string, 0)
 	}
-	if val := kv["groups"]; val != nil {
-		na := make([]UserGroups, 0)
-		if a, ok := val.([]UserGroups); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(UserGroups); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av UserGroups
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for groups field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(UserGroups); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av UserGroups
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for groups field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for groups field")
+
+	if o == nil {
+
+		o.Groups = make([]UserGroups, 0)
+
+	}
+	if val, ok := kv["groups"]; ok {
+		if sv, ok := val.([]UserGroups); ok {
+			o.Groups = sv
+		} else if sp, ok := val.([]*UserGroups); ok {
+			o.Groups = o.Groups[:0]
+			for _, e := range sp {
+				o.Groups = append(o.Groups, *e)
 			}
 		}
-		o.Groups = na
-	} else {
-		o.Groups = []UserGroups{}
 	}
-	if o.Groups == nil {
-		o.Groups = make([]UserGroups, 0)
-	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
 			}
-			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["username"].(string); ok {
 		o.Username = val
 	} else {
-		val := kv["username"]
-		if val == nil {
-			o.Username = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["username"]; ok {
+			if val == nil {
+				o.Username = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Username = fmt.Sprintf("%v", val)
 			}
-			o.Username = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -645,11 +701,11 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "emails",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "emails"},
+				"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "groups",
-				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}},
+				"type": map[string]interface{}{"name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}, "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "id",

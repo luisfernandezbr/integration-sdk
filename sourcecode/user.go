@@ -75,11 +75,11 @@ type UserType int32
 func (v UserType) String() string {
 	switch int32(v) {
 	case 0:
-		return "human"
+		return "HUMAN"
 	case 1:
-		return "bot"
+		return "BOT"
 	case 2:
-		return "deleted_special_user"
+		return "DELETED_SPECIAL_USER"
 	}
 	return "unset"
 }
@@ -132,24 +132,21 @@ func toUserObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => User name => User
 	switch v := o.(type) {
 	case *User:
-		return v.ToMap()
-	case User:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
+		// is nested enum Type
 	case UserType:
-		if !isavro {
-			return (o.(UserType)).String()
-		}
-		return (o.(UserType)).String()
+		return v.String()
 
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of User
@@ -167,7 +164,7 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 	return UserModelName
 }
 
-func (o *User) setDefaults() {
+func (o *User) setDefaults(frommap bool) {
 	if o.AssociatedRefID == nil {
 		o.AssociatedRefID = &emptyString
 	}
@@ -182,6 +179,10 @@ func (o *User) setDefaults() {
 	}
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -379,7 +380,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"associated_ref_id": toUserObject(o.AssociatedRefID, isavro, true, "string"),
 		"avatar_url":        toUserObject(o.AvatarURL, isavro, true, "string"),
@@ -398,175 +399,197 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *User) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["associated_ref_id"].(*string); ok {
 		o.AssociatedRefID = val
 	} else if val, ok := kv["associated_ref_id"].(string); ok {
 		o.AssociatedRefID = &val
 	} else {
-		val := kv["associated_ref_id"]
-		if val == nil {
-			o.AssociatedRefID = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["associated_ref_id"]; ok {
+			if val == nil {
+				o.AssociatedRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AssociatedRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.AssociatedRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["avatar_url"].(*string); ok {
 		o.AvatarURL = val
 	} else if val, ok := kv["avatar_url"].(string); ok {
 		o.AvatarURL = &val
 	} else {
-		val := kv["avatar_url"]
-		if val == nil {
-			o.AvatarURL = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["avatar_url"]; ok {
+			if val == nil {
+				o.AvatarURL = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			o.CustomerID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["email"].(*string); ok {
 		o.Email = val
 	} else if val, ok := kv["email"].(string); ok {
 		o.Email = &val
 	} else {
-		val := kv["email"]
-		if val == nil {
-			o.Email = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["email"]; ok {
+			if val == nil {
+				o.Email = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Email = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.Email = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["member"].(bool); ok {
 		o.Member = val
 	} else {
-		val := kv["member"]
-		if val == nil {
-			o.Member = number.ToBoolAny(nil)
-		} else {
-			o.Member = number.ToBoolAny(val)
+		if val, ok := kv["member"]; ok {
+			if val == nil {
+				o.Member = number.ToBoolAny(nil)
+			} else {
+				o.Member = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
 			}
-			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["type"].(UserType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
 			ev := em["sourcecode.type"].(string)
 			switch ev {
-			case "human":
+			case "human", "HUMAN":
 				o.Type = 0
-			case "bot":
+			case "bot", "BOT":
 				o.Type = 1
-			case "deleted_special_user":
+			case "deleted_special_user", "DELETED_SPECIAL_USER":
 				o.Type = 2
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
 			switch em {
-			case "human":
+			case "human", "HUMAN":
 				o.Type = 0
-			case "bot":
+			case "bot", "BOT":
 				o.Type = 1
-			case "deleted_special_user":
+			case "deleted_special_user", "DELETED_SPECIAL_USER":
 				o.Type = 2
 			}
 		}
 	}
+
 	if val, ok := kv["username"].(*string); ok {
 		o.Username = val
 	} else if val, ok := kv["username"].(string); ok {
 		o.Username = &val
 	} else {
-		val := kv["username"]
-		if val == nil {
-			o.Username = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["username"]; ok {
+			if val == nil {
+				o.Username = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Username = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.Username = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -642,7 +665,7 @@ func GetUserAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"human", "bot", "deleted_special_user"},
+					"symbols": []interface{}{"HUMAN", "BOT", "DELETED_SPECIAL_USER"},
 				},
 			},
 			map[string]interface{}{

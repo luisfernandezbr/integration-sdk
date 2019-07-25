@@ -26,6 +26,7 @@ import (
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
@@ -73,15 +74,98 @@ type HookReceivedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *HookReceivedDate) ToMap() map[string]interface{} {
+func toHookReceivedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toHookReceivedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => HookReceivedDate name => HookReceivedDate
+	switch v := o.(type) {
+	case *HookReceivedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *HookReceivedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toHookReceivedDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toHookReceivedDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toHookReceivedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *HookReceivedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *HookReceivedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // Hook hook is a webhook event which is received from an external source
@@ -113,21 +197,20 @@ func toHookObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toHookObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => Hook name => Hook
 	switch v := o.(type) {
 	case *Hook:
-		return v.ToMap()
-	case Hook:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case HookReceivedDate:
-		vv := o.(HookReceivedDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of Hook
@@ -145,9 +228,13 @@ func (o *Hook) GetModelName() datamodel.ModelNameType {
 	return HookModelName
 }
 
-func (o *Hook) setDefaults() {
+func (o *Hook) setDefaults(frommap bool) {
 
 	o.GetID()
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 }
 
 // GetID returns the ID for the object
@@ -337,7 +424,7 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 			o.Headers = make(map[string]string)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"data":          toHookObject(o.Data, isavro, false, "string"),
 		"headers":       toHookObject(o.Headers, isavro, false, "string"),
@@ -350,106 +437,111 @@ func (o *Hook) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Hook) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["data"].(string); ok {
 		o.Data = val
 	} else {
-		val := kv["data"]
-		if val == nil {
-			o.Data = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Data = fmt.Sprintf("%v", val)
-		}
-	}
-	if val := kv["headers"]; val != nil {
-		kv := make(map[string]string)
-		if m, ok := val.(map[string]string); ok {
-			kv = m
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				for k, v := range m {
-					if mv, ok := v.(string); ok {
-						kv[k] = mv
-					} else {
-						kv[k] = fmt.Sprintf("%v", v)
-					}
-				}
+		if val, ok := kv["data"]; ok {
+			if val == nil {
+				o.Data = ""
 			} else {
-				panic("unsupported type for headers field entry: " + reflect.TypeOf(val).String())
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Data = fmt.Sprintf("%v", val)
 			}
 		}
-		o.Headers = kv
-	} else {
-		o.Headers = map[string]string{}
 	}
+
+	if val, ok := kv["headers"]; ok {
+		if val != nil {
+			kv := make(map[string]string)
+			if m, ok := val.(map[string]string); ok {
+				kv = m
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					for k, v := range m {
+						if mv, ok := v.(string); ok {
+							kv[k] = mv
+						} else {
+							kv[k] = fmt.Sprintf("%v", v)
+						}
+					}
+				} else {
+					panic("unsupported type for headers field entry: " + reflect.TypeOf(val).String())
+				}
+			}
+			o.Headers = kv
+		}
+	}
+	if o.Headers == nil {
+		o.Headers = make(map[string]string)
+	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.ID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["received_date"].(HookReceivedDate); ok {
-		o.ReceivedDate = val
-	} else {
-		val := kv["received_date"]
-		if val == nil {
-			o.ReceivedDate = HookReceivedDate{}
-		} else {
-			o.ReceivedDate = HookReceivedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
 				}
-				val = si
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.ReceivedDate)
-
 		}
 	}
+
+	if val, ok := kv["received_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ReceivedDate.FromMap(kv)
+		} else if sv, ok := val.(HookReceivedDate); ok {
+			// struct
+			o.ReceivedDate = sv
+		} else if sp, ok := val.(*HookReceivedDate); ok {
+			// struct pointer
+			o.ReceivedDate = *sp
+		}
+	} else {
+		o.ReceivedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["system"].(string); ok {
 		o.System = val
 	} else {
-		val := kv["system"]
-		if val == nil {
-			o.System = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["system"]; ok {
+			if val == nil {
+				o.System = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.System = fmt.Sprintf("%v", val)
 			}
-			o.System = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["token"].(string); ok {
 		o.Token = val
 	} else {
-		val := kv["token"]
-		if val == nil {
-			o.Token = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["token"]; ok {
+			if val == nil {
+				o.Token = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Token = fmt.Sprintf("%v", val)
 			}
-			o.Token = fmt.Sprintf("%v", val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // GetHookAvroSchemaSpec creates the avro schema specification for Hook
@@ -476,7 +568,7 @@ func GetHookAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "received_date",
-				"type": map[string]interface{}{"type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the hook was received"},
+				"type": map[string]interface{}{"type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the hook was received"},
 			},
 			map[string]interface{}{
 				"name": "system",

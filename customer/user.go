@@ -122,15 +122,98 @@ type UserDeletedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *UserDeletedDate) ToMap() map[string]interface{} {
+func toUserDeletedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toUserDeletedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => UserDeletedDate name => UserDeletedDate
+	switch v := o.(type) {
+	case *UserDeletedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *UserDeletedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toUserDeletedDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toUserDeletedDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toUserDeletedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *UserDeletedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserDeletedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // UserHiredDate represents the object structure for hired_date
@@ -143,15 +226,98 @@ type UserHiredDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *UserHiredDate) ToMap() map[string]interface{} {
+func toUserHiredDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toUserHiredDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => UserHiredDate name => UserHiredDate
+	switch v := o.(type) {
+	case *UserHiredDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *UserHiredDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toUserHiredDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toUserHiredDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toUserHiredDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *UserHiredDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserHiredDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // UserTerminatedDate represents the object structure for terminated_date
@@ -164,15 +330,98 @@ type UserTerminatedDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func (o *UserTerminatedDate) ToMap() map[string]interface{} {
+func toUserTerminatedDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toUserTerminatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	// nested => true prefix => UserTerminatedDate name => UserTerminatedDate
+	switch v := o.(type) {
+	case *UserTerminatedDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *UserTerminatedDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": o.Epoch,
+		"epoch": toUserTerminatedDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": o.Offset,
+		"offset": toUserTerminatedDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": o.Rfc3339,
+		"rfc3339": toUserTerminatedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
+}
+
+func (o *UserTerminatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserTerminatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
 }
 
 // User the customer's user record
@@ -236,27 +485,26 @@ func toUserObjectNil(isavro bool, isoptional bool) interface{} {
 }
 
 func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-
-	if res := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); res != nil {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
+	// nested => false prefix => User name => User
 	switch v := o.(type) {
 	case *User:
-		return v.ToMap()
-	case User:
-		return v.ToMap()
+		return v.ToMap(isavro)
 
 	case UserDeletedDate:
-		vv := o.(UserDeletedDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
 	case UserHiredDate:
-		vv := o.(UserHiredDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
 	case UserTerminatedDate:
-		vv := o.(UserTerminatedDate)
-		return vv.ToMap()
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
-	panic("couldn't figure out the object type: " + reflect.TypeOf(o).String())
 }
 
 // String returns a string representation of User
@@ -274,7 +522,7 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 	return UserModelName
 }
 
-func (o *User) setDefaults() {
+func (o *User) setDefaults(frommap bool) {
 	if o.AvatarURL == nil {
 		o.AvatarURL = &emptyString
 	}
@@ -291,16 +539,41 @@ func (o *User) setDefaults() {
 		o.PrimaryTeamID = &emptyString
 	}
 	if o.RoleIds == nil {
-		o.RoleIds = []string{}
+		o.RoleIds = make([]string, 0)
 	}
 	if o.TeamIds == nil {
-		o.TeamIds = []string{}
+		o.TeamIds = make([]string, 0)
 	}
 	if o.Title == nil {
 		o.Title = &emptyString
 	}
 
 	o.GetID()
+
+	{
+		v := false
+
+		o.Active = v
+
+	}
+
+	{
+		v := false
+
+		o.Owner = v
+
+	}
+
+	{
+		v := true
+
+		o.Trackable = v
+
+	}
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
 	o.GetRefID()
 	o.Hash()
 }
@@ -504,7 +777,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 			o.TeamIds = make([]string, 0)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(true)
 	return map[string]interface{}{
 		"active":          toUserObject(o.Active, isavro, false, "boolean"),
 		"avatar_url":      toUserObject(o.AvatarURL, isavro, true, "string"),
@@ -534,407 +807,420 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *User) FromMap(kv map[string]interface{}) {
+
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
 	} else {
-		val := kv["active"]
-		if val == nil {
-			o.Active = number.ToBoolAny(nil)
-		} else {
-			o.Active = number.ToBoolAny(val)
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = number.ToBoolAny(nil)
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["avatar_url"].(*string); ok {
 		o.AvatarURL = val
 	} else if val, ok := kv["avatar_url"].(string); ok {
 		o.AvatarURL = &val
 	} else {
-		val := kv["avatar_url"]
-		if val == nil {
-			o.AvatarURL = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["avatar_url"]; ok {
+			if val == nil {
+				o.AvatarURL = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["cost_center_id"].(*string); ok {
 		o.CostCenterID = val
 	} else if val, ok := kv["cost_center_id"].(string); ok {
 		o.CostCenterID = &val
 	} else {
-		val := kv["cost_center_id"]
-		if val == nil {
-			o.CostCenterID = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["cost_center_id"]; ok {
+			if val == nil {
+				o.CostCenterID = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CostCenterID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.CostCenterID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["created_ts"].(int64); ok {
 		o.CreatedAt = val
 	} else {
-		val := kv["created_ts"]
-		if val == nil {
-			o.CreatedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["created_ts"]; ok {
+			if val == nil {
+				o.CreatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.CreatedAt = number.ToInt64Any(val)
 			}
-			o.CreatedAt = number.ToInt64Any(val)
 		}
 	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
-		val := kv["customer_id"]
-		if val == nil {
-			o.CustomerID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.CustomerID = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["deleted_date"].(UserDeletedDate); ok {
-		o.DeletedDate = val
-	} else {
-		val := kv["deleted_date"]
-		if val == nil {
-			o.DeletedDate = UserDeletedDate{}
-		} else {
-			o.DeletedDate = UserDeletedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
 				}
-				val = si
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.DeletedDate)
-
 		}
 	}
+
+	if val, ok := kv["deleted_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.DeletedDate.FromMap(kv)
+		} else if sv, ok := val.(UserDeletedDate); ok {
+			// struct
+			o.DeletedDate = sv
+		} else if sp, ok := val.(*UserDeletedDate); ok {
+			// struct pointer
+			o.DeletedDate = *sp
+		}
+	} else {
+		o.DeletedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["email"].(string); ok {
 		o.Email = val
 	} else {
-		val := kv["email"]
-		if val == nil {
-			o.Email = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
-			}
-			o.Email = fmt.Sprintf("%v", val)
-		}
-	}
-	if val, ok := kv["hired_date"].(UserHiredDate); ok {
-		o.HiredDate = val
-	} else {
-		val := kv["hired_date"]
-		if val == nil {
-			o.HiredDate = UserHiredDate{}
-		} else {
-			o.HiredDate = UserHiredDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
+		if val, ok := kv["email"]; ok {
+			if val == nil {
+				o.Email = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
 				}
-				val = si
+				o.Email = fmt.Sprintf("%v", val)
 			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.HiredDate)
-
 		}
 	}
+
+	if val, ok := kv["hired_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.HiredDate.FromMap(kv)
+		} else if sv, ok := val.(UserHiredDate); ok {
+			// struct
+			o.HiredDate = sv
+		} else if sp, ok := val.(*UserHiredDate); ok {
+			// struct pointer
+			o.HiredDate = *sp
+		}
+	} else {
+		o.HiredDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
-		val := kv["id"]
-		if val == nil {
-			o.ID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
-			o.ID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["location"].(*string); ok {
 		o.Location = val
 	} else if val, ok := kv["location"].(string); ok {
 		o.Location = &val
 	} else {
-		val := kv["location"]
-		if val == nil {
-			o.Location = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["location"]; ok {
+			if val == nil {
+				o.Location = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Location = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.Location = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["manager_id"].(*string); ok {
 		o.ManagerID = val
 	} else if val, ok := kv["manager_id"].(string); ok {
 		o.ManagerID = &val
 	} else {
-		val := kv["manager_id"]
-		if val == nil {
-			o.ManagerID = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["manager_id"]; ok {
+			if val == nil {
+				o.ManagerID = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ManagerID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.ManagerID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
-		val := kv["name"]
-		if val == nil {
-			o.Name = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
 			}
-			o.Name = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["owner"].(bool); ok {
 		o.Owner = val
 	} else {
-		val := kv["owner"]
-		if val == nil {
-			o.Owner = number.ToBoolAny(nil)
-		} else {
-			o.Owner = number.ToBoolAny(val)
+		if val, ok := kv["owner"]; ok {
+			if val == nil {
+				o.Owner = number.ToBoolAny(nil)
+			} else {
+				o.Owner = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["primary_team_id"].(*string); ok {
 		o.PrimaryTeamID = val
 	} else if val, ok := kv["primary_team_id"].(string); ok {
 		o.PrimaryTeamID = &val
 	} else {
-		val := kv["primary_team_id"]
-		if val == nil {
-			o.PrimaryTeamID = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["primary_team_id"]; ok {
+			if val == nil {
+				o.PrimaryTeamID = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PrimaryTeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.PrimaryTeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
-		val := kv["ref_id"]
-		if val == nil {
-			o.RefID = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
 			}
-			o.RefID = fmt.Sprintf("%v", val)
 		}
 	}
+
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
-		val := kv["ref_type"]
-		if val == nil {
-			o.RefType = ""
-		} else {
-			if m, ok := val.(map[string]interface{}); ok {
-				val = pjson.Stringify(m)
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
-			o.RefType = fmt.Sprintf("%v", val)
 		}
 	}
-	if val := kv["role_ids"]; val != nil {
-		na := make([]string, 0)
-		if a, ok := val.([]string); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if s, ok := val.(string); ok {
-				for _, sv := range strings.Split(s, ",") {
-					na = append(na, strings.TrimSpace(sv))
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+
+	if val, ok := kv["role_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for role_ids field")
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for role_ids field")
+				}
 			}
+			o.RoleIds = na
 		}
-		o.RoleIds = na
-	} else {
-		o.RoleIds = []string{}
 	}
 	if o.RoleIds == nil {
 		o.RoleIds = make([]string, 0)
 	}
-	if val := kv["team_ids"]; val != nil {
-		na := make([]string, 0)
-		if a, ok := val.([]string); ok {
-			na = append(na, a...)
-		} else {
-			if a, ok := val.([]interface{}); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						if badMap, ok := ae.(map[interface{}]interface{}); ok {
-							ae = slice.ConvertToStringToInterface(badMap)
-						}
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for team_ids field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
-			} else if s, ok := val.(string); ok {
-				for _, sv := range strings.Split(s, ",") {
-					na = append(na, strings.TrimSpace(sv))
-				}
-			} else if a, ok := val.(primitive.A); ok {
-				for _, ae := range a {
-					if av, ok := ae.(string); ok {
-						na = append(na, av)
-					} else {
-						b, _ := json.Marshal(ae)
-						var av string
-						if err := json.Unmarshal(b, &av); err != nil {
-							panic("unsupported type for team_ids field entry: " + reflect.TypeOf(ae).String())
-						}
-						na = append(na, av)
-					}
-				}
+
+	if val, ok := kv["team_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				fmt.Println(reflect.TypeOf(val).String())
-				panic("unsupported type for team_ids field")
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for team_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for team_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for team_ids field")
+				}
 			}
+			o.TeamIds = na
 		}
-		o.TeamIds = na
-	} else {
-		o.TeamIds = []string{}
 	}
 	if o.TeamIds == nil {
 		o.TeamIds = make([]string, 0)
 	}
-	if val, ok := kv["terminated_date"].(UserTerminatedDate); ok {
-		o.TerminatedDate = val
-	} else {
-		val := kv["terminated_date"]
-		if val == nil {
-			o.TerminatedDate = UserTerminatedDate{}
-		} else {
-			o.TerminatedDate = UserTerminatedDate{}
-			if m, ok := val.(map[interface{}]interface{}); ok {
-				si := make(map[string]interface{})
-				for k, v := range m {
-					if key, ok := k.(string); ok {
-						si[key] = v
-					}
-				}
-				val = si
-			}
-			b, _ := json.Marshal(val)
-			json.Unmarshal(b, &o.TerminatedDate)
 
+	if val, ok := kv["terminated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.TerminatedDate.FromMap(kv)
+		} else if sv, ok := val.(UserTerminatedDate); ok {
+			// struct
+			o.TerminatedDate = sv
+		} else if sp, ok := val.(*UserTerminatedDate); ok {
+			// struct pointer
+			o.TerminatedDate = *sp
 		}
+	} else {
+		o.TerminatedDate.FromMap(map[string]interface{}{})
 	}
+
 	if val, ok := kv["title"].(*string); ok {
 		o.Title = val
 	} else if val, ok := kv["title"].(string); ok {
 		o.Title = &val
 	} else {
-		val := kv["title"]
-		if val == nil {
-			o.Title = pstrings.Pointer("")
-		} else {
-			// if coming in as avro union, convert it back
-			if kv, ok := val.(map[string]interface{}); ok {
-				val = kv["string"]
+		if val, ok := kv["title"]; ok {
+			if val == nil {
+				o.Title = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Title = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.Title = pstrings.Pointer(fmt.Sprintf("%v", val))
 		}
 	}
+
 	if val, ok := kv["trackable"].(bool); ok {
 		o.Trackable = val
 	} else {
-		val := kv["trackable"]
-		if val == nil {
-			o.Trackable = number.ToBoolAny(nil)
-		} else {
-			o.Trackable = number.ToBoolAny(val)
+		if val, ok := kv["trackable"]; ok {
+			if val == nil {
+				o.Trackable = number.ToBoolAny(nil)
+			} else {
+				o.Trackable = number.ToBoolAny(val)
+			}
 		}
 	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
-		val := kv["updated_ts"]
-		if val == nil {
-			o.UpdatedAt = number.ToInt64Any(nil)
-		} else {
-			if tv, ok := val.(time.Time); ok {
-				val = datetime.TimeToEpoch(tv)
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
 			}
-			o.UpdatedAt = number.ToInt64Any(val)
 		}
 	}
-	o.setDefaults()
+	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
@@ -968,19 +1254,19 @@ func (o *User) Hash() string {
 
 // CreateUser creates a new User in the database
 func CreateUser(ctx context.Context, db datamodel.Storage, o *User) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Create(ctx, o)
 }
 
 // DeleteUser deletes a User in the database
 func DeleteUser(ctx context.Context, db datamodel.Storage, o *User) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Delete(ctx, o)
 }
 
 // UpdateUser updates a User in the database
 func UpdateUser(ctx context.Context, db datamodel.Storage, o *User) error {
-	o.setDefaults()
+	o.setDefaults(true)
 	return db.Update(ctx, o)
 }
 
@@ -1047,7 +1333,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "deleted_date",
-				"type": map[string]interface{}{"type": "record", "name": "deleted_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user record was deleted in epoch timestamp"},
+				"type": map[string]interface{}{"type": "record", "name": "deleted_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user record was deleted in epoch timestamp"},
 			},
 			map[string]interface{}{
 				"name": "email",
@@ -1055,7 +1341,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "hired_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp", "type": "record", "name": "hired_date"},
+				"type": map[string]interface{}{"type": "record", "name": "hired_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1102,7 +1388,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "terminated_date",
-				"type": map[string]interface{}{"type": "record", "name": "terminated_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was terminated in epoch timestamp"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was terminated in epoch timestamp", "type": "record", "name": "terminated_date"},
 			},
 			map[string]interface{}{
 				"name":    "title",
