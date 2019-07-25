@@ -507,6 +507,18 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*HookReceivedDate); ok {
 			// struct pointer
 			o.ReceivedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.ReceivedDate.Epoch = dt.Epoch
+			o.ReceivedDate.Rfc3339 = dt.Rfc3339
+			o.ReceivedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ReceivedDate.Epoch = dt.Epoch
+			o.ReceivedDate.Rfc3339 = dt.Rfc3339
+			o.ReceivedDate.Offset = dt.Offset
 		}
 	} else {
 		o.ReceivedDate.FromMap(map[string]interface{}{})
@@ -568,7 +580,7 @@ func GetHookAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "received_date",
-				"type": map[string]interface{}{"type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the hook was received"},
+				"type": map[string]interface{}{"doc": "the date when the hook was received", "type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "system",

@@ -782,6 +782,18 @@ func (o *Interval) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntervalEndDate); ok {
 			// struct pointer
 			o.EndDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.EndDate.Epoch = dt.Epoch
+			o.EndDate.Rfc3339 = dt.Rfc3339
+			o.EndDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EndDate.Epoch = dt.Epoch
+			o.EndDate.Rfc3339 = dt.Rfc3339
+			o.EndDate.Offset = dt.Offset
 		}
 	} else {
 		o.EndDate.FromMap(map[string]interface{}{})
@@ -811,6 +823,18 @@ func (o *Interval) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntervalPriorEndDate); ok {
 			// struct pointer
 			o.PriorEndDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.PriorEndDate.Epoch = dt.Epoch
+			o.PriorEndDate.Rfc3339 = dt.Rfc3339
+			o.PriorEndDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.PriorEndDate.Epoch = dt.Epoch
+			o.PriorEndDate.Rfc3339 = dt.Rfc3339
+			o.PriorEndDate.Offset = dt.Offset
 		}
 	} else {
 		o.PriorEndDate.FromMap(map[string]interface{}{})
@@ -825,6 +849,18 @@ func (o *Interval) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntervalPriorStartDate); ok {
 			// struct pointer
 			o.PriorStartDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.PriorStartDate.Epoch = dt.Epoch
+			o.PriorStartDate.Rfc3339 = dt.Rfc3339
+			o.PriorStartDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.PriorStartDate.Epoch = dt.Epoch
+			o.PriorStartDate.Rfc3339 = dt.Rfc3339
+			o.PriorStartDate.Offset = dt.Offset
 		}
 	} else {
 		o.PriorStartDate.FromMap(map[string]interface{}{})
@@ -839,6 +875,18 @@ func (o *Interval) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntervalStartDate); ok {
 			// struct pointer
 			o.StartDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.StartDate.Epoch = dt.Epoch
+			o.StartDate.Rfc3339 = dt.Rfc3339
+			o.StartDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.StartDate.Epoch = dt.Epoch
+			o.StartDate.Rfc3339 = dt.Rfc3339
+			o.StartDate.Offset = dt.Offset
 		}
 	} else {
 		o.StartDate.FromMap(map[string]interface{}{})
@@ -870,7 +918,7 @@ func GetIntervalAvroSchemaSpec() string {
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the end of the time interval - the current signal date"},
+				"type": map[string]interface{}{"doc": "the date at the end of the time interval - the current signal date", "type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -878,15 +926,15 @@ func GetIntervalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "prior_end_date",
-				"type": map[string]interface{}{"type": "record", "name": "prior_end_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date at the end of the prior interval - the prior signal date"},
+				"type": map[string]interface{}{"type": "record", "name": "prior_end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the end of the prior interval - the prior signal date"},
 			},
 			map[string]interface{}{
 				"name": "prior_start_date",
-				"type": map[string]interface{}{"name": "prior_start_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the start of the prior time interval", "type": "record"},
+				"type": map[string]interface{}{"name": "prior_start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the start of the prior time interval", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "start_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the start of the time interval", "type": "record", "name": "start_date"},
+				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the start of the time interval"},
 			},
 			map[string]interface{}{
 				"name": "time_unit",

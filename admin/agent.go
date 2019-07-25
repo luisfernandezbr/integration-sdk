@@ -485,6 +485,18 @@ func (o *Agent) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*AgentCompletedDate); ok {
 			// struct pointer
 			o.CompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.CompletedDate.Epoch = dt.Epoch
+			o.CompletedDate.Rfc3339 = dt.Rfc3339
+			o.CompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CompletedDate.Epoch = dt.Epoch
+			o.CompletedDate.Rfc3339 = dt.Rfc3339
+			o.CompletedDate.Offset = dt.Offset
 		}
 	} else {
 		o.CompletedDate.FromMap(map[string]interface{}{})
@@ -706,7 +718,7 @@ func GetAgentAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "completed_date",
-				"type": map[string]interface{}{"name": "completed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "Last time the agent completed setup", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "completed_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Last time the agent completed setup"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

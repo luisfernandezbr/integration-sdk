@@ -632,6 +632,18 @@ func (o *Activity) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ActivityActivityDate); ok {
 			// struct pointer
 			o.ActivityDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.ActivityDate.Epoch = dt.Epoch
+			o.ActivityDate.Rfc3339 = dt.Rfc3339
+			o.ActivityDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ActivityDate.Epoch = dt.Epoch
+			o.ActivityDate.Rfc3339 = dt.Rfc3339
+			o.ActivityDate.Offset = dt.Offset
 		}
 	} else {
 		o.ActivityDate.FromMap(map[string]interface{}{})
@@ -799,7 +811,7 @@ func GetActivityAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "activity_date",
-				"type": map[string]interface{}{"type": "record", "name": "activity_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
+				"type": map[string]interface{}{"doc": "date object", "type": "record", "name": "activity_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

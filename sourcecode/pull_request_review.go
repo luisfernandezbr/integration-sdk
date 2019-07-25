@@ -491,6 +491,18 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PullRequestReviewCreatedDate); ok {
 			// struct pointer
 			o.CreatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
 		}
 	} else {
 		o.CreatedDate.FromMap(map[string]interface{}{})

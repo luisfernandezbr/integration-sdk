@@ -899,6 +899,18 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PullRequestClosedDate); ok {
 			// struct pointer
 			o.ClosedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.ClosedDate.Epoch = dt.Epoch
+			o.ClosedDate.Rfc3339 = dt.Rfc3339
+			o.ClosedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ClosedDate.Epoch = dt.Epoch
+			o.ClosedDate.Rfc3339 = dt.Rfc3339
+			o.ClosedDate.Offset = dt.Offset
 		}
 	} else {
 		o.ClosedDate.FromMap(map[string]interface{}{})
@@ -979,6 +991,18 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PullRequestCreatedDate); ok {
 			// struct pointer
 			o.CreatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
 		}
 	} else {
 		o.CreatedDate.FromMap(map[string]interface{}{})
@@ -1068,6 +1092,18 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PullRequestMergedDate); ok {
 			// struct pointer
 			o.MergedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.MergedDate.Epoch = dt.Epoch
+			o.MergedDate.Rfc3339 = dt.Rfc3339
+			o.MergedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.MergedDate.Epoch = dt.Epoch
+			o.MergedDate.Rfc3339 = dt.Rfc3339
+			o.MergedDate.Offset = dt.Offset
 		}
 	} else {
 		o.MergedDate.FromMap(map[string]interface{}{})
@@ -1157,6 +1193,18 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PullRequestUpdatedDate); ok {
 			// struct pointer
 			o.UpdatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
 		}
 	} else {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
@@ -1221,11 +1269,11 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "closed_date",
-				"type": map[string]interface{}{"name": "closed_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the timestamp in UTC that the pull request was closed", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "closed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed"},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "commits"},
+				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "created_by_ref_id",
@@ -1257,7 +1305,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "merged_date",
-				"type": map[string]interface{}{"type": "record", "name": "merged_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged"},
+				"type": map[string]interface{}{"type": "record", "name": "merged_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1281,7 +1329,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_date",
-				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the timestamp in UTC that the pull request was closed"},
+				"type": map[string]interface{}{"name": "updated_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the timestamp in UTC that the pull request was closed", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "url",
