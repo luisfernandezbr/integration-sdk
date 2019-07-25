@@ -762,11 +762,11 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*BlameChangeDate); ok {
 			// struct pointer
 			o.ChangeDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok {
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
 			o.ChangeDate.Epoch = dt.Epoch
 			o.ChangeDate.Rfc3339 = dt.Rfc3339
 			o.ChangeDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok {
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
 			dt, err := datetime.NewDateWithTime(tv)
 			if err != nil {
 				panic(err)
@@ -1123,7 +1123,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "change_date",
-				"type": map[string]interface{}{"type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"},
+				"type": map[string]interface{}{"type": "record", "name": "change_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"},
 			},
 			map[string]interface{}{
 				"name": "comments",

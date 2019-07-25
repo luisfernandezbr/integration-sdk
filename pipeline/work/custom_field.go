@@ -526,11 +526,11 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CustomFieldProcessingDate); ok {
 			// struct pointer
 			o.ProcessingDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok {
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
 			o.ProcessingDate.Epoch = dt.Epoch
 			o.ProcessingDate.Rfc3339 = dt.Rfc3339
 			o.ProcessingDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok {
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
 			dt, err := datetime.NewDateWithTime(tv)
 			if err != nil {
 				panic(err)
@@ -618,7 +618,7 @@ func GetCustomFieldAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "processing_date",
-				"type": map[string]interface{}{"type": "record", "name": "processing_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "date of processing a custom field"},
+				"type": map[string]interface{}{"type": "record", "name": "processing_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

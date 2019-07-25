@@ -525,11 +525,11 @@ func (o *ACLGrant) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ACLGrantCreatedDate); ok {
 			// struct pointer
 			o.CreatedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok {
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok {
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
 			dt, err := datetime.NewDateWithTime(tv)
 			if err != nil {
 				panic(err)
@@ -766,7 +766,7 @@ func GetACLGrantAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the created date"},
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the created date"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
