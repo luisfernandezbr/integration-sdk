@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -27,6 +28,8 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -50,6 +53,8 @@ const (
 	MaterializedLogIDColumn = "id"
 	// MaterializedLogModelColumn is the model column name
 	MaterializedLogModelColumn = "model"
+	// MaterializedLogModelIdsColumn is the model_ids column name
+	MaterializedLogModelIdsColumn = "model_ids"
 	// MaterializedLogRecordCountColumn is the record_count column name
 	MaterializedLogRecordCountColumn = "record_count"
 	// MaterializedLogRefIDColumn is the ref_id column name
@@ -68,6 +73,8 @@ type MaterializedLog struct {
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Model the name of the model
 	Model string `json:"model" bson:"model" yaml:"model" faker:"-"`
+	// ModelIds ids of the changed records
+	ModelIds []string `json:"model_ids" bson:"model_ids" yaml:"model_ids" faker:"-"`
 	// RecordCount count of records in batched save
 	RecordCount int64 `json:"record_count" bson:"record_count" yaml:"record_count" faker:"-"`
 	// RefID the source system id for the model instance
@@ -119,6 +126,9 @@ func (o *MaterializedLog) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *MaterializedLog) setDefaults(frommap bool) {
+	if o.ModelIds == nil {
+		o.ModelIds = make([]string, 0)
+	}
 
 	o.GetID()
 
@@ -312,12 +322,16 @@ func (o *MaterializedLog) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
+		if o.ModelIds == nil {
+			o.ModelIds = make([]string, 0)
+		}
 	}
 	o.setDefaults(true)
 	return map[string]interface{}{
 		"customer_id":  toMaterializedLogObject(o.CustomerID, isavro, false, "string"),
 		"id":           toMaterializedLogObject(o.ID, isavro, false, "string"),
 		"model":        toMaterializedLogObject(o.Model, isavro, false, "string"),
+		"model_ids":    toMaterializedLogObject(o.ModelIds, isavro, false, "model_ids"),
 		"record_count": toMaterializedLogObject(o.RecordCount, isavro, false, "long"),
 		"ref_id":       toMaterializedLogObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toMaterializedLogObject(o.RefType, isavro, false, "string"),
@@ -377,6 +391,57 @@ func (o *MaterializedLog) FromMap(kv map[string]interface{}) {
 				o.Model = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["model_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for model_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for model_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for model_ids field")
+				}
+			}
+			o.ModelIds = na
+		}
+	}
+	if o.ModelIds == nil {
+		o.ModelIds = make([]string, 0)
 	}
 
 	if val, ok := kv["record_count"].(int64); ok {
@@ -447,6 +512,7 @@ func (o *MaterializedLog) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Model)
+	args = append(args, o.ModelIds)
 	args = append(args, o.RecordCount)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
@@ -477,6 +543,10 @@ func GetMaterializedLogAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "model",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "model_ids",
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "model_ids"},
 			},
 			map[string]interface{}{
 				"name": "record_count",
