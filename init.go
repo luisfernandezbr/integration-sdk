@@ -5,32 +5,16 @@ package datamodel
 import (
 	"github.com/pinpt/go-common/datamodel"
 
-	dm_admin "github.com/pinpt/go-datamodel/admin"
-	dm_agent "github.com/pinpt/go-datamodel/agent"
-	dm_auth "github.com/pinpt/go-datamodel/auth"
-	dm_codequality "github.com/pinpt/go-datamodel/codequality"
-	dm_customer "github.com/pinpt/go-datamodel/customer"
-	dm_ops_db "github.com/pinpt/go-datamodel/ops/db"
-	dm_pipeline_activity "github.com/pinpt/go-datamodel/pipeline/activity"
-	dm_pipeline_customer "github.com/pinpt/go-datamodel/pipeline/customer"
-	dm_pipeline_integration "github.com/pinpt/go-datamodel/pipeline/integration"
-	dm_pipeline_reprocess "github.com/pinpt/go-datamodel/pipeline/reprocess"
-	dm_pipeline_signal "github.com/pinpt/go-datamodel/pipeline/signal"
-	dm_pipeline_sourcecode "github.com/pinpt/go-datamodel/pipeline/sourcecode"
-	dm_pipeline_team "github.com/pinpt/go-datamodel/pipeline/team"
-	dm_pipeline_work "github.com/pinpt/go-datamodel/pipeline/work"
-	dm_sourcecode "github.com/pinpt/go-datamodel/sourcecode"
-	dm_web "github.com/pinpt/go-datamodel/web"
-	dm_work "github.com/pinpt/go-datamodel/work"
+	dm_agent "github.com/pinpt/integration-sdk/agent"
+	dm_codequality "github.com/pinpt/integration-sdk/codequality"
+	dm_customer "github.com/pinpt/integration-sdk/customer"
+	dm_sourcecode "github.com/pinpt/integration-sdk/sourcecode"
+	dm_work "github.com/pinpt/integration-sdk/work"
 )
 
 // New returns a new instanceof from a ModelNameType
 func New(name datamodel.ModelNameType) datamodel.Model {
 	switch name {
-	case "admin.Agent":
-		o := new(dm_admin.Agent)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "agent.Enabled":
 		o := new(dm_agent.Enabled)
 		o.FromMap(map[string]interface{}{})
@@ -91,10 +75,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.UserResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "auth.ACLGrant":
-		o := new(dm_auth.ACLGrant)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "codequality.Metric":
 		o := new(dm_codequality.Metric)
 		o.FromMap(map[string]interface{}{})
@@ -113,42 +93,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "customer.User":
 		o := new(dm_customer.User)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "ops.db.Change":
-		o := new(dm_ops_db.Change)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline.activity.Activity":
-		o := new(dm_pipeline_activity.Activity)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline.customer.User":
-		o := new(dm_pipeline_customer.User)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline.integration.User":
-		o := new(dm_pipeline_integration.User)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline.reprocess.MaterializedLog":
-		o := new(dm_pipeline_reprocess.MaterializedLog)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline.signal.Interval":
-		o := new(dm_pipeline_signal.Interval)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline.sourcecode.Commit":
-		o := new(dm_pipeline_sourcecode.Commit)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline.team.TeamCost":
-		o := new(dm_pipeline_team.TeamCost)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline.work.CustomField":
-		o := new(dm_pipeline_work.CustomField)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "sourcecode.Blame":
@@ -183,10 +127,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "web.Hook":
-		o := new(dm_web.Hook)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "work.Changelog":
 		o := new(dm_work.Changelog)
 		o.FromMap(map[string]interface{}{})
@@ -218,10 +158,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
-	case "admin_Agent_topic":
-		o := new(dm_admin.Agent)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "agent_Enabled_topic":
 		o := new(dm_agent.Enabled)
 		o.FromMap(map[string]interface{}{})
@@ -282,10 +218,6 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.UserResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "auth_ACLGrant_topic":
-		o := new(dm_auth.ACLGrant)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "codequality_Metric_topic":
 		o := new(dm_codequality.Metric)
 		o.FromMap(map[string]interface{}{})
@@ -304,42 +236,6 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		return o
 	case "customer_User_topic":
 		o := new(dm_customer.User)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "ops_db_Change_topic":
-		o := new(dm_ops_db.Change)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline_activity_Activity_topic":
-		o := new(dm_pipeline_activity.Activity)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline_customer_User_topic":
-		o := new(dm_pipeline_customer.User)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline_integration_User_topic":
-		o := new(dm_pipeline_integration.User)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline_reprocess_MaterializedLog_topic":
-		o := new(dm_pipeline_reprocess.MaterializedLog)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline_signal_Interval_topic":
-		o := new(dm_pipeline_signal.Interval)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline_sourcecode_Commit_topic":
-		o := new(dm_pipeline_sourcecode.Commit)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline_team_TeamCost_topic":
-		o := new(dm_pipeline_team.TeamCost)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "pipeline_work_CustomField_topic":
-		o := new(dm_pipeline_work.CustomField)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "sourcecode_Blame_topic":
@@ -374,10 +270,6 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "web_Hook_topic":
-		o := new(dm_web.Hook)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "work_Changelog_topic":
 		o := new(dm_work.Changelog)
 		o.FromMap(map[string]interface{}{})
@@ -409,17 +301,9 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 // GetMaterializedTopics returns an array of topics to be materialized
 func GetMaterializedTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
-		datamodel.TopicNameType("admin_Agent_topic"),
-		datamodel.TopicNameType("auth_ACLGrant_topic"),
 		datamodel.TopicNameType("customer_CostCenter_topic"),
 		datamodel.TopicNameType("customer_Team_topic"),
 		datamodel.TopicNameType("customer_User_topic"),
-		datamodel.TopicNameType("pipeline_activity_Activity_topic"),
-		datamodel.TopicNameType("pipeline_integration_User_topic"),
-		datamodel.TopicNameType("pipeline_signal_Interval_topic"),
-		datamodel.TopicNameType("pipeline_sourcecode_Commit_topic"),
-		datamodel.TopicNameType("pipeline_team_TeamCost_topic"),
-		datamodel.TopicNameType("pipeline_work_CustomField_topic"),
 		datamodel.TopicNameType("sourcecode_Branch_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequestReview_topic"),
@@ -434,7 +318,6 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
-		datamodel.TopicNameType("admin_Agent_topic"),
 		datamodel.TopicNameType("agent_Enabled_topic"),
 		datamodel.TopicNameType("agent_EnrollRequest_topic"),
 		datamodel.TopicNameType("agent_EnrollResponse_topic"),
@@ -450,21 +333,11 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_RepoResponse_topic"),
 		datamodel.TopicNameType("agent_UserRequest_topic"),
 		datamodel.TopicNameType("agent_UserResponse_topic"),
-		datamodel.TopicNameType("auth_ACLGrant_topic"),
 		datamodel.TopicNameType("codequality_Metric_topic"),
 		datamodel.TopicNameType("codequality_Project_topic"),
 		datamodel.TopicNameType("customer_CostCenter_topic"),
 		datamodel.TopicNameType("customer_Team_topic"),
 		datamodel.TopicNameType("customer_User_topic"),
-		datamodel.TopicNameType("ops_db_Change_topic"),
-		datamodel.TopicNameType("pipeline_activity_Activity_topic"),
-		datamodel.TopicNameType("pipeline_customer_User_topic"),
-		datamodel.TopicNameType("pipeline_integration_User_topic"),
-		datamodel.TopicNameType("pipeline_reprocess_MaterializedLog_topic"),
-		datamodel.TopicNameType("pipeline_signal_Interval_topic"),
-		datamodel.TopicNameType("pipeline_sourcecode_Commit_topic"),
-		datamodel.TopicNameType("pipeline_team_TeamCost_topic"),
-		datamodel.TopicNameType("pipeline_work_CustomField_topic"),
 		datamodel.TopicNameType("sourcecode_Blame_topic"),
 		datamodel.TopicNameType("sourcecode_Branch_topic"),
 		datamodel.TopicNameType("sourcecode_Commit_topic"),
@@ -473,7 +346,6 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("sourcecode_PullRequest_topic"),
 		datamodel.TopicNameType("sourcecode_Repo_topic"),
 		datamodel.TopicNameType("sourcecode_User_topic"),
-		datamodel.TopicNameType("web_Hook_topic"),
 		datamodel.TopicNameType("work_Changelog_topic"),
 		datamodel.TopicNameType("work_CustomField_topic"),
 		datamodel.TopicNameType("work_Issue_topic"),
@@ -486,7 +358,6 @@ func GetTopics() []datamodel.TopicNameType {
 // GetModelNames returns an array of model names that are configured
 func GetModelNames() []datamodel.ModelNameType {
 	return []datamodel.ModelNameType{
-		datamodel.ModelNameType("admin.Agent"),
 		datamodel.ModelNameType("agent.Enabled"),
 		datamodel.ModelNameType("agent.EnrollRequest"),
 		datamodel.ModelNameType("agent.EnrollResponse"),
@@ -502,21 +373,11 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.RepoResponse"),
 		datamodel.ModelNameType("agent.UserRequest"),
 		datamodel.ModelNameType("agent.UserResponse"),
-		datamodel.ModelNameType("auth.ACLGrant"),
 		datamodel.ModelNameType("codequality.Metric"),
 		datamodel.ModelNameType("codequality.Project"),
 		datamodel.ModelNameType("customer.CostCenter"),
 		datamodel.ModelNameType("customer.Team"),
 		datamodel.ModelNameType("customer.User"),
-		datamodel.ModelNameType("ops.db.Change"),
-		datamodel.ModelNameType("pipeline.activity.Activity"),
-		datamodel.ModelNameType("pipeline.customer.User"),
-		datamodel.ModelNameType("pipeline.integration.User"),
-		datamodel.ModelNameType("pipeline.reprocess.MaterializedLog"),
-		datamodel.ModelNameType("pipeline.signal.Interval"),
-		datamodel.ModelNameType("pipeline.sourcecode.Commit"),
-		datamodel.ModelNameType("pipeline.team.TeamCost"),
-		datamodel.ModelNameType("pipeline.work.CustomField"),
 		datamodel.ModelNameType("sourcecode.Blame"),
 		datamodel.ModelNameType("sourcecode.Branch"),
 		datamodel.ModelNameType("sourcecode.Commit"),
@@ -525,7 +386,6 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("sourcecode.PullRequestReview"),
 		datamodel.ModelNameType("sourcecode.Repo"),
 		datamodel.ModelNameType("sourcecode.User"),
-		datamodel.ModelNameType("web.Hook"),
 		datamodel.ModelNameType("work.Changelog"),
 		datamodel.ModelNameType("work.CustomField"),
 		datamodel.ModelNameType("work.Issue"),
