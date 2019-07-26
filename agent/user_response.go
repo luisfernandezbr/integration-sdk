@@ -100,12 +100,20 @@ const (
 	UserResponseUsersColumnActiveColumn = "users->active"
 	// UserResponseUsersColumnAvatarURLColumn is the avatar_url column property of the Users name
 	UserResponseUsersColumnAvatarURLColumn = "users->avatar_url"
+	// UserResponseUsersColumnCustomerIDColumn is the customer_id column property of the Users name
+	UserResponseUsersColumnCustomerIDColumn = "users->customer_id"
 	// UserResponseUsersColumnEmailsColumn is the emails column property of the Users name
 	UserResponseUsersColumnEmailsColumn = "users->emails"
 	// UserResponseUsersColumnGroupsColumn is the groups column property of the Users name
 	UserResponseUsersColumnGroupsColumn = "users->groups"
+	// UserResponseUsersColumnIDColumn is the id column property of the Users name
+	UserResponseUsersColumnIDColumn = "users->id"
 	// UserResponseUsersColumnNameColumn is the name column property of the Users name
 	UserResponseUsersColumnNameColumn = "users->name"
+	// UserResponseUsersColumnRefIDColumn is the ref_id column property of the Users name
+	UserResponseUsersColumnRefIDColumn = "users->ref_id"
+	// UserResponseUsersColumnRefTypeColumn is the ref_type column property of the Users name
+	UserResponseUsersColumnRefTypeColumn = "users->ref_type"
 	// UserResponseUsersColumnUsernameColumn is the username column property of the Users name
 	UserResponseUsersColumnUsernameColumn = "users->username"
 	// UserResponseUUIDColumn is the uuid column name
@@ -352,12 +360,20 @@ type UserResponseUsers struct {
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// AvatarURL the url to users avatar
 	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Emails the email for the user
 	Emails []string `json:"emails" bson:"emails" yaml:"emails" faker:"-"`
 	// Groups Group names
 	Groups []UserResponseUsersGroups `json:"groups" bson:"groups" yaml:"groups" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the user
 	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Username the username of the user
 	Username string `json:"username" bson:"username" yaml:"username" faker:"username"`
 }
@@ -396,12 +412,20 @@ func (o *UserResponseUsers) ToMap(avro ...bool) map[string]interface{} {
 		"active": toUserResponseUsersObject(o.Active, isavro, false, "boolean"),
 		// AvatarURL the url to users avatar
 		"avatar_url": toUserResponseUsersObject(o.AvatarURL, isavro, true, "string"),
+		// CustomerID the customer id for the model instance
+		"customer_id": toUserResponseUsersObject(o.CustomerID, isavro, false, "string"),
 		// Emails the email for the user
 		"emails": toUserResponseUsersObject(o.Emails, isavro, false, "emails"),
 		// Groups Group names
 		"groups": toUserResponseUsersObject(o.Groups, isavro, false, "groups"),
+		// ID the primary key for the model instance
+		"id": toUserResponseUsersObject(o.ID, isavro, false, "string"),
 		// Name the name of the user
 		"name": toUserResponseUsersObject(o.Name, isavro, false, "string"),
+		// RefID the source system id for the model instance
+		"ref_id": toUserResponseUsersObject(o.RefID, isavro, false, "string"),
+		// RefType the source system identifier for the model instance
+		"ref_type": toUserResponseUsersObject(o.RefType, isavro, false, "string"),
 		// Username the username of the user
 		"username": toUserResponseUsersObject(o.Username, isavro, false, "string"),
 	}
@@ -443,6 +467,21 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -514,6 +553,21 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -525,6 +579,36 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -994,18 +1078,6 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1362,7 +1434,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1426,7 +1498,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "users",
-				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"doc": "the email for the user", "type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}, "name": "emails"}, map[string]interface{}{"name": "groups", "doc": "Group names", "type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"doc": "Group name", "type": "string", "name": "name"}}, "doc": "Group names", "type": "record", "name": "groups"}}}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users", "type": "record", "name": "users"}},
+				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": map[string]interface{}{"items": "string", "type": "array", "name": "emails"}, "name": "emails", "doc": "the email for the user"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}}, "name": "groups", "doc": "Group names"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "uuid",

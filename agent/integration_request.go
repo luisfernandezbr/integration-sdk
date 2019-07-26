@@ -58,14 +58,22 @@ const (
 	IntegrationRequestIntegrationColumnActiveColumn = "integration->active"
 	// IntegrationRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
 	IntegrationRequestIntegrationColumnAuthorizationColumn = "integration->authorization"
+	// IntegrationRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
+	IntegrationRequestIntegrationColumnCustomerIDColumn = "integration->customer_id"
 	// IntegrationRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
 	IntegrationRequestIntegrationColumnErroredColumn = "integration->errored"
 	// IntegrationRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
 	IntegrationRequestIntegrationColumnExclusionsColumn = "integration->exclusions"
+	// IntegrationRequestIntegrationColumnIDColumn is the id column property of the Integration name
+	IntegrationRequestIntegrationColumnIDColumn = "integration->id"
 	// IntegrationRequestIntegrationColumnNameColumn is the name column property of the Integration name
 	IntegrationRequestIntegrationColumnNameColumn = "integration->name"
 	// IntegrationRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
 	IntegrationRequestIntegrationColumnProgressColumn = "integration->progress"
+	// IntegrationRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
+	IntegrationRequestIntegrationColumnRefIDColumn = "integration->ref_id"
+	// IntegrationRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
+	IntegrationRequestIntegrationColumnRefTypeColumn = "integration->ref_type"
 	// IntegrationRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
 	IntegrationRequestIntegrationColumnValidatedColumn = "integration->validated"
 	// IntegrationRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
@@ -502,14 +510,22 @@ type IntegrationRequestIntegration struct {
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
 	Authorization IntegrationRequestIntegrationAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Errored If authorization failed by the agent
 	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
 	// Exclusions The exclusion list for this integration
 	Exclusions []string `json:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name The user friendly name of the integration
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
 	Progress IntegrationRequestIntegrationProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
 	// ValidatedDate Date when validated
@@ -558,14 +574,22 @@ func (o *IntegrationRequestIntegration) ToMap(avro ...bool) map[string]interface
 		"active": toIntegrationRequestIntegrationObject(o.Active, isavro, false, "boolean"),
 		// Authorization Authorization information
 		"authorization": toIntegrationRequestIntegrationObject(o.Authorization, isavro, false, "authorization"),
+		// CustomerID the customer id for the model instance
+		"customer_id": toIntegrationRequestIntegrationObject(o.CustomerID, isavro, false, "string"),
 		// Errored If authorization failed by the agent
 		"errored": toIntegrationRequestIntegrationObject(o.Errored, isavro, true, "boolean"),
 		// Exclusions The exclusion list for this integration
 		"exclusions": toIntegrationRequestIntegrationObject(o.Exclusions, isavro, false, "exclusions"),
+		// ID the primary key for the model instance
+		"id": toIntegrationRequestIntegrationObject(o.ID, isavro, false, "string"),
 		// Name The user friendly name of the integration
 		"name": toIntegrationRequestIntegrationObject(o.Name, isavro, false, "string"),
 		// Progress Agent processing progress
 		"progress": toIntegrationRequestIntegrationObject(o.Progress, isavro, false, "progress"),
+		// RefID the source system id for the model instance
+		"ref_id": toIntegrationRequestIntegrationObject(o.RefID, isavro, false, "string"),
+		// RefType the source system identifier for the model instance
+		"ref_type": toIntegrationRequestIntegrationObject(o.RefType, isavro, false, "string"),
 		// Validated If the validation has been run against this instance
 		"validated": toIntegrationRequestIntegrationObject(o.Validated, isavro, true, "boolean"),
 		// ValidatedDate Date when validated
@@ -619,6 +643,21 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.Authorization.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 
 	if val, ok := kv["errored"].(*bool); ok {
@@ -690,6 +729,21 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.Exclusions = make([]string, 0)
 	}
 
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -717,6 +771,36 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.Progress.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 
 	if val, ok := kv["validated"].(*bool); ok {
@@ -1313,18 +1397,6 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1383,7 +1455,7 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "If true, the integration is still active"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "access_token", "doc": "Access token"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "refresh_token", "doc": "Refresh token"}, map[string]interface{}{"type": []interface{}{"null", "string"}, "name": "url", "doc": "URL of instance if relevant", "default": nil}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "authorization", "doc": "the agents encrypted authorization"}}, "doc": "Authorization information"}, "name": "authorization", "doc": "Authorization information"}, map[string]interface{}{"name": "errored", "doc": "If authorization failed by the agent", "default": nil, "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "message", "doc": "Any relevant messaging during processing"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"type": "long", "name": "completed", "doc": "The total amount processed thus far"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "boolean"}, "name": "validated", "doc": "If the validation has been run against this instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "validation_message", "doc": "The validation message from the agent"}}, "doc": "the integration details to add"},
+				"type": map[string]interface{}{"doc": "the integration details to add", "type": "record", "name": "integration", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "type": "boolean", "name": "active"}, map[string]interface{}{"doc": "Authorization information", "type": map[string]interface{}{"type": "record", "name": "integration.authorization", "fields": []interface{}{map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "access_token", "doc": "Access token"}, map[string]interface{}{"doc": "Refresh token", "default": nil, "type": []interface{}{"null", "string"}, "name": "refresh_token"}, map[string]interface{}{"doc": "URL of instance if relevant", "default": nil, "type": []interface{}{"null", "string"}, "name": "url"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "username", "doc": "Username for instance, if relevant"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "password", "doc": "Password for instance, if relevant"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "api_token", "doc": "API Token for instance, if relevant"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "authorization", "doc": "the agents encrypted authorization"}}, "doc": "Authorization information"}, "name": "authorization"}, map[string]interface{}{"name": "customer_id", "doc": "the customer id for the model instance", "type": "string"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "boolean"}, "name": "errored", "doc": "If authorization failed by the agent"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "exclusions", "items": "string"}, "name": "exclusions", "doc": "The exclusion list for this integration"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "string", "name": "name", "doc": "The user friendly name of the integration"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.progress", "fields": []interface{}{map[string]interface{}{"name": "message", "doc": "Any relevant messaging during processing", "type": "string"}, map[string]interface{}{"type": "long", "name": "total", "doc": "The total amount to be processed"}, map[string]interface{}{"name": "completed", "doc": "The total amount processed thus far", "type": "long"}}, "doc": "Agent processing progress"}, "name": "progress", "doc": "Agent processing progress"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"name": "validated", "doc": "If the validation has been run against this instance", "default": nil, "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "integration.validated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "Date when validated"}, "name": "validated_date", "doc": "Date when validated"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "validation_message", "doc": "The validation message from the agent"}}},
 			},
 			map[string]interface{}{
 				"name": "location",
@@ -1403,7 +1475,7 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made", "type": "record"},
+				"type": map[string]interface{}{"name": "request_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date when the request was made", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

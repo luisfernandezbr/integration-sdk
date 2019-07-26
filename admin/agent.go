@@ -716,7 +716,7 @@ func GetAgentAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "completed_date",
-				"type": map[string]interface{}{"name": "completed_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Last time the agent completed setup", "type": "record"},
+				"type": map[string]interface{}{"doc": "Last time the agent completed setup", "type": "record", "name": "completed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

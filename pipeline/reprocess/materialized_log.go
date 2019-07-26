@@ -546,7 +546,7 @@ func GetMaterializedLogAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "model_ids",
-				"type": map[string]interface{}{"items": "string", "type": "array", "name": "model_ids"},
+				"type": map[string]interface{}{"type": "array", "name": "model_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "record_count",

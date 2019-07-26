@@ -87,8 +87,12 @@ const (
 	ProjectResponseProjectsColumnActiveColumn = "projects->active"
 	// ProjectResponseProjectsColumnCategoryColumn is the category column property of the Projects name
 	ProjectResponseProjectsColumnCategoryColumn = "projects->category"
+	// ProjectResponseProjectsColumnCustomerIDColumn is the customer_id column property of the Projects name
+	ProjectResponseProjectsColumnCustomerIDColumn = "projects->customer_id"
 	// ProjectResponseProjectsColumnDescriptionColumn is the description column property of the Projects name
 	ProjectResponseProjectsColumnDescriptionColumn = "projects->description"
+	// ProjectResponseProjectsColumnIDColumn is the id column property of the Projects name
+	ProjectResponseProjectsColumnIDColumn = "projects->id"
 	// ProjectResponseProjectsColumnIdentifierColumn is the identifier column property of the Projects name
 	ProjectResponseProjectsColumnIdentifierColumn = "projects->identifier"
 	// ProjectResponseProjectsColumnLastIssueColumn is the last_issue column property of the Projects name
@@ -97,6 +101,10 @@ const (
 	ProjectResponseProjectsColumnNameColumn = "projects->name"
 	// ProjectResponseProjectsColumnProjectIDColumn is the project_id column property of the Projects name
 	ProjectResponseProjectsColumnProjectIDColumn = "projects->project_id"
+	// ProjectResponseProjectsColumnRefIDColumn is the ref_id column property of the Projects name
+	ProjectResponseProjectsColumnRefIDColumn = "projects->ref_id"
+	// ProjectResponseProjectsColumnRefTypeColumn is the ref_type column property of the Projects name
+	ProjectResponseProjectsColumnRefTypeColumn = "projects->ref_type"
 	// ProjectResponseProjectsColumnTotalIssuesColumn is the total_issues column property of the Projects name
 	ProjectResponseProjectsColumnTotalIssuesColumn = "projects->total_issues"
 	// ProjectResponseProjectsColumnURLColumn is the url column property of the Projects name
@@ -222,18 +230,10 @@ func (o *ProjectResponseEventDate) FromMap(kv map[string]interface{}) {
 
 // ProjectResponseProjectsLastIssueCreatedDate represents the object structure for created_date
 type ProjectResponseProjectsLastIssueCreatedDate struct {
-	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
@@ -265,18 +265,10 @@ func (o *ProjectResponseProjectsLastIssueCreatedDate) ToMap(avro ...bool) map[st
 	}
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// CustomerID the customer id for the model instance
-		"customer_id": toProjectResponseProjectsLastIssueCreatedDateObject(o.CustomerID, isavro, false, "string"),
 		// Epoch the date in epoch format
 		"epoch": toProjectResponseProjectsLastIssueCreatedDateObject(o.Epoch, isavro, false, "long"),
-		// ID the primary key for the model instance
-		"id": toProjectResponseProjectsLastIssueCreatedDateObject(o.ID, isavro, false, "string"),
 		// Offset the timezone offset from GMT
 		"offset": toProjectResponseProjectsLastIssueCreatedDateObject(o.Offset, isavro, false, "long"),
-		// RefID the source system id for the model instance
-		"ref_id": toProjectResponseProjectsLastIssueCreatedDateObject(o.RefID, isavro, false, "string"),
-		// RefType the source system identifier for the model instance
-		"ref_type": toProjectResponseProjectsLastIssueCreatedDateObject(o.RefType, isavro, false, "string"),
 		// Rfc3339 the date in RFC3339 format
 		"rfc3339": toProjectResponseProjectsLastIssueCreatedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
@@ -291,21 +283,6 @@ func (o *ProjectResponseProjectsLastIssueCreatedDate) setDefaults(frommap bool) 
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectResponseProjectsLastIssueCreatedDate) FromMap(kv map[string]interface{}) {
-
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	} else {
-		if val, ok := kv["customer_id"]; ok {
-			if val == nil {
-				o.CustomerID = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.CustomerID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -322,21 +299,6 @@ func (o *ProjectResponseProjectsLastIssueCreatedDate) FromMap(kv map[string]inte
 		}
 	}
 
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
 	if val, ok := kv["offset"].(int64); ok {
 		o.Offset = val
 	} else {
@@ -348,36 +310,6 @@ func (o *ProjectResponseProjectsLastIssueCreatedDate) FromMap(kv map[string]inte
 					val = datetime.TimeToEpoch(tv)
 				}
 				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	} else {
-		if val, ok := kv["ref_id"]; ok {
-			if val == nil {
-				o.RefID = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.RefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = val
-	} else {
-		if val, ok := kv["ref_type"]; ok {
-			if val == nil {
-				o.RefType = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.RefType = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -634,8 +566,12 @@ type ProjectResponseProjects struct {
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// Category the project category
 	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the project
 	Description *string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the project
 	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// LastIssue last issue for this project
@@ -644,6 +580,10 @@ type ProjectResponseProjects struct {
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// ProjectID the id of the project
 	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// TotalIssues the total issues count for the project
 	TotalIssues int64 `json:"total_issues" bson:"total_issues" yaml:"total_issues" faker:"-"`
 	// URL the url to the project home page
@@ -684,8 +624,12 @@ func (o *ProjectResponseProjects) ToMap(avro ...bool) map[string]interface{} {
 		"active": toProjectResponseProjectsObject(o.Active, isavro, false, "boolean"),
 		// Category the project category
 		"category": toProjectResponseProjectsObject(o.Category, isavro, true, "string"),
+		// CustomerID the customer id for the model instance
+		"customer_id": toProjectResponseProjectsObject(o.CustomerID, isavro, false, "string"),
 		// Description the description of the project
 		"description": toProjectResponseProjectsObject(o.Description, isavro, true, "string"),
+		// ID the primary key for the model instance
+		"id": toProjectResponseProjectsObject(o.ID, isavro, false, "string"),
 		// Identifier the common identifier for the project
 		"identifier": toProjectResponseProjectsObject(o.Identifier, isavro, false, "string"),
 		// LastIssue last issue for this project
@@ -694,6 +638,10 @@ func (o *ProjectResponseProjects) ToMap(avro ...bool) map[string]interface{} {
 		"name": toProjectResponseProjectsObject(o.Name, isavro, false, "string"),
 		// ProjectID the id of the project
 		"project_id": toProjectResponseProjectsObject(o.ProjectID, isavro, false, "string"),
+		// RefID the source system id for the model instance
+		"ref_id": toProjectResponseProjectsObject(o.RefID, isavro, false, "string"),
+		// RefType the source system identifier for the model instance
+		"ref_type": toProjectResponseProjectsObject(o.RefType, isavro, false, "string"),
 		// TotalIssues the total issues count for the project
 		"total_issues": toProjectResponseProjectsObject(o.TotalIssues, isavro, false, "long"),
 		// URL the url to the project home page
@@ -741,6 +689,21 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["description"].(*string); ok {
 		o.Description = val
 	} else if val, ok := kv["description"].(string); ok {
@@ -755,6 +718,21 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -814,6 +792,36 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.ProjectID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1343,18 +1351,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1711,7 +1707,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1751,7 +1747,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "projects",
-				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"doc": "the projects exported", "type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"name": "active", "doc": "the status of the project", "type": "boolean"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "category", "doc": "the project category"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "description", "doc": "the description of the project"}, map[string]interface{}{"name": "identifier", "doc": "the common identifier for the project", "type": "string"}, map[string]interface{}{"name": "last_issue", "doc": "last issue for this project", "type": map[string]interface{}{"doc": "last issue for this project", "type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "issue_id", "doc": "issue id"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the issue key from the source"}, map[string]interface{}{"type": map[string]interface{}{"doc": "the date of the change", "type": "record", "name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}}, "name": "created_date", "doc": "the date of the change"}, map[string]interface{}{"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the user name"}, map[string]interface{}{"name": "avatar_url", "doc": "the avatar url", "type": "string"}}, "doc": "the last user", "type": "record", "name": "last_issue.last_user"}, "name": "last_user", "doc": "the last user"}}}}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "long", "name": "total_issues", "doc": "the total issues count for the project"}, map[string]interface{}{"doc": "the url to the project home page", "type": "string", "name": "url"}}}},
+				"type": map[string]interface{}{"type": "array", "name": "projects", "items": map[string]interface{}{"type": "record", "name": "projects", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "the status of the project"}, map[string]interface{}{"doc": "the project category", "default": nil, "type": []interface{}{"null", "string"}, "name": "category"}, map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": []interface{}{"null", "string"}, "name": "description", "doc": "the description of the project", "default": nil}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the common identifier for the project"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "projects.last_issue", "fields": []interface{}{map[string]interface{}{"name": "issue_id", "doc": "issue id", "type": "string"}, map[string]interface{}{"type": "string", "name": "identifier", "doc": "the issue key from the source"}, map[string]interface{}{"type": map[string]interface{}{"type": "record", "name": "last_issue.created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the change"}, "name": "created_date", "doc": "the date of the change"}, map[string]interface{}{"name": "last_user", "doc": "the last user", "type": map[string]interface{}{"type": "record", "name": "last_issue.last_user", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "user_id", "doc": "the work project user id"}, map[string]interface{}{"name": "name", "doc": "the user name", "type": "string"}, map[string]interface{}{"type": "string", "name": "avatar_url", "doc": "the avatar url"}}, "doc": "the last user"}}}, "doc": "last issue for this project"}, "name": "last_issue", "doc": "last issue for this project"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the project"}, map[string]interface{}{"type": "string", "name": "project_id", "doc": "the id of the project"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"name": "ref_type", "doc": "the source system identifier for the model instance", "type": "string"}, map[string]interface{}{"doc": "the total issues count for the project", "type": "long", "name": "total_issues"}, map[string]interface{}{"type": "string", "name": "url", "doc": "the url to the project home page"}}, "doc": "the projects exported"}},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
