@@ -89,7 +89,6 @@ func toMetricCreatedDateObject(o interface{}, isavro bool, isoptional bool, avro
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => MetricCreatedDate name => MetricCreatedDate
 	switch v := o.(type) {
 	case *MetricCreatedDate:
 		return v.ToMap(isavro)
@@ -208,7 +207,6 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Metric name => Metric
 	switch v := o.(type) {
 	case *Metric:
 		return v.ToMap(isavro)
@@ -629,7 +627,7 @@ func GetMetricAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the metric was created", "type": "record", "name": "created_date"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the metric was created", "type": "record", "name": "created_date"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

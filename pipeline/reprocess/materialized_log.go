@@ -94,7 +94,6 @@ func toMaterializedLogObject(o interface{}, isavro bool, isoptional bool, avroty
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => MaterializedLog name => MaterializedLog
 	switch v := o.(type) {
 	case *MaterializedLog:
 		return v.ToMap(isavro)

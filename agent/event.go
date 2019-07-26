@@ -112,7 +112,6 @@ func toEventEventDateObject(o interface{}, isavro bool, isoptional bool, avrotyp
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => EventEventDate name => EventEventDate
 	switch v := o.(type) {
 	case *EventEventDate:
 		return v.ToMap(isavro)
@@ -298,7 +297,6 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Event name => Event
 	switch v := o.(type) {
 	case *Event:
 		return v.ToMap(isavro)
@@ -306,7 +304,6 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	case EventEventDate:
 		return v.ToMap(isavro)
 
-		// is nested enum Type
 	case EventType:
 		return v.String()
 
@@ -975,7 +972,7 @@ func GetEventAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
+				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "free_space",

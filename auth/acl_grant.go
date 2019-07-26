@@ -93,7 +93,6 @@ func toACLGrantCreatedDateObject(o interface{}, isavro bool, isoptional bool, av
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => ACLGrantCreatedDate name => ACLGrantCreatedDate
 	switch v := o.(type) {
 	case *ACLGrantCreatedDate:
 		return v.ToMap(isavro)
@@ -241,7 +240,6 @@ func toACLGrantObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => ACLGrant name => ACLGrant
 	switch v := o.(type) {
 	case *ACLGrant:
 		return v.ToMap(isavro)
@@ -249,7 +247,6 @@ func toACLGrantObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 	case ACLGrantCreatedDate:
 		return v.ToMap(isavro)
 
-		// is nested enum Permission
 	case ACLGrantPermission:
 		return v.String()
 

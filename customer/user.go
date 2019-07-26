@@ -133,7 +133,6 @@ func toUserDeletedDateObject(o interface{}, isavro bool, isoptional bool, avroty
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => UserDeletedDate name => UserDeletedDate
 	switch v := o.(type) {
 	case *UserDeletedDate:
 		return v.ToMap(isavro)
@@ -237,7 +236,6 @@ func toUserHiredDateObject(o interface{}, isavro bool, isoptional bool, avrotype
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => UserHiredDate name => UserHiredDate
 	switch v := o.(type) {
 	case *UserHiredDate:
 		return v.ToMap(isavro)
@@ -341,7 +339,6 @@ func toUserTerminatedDateObject(o interface{}, isavro bool, isoptional bool, avr
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => UserTerminatedDate name => UserTerminatedDate
 	switch v := o.(type) {
 	case *UserTerminatedDate:
 		return v.ToMap(isavro)
@@ -488,7 +485,6 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => User name => User
 	switch v := o.(type) {
 	case *User:
 		return v.ToMap(isavro)
@@ -1369,7 +1365,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "deleted_date",
-				"type": map[string]interface{}{"name": "deleted_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user record was deleted in epoch timestamp", "type": "record"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user record was deleted in epoch timestamp", "type": "record", "name": "deleted_date"},
 			},
 			map[string]interface{}{
 				"name": "email",
@@ -1377,7 +1373,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "hired_date",
-				"type": map[string]interface{}{"type": "record", "name": "hired_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was hired in epoch timestamp", "type": "record", "name": "hired_date"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1424,7 +1420,7 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "terminated_date",
-				"type": map[string]interface{}{"type": "record", "name": "terminated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "when the user was terminated in epoch timestamp"},
+				"type": map[string]interface{}{"doc": "when the user was terminated in epoch timestamp", "type": "record", "name": "terminated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name":    "title",

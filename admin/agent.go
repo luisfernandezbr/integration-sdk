@@ -94,7 +94,6 @@ func toAgentCompletedDateObject(o interface{}, isavro bool, isoptional bool, avr
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => AgentCompletedDate name => AgentCompletedDate
 	switch v := o.(type) {
 	case *AgentCompletedDate:
 		return v.ToMap(isavro)
@@ -217,7 +216,6 @@ func toAgentObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Agent name => Agent
 	switch v := o.(type) {
 	case *Agent:
 		return v.ToMap(isavro)
@@ -718,7 +716,7 @@ func GetAgentAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "completed_date",
-				"type": map[string]interface{}{"type": "record", "name": "completed_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Last time the agent completed setup"},
+				"type": map[string]interface{}{"type": "record", "name": "completed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "Last time the agent completed setup"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

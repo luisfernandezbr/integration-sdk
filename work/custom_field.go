@@ -88,7 +88,6 @@ func toCustomFieldObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => CustomField name => CustomField
 	switch v := o.(type) {
 	case *CustomField:
 		return v.ToMap(isavro)

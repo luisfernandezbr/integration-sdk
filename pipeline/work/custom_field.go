@@ -87,7 +87,6 @@ func toCustomFieldProcessingDateObject(o interface{}, isavro bool, isoptional bo
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => CustomFieldProcessingDate name => CustomFieldProcessingDate
 	switch v := o.(type) {
 	case *CustomFieldProcessingDate:
 		return v.ToMap(isavro)
@@ -204,7 +203,6 @@ func toCustomFieldObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => CustomField name => CustomField
 	switch v := o.(type) {
 	case *CustomField:
 		return v.ToMap(isavro)
@@ -618,7 +616,7 @@ func GetCustomFieldAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "processing_date",
-				"type": map[string]interface{}{"name": "processing_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date of processing a custom field", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "processing_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "date of processing a custom field"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

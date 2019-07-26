@@ -85,7 +85,6 @@ func toHookReceivedDateObject(o interface{}, isavro bool, isoptional bool, avrot
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => HookReceivedDate name => HookReceivedDate
 	switch v := o.(type) {
 	case *HookReceivedDate:
 		return v.ToMap(isavro)
@@ -200,7 +199,6 @@ func toHookObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Hook name => Hook
 	switch v := o.(type) {
 	case *Hook:
 		return v.ToMap(isavro)
@@ -580,7 +578,7 @@ func GetHookAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "received_date",
-				"type": map[string]interface{}{"type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the hook was received"},
+				"type": map[string]interface{}{"type": "record", "name": "received_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the hook was received"},
 			},
 			map[string]interface{}{
 				"name": "system",

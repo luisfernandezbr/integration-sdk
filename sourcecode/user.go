@@ -135,12 +135,10 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => User name => User
 	switch v := o.(type) {
 	case *User:
 		return v.ToMap(isavro)
 
-		// is nested enum Type
 	case UserType:
 		return v.String()
 

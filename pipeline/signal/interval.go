@@ -103,7 +103,6 @@ func toIntervalEndDateObject(o interface{}, isavro bool, isoptional bool, avroty
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => IntervalEndDate name => IntervalEndDate
 	switch v := o.(type) {
 	case *IntervalEndDate:
 		return v.ToMap(isavro)
@@ -207,7 +206,6 @@ func toIntervalPriorEndDateObject(o interface{}, isavro bool, isoptional bool, a
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => IntervalPriorEndDate name => IntervalPriorEndDate
 	switch v := o.(type) {
 	case *IntervalPriorEndDate:
 		return v.ToMap(isavro)
@@ -311,7 +309,6 @@ func toIntervalPriorStartDateObject(o interface{}, isavro bool, isoptional bool,
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => IntervalPriorStartDate name => IntervalPriorStartDate
 	switch v := o.(type) {
 	case *IntervalPriorStartDate:
 		return v.ToMap(isavro)
@@ -415,7 +412,6 @@ func toIntervalStartDateObject(o interface{}, isavro bool, isoptional bool, avro
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => IntervalStartDate name => IntervalStartDate
 	switch v := o.(type) {
 	case *IntervalStartDate:
 		return v.ToMap(isavro)
@@ -530,7 +526,6 @@ func toIntervalObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Interval name => Interval
 	switch v := o.(type) {
 	case *Interval:
 		return v.ToMap(isavro)
@@ -918,7 +913,7 @@ func GetIntervalAvroSchemaSpec() string {
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "end_date",
-				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the end of the time interval - the current signal date"},
+				"type": map[string]interface{}{"type": "record", "name": "end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date at the end of the time interval - the current signal date"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -926,7 +921,7 @@ func GetIntervalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "prior_end_date",
-				"type": map[string]interface{}{"doc": "the date at the end of the prior interval - the prior signal date", "type": "record", "name": "prior_end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
+				"type": map[string]interface{}{"doc": "the date at the end of the prior interval - the prior signal date", "type": "record", "name": "prior_end_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "prior_start_date",
@@ -934,7 +929,7 @@ func GetIntervalAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "start_date",
-				"type": map[string]interface{}{"type": "record", "name": "start_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date at the start of the time interval"},
+				"type": map[string]interface{}{"name": "start_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date at the start of the time interval", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "time_unit",

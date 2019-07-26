@@ -105,7 +105,6 @@ func toRepoObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Repo name => Repo
 	switch v := o.(type) {
 	case *Repo:
 		return v.ToMap(isavro)

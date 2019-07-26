@@ -106,7 +106,6 @@ func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Project name => Project
 	switch v := o.(type) {
 	case *Project:
 		return v.ToMap(isavro)

@@ -121,7 +121,6 @@ func toBranchObject(o interface{}, isavro bool, isoptional bool, avrotype string
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Branch name => Branch
 	switch v := o.(type) {
 	case *Branch:
 		return v.ToMap(isavro)
@@ -693,7 +692,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "branched_from_commits"},
 			},
 			map[string]interface{}{
 				"name": "commits",

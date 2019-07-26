@@ -120,7 +120,6 @@ func toIntegrationResponseEventDateObject(o interface{}, isavro bool, isoptional
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => IntegrationResponseEventDate name => IntegrationResponseEventDate
 	switch v := o.(type) {
 	case *IntegrationResponseEventDate:
 		return v.ToMap(isavro)
@@ -314,7 +313,6 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => IntegrationResponse name => IntegrationResponse
 	switch v := o.(type) {
 	case *IntegrationResponse:
 		return v.ToMap(isavro)
@@ -322,7 +320,6 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	case IntegrationResponseEventDate:
 		return v.ToMap(isavro)
 
-		// is nested enum Type
 	case IntegrationResponseType:
 		return v.String()
 
@@ -1048,7 +1045,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",

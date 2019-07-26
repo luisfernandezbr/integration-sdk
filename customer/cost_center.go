@@ -106,7 +106,6 @@ func toCostCenterObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => CostCenter name => CostCenter
 	switch v := o.(type) {
 	case *CostCenter:
 		return v.ToMap(isavro)

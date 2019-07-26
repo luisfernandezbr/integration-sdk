@@ -89,7 +89,6 @@ func toTeamCostUpdatedDateObject(o interface{}, isavro bool, isoptional bool, av
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => TeamCostUpdatedDate name => TeamCostUpdatedDate
 	switch v := o.(type) {
 	case *TeamCostUpdatedDate:
 		return v.ToMap(isavro)
@@ -208,7 +207,6 @@ func toTeamCostObject(o interface{}, isavro bool, isoptional bool, avrotype stri
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => TeamCost name => TeamCost
 	switch v := o.(type) {
 	case *TeamCost:
 		return v.ToMap(isavro)
@@ -662,7 +660,7 @@ func GetTeamCostAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_date",
-				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object"},
+				"type": map[string]interface{}{"name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date object", "type": "record"},
 			},
 		},
 	}

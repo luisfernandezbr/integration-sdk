@@ -92,7 +92,6 @@ func toUserGroupsObject(o interface{}, isavro bool, isoptional bool, avrotype st
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => UserGroups name => UserGroups
 	switch v := o.(type) {
 	case *UserGroups:
 		return v.ToMap(isavro)
@@ -198,7 +197,6 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => User name => User
 	switch v := o.(type) {
 	case *User:
 		return v.ToMap(isavro)
@@ -701,11 +699,11 @@ func GetUserAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "emails",
-				"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "emails"},
 			},
 			map[string]interface{}{
 				"name": "groups",
-				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names"}},
+				"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"name": "groups", "fields": []interface{}{map[string]interface{}{"name": "group_id", "doc": "Group id", "type": "string"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "id",

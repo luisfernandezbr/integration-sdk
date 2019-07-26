@@ -117,7 +117,6 @@ func toTeamObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Team name => Team
 	switch v := o.(type) {
 	case *Team:
 		return v.ToMap(isavro)
@@ -766,7 +765,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "parent_ids",
-				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "type": "array", "name": "parent_ids"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

@@ -101,7 +101,6 @@ func toChangelogCreatedDateObject(o interface{}, isavro bool, isoptional bool, a
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => ChangelogCreatedDate name => ChangelogCreatedDate
 	switch v := o.(type) {
 	case *ChangelogCreatedDate:
 		return v.ToMap(isavro)
@@ -232,7 +231,6 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => Changelog name => Changelog
 	switch v := o.(type) {
 	case *Changelog:
 		return v.ToMap(isavro)
@@ -755,7 +753,7 @@ func GetChangelogAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when this change was created", "type": "record"},
+				"type": map[string]interface{}{"name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when this change was created", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

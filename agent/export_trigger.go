@@ -85,7 +85,6 @@ func toExportTriggerRequestDateObject(o interface{}, isavro bool, isoptional boo
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => ExportTriggerRequestDate name => ExportTriggerRequestDate
 	switch v := o.(type) {
 	case *ExportTriggerRequestDate:
 		return v.ToMap(isavro)
@@ -200,7 +199,6 @@ func toExportTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => ExportTrigger name => ExportTrigger
 	switch v := o.(type) {
 	case *ExportTrigger:
 		return v.ToMap(isavro)
@@ -603,7 +601,7 @@ func GetExportTriggerAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date when the request was made", "type": "record", "name": "request_date"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

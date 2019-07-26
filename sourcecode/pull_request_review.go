@@ -91,7 +91,6 @@ func toPullRequestReviewCreatedDateObject(o interface{}, isavro bool, isoptional
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => true prefix => PullRequestReviewCreatedDate name => PullRequestReviewCreatedDate
 	switch v := o.(type) {
 	case *PullRequestReviewCreatedDate:
 		return v.ToMap(isavro)
@@ -212,7 +211,6 @@ func toPullRequestReviewObject(o interface{}, isavro bool, isoptional bool, avro
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
-	// nested => false prefix => PullRequestReview name => PullRequestReview
 	switch v := o.(type) {
 	case *PullRequestReview:
 		return v.ToMap(isavro)
@@ -659,7 +657,7 @@ func GetPullRequestReviewAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the timestamp in UTC that the review was created"},
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the review was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
