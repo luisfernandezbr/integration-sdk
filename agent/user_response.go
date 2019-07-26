@@ -550,6 +550,32 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 			for _, e := range sp {
 				o.Groups = append(o.Groups, *e)
 			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(UserResponseUsersGroups); ok {
+					o.Groups = append(o.Groups, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm UserResponseUsersGroups
+					fm.FromMap(r)
+					o.Groups = append(o.Groups, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm UserResponseUsersGroups
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Groups = append(o.Groups, fm)
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1334,6 +1360,32 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 			for _, e := range sp {
 				o.Users = append(o.Users, *e)
 			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(UserResponseUsers); ok {
+					o.Users = append(o.Users, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm UserResponseUsers
+					fm.FromMap(r)
+					o.Users = append(o.Users, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm UserResponseUsers
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Users = append(o.Users, fm)
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1434,7 +1486,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1498,7 +1550,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "users",
-				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"name": "avatar_url", "doc": "the url to users avatar", "default": nil, "type": []interface{}{"null", "string"}}, map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": map[string]interface{}{"items": "string", "type": "array", "name": "emails"}, "name": "emails", "doc": "the email for the user"}, map[string]interface{}{"doc": "Group names", "type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"name": "name", "doc": "Group name", "type": "string"}}, "doc": "Group names"}}, "name": "groups"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users", "type": "record"}},
+				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"doc": "the exported users", "type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}, "name": "emails", "doc": "the email for the user"}, map[string]interface{}{"type": map[string]interface{}{"name": "groups", "items": map[string]interface{}{"name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names", "type": "record"}, "type": "array"}, "name": "groups", "doc": "Group names"}, map[string]interface{}{"doc": "the primary key for the model instance", "type": "string", "name": "id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "type": "string", "name": "ref_type"}, map[string]interface{}{"name": "username", "doc": "the username of the user", "type": "string"}}}},
 			},
 			map[string]interface{}{
 				"name": "uuid",
