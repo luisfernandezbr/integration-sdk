@@ -336,7 +336,7 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"active":      toCostCenterObject(o.Active, isavro, false, "boolean"),
 		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),
@@ -354,6 +354,8 @@ func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *CostCenter) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {

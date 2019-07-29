@@ -342,7 +342,7 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"active":      toProjectObject(o.Active, isavro, false, "boolean"),
 		"category":    toProjectObject(o.Category, isavro, true, "string"),
@@ -360,6 +360,8 @@ func (o *Project) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Project) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {

@@ -339,7 +339,7 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"active":         toRepoObject(o.Active, isavro, false, "boolean"),
 		"customer_id":    toRepoObject(o.CustomerID, isavro, false, "string"),
@@ -357,6 +357,8 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Repo) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {

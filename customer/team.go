@@ -376,7 +376,7 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 			o.ParentIds = make([]string, 0)
 		}
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"active":       toTeamObject(o.Active, isavro, true, "boolean"),
 		"children_ids": toTeamObject(o.ChildrenIds, isavro, false, "children_ids"),
@@ -396,6 +396,8 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Team) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -739,7 +741,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "children_ids",
-				"type": map[string]interface{}{"name": "children_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "children_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",

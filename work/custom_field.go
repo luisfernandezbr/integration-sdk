@@ -309,7 +309,7 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"customer_id": toCustomFieldObject(o.CustomerID, isavro, false, "string"),
 		"id":          toCustomFieldObject(o.ID, isavro, false, "string"),
@@ -323,6 +323,8 @@ func (o *CustomField) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *CustomField) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {

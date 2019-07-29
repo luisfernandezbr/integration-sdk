@@ -333,7 +333,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"avatar_url":  toUserObject(o.AvatarURL, isavro, true, "string"),
 		"customer_id": toUserObject(o.CustomerID, isavro, false, "string"),
@@ -349,6 +349,8 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *User) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {

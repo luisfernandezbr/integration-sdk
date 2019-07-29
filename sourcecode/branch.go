@@ -363,7 +363,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 			o.Commits = make([]string, 0)
 		}
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"ahead_default_count":   toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
 		"behind_default_count":  toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
@@ -384,6 +384,8 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *Branch) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -698,7 +700,7 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+				"type": map[string]interface{}{"name": "commits", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",

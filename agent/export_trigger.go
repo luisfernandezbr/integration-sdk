@@ -263,7 +263,7 @@ func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 	}
 	if isavro {
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"customer_id": toExportTriggerObject(o.CustomerID, isavro, false, "string"),
 		"id":          toExportTriggerObject(o.ID, isavro, false, "string"),
@@ -275,6 +275,8 @@ func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {

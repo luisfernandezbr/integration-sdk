@@ -992,7 +992,7 @@ func (o *UserResponse) ToMap(avro ...bool) map[string]interface{} {
 			o.Users = make([]UserResponseUsers, 0)
 		}
 	}
-	o.setDefaults(true)
+	o.setDefaults(false)
 	return map[string]interface{}{
 		"architecture":   toUserResponseObject(o.Architecture, isavro, false, "string"),
 		"customer_id":    toUserResponseObject(o.CustomerID, isavro, false, "string"),
@@ -1023,6 +1023,8 @@ func (o *UserResponse) ToMap(avro ...bool) map[string]interface{} {
 
 // FromMap attempts to load data into object from a map
 func (o *UserResponse) FromMap(kv map[string]interface{}) {
+
+	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -1526,7 +1528,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1590,7 +1592,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "users",
-				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"type": []interface{}{"null", "string"}, "name": "avatar_url", "doc": "the url to users avatar", "default": nil}, map[string]interface{}{"doc": "the customer id for the model instance", "type": "string", "name": "customer_id"}, map[string]interface{}{"doc": "the email for the user", "type": map[string]interface{}{"name": "emails", "items": "string", "type": "array"}, "name": "emails"}, map[string]interface{}{"name": "groups", "doc": "Group names", "type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"name": "group_id", "doc": "Group id", "type": "string"}, map[string]interface{}{"doc": "Group name", "type": "string", "name": "name"}}, "doc": "Group names"}}}, map[string]interface{}{"name": "id", "doc": "the primary key for the model instance", "type": "string"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"name": "ref_id", "doc": "the source system id for the model instance", "type": "string"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users"}},
+				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"name": "emails", "doc": "the email for the user", "type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"doc": "Group name", "type": "string", "name": "name"}}, "doc": "Group names"}}, "name": "groups", "doc": "Group names"}, map[string]interface{}{"doc": "the primary key for the model instance", "type": "string", "name": "id"}, map[string]interface{}{"doc": "the name of the user", "type": "string", "name": "name"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users"}},
 			},
 			map[string]interface{}{
 				"name": "uuid",
