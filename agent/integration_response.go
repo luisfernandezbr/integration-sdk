@@ -701,6 +701,18 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1045,7 +1057,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event"},
+				"type": map[string]interface{}{"doc": "the date of the event", "type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "free_space",
