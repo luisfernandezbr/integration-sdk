@@ -28,6 +28,7 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -488,7 +489,10 @@ func (o *Blame) setDefaults(frommap bool) {
 		o.Lines = make([]BlameLines, 0)
 	}
 
-	o.GetID()
+	if o.ID == "" {
+		// we will attempt to generate a consistent, unique ID from a hash
+		o.ID = hash.Values("Blame", o.CustomerID, o.RefType, o.GetRefID())
+	}
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -499,10 +503,6 @@ func (o *Blame) setDefaults(frommap bool) {
 
 // GetID returns the ID for the object
 func (o *Blame) GetID() string {
-	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Blame", o.CustomerID, o.RefType, o.GetRefID())
-	}
 	return o.ID
 }
 
@@ -631,6 +631,9 @@ func (o *Blame) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	o.FromMap(kv)
+	if idstr, ok := kv["id"].(string); ok {
+		o.ID = idstr
+	}
 	return nil
 }
 
@@ -938,6 +941,19 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			for _, e := range sp {
 				o.Lines = append(o.Lines, *e)
 			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(BlameLines); ok {
+					o.Lines = append(o.Lines, av)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av BlameLines
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for lines field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.Lines = append(o.Lines, av)
+				}
+			}
 		} else if arr, ok := val.([]interface{}); ok {
 			for _, item := range arr {
 				if r, ok := item.(BlameLines); ok {
@@ -1190,7 +1206,7 @@ func GetBlameAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "lines",
-				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"type": "boolean", "name": "blank", "doc": "if the line is a blank line"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"name": "date", "doc": "the change date in RFC3339 format of this line when last changed", "type": "string"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
+				"type": map[string]interface{}{"type": "array", "name": "lines", "items": map[string]interface{}{"type": "record", "name": "lines", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "author_ref_id", "doc": "the author ref_id of this line when last changed"}, map[string]interface{}{"name": "blank", "doc": "if the line is a blank line", "type": "boolean"}, map[string]interface{}{"type": "boolean", "name": "code", "doc": "if the line is sourcecode"}, map[string]interface{}{"type": "boolean", "name": "comment", "doc": "if the line is a comment"}, map[string]interface{}{"type": "string", "name": "date", "doc": "the change date in RFC3339 format of this line when last changed"}, map[string]interface{}{"type": "string", "name": "sha", "doc": "the sha when this line was last changed"}}, "doc": "the individual line attributions"}},
 			},
 			map[string]interface{}{
 				"name": "loc",

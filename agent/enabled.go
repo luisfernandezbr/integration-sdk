@@ -343,7 +343,10 @@ func (o *Enabled) setDefaults(frommap bool) {
 		o.Error = &emptyString
 	}
 
-	o.GetID()
+	if o.ID == "" {
+		// we will attempt to generate a consistent, unique ID from a hash
+		o.ID = hash.Values("Enabled", o.CustomerID, o.RefType, o.GetRefID())
+	}
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -354,10 +357,6 @@ func (o *Enabled) setDefaults(frommap bool) {
 
 // GetID returns the ID for the object
 func (o *Enabled) GetID() string {
-	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Enabled", o.CustomerID, o.RefType, o.GetRefID())
-	}
 	return o.ID
 }
 
@@ -486,6 +485,9 @@ func (o *Enabled) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	o.FromMap(kv)
+	if idstr, ok := kv["id"].(string); ok {
+		o.ID = idstr
+	}
 	return nil
 }
 
@@ -676,18 +678,6 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1011,7 +1001,7 @@ func GetEnabledAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",

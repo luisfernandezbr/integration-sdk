@@ -550,6 +550,19 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 			for _, e := range sp {
 				o.Groups = append(o.Groups, *e)
 			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(UserResponseUsersGroups); ok {
+					o.Groups = append(o.Groups, av)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av UserResponseUsersGroups
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for groups field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.Groups = append(o.Groups, av)
+				}
+			}
 		} else if arr, ok := val.([]interface{}); ok {
 			for _, item := range arr {
 				if r, ok := item.(UserResponseUsersGroups); ok {
@@ -766,7 +779,10 @@ func (o *UserResponse) setDefaults(frommap bool) {
 		o.Users = make([]UserResponseUsers, 0)
 	}
 
-	o.GetID()
+	if o.ID == "" {
+		// we will attempt to generate a consistent, unique ID from a hash
+		o.ID = hash.Values("UserResponse", o.CustomerID, o.RefType, o.GetRefID())
+	}
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -777,10 +793,6 @@ func (o *UserResponse) setDefaults(frommap bool) {
 
 // GetID returns the ID for the object
 func (o *UserResponse) GetID() string {
-	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("UserResponse", o.CustomerID, o.RefType, o.GetRefID())
-	}
 	return o.ID
 }
 
@@ -909,6 +921,9 @@ func (o *UserResponse) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	o.FromMap(kv)
+	if idstr, ok := kv["id"].(string); ok {
+		o.ID = idstr
+	}
 	return nil
 }
 
@@ -1104,6 +1119,18 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1360,6 +1387,19 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 			for _, e := range sp {
 				o.Users = append(o.Users, *e)
 			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(UserResponseUsers); ok {
+					o.Users = append(o.Users, av)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av UserResponseUsers
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for users field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.Users = append(o.Users, av)
+				}
+			}
 		} else if arr, ok := val.([]interface{}); ok {
 			for _, item := range arr {
 				if r, ok := item.(UserResponseUsers); ok {
@@ -1486,7 +1526,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "event_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "type": "long", "name": "epoch"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event", "type": "record", "name": "event_date"},
+				"type": map[string]interface{}{"type": "record", "name": "event_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date of the event"},
 			},
 			map[string]interface{}{
 				"name": "free_space",
@@ -1550,7 +1590,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "users",
-				"type": map[string]interface{}{"name": "users", "items": map[string]interface{}{"type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"default": nil, "type": []interface{}{"null", "string"}, "name": "avatar_url", "doc": "the url to users avatar"}, map[string]interface{}{"type": "string", "name": "customer_id", "doc": "the customer id for the model instance"}, map[string]interface{}{"type": map[string]interface{}{"type": "array", "name": "emails", "items": "string"}, "name": "emails", "doc": "the email for the user"}, map[string]interface{}{"type": map[string]interface{}{"name": "groups", "items": map[string]interface{}{"name": "groups", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "group_id", "doc": "Group id"}, map[string]interface{}{"type": "string", "name": "name", "doc": "Group name"}}, "doc": "Group names", "type": "record"}, "type": "array"}, "name": "groups", "doc": "Group names"}, map[string]interface{}{"type": "string", "name": "id", "doc": "the primary key for the model instance"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"type": "string", "name": "ref_id", "doc": "the source system id for the model instance"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users"}, "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "users", "items": map[string]interface{}{"type": "record", "name": "users", "fields": []interface{}{map[string]interface{}{"type": "boolean", "name": "active", "doc": "if user is active"}, map[string]interface{}{"type": []interface{}{"null", "string"}, "name": "avatar_url", "doc": "the url to users avatar", "default": nil}, map[string]interface{}{"doc": "the customer id for the model instance", "type": "string", "name": "customer_id"}, map[string]interface{}{"doc": "the email for the user", "type": map[string]interface{}{"name": "emails", "items": "string", "type": "array"}, "name": "emails"}, map[string]interface{}{"name": "groups", "doc": "Group names", "type": map[string]interface{}{"type": "array", "name": "groups", "items": map[string]interface{}{"type": "record", "name": "groups", "fields": []interface{}{map[string]interface{}{"name": "group_id", "doc": "Group id", "type": "string"}, map[string]interface{}{"doc": "Group name", "type": "string", "name": "name"}}, "doc": "Group names"}}}, map[string]interface{}{"name": "id", "doc": "the primary key for the model instance", "type": "string"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the user"}, map[string]interface{}{"name": "ref_id", "doc": "the source system id for the model instance", "type": "string"}, map[string]interface{}{"type": "string", "name": "ref_type", "doc": "the source system identifier for the model instance"}, map[string]interface{}{"type": "string", "name": "username", "doc": "the username of the user"}}, "doc": "the exported users"}},
 			},
 			map[string]interface{}{
 				"name": "uuid",

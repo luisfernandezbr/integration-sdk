@@ -220,7 +220,9 @@ func (o *EnrollRequest) GetModelName() datamodel.ModelNameType {
 
 func (o *EnrollRequest) setDefaults(frommap bool) {
 
-	o.GetID()
+	if o.ID == "" {
+		o.ID = hash.Values(o.Code, o.UUID)
+	}
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -229,9 +231,6 @@ func (o *EnrollRequest) setDefaults(frommap bool) {
 
 // GetID returns the ID for the object
 func (o *EnrollRequest) GetID() string {
-	if o.ID == "" {
-		o.ID = hash.Values(o.Code, o.UUID)
-	}
 	return o.ID
 }
 
@@ -347,6 +346,9 @@ func (o *EnrollRequest) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	o.FromMap(kv)
+	if idstr, ok := kv["id"].(string); ok {
+		o.ID = idstr
+	}
 	return nil
 }
 
@@ -518,7 +520,7 @@ func GetEnrollRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "request_date",
-				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "the date when the request was made"},
+				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date when the request was made"},
 			},
 			map[string]interface{}{
 				"name": "uuid",

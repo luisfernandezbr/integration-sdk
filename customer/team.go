@@ -152,7 +152,10 @@ func (o *Team) setDefaults(frommap bool) {
 		o.ParentIds = make([]string, 0)
 	}
 
-	o.GetID()
+	if o.ID == "" {
+		// set the id from the spec provided in the model
+		o.ID = hash.Values(o.CustomerID, randomString(64))
+	}
 
 	{
 		v := false
@@ -177,10 +180,6 @@ func (o *Team) setDefaults(frommap bool) {
 
 // GetID returns the ID for the object
 func (o *Team) GetID() string {
-	if o.ID == "" {
-		// set the id from the spec provided in the model
-		o.ID = hash.Values(o.CustomerID, randomString(64))
-	}
 	return o.ID
 }
 
@@ -303,6 +302,9 @@ func (o *Team) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	o.FromMap(kv)
+	if idstr, ok := kv["id"].(string); ok {
+		o.ID = idstr
+	}
 	return nil
 }
 
@@ -737,7 +739,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "children_ids",
-				"type": map[string]interface{}{"type": "array", "name": "children_ids", "items": "string"},
+				"type": map[string]interface{}{"name": "children_ids", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "created_ts",
@@ -765,7 +767,7 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "parent_ids",
-				"type": map[string]interface{}{"name": "parent_ids", "items": "string", "type": "array"},
+				"type": map[string]interface{}{"type": "array", "name": "parent_ids", "items": "string"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",

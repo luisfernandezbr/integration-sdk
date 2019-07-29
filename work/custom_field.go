@@ -114,7 +114,10 @@ func (o *CustomField) GetModelName() datamodel.ModelNameType {
 
 func (o *CustomField) setDefaults(frommap bool) {
 
-	o.GetID()
+	if o.ID == "" {
+		// we will attempt to generate a consistent, unique ID from a hash
+		o.ID = hash.Values("CustomField", o.CustomerID, o.RefType, o.GetRefID())
+	}
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -125,10 +128,6 @@ func (o *CustomField) setDefaults(frommap bool) {
 
 // GetID returns the ID for the object
 func (o *CustomField) GetID() string {
-	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("CustomField", o.CustomerID, o.RefType, o.GetRefID())
-	}
 	return o.ID
 }
 
@@ -242,6 +241,9 @@ func (o *CustomField) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	o.FromMap(kv)
+	if idstr, ok := kv["id"].(string); ok {
+		o.ID = idstr
+	}
 	return nil
 }
 

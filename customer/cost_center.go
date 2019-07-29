@@ -132,7 +132,10 @@ func (o *CostCenter) GetModelName() datamodel.ModelNameType {
 
 func (o *CostCenter) setDefaults(frommap bool) {
 
-	o.GetID()
+	if o.ID == "" {
+		// set the id from the spec provided in the model
+		o.ID = hash.Values(o.CustomerID, randomString(64))
+	}
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -143,10 +146,6 @@ func (o *CostCenter) setDefaults(frommap bool) {
 
 // GetID returns the ID for the object
 func (o *CostCenter) GetID() string {
-	if o.ID == "" {
-		// set the id from the spec provided in the model
-		o.ID = hash.Values(o.CustomerID, randomString(64))
-	}
 	return o.ID
 }
 
@@ -269,6 +268,9 @@ func (o *CostCenter) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	o.FromMap(kv)
+	if idstr, ok := kv["id"].(string); ok {
+		o.ID = idstr
+	}
 	return nil
 }
 

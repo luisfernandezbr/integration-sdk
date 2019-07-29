@@ -131,7 +131,10 @@ func (o *Repo) GetModelName() datamodel.ModelNameType {
 
 func (o *Repo) setDefaults(frommap bool) {
 
-	o.GetID()
+	if o.ID == "" {
+		// we will attempt to generate a consistent, unique ID from a hash
+		o.ID = hash.Values("Repo", o.CustomerID, o.RefType, o.GetRefID())
+	}
 
 	if o.DefaultBranch == "" {
 		o.DefaultBranch = "master"
@@ -146,10 +149,6 @@ func (o *Repo) setDefaults(frommap bool) {
 
 // GetID returns the ID for the object
 func (o *Repo) GetID() string {
-	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Repo", o.CustomerID, o.RefType, o.GetRefID())
-	}
 	return o.ID
 }
 
@@ -272,6 +271,9 @@ func (o *Repo) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	o.FromMap(kv)
+	if idstr, ok := kv["id"].(string); ok {
+		o.ID = idstr
+	}
 	return nil
 }
 
