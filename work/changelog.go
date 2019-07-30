@@ -521,6 +521,13 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.CreatedDate.FromMap(map[string]interface{}{})

@@ -910,6 +910,13 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.ClosedDate.Epoch = dt.Epoch
 			o.ClosedDate.Rfc3339 = dt.Rfc3339
 			o.ClosedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ClosedDate.Epoch = dt.Epoch
+				o.ClosedDate.Rfc3339 = dt.Rfc3339
+				o.ClosedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.ClosedDate.FromMap(map[string]interface{}{})
@@ -1002,6 +1009,13 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.CreatedDate.FromMap(map[string]interface{}{})
@@ -1103,6 +1117,13 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.MergedDate.Epoch = dt.Epoch
 			o.MergedDate.Rfc3339 = dt.Rfc3339
 			o.MergedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.MergedDate.Epoch = dt.Epoch
+				o.MergedDate.Rfc3339 = dt.Rfc3339
+				o.MergedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.MergedDate.FromMap(map[string]interface{}{})
@@ -1204,6 +1225,13 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.UpdatedDate.Epoch = dt.Epoch
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
@@ -1268,7 +1296,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "closed_date",
-				"type": map[string]interface{}{"type": "record", "name": "closed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed"},
+				"type": map[string]interface{}{"name": "closed_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "commits",
@@ -1280,7 +1308,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was created", "type": "record", "name": "created_date"},
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was created"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1304,7 +1332,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "merged_date",
-				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged", "type": "record", "name": "merged_date"},
+				"type": map[string]interface{}{"type": "record", "name": "merged_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was merged"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1328,7 +1356,7 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_date",
-				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed"},
+				"type": map[string]interface{}{"type": "record", "name": "updated_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the timestamp in UTC that the pull request was closed"},
 			},
 			map[string]interface{}{
 				"name": "url",

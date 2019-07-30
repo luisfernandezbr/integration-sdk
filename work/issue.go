@@ -922,6 +922,13 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.CreatedDate.FromMap(map[string]interface{}{})
@@ -1033,6 +1040,13 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.DueDate.Epoch = dt.Epoch
 			o.DueDate.Rfc3339 = dt.Rfc3339
 			o.DueDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.DueDate.Epoch = dt.Epoch
+				o.DueDate.Rfc3339 = dt.Rfc3339
+				o.DueDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.DueDate.FromMap(map[string]interface{}{})
@@ -1290,6 +1304,13 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.UpdatedDate.Epoch = dt.Epoch
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
@@ -1357,7 +1378,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "created_date",
-				"type": map[string]interface{}{"name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the issue was created", "type": "record"},
+				"type": map[string]interface{}{"type": "record", "name": "created_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the issue was created"},
 			},
 			map[string]interface{}{
 				"name": "creator_ref_id",
@@ -1365,7 +1386,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "customFields",
-				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"type": "record", "name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"doc": "the value of the custom field", "type": "string", "name": "value"}}, "doc": "list of custom fields and their values"}},
+				"type": map[string]interface{}{"type": "array", "name": "customFields", "items": map[string]interface{}{"name": "customFields", "fields": []interface{}{map[string]interface{}{"type": "string", "name": "id", "doc": "the id of the custom field"}, map[string]interface{}{"type": "string", "name": "name", "doc": "the name of the custom field"}, map[string]interface{}{"type": "string", "name": "value", "doc": "the value of the custom field"}}, "doc": "list of custom fields and their values", "type": "record"}},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -1373,7 +1394,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "due_date",
-				"type": map[string]interface{}{"type": "record", "name": "due_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "due date of the issue"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"name": "rfc3339", "doc": "the date in RFC3339 format", "type": "string"}}, "doc": "due date of the issue", "type": "record", "name": "due_date"},
 			},
 			map[string]interface{}{
 				"name": "id",
@@ -1417,7 +1438,7 @@ func GetIssueAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "tags",
-				"type": map[string]interface{}{"type": "array", "name": "tags", "items": "string"},
+				"type": map[string]interface{}{"name": "tags", "items": "string", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "title",

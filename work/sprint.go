@@ -868,6 +868,13 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.CompletedDate.Epoch = dt.Epoch
 			o.CompletedDate.Rfc3339 = dt.Rfc3339
 			o.CompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CompletedDate.Epoch = dt.Epoch
+				o.CompletedDate.Rfc3339 = dt.Rfc3339
+				o.CompletedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.CompletedDate.FromMap(map[string]interface{}{})
@@ -909,6 +916,13 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.EndedDate.Epoch = dt.Epoch
 			o.EndedDate.Rfc3339 = dt.Rfc3339
 			o.EndedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EndedDate.Epoch = dt.Epoch
+				o.EndedDate.Rfc3339 = dt.Rfc3339
+				o.EndedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EndedDate.FromMap(map[string]interface{}{})
@@ -935,6 +949,13 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.FetchedDate.Epoch = dt.Epoch
 			o.FetchedDate.Rfc3339 = dt.Rfc3339
 			o.FetchedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.FetchedDate.Epoch = dt.Epoch
+				o.FetchedDate.Rfc3339 = dt.Rfc3339
+				o.FetchedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.FetchedDate.FromMap(map[string]interface{}{})
@@ -1036,6 +1057,13 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			o.StartedDate.Epoch = dt.Epoch
 			o.StartedDate.Rfc3339 = dt.Rfc3339
 			o.StartedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.StartedDate.Epoch = dt.Epoch
+				o.StartedDate.Rfc3339 = dt.Rfc3339
+				o.StartedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.StartedDate.FromMap(map[string]interface{}{})
@@ -1108,11 +1136,11 @@ func GetSprintAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "ended_date",
-				"type": map[string]interface{}{"type": "record", "name": "ended_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was ended"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"name": "epoch", "doc": "the date in epoch format", "type": "long"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "type": "string", "name": "rfc3339"}}, "doc": "the date that the sprint was ended", "type": "record", "name": "ended_date"},
 			},
 			map[string]interface{}{
 				"name": "fetched_date",
-				"type": map[string]interface{}{"type": "record", "name": "fetched_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"name": "offset", "doc": "the timezone offset from GMT", "type": "long"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date in when the api was called"},
+				"type": map[string]interface{}{"fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "date in when the api was called", "type": "record", "name": "fetched_date"},
 			},
 			map[string]interface{}{
 				"name": "goal",
@@ -1136,7 +1164,7 @@ func GetSprintAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "started_date",
-				"type": map[string]interface{}{"type": "record", "name": "started_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"doc": "the timezone offset from GMT", "type": "long", "name": "offset"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the date that the sprint was started"},
+				"type": map[string]interface{}{"doc": "the date that the sprint was started", "type": "record", "name": "started_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}},
 			},
 			map[string]interface{}{
 				"name": "status",
