@@ -6,6 +6,7 @@ import (
 	"github.com/pinpt/go-common/datamodel"
 
 	dm_agent "github.com/pinpt/integration-sdk/agent"
+	dm_cicd "github.com/pinpt/integration-sdk/cicd"
 	dm_codequality "github.com/pinpt/integration-sdk/codequality"
 	dm_customer "github.com/pinpt/integration-sdk/customer"
 	dm_sourcecode "github.com/pinpt/integration-sdk/sourcecode"
@@ -73,6 +74,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "agent.UserResponse":
 		o := new(dm_agent.UserResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "cicd.Build":
+		o := new(dm_cicd.Build)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "cicd.Deployment":
+		o := new(dm_cicd.Deployment)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "codequality.Metric":
@@ -218,6 +227,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.UserResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "cicd_Build_topic":
+		o := new(dm_cicd.Build)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "cicd_Deployment_topic":
+		o := new(dm_cicd.Deployment)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "codequality_Metric_topic":
 		o := new(dm_codequality.Metric)
 		o.FromMap(map[string]interface{}{})
@@ -333,6 +350,8 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_RepoResponse_topic"),
 		datamodel.TopicNameType("agent_UserRequest_topic"),
 		datamodel.TopicNameType("agent_UserResponse_topic"),
+		datamodel.TopicNameType("cicd_Build_topic"),
+		datamodel.TopicNameType("cicd_Deployment_topic"),
 		datamodel.TopicNameType("codequality_Metric_topic"),
 		datamodel.TopicNameType("codequality_Project_topic"),
 		datamodel.TopicNameType("customer_CostCenter_topic"),
@@ -373,6 +392,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.RepoResponse"),
 		datamodel.ModelNameType("agent.UserRequest"),
 		datamodel.ModelNameType("agent.UserResponse"),
+		datamodel.ModelNameType("cicd.Build"),
+		datamodel.ModelNameType("cicd.Deployment"),
 		datamodel.ModelNameType("codequality.Metric"),
 		datamodel.ModelNameType("codequality.Project"),
 		datamodel.ModelNameType("customer.CostCenter"),
