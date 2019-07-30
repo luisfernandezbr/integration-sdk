@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"bytes"
 	"compress/gzip"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -14,17 +15,29 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 )
 
 const (
+	// ExportTriggerTopic is the default topic name
+	ExportTriggerTopic datamodel.TopicNameType = "agent_ExportTrigger_topic"
+
+	// ExportTriggerStream is the default stream name
+	ExportTriggerStream datamodel.TopicNameType = "agent_ExportTrigger_stream"
+
+	// ExportTriggerTable is the default table name
+	ExportTriggerTable datamodel.TopicNameType = "agent_ExportTrigger"
 
 	// ExportTriggerModelName is the model name
 	ExportTriggerModelName datamodel.ModelNameType = "agent.ExportTrigger"
@@ -39,7 +52,118 @@ const (
 	ExportTriggerRefIDColumn = "ref_id"
 	// ExportTriggerRefTypeColumn is the ref_type column name
 	ExportTriggerRefTypeColumn = "ref_type"
+	// ExportTriggerRequestDateColumn is the request_date column name
+	ExportTriggerRequestDateColumn = "request_date"
+	// ExportTriggerRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	ExportTriggerRequestDateColumnEpochColumn = "request_date->epoch"
+	// ExportTriggerRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	ExportTriggerRequestDateColumnOffsetColumn = "request_date->offset"
+	// ExportTriggerRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	ExportTriggerRequestDateColumnRfc3339Column = "request_date->rfc3339"
 )
+
+// ExportTriggerRequestDate represents the object structure for request_date
+type ExportTriggerRequestDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toExportTriggerRequestDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toExportTriggerRequestDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	switch v := o.(type) {
+	case *ExportTriggerRequestDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ExportTriggerRequestDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toExportTriggerRequestDateObject(o.Epoch, isavro, false, "long"),
+		// Offset the timezone offset from GMT
+		"offset": toExportTriggerRequestDateObject(o.Offset, isavro, false, "long"),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toExportTriggerRequestDateObject(o.Rfc3339, isavro, false, "string"),
+	}
+}
+
+func (o *ExportTriggerRequestDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportTriggerRequestDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
 
 // ExportTrigger used to trigger an agent.ExportRequest
 type ExportTrigger struct {
@@ -51,6 +175,8 @@ type ExportTrigger struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RequestDate the requested date
+	RequestDate ExportTriggerRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -73,6 +199,8 @@ func toExportTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype
 	case *ExportTrigger:
 		return v.ToMap(isavro)
 
+	case ExportTriggerRequestDate:
+		return v.ToMap(isavro)
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
@@ -85,7 +213,7 @@ func (o *ExportTrigger) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *ExportTrigger) GetTopicName() datamodel.TopicNameType {
-	return ""
+	return ExportTriggerTopic
 }
 
 // GetModelName returns the name of the model
@@ -114,12 +242,31 @@ func (o *ExportTrigger) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *ExportTrigger) GetTopicKey() string {
-	return ""
+	var i interface{} = o.ID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportTrigger) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.RequestDate
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	case ExportTriggerRequestDate:
+		return datetime.DateFromEpoch(v.Epoch)
+	}
+	panic("not sure how to handle the date time format for ExportTrigger")
 }
 
 // GetRefID returns the RefID for the object
@@ -139,17 +286,40 @@ func (o *ExportTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeC
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *ExportTrigger) IsEvented() bool {
-	return false
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *ExportTrigger) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = ExportTriggerModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
 func (o *ExportTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
-	return nil
+	retention, err := time.ParseDuration("168h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "id",
+		Timestamp:         "request_date",
+		NumPartitions:     8,
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetStateKey returns a key for use in state store
 func (o *ExportTrigger) GetStateKey() string {
-	key := ""
+	key := "id"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
@@ -265,11 +435,12 @@ func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id": toExportTriggerObject(o.CustomerID, isavro, false, "string"),
-		"id":          toExportTriggerObject(o.ID, isavro, false, "string"),
-		"ref_id":      toExportTriggerObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toExportTriggerObject(o.RefType, isavro, false, "string"),
-		"hashcode":    toExportTriggerObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":  toExportTriggerObject(o.CustomerID, isavro, false, "string"),
+		"id":           toExportTriggerObject(o.ID, isavro, false, "string"),
+		"ref_id":       toExportTriggerObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toExportTriggerObject(o.RefType, isavro, false, "string"),
+		"request_date": toExportTriggerObject(o.RequestDate, isavro, false, "request_date"),
+		"hashcode":     toExportTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -342,6 +513,33 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(ExportTriggerRequestDate); ok {
+			// struct
+			o.RequestDate = sv
+		} else if sp, ok := val.(*ExportTriggerRequestDate); ok {
+			// struct pointer
+			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
 	o.setDefaults(false)
 }
 
@@ -352,6 +550,7 @@ func (o *ExportTrigger) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RequestDate)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -382,6 +581,10 @@ func GetExportTriggerAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "request_date",
+				"type": map[string]interface{}{"type": "record", "name": "request_date", "fields": []interface{}{map[string]interface{}{"type": "long", "name": "epoch", "doc": "the date in epoch format"}, map[string]interface{}{"type": "long", "name": "offset", "doc": "the timezone offset from GMT"}, map[string]interface{}{"type": "string", "name": "rfc3339", "doc": "the date in RFC3339 format"}}, "doc": "the requested date"},
 			},
 		},
 	}
@@ -615,4 +818,322 @@ func NewExportTriggerOutputStream(stream io.WriteCloser, ch chan ExportTrigger, 
 		}
 	}()
 	return done
+}
+
+// ExportTriggerSendEvent is an event detail for sending data
+type ExportTriggerSendEvent struct {
+	ExportTrigger *ExportTrigger
+	headers       map[string]string
+	time          time.Time
+	key           string
+}
+
+var _ datamodel.ModelSendEvent = (*ExportTriggerSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *ExportTriggerSendEvent) Key() string {
+	if e.key == "" {
+		return e.ExportTrigger.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *ExportTriggerSendEvent) Object() datamodel.Model {
+	return e.ExportTrigger
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *ExportTriggerSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *ExportTriggerSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// ExportTriggerSendEventOpts is a function handler for setting opts
+type ExportTriggerSendEventOpts func(o *ExportTriggerSendEvent)
+
+// WithExportTriggerSendEventKey sets the key value to a value different than the object ID
+func WithExportTriggerSendEventKey(key string) ExportTriggerSendEventOpts {
+	return func(o *ExportTriggerSendEvent) {
+		o.key = key
+	}
+}
+
+// WithExportTriggerSendEventTimestamp sets the timestamp value
+func WithExportTriggerSendEventTimestamp(tv time.Time) ExportTriggerSendEventOpts {
+	return func(o *ExportTriggerSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithExportTriggerSendEventHeader sets the timestamp value
+func WithExportTriggerSendEventHeader(key, value string) ExportTriggerSendEventOpts {
+	return func(o *ExportTriggerSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewExportTriggerSendEvent returns a new ExportTriggerSendEvent instance
+func NewExportTriggerSendEvent(o *ExportTrigger, opts ...ExportTriggerSendEventOpts) *ExportTriggerSendEvent {
+	res := &ExportTriggerSendEvent{
+		ExportTrigger: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewExportTriggerProducer will stream data from the channel
+func NewExportTriggerProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+	done := make(chan bool, 1)
+	go func() {
+		defer func() { done <- true }()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
+					empty <- true
+					return
+				}
+				if object, ok := item.Object().(*ExportTrigger); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.ExportTrigger but received on of type %v", reflect.TypeOf(item.Object()))
+				}
+			}
+		}
+	}()
+	return done
+}
+
+// NewExportTriggerConsumer will stream data from the topic into the provided channel
+func NewExportTriggerConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
+			var object ExportTrigger
+			switch msg.Encoding {
+			case eventing.JSONEncoding:
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into agent.ExportTrigger: %s", err)
+				}
+			case eventing.AvroEncoding:
+				if err := object.FromAvroBinary(msg.Value); err != nil {
+					return fmt.Errorf("error unmarshaling avro data into agent.ExportTrigger: %s", err)
+				}
+			default:
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.ExportTrigger")
+			}
+
+			// ignore messages that have exceeded the TTL
+			cfg := object.GetTopicConfig()
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
+				return nil
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+
+			ch <- &ExportTriggerReceiveEvent{&object, msg, false}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object ExportTrigger
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &ExportTriggerReceiveEvent{nil, msg, true}
+		},
+	}
+	consumer.Consume(adapter)
+	return adapter
+}
+
+// ExportTriggerReceiveEvent is an event detail for receiving data
+type ExportTriggerReceiveEvent struct {
+	ExportTrigger *ExportTrigger
+	message       eventing.Message
+	eof           bool
+}
+
+var _ datamodel.ModelReceiveEvent = (*ExportTriggerReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *ExportTriggerReceiveEvent) Object() datamodel.Model {
+	return e.ExportTrigger
+}
+
+// Message returns the underlying message data for the event
+func (e *ExportTriggerReceiveEvent) Message() eventing.Message {
+	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *ExportTriggerReceiveEvent) EOF() bool {
+	return e.eof
+}
+
+// ExportTriggerProducer implements the datamodel.ModelEventProducer
+type ExportTriggerProducer struct {
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
+	empty    chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*ExportTriggerProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *ExportTriggerProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *ExportTriggerProducer) Close() error {
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	if !closed {
+		close(p.ch)
+		<-p.empty
+		p.cancel()
+		<-p.done
+	}
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *ExportTrigger) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *ExportTrigger) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
+	empty := make(chan bool, 1)
+	newctx, cancel := context.WithCancel(context.Background())
+	return &ExportTriggerProducer{
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		empty:    empty,
+		done:     NewExportTriggerProducer(newctx, producer, ch, errors, empty),
+	}
+}
+
+// NewExportTriggerProducerChannel returns a channel which can be used for producing Model events
+func NewExportTriggerProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewExportTriggerProducerChannelSize(producer, 0, errors)
+}
+
+// NewExportTriggerProducerChannelSize returns a channel which can be used for producing Model events
+func NewExportTriggerProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
+	empty := make(chan bool, 1)
+	newctx, cancel := context.WithCancel(context.Background())
+	return &ExportTriggerProducer{
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		empty:    empty,
+		done:     NewExportTriggerProducer(newctx, producer, ch, errors, empty),
+	}
+}
+
+// ExportTriggerConsumer implements the datamodel.ModelEventConsumer
+type ExportTriggerConsumer struct {
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
+}
+
+var _ datamodel.ModelEventConsumer = (*ExportTriggerConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *ExportTriggerConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *ExportTriggerConsumer) Close() error {
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *ExportTrigger) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	return &ExportTriggerConsumer{
+		ch:       ch,
+		callback: NewExportTriggerConsumer(consumer, ch, errors),
+		consumer: consumer,
+	}
+}
+
+// NewExportTriggerConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewExportTriggerConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	return &ExportTriggerConsumer{
+		ch:       ch,
+		callback: NewExportTriggerConsumer(consumer, ch, errors),
+		consumer: consumer,
+	}
 }

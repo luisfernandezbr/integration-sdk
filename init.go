@@ -324,6 +324,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_Event_topic"),
 		datamodel.TopicNameType("agent_ExportRequest_topic"),
 		datamodel.TopicNameType("agent_ExportResponse_topic"),
+		datamodel.TopicNameType("agent_ExportTrigger_topic"),
 		datamodel.TopicNameType("agent_IntegrationRequest_topic"),
 		datamodel.TopicNameType("agent_IntegrationResponse_topic"),
 		datamodel.TopicNameType("agent_ProjectRequest_topic"),
