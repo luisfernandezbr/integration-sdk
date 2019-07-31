@@ -418,6 +418,39 @@ func (o *PullRequestMergedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// PullRequestStatus is the enumeration type for status
+type PullRequestStatus int32
+
+// String returns the string value for Status
+func (v PullRequestStatus) String() string {
+	switch int32(v) {
+	case 0:
+		return "OPEN"
+	case 1:
+		return "CLOSED"
+	case 2:
+		return "MERGED"
+	case 3:
+		return "SUPERSEDED"
+	case 4:
+		return "LOCKED"
+	}
+	return "unset"
+}
+
+const (
+	// StatusOpen is the enumeration value for open
+	PullRequestStatusOpen PullRequestStatus = 0
+	// StatusClosed is the enumeration value for closed
+	PullRequestStatusClosed PullRequestStatus = 1
+	// StatusMerged is the enumeration value for merged
+	PullRequestStatusMerged PullRequestStatus = 2
+	// StatusSuperseded is the enumeration value for superseded
+	PullRequestStatusSuperseded PullRequestStatus = 3
+	// StatusLocked is the enumeration value for locked
+	PullRequestStatusLocked PullRequestStatus = 4
+)
+
 // PullRequestUpdatedDate represents the object structure for updated_date
 type PullRequestUpdatedDate struct {
 	// Epoch the date in epoch format
@@ -552,7 +585,7 @@ type PullRequest struct {
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Status the status of the pull request
-	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
+	Status PullRequestStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
 	// Title the title of the pull request
 	Title string `json:"title" bson:"title" yaml:"title" faker:"commit_message"`
 	// UpdatedDate the timestamp in UTC that the pull request was closed
@@ -589,6 +622,9 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 
 	case PullRequestMergedDate:
 		return v.ToMap(isavro)
+
+	case PullRequestStatus:
+		return v.String()
 
 	case PullRequestUpdatedDate:
 		return v.ToMap(isavro)
@@ -856,7 +892,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":            toPullRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":          toPullRequestObject(o.RefType, isavro, false, "string"),
 		"repo_id":           toPullRequestObject(o.RepoID, isavro, false, "string"),
-		"status":            toPullRequestObject(o.Status, isavro, false, "string"),
+		"status":            toPullRequestObject(o.Status, isavro, false, "status"),
 		"title":             toPullRequestObject(o.Title, isavro, false, "string"),
 		"updated_date":      toPullRequestObject(o.UpdatedDate, isavro, false, "updated_date"),
 		"url":               toPullRequestObject(o.URL, isavro, false, "string"),
@@ -1174,17 +1210,36 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["status"].(string); ok {
+	if val, ok := kv["status"].(PullRequestStatus); ok {
 		o.Status = val
 	} else {
-		if val, ok := kv["status"]; ok {
-			if val == nil {
-				o.Status = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Status = fmt.Sprintf("%v", val)
+		if em, ok := kv["status"].(map[string]interface{}); ok {
+			ev := em["sourcecode.status"].(string)
+			switch ev {
+			case "open", "OPEN":
+				o.Status = 0
+			case "closed", "CLOSED":
+				o.Status = 1
+			case "merged", "MERGED":
+				o.Status = 2
+			case "superseded", "SUPERSEDED":
+				o.Status = 3
+			case "locked", "LOCKED":
+				o.Status = 4
+			}
+		}
+		if em, ok := kv["status"].(string); ok {
+			switch em {
+			case "open", "OPEN":
+				o.Status = 0
+			case "closed", "CLOSED":
+				o.Status = 1
+			case "merged", "MERGED":
+				o.Status = 2
+			case "superseded", "SUPERSEDED":
+				o.Status = 3
+			case "locked", "LOCKED":
+				o.Status = 4
 			}
 		}
 	}
@@ -1348,7 +1403,11 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "status",
-				"type": "string",
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "status",
+					"symbols": []interface{}{"OPEN", "CLOSED", "MERGED", "SUPERSEDED", "LOCKED"},
+				},
 			},
 			map[string]interface{}{
 				"name": "title",
