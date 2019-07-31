@@ -696,11 +696,11 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branched_from_commits",
-				"type": map[string]interface{}{"type": "array", "name": "branched_from_commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "name": "branched_from_commits", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "commits",
-				"type": map[string]interface{}{"type": "array", "name": "commits", "items": "string"},
+				"type": map[string]interface{}{"items": "string", "name": "commits", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
