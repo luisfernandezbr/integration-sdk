@@ -106,6 +106,8 @@ const (
 	BlameSlocColumn = "sloc"
 	// BlameStatusColumn is the status column name
 	BlameStatusColumn = "status"
+	// BlameUpdatedAtColumn is the updated_ts column name
+	BlameUpdatedAtColumn = "updated_ts"
 )
 
 // BlameChangeDate represents the object structure for change_date
@@ -431,6 +433,8 @@ type Blame struct {
 	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
 	// Status the status of the change
 	Status BlameStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -465,6 +469,7 @@ func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 
 	case BlameStatus:
 		return v.String()
+
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
@@ -521,7 +526,7 @@ func (o *Blame) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Blame) GetTimestamp() time.Time {
-	var dt interface{} = o.ChangeDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -533,8 +538,6 @@ func (o *Blame) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case BlameChangeDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Blame")
 }
@@ -578,7 +581,7 @@ func (o *Blame) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "change_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -729,6 +732,7 @@ func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
 		"size":            toBlameObject(o.Size, isavro, false, "long"),
 		"sloc":            toBlameObject(o.Sloc, isavro, false, "long"),
 		"status":          toBlameObject(o.Status, isavro, false, "status"),
+		"updated_ts":      toBlameObject(o.UpdatedAt, isavro, false, "long"),
 		"hashcode":        toBlameObject(o.Hashcode, isavro, false, "string"),
 	}
 }
@@ -1126,6 +1130,21 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1153,6 +1172,7 @@ func (o *Blame) Hash() string {
 	args = append(args, o.Size)
 	args = append(args, o.Sloc)
 	args = append(args, o.Status)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -1256,6 +1276,10 @@ func GetBlameAvroSchemaSpec() string {
 					"name":    "status",
 					"symbols": []interface{}{"ADDED", "MODIFIED", "REMOVED"},
 				},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 		},
 	}

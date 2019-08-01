@@ -93,6 +93,8 @@ const (
 	IntegrationResponseSuccessColumn = "success"
 	// IntegrationResponseTypeColumn is the type column name
 	IntegrationResponseTypeColumn = "type"
+	// IntegrationResponseUpdatedAtColumn is the updated_ts column name
+	IntegrationResponseUpdatedAtColumn = "updated_ts"
 	// IntegrationResponseUUIDColumn is the uuid column name
 	IntegrationResponseUUIDColumn = "uuid"
 	// IntegrationResponseVersionColumn is the version column name
@@ -291,6 +293,8 @@ type IntegrationResponse struct {
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
 	Type IntegrationResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -379,7 +383,7 @@ func (o *IntegrationResponse) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *IntegrationResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.EventDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -391,8 +395,6 @@ func (o *IntegrationResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case IntegrationResponseEventDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for IntegrationResponse")
 }
@@ -436,7 +438,7 @@ func (o *IntegrationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "event_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -584,6 +586,7 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 		"request_id":     toIntegrationResponseObject(o.RequestID, isavro, false, "string"),
 		"success":        toIntegrationResponseObject(o.Success, isavro, false, "boolean"),
 		"type":           toIntegrationResponseObject(o.Type, isavro, false, "type"),
+		"updated_ts":     toIntegrationResponseObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":           toIntegrationResponseObject(o.UUID, isavro, false, "string"),
 		"version":        toIntegrationResponseObject(o.Version, isavro, false, "string"),
 		"hashcode":       toIntegrationResponseObject(o.Hashcode, isavro, false, "string"),
@@ -948,6 +951,21 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1004,6 +1022,7 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
 	args = append(args, o.Type)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1110,6 +1129,10 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 					"name":    "type",
 					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
 				},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "uuid",

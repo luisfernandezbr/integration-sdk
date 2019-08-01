@@ -96,6 +96,8 @@ const (
 	ExportRequestRequestDateColumnOffsetColumn = "request_date->offset"
 	// ExportRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
 	ExportRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
+	// ExportRequestUpdatedAtColumn is the updated_ts column name
+	ExportRequestUpdatedAtColumn = "updated_ts"
 	// ExportRequestUploadURLColumn is the upload_url column name
 	ExportRequestUploadURLColumn = "upload_url"
 	// ExportRequestUUIDColumn is the uuid column name
@@ -1020,6 +1022,8 @@ type ExportRequest struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate ExportRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UploadURL The one time upload URL to use for uploading a job to the Pinpoint cloud
 	UploadURL *string `json:"upload_url" bson:"upload_url" yaml:"upload_url" faker:"-"`
 	// UUID the agent unique identifier
@@ -1115,7 +1119,7 @@ func (o *ExportRequest) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.RequestDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -1127,8 +1131,6 @@ func (o *ExportRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ExportRequestRequestDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ExportRequest")
 }
@@ -1172,7 +1174,7 @@ func (o *ExportRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "request_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -1310,6 +1312,7 @@ func (o *ExportRequest) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toExportRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toExportRequestObject(o.RefType, isavro, false, "string"),
 		"request_date": toExportRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"updated_ts":   toExportRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"upload_url":   toExportRequestObject(o.UploadURL, isavro, true, "string"),
 		"uuid":         toExportRequestObject(o.UUID, isavro, false, "string"),
 		"hashcode":     toExportRequestObject(o.Hashcode, isavro, false, "string"),
@@ -1511,6 +1514,21 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		o.RequestDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["upload_url"].(*string); ok {
 		o.UploadURL = val
 	} else if val, ok := kv["upload_url"].(string); ok {
@@ -1557,6 +1575,7 @@ func (o *ExportRequest) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UploadURL)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
@@ -1609,6 +1628,10 @@ func GetExportRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name":    "upload_url",

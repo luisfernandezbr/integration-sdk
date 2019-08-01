@@ -90,6 +90,8 @@ const (
 	SprintStartedDateColumnRfc3339Column = "started_date->rfc3339"
 	// SprintStatusColumn is the status column name
 	SprintStatusColumn = "status"
+	// SprintUpdatedAtColumn is the updated_ts column name
+	SprintUpdatedAtColumn = "updated_ts"
 )
 
 // SprintCompletedDate represents the object structure for completed_date
@@ -553,6 +555,8 @@ type Sprint struct {
 	StartedDate SprintStartedDate `json:"started_date" bson:"started_date" yaml:"started_date" faker:"-"`
 	// Status status of the sprint
 	Status SprintStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -589,6 +593,7 @@ func toSprintObject(o interface{}, isavro bool, isoptional bool, avrotype string
 
 	case SprintStatus:
 		return v.String()
+
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
@@ -638,7 +643,7 @@ func (o *Sprint) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Sprint) GetTimestamp() time.Time {
-	var dt interface{} = o.FetchedDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -650,8 +655,6 @@ func (o *Sprint) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case SprintFetchedDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Sprint")
 }
@@ -695,7 +698,7 @@ func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "fetched_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -833,6 +836,7 @@ func (o *Sprint) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":       toSprintObject(o.RefType, isavro, false, "string"),
 		"started_date":   toSprintObject(o.StartedDate, isavro, false, "started_date"),
 		"status":         toSprintObject(o.Status, isavro, false, "status"),
+		"updated_ts":     toSprintObject(o.UpdatedAt, isavro, false, "long"),
 		"hashcode":       toSprintObject(o.Hashcode, isavro, false, "string"),
 	}
 }
@@ -1094,6 +1098,21 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1111,6 +1130,7 @@ func (o *Sprint) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.StartedDate)
 	args = append(args, o.Status)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -1173,6 +1193,10 @@ func GetSprintAvroSchemaSpec() string {
 					"name":    "status",
 					"symbols": []interface{}{"ACTIVE", "FUTURE", "CLOSED"},
 				},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 		},
 	}

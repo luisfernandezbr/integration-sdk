@@ -111,6 +111,8 @@ const (
 	IssueUpdatedDateColumnOffsetColumn = "updated_date->offset"
 	// IssueUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
 	IssueUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
+	// IssueUpdatedAtColumn is the updated_ts column name
+	IssueUpdatedAtColumn = "updated_ts"
 	// IssueURLColumn is the url column name
 	IssueURLColumn = "url"
 )
@@ -569,6 +571,8 @@ type Issue struct {
 	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedDate the date that the issue was updated
 	UpdatedDate IssueUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the issue page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -665,7 +669,7 @@ func (o *Issue) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Issue) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -677,8 +681,6 @@ func (o *Issue) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case IssueUpdatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Issue")
 }
@@ -722,7 +724,7 @@ func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "project_id",
-		Timestamp:         "updated_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -875,6 +877,7 @@ func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
 		"title":           toIssueObject(o.Title, isavro, false, "string"),
 		"type":            toIssueObject(o.Type, isavro, false, "string"),
 		"updated_date":    toIssueObject(o.UpdatedDate, isavro, false, "updated_date"),
+		"updated_ts":      toIssueObject(o.UpdatedAt, isavro, false, "long"),
 		"url":             toIssueObject(o.URL, isavro, false, "string"),
 		"hashcode":        toIssueObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -1320,6 +1323,21 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -1360,6 +1378,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.Title)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedDate)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -1455,6 +1474,10 @@ func GetIssueAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_date",
 				"type": map[string]interface{}{"doc": "the date that the issue was updated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "updated_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "url",

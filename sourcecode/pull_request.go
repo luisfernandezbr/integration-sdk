@@ -105,6 +105,8 @@ const (
 	PullRequestUpdatedDateColumnOffsetColumn = "updated_date->offset"
 	// PullRequestUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
 	PullRequestUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
+	// PullRequestUpdatedAtColumn is the updated_ts column name
+	PullRequestUpdatedAtColumn = "updated_ts"
 	// PullRequestURLColumn is the url column name
 	PullRequestURLColumn = "url"
 )
@@ -590,6 +592,8 @@ type PullRequest struct {
 	Title string `json:"title" bson:"title" yaml:"title" faker:"commit_message"`
 	// UpdatedDate the timestamp in UTC that the pull request was closed
 	UpdatedDate PullRequestUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the pull request home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -682,7 +686,7 @@ func (o *PullRequest) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -694,8 +698,6 @@ func (o *PullRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case PullRequestUpdatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for PullRequest")
 }
@@ -748,7 +750,7 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "updated_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -895,6 +897,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		"status":            toPullRequestObject(o.Status, isavro, false, "status"),
 		"title":             toPullRequestObject(o.Title, isavro, false, "string"),
 		"updated_date":      toPullRequestObject(o.UpdatedDate, isavro, false, "updated_date"),
+		"updated_ts":        toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"url":               toPullRequestObject(o.URL, isavro, false, "string"),
 		"hashcode":          toPullRequestObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -1292,6 +1295,21 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -1329,6 +1347,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.Status)
 	args = append(args, o.Title)
 	args = append(args, o.UpdatedDate)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -1416,6 +1435,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_date",
 				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "updated_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "url",

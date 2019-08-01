@@ -66,6 +66,8 @@ const (
 	PullRequestReviewRepoIDColumn = "repo_id"
 	// PullRequestReviewStateColumn is the state column name
 	PullRequestReviewStateColumn = "state"
+	// PullRequestReviewUpdatedAtColumn is the updated_ts column name
+	PullRequestReviewUpdatedAtColumn = "updated_ts"
 	// PullRequestReviewUserRefIDColumn is the user_ref_id column name
 	PullRequestReviewUserRefIDColumn = "user_ref_id"
 )
@@ -191,6 +193,8 @@ type PullRequestReview struct {
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// State the state of the review
 	State string `json:"state" bson:"state" yaml:"state" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -268,7 +272,7 @@ func (o *PullRequestReview) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequestReview) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -280,8 +284,6 @@ func (o *PullRequestReview) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case PullRequestReviewCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for PullRequestReview")
 }
@@ -334,7 +336,7 @@ func (o *PullRequestReview) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "created_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -469,6 +471,7 @@ func (o *PullRequestReview) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":        toPullRequestReviewObject(o.RefType, isavro, false, "string"),
 		"repo_id":         toPullRequestReviewObject(o.RepoID, isavro, false, "string"),
 		"state":           toPullRequestReviewObject(o.State, isavro, false, "string"),
+		"updated_ts":      toPullRequestReviewObject(o.UpdatedAt, isavro, false, "long"),
 		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, isavro, false, "string"),
 		"hashcode":        toPullRequestReviewObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -622,6 +625,21 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["user_ref_id"].(string); ok {
 		o.UserRefID = val
 	} else {
@@ -650,6 +668,7 @@ func (o *PullRequestReview) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
 	args = append(args, o.State)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -697,6 +716,10 @@ func GetPullRequestReviewAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "state",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "user_ref_id",

@@ -145,6 +145,8 @@ const (
 	CommitSizeColumn = "size"
 	// CommitSlocColumn is the sloc column name
 	CommitSlocColumn = "sloc"
+	// CommitUpdatedAtColumn is the updated_ts column name
+	CommitUpdatedAtColumn = "updated_ts"
 	// CommitURLColumn is the url column name
 	CommitURLColumn = "url"
 )
@@ -897,6 +899,8 @@ type Commit struct {
 	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
 	// Sloc the number of source lines in the commit
 	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the commit detail
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -984,7 +988,7 @@ func (o *Commit) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Commit) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -996,8 +1000,6 @@ func (o *Commit) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case CommitCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Commit")
 }
@@ -1042,7 +1044,7 @@ func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "created_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -1196,6 +1198,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"sha":              toCommitObject(o.Sha, isavro, false, "string"),
 		"size":             toCommitObject(o.Size, isavro, false, "long"),
 		"sloc":             toCommitObject(o.Sloc, isavro, false, "long"),
+		"updated_ts":       toCommitObject(o.UpdatedAt, isavro, false, "long"),
 		"url":              toCommitObject(o.URL, isavro, false, "string"),
 		"hashcode":         toCommitObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -1623,6 +1626,21 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -1667,6 +1685,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Sha)
 	args = append(args, o.Size)
 	args = append(args, o.Sloc)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -1777,6 +1796,10 @@ func GetCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "sloc",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
 				"type": "long",
 			},
 			map[string]interface{}{

@@ -64,6 +64,8 @@ const (
 	MetricRefIDColumn = "ref_id"
 	// MetricRefTypeColumn is the ref_type column name
 	MetricRefTypeColumn = "ref_type"
+	// MetricUpdatedAtColumn is the updated_ts column name
+	MetricUpdatedAtColumn = "updated_ts"
 	// MetricValueColumn is the value column name
 	MetricValueColumn = "value"
 )
@@ -187,6 +189,8 @@ type Metric struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Value the value of the metric
 	Value string `json:"value" bson:"value" yaml:"value" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -264,7 +268,7 @@ func (o *Metric) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Metric) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -276,8 +280,6 @@ func (o *Metric) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case MetricCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Metric")
 }
@@ -321,7 +323,7 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "created_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -455,6 +457,7 @@ func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
 		"project_id":   toMetricObject(o.ProjectID, isavro, false, "string"),
 		"ref_id":       toMetricObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toMetricObject(o.RefType, isavro, false, "string"),
+		"updated_ts":   toMetricObject(o.UpdatedAt, isavro, false, "long"),
 		"value":        toMetricObject(o.Value, isavro, false, "string"),
 		"hashcode":     toMetricObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -593,6 +596,21 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["value"].(string); ok {
 		o.Value = val
 	} else {
@@ -620,6 +638,7 @@ func (o *Metric) Hash() string {
 	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.Value)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -663,6 +682,10 @@ func GetMetricAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "value",

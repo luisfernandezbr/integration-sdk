@@ -94,6 +94,8 @@ const (
 	UserRequestRequestDateColumnOffsetColumn = "request_date->offset"
 	// UserRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
 	UserRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
+	// UserRequestUpdatedAtColumn is the updated_ts column name
+	UserRequestUpdatedAtColumn = "updated_ts"
 	// UserRequestUUIDColumn is the uuid column name
 	UserRequestUUIDColumn = "uuid"
 )
@@ -1014,6 +1016,8 @@ type UserRequest struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate UserRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -1097,7 +1101,7 @@ func (o *UserRequest) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *UserRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.RequestDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -1109,8 +1113,6 @@ func (o *UserRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case UserRequestRequestDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for UserRequest")
 }
@@ -1154,7 +1156,7 @@ func (o *UserRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "request_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -1288,6 +1290,7 @@ func (o *UserRequest) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toUserRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toUserRequestObject(o.RefType, isavro, false, "string"),
 		"request_date": toUserRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"updated_ts":   toUserRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":         toUserRequestObject(o.UUID, isavro, false, "string"),
 		"hashcode":     toUserRequestObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -1432,6 +1435,21 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		o.RequestDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1459,6 +1477,7 @@ func (o *UserRequest) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -1506,6 +1525,10 @@ func GetUserRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "uuid",

@@ -21,6 +21,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
@@ -61,6 +62,8 @@ const (
 	RepoRefIDColumn = "ref_id"
 	// RepoRefTypeColumn is the ref_type column name
 	RepoRefTypeColumn = "ref_type"
+	// RepoUpdatedAtColumn is the updated_ts column name
+	RepoUpdatedAtColumn = "updated_ts"
 	// RepoURLColumn is the url column name
 	RepoURLColumn = "url"
 )
@@ -85,6 +88,8 @@ type Repo struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the repo home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -163,7 +168,20 @@ func (o *Repo) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Repo) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Repo")
 }
 
 // GetRefID returns the RefID for the object
@@ -214,7 +232,7 @@ func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -350,6 +368,7 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 		"name":           toRepoObject(o.Name, isavro, false, "string"),
 		"ref_id":         toRepoObject(o.RefID, isavro, false, "string"),
 		"ref_type":       toRepoObject(o.RefType, isavro, false, "string"),
+		"updated_ts":     toRepoObject(o.UpdatedAt, isavro, false, "long"),
 		"url":            toRepoObject(o.URL, isavro, false, "string"),
 		"hashcode":       toRepoObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -497,6 +516,21 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -526,6 +560,7 @@ func (o *Repo) Hash() string {
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -577,6 +612,10 @@ func GetRepoAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "url",

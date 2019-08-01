@@ -107,6 +107,8 @@ const (
 	ExportResponseSuccessColumn = "success"
 	// ExportResponseTypeColumn is the type column name
 	ExportResponseTypeColumn = "type"
+	// ExportResponseUpdatedAtColumn is the updated_ts column name
+	ExportResponseUpdatedAtColumn = "updated_ts"
 	// ExportResponseUUIDColumn is the uuid column name
 	ExportResponseUUIDColumn = "uuid"
 	// ExportResponseVersionColumn is the version column name
@@ -513,6 +515,8 @@ type ExportResponse struct {
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
 	Type ExportResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -607,7 +611,7 @@ func (o *ExportResponse) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.EventDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -619,8 +623,6 @@ func (o *ExportResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ExportResponseEventDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ExportResponse")
 }
@@ -664,7 +666,7 @@ func (o *ExportResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "event_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -813,6 +815,7 @@ func (o *ExportResponse) ToMap(avro ...bool) map[string]interface{} {
 		"start_date":   toExportResponseObject(o.StartDate, isavro, false, "start_date"),
 		"success":      toExportResponseObject(o.Success, isavro, false, "boolean"),
 		"type":         toExportResponseObject(o.Type, isavro, false, "type"),
+		"updated_ts":   toExportResponseObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":         toExportResponseObject(o.UUID, isavro, false, "string"),
 		"version":      toExportResponseObject(o.Version, isavro, false, "string"),
 		"hashcode":     toExportResponseObject(o.Hashcode, isavro, false, "string"),
@@ -952,6 +955,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1228,6 +1250,21 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1285,6 +1322,7 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.StartDate)
 	args = append(args, o.Success)
 	args = append(args, o.Type)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1395,6 +1433,10 @@ func GetExportResponseAvroSchemaSpec() string {
 					"name":    "type",
 					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
 				},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "uuid",

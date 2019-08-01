@@ -73,6 +73,8 @@ const (
 	BranchRefTypeColumn = "ref_type"
 	// BranchRepoIDColumn is the repo_id column name
 	BranchRepoIDColumn = "repo_id"
+	// BranchUpdatedAtColumn is the updated_ts column name
+	BranchUpdatedAtColumn = "updated_ts"
 )
 
 // Branch git branches
@@ -103,6 +105,8 @@ type Branch struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -181,7 +185,20 @@ func (o *Branch) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Branch) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Branch")
 }
 
 // GetRefID returns the RefID for the object
@@ -232,7 +249,7 @@ func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -378,6 +395,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":                toBranchObject(o.RefID, isavro, false, "string"),
 		"ref_type":              toBranchObject(o.RefType, isavro, false, "string"),
 		"repo_id":               toBranchObject(o.RepoID, isavro, false, "string"),
+		"updated_ts":            toBranchObject(o.UpdatedAt, isavro, false, "long"),
 		"hashcode":              toBranchObject(o.Hashcode, isavro, false, "string"),
 	}
 }
@@ -652,6 +670,21 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -671,6 +704,7 @@ func (o *Branch) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -737,6 +771,10 @@ func GetBranchAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "repo_id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 		},
 	}

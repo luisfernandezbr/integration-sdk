@@ -21,10 +21,12 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
@@ -57,6 +59,8 @@ const (
 	UserRefIDColumn = "ref_id"
 	// UserRefTypeColumn is the ref_type column name
 	UserRefTypeColumn = "ref_type"
+	// UserUpdatedAtColumn is the updated_ts column name
+	UserUpdatedAtColumn = "updated_ts"
 	// UserUsernameColumn is the username column name
 	UserUsernameColumn = "username"
 )
@@ -77,6 +81,8 @@ type User struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Username the username of the user
 	Username string `json:"username" bson:"username" yaml:"username" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -157,7 +163,20 @@ func (o *User) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *User) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for User")
 }
 
 // GetRefID returns the RefID for the object
@@ -208,7 +227,7 @@ func (o *User) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -342,6 +361,7 @@ func (o *User) ToMap(avro ...bool) map[string]interface{} {
 		"name":        toUserObject(o.Name, isavro, false, "string"),
 		"ref_id":      toUserObject(o.RefID, isavro, false, "string"),
 		"ref_type":    toUserObject(o.RefType, isavro, false, "string"),
+		"updated_ts":  toUserObject(o.UpdatedAt, isavro, false, "long"),
 		"username":    toUserObject(o.Username, isavro, false, "string"),
 		"hashcode":    toUserObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -468,6 +488,21 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["username"].(string); ok {
 		o.Username = val
 	} else {
@@ -495,6 +530,7 @@ func (o *User) Hash() string {
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.Username)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -540,6 +576,10 @@ func GetUserAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "username",

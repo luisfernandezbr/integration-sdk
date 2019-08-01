@@ -76,6 +76,8 @@ const (
 	ChangelogToColumn = "to"
 	// ChangelogToStringColumn is the to_string column name
 	ChangelogToStringColumn = "to_string"
+	// ChangelogUpdatedAtColumn is the updated_ts column name
+	ChangelogUpdatedAtColumn = "updated_ts"
 	// ChangelogUserIDColumn is the user_id column name
 	ChangelogUserIDColumn = "user_id"
 )
@@ -211,6 +213,8 @@ type Changelog struct {
 	To string `json:"to" bson:"to" yaml:"to" faker:"-"`
 	// ToString name of the change to
 	ToString string `json:"to_string" bson:"to_string" yaml:"to_string" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UserID id of the user of this change
 	UserID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -288,7 +292,7 @@ func (o *Changelog) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Changelog) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -300,8 +304,6 @@ func (o *Changelog) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ChangelogCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Changelog")
 }
@@ -345,7 +347,7 @@ func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "issue_id",
-		Timestamp:         "created_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -485,6 +487,7 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":     toChangelogObject(o.RefType, isavro, false, "string"),
 		"to":           toChangelogObject(o.To, isavro, false, "string"),
 		"to_string":    toChangelogObject(o.ToString, isavro, false, "string"),
+		"updated_ts":   toChangelogObject(o.UpdatedAt, isavro, false, "long"),
 		"user_id":      toChangelogObject(o.UserID, isavro, false, "string"),
 		"hashcode":     toChangelogObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -713,6 +716,21 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["user_id"].(string); ok {
 		o.UserID = val
 	} else {
@@ -746,6 +764,7 @@ func (o *Changelog) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.To)
 	args = append(args, o.ToString)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UserID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -813,6 +832,10 @@ func GetChangelogAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "to_string",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "user_id",

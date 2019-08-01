@@ -81,6 +81,8 @@ const (
 	DeploymentStartDateColumnRfc3339Column = "start_date->rfc3339"
 	// DeploymentStatusColumn is the status column name
 	DeploymentStatusColumn = "status"
+	// DeploymentUpdatedAtColumn is the updated_ts column name
+	DeploymentUpdatedAtColumn = "updated_ts"
 	// DeploymentURLColumn is the url column name
 	DeploymentURLColumn = "url"
 )
@@ -379,6 +381,8 @@ type Deployment struct {
 	StartDate DeploymentStartDate `json:"start_date" bson:"start_date" yaml:"start_date" faker:"-"`
 	// Status the status of the deployment
 	Status DeploymentStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the deployment status page
 	URL *string `json:"url" bson:"url" yaml:"url" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -475,7 +479,7 @@ func (o *Deployment) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Deployment) GetTimestamp() time.Time {
-	var dt interface{} = o.StartDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -487,8 +491,6 @@ func (o *Deployment) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case DeploymentStartDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Deployment")
 }
@@ -532,7 +534,7 @@ func (o *Deployment) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "start_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -671,6 +673,7 @@ func (o *Deployment) ToMap(avro ...bool) map[string]interface{} {
 		"repo_name":    toDeploymentObject(o.RepoName, isavro, false, "string"),
 		"start_date":   toDeploymentObject(o.StartDate, isavro, false, "start_date"),
 		"status":       toDeploymentObject(o.Status, isavro, false, "status"),
+		"updated_ts":   toDeploymentObject(o.UpdatedAt, isavro, false, "long"),
 		"url":          toDeploymentObject(o.URL, isavro, true, "string"),
 		"hashcode":     toDeploymentObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -933,6 +936,21 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["url"].(*string); ok {
 		o.URL = val
 	} else if val, ok := kv["url"].(string); ok {
@@ -968,6 +986,7 @@ func (o *Deployment) Hash() string {
 	args = append(args, o.RepoName)
 	args = append(args, o.StartDate)
 	args = append(args, o.Status)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -1039,6 +1058,10 @@ func GetDeploymentAvroSchemaSpec() string {
 					"name":    "status",
 					"symbols": []interface{}{"PASS", "FAIL", "CANCEL"},
 				},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name":    "url",

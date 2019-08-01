@@ -60,6 +60,8 @@ const (
 	ExportTriggerRequestDateColumnOffsetColumn = "request_date->offset"
 	// ExportTriggerRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
 	ExportTriggerRequestDateColumnRfc3339Column = "request_date->rfc3339"
+	// ExportTriggerUpdatedAtColumn is the updated_ts column name
+	ExportTriggerUpdatedAtColumn = "updated_ts"
 )
 
 // ExportTriggerRequestDate represents the object structure for request_date
@@ -177,6 +179,8 @@ type ExportTrigger struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the requested date
 	RequestDate ExportTriggerRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -201,6 +205,7 @@ func toExportTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype
 
 	case ExportTriggerRequestDate:
 		return v.ToMap(isavro)
+
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
 	}
@@ -251,7 +256,7 @@ func (o *ExportTrigger) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportTrigger) GetTimestamp() time.Time {
-	var dt interface{} = o.RequestDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -263,8 +268,6 @@ func (o *ExportTrigger) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case ExportTriggerRequestDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for ExportTrigger")
 }
@@ -308,7 +311,7 @@ func (o *ExportTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "request_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -440,6 +443,7 @@ func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toExportTriggerObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toExportTriggerObject(o.RefType, isavro, false, "string"),
 		"request_date": toExportTriggerObject(o.RequestDate, isavro, false, "request_date"),
+		"updated_ts":   toExportTriggerObject(o.UpdatedAt, isavro, false, "long"),
 		"hashcode":     toExportTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
@@ -547,6 +551,20 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 		o.RequestDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -558,6 +576,7 @@ func (o *ExportTrigger) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -592,6 +611,10 @@ func GetExportTriggerAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the requested date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 		},
 	}

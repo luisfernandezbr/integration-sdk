@@ -94,6 +94,8 @@ const (
 	IntegrationRequestRequestDateColumnOffsetColumn = "request_date->offset"
 	// IntegrationRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
 	IntegrationRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
+	// IntegrationRequestUpdatedAtColumn is the updated_ts column name
+	IntegrationRequestUpdatedAtColumn = "updated_ts"
 	// IntegrationRequestUUIDColumn is the uuid column name
 	IntegrationRequestUUIDColumn = "uuid"
 )
@@ -1014,6 +1016,8 @@ type IntegrationRequest struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate IntegrationRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -1097,7 +1101,7 @@ func (o *IntegrationRequest) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *IntegrationRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.RequestDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -1109,8 +1113,6 @@ func (o *IntegrationRequest) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case IntegrationRequestRequestDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for IntegrationRequest")
 }
@@ -1154,7 +1156,7 @@ func (o *IntegrationRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "request_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -1288,6 +1290,7 @@ func (o *IntegrationRequest) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toIntegrationRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toIntegrationRequestObject(o.RefType, isavro, false, "string"),
 		"request_date": toIntegrationRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"updated_ts":   toIntegrationRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":         toIntegrationRequestObject(o.UUID, isavro, false, "string"),
 		"hashcode":     toIntegrationRequestObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -1408,9 +1411,43 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
 	}
 
 	if val, ok := kv["uuid"].(string); ok {
@@ -1440,6 +1477,7 @@ func (o *IntegrationRequest) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -1487,6 +1525,10 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "uuid",

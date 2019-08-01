@@ -91,6 +91,8 @@ const (
 	EnrollResponseSuccessColumn = "success"
 	// EnrollResponseTypeColumn is the type column name
 	EnrollResponseTypeColumn = "type"
+	// EnrollResponseUpdatedAtColumn is the updated_ts column name
+	EnrollResponseUpdatedAtColumn = "updated_ts"
 	// EnrollResponseUUIDColumn is the uuid column name
 	EnrollResponseUUIDColumn = "uuid"
 	// EnrollResponseVersionColumn is the version column name
@@ -287,6 +289,8 @@ type EnrollResponse struct {
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
 	Type EnrollResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -375,7 +379,7 @@ func (o *EnrollResponse) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *EnrollResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.EventDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -387,8 +391,6 @@ func (o *EnrollResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case EnrollResponseEventDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for EnrollResponse")
 }
@@ -432,7 +434,7 @@ func (o *EnrollResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "event_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -579,6 +581,7 @@ func (o *EnrollResponse) ToMap(avro ...bool) map[string]interface{} {
 		"request_id":   toEnrollResponseObject(o.RequestID, isavro, false, "string"),
 		"success":      toEnrollResponseObject(o.Success, isavro, false, "boolean"),
 		"type":         toEnrollResponseObject(o.Type, isavro, false, "type"),
+		"updated_ts":   toEnrollResponseObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":         toEnrollResponseObject(o.UUID, isavro, false, "string"),
 		"version":      toEnrollResponseObject(o.Version, isavro, false, "string"),
 		"hashcode":     toEnrollResponseObject(o.Hashcode, isavro, false, "string"),
@@ -700,6 +703,25 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnrollResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -928,6 +950,21 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -983,6 +1020,7 @@ func (o *EnrollResponse) Hash() string {
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
 	args = append(args, o.Type)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1085,6 +1123,10 @@ func GetEnrollResponseAvroSchemaSpec() string {
 					"name":    "type",
 					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
 				},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "uuid",

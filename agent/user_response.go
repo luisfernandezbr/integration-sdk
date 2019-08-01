@@ -94,6 +94,8 @@ const (
 	UserResponseSuccessColumn = "success"
 	// UserResponseTypeColumn is the type column name
 	UserResponseTypeColumn = "type"
+	// UserResponseUpdatedAtColumn is the updated_ts column name
+	UserResponseUpdatedAtColumn = "updated_ts"
 	// UserResponseUsersColumn is the users column name
 	UserResponseUsersColumn = "users"
 	// UserResponseUsersColumnActiveColumn is the active column property of the Users name
@@ -715,6 +717,8 @@ type UserResponse struct {
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
 	Type UserResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Users the exported users
 	Users []UserResponseUsers `json:"users" bson:"users" yaml:"users" faker:"-"`
 	// UUID the agent unique identifier
@@ -815,7 +819,7 @@ func (o *UserResponse) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *UserResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.EventDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -827,8 +831,6 @@ func (o *UserResponse) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case UserResponseEventDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for UserResponse")
 }
@@ -872,7 +874,7 @@ func (o *UserResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "event_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -1022,6 +1024,7 @@ func (o *UserResponse) ToMap(avro ...bool) map[string]interface{} {
 		"request_id":     toUserResponseObject(o.RequestID, isavro, false, "string"),
 		"success":        toUserResponseObject(o.Success, isavro, false, "boolean"),
 		"type":           toUserResponseObject(o.Type, isavro, false, "type"),
+		"updated_ts":     toUserResponseObject(o.UpdatedAt, isavro, false, "long"),
 		"users":          toUserResponseObject(o.Users, isavro, false, "users"),
 		"uuid":           toUserResponseObject(o.UUID, isavro, false, "string"),
 		"version":        toUserResponseObject(o.Version, isavro, false, "string"),
@@ -1129,6 +1132,25 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1372,6 +1394,21 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if o == nil {
 
 		o.Users = make([]UserResponseUsers, 0)
@@ -1482,6 +1519,7 @@ func (o *UserResponse) Hash() string {
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
 	args = append(args, o.Type)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.Users)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
@@ -1585,6 +1623,10 @@ func GetUserResponseAvroSchemaSpec() string {
 					"name":    "type",
 					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
 				},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "users",

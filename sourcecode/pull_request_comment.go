@@ -74,6 +74,8 @@ const (
 	PullRequestCommentUpdatedDateColumnOffsetColumn = "updated_date->offset"
 	// PullRequestCommentUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
 	PullRequestCommentUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
+	// PullRequestCommentUpdatedAtColumn is the updated_ts column name
+	PullRequestCommentUpdatedAtColumn = "updated_ts"
 	// PullRequestCommentUserRefIDColumn is the user_ref_id column name
 	PullRequestCommentUserRefIDColumn = "user_ref_id"
 )
@@ -304,6 +306,8 @@ type PullRequestComment struct {
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// UpdatedDate the timestamp in UTC that the comment was closed
 	UpdatedDate PullRequestCommentUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -384,7 +388,7 @@ func (o *PullRequestComment) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequestComment) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedDate
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -396,8 +400,6 @@ func (o *PullRequestComment) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
-	case PullRequestCommentUpdatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for PullRequestComment")
 }
@@ -450,7 +452,7 @@ func (o *PullRequestComment) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "updated_date",
+		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -586,6 +588,7 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":        toPullRequestCommentObject(o.RefType, isavro, false, "string"),
 		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
 		"updated_date":    toPullRequestCommentObject(o.UpdatedDate, isavro, false, "updated_date"),
+		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, isavro, false, "long"),
 		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, isavro, false, "string"),
 		"hashcode":        toPullRequestCommentObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -772,6 +775,21 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["user_ref_id"].(string); ok {
 		o.UserRefID = val
 	} else {
@@ -801,6 +819,7 @@ func (o *PullRequestComment) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
 	args = append(args, o.UpdatedDate)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -852,6 +871,10 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_date",
 				"type": map[string]interface{}{"doc": "the timestamp in UTC that the comment was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "updated_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "user_ref_id",
