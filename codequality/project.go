@@ -171,12 +171,21 @@ func (o *Project) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Project) IsMaterialized() bool {
-	return false
+	return true
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *Project) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
+	idletime, err := time.ParseDuration("1s")
+	if err != nil {
+		panic(err)
+	}
+	return &datamodel.ModelMaterializeConfig{
+		KeyName:   "id",
+		TableName: "codequality_project",
+		BatchSize: 5000,
+		IdleTime:  idletime,
+	}
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
