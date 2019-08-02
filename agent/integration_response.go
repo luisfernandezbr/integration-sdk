@@ -73,8 +73,6 @@ const (
 	IntegrationResponseHostnameColumn = "hostname"
 	// IntegrationResponseIDColumn is the id column name
 	IntegrationResponseIDColumn = "id"
-	// IntegrationResponseIntegrationIDColumn is the integration_id column name
-	IntegrationResponseIntegrationIDColumn = "integration_id"
 	// IntegrationResponseMemoryColumn is the memory column name
 	IntegrationResponseMemoryColumn = "memory"
 	// IntegrationResponseMessageColumn is the message column name
@@ -273,8 +271,6 @@ type IntegrationResponse struct {
 	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// IntegrationID the integration id
-	IntegrationID string `json:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -565,31 +561,30 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":   toIntegrationResponseObject(o.Architecture, isavro, false, "string"),
-		"authorization":  toIntegrationResponseObject(o.Authorization, isavro, false, "string"),
-		"customer_id":    toIntegrationResponseObject(o.CustomerID, isavro, false, "string"),
-		"data":           toIntegrationResponseObject(o.Data, isavro, true, "string"),
-		"distro":         toIntegrationResponseObject(o.Distro, isavro, false, "string"),
-		"error":          toIntegrationResponseObject(o.Error, isavro, true, "string"),
-		"event_date":     toIntegrationResponseObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":     toIntegrationResponseObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":     toIntegrationResponseObject(o.GoVersion, isavro, false, "string"),
-		"hostname":       toIntegrationResponseObject(o.Hostname, isavro, false, "string"),
-		"id":             toIntegrationResponseObject(o.ID, isavro, false, "string"),
-		"integration_id": toIntegrationResponseObject(o.IntegrationID, isavro, false, "string"),
-		"memory":         toIntegrationResponseObject(o.Memory, isavro, false, "long"),
-		"message":        toIntegrationResponseObject(o.Message, isavro, false, "string"),
-		"num_cpu":        toIntegrationResponseObject(o.NumCPU, isavro, false, "long"),
-		"os":             toIntegrationResponseObject(o.OS, isavro, false, "string"),
-		"ref_id":         toIntegrationResponseObject(o.RefID, isavro, false, "string"),
-		"ref_type":       toIntegrationResponseObject(o.RefType, isavro, false, "string"),
-		"request_id":     toIntegrationResponseObject(o.RequestID, isavro, false, "string"),
-		"success":        toIntegrationResponseObject(o.Success, isavro, false, "boolean"),
-		"type":           toIntegrationResponseObject(o.Type, isavro, false, "type"),
-		"updated_ts":     toIntegrationResponseObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":           toIntegrationResponseObject(o.UUID, isavro, false, "string"),
-		"version":        toIntegrationResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":       toIntegrationResponseObject(o.Hashcode, isavro, false, "string"),
+		"architecture":  toIntegrationResponseObject(o.Architecture, isavro, false, "string"),
+		"authorization": toIntegrationResponseObject(o.Authorization, isavro, false, "string"),
+		"customer_id":   toIntegrationResponseObject(o.CustomerID, isavro, false, "string"),
+		"data":          toIntegrationResponseObject(o.Data, isavro, true, "string"),
+		"distro":        toIntegrationResponseObject(o.Distro, isavro, false, "string"),
+		"error":         toIntegrationResponseObject(o.Error, isavro, true, "string"),
+		"event_date":    toIntegrationResponseObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":    toIntegrationResponseObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":    toIntegrationResponseObject(o.GoVersion, isavro, false, "string"),
+		"hostname":      toIntegrationResponseObject(o.Hostname, isavro, false, "string"),
+		"id":            toIntegrationResponseObject(o.ID, isavro, false, "string"),
+		"memory":        toIntegrationResponseObject(o.Memory, isavro, false, "long"),
+		"message":       toIntegrationResponseObject(o.Message, isavro, false, "string"),
+		"num_cpu":       toIntegrationResponseObject(o.NumCPU, isavro, false, "long"),
+		"os":            toIntegrationResponseObject(o.OS, isavro, false, "string"),
+		"ref_id":        toIntegrationResponseObject(o.RefID, isavro, false, "string"),
+		"ref_type":      toIntegrationResponseObject(o.RefType, isavro, false, "string"),
+		"request_id":    toIntegrationResponseObject(o.RequestID, isavro, false, "string"),
+		"success":       toIntegrationResponseObject(o.Success, isavro, false, "boolean"),
+		"type":          toIntegrationResponseObject(o.Type, isavro, false, "type"),
+		"updated_ts":    toIntegrationResponseObject(o.UpdatedAt, isavro, false, "long"),
+		"uuid":          toIntegrationResponseObject(o.UUID, isavro, false, "string"),
+		"version":       toIntegrationResponseObject(o.Version, isavro, false, "string"),
+		"hashcode":      toIntegrationResponseObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -769,21 +764,6 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["integration_id"].(string); ok {
-		o.IntegrationID = val
-	} else {
-		if val, ok := kv["integration_id"]; ok {
-			if val == nil {
-				o.IntegrationID = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.IntegrationID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1012,7 +992,6 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
-	args = append(args, o.IntegrationID)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
@@ -1084,10 +1063,6 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "integration_id",
 				"type": "string",
 			},
 			map[string]interface{}{

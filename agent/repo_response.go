@@ -330,10 +330,18 @@ func (o *RepoResponseReposCreatedDate) FromMap(kv map[string]interface{}) {
 
 // RepoResponseReposLastCommitCreatedDate represents the object structure for created_date
 type RepoResponseReposLastCommitCreatedDate struct {
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Offset the timezone offset from GMT
 	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
@@ -365,10 +373,18 @@ func (o *RepoResponseReposLastCommitCreatedDate) ToMap(avro ...bool) map[string]
 	}
 	o.setDefaults(true)
 	return map[string]interface{}{
+		// CustomerID the customer id for the model instance
+		"customer_id": toRepoResponseReposLastCommitCreatedDateObject(o.CustomerID, isavro, false, "string"),
 		// Epoch the date in epoch format
 		"epoch": toRepoResponseReposLastCommitCreatedDateObject(o.Epoch, isavro, false, "long"),
+		// ID the primary key for the model instance
+		"id": toRepoResponseReposLastCommitCreatedDateObject(o.ID, isavro, false, "string"),
 		// Offset the timezone offset from GMT
 		"offset": toRepoResponseReposLastCommitCreatedDateObject(o.Offset, isavro, false, "long"),
+		// RefID the source system id for the model instance
+		"ref_id": toRepoResponseReposLastCommitCreatedDateObject(o.RefID, isavro, false, "string"),
+		// RefType the source system identifier for the model instance
+		"ref_type": toRepoResponseReposLastCommitCreatedDateObject(o.RefType, isavro, false, "string"),
 		// Rfc3339 the date in RFC3339 format
 		"rfc3339": toRepoResponseReposLastCommitCreatedDateObject(o.Rfc3339, isavro, false, "string"),
 	}
@@ -383,6 +399,21 @@ func (o *RepoResponseReposLastCommitCreatedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseReposLastCommitCreatedDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -399,6 +430,21 @@ func (o *RepoResponseReposLastCommitCreatedDate) FromMap(kv map[string]interface
 		}
 	}
 
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["offset"].(int64); ok {
 		o.Offset = val
 	} else {
@@ -410,6 +456,36 @@ func (o *RepoResponseReposLastCommitCreatedDate) FromMap(kv map[string]interface
 					val = datetime.TimeToEpoch(tv)
 				}
 				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1437,25 +1513,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1915,7 +1972,7 @@ func GetRepoResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "repos",
-				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "the repos exported", "fields": []interface{}{map[string]interface{}{"doc": "the status of the repo determined by an Admin", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "the creation date", "name": "created_date", "type": map[string]interface{}{"doc": "the creation date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "repos.created_date", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"doc": "the description of the repository", "name": "description", "type": "string"}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "the programming language defined for the repository", "name": "language", "type": "string"}, map[string]interface{}{"doc": "the most recent commit to the repo", "name": "last_commit", "type": map[string]interface{}{"doc": "the most recent commit to the repo", "fields": []interface{}{map[string]interface{}{"doc": "the id of the latest commit", "name": "commit_id", "type": "string"}, map[string]interface{}{"doc": "the url of the lastest commit", "name": "url", "type": "string"}, map[string]interface{}{"doc": "the commit message of the latest commit", "name": "message", "type": "string"}, map[string]interface{}{"doc": "the timestamp of the latest commit", "name": "created_date", "type": map[string]interface{}{"doc": "the timestamp of the latest commit", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_commit.created_date", "type": "record"}}, map[string]interface{}{"doc": "the author of the latest commit", "name": "author", "type": map[string]interface{}{"doc": "the author of the latest commit", "fields": []interface{}{map[string]interface{}{"doc": "the author name", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the email of the author", "name": "email", "type": "string"}, map[string]interface{}{"doc": "the avatar_url for the author", "name": "avatar_url", "type": "string"}}, "name": "last_commit.author", "type": "record"}}}, "name": "repos.last_commit", "type": "record"}}, map[string]interface{}{"doc": "the name of the repository", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}}, "name": "repos", "type": "record"}, "name": "repos", "type": "array"},
+				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "the repos exported", "fields": []interface{}{map[string]interface{}{"doc": "the status of the repo determined by an Admin", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "the creation date", "name": "created_date", "type": map[string]interface{}{"doc": "the creation date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "repos.created_date", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"doc": "the description of the repository", "name": "description", "type": "string"}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "the programming language defined for the repository", "name": "language", "type": "string"}, map[string]interface{}{"doc": "the most recent commit to the repo", "name": "last_commit", "type": map[string]interface{}{"doc": "the most recent commit to the repo", "fields": []interface{}{map[string]interface{}{"doc": "the id of the latest commit", "name": "commit_id", "type": "string"}, map[string]interface{}{"doc": "the url of the lastest commit", "name": "url", "type": "string"}, map[string]interface{}{"doc": "the commit message of the latest commit", "name": "message", "type": "string"}, map[string]interface{}{"doc": "the timestamp of the latest commit", "name": "created_date", "type": map[string]interface{}{"doc": "the timestamp of the latest commit", "fields": []interface{}{map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_commit.created_date", "type": "record"}}, map[string]interface{}{"doc": "the author of the latest commit", "name": "author", "type": map[string]interface{}{"doc": "the author of the latest commit", "fields": []interface{}{map[string]interface{}{"doc": "the author name", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the email of the author", "name": "email", "type": "string"}, map[string]interface{}{"doc": "the avatar_url for the author", "name": "avatar_url", "type": "string"}}, "name": "last_commit.author", "type": "record"}}}, "name": "repos.last_commit", "type": "record"}}, map[string]interface{}{"doc": "the name of the repository", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}}, "name": "repos", "type": "record"}, "name": "repos", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "request_id",
