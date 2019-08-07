@@ -69,6 +69,8 @@ const (
 	TeamRefIDColumn = "ref_id"
 	// TeamRefTypeColumn is the ref_type column name
 	TeamRefTypeColumn = "ref_type"
+	// TeamTeamCostIDColumn is the team_cost_id column name
+	TeamTeamCostIDColumn = "team_cost_id"
 	// TeamUpdatedAtColumn is the updated_ts column name
 	TeamUpdatedAtColumn = "updated_ts"
 )
@@ -97,6 +99,8 @@ type Team struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// TeamCostID the team cost id
+	TeamCostID string `json:"team_cost_id" bson:"team_cost_id" yaml:"team_cost_id" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -402,6 +406,7 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 		"parent_ids":   toTeamObject(o.ParentIds, isavro, false, "parent_ids"),
 		"ref_id":       toTeamObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toTeamObject(o.RefType, isavro, false, "string"),
+		"team_cost_id": toTeamObject(o.TeamCostID, isavro, false, "string"),
 		"updated_ts":   toTeamObject(o.UpdatedAt, isavro, false, "long"),
 		"hashcode":     toTeamObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -654,6 +659,21 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["team_cost_id"].(string); ok {
+		o.TeamCostID = val
+	} else {
+		if val, ok := kv["team_cost_id"]; ok {
+			if val == nil {
+				o.TeamCostID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.TeamCostID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -685,6 +705,7 @@ func (o *Team) Hash() string {
 	args = append(args, o.ParentIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.TeamCostID)
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -790,6 +811,10 @@ func GetTeamAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "ref_type",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "team_cost_id",
 				"type": "string",
 			},
 			map[string]interface{}{
