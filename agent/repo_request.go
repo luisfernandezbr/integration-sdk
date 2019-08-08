@@ -94,6 +94,8 @@ const (
 	RepoRequestRequestDateColumnOffsetColumn = "request_date->offset"
 	// RepoRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
 	RepoRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
+	// RepoRequestSystemTypeColumn is the system_type column name
+	RepoRequestSystemTypeColumn = "system_type"
 	// RepoRequestUpdatedAtColumn is the updated_ts column name
 	RepoRequestUpdatedAtColumn = "updated_ts"
 	// RepoRequestUUIDColumn is the uuid column name
@@ -1000,6 +1002,27 @@ func (o *RepoRequestRequestDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// RepoRequestSystemType is the enumeration type for system_type
+type RepoRequestSystemType int32
+
+// String returns the string value for SystemType
+func (v RepoRequestSystemType) String() string {
+	switch int32(v) {
+	case 0:
+		return "WORK"
+	case 1:
+		return "SOURCECODE"
+	}
+	return "unset"
+}
+
+const (
+	// SystemTypeWork is the enumeration value for work
+	RepoRequestSystemTypeWork RepoRequestSystemType = 0
+	// SystemTypeSourcecode is the enumeration value for sourcecode
+	RepoRequestSystemTypeSourcecode RepoRequestSystemType = 1
+)
+
 // RepoRequest an agent action to request adding new repos
 type RepoRequest struct {
 	// CustomerID the customer id for the model instance
@@ -1016,6 +1039,8 @@ type RepoRequest struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate RepoRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+	SystemType RepoRequestSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
@@ -1050,6 +1075,9 @@ func toRepoRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 
 	case RepoRequestRequestDate:
 		return v.ToMap(isavro)
+
+	case RepoRequestSystemType:
+		return v.String()
 
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
@@ -1290,6 +1318,7 @@ func (o *RepoRequest) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toRepoRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toRepoRequestObject(o.RefType, isavro, false, "string"),
 		"request_date": toRepoRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"system_type":  toRepoRequestObject(o.SystemType, isavro, false, "system_type"),
 		"updated_ts":   toRepoRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":         toRepoRequestObject(o.UUID, isavro, false, "string"),
 		"hashcode":     toRepoRequestObject(o.Hashcode, isavro, false, "string"),
@@ -1411,9 +1440,50 @@ func (o *RepoRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["system_type"].(RepoRequestSystemType); ok {
+		o.SystemType = val
+	} else {
+		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+			ev := em["agent.system_type"].(string)
+			switch ev {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
+		if em, ok := kv["system_type"].(string); ok {
+			switch em {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
 	}
 
 	if val, ok := kv["updated_ts"].(int64); ok {
@@ -1458,6 +1528,7 @@ func (o *RepoRequest) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
+	args = append(args, o.SystemType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
@@ -1506,6 +1577,14 @@ func GetRepoRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "system_type",
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "system_type",
+					"symbols": []interface{}{"WORK", "SOURCECODE"},
+				},
 			},
 			map[string]interface{}{
 				"name": "updated_ts",

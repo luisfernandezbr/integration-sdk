@@ -98,6 +98,8 @@ const (
 	ExportRequestRequestDateColumnOffsetColumn = "request_date->offset"
 	// ExportRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
 	ExportRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
+	// ExportRequestSystemTypeColumn is the system_type column name
+	ExportRequestSystemTypeColumn = "system_type"
 	// ExportRequestUpdatedAtColumn is the updated_ts column name
 	ExportRequestUpdatedAtColumn = "updated_ts"
 	// ExportRequestUploadURLColumn is the upload_url column name
@@ -1006,6 +1008,27 @@ func (o *ExportRequestRequestDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// ExportRequestSystemType is the enumeration type for system_type
+type ExportRequestSystemType int32
+
+// String returns the string value for SystemType
+func (v ExportRequestSystemType) String() string {
+	switch int32(v) {
+	case 0:
+		return "WORK"
+	case 1:
+		return "SOURCECODE"
+	}
+	return "unset"
+}
+
+const (
+	// SystemTypeWork is the enumeration value for work
+	ExportRequestSystemTypeWork ExportRequestSystemType = 0
+	// SystemTypeSourcecode is the enumeration value for sourcecode
+	ExportRequestSystemTypeSourcecode ExportRequestSystemType = 1
+)
+
 // ExportRequest an agent action to request an export
 type ExportRequest struct {
 	// CustomerID the customer id for the model instance
@@ -1026,6 +1049,8 @@ type ExportRequest struct {
 	ReprocessHistorical bool `json:"reprocess_historical" bson:"reprocess_historical" yaml:"reprocess_historical" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate ExportRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+	SystemType ExportRequestSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UploadURL The one time upload URL to use for uploading a job to the Pinpoint cloud
@@ -1066,6 +1091,9 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 
 	case ExportRequestRequestDate:
 		return v.ToMap(isavro)
+
+	case ExportRequestSystemType:
+		return v.String()
 
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
@@ -1324,6 +1352,7 @@ func (o *ExportRequest) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":             toExportRequestObject(o.RefType, isavro, false, "string"),
 		"reprocess_historical": toExportRequestObject(o.ReprocessHistorical, isavro, false, "boolean"),
 		"request_date":         toExportRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"system_type":          toExportRequestObject(o.SystemType, isavro, false, "system_type"),
 		"updated_ts":           toExportRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"upload_url":           toExportRequestObject(o.UploadURL, isavro, true, "string"),
 		"uuid":                 toExportRequestObject(o.UUID, isavro, false, "string"),
@@ -1538,6 +1567,28 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		o.RequestDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["system_type"].(ExportRequestSystemType); ok {
+		o.SystemType = val
+	} else {
+		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+			ev := em["agent.system_type"].(string)
+			switch ev {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
+		if em, ok := kv["system_type"].(string); ok {
+			switch em {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -1600,6 +1651,7 @@ func (o *ExportRequest) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.ReprocessHistorical)
 	args = append(args, o.RequestDate)
+	args = append(args, o.SystemType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UploadURL)
 	args = append(args, o.UUID)
@@ -1657,6 +1709,14 @@ func GetExportRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "system_type",
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "system_type",
+					"symbols": []interface{}{"WORK", "SOURCECODE"},
+				},
 			},
 			map[string]interface{}{
 				"name": "updated_ts",

@@ -94,6 +94,8 @@ const (
 	IntegrationRequestRequestDateColumnOffsetColumn = "request_date->offset"
 	// IntegrationRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
 	IntegrationRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
+	// IntegrationRequestSystemTypeColumn is the system_type column name
+	IntegrationRequestSystemTypeColumn = "system_type"
 	// IntegrationRequestUpdatedAtColumn is the updated_ts column name
 	IntegrationRequestUpdatedAtColumn = "updated_ts"
 	// IntegrationRequestUUIDColumn is the uuid column name
@@ -1000,6 +1002,27 @@ func (o *IntegrationRequestRequestDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// IntegrationRequestSystemType is the enumeration type for system_type
+type IntegrationRequestSystemType int32
+
+// String returns the string value for SystemType
+func (v IntegrationRequestSystemType) String() string {
+	switch int32(v) {
+	case 0:
+		return "WORK"
+	case 1:
+		return "SOURCECODE"
+	}
+	return "unset"
+}
+
+const (
+	// SystemTypeWork is the enumeration value for work
+	IntegrationRequestSystemTypeWork IntegrationRequestSystemType = 0
+	// SystemTypeSourcecode is the enumeration value for sourcecode
+	IntegrationRequestSystemTypeSourcecode IntegrationRequestSystemType = 1
+)
+
 // IntegrationRequest an agent action to request adding an integration
 type IntegrationRequest struct {
 	// CustomerID the customer id for the model instance
@@ -1016,6 +1039,8 @@ type IntegrationRequest struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate IntegrationRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+	SystemType IntegrationRequestSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
@@ -1050,6 +1075,9 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 
 	case IntegrationRequestRequestDate:
 		return v.ToMap(isavro)
+
+	case IntegrationRequestSystemType:
+		return v.String()
 
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
@@ -1290,6 +1318,7 @@ func (o *IntegrationRequest) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toIntegrationRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toIntegrationRequestObject(o.RefType, isavro, false, "string"),
 		"request_date": toIntegrationRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"system_type":  toIntegrationRequestObject(o.SystemType, isavro, false, "system_type"),
 		"updated_ts":   toIntegrationRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":         toIntegrationRequestObject(o.UUID, isavro, false, "string"),
 		"hashcode":     toIntegrationRequestObject(o.Hashcode, isavro, false, "string"),
@@ -1435,6 +1464,28 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		o.RequestDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["system_type"].(IntegrationRequestSystemType); ok {
+		o.SystemType = val
+	} else {
+		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+			ev := em["agent.system_type"].(string)
+			switch ev {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
+		if em, ok := kv["system_type"].(string); ok {
+			switch em {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -1477,6 +1528,7 @@ func (o *IntegrationRequest) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
+	args = append(args, o.SystemType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
@@ -1525,6 +1577,14 @@ func GetIntegrationRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "system_type",
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "system_type",
+					"symbols": []interface{}{"WORK", "SOURCECODE"},
+				},
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
