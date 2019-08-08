@@ -748,6 +748,9 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	if err != nil {
 		ttl = 0
 	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
 		Timestamp:         "updated_ts",

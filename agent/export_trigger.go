@@ -309,6 +309,9 @@ func (o *ExportTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	if err != nil {
 		ttl = 0
 	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
 		Timestamp:         "updated_ts",
