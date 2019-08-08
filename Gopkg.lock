@@ -75,7 +75,7 @@
   revision = "2e52cf6e685269ed8aefec6390f3cac3ef74e730"
 
 [[projects]]
-  digest = "1:d5ff2994cd846cec010be96dd3997d174ecfc355152a23e452bc1ec47a125ecc"
+  digest = "1:ac657ebed103c2e930e96d2510b7ef7714e2e755c4d34519335b47396289ed2d"
   name = "github.com/pinpt/go-common"
   packages = [
     "datamodel",
@@ -89,34 +89,8 @@
     "strings",
   ]
   pruneopts = "UT"
-  revision = "74309c1ce81f885067f5a5009fa7947d27c3cffa"
-  version = "7.0.38"
-
-[[projects]]
-  digest = "1:68a316c1ac18eadacca7591b9e2df5b5542078604b79765bb0e4d20e14501439"
-  name = "github.com/pinpt/go-datamodel"
-  packages = [
-    "admin",
-    "agent",
-    "auth",
-    "codequality",
-    "customer",
-    "ops/db",
-    "pipeline/activity",
-    "pipeline/customer",
-    "pipeline/integration",
-    "pipeline/reprocess",
-    "pipeline/signal",
-    "pipeline/sourcecode",
-    "pipeline/team",
-    "pipeline/work",
-    "sourcecode",
-    "web",
-    "work",
-  ]
-  pruneopts = "UT"
-  revision = "5af1a5c262d134826f6493beca0d33887eb23b69"
-  version = "0.0.333"
+  revision = "699a861a9dcd610b7654be4efee64bdb7d90e538"
+  version = "8.0.0"
 
 [[projects]]
   digest = "1:1cabe44fb226a08664539c7ff79f25940284d9e2116187a74c90472a51c257ca"
@@ -149,23 +123,6 @@
     "github.com/pinpt/go-common/number",
     "github.com/pinpt/go-common/slice",
     "github.com/pinpt/go-common/strings",
-    "github.com/pinpt/go-datamodel/admin",
-    "github.com/pinpt/go-datamodel/agent",
-    "github.com/pinpt/go-datamodel/auth",
-    "github.com/pinpt/go-datamodel/codequality",
-    "github.com/pinpt/go-datamodel/customer",
-    "github.com/pinpt/go-datamodel/ops/db",
-    "github.com/pinpt/go-datamodel/pipeline/activity",
-    "github.com/pinpt/go-datamodel/pipeline/customer",
-    "github.com/pinpt/go-datamodel/pipeline/integration",
-    "github.com/pinpt/go-datamodel/pipeline/reprocess",
-    "github.com/pinpt/go-datamodel/pipeline/signal",
-    "github.com/pinpt/go-datamodel/pipeline/sourcecode",
-    "github.com/pinpt/go-datamodel/pipeline/team",
-    "github.com/pinpt/go-datamodel/pipeline/work",
-    "github.com/pinpt/go-datamodel/sourcecode",
-    "github.com/pinpt/go-datamodel/web",
-    "github.com/pinpt/go-datamodel/work",
     "go.mongodb.org/mongo-driver/bson/primitive",
   ]
   solver-name = "gps-cdcl"
