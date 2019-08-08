@@ -88,6 +88,8 @@ const (
 	ExportRequestRefIDColumn = "ref_id"
 	// ExportRequestRefTypeColumn is the ref_type column name
 	ExportRequestRefTypeColumn = "ref_type"
+	// ExportRequestReprocessHistoricalColumn is the reprocess_historical column name
+	ExportRequestReprocessHistoricalColumn = "reprocess_historical"
 	// ExportRequestRequestDateColumn is the request_date column name
 	ExportRequestRequestDateColumn = "request_date"
 	// ExportRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
@@ -1020,6 +1022,8 @@ type ExportRequest struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// ReprocessHistorical This field is to differentiate between historical and incrementals
+	ReprocessHistorical bool `json:"reprocess_historical" bson:"reprocess_historical" yaml:"reprocess_historical" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate ExportRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
@@ -1094,6 +1098,13 @@ func (o *ExportRequest) setDefaults(frommap bool) {
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
 		o.ID = hash.Values("ExportRequest", o.CustomerID, o.RefType, o.GetRefID())
+	}
+
+	{
+		v := false
+
+		o.ReprocessHistorical = v
+
 	}
 
 	if frommap {
@@ -1304,18 +1315,19 @@ func (o *ExportRequest) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":  toExportRequestObject(o.CustomerID, isavro, false, "string"),
-		"id":           toExportRequestObject(o.ID, isavro, false, "string"),
-		"integrations": toExportRequestObject(o.Integrations, isavro, false, "integrations"),
-		"job_id":       toExportRequestObject(o.JobID, isavro, false, "string"),
-		"location":     toExportRequestObject(o.Location, isavro, false, "location"),
-		"ref_id":       toExportRequestObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toExportRequestObject(o.RefType, isavro, false, "string"),
-		"request_date": toExportRequestObject(o.RequestDate, isavro, false, "request_date"),
-		"updated_ts":   toExportRequestObject(o.UpdatedAt, isavro, false, "long"),
-		"upload_url":   toExportRequestObject(o.UploadURL, isavro, true, "string"),
-		"uuid":         toExportRequestObject(o.UUID, isavro, false, "string"),
-		"hashcode":     toExportRequestObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":          toExportRequestObject(o.CustomerID, isavro, false, "string"),
+		"id":                   toExportRequestObject(o.ID, isavro, false, "string"),
+		"integrations":         toExportRequestObject(o.Integrations, isavro, false, "integrations"),
+		"job_id":               toExportRequestObject(o.JobID, isavro, false, "string"),
+		"location":             toExportRequestObject(o.Location, isavro, false, "location"),
+		"ref_id":               toExportRequestObject(o.RefID, isavro, false, "string"),
+		"ref_type":             toExportRequestObject(o.RefType, isavro, false, "string"),
+		"reprocess_historical": toExportRequestObject(o.ReprocessHistorical, isavro, false, "boolean"),
+		"request_date":         toExportRequestObject(o.RequestDate, isavro, false, "request_date"),
+		"updated_ts":           toExportRequestObject(o.UpdatedAt, isavro, false, "long"),
+		"upload_url":           toExportRequestObject(o.UploadURL, isavro, true, "string"),
+		"uuid":                 toExportRequestObject(o.UUID, isavro, false, "string"),
+		"hashcode":             toExportRequestObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -1481,6 +1493,18 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["reprocess_historical"].(bool); ok {
+		o.ReprocessHistorical = val
+	} else {
+		if val, ok := kv["reprocess_historical"]; ok {
+			if val == nil {
+				o.ReprocessHistorical = number.ToBoolAny(nil)
+			} else {
+				o.ReprocessHistorical = number.ToBoolAny(val)
+			}
+		}
+	}
+
 	if val, ok := kv["request_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.RequestDate.FromMap(kv)
@@ -1574,6 +1598,7 @@ func (o *ExportRequest) Hash() string {
 	args = append(args, o.Location)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.ReprocessHistorical)
 	args = append(args, o.RequestDate)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UploadURL)
@@ -1624,6 +1649,10 @@ func GetExportRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ref_type",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "reprocess_historical",
+				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "request_date",
