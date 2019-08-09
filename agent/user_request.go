@@ -1443,25 +1443,6 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1978,6 +1959,10 @@ func NewUserRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mode
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
+				// if disable auto and we're skipping, we need to commit the message
+				if !msg.IsAutoCommit() {
+					msg.Commit()
+				}
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec

@@ -2096,6 +2096,10 @@ func NewExportRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.Mo
 			// ignore messages that have exceeded the TTL
 			cfg := object.GetTopicConfig()
 			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
+				// if disable auto and we're skipping, we need to commit the message
+				if !msg.IsAutoCommit() {
+					msg.Commit()
+				}
 				return nil
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
