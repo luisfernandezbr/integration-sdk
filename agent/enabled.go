@@ -213,15 +213,21 @@ func (v EnabledType) String() string {
 	case 2:
 		return "CRASH"
 	case 3:
-		return "INTEGRATION"
+		return "LOG"
 	case 4:
-		return "EXPORT"
+		return "INTEGRATION"
 	case 5:
-		return "PROJECT"
+		return "EXPORT"
 	case 6:
-		return "REPO"
+		return "PROJECT"
 	case 7:
+		return "REPO"
+	case 8:
 		return "USER"
+	case 9:
+		return "UNINSTALL"
+	case 10:
+		return "UPGRADE"
 	}
 	return "unset"
 }
@@ -233,16 +239,22 @@ const (
 	EnabledTypePing EnabledType = 1
 	// TypeCrash is the enumeration value for crash
 	EnabledTypeCrash EnabledType = 2
+	// TypeLog is the enumeration value for log
+	EnabledTypeLog EnabledType = 3
 	// TypeIntegration is the enumeration value for integration
-	EnabledTypeIntegration EnabledType = 3
+	EnabledTypeIntegration EnabledType = 4
 	// TypeExport is the enumeration value for export
-	EnabledTypeExport EnabledType = 4
+	EnabledTypeExport EnabledType = 5
 	// TypeProject is the enumeration value for project
-	EnabledTypeProject EnabledType = 5
+	EnabledTypeProject EnabledType = 6
 	// TypeRepo is the enumeration value for repo
-	EnabledTypeRepo EnabledType = 6
+	EnabledTypeRepo EnabledType = 7
 	// TypeUser is the enumeration value for user
-	EnabledTypeUser EnabledType = 7
+	EnabledTypeUser EnabledType = 8
+	// TypeUninstall is the enumeration value for uninstall
+	EnabledTypeUninstall EnabledType = 9
+	// TypeUpgrade is the enumeration value for upgrade
+	EnabledTypeUpgrade EnabledType = 10
 )
 
 // Enabled an agent event to indicate that it's enabled and ready for actions
@@ -686,25 +698,6 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -899,16 +892,22 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -919,16 +918,22 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 	}
@@ -1099,7 +1104,7 @@ func GetEnabledAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE"},
 				},
 			},
 			map[string]interface{}{

@@ -209,15 +209,21 @@ func (v EventType) String() string {
 	case 2:
 		return "CRASH"
 	case 3:
-		return "INTEGRATION"
+		return "LOG"
 	case 4:
-		return "EXPORT"
+		return "INTEGRATION"
 	case 5:
-		return "PROJECT"
+		return "EXPORT"
 	case 6:
-		return "REPO"
+		return "PROJECT"
 	case 7:
+		return "REPO"
+	case 8:
 		return "USER"
+	case 9:
+		return "UNINSTALL"
+	case 10:
+		return "UPGRADE"
 	}
 	return "unset"
 }
@@ -229,16 +235,22 @@ const (
 	EventTypePing EventType = 1
 	// TypeCrash is the enumeration value for crash
 	EventTypeCrash EventType = 2
+	// TypeLog is the enumeration value for log
+	EventTypeLog EventType = 3
 	// TypeIntegration is the enumeration value for integration
-	EventTypeIntegration EventType = 3
+	EventTypeIntegration EventType = 4
 	// TypeExport is the enumeration value for export
-	EventTypeExport EventType = 4
+	EventTypeExport EventType = 5
 	// TypeProject is the enumeration value for project
-	EventTypeProject EventType = 5
+	EventTypeProject EventType = 6
 	// TypeRepo is the enumeration value for repo
-	EventTypeRepo EventType = 6
+	EventTypeRepo EventType = 7
 	// TypeUser is the enumeration value for user
-	EventTypeUser EventType = 7
+	EventTypeUser EventType = 8
+	// TypeUninstall is the enumeration value for uninstall
+	EventTypeUninstall EventType = 9
+	// TypeUpgrade is the enumeration value for upgrade
+	EventTypeUpgrade EventType = 10
 )
 
 // Event event data sent from the agent
@@ -862,16 +874,22 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -882,16 +900,22 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 	}
@@ -1052,7 +1076,7 @@ func GetEventAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE"},
 				},
 			},
 			map[string]interface{}{

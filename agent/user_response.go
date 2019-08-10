@@ -240,15 +240,21 @@ func (v UserResponseType) String() string {
 	case 2:
 		return "CRASH"
 	case 3:
-		return "INTEGRATION"
+		return "LOG"
 	case 4:
-		return "EXPORT"
+		return "INTEGRATION"
 	case 5:
-		return "PROJECT"
+		return "EXPORT"
 	case 6:
-		return "REPO"
+		return "PROJECT"
 	case 7:
+		return "REPO"
+	case 8:
 		return "USER"
+	case 9:
+		return "UNINSTALL"
+	case 10:
+		return "UPGRADE"
 	}
 	return "unset"
 }
@@ -260,16 +266,22 @@ const (
 	UserResponseTypePing UserResponseType = 1
 	// TypeCrash is the enumeration value for crash
 	UserResponseTypeCrash UserResponseType = 2
+	// TypeLog is the enumeration value for log
+	UserResponseTypeLog UserResponseType = 3
 	// TypeIntegration is the enumeration value for integration
-	UserResponseTypeIntegration UserResponseType = 3
+	UserResponseTypeIntegration UserResponseType = 4
 	// TypeExport is the enumeration value for export
-	UserResponseTypeExport UserResponseType = 4
+	UserResponseTypeExport UserResponseType = 5
 	// TypeProject is the enumeration value for project
-	UserResponseTypeProject UserResponseType = 5
+	UserResponseTypeProject UserResponseType = 6
 	// TypeRepo is the enumeration value for repo
-	UserResponseTypeRepo UserResponseType = 6
+	UserResponseTypeRepo UserResponseType = 7
 	// TypeUser is the enumeration value for user
-	UserResponseTypeUser UserResponseType = 7
+	UserResponseTypeUser UserResponseType = 8
+	// TypeUninstall is the enumeration value for uninstall
+	UserResponseTypeUninstall UserResponseType = 9
+	// TypeUpgrade is the enumeration value for upgrade
+	UserResponseTypeUpgrade UserResponseType = 10
 )
 
 // UserResponseUsersGroups represents the object structure for groups
@@ -1135,6 +1147,25 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1344,16 +1375,22 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1364,16 +1401,22 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 	}
@@ -1605,7 +1648,7 @@ func GetUserResponseAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE"},
 				},
 			},
 			map[string]interface{}{

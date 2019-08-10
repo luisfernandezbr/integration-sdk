@@ -16,6 +16,10 @@ import (
 // New returns a new instanceof from a ModelNameType
 func New(name datamodel.ModelNameType) datamodel.Model {
 	switch name {
+	case "agent.Crash":
+		o := new(dm_agent.Crash)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Enabled":
 		o := new(dm_agent.Enabled)
 		o.FromMap(map[string]interface{}{})
@@ -52,6 +56,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.IntegrationResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.Log":
+		o := new(dm_agent.Log)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Ping":
+		o := new(dm_agent.Ping)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.ProjectRequest":
 		o := new(dm_agent.ProjectRequest)
 		o.FromMap(map[string]interface{}{})
@@ -66,6 +78,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "agent.RepoResponse":
 		o := new(dm_agent.RepoResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Uninstall":
+		o := new(dm_agent.Uninstall)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Upgrade":
+		o := new(dm_agent.Upgrade)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent.UserRequest":
@@ -167,6 +187,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
+	case "agent_Crash_topic":
+		o := new(dm_agent.Crash)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_Enabled_topic":
 		o := new(dm_agent.Enabled)
 		o.FromMap(map[string]interface{}{})
@@ -203,6 +227,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.IntegrationResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent_Log_topic":
+		o := new(dm_agent.Log)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_Ping_topic":
+		o := new(dm_agent.Ping)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_ProjectRequest_topic":
 		o := new(dm_agent.ProjectRequest)
 		o.FromMap(map[string]interface{}{})
@@ -217,6 +249,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		return o
 	case "agent_RepoResponse_topic":
 		o := new(dm_agent.RepoResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_Uninstall_topic":
+		o := new(dm_agent.Uninstall)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_Upgrade_topic":
+		o := new(dm_agent.Upgrade)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent_UserRequest_topic":
@@ -337,6 +377,7 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
+		datamodel.TopicNameType("agent_Crash_topic"),
 		datamodel.TopicNameType("agent_Enabled_topic"),
 		datamodel.TopicNameType("agent_EnrollRequest_topic"),
 		datamodel.TopicNameType("agent_EnrollResponse_topic"),
@@ -346,10 +387,14 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_ExportTrigger_topic"),
 		datamodel.TopicNameType("agent_IntegrationRequest_topic"),
 		datamodel.TopicNameType("agent_IntegrationResponse_topic"),
+		datamodel.TopicNameType("agent_Log_topic"),
+		datamodel.TopicNameType("agent_Ping_topic"),
 		datamodel.TopicNameType("agent_ProjectRequest_topic"),
 		datamodel.TopicNameType("agent_ProjectResponse_topic"),
 		datamodel.TopicNameType("agent_RepoRequest_topic"),
 		datamodel.TopicNameType("agent_RepoResponse_topic"),
+		datamodel.TopicNameType("agent_Uninstall_topic"),
+		datamodel.TopicNameType("agent_Upgrade_topic"),
 		datamodel.TopicNameType("agent_UserRequest_topic"),
 		datamodel.TopicNameType("agent_UserResponse_topic"),
 		datamodel.TopicNameType("cicd_Build_topic"),
@@ -379,6 +424,7 @@ func GetTopics() []datamodel.TopicNameType {
 // GetModelNames returns an array of model names that are configured
 func GetModelNames() []datamodel.ModelNameType {
 	return []datamodel.ModelNameType{
+		datamodel.ModelNameType("agent.Crash"),
 		datamodel.ModelNameType("agent.Enabled"),
 		datamodel.ModelNameType("agent.EnrollRequest"),
 		datamodel.ModelNameType("agent.EnrollResponse"),
@@ -388,10 +434,14 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.ExportTrigger"),
 		datamodel.ModelNameType("agent.IntegrationRequest"),
 		datamodel.ModelNameType("agent.IntegrationResponse"),
+		datamodel.ModelNameType("agent.Log"),
+		datamodel.ModelNameType("agent.Ping"),
 		datamodel.ModelNameType("agent.ProjectRequest"),
 		datamodel.ModelNameType("agent.ProjectResponse"),
 		datamodel.ModelNameType("agent.RepoRequest"),
 		datamodel.ModelNameType("agent.RepoResponse"),
+		datamodel.ModelNameType("agent.Uninstall"),
+		datamodel.ModelNameType("agent.Upgrade"),
 		datamodel.ModelNameType("agent.UserRequest"),
 		datamodel.ModelNameType("agent.UserResponse"),
 		datamodel.ModelNameType("cicd.Build"),

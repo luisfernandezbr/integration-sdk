@@ -31,76 +31,74 @@ import (
 )
 
 const (
-	// IntegrationResponseTopic is the default topic name
-	IntegrationResponseTopic datamodel.TopicNameType = "agent_IntegrationResponse_topic"
+	// PingTopic is the default topic name
+	PingTopic datamodel.TopicNameType = "agent_Ping_topic"
 
-	// IntegrationResponseStream is the default stream name
-	IntegrationResponseStream datamodel.TopicNameType = "agent_IntegrationResponse_stream"
+	// PingStream is the default stream name
+	PingStream datamodel.TopicNameType = "agent_Ping_stream"
 
-	// IntegrationResponseTable is the default table name
-	IntegrationResponseTable datamodel.TopicNameType = "agent_IntegrationResponse"
+	// PingTable is the default table name
+	PingTable datamodel.TopicNameType = "agent_Ping"
 
-	// IntegrationResponseModelName is the model name
-	IntegrationResponseModelName datamodel.ModelNameType = "agent.IntegrationResponse"
+	// PingModelName is the model name
+	PingModelName datamodel.ModelNameType = "agent.Ping"
 )
 
 const (
-	// IntegrationResponseArchitectureColumn is the architecture column name
-	IntegrationResponseArchitectureColumn = "architecture"
-	// IntegrationResponseAuthorizationColumn is the authorization column name
-	IntegrationResponseAuthorizationColumn = "authorization"
-	// IntegrationResponseCustomerIDColumn is the customer_id column name
-	IntegrationResponseCustomerIDColumn = "customer_id"
-	// IntegrationResponseDataColumn is the data column name
-	IntegrationResponseDataColumn = "data"
-	// IntegrationResponseDistroColumn is the distro column name
-	IntegrationResponseDistroColumn = "distro"
-	// IntegrationResponseErrorColumn is the error column name
-	IntegrationResponseErrorColumn = "error"
-	// IntegrationResponseEventDateColumn is the event_date column name
-	IntegrationResponseEventDateColumn = "event_date"
-	// IntegrationResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	IntegrationResponseEventDateColumnEpochColumn = "event_date->epoch"
-	// IntegrationResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	IntegrationResponseEventDateColumnOffsetColumn = "event_date->offset"
-	// IntegrationResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	IntegrationResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// IntegrationResponseFreeSpaceColumn is the free_space column name
-	IntegrationResponseFreeSpaceColumn = "free_space"
-	// IntegrationResponseGoVersionColumn is the go_version column name
-	IntegrationResponseGoVersionColumn = "go_version"
-	// IntegrationResponseHostnameColumn is the hostname column name
-	IntegrationResponseHostnameColumn = "hostname"
-	// IntegrationResponseIDColumn is the id column name
-	IntegrationResponseIDColumn = "id"
-	// IntegrationResponseMemoryColumn is the memory column name
-	IntegrationResponseMemoryColumn = "memory"
-	// IntegrationResponseMessageColumn is the message column name
-	IntegrationResponseMessageColumn = "message"
-	// IntegrationResponseNumCPUColumn is the num_cpu column name
-	IntegrationResponseNumCPUColumn = "num_cpu"
-	// IntegrationResponseOSColumn is the os column name
-	IntegrationResponseOSColumn = "os"
-	// IntegrationResponseRefIDColumn is the ref_id column name
-	IntegrationResponseRefIDColumn = "ref_id"
-	// IntegrationResponseRefTypeColumn is the ref_type column name
-	IntegrationResponseRefTypeColumn = "ref_type"
-	// IntegrationResponseRequestIDColumn is the request_id column name
-	IntegrationResponseRequestIDColumn = "request_id"
-	// IntegrationResponseSuccessColumn is the success column name
-	IntegrationResponseSuccessColumn = "success"
-	// IntegrationResponseTypeColumn is the type column name
-	IntegrationResponseTypeColumn = "type"
-	// IntegrationResponseUpdatedAtColumn is the updated_ts column name
-	IntegrationResponseUpdatedAtColumn = "updated_ts"
-	// IntegrationResponseUUIDColumn is the uuid column name
-	IntegrationResponseUUIDColumn = "uuid"
-	// IntegrationResponseVersionColumn is the version column name
-	IntegrationResponseVersionColumn = "version"
+	// PingArchitectureColumn is the architecture column name
+	PingArchitectureColumn = "architecture"
+	// PingCustomerIDColumn is the customer_id column name
+	PingCustomerIDColumn = "customer_id"
+	// PingDataColumn is the data column name
+	PingDataColumn = "data"
+	// PingDistroColumn is the distro column name
+	PingDistroColumn = "distro"
+	// PingErrorColumn is the error column name
+	PingErrorColumn = "error"
+	// PingEventDateColumn is the event_date column name
+	PingEventDateColumn = "event_date"
+	// PingEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	PingEventDateColumnEpochColumn = "event_date->epoch"
+	// PingEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	PingEventDateColumnOffsetColumn = "event_date->offset"
+	// PingEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	PingEventDateColumnRfc3339Column = "event_date->rfc3339"
+	// PingFreeSpaceColumn is the free_space column name
+	PingFreeSpaceColumn = "free_space"
+	// PingGoVersionColumn is the go_version column name
+	PingGoVersionColumn = "go_version"
+	// PingHostnameColumn is the hostname column name
+	PingHostnameColumn = "hostname"
+	// PingIDColumn is the id column name
+	PingIDColumn = "id"
+	// PingMemoryColumn is the memory column name
+	PingMemoryColumn = "memory"
+	// PingMessageColumn is the message column name
+	PingMessageColumn = "message"
+	// PingNumCPUColumn is the num_cpu column name
+	PingNumCPUColumn = "num_cpu"
+	// PingOSColumn is the os column name
+	PingOSColumn = "os"
+	// PingRefIDColumn is the ref_id column name
+	PingRefIDColumn = "ref_id"
+	// PingRefTypeColumn is the ref_type column name
+	PingRefTypeColumn = "ref_type"
+	// PingRequestIDColumn is the request_id column name
+	PingRequestIDColumn = "request_id"
+	// PingSuccessColumn is the success column name
+	PingSuccessColumn = "success"
+	// PingTypeColumn is the type column name
+	PingTypeColumn = "type"
+	// PingUpdatedAtColumn is the updated_ts column name
+	PingUpdatedAtColumn = "updated_ts"
+	// PingUUIDColumn is the uuid column name
+	PingUUIDColumn = "uuid"
+	// PingVersionColumn is the version column name
+	PingVersionColumn = "version"
 )
 
-// IntegrationResponseEventDate represents the object structure for event_date
-type IntegrationResponseEventDate struct {
+// PingEventDate represents the object structure for event_date
+type PingEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -109,19 +107,19 @@ type IntegrationResponseEventDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toIntegrationResponseEventDateObjectNil(isavro bool, isoptional bool) interface{} {
+func toPingEventDateObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toIntegrationResponseEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toPingEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
 	switch v := o.(type) {
-	case *IntegrationResponseEventDate:
+	case *PingEventDate:
 		return v.ToMap(isavro)
 
 	default:
@@ -129,7 +127,7 @@ func toIntegrationResponseEventDateObject(o interface{}, isavro bool, isoptional
 	}
 }
 
-func (o *IntegrationResponseEventDate) ToMap(avro ...bool) map[string]interface{} {
+func (o *PingEventDate) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -137,15 +135,15 @@ func (o *IntegrationResponseEventDate) ToMap(avro ...bool) map[string]interface{
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toIntegrationResponseEventDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPingEventDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": toIntegrationResponseEventDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPingEventDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIntegrationResponseEventDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPingEventDateObject(o.Rfc3339, isavro, false, "string"),
 	}
 }
 
-func (o *IntegrationResponseEventDate) setDefaults(frommap bool) {
+func (o *PingEventDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -153,7 +151,7 @@ func (o *IntegrationResponseEventDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *IntegrationResponseEventDate) FromMap(kv map[string]interface{}) {
+func (o *PingEventDate) FromMap(kv map[string]interface{}) {
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -202,11 +200,11 @@ func (o *IntegrationResponseEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// IntegrationResponseType is the enumeration type for type
-type IntegrationResponseType int32
+// PingType is the enumeration type for type
+type PingType int32
 
 // String returns the string value for Type
-func (v IntegrationResponseType) String() string {
+func (v PingType) String() string {
 	switch int32(v) {
 	case 0:
 		return "ENROLL"
@@ -236,35 +234,33 @@ func (v IntegrationResponseType) String() string {
 
 const (
 	// TypeEnroll is the enumeration value for enroll
-	IntegrationResponseTypeEnroll IntegrationResponseType = 0
+	PingTypeEnroll PingType = 0
 	// TypePing is the enumeration value for ping
-	IntegrationResponseTypePing IntegrationResponseType = 1
+	PingTypePing PingType = 1
 	// TypeCrash is the enumeration value for crash
-	IntegrationResponseTypeCrash IntegrationResponseType = 2
+	PingTypeCrash PingType = 2
 	// TypeLog is the enumeration value for log
-	IntegrationResponseTypeLog IntegrationResponseType = 3
+	PingTypeLog PingType = 3
 	// TypeIntegration is the enumeration value for integration
-	IntegrationResponseTypeIntegration IntegrationResponseType = 4
+	PingTypeIntegration PingType = 4
 	// TypeExport is the enumeration value for export
-	IntegrationResponseTypeExport IntegrationResponseType = 5
+	PingTypeExport PingType = 5
 	// TypeProject is the enumeration value for project
-	IntegrationResponseTypeProject IntegrationResponseType = 6
+	PingTypeProject PingType = 6
 	// TypeRepo is the enumeration value for repo
-	IntegrationResponseTypeRepo IntegrationResponseType = 7
+	PingTypeRepo PingType = 7
 	// TypeUser is the enumeration value for user
-	IntegrationResponseTypeUser IntegrationResponseType = 8
+	PingTypeUser PingType = 8
 	// TypeUninstall is the enumeration value for uninstall
-	IntegrationResponseTypeUninstall IntegrationResponseType = 9
+	PingTypeUninstall PingType = 9
 	// TypeUpgrade is the enumeration value for upgrade
-	IntegrationResponseTypeUpgrade IntegrationResponseType = 10
+	PingTypeUpgrade PingType = 10
 )
 
-// IntegrationResponse an agent response to an action request adding an integration
-type IntegrationResponse struct {
+// Ping an agent event for recording a ping
+type Ping struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
-	// Authorization the encrypted authorization data for this integration
-	Authorization string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
@@ -274,7 +270,7 @@ type IntegrationResponse struct {
 	// Error an error message related to this event
 	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
 	// EventDate the date of the event
-	EventDate IntegrationResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate PingEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -300,7 +296,7 @@ type IntegrationResponse struct {
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
-	Type IntegrationResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type PingType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
@@ -312,27 +308,27 @@ type IntegrationResponse struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*IntegrationResponse)(nil)
+var _ datamodel.Model = (*Ping)(nil)
 
-func toIntegrationResponseObjectNil(isavro bool, isoptional bool) interface{} {
+func toPingObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toPingObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
 	switch v := o.(type) {
-	case *IntegrationResponse:
+	case *Ping:
 		return v.ToMap(isavro)
 
-	case IntegrationResponseEventDate:
+	case PingEventDate:
 		return v.ToMap(isavro)
 
-	case IntegrationResponseType:
+	case PingType:
 		return v.String()
 
 	default:
@@ -340,22 +336,22 @@ func toIntegrationResponseObject(o interface{}, isavro bool, isoptional bool, av
 	}
 }
 
-// String returns a string representation of IntegrationResponse
-func (o *IntegrationResponse) String() string {
-	return fmt.Sprintf("agent.IntegrationResponse<%s>", o.ID)
+// String returns a string representation of Ping
+func (o *Ping) String() string {
+	return fmt.Sprintf("agent.Ping<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *IntegrationResponse) GetTopicName() datamodel.TopicNameType {
-	return IntegrationResponseTopic
+func (o *Ping) GetTopicName() datamodel.TopicNameType {
+	return PingTopic
 }
 
 // GetModelName returns the name of the model
-func (o *IntegrationResponse) GetModelName() datamodel.ModelNameType {
-	return IntegrationResponseModelName
+func (o *Ping) GetModelName() datamodel.ModelNameType {
+	return PingModelName
 }
 
-func (o *IntegrationResponse) setDefaults(frommap bool) {
+func (o *Ping) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString
 	}
@@ -365,7 +361,7 @@ func (o *IntegrationResponse) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("IntegrationResponse", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("Ping", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -376,12 +372,12 @@ func (o *IntegrationResponse) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *IntegrationResponse) GetID() string {
+func (o *Ping) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *IntegrationResponse) GetTopicKey() string {
+func (o *Ping) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -390,7 +386,7 @@ func (o *IntegrationResponse) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *IntegrationResponse) GetTimestamp() time.Time {
+func (o *Ping) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -404,37 +400,37 @@ func (o *IntegrationResponse) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for IntegrationResponse")
+	panic("not sure how to handle the date time format for Ping")
 }
 
 // GetRefID returns the RefID for the object
-func (o *IntegrationResponse) GetRefID() string {
+func (o *Ping) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *IntegrationResponse) IsMaterialized() bool {
+func (o *Ping) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *IntegrationResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *Ping) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *IntegrationResponse) IsEvented() bool {
+func (o *Ping) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *IntegrationResponse) SetEventHeaders(kv map[string]string) {
+func (o *Ping) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = IntegrationResponseModelName.String()
+	kv["model"] = PingModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *IntegrationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *Ping) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -459,28 +455,28 @@ func (o *IntegrationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *IntegrationResponse) GetStateKey() string {
+func (o *Ping) GetStateKey() string {
 	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *IntegrationResponse) GetCustomerID() string {
+func (o *Ping) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of IntegrationResponse
-func (o *IntegrationResponse) Clone() datamodel.Model {
-	c := new(IntegrationResponse)
+// Clone returns an exact copy of Ping
+func (o *Ping) Clone() datamodel.Model {
+	c := new(Ping)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *IntegrationResponse) Anon() datamodel.Model {
-	c := new(IntegrationResponse)
+func (o *Ping) Anon() datamodel.Model {
+	c := new(Ping)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -495,12 +491,12 @@ func (o *IntegrationResponse) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *IntegrationResponse) MarshalJSON() ([]byte, error) {
+func (o *Ping) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *IntegrationResponse) UnmarshalJSON(data []byte) error {
+func (o *Ping) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -512,22 +508,22 @@ func (o *IntegrationResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecIntegrationResponse *goavro.Codec
+var cachedCodecPing *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *IntegrationResponse) GetAvroCodec() *goavro.Codec {
-	if cachedCodecIntegrationResponse == nil {
-		c, err := GetIntegrationResponseAvroSchema()
+func (o *Ping) GetAvroCodec() *goavro.Codec {
+	if cachedCodecPing == nil {
+		c, err := GetPingAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecIntegrationResponse = c
+		cachedCodecPing = c
 	}
-	return cachedCodecIntegrationResponse
+	return cachedCodecPing
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *IntegrationResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *Ping) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -541,7 +537,7 @@ func (o *IntegrationResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *IntegrationResponse) FromAvroBinary(value []byte) error {
+func (o *Ping) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -556,18 +552,18 @@ func (o *IntegrationResponse) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *IntegrationResponse) Stringify() string {
+func (o *Ping) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two IntegrationResponse objects are equal
-func (o *IntegrationResponse) IsEqual(other *IntegrationResponse) bool {
+// IsEqual returns true if the two Ping objects are equal
+func (o *Ping) IsEqual(other *Ping) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
+func (o *Ping) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -576,35 +572,34 @@ func (o *IntegrationResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":  toIntegrationResponseObject(o.Architecture, isavro, false, "string"),
-		"authorization": toIntegrationResponseObject(o.Authorization, isavro, false, "string"),
-		"customer_id":   toIntegrationResponseObject(o.CustomerID, isavro, false, "string"),
-		"data":          toIntegrationResponseObject(o.Data, isavro, true, "string"),
-		"distro":        toIntegrationResponseObject(o.Distro, isavro, false, "string"),
-		"error":         toIntegrationResponseObject(o.Error, isavro, true, "string"),
-		"event_date":    toIntegrationResponseObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":    toIntegrationResponseObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":    toIntegrationResponseObject(o.GoVersion, isavro, false, "string"),
-		"hostname":      toIntegrationResponseObject(o.Hostname, isavro, false, "string"),
-		"id":            toIntegrationResponseObject(o.ID, isavro, false, "string"),
-		"memory":        toIntegrationResponseObject(o.Memory, isavro, false, "long"),
-		"message":       toIntegrationResponseObject(o.Message, isavro, false, "string"),
-		"num_cpu":       toIntegrationResponseObject(o.NumCPU, isavro, false, "long"),
-		"os":            toIntegrationResponseObject(o.OS, isavro, false, "string"),
-		"ref_id":        toIntegrationResponseObject(o.RefID, isavro, false, "string"),
-		"ref_type":      toIntegrationResponseObject(o.RefType, isavro, false, "string"),
-		"request_id":    toIntegrationResponseObject(o.RequestID, isavro, false, "string"),
-		"success":       toIntegrationResponseObject(o.Success, isavro, false, "boolean"),
-		"type":          toIntegrationResponseObject(o.Type, isavro, false, "type"),
-		"updated_ts":    toIntegrationResponseObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":          toIntegrationResponseObject(o.UUID, isavro, false, "string"),
-		"version":       toIntegrationResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":      toIntegrationResponseObject(o.Hashcode, isavro, false, "string"),
+		"architecture": toPingObject(o.Architecture, isavro, false, "string"),
+		"customer_id":  toPingObject(o.CustomerID, isavro, false, "string"),
+		"data":         toPingObject(o.Data, isavro, true, "string"),
+		"distro":       toPingObject(o.Distro, isavro, false, "string"),
+		"error":        toPingObject(o.Error, isavro, true, "string"),
+		"event_date":   toPingObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":   toPingObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":   toPingObject(o.GoVersion, isavro, false, "string"),
+		"hostname":     toPingObject(o.Hostname, isavro, false, "string"),
+		"id":           toPingObject(o.ID, isavro, false, "string"),
+		"memory":       toPingObject(o.Memory, isavro, false, "long"),
+		"message":      toPingObject(o.Message, isavro, false, "string"),
+		"num_cpu":      toPingObject(o.NumCPU, isavro, false, "long"),
+		"os":           toPingObject(o.OS, isavro, false, "string"),
+		"ref_id":       toPingObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toPingObject(o.RefType, isavro, false, "string"),
+		"request_id":   toPingObject(o.RequestID, isavro, false, "string"),
+		"success":      toPingObject(o.Success, isavro, false, "boolean"),
+		"type":         toPingObject(o.Type, isavro, false, "type"),
+		"updated_ts":   toPingObject(o.UpdatedAt, isavro, false, "long"),
+		"uuid":         toPingObject(o.UUID, isavro, false, "string"),
+		"version":      toPingObject(o.Version, isavro, false, "string"),
+		"hashcode":     toPingObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
+func (o *Ping) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -624,21 +619,6 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.Architecture = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["authorization"].(string); ok {
-		o.Authorization = val
-	} else {
-		if val, ok := kv["authorization"]; ok {
-			if val == nil {
-				o.Authorization = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Authorization = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -712,12 +692,31 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["event_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.EventDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationResponseEventDate); ok {
+		} else if sv, ok := val.(PingEventDate); ok {
 			// struct
 			o.EventDate = sv
-		} else if sp, ok := val.(*IntegrationResponseEventDate); ok {
+		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -900,7 +899,7 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["type"].(IntegrationResponseType); ok {
+	if val, ok := kv["type"].(PingType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -1006,10 +1005,9 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *IntegrationResponse) Hash() string {
+func (o *Ping) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
-	args = append(args, o.Authorization)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
@@ -1035,12 +1033,12 @@ func (o *IntegrationResponse) Hash() string {
 	return o.Hashcode
 }
 
-// GetIntegrationResponseAvroSchemaSpec creates the avro schema specification for IntegrationResponse
-func GetIntegrationResponseAvroSchemaSpec() string {
+// GetPingAvroSchemaSpec creates the avro schema specification for Ping
+func GetPingAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "IntegrationResponse",
+		"name":      "Ping",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
@@ -1048,10 +1046,6 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "architecture",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "authorization",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -1150,7 +1144,7 @@ func GetIntegrationResponseAvroSchemaSpec() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *IntegrationResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *Ping) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
@@ -1162,25 +1156,25 @@ func (o *IntegrationResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// GetIntegrationResponseAvroSchema creates the avro schema for IntegrationResponse
-func GetIntegrationResponseAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetIntegrationResponseAvroSchemaSpec())
+// GetPingAvroSchema creates the avro schema for Ping
+func GetPingAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetPingAvroSchemaSpec())
 }
 
-// TransformIntegrationResponseFunc is a function for transforming IntegrationResponse during processing
-type TransformIntegrationResponseFunc func(input *IntegrationResponse) (*IntegrationResponse, error)
+// TransformPingFunc is a function for transforming Ping during processing
+type TransformPingFunc func(input *Ping) (*Ping, error)
 
-// NewIntegrationResponsePipe creates a pipe for processing IntegrationResponse items
-func NewIntegrationResponsePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformIntegrationResponseFunc) <-chan bool {
+// NewPingPipe creates a pipe for processing Ping items
+func NewPingPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformPingFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewIntegrationResponseInputStream(input, errors)
-	var stream chan IntegrationResponse
+	inch, indone := NewPingInputStream(input, errors)
+	var stream chan Ping
 	if len(transforms) > 0 {
-		stream = make(chan IntegrationResponse, 1000)
+		stream = make(chan Ping, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewIntegrationResponseOutputStream(output, stream, errors)
+	outdone := NewPingOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -1216,12 +1210,12 @@ func NewIntegrationResponsePipe(input io.ReadCloser, output io.WriteCloser, erro
 	return done
 }
 
-// NewIntegrationResponseInputStreamDir creates a channel for reading IntegrationResponse as JSON newlines from a directory of files
-func NewIntegrationResponseInputStreamDir(dir string, errors chan<- error, transforms ...TransformIntegrationResponseFunc) (chan IntegrationResponse, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/integration_response\\.json(\\.gz)?$"))
+// NewPingInputStreamDir creates a channel for reading Ping as JSON newlines from a directory of files
+func NewPingInputStreamDir(dir string, errors chan<- error, transforms ...TransformPingFunc) (chan Ping, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/ping\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan IntegrationResponse)
+		ch := make(chan Ping)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1229,16 +1223,16 @@ func NewIntegrationResponseInputStreamDir(dir string, errors chan<- error, trans
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for integration_response")
-		ch := make(chan IntegrationResponse)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for ping")
+		ch := make(chan Ping)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewIntegrationResponseInputStreamFile(files[0], errors, transforms...)
+		return NewPingInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan IntegrationResponse)
+		ch := make(chan Ping)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1246,12 +1240,12 @@ func NewIntegrationResponseInputStreamDir(dir string, errors chan<- error, trans
 	}
 }
 
-// NewIntegrationResponseInputStreamFile creates an channel for reading IntegrationResponse as JSON newlines from filename
-func NewIntegrationResponseInputStreamFile(filename string, errors chan<- error, transforms ...TransformIntegrationResponseFunc) (chan IntegrationResponse, <-chan bool) {
+// NewPingInputStreamFile creates an channel for reading Ping as JSON newlines from filename
+func NewPingInputStreamFile(filename string, errors chan<- error, transforms ...TransformPingFunc) (chan Ping, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan IntegrationResponse)
+		ch := make(chan Ping)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1263,7 +1257,7 @@ func NewIntegrationResponseInputStreamFile(filename string, errors chan<- error,
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan IntegrationResponse)
+			ch := make(chan Ping)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -1271,13 +1265,13 @@ func NewIntegrationResponseInputStreamFile(filename string, errors chan<- error,
 		}
 		f = gz
 	}
-	return NewIntegrationResponseInputStream(f, errors, transforms...)
+	return NewPingInputStream(f, errors, transforms...)
 }
 
-// NewIntegrationResponseInputStream creates an channel for reading IntegrationResponse as JSON newlines from stream
-func NewIntegrationResponseInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformIntegrationResponseFunc) (chan IntegrationResponse, <-chan bool) {
+// NewPingInputStream creates an channel for reading Ping as JSON newlines from stream
+func NewPingInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformPingFunc) (chan Ping, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan IntegrationResponse, 1000)
+	ch := make(chan Ping, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -1290,7 +1284,7 @@ func NewIntegrationResponseInputStream(stream io.ReadCloser, errors chan<- error
 				errors <- err
 				return
 			}
-			var item IntegrationResponse
+			var item Ping
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -1316,9 +1310,9 @@ func NewIntegrationResponseInputStream(stream io.ReadCloser, errors chan<- error
 	return ch, done
 }
 
-// NewIntegrationResponseOutputStreamDir will output json newlines from channel and save in dir
-func NewIntegrationResponseOutputStreamDir(dir string, ch chan IntegrationResponse, errors chan<- error, transforms ...TransformIntegrationResponseFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/integration_response\\.json(\\.gz)?$")
+// NewPingOutputStreamDir will output json newlines from channel and save in dir
+func NewPingOutputStreamDir(dir string, ch chan Ping, errors chan<- error, transforms ...TransformPingFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/ping\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -1334,11 +1328,11 @@ func NewIntegrationResponseOutputStreamDir(dir string, ch chan IntegrationRespon
 		done <- true
 		return done
 	}
-	return NewIntegrationResponseOutputStream(gz, ch, errors, transforms...)
+	return NewPingOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewIntegrationResponseOutputStream will output json newlines from channel to the stream
-func NewIntegrationResponseOutputStream(stream io.WriteCloser, ch chan IntegrationResponse, errors chan<- error, transforms ...TransformIntegrationResponseFunc) <-chan bool {
+// NewPingOutputStream will output json newlines from channel to the stream
+func NewPingOutputStream(stream io.WriteCloser, ch chan Ping, errors chan<- error, transforms ...TransformPingFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -1378,59 +1372,59 @@ func NewIntegrationResponseOutputStream(stream io.WriteCloser, ch chan Integrati
 	return done
 }
 
-// IntegrationResponseSendEvent is an event detail for sending data
-type IntegrationResponseSendEvent struct {
-	IntegrationResponse *IntegrationResponse
-	headers             map[string]string
-	time                time.Time
-	key                 string
+// PingSendEvent is an event detail for sending data
+type PingSendEvent struct {
+	Ping    *Ping
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-var _ datamodel.ModelSendEvent = (*IntegrationResponseSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*PingSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *IntegrationResponseSendEvent) Key() string {
+func (e *PingSendEvent) Key() string {
 	if e.key == "" {
-		return e.IntegrationResponse.GetID()
+		return e.Ping.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *IntegrationResponseSendEvent) Object() datamodel.Model {
-	return e.IntegrationResponse
+func (e *PingSendEvent) Object() datamodel.Model {
+	return e.Ping
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *IntegrationResponseSendEvent) Headers() map[string]string {
+func (e *PingSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *IntegrationResponseSendEvent) Timestamp() time.Time {
+func (e *PingSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// IntegrationResponseSendEventOpts is a function handler for setting opts
-type IntegrationResponseSendEventOpts func(o *IntegrationResponseSendEvent)
+// PingSendEventOpts is a function handler for setting opts
+type PingSendEventOpts func(o *PingSendEvent)
 
-// WithIntegrationResponseSendEventKey sets the key value to a value different than the object ID
-func WithIntegrationResponseSendEventKey(key string) IntegrationResponseSendEventOpts {
-	return func(o *IntegrationResponseSendEvent) {
+// WithPingSendEventKey sets the key value to a value different than the object ID
+func WithPingSendEventKey(key string) PingSendEventOpts {
+	return func(o *PingSendEvent) {
 		o.key = key
 	}
 }
 
-// WithIntegrationResponseSendEventTimestamp sets the timestamp value
-func WithIntegrationResponseSendEventTimestamp(tv time.Time) IntegrationResponseSendEventOpts {
-	return func(o *IntegrationResponseSendEvent) {
+// WithPingSendEventTimestamp sets the timestamp value
+func WithPingSendEventTimestamp(tv time.Time) PingSendEventOpts {
+	return func(o *PingSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithIntegrationResponseSendEventHeader sets the timestamp value
-func WithIntegrationResponseSendEventHeader(key, value string) IntegrationResponseSendEventOpts {
-	return func(o *IntegrationResponseSendEvent) {
+// WithPingSendEventHeader sets the timestamp value
+func WithPingSendEventHeader(key, value string) PingSendEventOpts {
+	return func(o *PingSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -1438,10 +1432,10 @@ func WithIntegrationResponseSendEventHeader(key, value string) IntegrationRespon
 	}
 }
 
-// NewIntegrationResponseSendEvent returns a new IntegrationResponseSendEvent instance
-func NewIntegrationResponseSendEvent(o *IntegrationResponse, opts ...IntegrationResponseSendEventOpts) *IntegrationResponseSendEvent {
-	res := &IntegrationResponseSendEvent{
-		IntegrationResponse: o,
+// NewPingSendEvent returns a new PingSendEvent instance
+func NewPingSendEvent(o *Ping, opts ...PingSendEventOpts) *PingSendEvent {
+	res := &PingSendEvent{
+		Ping: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -1451,8 +1445,8 @@ func NewIntegrationResponseSendEvent(o *IntegrationResponse, opts ...Integration
 	return res
 }
 
-// NewIntegrationResponseProducer will stream data from the channel
-func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewPingProducer will stream data from the channel
+func NewPingProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1465,7 +1459,7 @@ func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Produ
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*IntegrationResponse); ok {
+				if object, ok := item.Object().(*Ping); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1496,7 +1490,7 @@ func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Produ
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.IntegrationResponse but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Ping but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -1504,22 +1498,22 @@ func NewIntegrationResponseProducer(ctx context.Context, producer eventing.Produ
 	return done
 }
 
-// NewIntegrationResponseConsumer will stream data from the topic into the provided channel
-func NewIntegrationResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewPingConsumer will stream data from the topic into the provided channel
+func NewPingConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object IntegrationResponse
+			var object Ping
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.IntegrationResponse: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.Ping: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.IntegrationResponse: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.Ping: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.IntegrationResponse")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.Ping")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -1533,51 +1527,51 @@ func NewIntegrationResponseConsumer(consumer eventing.Consumer, ch chan<- datamo
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &IntegrationResponseReceiveEvent{&object, msg, false}
+			ch <- &PingReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object IntegrationResponse
+			var object Ping
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &IntegrationResponseReceiveEvent{nil, msg, true}
+			ch <- &PingReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// IntegrationResponseReceiveEvent is an event detail for receiving data
-type IntegrationResponseReceiveEvent struct {
-	IntegrationResponse *IntegrationResponse
-	message             eventing.Message
-	eof                 bool
+// PingReceiveEvent is an event detail for receiving data
+type PingReceiveEvent struct {
+	Ping    *Ping
+	message eventing.Message
+	eof     bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*IntegrationResponseReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*PingReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *IntegrationResponseReceiveEvent) Object() datamodel.Model {
-	return e.IntegrationResponse
+func (e *PingReceiveEvent) Object() datamodel.Model {
+	return e.Ping
 }
 
 // Message returns the underlying message data for the event
-func (e *IntegrationResponseReceiveEvent) Message() eventing.Message {
+func (e *PingReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *IntegrationResponseReceiveEvent) EOF() bool {
+func (e *PingReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// IntegrationResponseProducer implements the datamodel.ModelEventProducer
-type IntegrationResponseProducer struct {
+// PingProducer implements the datamodel.ModelEventProducer
+type PingProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -1588,15 +1582,15 @@ type IntegrationResponseProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*IntegrationResponseProducer)(nil)
+var _ datamodel.ModelEventProducer = (*PingProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *IntegrationResponseProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *PingProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *IntegrationResponseProducer) Close() error {
+func (p *PingProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1611,47 +1605,47 @@ func (p *IntegrationResponseProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *IntegrationResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Ping) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *IntegrationResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Ping) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &IntegrationResponseProducer{
+	return &PingProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewIntegrationResponseProducer(newctx, producer, ch, errors, empty),
+		done:     NewPingProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewIntegrationResponseProducerChannel returns a channel which can be used for producing Model events
-func NewIntegrationResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewIntegrationResponseProducerChannelSize(producer, 0, errors)
+// NewPingProducerChannel returns a channel which can be used for producing Model events
+func NewPingProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewPingProducerChannelSize(producer, 0, errors)
 }
 
-// NewIntegrationResponseProducerChannelSize returns a channel which can be used for producing Model events
-func NewIntegrationResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewPingProducerChannelSize returns a channel which can be used for producing Model events
+func NewPingProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &IntegrationResponseProducer{
+	return &PingProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewIntegrationResponseProducer(newctx, producer, ch, errors, empty),
+		done:     NewPingProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// IntegrationResponseConsumer implements the datamodel.ModelEventConsumer
-type IntegrationResponseConsumer struct {
+// PingConsumer implements the datamodel.ModelEventConsumer
+type PingConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1659,15 +1653,15 @@ type IntegrationResponseConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*IntegrationResponseConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*PingConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *IntegrationResponseConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *PingConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *IntegrationResponseConsumer) Close() error {
+func (c *PingConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1681,21 +1675,21 @@ func (c *IntegrationResponseConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *IntegrationResponse) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Ping) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &IntegrationResponseConsumer{
+	return &PingConsumer{
 		ch:       ch,
-		callback: NewIntegrationResponseConsumer(consumer, ch, errors),
+		callback: NewPingConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewIntegrationResponseConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewIntegrationResponseConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewPingConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewPingConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &IntegrationResponseConsumer{
+	return &PingConsumer{
 		ch:       ch,
-		callback: NewIntegrationResponseConsumer(consumer, ch, errors),
+		callback: NewPingConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }

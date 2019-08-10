@@ -437,15 +437,21 @@ func (v ExportResponseType) String() string {
 	case 2:
 		return "CRASH"
 	case 3:
-		return "INTEGRATION"
+		return "LOG"
 	case 4:
-		return "EXPORT"
+		return "INTEGRATION"
 	case 5:
-		return "PROJECT"
+		return "EXPORT"
 	case 6:
-		return "REPO"
+		return "PROJECT"
 	case 7:
+		return "REPO"
+	case 8:
 		return "USER"
+	case 9:
+		return "UNINSTALL"
+	case 10:
+		return "UPGRADE"
 	}
 	return "unset"
 }
@@ -457,16 +463,22 @@ const (
 	ExportResponseTypePing ExportResponseType = 1
 	// TypeCrash is the enumeration value for crash
 	ExportResponseTypeCrash ExportResponseType = 2
+	// TypeLog is the enumeration value for log
+	ExportResponseTypeLog ExportResponseType = 3
 	// TypeIntegration is the enumeration value for integration
-	ExportResponseTypeIntegration ExportResponseType = 3
+	ExportResponseTypeIntegration ExportResponseType = 4
 	// TypeExport is the enumeration value for export
-	ExportResponseTypeExport ExportResponseType = 4
+	ExportResponseTypeExport ExportResponseType = 5
 	// TypeProject is the enumeration value for project
-	ExportResponseTypeProject ExportResponseType = 5
+	ExportResponseTypeProject ExportResponseType = 6
 	// TypeRepo is the enumeration value for repo
-	ExportResponseTypeRepo ExportResponseType = 6
+	ExportResponseTypeRepo ExportResponseType = 7
 	// TypeUser is the enumeration value for user
-	ExportResponseTypeUser ExportResponseType = 7
+	ExportResponseTypeUser ExportResponseType = 8
+	// TypeUninstall is the enumeration value for uninstall
+	ExportResponseTypeUninstall ExportResponseType = 9
+	// TypeUpgrade is the enumeration value for upgrade
+	ExportResponseTypeUpgrade ExportResponseType = 10
 )
 
 // ExportResponse an agent response to an action request for export
@@ -958,6 +970,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1200,16 +1231,22 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1220,16 +1257,22 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 	}
@@ -1415,7 +1458,7 @@ func GetExportResponseAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE"},
 				},
 			},
 			map[string]interface{}{

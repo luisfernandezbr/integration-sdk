@@ -811,15 +811,21 @@ func (v ProjectResponseType) String() string {
 	case 2:
 		return "CRASH"
 	case 3:
-		return "INTEGRATION"
+		return "LOG"
 	case 4:
-		return "EXPORT"
+		return "INTEGRATION"
 	case 5:
-		return "PROJECT"
+		return "EXPORT"
 	case 6:
-		return "REPO"
+		return "PROJECT"
 	case 7:
+		return "REPO"
+	case 8:
 		return "USER"
+	case 9:
+		return "UNINSTALL"
+	case 10:
+		return "UPGRADE"
 	}
 	return "unset"
 }
@@ -831,16 +837,22 @@ const (
 	ProjectResponseTypePing ProjectResponseType = 1
 	// TypeCrash is the enumeration value for crash
 	ProjectResponseTypeCrash ProjectResponseType = 2
+	// TypeLog is the enumeration value for log
+	ProjectResponseTypeLog ProjectResponseType = 3
 	// TypeIntegration is the enumeration value for integration
-	ProjectResponseTypeIntegration ProjectResponseType = 3
+	ProjectResponseTypeIntegration ProjectResponseType = 4
 	// TypeExport is the enumeration value for export
-	ProjectResponseTypeExport ProjectResponseType = 4
+	ProjectResponseTypeExport ProjectResponseType = 5
 	// TypeProject is the enumeration value for project
-	ProjectResponseTypeProject ProjectResponseType = 5
+	ProjectResponseTypeProject ProjectResponseType = 6
 	// TypeRepo is the enumeration value for repo
-	ProjectResponseTypeRepo ProjectResponseType = 6
+	ProjectResponseTypeRepo ProjectResponseType = 7
 	// TypeUser is the enumeration value for user
-	ProjectResponseTypeUser ProjectResponseType = 7
+	ProjectResponseTypeUser ProjectResponseType = 8
+	// TypeUninstall is the enumeration value for uninstall
+	ProjectResponseTypeUninstall ProjectResponseType = 9
+	// TypeUpgrade is the enumeration value for upgrade
+	ProjectResponseTypeUpgrade ProjectResponseType = 10
 )
 
 // ProjectResponse an agent response to an action request adding project(s)
@@ -1586,16 +1598,22 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1606,16 +1624,22 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 1
 			case "crash", "CRASH":
 				o.Type = 2
-			case "integration", "INTEGRATION":
+			case "log", "LOG":
 				o.Type = 3
-			case "export", "EXPORT":
+			case "integration", "INTEGRATION":
 				o.Type = 4
-			case "project", "PROJECT":
+			case "export", "EXPORT":
 				o.Type = 5
-			case "repo", "REPO":
+			case "project", "PROJECT":
 				o.Type = 6
-			case "user", "USER":
+			case "repo", "REPO":
 				o.Type = 7
+			case "user", "USER":
+				o.Type = 8
+			case "uninstall", "UNINSTALL":
+				o.Type = 9
+			case "upgrade", "UPGRADE":
+				o.Type = 10
 			}
 		}
 	}
@@ -1796,7 +1820,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE"},
 				},
 			},
 			map[string]interface{}{
