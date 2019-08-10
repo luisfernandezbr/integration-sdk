@@ -232,6 +232,10 @@ func (v UpgradeType) String() string {
 		return "UNINSTALL"
 	case 10:
 		return "UPGRADE"
+	case 11:
+		return "START"
+	case 12:
+		return "STOP"
 	}
 	return "unset"
 }
@@ -259,6 +263,10 @@ const (
 	UpgradeTypeUninstall UpgradeType = 9
 	// TypeUpgrade is the enumeration value for upgrade
 	UpgradeTypeUpgrade UpgradeType = 10
+	// TypeStart is the enumeration value for start
+	UpgradeTypeStart UpgradeType = 11
+	// TypeStop is the enumeration value for stop
+	UpgradeTypeStop UpgradeType = 12
 )
 
 // Upgrade an agent event to indicate the agent version was upgraded
@@ -708,6 +716,25 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpgradeEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -948,6 +975,10 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 				o.Type = 9
 			case "upgrade", "UPGRADE":
 				o.Type = 10
+			case "start", "START":
+				o.Type = 11
+			case "stop", "STOP":
+				o.Type = 12
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -974,6 +1005,10 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 				o.Type = 9
 			case "upgrade", "UPGRADE":
 				o.Type = 10
+			case "start", "START":
+				o.Type = 11
+			case "stop", "STOP":
+				o.Type = 12
 			}
 		}
 	}
@@ -1154,7 +1189,7 @@ func GetUpgradeAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE", "START", "STOP"},
 				},
 			},
 			map[string]interface{}{

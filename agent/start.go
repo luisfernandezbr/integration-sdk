@@ -31,76 +31,74 @@ import (
 )
 
 const (
-	// EnrollResponseTopic is the default topic name
-	EnrollResponseTopic datamodel.TopicNameType = "agent_EnrollResponse_topic"
+	// StartTopic is the default topic name
+	StartTopic datamodel.TopicNameType = "agent_Start_topic"
 
-	// EnrollResponseStream is the default stream name
-	EnrollResponseStream datamodel.TopicNameType = "agent_EnrollResponse_stream"
+	// StartStream is the default stream name
+	StartStream datamodel.TopicNameType = "agent_Start_stream"
 
-	// EnrollResponseTable is the default table name
-	EnrollResponseTable datamodel.TopicNameType = "agent_EnrollResponse"
+	// StartTable is the default table name
+	StartTable datamodel.TopicNameType = "agent_Start"
 
-	// EnrollResponseModelName is the model name
-	EnrollResponseModelName datamodel.ModelNameType = "agent.EnrollResponse"
+	// StartModelName is the model name
+	StartModelName datamodel.ModelNameType = "agent.Start"
 )
 
 const (
-	// EnrollResponseApikeyColumn is the apikey column name
-	EnrollResponseApikeyColumn = "apikey"
-	// EnrollResponseArchitectureColumn is the architecture column name
-	EnrollResponseArchitectureColumn = "architecture"
-	// EnrollResponseCustomerIDColumn is the customer_id column name
-	EnrollResponseCustomerIDColumn = "customer_id"
-	// EnrollResponseDataColumn is the data column name
-	EnrollResponseDataColumn = "data"
-	// EnrollResponseDistroColumn is the distro column name
-	EnrollResponseDistroColumn = "distro"
-	// EnrollResponseErrorColumn is the error column name
-	EnrollResponseErrorColumn = "error"
-	// EnrollResponseEventDateColumn is the event_date column name
-	EnrollResponseEventDateColumn = "event_date"
-	// EnrollResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	EnrollResponseEventDateColumnEpochColumn = "event_date->epoch"
-	// EnrollResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	EnrollResponseEventDateColumnOffsetColumn = "event_date->offset"
-	// EnrollResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	EnrollResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// EnrollResponseFreeSpaceColumn is the free_space column name
-	EnrollResponseFreeSpaceColumn = "free_space"
-	// EnrollResponseGoVersionColumn is the go_version column name
-	EnrollResponseGoVersionColumn = "go_version"
-	// EnrollResponseHostnameColumn is the hostname column name
-	EnrollResponseHostnameColumn = "hostname"
-	// EnrollResponseIDColumn is the id column name
-	EnrollResponseIDColumn = "id"
-	// EnrollResponseMemoryColumn is the memory column name
-	EnrollResponseMemoryColumn = "memory"
-	// EnrollResponseMessageColumn is the message column name
-	EnrollResponseMessageColumn = "message"
-	// EnrollResponseNumCPUColumn is the num_cpu column name
-	EnrollResponseNumCPUColumn = "num_cpu"
-	// EnrollResponseOSColumn is the os column name
-	EnrollResponseOSColumn = "os"
-	// EnrollResponseRefIDColumn is the ref_id column name
-	EnrollResponseRefIDColumn = "ref_id"
-	// EnrollResponseRefTypeColumn is the ref_type column name
-	EnrollResponseRefTypeColumn = "ref_type"
-	// EnrollResponseRequestIDColumn is the request_id column name
-	EnrollResponseRequestIDColumn = "request_id"
-	// EnrollResponseSuccessColumn is the success column name
-	EnrollResponseSuccessColumn = "success"
-	// EnrollResponseTypeColumn is the type column name
-	EnrollResponseTypeColumn = "type"
-	// EnrollResponseUpdatedAtColumn is the updated_ts column name
-	EnrollResponseUpdatedAtColumn = "updated_ts"
-	// EnrollResponseUUIDColumn is the uuid column name
-	EnrollResponseUUIDColumn = "uuid"
-	// EnrollResponseVersionColumn is the version column name
-	EnrollResponseVersionColumn = "version"
+	// StartArchitectureColumn is the architecture column name
+	StartArchitectureColumn = "architecture"
+	// StartCustomerIDColumn is the customer_id column name
+	StartCustomerIDColumn = "customer_id"
+	// StartDataColumn is the data column name
+	StartDataColumn = "data"
+	// StartDistroColumn is the distro column name
+	StartDistroColumn = "distro"
+	// StartErrorColumn is the error column name
+	StartErrorColumn = "error"
+	// StartEventDateColumn is the event_date column name
+	StartEventDateColumn = "event_date"
+	// StartEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	StartEventDateColumnEpochColumn = "event_date->epoch"
+	// StartEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	StartEventDateColumnOffsetColumn = "event_date->offset"
+	// StartEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	StartEventDateColumnRfc3339Column = "event_date->rfc3339"
+	// StartFreeSpaceColumn is the free_space column name
+	StartFreeSpaceColumn = "free_space"
+	// StartGoVersionColumn is the go_version column name
+	StartGoVersionColumn = "go_version"
+	// StartHostnameColumn is the hostname column name
+	StartHostnameColumn = "hostname"
+	// StartIDColumn is the id column name
+	StartIDColumn = "id"
+	// StartMemoryColumn is the memory column name
+	StartMemoryColumn = "memory"
+	// StartMessageColumn is the message column name
+	StartMessageColumn = "message"
+	// StartNumCPUColumn is the num_cpu column name
+	StartNumCPUColumn = "num_cpu"
+	// StartOSColumn is the os column name
+	StartOSColumn = "os"
+	// StartRefIDColumn is the ref_id column name
+	StartRefIDColumn = "ref_id"
+	// StartRefTypeColumn is the ref_type column name
+	StartRefTypeColumn = "ref_type"
+	// StartRequestIDColumn is the request_id column name
+	StartRequestIDColumn = "request_id"
+	// StartSuccessColumn is the success column name
+	StartSuccessColumn = "success"
+	// StartTypeColumn is the type column name
+	StartTypeColumn = "type"
+	// StartUpdatedAtColumn is the updated_ts column name
+	StartUpdatedAtColumn = "updated_ts"
+	// StartUUIDColumn is the uuid column name
+	StartUUIDColumn = "uuid"
+	// StartVersionColumn is the version column name
+	StartVersionColumn = "version"
 )
 
-// EnrollResponseEventDate represents the object structure for event_date
-type EnrollResponseEventDate struct {
+// StartEventDate represents the object structure for event_date
+type StartEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -109,19 +107,19 @@ type EnrollResponseEventDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toEnrollResponseEventDateObjectNil(isavro bool, isoptional bool) interface{} {
+func toStartEventDateObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toEnrollResponseEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toStartEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
 	switch v := o.(type) {
-	case *EnrollResponseEventDate:
+	case *StartEventDate:
 		return v.ToMap(isavro)
 
 	default:
@@ -129,7 +127,7 @@ func toEnrollResponseEventDateObject(o interface{}, isavro bool, isoptional bool
 	}
 }
 
-func (o *EnrollResponseEventDate) ToMap(avro ...bool) map[string]interface{} {
+func (o *StartEventDate) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -137,15 +135,15 @@ func (o *EnrollResponseEventDate) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toEnrollResponseEventDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toStartEventDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": toEnrollResponseEventDateObject(o.Offset, isavro, false, "long"),
+		"offset": toStartEventDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toEnrollResponseEventDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toStartEventDateObject(o.Rfc3339, isavro, false, "string"),
 	}
 }
 
-func (o *EnrollResponseEventDate) setDefaults(frommap bool) {
+func (o *StartEventDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -153,7 +151,7 @@ func (o *EnrollResponseEventDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *EnrollResponseEventDate) FromMap(kv map[string]interface{}) {
+func (o *StartEventDate) FromMap(kv map[string]interface{}) {
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -202,11 +200,11 @@ func (o *EnrollResponseEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// EnrollResponseType is the enumeration type for type
-type EnrollResponseType int32
+// StartType is the enumeration type for type
+type StartType int32
 
 // String returns the string value for Type
-func (v EnrollResponseType) String() string {
+func (v StartType) String() string {
 	switch int32(v) {
 	case 0:
 		return "ENROLL"
@@ -240,37 +238,35 @@ func (v EnrollResponseType) String() string {
 
 const (
 	// TypeEnroll is the enumeration value for enroll
-	EnrollResponseTypeEnroll EnrollResponseType = 0
+	StartTypeEnroll StartType = 0
 	// TypePing is the enumeration value for ping
-	EnrollResponseTypePing EnrollResponseType = 1
+	StartTypePing StartType = 1
 	// TypeCrash is the enumeration value for crash
-	EnrollResponseTypeCrash EnrollResponseType = 2
+	StartTypeCrash StartType = 2
 	// TypeLog is the enumeration value for log
-	EnrollResponseTypeLog EnrollResponseType = 3
+	StartTypeLog StartType = 3
 	// TypeIntegration is the enumeration value for integration
-	EnrollResponseTypeIntegration EnrollResponseType = 4
+	StartTypeIntegration StartType = 4
 	// TypeExport is the enumeration value for export
-	EnrollResponseTypeExport EnrollResponseType = 5
+	StartTypeExport StartType = 5
 	// TypeProject is the enumeration value for project
-	EnrollResponseTypeProject EnrollResponseType = 6
+	StartTypeProject StartType = 6
 	// TypeRepo is the enumeration value for repo
-	EnrollResponseTypeRepo EnrollResponseType = 7
+	StartTypeRepo StartType = 7
 	// TypeUser is the enumeration value for user
-	EnrollResponseTypeUser EnrollResponseType = 8
+	StartTypeUser StartType = 8
 	// TypeUninstall is the enumeration value for uninstall
-	EnrollResponseTypeUninstall EnrollResponseType = 9
+	StartTypeUninstall StartType = 9
 	// TypeUpgrade is the enumeration value for upgrade
-	EnrollResponseTypeUpgrade EnrollResponseType = 10
+	StartTypeUpgrade StartType = 10
 	// TypeStart is the enumeration value for start
-	EnrollResponseTypeStart EnrollResponseType = 11
+	StartTypeStart StartType = 11
 	// TypeStop is the enumeration value for stop
-	EnrollResponseTypeStop EnrollResponseType = 12
+	StartTypeStop StartType = 12
 )
 
-// EnrollResponse an agent response to an the enroll action
-type EnrollResponse struct {
-	// Apikey The API key that the agent should use when communicating with the cloud
-	Apikey string `json:"apikey" bson:"apikey" yaml:"apikey" faker:"-"`
+// Start an agent event which is sent on start
+type Start struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -282,7 +278,7 @@ type EnrollResponse struct {
 	// Error an error message related to this event
 	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
 	// EventDate the date of the event
-	EventDate EnrollResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate StartEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -308,7 +304,7 @@ type EnrollResponse struct {
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
-	Type EnrollResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type StartType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
@@ -320,27 +316,27 @@ type EnrollResponse struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*EnrollResponse)(nil)
+var _ datamodel.Model = (*Start)(nil)
 
-func toEnrollResponseObjectNil(isavro bool, isoptional bool) interface{} {
+func toStartObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toEnrollResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toStartObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
 	switch v := o.(type) {
-	case *EnrollResponse:
+	case *Start:
 		return v.ToMap(isavro)
 
-	case EnrollResponseEventDate:
+	case StartEventDate:
 		return v.ToMap(isavro)
 
-	case EnrollResponseType:
+	case StartType:
 		return v.String()
 
 	default:
@@ -348,22 +344,22 @@ func toEnrollResponseObject(o interface{}, isavro bool, isoptional bool, avrotyp
 	}
 }
 
-// String returns a string representation of EnrollResponse
-func (o *EnrollResponse) String() string {
-	return fmt.Sprintf("agent.EnrollResponse<%s>", o.ID)
+// String returns a string representation of Start
+func (o *Start) String() string {
+	return fmt.Sprintf("agent.Start<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *EnrollResponse) GetTopicName() datamodel.TopicNameType {
-	return EnrollResponseTopic
+func (o *Start) GetTopicName() datamodel.TopicNameType {
+	return StartTopic
 }
 
 // GetModelName returns the name of the model
-func (o *EnrollResponse) GetModelName() datamodel.ModelNameType {
-	return EnrollResponseModelName
+func (o *Start) GetModelName() datamodel.ModelNameType {
+	return StartModelName
 }
 
-func (o *EnrollResponse) setDefaults(frommap bool) {
+func (o *Start) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString
 	}
@@ -373,7 +369,7 @@ func (o *EnrollResponse) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("EnrollResponse", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("Start", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -384,12 +380,12 @@ func (o *EnrollResponse) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *EnrollResponse) GetID() string {
+func (o *Start) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *EnrollResponse) GetTopicKey() string {
+func (o *Start) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -398,7 +394,7 @@ func (o *EnrollResponse) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *EnrollResponse) GetTimestamp() time.Time {
+func (o *Start) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -412,37 +408,37 @@ func (o *EnrollResponse) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for EnrollResponse")
+	panic("not sure how to handle the date time format for Start")
 }
 
 // GetRefID returns the RefID for the object
-func (o *EnrollResponse) GetRefID() string {
+func (o *Start) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *EnrollResponse) IsMaterialized() bool {
+func (o *Start) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *EnrollResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *Start) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *EnrollResponse) IsEvented() bool {
+func (o *Start) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *EnrollResponse) SetEventHeaders(kv map[string]string) {
+func (o *Start) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = EnrollResponseModelName.String()
+	kv["model"] = StartModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *EnrollResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *Start) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -467,28 +463,28 @@ func (o *EnrollResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *EnrollResponse) GetStateKey() string {
+func (o *Start) GetStateKey() string {
 	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *EnrollResponse) GetCustomerID() string {
+func (o *Start) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of EnrollResponse
-func (o *EnrollResponse) Clone() datamodel.Model {
-	c := new(EnrollResponse)
+// Clone returns an exact copy of Start
+func (o *Start) Clone() datamodel.Model {
+	c := new(Start)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *EnrollResponse) Anon() datamodel.Model {
-	c := new(EnrollResponse)
+func (o *Start) Anon() datamodel.Model {
+	c := new(Start)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -503,12 +499,12 @@ func (o *EnrollResponse) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *EnrollResponse) MarshalJSON() ([]byte, error) {
+func (o *Start) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *EnrollResponse) UnmarshalJSON(data []byte) error {
+func (o *Start) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -520,22 +516,22 @@ func (o *EnrollResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecEnrollResponse *goavro.Codec
+var cachedCodecStart *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *EnrollResponse) GetAvroCodec() *goavro.Codec {
-	if cachedCodecEnrollResponse == nil {
-		c, err := GetEnrollResponseAvroSchema()
+func (o *Start) GetAvroCodec() *goavro.Codec {
+	if cachedCodecStart == nil {
+		c, err := GetStartAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecEnrollResponse = c
+		cachedCodecStart = c
 	}
-	return cachedCodecEnrollResponse
+	return cachedCodecStart
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *EnrollResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *Start) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -549,7 +545,7 @@ func (o *EnrollResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *EnrollResponse) FromAvroBinary(value []byte) error {
+func (o *Start) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -564,18 +560,18 @@ func (o *EnrollResponse) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *EnrollResponse) Stringify() string {
+func (o *Start) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two EnrollResponse objects are equal
-func (o *EnrollResponse) IsEqual(other *EnrollResponse) bool {
+// IsEqual returns true if the two Start objects are equal
+func (o *Start) IsEqual(other *Start) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *EnrollResponse) ToMap(avro ...bool) map[string]interface{} {
+func (o *Start) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -584,56 +580,40 @@ func (o *EnrollResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"apikey":       toEnrollResponseObject(o.Apikey, isavro, false, "string"),
-		"architecture": toEnrollResponseObject(o.Architecture, isavro, false, "string"),
-		"customer_id":  toEnrollResponseObject(o.CustomerID, isavro, false, "string"),
-		"data":         toEnrollResponseObject(o.Data, isavro, true, "string"),
-		"distro":       toEnrollResponseObject(o.Distro, isavro, false, "string"),
-		"error":        toEnrollResponseObject(o.Error, isavro, true, "string"),
-		"event_date":   toEnrollResponseObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":   toEnrollResponseObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":   toEnrollResponseObject(o.GoVersion, isavro, false, "string"),
-		"hostname":     toEnrollResponseObject(o.Hostname, isavro, false, "string"),
-		"id":           toEnrollResponseObject(o.ID, isavro, false, "string"),
-		"memory":       toEnrollResponseObject(o.Memory, isavro, false, "long"),
-		"message":      toEnrollResponseObject(o.Message, isavro, false, "string"),
-		"num_cpu":      toEnrollResponseObject(o.NumCPU, isavro, false, "long"),
-		"os":           toEnrollResponseObject(o.OS, isavro, false, "string"),
-		"ref_id":       toEnrollResponseObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toEnrollResponseObject(o.RefType, isavro, false, "string"),
-		"request_id":   toEnrollResponseObject(o.RequestID, isavro, false, "string"),
-		"success":      toEnrollResponseObject(o.Success, isavro, false, "boolean"),
-		"type":         toEnrollResponseObject(o.Type, isavro, false, "type"),
-		"updated_ts":   toEnrollResponseObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":         toEnrollResponseObject(o.UUID, isavro, false, "string"),
-		"version":      toEnrollResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":     toEnrollResponseObject(o.Hashcode, isavro, false, "string"),
+		"architecture": toStartObject(o.Architecture, isavro, false, "string"),
+		"customer_id":  toStartObject(o.CustomerID, isavro, false, "string"),
+		"data":         toStartObject(o.Data, isavro, true, "string"),
+		"distro":       toStartObject(o.Distro, isavro, false, "string"),
+		"error":        toStartObject(o.Error, isavro, true, "string"),
+		"event_date":   toStartObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":   toStartObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":   toStartObject(o.GoVersion, isavro, false, "string"),
+		"hostname":     toStartObject(o.Hostname, isavro, false, "string"),
+		"id":           toStartObject(o.ID, isavro, false, "string"),
+		"memory":       toStartObject(o.Memory, isavro, false, "long"),
+		"message":      toStartObject(o.Message, isavro, false, "string"),
+		"num_cpu":      toStartObject(o.NumCPU, isavro, false, "long"),
+		"os":           toStartObject(o.OS, isavro, false, "string"),
+		"ref_id":       toStartObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toStartObject(o.RefType, isavro, false, "string"),
+		"request_id":   toStartObject(o.RequestID, isavro, false, "string"),
+		"success":      toStartObject(o.Success, isavro, false, "boolean"),
+		"type":         toStartObject(o.Type, isavro, false, "type"),
+		"updated_ts":   toStartObject(o.UpdatedAt, isavro, false, "long"),
+		"uuid":         toStartObject(o.UUID, isavro, false, "string"),
+		"version":      toStartObject(o.Version, isavro, false, "string"),
+		"hashcode":     toStartObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
+func (o *Start) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["apikey"].(string); ok {
-		o.Apikey = val
-	} else {
-		if val, ok := kv["apikey"]; ok {
-			if val == nil {
-				o.Apikey = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Apikey = fmt.Sprintf("%v", val)
-			}
-		}
 	}
 
 	if val, ok := kv["architecture"].(string); ok {
@@ -720,10 +700,10 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["event_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.EventDate.FromMap(kv)
-		} else if sv, ok := val.(EnrollResponseEventDate); ok {
+		} else if sv, ok := val.(StartEventDate); ok {
 			// struct
 			o.EventDate = sv
-		} else if sp, ok := val.(*EnrollResponseEventDate); ok {
+		} else if sp, ok := val.(*StartEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
 		}
@@ -908,7 +888,7 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["type"].(EnrollResponseType); ok {
+	if val, ok := kv["type"].(StartType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -1022,9 +1002,8 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *EnrollResponse) Hash() string {
+func (o *Start) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Apikey)
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
@@ -1051,19 +1030,15 @@ func (o *EnrollResponse) Hash() string {
 	return o.Hashcode
 }
 
-// GetEnrollResponseAvroSchemaSpec creates the avro schema specification for EnrollResponse
-func GetEnrollResponseAvroSchemaSpec() string {
+// GetStartAvroSchemaSpec creates the avro schema specification for Start
+func GetStartAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "EnrollResponse",
+		"name":      "Start",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "apikey",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -1166,37 +1141,37 @@ func GetEnrollResponseAvroSchemaSpec() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *EnrollResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *Start) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
 		},
 		Subscribe: datamodel.EventAPISubscribe{
-			Public: true,
-			Key:    "uuid",
+			Public: false,
+			Key:    "",
 		},
 	}
 }
 
-// GetEnrollResponseAvroSchema creates the avro schema for EnrollResponse
-func GetEnrollResponseAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetEnrollResponseAvroSchemaSpec())
+// GetStartAvroSchema creates the avro schema for Start
+func GetStartAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetStartAvroSchemaSpec())
 }
 
-// TransformEnrollResponseFunc is a function for transforming EnrollResponse during processing
-type TransformEnrollResponseFunc func(input *EnrollResponse) (*EnrollResponse, error)
+// TransformStartFunc is a function for transforming Start during processing
+type TransformStartFunc func(input *Start) (*Start, error)
 
-// NewEnrollResponsePipe creates a pipe for processing EnrollResponse items
-func NewEnrollResponsePipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformEnrollResponseFunc) <-chan bool {
+// NewStartPipe creates a pipe for processing Start items
+func NewStartPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformStartFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewEnrollResponseInputStream(input, errors)
-	var stream chan EnrollResponse
+	inch, indone := NewStartInputStream(input, errors)
+	var stream chan Start
 	if len(transforms) > 0 {
-		stream = make(chan EnrollResponse, 1000)
+		stream = make(chan Start, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewEnrollResponseOutputStream(output, stream, errors)
+	outdone := NewStartOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -1232,12 +1207,12 @@ func NewEnrollResponsePipe(input io.ReadCloser, output io.WriteCloser, errors ch
 	return done
 }
 
-// NewEnrollResponseInputStreamDir creates a channel for reading EnrollResponse as JSON newlines from a directory of files
-func NewEnrollResponseInputStreamDir(dir string, errors chan<- error, transforms ...TransformEnrollResponseFunc) (chan EnrollResponse, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/enroll_response\\.json(\\.gz)?$"))
+// NewStartInputStreamDir creates a channel for reading Start as JSON newlines from a directory of files
+func NewStartInputStreamDir(dir string, errors chan<- error, transforms ...TransformStartFunc) (chan Start, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/start\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan EnrollResponse)
+		ch := make(chan Start)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1245,16 +1220,16 @@ func NewEnrollResponseInputStreamDir(dir string, errors chan<- error, transforms
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for enroll_response")
-		ch := make(chan EnrollResponse)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for start")
+		ch := make(chan Start)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewEnrollResponseInputStreamFile(files[0], errors, transforms...)
+		return NewStartInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan EnrollResponse)
+		ch := make(chan Start)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1262,12 +1237,12 @@ func NewEnrollResponseInputStreamDir(dir string, errors chan<- error, transforms
 	}
 }
 
-// NewEnrollResponseInputStreamFile creates an channel for reading EnrollResponse as JSON newlines from filename
-func NewEnrollResponseInputStreamFile(filename string, errors chan<- error, transforms ...TransformEnrollResponseFunc) (chan EnrollResponse, <-chan bool) {
+// NewStartInputStreamFile creates an channel for reading Start as JSON newlines from filename
+func NewStartInputStreamFile(filename string, errors chan<- error, transforms ...TransformStartFunc) (chan Start, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan EnrollResponse)
+		ch := make(chan Start)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1279,7 +1254,7 @@ func NewEnrollResponseInputStreamFile(filename string, errors chan<- error, tran
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan EnrollResponse)
+			ch := make(chan Start)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -1287,13 +1262,13 @@ func NewEnrollResponseInputStreamFile(filename string, errors chan<- error, tran
 		}
 		f = gz
 	}
-	return NewEnrollResponseInputStream(f, errors, transforms...)
+	return NewStartInputStream(f, errors, transforms...)
 }
 
-// NewEnrollResponseInputStream creates an channel for reading EnrollResponse as JSON newlines from stream
-func NewEnrollResponseInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformEnrollResponseFunc) (chan EnrollResponse, <-chan bool) {
+// NewStartInputStream creates an channel for reading Start as JSON newlines from stream
+func NewStartInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformStartFunc) (chan Start, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan EnrollResponse, 1000)
+	ch := make(chan Start, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -1306,7 +1281,7 @@ func NewEnrollResponseInputStream(stream io.ReadCloser, errors chan<- error, tra
 				errors <- err
 				return
 			}
-			var item EnrollResponse
+			var item Start
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -1332,9 +1307,9 @@ func NewEnrollResponseInputStream(stream io.ReadCloser, errors chan<- error, tra
 	return ch, done
 }
 
-// NewEnrollResponseOutputStreamDir will output json newlines from channel and save in dir
-func NewEnrollResponseOutputStreamDir(dir string, ch chan EnrollResponse, errors chan<- error, transforms ...TransformEnrollResponseFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/enroll_response\\.json(\\.gz)?$")
+// NewStartOutputStreamDir will output json newlines from channel and save in dir
+func NewStartOutputStreamDir(dir string, ch chan Start, errors chan<- error, transforms ...TransformStartFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/start\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -1350,11 +1325,11 @@ func NewEnrollResponseOutputStreamDir(dir string, ch chan EnrollResponse, errors
 		done <- true
 		return done
 	}
-	return NewEnrollResponseOutputStream(gz, ch, errors, transforms...)
+	return NewStartOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewEnrollResponseOutputStream will output json newlines from channel to the stream
-func NewEnrollResponseOutputStream(stream io.WriteCloser, ch chan EnrollResponse, errors chan<- error, transforms ...TransformEnrollResponseFunc) <-chan bool {
+// NewStartOutputStream will output json newlines from channel to the stream
+func NewStartOutputStream(stream io.WriteCloser, ch chan Start, errors chan<- error, transforms ...TransformStartFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -1394,59 +1369,59 @@ func NewEnrollResponseOutputStream(stream io.WriteCloser, ch chan EnrollResponse
 	return done
 }
 
-// EnrollResponseSendEvent is an event detail for sending data
-type EnrollResponseSendEvent struct {
-	EnrollResponse *EnrollResponse
-	headers        map[string]string
-	time           time.Time
-	key            string
+// StartSendEvent is an event detail for sending data
+type StartSendEvent struct {
+	Start   *Start
+	headers map[string]string
+	time    time.Time
+	key     string
 }
 
-var _ datamodel.ModelSendEvent = (*EnrollResponseSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*StartSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *EnrollResponseSendEvent) Key() string {
+func (e *StartSendEvent) Key() string {
 	if e.key == "" {
-		return e.EnrollResponse.GetID()
+		return e.Start.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *EnrollResponseSendEvent) Object() datamodel.Model {
-	return e.EnrollResponse
+func (e *StartSendEvent) Object() datamodel.Model {
+	return e.Start
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *EnrollResponseSendEvent) Headers() map[string]string {
+func (e *StartSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *EnrollResponseSendEvent) Timestamp() time.Time {
+func (e *StartSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// EnrollResponseSendEventOpts is a function handler for setting opts
-type EnrollResponseSendEventOpts func(o *EnrollResponseSendEvent)
+// StartSendEventOpts is a function handler for setting opts
+type StartSendEventOpts func(o *StartSendEvent)
 
-// WithEnrollResponseSendEventKey sets the key value to a value different than the object ID
-func WithEnrollResponseSendEventKey(key string) EnrollResponseSendEventOpts {
-	return func(o *EnrollResponseSendEvent) {
+// WithStartSendEventKey sets the key value to a value different than the object ID
+func WithStartSendEventKey(key string) StartSendEventOpts {
+	return func(o *StartSendEvent) {
 		o.key = key
 	}
 }
 
-// WithEnrollResponseSendEventTimestamp sets the timestamp value
-func WithEnrollResponseSendEventTimestamp(tv time.Time) EnrollResponseSendEventOpts {
-	return func(o *EnrollResponseSendEvent) {
+// WithStartSendEventTimestamp sets the timestamp value
+func WithStartSendEventTimestamp(tv time.Time) StartSendEventOpts {
+	return func(o *StartSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithEnrollResponseSendEventHeader sets the timestamp value
-func WithEnrollResponseSendEventHeader(key, value string) EnrollResponseSendEventOpts {
-	return func(o *EnrollResponseSendEvent) {
+// WithStartSendEventHeader sets the timestamp value
+func WithStartSendEventHeader(key, value string) StartSendEventOpts {
+	return func(o *StartSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -1454,10 +1429,10 @@ func WithEnrollResponseSendEventHeader(key, value string) EnrollResponseSendEven
 	}
 }
 
-// NewEnrollResponseSendEvent returns a new EnrollResponseSendEvent instance
-func NewEnrollResponseSendEvent(o *EnrollResponse, opts ...EnrollResponseSendEventOpts) *EnrollResponseSendEvent {
-	res := &EnrollResponseSendEvent{
-		EnrollResponse: o,
+// NewStartSendEvent returns a new StartSendEvent instance
+func NewStartSendEvent(o *Start, opts ...StartSendEventOpts) *StartSendEvent {
+	res := &StartSendEvent{
+		Start: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -1467,8 +1442,8 @@ func NewEnrollResponseSendEvent(o *EnrollResponse, opts ...EnrollResponseSendEve
 	return res
 }
 
-// NewEnrollResponseProducer will stream data from the channel
-func NewEnrollResponseProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewStartProducer will stream data from the channel
+func NewStartProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1481,7 +1456,7 @@ func NewEnrollResponseProducer(ctx context.Context, producer eventing.Producer, 
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*EnrollResponse); ok {
+				if object, ok := item.Object().(*Start); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1512,7 +1487,7 @@ func NewEnrollResponseProducer(ctx context.Context, producer eventing.Producer, 
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.EnrollResponse but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Start but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -1520,22 +1495,22 @@ func NewEnrollResponseProducer(ctx context.Context, producer eventing.Producer, 
 	return done
 }
 
-// NewEnrollResponseConsumer will stream data from the topic into the provided channel
-func NewEnrollResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewStartConsumer will stream data from the topic into the provided channel
+func NewStartConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object EnrollResponse
+			var object Start
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.EnrollResponse: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.Start: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.EnrollResponse: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.Start: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.EnrollResponse")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.Start")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -1549,51 +1524,51 @@ func NewEnrollResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.M
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &EnrollResponseReceiveEvent{&object, msg, false}
+			ch <- &StartReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object EnrollResponse
+			var object Start
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &EnrollResponseReceiveEvent{nil, msg, true}
+			ch <- &StartReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// EnrollResponseReceiveEvent is an event detail for receiving data
-type EnrollResponseReceiveEvent struct {
-	EnrollResponse *EnrollResponse
-	message        eventing.Message
-	eof            bool
+// StartReceiveEvent is an event detail for receiving data
+type StartReceiveEvent struct {
+	Start   *Start
+	message eventing.Message
+	eof     bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*EnrollResponseReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*StartReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *EnrollResponseReceiveEvent) Object() datamodel.Model {
-	return e.EnrollResponse
+func (e *StartReceiveEvent) Object() datamodel.Model {
+	return e.Start
 }
 
 // Message returns the underlying message data for the event
-func (e *EnrollResponseReceiveEvent) Message() eventing.Message {
+func (e *StartReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *EnrollResponseReceiveEvent) EOF() bool {
+func (e *StartReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// EnrollResponseProducer implements the datamodel.ModelEventProducer
-type EnrollResponseProducer struct {
+// StartProducer implements the datamodel.ModelEventProducer
+type StartProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -1604,15 +1579,15 @@ type EnrollResponseProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*EnrollResponseProducer)(nil)
+var _ datamodel.ModelEventProducer = (*StartProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *EnrollResponseProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *StartProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *EnrollResponseProducer) Close() error {
+func (p *StartProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1627,47 +1602,47 @@ func (p *EnrollResponseProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *EnrollResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Start) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *EnrollResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Start) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &EnrollResponseProducer{
+	return &StartProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewEnrollResponseProducer(newctx, producer, ch, errors, empty),
+		done:     NewStartProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewEnrollResponseProducerChannel returns a channel which can be used for producing Model events
-func NewEnrollResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewEnrollResponseProducerChannelSize(producer, 0, errors)
+// NewStartProducerChannel returns a channel which can be used for producing Model events
+func NewStartProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewStartProducerChannelSize(producer, 0, errors)
 }
 
-// NewEnrollResponseProducerChannelSize returns a channel which can be used for producing Model events
-func NewEnrollResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewStartProducerChannelSize returns a channel which can be used for producing Model events
+func NewStartProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &EnrollResponseProducer{
+	return &StartProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewEnrollResponseProducer(newctx, producer, ch, errors, empty),
+		done:     NewStartProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// EnrollResponseConsumer implements the datamodel.ModelEventConsumer
-type EnrollResponseConsumer struct {
+// StartConsumer implements the datamodel.ModelEventConsumer
+type StartConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1675,15 +1650,15 @@ type EnrollResponseConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*EnrollResponseConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*StartConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *EnrollResponseConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *StartConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *EnrollResponseConsumer) Close() error {
+func (c *StartConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1697,21 +1672,21 @@ func (c *EnrollResponseConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *EnrollResponse) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Start) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &EnrollResponseConsumer{
+	return &StartConsumer{
 		ch:       ch,
-		callback: NewEnrollResponseConsumer(consumer, ch, errors),
+		callback: NewStartConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewEnrollResponseConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewEnrollResponseConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewStartConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewStartConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &EnrollResponseConsumer{
+	return &StartConsumer{
 		ch:       ch,
-		callback: NewEnrollResponseConsumer(consumer, ch, errors),
+		callback: NewStartConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }

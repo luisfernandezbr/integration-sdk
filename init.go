@@ -84,6 +84,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.RepoResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.Start":
+		o := new(dm_agent.Start)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Stop":
+		o := new(dm_agent.Stop)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Uninstall":
 		o := new(dm_agent.Uninstall)
 		o.FromMap(map[string]interface{}{})
@@ -263,6 +271,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.RepoResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent_Start_topic":
+		o := new(dm_agent.Start)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_Stop_topic":
+		o := new(dm_agent.Stop)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_Uninstall_topic":
 		o := new(dm_agent.Uninstall)
 		o.FromMap(map[string]interface{}{})
@@ -410,6 +426,8 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_ProjectTrigger_topic"),
 		datamodel.TopicNameType("agent_RepoRequest_topic"),
 		datamodel.TopicNameType("agent_RepoResponse_topic"),
+		datamodel.TopicNameType("agent_Start_topic"),
+		datamodel.TopicNameType("agent_Stop_topic"),
 		datamodel.TopicNameType("agent_Uninstall_topic"),
 		datamodel.TopicNameType("agent_Upgrade_topic"),
 		datamodel.TopicNameType("agent_UserRequest_topic"),
@@ -459,6 +477,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.ProjectTrigger"),
 		datamodel.ModelNameType("agent.RepoRequest"),
 		datamodel.ModelNameType("agent.RepoResponse"),
+		datamodel.ModelNameType("agent.Start"),
+		datamodel.ModelNameType("agent.Stop"),
 		datamodel.ModelNameType("agent.Uninstall"),
 		datamodel.ModelNameType("agent.Upgrade"),
 		datamodel.ModelNameType("agent.UserRequest"),
