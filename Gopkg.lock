@@ -75,7 +75,7 @@
   revision = "2e52cf6e685269ed8aefec6390f3cac3ef74e730"
 
 [[projects]]
-  digest = "1:f8aa6c18390a0a72580a5fcd36ebea7f1430eae9b41342bf3dc32006ef754cf0"
+  digest = "1:92276714c172546de2ca884cf7cfab6b5c6cc33d2432401cfa81ab269df0a8a9"
   name = "github.com/pinpt/go-common"
   packages = [
     "datamodel",
@@ -89,8 +89,8 @@
     "strings",
   ]
   pruneopts = "UT"
-  revision = "5be8b95a085ce6c7a24a0e4f8533d27e0055c50d"
-  version = "8.0.2"
+  revision = "1f8b8c9c21a2c65e9afdcd0257558ec21626590f"
+  version = "8.1.0"
 
 [[projects]]
   digest = "1:1cabe44fb226a08664539c7ff79f25940284d9e2116187a74c90472a51c257ca"
