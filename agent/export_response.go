@@ -95,6 +95,8 @@ const (
 	ExportResponseRefTypeColumn = "ref_type"
 	// ExportResponseRequestIDColumn is the request_id column name
 	ExportResponseRequestIDColumn = "request_id"
+	// ExportResponseSizeColumn is the size column name
+	ExportResponseSizeColumn = "size"
 	// ExportResponseStartDateColumn is the start_date column name
 	ExportResponseStartDateColumn = "start_date"
 	// ExportResponseStartDateColumnEpochColumn is the epoch column property of the StartDate name
@@ -109,6 +111,8 @@ const (
 	ExportResponseTypeColumn = "type"
 	// ExportResponseUpdatedAtColumn is the updated_ts column name
 	ExportResponseUpdatedAtColumn = "updated_ts"
+	// ExportResponseUploadURLColumn is the upload_url column name
+	ExportResponseUploadURLColumn = "upload_url"
 	// ExportResponseUUIDColumn is the uuid column name
 	ExportResponseUUIDColumn = "uuid"
 	// ExportResponseVersionColumn is the version column name
@@ -529,6 +533,8 @@ type ExportResponse struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
 	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	// Size the size of the upload in bytes
+	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
 	// StartDate the export start date
 	StartDate ExportResponseStartDate `json:"start_date" bson:"start_date" yaml:"start_date" faker:"-"`
 	// Success if the response was successful
@@ -537,6 +543,8 @@ type ExportResponse struct {
 	Type ExportResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// UploadURL the upload URL where the job was placed. will be NULL if not uploaded
+	UploadURL *string `json:"upload_url" bson:"upload_url" yaml:"upload_url" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -601,6 +609,9 @@ func (o *ExportResponse) setDefaults(frommap bool) {
 	}
 	if o.Error == nil {
 		o.Error = &emptyString
+	}
+	if o.UploadURL == nil {
+		o.UploadURL = &emptyString
 	}
 
 	if o.ID == "" {
@@ -835,10 +846,12 @@ func (o *ExportResponse) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toExportResponseObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toExportResponseObject(o.RefType, isavro, false, "string"),
 		"request_id":   toExportResponseObject(o.RequestID, isavro, false, "string"),
+		"size":         toExportResponseObject(o.Size, isavro, false, "long"),
 		"start_date":   toExportResponseObject(o.StartDate, isavro, false, "start_date"),
 		"success":      toExportResponseObject(o.Success, isavro, false, "boolean"),
 		"type":         toExportResponseObject(o.Type, isavro, false, "type"),
 		"updated_ts":   toExportResponseObject(o.UpdatedAt, isavro, false, "long"),
+		"upload_url":   toExportResponseObject(o.UploadURL, isavro, true, "string"),
 		"uuid":         toExportResponseObject(o.UUID, isavro, false, "string"),
 		"version":      toExportResponseObject(o.Version, isavro, false, "string"),
 		"hashcode":     toExportResponseObject(o.Hashcode, isavro, false, "string"),
@@ -978,25 +991,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1182,6 +1176,21 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["size"].(int64); ok {
+		o.Size = val
+	} else {
+		if val, ok := kv["size"]; ok {
+			if val == nil {
+				o.Size = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Size = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["start_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.StartDate.FromMap(kv)
@@ -1308,6 +1317,24 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["upload_url"].(*string); ok {
+		o.UploadURL = val
+	} else if val, ok := kv["upload_url"].(string); ok {
+		o.UploadURL = &val
+	} else {
+		if val, ok := kv["upload_url"]; ok {
+			if val == nil {
+				o.UploadURL = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UploadURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1362,10 +1389,12 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestID)
+	args = append(args, o.Size)
 	args = append(args, o.StartDate)
 	args = append(args, o.Success)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.UploadURL)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1462,6 +1491,10 @@ func GetExportResponseAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "size",
+				"type": "long",
+			},
+			map[string]interface{}{
 				"name": "start_date",
 				"type": map[string]interface{}{"doc": "the export start date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "start_date", "type": "record"},
 			},
@@ -1480,6 +1513,11 @@ func GetExportResponseAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_ts",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name":    "upload_url",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
 				"name": "uuid",
