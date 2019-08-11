@@ -141,8 +141,11 @@ func (o *Repo) setDefaults(frommap bool) {
 		o.ID = hash.Values("Repo", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
-	if o.DefaultBranch == "" {
-		o.DefaultBranch = "master"
+	{
+		v := "master"
+
+		o.DefaultBranch = v
+
 	}
 
 	if frommap {

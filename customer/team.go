@@ -161,18 +161,9 @@ func (o *Team) setDefaults(frommap bool) {
 		o.ID = hash.Values(o.CustomerID, randomString(64))
 	}
 
-	{
+	if o.Active == nil {
 		v := false
-
 		o.Active = &v
-
-	}
-
-	{
-		v := true
-
-		o.Leaf = v
-
 	}
 
 	if frommap {

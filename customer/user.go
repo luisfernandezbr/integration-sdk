@@ -549,27 +549,6 @@ func (o *User) setDefaults(frommap bool) {
 		o.ID = hash.Values(o.CustomerID, o.Email)
 	}
 
-	{
-		v := false
-
-		o.Active = v
-
-	}
-
-	{
-		v := false
-
-		o.Owner = v
-
-	}
-
-	{
-		v := true
-
-		o.Trackable = v
-
-	}
-
 	if frommap {
 		o.FromMap(map[string]interface{}{})
 	}

@@ -445,13 +445,6 @@ func (o *Build) setDefaults(frommap bool) {
 		o.ID = hash.Values("Build", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
-	{
-		v := true
-
-		o.Automated = v
-
-	}
-
 	if frommap {
 		o.FromMap(map[string]interface{}{})
 	}
