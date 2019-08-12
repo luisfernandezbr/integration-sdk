@@ -85,6 +85,8 @@ const (
 	PingRefTypeColumn = "ref_type"
 	// PingRequestIDColumn is the request_id column name
 	PingRequestIDColumn = "request_id"
+	// PingStateColumn is the state column name
+	PingStateColumn = "state"
 	// PingSuccessColumn is the success column name
 	PingSuccessColumn = "success"
 	// PingTypeColumn is the type column name
@@ -200,6 +202,35 @@ func (o *PingEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// PingState is the enumeration type for state
+type PingState int32
+
+// String returns the string value for State
+func (v PingState) String() string {
+	switch int32(v) {
+	case 0:
+		return "IDLE"
+	case 1:
+		return "STARTING"
+	case 2:
+		return "STOPPING"
+	case 3:
+		return "EXPORTING"
+	}
+	return "unset"
+}
+
+const (
+	// StateIdle is the enumeration value for idle
+	PingStateIdle PingState = 0
+	// StateStarting is the enumeration value for starting
+	PingStateStarting PingState = 1
+	// StateStopping is the enumeration value for stopping
+	PingStateStopping PingState = 2
+	// StateExporting is the enumeration value for exporting
+	PingStateExporting PingState = 3
+)
+
 // PingType is the enumeration type for type
 type PingType int32
 
@@ -301,6 +332,8 @@ type Ping struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
 	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	// State the state of the agent
+	State PingState `json:"state" bson:"state" yaml:"state" faker:"-"`
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
@@ -335,6 +368,9 @@ func toPingObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 
 	case PingEventDate:
 		return v.ToMap(isavro)
+
+	case PingState:
+		return v.String()
 
 	case PingType:
 		return v.String()
@@ -597,6 +633,7 @@ func (o *Ping) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":       toPingObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toPingObject(o.RefType, isavro, false, "string"),
 		"request_id":   toPingObject(o.RequestID, isavro, false, "string"),
+		"state":        toPingObject(o.State, isavro, false, "state"),
 		"success":      toPingObject(o.Success, isavro, false, "boolean"),
 		"type":         toPingObject(o.Type, isavro, false, "type"),
 		"updated_ts":   toPingObject(o.UpdatedAt, isavro, false, "long"),
@@ -706,25 +743,6 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -895,6 +913,36 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["state"].(PingState); ok {
+		o.State = val
+	} else {
+		if em, ok := kv["state"].(map[string]interface{}); ok {
+			ev := em["agent.state"].(string)
+			switch ev {
+			case "idle", "IDLE":
+				o.State = 0
+			case "starting", "STARTING":
+				o.State = 1
+			case "stopping", "STOPPING":
+				o.State = 2
+			case "exporting", "EXPORTING":
+				o.State = 3
+			}
+		}
+		if em, ok := kv["state"].(string); ok {
+			switch em {
+			case "idle", "IDLE":
+				o.State = 0
+			case "starting", "STARTING":
+				o.State = 1
+			case "stopping", "STOPPING":
+				o.State = 2
+			case "exporting", "EXPORTING":
+				o.State = 3
+			}
+		}
+	}
+
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
@@ -1040,6 +1088,7 @@ func (o *Ping) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestID)
+	args = append(args, o.State)
 	args = append(args, o.Success)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
@@ -1129,6 +1178,14 @@ func GetPingAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "state",
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "state",
+					"symbols": []interface{}{"IDLE", "STARTING", "STOPPING", "EXPORTING"},
+				},
 			},
 			map[string]interface{}{
 				"name": "success",
