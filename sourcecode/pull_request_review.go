@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -1067,6 +1068,9 @@ func NewPullRequestReviewProducer(ctx context.Context, producer eventing.Produce
 					if tv.IsZero() {
 						tv = time.Now() // if its still zero, use the ingest time
 					}
+					// add generated message headers
+					headers["message-id"] = pstrings.NewUUIDV4()
+					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
 						Key:       item.Key(),

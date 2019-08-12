@@ -974,6 +974,9 @@ func NewProjectProducer(ctx context.Context, producer eventing.Producer, ch <-ch
 					if tv.IsZero() {
 						tv = time.Now() // if its still zero, use the ingest time
 					}
+					// add generated message headers
+					headers["message-id"] = pstrings.NewUUIDV4()
+					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
 						Key:       item.Key(),
