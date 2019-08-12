@@ -81,6 +81,14 @@ const (
 	ExportResponseIDColumn = "id"
 	// ExportResponseJobIDColumn is the job_id column name
 	ExportResponseJobIDColumn = "job_id"
+	// ExportResponseLastExportDateColumn is the last_export_date column name
+	ExportResponseLastExportDateColumn = "last_export_date"
+	// ExportResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	ExportResponseLastExportDateColumnEpochColumn = "last_export_date->epoch"
+	// ExportResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	ExportResponseLastExportDateColumnOffsetColumn = "last_export_date->offset"
+	// ExportResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	ExportResponseLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
 	// ExportResponseMemoryColumn is the memory column name
 	ExportResponseMemoryColumn = "memory"
 	// ExportResponseMessageColumn is the message column name
@@ -113,6 +121,8 @@ const (
 	ExportResponseUpdatedAtColumn = "updated_ts"
 	// ExportResponseUploadURLColumn is the upload_url column name
 	ExportResponseUploadURLColumn = "upload_url"
+	// ExportResponseUptimeColumn is the uptime column name
+	ExportResponseUptimeColumn = "uptime"
 	// ExportResponseUUIDColumn is the uuid column name
 	ExportResponseUUIDColumn = "uuid"
 	// ExportResponseVersionColumn is the version column name
@@ -277,6 +287,109 @@ func (o *ExportResponseEventDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ExportResponseEventDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// ExportResponseLastExportDate represents the object structure for last_export_date
+type ExportResponseLastExportDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toExportResponseLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toExportResponseLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	switch v := o.(type) {
+	case *ExportResponseLastExportDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *ExportResponseLastExportDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toExportResponseLastExportDateObject(o.Epoch, isavro, false, "long"),
+		// Offset the timezone offset from GMT
+		"offset": toExportResponseLastExportDateObject(o.Offset, isavro, false, "long"),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toExportResponseLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+	}
+}
+
+func (o *ExportResponseLastExportDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportResponseLastExportDate) FromMap(kv map[string]interface{}) {
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -519,6 +632,8 @@ type ExportResponse struct {
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// JobID The job ID
 	JobID string `json:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
+	// LastExportDate the last export date
+	LastExportDate ExportResponseLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -545,6 +660,8 @@ type ExportResponse struct {
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UploadURL the upload URL where the job was placed. will be NULL if not uploaded
 	UploadURL *string `json:"upload_url" bson:"upload_url" yaml:"upload_url" faker:"-"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -575,6 +692,9 @@ func toExportResponseObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		return v.ToMap(isavro)
 
 	case ExportResponseEventDate:
+		return v.ToMap(isavro)
+
+	case ExportResponseLastExportDate:
 		return v.ToMap(isavro)
 
 	case ExportResponseStartDate:
@@ -827,34 +947,36 @@ func (o *ExportResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture": toExportResponseObject(o.Architecture, isavro, false, "string"),
-		"customer_id":  toExportResponseObject(o.CustomerID, isavro, false, "string"),
-		"data":         toExportResponseObject(o.Data, isavro, true, "string"),
-		"distro":       toExportResponseObject(o.Distro, isavro, false, "string"),
-		"end_date":     toExportResponseObject(o.EndDate, isavro, false, "end_date"),
-		"error":        toExportResponseObject(o.Error, isavro, true, "string"),
-		"event_date":   toExportResponseObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":   toExportResponseObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":   toExportResponseObject(o.GoVersion, isavro, false, "string"),
-		"hostname":     toExportResponseObject(o.Hostname, isavro, false, "string"),
-		"id":           toExportResponseObject(o.ID, isavro, false, "string"),
-		"job_id":       toExportResponseObject(o.JobID, isavro, false, "string"),
-		"memory":       toExportResponseObject(o.Memory, isavro, false, "long"),
-		"message":      toExportResponseObject(o.Message, isavro, false, "string"),
-		"num_cpu":      toExportResponseObject(o.NumCPU, isavro, false, "long"),
-		"os":           toExportResponseObject(o.OS, isavro, false, "string"),
-		"ref_id":       toExportResponseObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toExportResponseObject(o.RefType, isavro, false, "string"),
-		"request_id":   toExportResponseObject(o.RequestID, isavro, false, "string"),
-		"size":         toExportResponseObject(o.Size, isavro, false, "long"),
-		"start_date":   toExportResponseObject(o.StartDate, isavro, false, "start_date"),
-		"success":      toExportResponseObject(o.Success, isavro, false, "boolean"),
-		"type":         toExportResponseObject(o.Type, isavro, false, "type"),
-		"updated_ts":   toExportResponseObject(o.UpdatedAt, isavro, false, "long"),
-		"upload_url":   toExportResponseObject(o.UploadURL, isavro, true, "string"),
-		"uuid":         toExportResponseObject(o.UUID, isavro, false, "string"),
-		"version":      toExportResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":     toExportResponseObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toExportResponseObject(o.Architecture, isavro, false, "string"),
+		"customer_id":      toExportResponseObject(o.CustomerID, isavro, false, "string"),
+		"data":             toExportResponseObject(o.Data, isavro, true, "string"),
+		"distro":           toExportResponseObject(o.Distro, isavro, false, "string"),
+		"end_date":         toExportResponseObject(o.EndDate, isavro, false, "end_date"),
+		"error":            toExportResponseObject(o.Error, isavro, true, "string"),
+		"event_date":       toExportResponseObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":       toExportResponseObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":       toExportResponseObject(o.GoVersion, isavro, false, "string"),
+		"hostname":         toExportResponseObject(o.Hostname, isavro, false, "string"),
+		"id":               toExportResponseObject(o.ID, isavro, false, "string"),
+		"job_id":           toExportResponseObject(o.JobID, isavro, false, "string"),
+		"last_export_date": toExportResponseObject(o.LastExportDate, isavro, false, "last_export_date"),
+		"memory":           toExportResponseObject(o.Memory, isavro, false, "long"),
+		"message":          toExportResponseObject(o.Message, isavro, false, "string"),
+		"num_cpu":          toExportResponseObject(o.NumCPU, isavro, false, "long"),
+		"os":               toExportResponseObject(o.OS, isavro, false, "string"),
+		"ref_id":           toExportResponseObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toExportResponseObject(o.RefType, isavro, false, "string"),
+		"request_id":       toExportResponseObject(o.RequestID, isavro, false, "string"),
+		"size":             toExportResponseObject(o.Size, isavro, false, "long"),
+		"start_date":       toExportResponseObject(o.StartDate, isavro, false, "start_date"),
+		"success":          toExportResponseObject(o.Success, isavro, false, "boolean"),
+		"type":             toExportResponseObject(o.Type, isavro, false, "type"),
+		"updated_ts":       toExportResponseObject(o.UpdatedAt, isavro, false, "long"),
+		"upload_url":       toExportResponseObject(o.UploadURL, isavro, true, "string"),
+		"uptime":           toExportResponseObject(o.Uptime, isavro, false, "long"),
+		"uuid":             toExportResponseObject(o.UUID, isavro, false, "string"),
+		"version":          toExportResponseObject(o.Version, isavro, false, "string"),
+		"hashcode":         toExportResponseObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -991,6 +1113,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1069,6 +1210,39 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.JobID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["last_export_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportDate.FromMap(kv)
+		} else if sv, ok := val.(ExportResponseLastExportDate); ok {
+			// struct
+			o.LastExportDate = sv
+		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
+			// struct pointer
+			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["memory"].(int64); ok {
@@ -1335,6 +1509,21 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["uptime"].(int64); ok {
+		o.Uptime = val
+	} else {
+		if val, ok := kv["uptime"]; ok {
+			if val == nil {
+				o.Uptime = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Uptime = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1382,6 +1571,7 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
 	args = append(args, o.JobID)
+	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
@@ -1395,6 +1585,7 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UploadURL)
+	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1463,6 +1654,10 @@ func GetExportResponseAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "last_export_date",
+				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
+			},
+			map[string]interface{}{
 				"name": "memory",
 				"type": "long",
 			},
@@ -1518,6 +1713,10 @@ func GetExportResponseAvroSchemaSpec() string {
 				"name":    "upload_url",
 				"type":    []interface{}{"null", "string"},
 				"default": nil,
+			},
+			map[string]interface{}{
+				"name": "uptime",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "uuid",

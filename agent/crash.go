@@ -71,6 +71,14 @@ const (
 	CrashHostnameColumn = "hostname"
 	// CrashIDColumn is the id column name
 	CrashIDColumn = "id"
+	// CrashLastExportDateColumn is the last_export_date column name
+	CrashLastExportDateColumn = "last_export_date"
+	// CrashLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	CrashLastExportDateColumnEpochColumn = "last_export_date->epoch"
+	// CrashLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	CrashLastExportDateColumnOffsetColumn = "last_export_date->offset"
+	// CrashLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	CrashLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
 	// CrashMemoryColumn is the memory column name
 	CrashMemoryColumn = "memory"
 	// CrashMessageColumn is the message column name
@@ -91,6 +99,8 @@ const (
 	CrashTypeColumn = "type"
 	// CrashUpdatedAtColumn is the updated_ts column name
 	CrashUpdatedAtColumn = "updated_ts"
+	// CrashUptimeColumn is the uptime column name
+	CrashUptimeColumn = "uptime"
 	// CrashUUIDColumn is the uuid column name
 	CrashUUIDColumn = "uuid"
 	// CrashVersionColumn is the version column name
@@ -152,6 +162,109 @@ func (o *CrashEventDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *CrashEventDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// CrashLastExportDate represents the object structure for last_export_date
+type CrashLastExportDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toCrashLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toCrashLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	switch v := o.(type) {
+	case *CrashLastExportDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *CrashLastExportDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toCrashLastExportDateObject(o.Epoch, isavro, false, "long"),
+		// Offset the timezone offset from GMT
+		"offset": toCrashLastExportDateObject(o.Offset, isavro, false, "long"),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toCrashLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+	}
+}
+
+func (o *CrashLastExportDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CrashLastExportDate) FromMap(kv map[string]interface{}) {
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -287,6 +400,8 @@ type Crash struct {
 	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// LastExportDate the last export date
+	LastExportDate CrashLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -307,6 +422,8 @@ type Crash struct {
 	Type CrashType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -334,6 +451,9 @@ func toCrashObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		return v.ToMap(isavro)
 
 	case CrashEventDate:
+		return v.ToMap(isavro)
+
+	case CrashLastExportDate:
 		return v.ToMap(isavro)
 
 	case CrashType:
@@ -580,29 +700,31 @@ func (o *Crash) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture": toCrashObject(o.Architecture, isavro, false, "string"),
-		"customer_id":  toCrashObject(o.CustomerID, isavro, false, "string"),
-		"data":         toCrashObject(o.Data, isavro, true, "string"),
-		"distro":       toCrashObject(o.Distro, isavro, false, "string"),
-		"error":        toCrashObject(o.Error, isavro, true, "string"),
-		"event_date":   toCrashObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":   toCrashObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":   toCrashObject(o.GoVersion, isavro, false, "string"),
-		"hostname":     toCrashObject(o.Hostname, isavro, false, "string"),
-		"id":           toCrashObject(o.ID, isavro, false, "string"),
-		"memory":       toCrashObject(o.Memory, isavro, false, "long"),
-		"message":      toCrashObject(o.Message, isavro, false, "string"),
-		"num_cpu":      toCrashObject(o.NumCPU, isavro, false, "long"),
-		"os":           toCrashObject(o.OS, isavro, false, "string"),
-		"ref_id":       toCrashObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toCrashObject(o.RefType, isavro, false, "string"),
-		"request_id":   toCrashObject(o.RequestID, isavro, false, "string"),
-		"success":      toCrashObject(o.Success, isavro, false, "boolean"),
-		"type":         toCrashObject(o.Type, isavro, false, "type"),
-		"updated_ts":   toCrashObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":         toCrashObject(o.UUID, isavro, false, "string"),
-		"version":      toCrashObject(o.Version, isavro, false, "string"),
-		"hashcode":     toCrashObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toCrashObject(o.Architecture, isavro, false, "string"),
+		"customer_id":      toCrashObject(o.CustomerID, isavro, false, "string"),
+		"data":             toCrashObject(o.Data, isavro, true, "string"),
+		"distro":           toCrashObject(o.Distro, isavro, false, "string"),
+		"error":            toCrashObject(o.Error, isavro, true, "string"),
+		"event_date":       toCrashObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":       toCrashObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":       toCrashObject(o.GoVersion, isavro, false, "string"),
+		"hostname":         toCrashObject(o.Hostname, isavro, false, "string"),
+		"id":               toCrashObject(o.ID, isavro, false, "string"),
+		"last_export_date": toCrashObject(o.LastExportDate, isavro, false, "last_export_date"),
+		"memory":           toCrashObject(o.Memory, isavro, false, "long"),
+		"message":          toCrashObject(o.Message, isavro, false, "string"),
+		"num_cpu":          toCrashObject(o.NumCPU, isavro, false, "long"),
+		"os":               toCrashObject(o.OS, isavro, false, "string"),
+		"ref_id":           toCrashObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toCrashObject(o.RefType, isavro, false, "string"),
+		"request_id":       toCrashObject(o.RequestID, isavro, false, "string"),
+		"success":          toCrashObject(o.Success, isavro, false, "boolean"),
+		"type":             toCrashObject(o.Type, isavro, false, "type"),
+		"updated_ts":       toCrashObject(o.UpdatedAt, isavro, false, "long"),
+		"uptime":           toCrashObject(o.Uptime, isavro, false, "long"),
+		"uuid":             toCrashObject(o.UUID, isavro, false, "string"),
+		"version":          toCrashObject(o.Version, isavro, false, "string"),
+		"hashcode":         toCrashObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -788,6 +910,39 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["last_export_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportDate.FromMap(kv)
+		} else if sv, ok := val.(CrashLastExportDate); ok {
+			// struct
+			o.LastExportDate = sv
+		} else if sp, ok := val.(*CrashLastExportDate); ok {
+			// struct pointer
+			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["memory"].(int64); ok {
@@ -988,6 +1143,21 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["uptime"].(int64); ok {
+		o.Uptime = val
+	} else {
+		if val, ok := kv["uptime"]; ok {
+			if val == nil {
+				o.Uptime = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Uptime = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1033,6 +1203,7 @@ func (o *Crash) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
@@ -1043,6 +1214,7 @@ func (o *Crash) Hash() string {
 	args = append(args, o.Success)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1103,6 +1275,10 @@ func GetCrashAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "last_export_date",
+				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
+			},
+			map[string]interface{}{
 				"name": "memory",
 				"type": "long",
 			},
@@ -1144,6 +1320,10 @@ func GetCrashAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "uptime",
 				"type": "long",
 			},
 			map[string]interface{}{

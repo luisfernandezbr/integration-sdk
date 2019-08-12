@@ -159,8 +159,7 @@ func (o *Branch) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Branch", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.RefID, o.RepoID)
 	}
 
 	if frommap {

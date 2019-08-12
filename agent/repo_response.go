@@ -74,6 +74,14 @@ const (
 	RepoResponseIDColumn = "id"
 	// RepoResponseIntegrationIDColumn is the integration_id column name
 	RepoResponseIntegrationIDColumn = "integration_id"
+	// RepoResponseLastExportDateColumn is the last_export_date column name
+	RepoResponseLastExportDateColumn = "last_export_date"
+	// RepoResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	RepoResponseLastExportDateColumnEpochColumn = "last_export_date->epoch"
+	// RepoResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	RepoResponseLastExportDateColumnOffsetColumn = "last_export_date->offset"
+	// RepoResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	RepoResponseLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
 	// RepoResponseMemoryColumn is the memory column name
 	RepoResponseMemoryColumn = "memory"
 	// RepoResponseMessageColumn is the message column name
@@ -112,6 +120,8 @@ const (
 	RepoResponseTypeColumn = "type"
 	// RepoResponseUpdatedAtColumn is the updated_ts column name
 	RepoResponseUpdatedAtColumn = "updated_ts"
+	// RepoResponseUptimeColumn is the uptime column name
+	RepoResponseUptimeColumn = "uptime"
 	// RepoResponseUUIDColumn is the uuid column name
 	RepoResponseUUIDColumn = "uuid"
 	// RepoResponseVersionColumn is the version column name
@@ -173,6 +183,109 @@ func (o *RepoResponseEventDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseEventDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// RepoResponseLastExportDate represents the object structure for last_export_date
+type RepoResponseLastExportDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toRepoResponseLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toRepoResponseLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	switch v := o.(type) {
+	case *RepoResponseLastExportDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *RepoResponseLastExportDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toRepoResponseLastExportDateObject(o.Epoch, isavro, false, "long"),
+		// Offset the timezone offset from GMT
+		"offset": toRepoResponseLastExportDateObject(o.Offset, isavro, false, "long"),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toRepoResponseLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+	}
+}
+
+func (o *RepoResponseLastExportDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoResponseLastExportDate) FromMap(kv map[string]interface{}) {
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -982,6 +1095,8 @@ type RepoResponse struct {
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
 	IntegrationID string `json:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// LastExportDate the last export date
+	LastExportDate RepoResponseLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -1004,6 +1119,8 @@ type RepoResponse struct {
 	Type RepoResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -1031,6 +1148,9 @@ func toRepoResponseObject(o interface{}, isavro bool, isoptional bool, avrotype 
 		return v.ToMap(isavro)
 
 	case RepoResponseEventDate:
+		return v.ToMap(isavro)
+
+	case RepoResponseLastExportDate:
 		return v.ToMap(isavro)
 
 	case []RepoResponseRepos:
@@ -1290,31 +1410,33 @@ func (o *RepoResponse) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":   toRepoResponseObject(o.Architecture, isavro, false, "string"),
-		"customer_id":    toRepoResponseObject(o.CustomerID, isavro, false, "string"),
-		"data":           toRepoResponseObject(o.Data, isavro, true, "string"),
-		"distro":         toRepoResponseObject(o.Distro, isavro, false, "string"),
-		"error":          toRepoResponseObject(o.Error, isavro, true, "string"),
-		"event_date":     toRepoResponseObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":     toRepoResponseObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":     toRepoResponseObject(o.GoVersion, isavro, false, "string"),
-		"hostname":       toRepoResponseObject(o.Hostname, isavro, false, "string"),
-		"id":             toRepoResponseObject(o.ID, isavro, false, "string"),
-		"integration_id": toRepoResponseObject(o.IntegrationID, isavro, false, "string"),
-		"memory":         toRepoResponseObject(o.Memory, isavro, false, "long"),
-		"message":        toRepoResponseObject(o.Message, isavro, false, "string"),
-		"num_cpu":        toRepoResponseObject(o.NumCPU, isavro, false, "long"),
-		"os":             toRepoResponseObject(o.OS, isavro, false, "string"),
-		"ref_id":         toRepoResponseObject(o.RefID, isavro, false, "string"),
-		"ref_type":       toRepoResponseObject(o.RefType, isavro, false, "string"),
-		"repos":          toRepoResponseObject(o.Repos, isavro, false, "repos"),
-		"request_id":     toRepoResponseObject(o.RequestID, isavro, false, "string"),
-		"success":        toRepoResponseObject(o.Success, isavro, false, "boolean"),
-		"type":           toRepoResponseObject(o.Type, isavro, false, "type"),
-		"updated_ts":     toRepoResponseObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":           toRepoResponseObject(o.UUID, isavro, false, "string"),
-		"version":        toRepoResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":       toRepoResponseObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toRepoResponseObject(o.Architecture, isavro, false, "string"),
+		"customer_id":      toRepoResponseObject(o.CustomerID, isavro, false, "string"),
+		"data":             toRepoResponseObject(o.Data, isavro, true, "string"),
+		"distro":           toRepoResponseObject(o.Distro, isavro, false, "string"),
+		"error":            toRepoResponseObject(o.Error, isavro, true, "string"),
+		"event_date":       toRepoResponseObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":       toRepoResponseObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":       toRepoResponseObject(o.GoVersion, isavro, false, "string"),
+		"hostname":         toRepoResponseObject(o.Hostname, isavro, false, "string"),
+		"id":               toRepoResponseObject(o.ID, isavro, false, "string"),
+		"integration_id":   toRepoResponseObject(o.IntegrationID, isavro, false, "string"),
+		"last_export_date": toRepoResponseObject(o.LastExportDate, isavro, false, "last_export_date"),
+		"memory":           toRepoResponseObject(o.Memory, isavro, false, "long"),
+		"message":          toRepoResponseObject(o.Message, isavro, false, "string"),
+		"num_cpu":          toRepoResponseObject(o.NumCPU, isavro, false, "long"),
+		"os":               toRepoResponseObject(o.OS, isavro, false, "string"),
+		"ref_id":           toRepoResponseObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toRepoResponseObject(o.RefType, isavro, false, "string"),
+		"repos":            toRepoResponseObject(o.Repos, isavro, false, "repos"),
+		"request_id":       toRepoResponseObject(o.RequestID, isavro, false, "string"),
+		"success":          toRepoResponseObject(o.Success, isavro, false, "boolean"),
+		"type":             toRepoResponseObject(o.Type, isavro, false, "type"),
+		"updated_ts":       toRepoResponseObject(o.UpdatedAt, isavro, false, "long"),
+		"uptime":           toRepoResponseObject(o.Uptime, isavro, false, "long"),
+		"uuid":             toRepoResponseObject(o.UUID, isavro, false, "string"),
+		"version":          toRepoResponseObject(o.Version, isavro, false, "string"),
+		"hashcode":         toRepoResponseObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -1418,6 +1540,25 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1496,6 +1637,39 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 				o.IntegrationID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["last_export_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportDate.FromMap(kv)
+		} else if sv, ok := val.(RepoResponseLastExportDate); ok {
+			// struct
+			o.LastExportDate = sv
+		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
+			// struct pointer
+			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["memory"].(int64); ok {
@@ -1751,6 +1925,21 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["uptime"].(int64); ok {
+		o.Uptime = val
+	} else {
+		if val, ok := kv["uptime"]; ok {
+			if val == nil {
+				o.Uptime = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Uptime = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1797,6 +1986,7 @@ func (o *RepoResponse) Hash() string {
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
@@ -1808,6 +1998,7 @@ func (o *RepoResponse) Hash() string {
 	args = append(args, o.Success)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1872,6 +2063,10 @@ func GetRepoResponseAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "last_export_date",
+				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
+			},
+			map[string]interface{}{
 				"name": "memory",
 				"type": "long",
 			},
@@ -1917,6 +2112,10 @@ func GetRepoResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "uptime",
 				"type": "long",
 			},
 			map[string]interface{}{

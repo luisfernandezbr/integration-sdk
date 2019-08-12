@@ -71,6 +71,14 @@ const (
 	StopHostnameColumn = "hostname"
 	// StopIDColumn is the id column name
 	StopIDColumn = "id"
+	// StopLastExportDateColumn is the last_export_date column name
+	StopLastExportDateColumn = "last_export_date"
+	// StopLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	StopLastExportDateColumnEpochColumn = "last_export_date->epoch"
+	// StopLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	StopLastExportDateColumnOffsetColumn = "last_export_date->offset"
+	// StopLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	StopLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
 	// StopMemoryColumn is the memory column name
 	StopMemoryColumn = "memory"
 	// StopMessageColumn is the message column name
@@ -91,6 +99,8 @@ const (
 	StopTypeColumn = "type"
 	// StopUpdatedAtColumn is the updated_ts column name
 	StopUpdatedAtColumn = "updated_ts"
+	// StopUptimeColumn is the uptime column name
+	StopUptimeColumn = "uptime"
 	// StopUUIDColumn is the uuid column name
 	StopUUIDColumn = "uuid"
 	// StopVersionColumn is the version column name
@@ -152,6 +162,109 @@ func (o *StopEventDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *StopEventDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// StopLastExportDate represents the object structure for last_export_date
+type StopLastExportDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toStopLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toStopLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	switch v := o.(type) {
+	case *StopLastExportDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *StopLastExportDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toStopLastExportDateObject(o.Epoch, isavro, false, "long"),
+		// Offset the timezone offset from GMT
+		"offset": toStopLastExportDateObject(o.Offset, isavro, false, "long"),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toStopLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+	}
+}
+
+func (o *StopLastExportDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *StopLastExportDate) FromMap(kv map[string]interface{}) {
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -287,6 +400,8 @@ type Stop struct {
 	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// LastExportDate the last export date
+	LastExportDate StopLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -307,6 +422,8 @@ type Stop struct {
 	Type StopType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -334,6 +451,9 @@ func toStopObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		return v.ToMap(isavro)
 
 	case StopEventDate:
+		return v.ToMap(isavro)
+
+	case StopLastExportDate:
 		return v.ToMap(isavro)
 
 	case StopType:
@@ -580,29 +700,31 @@ func (o *Stop) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture": toStopObject(o.Architecture, isavro, false, "string"),
-		"customer_id":  toStopObject(o.CustomerID, isavro, false, "string"),
-		"data":         toStopObject(o.Data, isavro, true, "string"),
-		"distro":       toStopObject(o.Distro, isavro, false, "string"),
-		"error":        toStopObject(o.Error, isavro, true, "string"),
-		"event_date":   toStopObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":   toStopObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":   toStopObject(o.GoVersion, isavro, false, "string"),
-		"hostname":     toStopObject(o.Hostname, isavro, false, "string"),
-		"id":           toStopObject(o.ID, isavro, false, "string"),
-		"memory":       toStopObject(o.Memory, isavro, false, "long"),
-		"message":      toStopObject(o.Message, isavro, false, "string"),
-		"num_cpu":      toStopObject(o.NumCPU, isavro, false, "long"),
-		"os":           toStopObject(o.OS, isavro, false, "string"),
-		"ref_id":       toStopObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toStopObject(o.RefType, isavro, false, "string"),
-		"request_id":   toStopObject(o.RequestID, isavro, false, "string"),
-		"success":      toStopObject(o.Success, isavro, false, "boolean"),
-		"type":         toStopObject(o.Type, isavro, false, "type"),
-		"updated_ts":   toStopObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":         toStopObject(o.UUID, isavro, false, "string"),
-		"version":      toStopObject(o.Version, isavro, false, "string"),
-		"hashcode":     toStopObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toStopObject(o.Architecture, isavro, false, "string"),
+		"customer_id":      toStopObject(o.CustomerID, isavro, false, "string"),
+		"data":             toStopObject(o.Data, isavro, true, "string"),
+		"distro":           toStopObject(o.Distro, isavro, false, "string"),
+		"error":            toStopObject(o.Error, isavro, true, "string"),
+		"event_date":       toStopObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":       toStopObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":       toStopObject(o.GoVersion, isavro, false, "string"),
+		"hostname":         toStopObject(o.Hostname, isavro, false, "string"),
+		"id":               toStopObject(o.ID, isavro, false, "string"),
+		"last_export_date": toStopObject(o.LastExportDate, isavro, false, "last_export_date"),
+		"memory":           toStopObject(o.Memory, isavro, false, "long"),
+		"message":          toStopObject(o.Message, isavro, false, "string"),
+		"num_cpu":          toStopObject(o.NumCPU, isavro, false, "long"),
+		"os":               toStopObject(o.OS, isavro, false, "string"),
+		"ref_id":           toStopObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toStopObject(o.RefType, isavro, false, "string"),
+		"request_id":       toStopObject(o.RequestID, isavro, false, "string"),
+		"success":          toStopObject(o.Success, isavro, false, "boolean"),
+		"type":             toStopObject(o.Type, isavro, false, "type"),
+		"updated_ts":       toStopObject(o.UpdatedAt, isavro, false, "long"),
+		"uptime":           toStopObject(o.Uptime, isavro, false, "long"),
+		"uuid":             toStopObject(o.UUID, isavro, false, "string"),
+		"version":          toStopObject(o.Version, isavro, false, "string"),
+		"hashcode":         toStopObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -706,6 +828,25 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -769,6 +910,39 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["last_export_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportDate.FromMap(kv)
+		} else if sv, ok := val.(StopLastExportDate); ok {
+			// struct
+			o.LastExportDate = sv
+		} else if sp, ok := val.(*StopLastExportDate); ok {
+			// struct pointer
+			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["memory"].(int64); ok {
@@ -969,6 +1143,21 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["uptime"].(int64); ok {
+		o.Uptime = val
+	} else {
+		if val, ok := kv["uptime"]; ok {
+			if val == nil {
+				o.Uptime = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Uptime = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1014,6 +1203,7 @@ func (o *Stop) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
@@ -1024,6 +1214,7 @@ func (o *Stop) Hash() string {
 	args = append(args, o.Success)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1084,6 +1275,10 @@ func GetStopAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "last_export_date",
+				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
+			},
+			map[string]interface{}{
 				"name": "memory",
 				"type": "long",
 			},
@@ -1125,6 +1320,10 @@ func GetStopAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "uptime",
 				"type": "long",
 			},
 			map[string]interface{}{

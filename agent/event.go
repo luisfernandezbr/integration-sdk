@@ -71,6 +71,14 @@ const (
 	EventHostnameColumn = "hostname"
 	// EventIDColumn is the id column name
 	EventIDColumn = "id"
+	// EventLastExportDateColumn is the last_export_date column name
+	EventLastExportDateColumn = "last_export_date"
+	// EventLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	EventLastExportDateColumnEpochColumn = "last_export_date->epoch"
+	// EventLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	EventLastExportDateColumnOffsetColumn = "last_export_date->offset"
+	// EventLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	EventLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
 	// EventMemoryColumn is the memory column name
 	EventMemoryColumn = "memory"
 	// EventMessageColumn is the message column name
@@ -87,6 +95,8 @@ const (
 	EventTypeColumn = "type"
 	// EventUpdatedAtColumn is the updated_ts column name
 	EventUpdatedAtColumn = "updated_ts"
+	// EventUptimeColumn is the uptime column name
+	EventUptimeColumn = "uptime"
 	// EventUUIDColumn is the uuid column name
 	EventUUIDColumn = "uuid"
 	// EventVersionColumn is the version column name
@@ -148,6 +158,109 @@ func (o *EventEventDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *EventEventDate) FromMap(kv map[string]interface{}) {
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// EventLastExportDate represents the object structure for last_export_date
+type EventLastExportDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toEventLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
+	if isavro && isoptional {
+		return goavro.Union("null", nil)
+	}
+	return nil
+}
+
+func toEventLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
+		return res
+	}
+	switch v := o.(type) {
+	case *EventLastExportDate:
+		return v.ToMap(isavro)
+
+	default:
+		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+	}
+}
+
+func (o *EventLastExportDate) ToMap(avro ...bool) map[string]interface{} {
+	var isavro bool
+	if len(avro) > 0 && avro[0] {
+		isavro = true
+	}
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toEventLastExportDateObject(o.Epoch, isavro, false, "long"),
+		// Offset the timezone offset from GMT
+		"offset": toEventLastExportDateObject(o.Offset, isavro, false, "long"),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toEventLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+	}
+}
+
+func (o *EventLastExportDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *EventLastExportDate) FromMap(kv map[string]interface{}) {
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -283,6 +396,8 @@ type Event struct {
 	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// LastExportDate the last export date
+	LastExportDate EventLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -299,6 +414,8 @@ type Event struct {
 	Type EventType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
@@ -326,6 +443,9 @@ func toEventObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		return v.ToMap(isavro)
 
 	case EventEventDate:
+		return v.ToMap(isavro)
+
+	case EventLastExportDate:
 		return v.ToMap(isavro)
 
 	case EventType:
@@ -572,27 +692,29 @@ func (o *Event) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture": toEventObject(o.Architecture, isavro, false, "string"),
-		"customer_id":  toEventObject(o.CustomerID, isavro, false, "string"),
-		"data":         toEventObject(o.Data, isavro, true, "string"),
-		"distro":       toEventObject(o.Distro, isavro, false, "string"),
-		"error":        toEventObject(o.Error, isavro, true, "string"),
-		"event_date":   toEventObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":   toEventObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":   toEventObject(o.GoVersion, isavro, false, "string"),
-		"hostname":     toEventObject(o.Hostname, isavro, false, "string"),
-		"id":           toEventObject(o.ID, isavro, false, "string"),
-		"memory":       toEventObject(o.Memory, isavro, false, "long"),
-		"message":      toEventObject(o.Message, isavro, false, "string"),
-		"num_cpu":      toEventObject(o.NumCPU, isavro, false, "long"),
-		"os":           toEventObject(o.OS, isavro, false, "string"),
-		"ref_id":       toEventObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toEventObject(o.RefType, isavro, false, "string"),
-		"type":         toEventObject(o.Type, isavro, false, "type"),
-		"updated_ts":   toEventObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":         toEventObject(o.UUID, isavro, false, "string"),
-		"version":      toEventObject(o.Version, isavro, false, "string"),
-		"hashcode":     toEventObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toEventObject(o.Architecture, isavro, false, "string"),
+		"customer_id":      toEventObject(o.CustomerID, isavro, false, "string"),
+		"data":             toEventObject(o.Data, isavro, true, "string"),
+		"distro":           toEventObject(o.Distro, isavro, false, "string"),
+		"error":            toEventObject(o.Error, isavro, true, "string"),
+		"event_date":       toEventObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":       toEventObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":       toEventObject(o.GoVersion, isavro, false, "string"),
+		"hostname":         toEventObject(o.Hostname, isavro, false, "string"),
+		"id":               toEventObject(o.ID, isavro, false, "string"),
+		"last_export_date": toEventObject(o.LastExportDate, isavro, false, "last_export_date"),
+		"memory":           toEventObject(o.Memory, isavro, false, "long"),
+		"message":          toEventObject(o.Message, isavro, false, "string"),
+		"num_cpu":          toEventObject(o.NumCPU, isavro, false, "long"),
+		"os":               toEventObject(o.OS, isavro, false, "string"),
+		"ref_id":           toEventObject(o.RefID, isavro, false, "string"),
+		"ref_type":         toEventObject(o.RefType, isavro, false, "string"),
+		"type":             toEventObject(o.Type, isavro, false, "type"),
+		"updated_ts":       toEventObject(o.UpdatedAt, isavro, false, "long"),
+		"uptime":           toEventObject(o.Uptime, isavro, false, "long"),
+		"uuid":             toEventObject(o.UUID, isavro, false, "string"),
+		"version":          toEventObject(o.Version, isavro, false, "string"),
+		"hashcode":         toEventObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -780,6 +902,39 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["last_export_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportDate.FromMap(kv)
+		} else if sv, ok := val.(EventLastExportDate); ok {
+			// struct
+			o.LastExportDate = sv
+		} else if sp, ok := val.(*EventLastExportDate); ok {
+			// struct pointer
+			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["memory"].(int64); ok {
 		o.Memory = val
 	} else {
@@ -951,6 +1106,21 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["uptime"].(int64); ok {
+		o.Uptime = val
+	} else {
+		if val, ok := kv["uptime"]; ok {
+			if val == nil {
+				o.Uptime = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Uptime = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -996,6 +1166,7 @@ func (o *Event) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
@@ -1004,6 +1175,7 @@ func (o *Event) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
@@ -1064,6 +1236,10 @@ func GetEventAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "last_export_date",
+				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
+			},
+			map[string]interface{}{
 				"name": "memory",
 				"type": "long",
 			},
@@ -1097,6 +1273,10 @@ func GetEventAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
+				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "uptime",
 				"type": "long",
 			},
 			map[string]interface{}{
