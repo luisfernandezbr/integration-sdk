@@ -31,74 +31,74 @@ import (
 )
 
 const (
-	// LogTopic is the default topic name
-	LogTopic datamodel.TopicNameType = "agent_Log_topic"
+	// StopTopic is the default topic name
+	StopTopic datamodel.TopicNameType = "agent_Stop_topic"
 
-	// LogStream is the default stream name
-	LogStream datamodel.TopicNameType = "agent_Log_stream"
+	// StopStream is the default stream name
+	StopStream datamodel.TopicNameType = "agent_Stop_stream"
 
-	// LogTable is the default table name
-	LogTable datamodel.TopicNameType = "agent_Log"
+	// StopTable is the default table name
+	StopTable datamodel.TopicNameType = "agent_Stop"
 
-	// LogModelName is the model name
-	LogModelName datamodel.ModelNameType = "agent.Log"
+	// StopModelName is the model name
+	StopModelName datamodel.ModelNameType = "agent.Stop"
 )
 
 const (
-	// LogArchitectureColumn is the architecture column name
-	LogArchitectureColumn = "architecture"
-	// LogCustomerIDColumn is the customer_id column name
-	LogCustomerIDColumn = "customer_id"
-	// LogDataColumn is the data column name
-	LogDataColumn = "data"
-	// LogDistroColumn is the distro column name
-	LogDistroColumn = "distro"
-	// LogErrorColumn is the error column name
-	LogErrorColumn = "error"
-	// LogEventDateColumn is the event_date column name
-	LogEventDateColumn = "event_date"
-	// LogEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	LogEventDateColumnEpochColumn = "event_date->epoch"
-	// LogEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	LogEventDateColumnOffsetColumn = "event_date->offset"
-	// LogEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	LogEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// LogFreeSpaceColumn is the free_space column name
-	LogFreeSpaceColumn = "free_space"
-	// LogGoVersionColumn is the go_version column name
-	LogGoVersionColumn = "go_version"
-	// LogHostnameColumn is the hostname column name
-	LogHostnameColumn = "hostname"
-	// LogIDColumn is the id column name
-	LogIDColumn = "id"
-	// LogMemoryColumn is the memory column name
-	LogMemoryColumn = "memory"
-	// LogMessageColumn is the message column name
-	LogMessageColumn = "message"
-	// LogNumCPUColumn is the num_cpu column name
-	LogNumCPUColumn = "num_cpu"
-	// LogOSColumn is the os column name
-	LogOSColumn = "os"
-	// LogRefIDColumn is the ref_id column name
-	LogRefIDColumn = "ref_id"
-	// LogRefTypeColumn is the ref_type column name
-	LogRefTypeColumn = "ref_type"
-	// LogRequestIDColumn is the request_id column name
-	LogRequestIDColumn = "request_id"
-	// LogSuccessColumn is the success column name
-	LogSuccessColumn = "success"
-	// LogTypeColumn is the type column name
-	LogTypeColumn = "type"
-	// LogUpdatedAtColumn is the updated_ts column name
-	LogUpdatedAtColumn = "updated_ts"
-	// LogUUIDColumn is the uuid column name
-	LogUUIDColumn = "uuid"
-	// LogVersionColumn is the version column name
-	LogVersionColumn = "version"
+	// StopArchitectureColumn is the architecture column name
+	StopArchitectureColumn = "architecture"
+	// StopCustomerIDColumn is the customer_id column name
+	StopCustomerIDColumn = "customer_id"
+	// StopDataColumn is the data column name
+	StopDataColumn = "data"
+	// StopDistroColumn is the distro column name
+	StopDistroColumn = "distro"
+	// StopErrorColumn is the error column name
+	StopErrorColumn = "error"
+	// StopEventDateColumn is the event_date column name
+	StopEventDateColumn = "event_date"
+	// StopEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	StopEventDateColumnEpochColumn = "event_date->epoch"
+	// StopEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	StopEventDateColumnOffsetColumn = "event_date->offset"
+	// StopEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	StopEventDateColumnRfc3339Column = "event_date->rfc3339"
+	// StopFreeSpaceColumn is the free_space column name
+	StopFreeSpaceColumn = "free_space"
+	// StopGoVersionColumn is the go_version column name
+	StopGoVersionColumn = "go_version"
+	// StopHostnameColumn is the hostname column name
+	StopHostnameColumn = "hostname"
+	// StopIDColumn is the id column name
+	StopIDColumn = "id"
+	// StopMemoryColumn is the memory column name
+	StopMemoryColumn = "memory"
+	// StopMessageColumn is the message column name
+	StopMessageColumn = "message"
+	// StopNumCPUColumn is the num_cpu column name
+	StopNumCPUColumn = "num_cpu"
+	// StopOSColumn is the os column name
+	StopOSColumn = "os"
+	// StopRefIDColumn is the ref_id column name
+	StopRefIDColumn = "ref_id"
+	// StopRefTypeColumn is the ref_type column name
+	StopRefTypeColumn = "ref_type"
+	// StopRequestIDColumn is the request_id column name
+	StopRequestIDColumn = "request_id"
+	// StopSuccessColumn is the success column name
+	StopSuccessColumn = "success"
+	// StopTypeColumn is the type column name
+	StopTypeColumn = "type"
+	// StopUpdatedAtColumn is the updated_ts column name
+	StopUpdatedAtColumn = "updated_ts"
+	// StopUUIDColumn is the uuid column name
+	StopUUIDColumn = "uuid"
+	// StopVersionColumn is the version column name
+	StopVersionColumn = "version"
 )
 
-// LogEventDate represents the object structure for event_date
-type LogEventDate struct {
+// StopEventDate represents the object structure for event_date
+type StopEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -107,19 +107,19 @@ type LogEventDate struct {
 	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toLogEventDateObjectNil(isavro bool, isoptional bool) interface{} {
+func toStopEventDateObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toLogEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toStopEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
 	switch v := o.(type) {
-	case *LogEventDate:
+	case *StopEventDate:
 		return v.ToMap(isavro)
 
 	default:
@@ -127,7 +127,7 @@ func toLogEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype 
 	}
 }
 
-func (o *LogEventDate) ToMap(avro ...bool) map[string]interface{} {
+func (o *StopEventDate) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -135,15 +135,15 @@ func (o *LogEventDate) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toLogEventDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toStopEventDateObject(o.Epoch, isavro, false, "long"),
 		// Offset the timezone offset from GMT
-		"offset": toLogEventDateObject(o.Offset, isavro, false, "long"),
+		"offset": toStopEventDateObject(o.Offset, isavro, false, "long"),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toLogEventDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toStopEventDateObject(o.Rfc3339, isavro, false, "string"),
 	}
 }
 
-func (o *LogEventDate) setDefaults(frommap bool) {
+func (o *StopEventDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -151,7 +151,7 @@ func (o *LogEventDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *LogEventDate) FromMap(kv map[string]interface{}) {
+func (o *StopEventDate) FromMap(kv map[string]interface{}) {
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -200,11 +200,11 @@ func (o *LogEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// LogType is the enumeration type for type
-type LogType int32
+// StopType is the enumeration type for type
+type StopType int32
 
 // String returns the string value for Type
-func (v LogType) String() string {
+func (v StopType) String() string {
 	switch int32(v) {
 	case 0:
 		return "ENROLL"
@@ -238,35 +238,35 @@ func (v LogType) String() string {
 
 const (
 	// TypeEnroll is the enumeration value for enroll
-	LogTypeEnroll LogType = 0
+	StopTypeEnroll StopType = 0
 	// TypePing is the enumeration value for ping
-	LogTypePing LogType = 1
+	StopTypePing StopType = 1
 	// TypeCrash is the enumeration value for crash
-	LogTypeCrash LogType = 2
+	StopTypeCrash StopType = 2
 	// TypeLog is the enumeration value for log
-	LogTypeLog LogType = 3
+	StopTypeLog StopType = 3
 	// TypeIntegration is the enumeration value for integration
-	LogTypeIntegration LogType = 4
+	StopTypeIntegration StopType = 4
 	// TypeExport is the enumeration value for export
-	LogTypeExport LogType = 5
+	StopTypeExport StopType = 5
 	// TypeProject is the enumeration value for project
-	LogTypeProject LogType = 6
+	StopTypeProject StopType = 6
 	// TypeRepo is the enumeration value for repo
-	LogTypeRepo LogType = 7
+	StopTypeRepo StopType = 7
 	// TypeUser is the enumeration value for user
-	LogTypeUser LogType = 8
+	StopTypeUser StopType = 8
 	// TypeUninstall is the enumeration value for uninstall
-	LogTypeUninstall LogType = 9
+	StopTypeUninstall StopType = 9
 	// TypeUpgrade is the enumeration value for upgrade
-	LogTypeUpgrade LogType = 10
+	StopTypeUpgrade StopType = 10
 	// TypeStart is the enumeration value for start
-	LogTypeStart LogType = 11
+	StopTypeStart StopType = 11
 	// TypeStop is the enumeration value for stop
-	LogTypeStop LogType = 12
+	StopTypeStop StopType = 12
 )
 
-// Log an agent event which provides the log file for an action
-type Log struct {
+// Stop an agent event which is sent on stop
+type Stop struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -278,7 +278,7 @@ type Log struct {
 	// Error an error message related to this event
 	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
 	// EventDate the date of the event
-	EventDate LogEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate StopEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -304,7 +304,7 @@ type Log struct {
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
 	// Type the type of event
-	Type LogType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type StopType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
@@ -316,27 +316,27 @@ type Log struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Log)(nil)
+var _ datamodel.Model = (*Stop)(nil)
 
-func toLogObjectNil(isavro bool, isoptional bool) interface{} {
+func toStopObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toLogObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toStopObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
 	switch v := o.(type) {
-	case *Log:
+	case *Stop:
 		return v.ToMap(isavro)
 
-	case LogEventDate:
+	case StopEventDate:
 		return v.ToMap(isavro)
 
-	case LogType:
+	case StopType:
 		return v.String()
 
 	default:
@@ -344,22 +344,22 @@ func toLogObject(o interface{}, isavro bool, isoptional bool, avrotype string) i
 	}
 }
 
-// String returns a string representation of Log
-func (o *Log) String() string {
-	return fmt.Sprintf("agent.Log<%s>", o.ID)
+// String returns a string representation of Stop
+func (o *Stop) String() string {
+	return fmt.Sprintf("agent.Stop<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Log) GetTopicName() datamodel.TopicNameType {
-	return LogTopic
+func (o *Stop) GetTopicName() datamodel.TopicNameType {
+	return StopTopic
 }
 
 // GetModelName returns the name of the model
-func (o *Log) GetModelName() datamodel.ModelNameType {
-	return LogModelName
+func (o *Stop) GetModelName() datamodel.ModelNameType {
+	return StopModelName
 }
 
-func (o *Log) setDefaults(frommap bool) {
+func (o *Stop) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString
 	}
@@ -369,7 +369,7 @@ func (o *Log) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Log", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("Stop", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -380,12 +380,12 @@ func (o *Log) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *Log) GetID() string {
+func (o *Stop) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Log) GetTopicKey() string {
+func (o *Stop) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -394,7 +394,7 @@ func (o *Log) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Log) GetTimestamp() time.Time {
+func (o *Stop) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -408,37 +408,37 @@ func (o *Log) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for Log")
+	panic("not sure how to handle the date time format for Stop")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Log) GetRefID() string {
+func (o *Stop) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Log) IsMaterialized() bool {
+func (o *Stop) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Log) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *Stop) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Log) IsEvented() bool {
+func (o *Stop) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Log) SetEventHeaders(kv map[string]string) {
+func (o *Stop) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = LogModelName.String()
+	kv["model"] = StopModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Log) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *Stop) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -463,28 +463,28 @@ func (o *Log) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *Log) GetStateKey() string {
+func (o *Stop) GetStateKey() string {
 	key := "uuid"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *Log) GetCustomerID() string {
+func (o *Stop) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Log
-func (o *Log) Clone() datamodel.Model {
-	c := new(Log)
+// Clone returns an exact copy of Stop
+func (o *Stop) Clone() datamodel.Model {
+	c := new(Stop)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Log) Anon() datamodel.Model {
-	c := new(Log)
+func (o *Stop) Anon() datamodel.Model {
+	c := new(Stop)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -499,12 +499,12 @@ func (o *Log) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Log) MarshalJSON() ([]byte, error) {
+func (o *Stop) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Log) UnmarshalJSON(data []byte) error {
+func (o *Stop) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -516,22 +516,22 @@ func (o *Log) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecLog *goavro.Codec
+var cachedCodecStop *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *Log) GetAvroCodec() *goavro.Codec {
-	if cachedCodecLog == nil {
-		c, err := GetLogAvroSchema()
+func (o *Stop) GetAvroCodec() *goavro.Codec {
+	if cachedCodecStop == nil {
+		c, err := GetStopAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecLog = c
+		cachedCodecStop = c
 	}
-	return cachedCodecLog
+	return cachedCodecStop
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Log) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *Stop) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -545,7 +545,7 @@ func (o *Log) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Log) FromAvroBinary(value []byte) error {
+func (o *Stop) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -560,18 +560,18 @@ func (o *Log) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Log) Stringify() string {
+func (o *Stop) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Log objects are equal
-func (o *Log) IsEqual(other *Log) bool {
+// IsEqual returns true if the two Stop objects are equal
+func (o *Stop) IsEqual(other *Stop) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Log) ToMap(avro ...bool) map[string]interface{} {
+func (o *Stop) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -580,34 +580,34 @@ func (o *Log) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture": toLogObject(o.Architecture, isavro, false, "string"),
-		"customer_id":  toLogObject(o.CustomerID, isavro, false, "string"),
-		"data":         toLogObject(o.Data, isavro, true, "string"),
-		"distro":       toLogObject(o.Distro, isavro, false, "string"),
-		"error":        toLogObject(o.Error, isavro, true, "string"),
-		"event_date":   toLogObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":   toLogObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":   toLogObject(o.GoVersion, isavro, false, "string"),
-		"hostname":     toLogObject(o.Hostname, isavro, false, "string"),
-		"id":           toLogObject(o.ID, isavro, false, "string"),
-		"memory":       toLogObject(o.Memory, isavro, false, "long"),
-		"message":      toLogObject(o.Message, isavro, false, "string"),
-		"num_cpu":      toLogObject(o.NumCPU, isavro, false, "long"),
-		"os":           toLogObject(o.OS, isavro, false, "string"),
-		"ref_id":       toLogObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toLogObject(o.RefType, isavro, false, "string"),
-		"request_id":   toLogObject(o.RequestID, isavro, false, "string"),
-		"success":      toLogObject(o.Success, isavro, false, "boolean"),
-		"type":         toLogObject(o.Type, isavro, false, "type"),
-		"updated_ts":   toLogObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":         toLogObject(o.UUID, isavro, false, "string"),
-		"version":      toLogObject(o.Version, isavro, false, "string"),
-		"hashcode":     toLogObject(o.Hashcode, isavro, false, "string"),
+		"architecture": toStopObject(o.Architecture, isavro, false, "string"),
+		"customer_id":  toStopObject(o.CustomerID, isavro, false, "string"),
+		"data":         toStopObject(o.Data, isavro, true, "string"),
+		"distro":       toStopObject(o.Distro, isavro, false, "string"),
+		"error":        toStopObject(o.Error, isavro, true, "string"),
+		"event_date":   toStopObject(o.EventDate, isavro, false, "event_date"),
+		"free_space":   toStopObject(o.FreeSpace, isavro, false, "long"),
+		"go_version":   toStopObject(o.GoVersion, isavro, false, "string"),
+		"hostname":     toStopObject(o.Hostname, isavro, false, "string"),
+		"id":           toStopObject(o.ID, isavro, false, "string"),
+		"memory":       toStopObject(o.Memory, isavro, false, "long"),
+		"message":      toStopObject(o.Message, isavro, false, "string"),
+		"num_cpu":      toStopObject(o.NumCPU, isavro, false, "long"),
+		"os":           toStopObject(o.OS, isavro, false, "string"),
+		"ref_id":       toStopObject(o.RefID, isavro, false, "string"),
+		"ref_type":     toStopObject(o.RefType, isavro, false, "string"),
+		"request_id":   toStopObject(o.RequestID, isavro, false, "string"),
+		"success":      toStopObject(o.Success, isavro, false, "boolean"),
+		"type":         toStopObject(o.Type, isavro, false, "type"),
+		"updated_ts":   toStopObject(o.UpdatedAt, isavro, false, "long"),
+		"uuid":         toStopObject(o.UUID, isavro, false, "string"),
+		"version":      toStopObject(o.Version, isavro, false, "string"),
+		"hashcode":     toStopObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Log) FromMap(kv map[string]interface{}) {
+func (o *Stop) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -700,10 +700,10 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["event_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.EventDate.FromMap(kv)
-		} else if sv, ok := val.(LogEventDate); ok {
+		} else if sv, ok := val.(StopEventDate); ok {
 			// struct
 			o.EventDate = sv
-		} else if sp, ok := val.(*LogEventDate); ok {
+		} else if sp, ok := val.(*StopEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
 		}
@@ -888,7 +888,7 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["type"].(LogType); ok {
+	if val, ok := kv["type"].(StopType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -1002,7 +1002,7 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Log) Hash() string {
+func (o *Stop) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
@@ -1030,12 +1030,12 @@ func (o *Log) Hash() string {
 	return o.Hashcode
 }
 
-// GetLogAvroSchemaSpec creates the avro schema specification for Log
-func GetLogAvroSchemaSpec() string {
+// GetStopAvroSchemaSpec creates the avro schema specification for Stop
+func GetStopAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "Log",
+		"name":      "Stop",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
@@ -1141,7 +1141,7 @@ func GetLogAvroSchemaSpec() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Log) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *Stop) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
@@ -1153,25 +1153,25 @@ func (o *Log) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// GetLogAvroSchema creates the avro schema for Log
-func GetLogAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetLogAvroSchemaSpec())
+// GetStopAvroSchema creates the avro schema for Stop
+func GetStopAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetStopAvroSchemaSpec())
 }
 
-// TransformLogFunc is a function for transforming Log during processing
-type TransformLogFunc func(input *Log) (*Log, error)
+// TransformStopFunc is a function for transforming Stop during processing
+type TransformStopFunc func(input *Stop) (*Stop, error)
 
-// NewLogPipe creates a pipe for processing Log items
-func NewLogPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformLogFunc) <-chan bool {
+// NewStopPipe creates a pipe for processing Stop items
+func NewStopPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformStopFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewLogInputStream(input, errors)
-	var stream chan Log
+	inch, indone := NewStopInputStream(input, errors)
+	var stream chan Stop
 	if len(transforms) > 0 {
-		stream = make(chan Log, 1000)
+		stream = make(chan Stop, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewLogOutputStream(output, stream, errors)
+	outdone := NewStopOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -1207,12 +1207,12 @@ func NewLogPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, t
 	return done
 }
 
-// NewLogInputStreamDir creates a channel for reading Log as JSON newlines from a directory of files
-func NewLogInputStreamDir(dir string, errors chan<- error, transforms ...TransformLogFunc) (chan Log, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/log\\.json(\\.gz)?$"))
+// NewStopInputStreamDir creates a channel for reading Stop as JSON newlines from a directory of files
+func NewStopInputStreamDir(dir string, errors chan<- error, transforms ...TransformStopFunc) (chan Stop, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/stop\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Log)
+		ch := make(chan Stop)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1220,16 +1220,16 @@ func NewLogInputStreamDir(dir string, errors chan<- error, transforms ...Transfo
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for log")
-		ch := make(chan Log)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for stop")
+		ch := make(chan Stop)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewLogInputStreamFile(files[0], errors, transforms...)
+		return NewStopInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Log)
+		ch := make(chan Stop)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1237,12 +1237,12 @@ func NewLogInputStreamDir(dir string, errors chan<- error, transforms ...Transfo
 	}
 }
 
-// NewLogInputStreamFile creates an channel for reading Log as JSON newlines from filename
-func NewLogInputStreamFile(filename string, errors chan<- error, transforms ...TransformLogFunc) (chan Log, <-chan bool) {
+// NewStopInputStreamFile creates an channel for reading Stop as JSON newlines from filename
+func NewStopInputStreamFile(filename string, errors chan<- error, transforms ...TransformStopFunc) (chan Stop, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Log)
+		ch := make(chan Stop)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -1254,7 +1254,7 @@ func NewLogInputStreamFile(filename string, errors chan<- error, transforms ...T
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Log)
+			ch := make(chan Stop)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -1262,13 +1262,13 @@ func NewLogInputStreamFile(filename string, errors chan<- error, transforms ...T
 		}
 		f = gz
 	}
-	return NewLogInputStream(f, errors, transforms...)
+	return NewStopInputStream(f, errors, transforms...)
 }
 
-// NewLogInputStream creates an channel for reading Log as JSON newlines from stream
-func NewLogInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformLogFunc) (chan Log, <-chan bool) {
+// NewStopInputStream creates an channel for reading Stop as JSON newlines from stream
+func NewStopInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformStopFunc) (chan Stop, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Log, 1000)
+	ch := make(chan Stop, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -1281,7 +1281,7 @@ func NewLogInputStream(stream io.ReadCloser, errors chan<- error, transforms ...
 				errors <- err
 				return
 			}
-			var item Log
+			var item Stop
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -1307,9 +1307,9 @@ func NewLogInputStream(stream io.ReadCloser, errors chan<- error, transforms ...
 	return ch, done
 }
 
-// NewLogOutputStreamDir will output json newlines from channel and save in dir
-func NewLogOutputStreamDir(dir string, ch chan Log, errors chan<- error, transforms ...TransformLogFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/log\\.json(\\.gz)?$")
+// NewStopOutputStreamDir will output json newlines from channel and save in dir
+func NewStopOutputStreamDir(dir string, ch chan Stop, errors chan<- error, transforms ...TransformStopFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/stop\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -1325,11 +1325,11 @@ func NewLogOutputStreamDir(dir string, ch chan Log, errors chan<- error, transfo
 		done <- true
 		return done
 	}
-	return NewLogOutputStream(gz, ch, errors, transforms...)
+	return NewStopOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewLogOutputStream will output json newlines from channel to the stream
-func NewLogOutputStream(stream io.WriteCloser, ch chan Log, errors chan<- error, transforms ...TransformLogFunc) <-chan bool {
+// NewStopOutputStream will output json newlines from channel to the stream
+func NewStopOutputStream(stream io.WriteCloser, ch chan Stop, errors chan<- error, transforms ...TransformStopFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -1369,59 +1369,59 @@ func NewLogOutputStream(stream io.WriteCloser, ch chan Log, errors chan<- error,
 	return done
 }
 
-// LogSendEvent is an event detail for sending data
-type LogSendEvent struct {
-	Log     *Log
+// StopSendEvent is an event detail for sending data
+type StopSendEvent struct {
+	Stop    *Stop
 	headers map[string]string
 	time    time.Time
 	key     string
 }
 
-var _ datamodel.ModelSendEvent = (*LogSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*StopSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *LogSendEvent) Key() string {
+func (e *StopSendEvent) Key() string {
 	if e.key == "" {
-		return e.Log.GetID()
+		return e.Stop.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *LogSendEvent) Object() datamodel.Model {
-	return e.Log
+func (e *StopSendEvent) Object() datamodel.Model {
+	return e.Stop
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *LogSendEvent) Headers() map[string]string {
+func (e *StopSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *LogSendEvent) Timestamp() time.Time {
+func (e *StopSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// LogSendEventOpts is a function handler for setting opts
-type LogSendEventOpts func(o *LogSendEvent)
+// StopSendEventOpts is a function handler for setting opts
+type StopSendEventOpts func(o *StopSendEvent)
 
-// WithLogSendEventKey sets the key value to a value different than the object ID
-func WithLogSendEventKey(key string) LogSendEventOpts {
-	return func(o *LogSendEvent) {
+// WithStopSendEventKey sets the key value to a value different than the object ID
+func WithStopSendEventKey(key string) StopSendEventOpts {
+	return func(o *StopSendEvent) {
 		o.key = key
 	}
 }
 
-// WithLogSendEventTimestamp sets the timestamp value
-func WithLogSendEventTimestamp(tv time.Time) LogSendEventOpts {
-	return func(o *LogSendEvent) {
+// WithStopSendEventTimestamp sets the timestamp value
+func WithStopSendEventTimestamp(tv time.Time) StopSendEventOpts {
+	return func(o *StopSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithLogSendEventHeader sets the timestamp value
-func WithLogSendEventHeader(key, value string) LogSendEventOpts {
-	return func(o *LogSendEvent) {
+// WithStopSendEventHeader sets the timestamp value
+func WithStopSendEventHeader(key, value string) StopSendEventOpts {
+	return func(o *StopSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -1429,10 +1429,10 @@ func WithLogSendEventHeader(key, value string) LogSendEventOpts {
 	}
 }
 
-// NewLogSendEvent returns a new LogSendEvent instance
-func NewLogSendEvent(o *Log, opts ...LogSendEventOpts) *LogSendEvent {
-	res := &LogSendEvent{
-		Log: o,
+// NewStopSendEvent returns a new StopSendEvent instance
+func NewStopSendEvent(o *Stop, opts ...StopSendEventOpts) *StopSendEvent {
+	res := &StopSendEvent{
+		Stop: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -1442,8 +1442,8 @@ func NewLogSendEvent(o *Log, opts ...LogSendEventOpts) *LogSendEvent {
 	return res
 }
 
-// NewLogProducer will stream data from the channel
-func NewLogProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewStopProducer will stream data from the channel
+func NewStopProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -1456,7 +1456,7 @@ func NewLogProducer(ctx context.Context, producer eventing.Producer, ch <-chan d
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*Log); ok {
+				if object, ok := item.Object().(*Stop); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1487,7 +1487,7 @@ func NewLogProducer(ctx context.Context, producer eventing.Producer, ch <-chan d
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Log but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Stop but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -1495,22 +1495,22 @@ func NewLogProducer(ctx context.Context, producer eventing.Producer, ch <-chan d
 	return done
 }
 
-// NewLogConsumer will stream data from the topic into the provided channel
-func NewLogConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewStopConsumer will stream data from the topic into the provided channel
+func NewStopConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object Log
+			var object Stop
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.Log: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.Stop: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.Log: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.Stop: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.Log")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.Stop")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -1524,51 +1524,51 @@ func NewLogConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceive
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &LogReceiveEvent{&object, msg, false}
+			ch <- &StopReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Log
+			var object Stop
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &LogReceiveEvent{nil, msg, true}
+			ch <- &StopReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// LogReceiveEvent is an event detail for receiving data
-type LogReceiveEvent struct {
-	Log     *Log
+// StopReceiveEvent is an event detail for receiving data
+type StopReceiveEvent struct {
+	Stop    *Stop
 	message eventing.Message
 	eof     bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*LogReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*StopReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *LogReceiveEvent) Object() datamodel.Model {
-	return e.Log
+func (e *StopReceiveEvent) Object() datamodel.Model {
+	return e.Stop
 }
 
 // Message returns the underlying message data for the event
-func (e *LogReceiveEvent) Message() eventing.Message {
+func (e *StopReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *LogReceiveEvent) EOF() bool {
+func (e *StopReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// LogProducer implements the datamodel.ModelEventProducer
-type LogProducer struct {
+// StopProducer implements the datamodel.ModelEventProducer
+type StopProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -1579,15 +1579,15 @@ type LogProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*LogProducer)(nil)
+var _ datamodel.ModelEventProducer = (*StopProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *LogProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *StopProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *LogProducer) Close() error {
+func (p *StopProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1602,47 +1602,47 @@ func (p *LogProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Log) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Stop) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Log) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *Stop) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &LogProducer{
+	return &StopProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewLogProducer(newctx, producer, ch, errors, empty),
+		done:     NewStopProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewLogProducerChannel returns a channel which can be used for producing Model events
-func NewLogProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewLogProducerChannelSize(producer, 0, errors)
+// NewStopProducerChannel returns a channel which can be used for producing Model events
+func NewStopProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewStopProducerChannelSize(producer, 0, errors)
 }
 
-// NewLogProducerChannelSize returns a channel which can be used for producing Model events
-func NewLogProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewStopProducerChannelSize returns a channel which can be used for producing Model events
+func NewStopProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &LogProducer{
+	return &StopProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewLogProducer(newctx, producer, ch, errors, empty),
+		done:     NewStopProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// LogConsumer implements the datamodel.ModelEventConsumer
-type LogConsumer struct {
+// StopConsumer implements the datamodel.ModelEventConsumer
+type StopConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1650,15 +1650,15 @@ type LogConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*LogConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*StopConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *LogConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *StopConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *LogConsumer) Close() error {
+func (c *StopConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1672,21 +1672,21 @@ func (c *LogConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Log) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *Stop) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &LogConsumer{
+	return &StopConsumer{
 		ch:       ch,
-		callback: NewLogConsumer(consumer, ch, errors),
+		callback: NewStopConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewLogConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewLogConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewStopConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewStopConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &LogConsumer{
+	return &StopConsumer{
 		ch:       ch,
-		callback: NewLogConsumer(consumer, ch, errors),
+		callback: NewStopConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }

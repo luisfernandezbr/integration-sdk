@@ -72,12 +72,24 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.ProjectResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.ProjectTrigger":
+		o := new(dm_agent.ProjectTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.RepoRequest":
 		o := new(dm_agent.RepoRequest)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent.RepoResponse":
 		o := new(dm_agent.RepoResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Start":
+		o := new(dm_agent.Start)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Stop":
+		o := new(dm_agent.Stop)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent.Uninstall":
@@ -94,6 +106,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "agent.UserResponse":
 		o := new(dm_agent.UserResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.UserTrigger":
+		o := new(dm_agent.UserTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "cicd.Build":
@@ -243,12 +259,24 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.ProjectResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent_ProjectTrigger_topic":
+		o := new(dm_agent.ProjectTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_RepoRequest_topic":
 		o := new(dm_agent.RepoRequest)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent_RepoResponse_topic":
 		o := new(dm_agent.RepoResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_Start_topic":
+		o := new(dm_agent.Start)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_Stop_topic":
+		o := new(dm_agent.Stop)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent_Uninstall_topic":
@@ -265,6 +293,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		return o
 	case "agent_UserResponse_topic":
 		o := new(dm_agent.UserResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_UserTrigger_topic":
+		o := new(dm_agent.UserTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "cicd_Build_topic":
@@ -391,12 +423,16 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_Ping_topic"),
 		datamodel.TopicNameType("agent_ProjectRequest_topic"),
 		datamodel.TopicNameType("agent_ProjectResponse_topic"),
+		datamodel.TopicNameType("agent_ProjectTrigger_topic"),
 		datamodel.TopicNameType("agent_RepoRequest_topic"),
 		datamodel.TopicNameType("agent_RepoResponse_topic"),
+		datamodel.TopicNameType("agent_Start_topic"),
+		datamodel.TopicNameType("agent_Stop_topic"),
 		datamodel.TopicNameType("agent_Uninstall_topic"),
 		datamodel.TopicNameType("agent_Upgrade_topic"),
 		datamodel.TopicNameType("agent_UserRequest_topic"),
 		datamodel.TopicNameType("agent_UserResponse_topic"),
+		datamodel.TopicNameType("agent_UserTrigger_topic"),
 		datamodel.TopicNameType("cicd_Build_topic"),
 		datamodel.TopicNameType("cicd_Deployment_topic"),
 		datamodel.TopicNameType("codequality_Metric_topic"),
@@ -438,12 +474,16 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.Ping"),
 		datamodel.ModelNameType("agent.ProjectRequest"),
 		datamodel.ModelNameType("agent.ProjectResponse"),
+		datamodel.ModelNameType("agent.ProjectTrigger"),
 		datamodel.ModelNameType("agent.RepoRequest"),
 		datamodel.ModelNameType("agent.RepoResponse"),
+		datamodel.ModelNameType("agent.Start"),
+		datamodel.ModelNameType("agent.Stop"),
 		datamodel.ModelNameType("agent.Uninstall"),
 		datamodel.ModelNameType("agent.Upgrade"),
 		datamodel.ModelNameType("agent.UserRequest"),
 		datamodel.ModelNameType("agent.UserResponse"),
+		datamodel.ModelNameType("agent.UserTrigger"),
 		datamodel.ModelNameType("cicd.Build"),
 		datamodel.ModelNameType("cicd.Deployment"),
 		datamodel.ModelNameType("codequality.Metric"),

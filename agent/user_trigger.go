@@ -1,7 +1,7 @@
 // DO NOT EDIT -- generated code
 
-// Package sourcecode - the system which contains source code
-package sourcecode
+// Package agent - the agent communicates with pinpoint cloud to send integration data
+package agent
 
 import (
 	"bufio"
@@ -30,88 +30,68 @@ import (
 )
 
 const (
-	// RepoTopic is the default topic name
-	RepoTopic datamodel.TopicNameType = "sourcecode_Repo_topic"
+	// UserTriggerTopic is the default topic name
+	UserTriggerTopic datamodel.TopicNameType = "agent_UserTrigger_topic"
 
-	// RepoStream is the default stream name
-	RepoStream datamodel.TopicNameType = "sourcecode_Repo_stream"
+	// UserTriggerStream is the default stream name
+	UserTriggerStream datamodel.TopicNameType = "agent_UserTrigger_stream"
 
-	// RepoTable is the default table name
-	RepoTable datamodel.TopicNameType = "sourcecode_Repo"
+	// UserTriggerTable is the default table name
+	UserTriggerTable datamodel.TopicNameType = "agent_UserTrigger"
 
-	// RepoModelName is the model name
-	RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
+	// UserTriggerModelName is the model name
+	UserTriggerModelName datamodel.ModelNameType = "agent.UserTrigger"
 )
 
 const (
-	// RepoActiveColumn is the active column name
-	RepoActiveColumn = "active"
-	// RepoCustomerIDColumn is the customer_id column name
-	RepoCustomerIDColumn = "customer_id"
-	// RepoDefaultBranchColumn is the default_branch column name
-	RepoDefaultBranchColumn = "default_branch"
-	// RepoDescriptionColumn is the description column name
-	RepoDescriptionColumn = "description"
-	// RepoIDColumn is the id column name
-	RepoIDColumn = "id"
-	// RepoLanguageColumn is the language column name
-	RepoLanguageColumn = "language"
-	// RepoNameColumn is the name column name
-	RepoNameColumn = "name"
-	// RepoRefIDColumn is the ref_id column name
-	RepoRefIDColumn = "ref_id"
-	// RepoRefTypeColumn is the ref_type column name
-	RepoRefTypeColumn = "ref_type"
-	// RepoUpdatedAtColumn is the updated_ts column name
-	RepoUpdatedAtColumn = "updated_ts"
-	// RepoURLColumn is the url column name
-	RepoURLColumn = "url"
+	// UserTriggerCustomerIDColumn is the customer_id column name
+	UserTriggerCustomerIDColumn = "customer_id"
+	// UserTriggerIDColumn is the id column name
+	UserTriggerIDColumn = "id"
+	// UserTriggerIntegrationIDColumn is the integration_id column name
+	UserTriggerIntegrationIDColumn = "integration_id"
+	// UserTriggerRefIDColumn is the ref_id column name
+	UserTriggerRefIDColumn = "ref_id"
+	// UserTriggerRefTypeColumn is the ref_type column name
+	UserTriggerRefTypeColumn = "ref_type"
+	// UserTriggerUpdatedAtColumn is the updated_ts column name
+	UserTriggerUpdatedAtColumn = "updated_ts"
 )
 
-// Repo the repo holds source code
-type Repo struct {
-	// Active the status of the repo
-	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+// UserTrigger used to trigger an agent.UserRequest
+type UserTrigger struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// DefaultBranch the repo default branch
-	DefaultBranch string `json:"default_branch" bson:"default_branch" yaml:"default_branch" faker:"-"`
-	// Description brief explanation of the repo
-	Description string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Language the programming language the source code is primarily written in
-	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
-	// Name the name of the repo
-	Name string `json:"name" bson:"name" yaml:"name" faker:"repo"`
+	// IntegrationID the integration id
+	IntegrationID string `json:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
-	// URL the url to the repo home page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Repo)(nil)
+var _ datamodel.Model = (*UserTrigger)(nil)
 
-func toRepoObjectNil(isavro bool, isoptional bool) interface{} {
+func toUserTriggerObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toRepoObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toUserTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
 	switch v := o.(type) {
-	case *Repo:
+	case *UserTrigger:
 		return v.ToMap(isavro)
 
 	default:
@@ -119,33 +99,26 @@ func toRepoObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 	}
 }
 
-// String returns a string representation of Repo
-func (o *Repo) String() string {
-	return fmt.Sprintf("sourcecode.Repo<%s>", o.ID)
+// String returns a string representation of UserTrigger
+func (o *UserTrigger) String() string {
+	return fmt.Sprintf("agent.UserTrigger<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Repo) GetTopicName() datamodel.TopicNameType {
-	return RepoTopic
+func (o *UserTrigger) GetTopicName() datamodel.TopicNameType {
+	return UserTriggerTopic
 }
 
 // GetModelName returns the name of the model
-func (o *Repo) GetModelName() datamodel.ModelNameType {
-	return RepoModelName
+func (o *UserTrigger) GetModelName() datamodel.ModelNameType {
+	return UserTriggerModelName
 }
 
-func (o *Repo) setDefaults(frommap bool) {
+func (o *UserTrigger) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Repo", o.CustomerID, o.RefType, o.GetRefID())
-	}
-
-	{
-		v := "master"
-
-		o.DefaultBranch = v
-
+		o.ID = hash.Values("UserTrigger", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -156,12 +129,12 @@ func (o *Repo) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *Repo) GetID() string {
+func (o *UserTrigger) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Repo) GetTopicKey() string {
+func (o *UserTrigger) GetTopicKey() string {
 	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
@@ -170,7 +143,7 @@ func (o *Repo) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Repo) GetTimestamp() time.Time {
+func (o *UserTrigger) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -184,46 +157,37 @@ func (o *Repo) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for Repo")
+	panic("not sure how to handle the date time format for UserTrigger")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Repo) GetRefID() string {
+func (o *UserTrigger) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Repo) IsMaterialized() bool {
-	return true
+func (o *UserTrigger) IsMaterialized() bool {
+	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Repo) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	idletime, err := time.ParseDuration("1s")
-	if err != nil {
-		panic(err)
-	}
-	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "id",
-		TableName: "sourcecode_repo",
-		BatchSize: 5000,
-		IdleTime:  idletime,
-	}
+func (o *UserTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Repo) IsEvented() bool {
+func (o *UserTrigger) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Repo) SetEventHeaders(kv map[string]string) {
+func (o *UserTrigger) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = RepoModelName.String()
+	kv["model"] = UserTriggerModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *UserTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -248,28 +212,28 @@ func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *Repo) GetStateKey() string {
+func (o *UserTrigger) GetStateKey() string {
 	key := "id"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *Repo) GetCustomerID() string {
+func (o *UserTrigger) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Repo
-func (o *Repo) Clone() datamodel.Model {
-	c := new(Repo)
+// Clone returns an exact copy of UserTrigger
+func (o *UserTrigger) Clone() datamodel.Model {
+	c := new(UserTrigger)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Repo) Anon() datamodel.Model {
-	c := new(Repo)
+func (o *UserTrigger) Anon() datamodel.Model {
+	c := new(UserTrigger)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -284,12 +248,12 @@ func (o *Repo) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Repo) MarshalJSON() ([]byte, error) {
+func (o *UserTrigger) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Repo) UnmarshalJSON(data []byte) error {
+func (o *UserTrigger) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -301,22 +265,22 @@ func (o *Repo) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecRepo *goavro.Codec
+var cachedCodecUserTrigger *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *Repo) GetAvroCodec() *goavro.Codec {
-	if cachedCodecRepo == nil {
-		c, err := GetRepoAvroSchema()
+func (o *UserTrigger) GetAvroCodec() *goavro.Codec {
+	if cachedCodecUserTrigger == nil {
+		c, err := GetUserTriggerAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecRepo = c
+		cachedCodecUserTrigger = c
 	}
-	return cachedCodecRepo
+	return cachedCodecUserTrigger
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *Repo) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *UserTrigger) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -330,7 +294,7 @@ func (o *Repo) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Repo) FromAvroBinary(value []byte) error {
+func (o *UserTrigger) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -345,18 +309,18 @@ func (o *Repo) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Repo) Stringify() string {
+func (o *UserTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Repo objects are equal
-func (o *Repo) IsEqual(other *Repo) bool {
+// IsEqual returns true if the two UserTrigger objects are equal
+func (o *UserTrigger) IsEqual(other *UserTrigger) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
+func (o *UserTrigger) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -365,41 +329,24 @@ func (o *Repo) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":         toRepoObject(o.Active, isavro, false, "boolean"),
-		"customer_id":    toRepoObject(o.CustomerID, isavro, false, "string"),
-		"default_branch": toRepoObject(o.DefaultBranch, isavro, false, "string"),
-		"description":    toRepoObject(o.Description, isavro, false, "string"),
-		"id":             toRepoObject(o.ID, isavro, false, "string"),
-		"language":       toRepoObject(o.Language, isavro, false, "string"),
-		"name":           toRepoObject(o.Name, isavro, false, "string"),
-		"ref_id":         toRepoObject(o.RefID, isavro, false, "string"),
-		"ref_type":       toRepoObject(o.RefType, isavro, false, "string"),
-		"updated_ts":     toRepoObject(o.UpdatedAt, isavro, false, "long"),
-		"url":            toRepoObject(o.URL, isavro, false, "string"),
-		"hashcode":       toRepoObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":    toUserTriggerObject(o.CustomerID, isavro, false, "string"),
+		"id":             toUserTriggerObject(o.ID, isavro, false, "string"),
+		"integration_id": toUserTriggerObject(o.IntegrationID, isavro, false, "string"),
+		"ref_id":         toUserTriggerObject(o.RefID, isavro, false, "string"),
+		"ref_type":       toUserTriggerObject(o.RefType, isavro, false, "string"),
+		"updated_ts":     toUserTriggerObject(o.UpdatedAt, isavro, false, "long"),
+		"hashcode":       toUserTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Repo) FromMap(kv map[string]interface{}) {
+func (o *UserTrigger) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["active"].(bool); ok {
-		o.Active = val
-	} else {
-		if val, ok := kv["active"]; ok {
-			if val == nil {
-				o.Active = number.ToBoolAny(nil)
-			} else {
-				o.Active = number.ToBoolAny(val)
-			}
-		}
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
@@ -413,36 +360,6 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["default_branch"].(string); ok {
-		o.DefaultBranch = val
-	} else {
-		if val, ok := kv["default_branch"]; ok {
-			if val == nil {
-				o.DefaultBranch = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.DefaultBranch = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["description"].(string); ok {
-		o.Description = val
-	} else {
-		if val, ok := kv["description"]; ok {
-			if val == nil {
-				o.Description = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Description = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -462,32 +379,17 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["language"].(string); ok {
-		o.Language = val
+	if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = val
 	} else {
-		if val, ok := kv["language"]; ok {
+		if val, ok := kv["integration_id"]; ok {
 			if val == nil {
-				o.Language = ""
+				o.IntegrationID = ""
 			} else {
 				if m, ok := val.(map[string]interface{}); ok {
 					val = pjson.Stringify(m)
 				}
-				o.Language = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Name = fmt.Sprintf("%v", val)
+				o.IntegrationID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -536,67 +438,35 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
-	} else {
-		if val, ok := kv["url"]; ok {
-			if val == nil {
-				o.URL = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.URL = fmt.Sprintf("%v", val)
-			}
-		}
-	}
 	o.setDefaults(false)
 }
 
 // Hash will return a hashcode for the object
-func (o *Repo) Hash() string {
+func (o *UserTrigger) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Active)
 	args = append(args, o.CustomerID)
-	args = append(args, o.DefaultBranch)
-	args = append(args, o.Description)
 	args = append(args, o.ID)
-	args = append(args, o.Language)
-	args = append(args, o.Name)
+	args = append(args, o.IntegrationID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
-	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
-// GetRepoAvroSchemaSpec creates the avro schema specification for Repo
-func GetRepoAvroSchemaSpec() string {
+// GetUserTriggerAvroSchemaSpec creates the avro schema specification for UserTrigger
+func GetUserTriggerAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
-		"namespace": "sourcecode",
-		"name":      "Repo",
+		"namespace": "agent",
+		"name":      "UserTrigger",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "active",
-				"type": "boolean",
-			},
-			map[string]interface{}{
 				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "default_branch",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "description",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -604,11 +474,7 @@ func GetRepoAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "language",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "name",
+				"name": "integration_id",
 				"type": "string",
 			},
 			map[string]interface{}{
@@ -623,17 +489,13 @@ func GetRepoAvroSchemaSpec() string {
 				"name": "updated_ts",
 				"type": "long",
 			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
 		},
 	}
 	return pjson.Stringify(spec, true)
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Repo) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *UserTrigger) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
@@ -645,25 +507,25 @@ func (o *Repo) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// GetRepoAvroSchema creates the avro schema for Repo
-func GetRepoAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetRepoAvroSchemaSpec())
+// GetUserTriggerAvroSchema creates the avro schema for UserTrigger
+func GetUserTriggerAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetUserTriggerAvroSchemaSpec())
 }
 
-// TransformRepoFunc is a function for transforming Repo during processing
-type TransformRepoFunc func(input *Repo) (*Repo, error)
+// TransformUserTriggerFunc is a function for transforming UserTrigger during processing
+type TransformUserTriggerFunc func(input *UserTrigger) (*UserTrigger, error)
 
-// NewRepoPipe creates a pipe for processing Repo items
-func NewRepoPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformRepoFunc) <-chan bool {
+// NewUserTriggerPipe creates a pipe for processing UserTrigger items
+func NewUserTriggerPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformUserTriggerFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewRepoInputStream(input, errors)
-	var stream chan Repo
+	inch, indone := NewUserTriggerInputStream(input, errors)
+	var stream chan UserTrigger
 	if len(transforms) > 0 {
-		stream = make(chan Repo, 1000)
+		stream = make(chan UserTrigger, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewRepoOutputStream(output, stream, errors)
+	outdone := NewUserTriggerOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -699,12 +561,12 @@ func NewRepoPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, 
 	return done
 }
 
-// NewRepoInputStreamDir creates a channel for reading Repo as JSON newlines from a directory of files
-func NewRepoInputStreamDir(dir string, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/repo\\.json(\\.gz)?$"))
+// NewUserTriggerInputStreamDir creates a channel for reading UserTrigger as JSON newlines from a directory of files
+func NewUserTriggerInputStreamDir(dir string, errors chan<- error, transforms ...TransformUserTriggerFunc) (chan UserTrigger, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/user_trigger\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan Repo)
+		ch := make(chan UserTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -712,16 +574,16 @@ func NewRepoInputStreamDir(dir string, errors chan<- error, transforms ...Transf
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for repo")
-		ch := make(chan Repo)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for user_trigger")
+		ch := make(chan UserTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewRepoInputStreamFile(files[0], errors, transforms...)
+		return NewUserTriggerInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan Repo)
+		ch := make(chan UserTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -729,12 +591,12 @@ func NewRepoInputStreamDir(dir string, errors chan<- error, transforms ...Transf
 	}
 }
 
-// NewRepoInputStreamFile creates an channel for reading Repo as JSON newlines from filename
-func NewRepoInputStreamFile(filename string, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
+// NewUserTriggerInputStreamFile creates an channel for reading UserTrigger as JSON newlines from filename
+func NewUserTriggerInputStreamFile(filename string, errors chan<- error, transforms ...TransformUserTriggerFunc) (chan UserTrigger, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan Repo)
+		ch := make(chan UserTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -746,7 +608,7 @@ func NewRepoInputStreamFile(filename string, errors chan<- error, transforms ...
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan Repo)
+			ch := make(chan UserTrigger)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -754,13 +616,13 @@ func NewRepoInputStreamFile(filename string, errors chan<- error, transforms ...
 		}
 		f = gz
 	}
-	return NewRepoInputStream(f, errors, transforms...)
+	return NewUserTriggerInputStream(f, errors, transforms...)
 }
 
-// NewRepoInputStream creates an channel for reading Repo as JSON newlines from stream
-func NewRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformRepoFunc) (chan Repo, <-chan bool) {
+// NewUserTriggerInputStream creates an channel for reading UserTrigger as JSON newlines from stream
+func NewUserTriggerInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformUserTriggerFunc) (chan UserTrigger, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan Repo, 1000)
+	ch := make(chan UserTrigger, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -773,7 +635,7 @@ func NewRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms ..
 				errors <- err
 				return
 			}
-			var item Repo
+			var item UserTrigger
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -799,9 +661,9 @@ func NewRepoInputStream(stream io.ReadCloser, errors chan<- error, transforms ..
 	return ch, done
 }
 
-// NewRepoOutputStreamDir will output json newlines from channel and save in dir
-func NewRepoOutputStreamDir(dir string, ch chan Repo, errors chan<- error, transforms ...TransformRepoFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/repo\\.json(\\.gz)?$")
+// NewUserTriggerOutputStreamDir will output json newlines from channel and save in dir
+func NewUserTriggerOutputStreamDir(dir string, ch chan UserTrigger, errors chan<- error, transforms ...TransformUserTriggerFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/user_trigger\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -817,11 +679,11 @@ func NewRepoOutputStreamDir(dir string, ch chan Repo, errors chan<- error, trans
 		done <- true
 		return done
 	}
-	return NewRepoOutputStream(gz, ch, errors, transforms...)
+	return NewUserTriggerOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewRepoOutputStream will output json newlines from channel to the stream
-func NewRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- error, transforms ...TransformRepoFunc) <-chan bool {
+// NewUserTriggerOutputStream will output json newlines from channel to the stream
+func NewUserTriggerOutputStream(stream io.WriteCloser, ch chan UserTrigger, errors chan<- error, transforms ...TransformUserTriggerFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -861,59 +723,59 @@ func NewRepoOutputStream(stream io.WriteCloser, ch chan Repo, errors chan<- erro
 	return done
 }
 
-// RepoSendEvent is an event detail for sending data
-type RepoSendEvent struct {
-	Repo    *Repo
-	headers map[string]string
-	time    time.Time
-	key     string
+// UserTriggerSendEvent is an event detail for sending data
+type UserTriggerSendEvent struct {
+	UserTrigger *UserTrigger
+	headers     map[string]string
+	time        time.Time
+	key         string
 }
 
-var _ datamodel.ModelSendEvent = (*RepoSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*UserTriggerSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *RepoSendEvent) Key() string {
+func (e *UserTriggerSendEvent) Key() string {
 	if e.key == "" {
-		return e.Repo.GetID()
+		return e.UserTrigger.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *RepoSendEvent) Object() datamodel.Model {
-	return e.Repo
+func (e *UserTriggerSendEvent) Object() datamodel.Model {
+	return e.UserTrigger
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *RepoSendEvent) Headers() map[string]string {
+func (e *UserTriggerSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *RepoSendEvent) Timestamp() time.Time {
+func (e *UserTriggerSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// RepoSendEventOpts is a function handler for setting opts
-type RepoSendEventOpts func(o *RepoSendEvent)
+// UserTriggerSendEventOpts is a function handler for setting opts
+type UserTriggerSendEventOpts func(o *UserTriggerSendEvent)
 
-// WithRepoSendEventKey sets the key value to a value different than the object ID
-func WithRepoSendEventKey(key string) RepoSendEventOpts {
-	return func(o *RepoSendEvent) {
+// WithUserTriggerSendEventKey sets the key value to a value different than the object ID
+func WithUserTriggerSendEventKey(key string) UserTriggerSendEventOpts {
+	return func(o *UserTriggerSendEvent) {
 		o.key = key
 	}
 }
 
-// WithRepoSendEventTimestamp sets the timestamp value
-func WithRepoSendEventTimestamp(tv time.Time) RepoSendEventOpts {
-	return func(o *RepoSendEvent) {
+// WithUserTriggerSendEventTimestamp sets the timestamp value
+func WithUserTriggerSendEventTimestamp(tv time.Time) UserTriggerSendEventOpts {
+	return func(o *UserTriggerSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithRepoSendEventHeader sets the timestamp value
-func WithRepoSendEventHeader(key, value string) RepoSendEventOpts {
-	return func(o *RepoSendEvent) {
+// WithUserTriggerSendEventHeader sets the timestamp value
+func WithUserTriggerSendEventHeader(key, value string) UserTriggerSendEventOpts {
+	return func(o *UserTriggerSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -921,10 +783,10 @@ func WithRepoSendEventHeader(key, value string) RepoSendEventOpts {
 	}
 }
 
-// NewRepoSendEvent returns a new RepoSendEvent instance
-func NewRepoSendEvent(o *Repo, opts ...RepoSendEventOpts) *RepoSendEvent {
-	res := &RepoSendEvent{
-		Repo: o,
+// NewUserTriggerSendEvent returns a new UserTriggerSendEvent instance
+func NewUserTriggerSendEvent(o *UserTrigger, opts ...UserTriggerSendEventOpts) *UserTriggerSendEvent {
+	res := &UserTriggerSendEvent{
+		UserTrigger: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -934,8 +796,8 @@ func NewRepoSendEvent(o *Repo, opts ...RepoSendEventOpts) *RepoSendEvent {
 	return res
 }
 
-// NewRepoProducer will stream data from the channel
-func NewRepoProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewUserTriggerProducer will stream data from the channel
+func NewUserTriggerProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -948,7 +810,7 @@ func NewRepoProducer(ctx context.Context, producer eventing.Producer, ch <-chan 
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*Repo); ok {
+				if object, ok := item.Object().(*UserTrigger); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -979,7 +841,7 @@ func NewRepoProducer(ctx context.Context, producer eventing.Producer, ch <-chan 
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.Repo but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.UserTrigger but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -987,22 +849,22 @@ func NewRepoProducer(ctx context.Context, producer eventing.Producer, ch <-chan 
 	return done
 }
 
-// NewRepoConsumer will stream data from the topic into the provided channel
-func NewRepoConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewUserTriggerConsumer will stream data from the topic into the provided channel
+func NewUserTriggerConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object Repo
+			var object UserTrigger
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.Repo: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.UserTrigger: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into sourcecode.Repo: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.UserTrigger: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Repo")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.UserTrigger")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -1016,51 +878,51 @@ func NewRepoConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiv
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &RepoReceiveEvent{&object, msg, false}
+			ch <- &UserTriggerReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Repo
+			var object UserTrigger
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &RepoReceiveEvent{nil, msg, true}
+			ch <- &UserTriggerReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// RepoReceiveEvent is an event detail for receiving data
-type RepoReceiveEvent struct {
-	Repo    *Repo
-	message eventing.Message
-	eof     bool
+// UserTriggerReceiveEvent is an event detail for receiving data
+type UserTriggerReceiveEvent struct {
+	UserTrigger *UserTrigger
+	message     eventing.Message
+	eof         bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*RepoReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*UserTriggerReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *RepoReceiveEvent) Object() datamodel.Model {
-	return e.Repo
+func (e *UserTriggerReceiveEvent) Object() datamodel.Model {
+	return e.UserTrigger
 }
 
 // Message returns the underlying message data for the event
-func (e *RepoReceiveEvent) Message() eventing.Message {
+func (e *UserTriggerReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *RepoReceiveEvent) EOF() bool {
+func (e *UserTriggerReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// RepoProducer implements the datamodel.ModelEventProducer
-type RepoProducer struct {
+// UserTriggerProducer implements the datamodel.ModelEventProducer
+type UserTriggerProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -1071,15 +933,15 @@ type RepoProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*RepoProducer)(nil)
+var _ datamodel.ModelEventProducer = (*UserTriggerProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *RepoProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *UserTriggerProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *RepoProducer) Close() error {
+func (p *UserTriggerProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -1094,47 +956,47 @@ func (p *RepoProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Repo) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *UserTrigger) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Repo) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *UserTrigger) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &RepoProducer{
+	return &UserTriggerProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewRepoProducer(newctx, producer, ch, errors, empty),
+		done:     NewUserTriggerProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewRepoProducerChannel returns a channel which can be used for producing Model events
-func NewRepoProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewRepoProducerChannelSize(producer, 0, errors)
+// NewUserTriggerProducerChannel returns a channel which can be used for producing Model events
+func NewUserTriggerProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewUserTriggerProducerChannelSize(producer, 0, errors)
 }
 
-// NewRepoProducerChannelSize returns a channel which can be used for producing Model events
-func NewRepoProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewUserTriggerProducerChannelSize returns a channel which can be used for producing Model events
+func NewUserTriggerProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &RepoProducer{
+	return &UserTriggerProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewRepoProducer(newctx, producer, ch, errors, empty),
+		done:     NewUserTriggerProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// RepoConsumer implements the datamodel.ModelEventConsumer
-type RepoConsumer struct {
+// UserTriggerConsumer implements the datamodel.ModelEventConsumer
+type UserTriggerConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1142,15 +1004,15 @@ type RepoConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*RepoConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*UserTriggerConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *RepoConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *UserTriggerConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *RepoConsumer) Close() error {
+func (c *UserTriggerConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1164,21 +1026,21 @@ func (c *RepoConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Repo) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *UserTrigger) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &RepoConsumer{
+	return &UserTriggerConsumer{
 		ch:       ch,
-		callback: NewRepoConsumer(consumer, ch, errors),
+		callback: NewUserTriggerConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewRepoConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewRepoConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewUserTriggerConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewUserTriggerConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &RepoConsumer{
+	return &UserTriggerConsumer{
 		ch:       ch,
-		callback: NewRepoConsumer(consumer, ch, errors),
+		callback: NewUserTriggerConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }

@@ -826,6 +826,10 @@ func (v ProjectResponseType) String() string {
 		return "UNINSTALL"
 	case 10:
 		return "UPGRADE"
+	case 11:
+		return "START"
+	case 12:
+		return "STOP"
 	}
 	return "unset"
 }
@@ -853,6 +857,10 @@ const (
 	ProjectResponseTypeUninstall ProjectResponseType = 9
 	// TypeUpgrade is the enumeration value for upgrade
 	ProjectResponseTypeUpgrade ProjectResponseType = 10
+	// TypeStart is the enumeration value for start
+	ProjectResponseTypeStart ProjectResponseType = 11
+	// TypeStop is the enumeration value for stop
+	ProjectResponseTypeStop ProjectResponseType = 12
 )
 
 // ProjectResponse an agent response to an action request adding project(s)
@@ -1614,6 +1622,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 9
 			case "upgrade", "UPGRADE":
 				o.Type = 10
+			case "start", "START":
+				o.Type = 11
+			case "stop", "STOP":
+				o.Type = 12
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1640,6 +1652,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 9
 			case "upgrade", "UPGRADE":
 				o.Type = 10
+			case "start", "START":
+				o.Type = 11
+			case "stop", "STOP":
+				o.Type = 12
 			}
 		}
 	}
@@ -1820,7 +1836,7 @@ func GetProjectResponseAvroSchemaSpec() string {
 				"type": map[string]interface{}{
 					"type":    "enum",
 					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE"},
+					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE", "START", "STOP"},
 				},
 			},
 			map[string]interface{}{
