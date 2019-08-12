@@ -21,28 +21,6 @@
   version = "v2.0.0"
 
 [[projects]]
-  digest = "1:ec6f9bf5e274c833c911923c9193867f3f18788c461f76f05f62bb1510e0ae65"
-  name = "github.com/go-sql-driver/mysql"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "72cd26f257d44c1114970e19afddcd812016007e"
-  version = "v1.4.1"
-
-[[projects]]
-  digest = "1:239c4c7fd2159585454003d9be7207167970194216193a8a210b8d29576f19c9"
-  name = "github.com/golang/protobuf"
-  packages = [
-    "proto",
-    "ptypes",
-    "ptypes/any",
-    "ptypes/duration",
-    "ptypes/timestamp",
-  ]
-  pruneopts = "UT"
-  revision = "b5d812f8a3706043e23a9cd5babf2e5423744d30"
-  version = "v1.3.1"
-
-[[projects]]
   digest = "1:e4f5819333ac698d294fe04dbf640f84719658d5c7ce195b10060cc37292ce79"
   name = "github.com/golang/snappy"
   packages = ["."]
@@ -51,12 +29,12 @@
   version = "v0.0.1"
 
 [[projects]]
-  digest = "1:9eddcfbbc797dd81c6335772d8b33e189d4fb76a29dd047a05ef8d121996f22e"
-  name = "github.com/jhaynie/go-gator"
-  packages = ["orm"]
+  digest = "1:582b704bebaa06b48c29b0cec224a6058a09c86883aaddabde889cd1a5f73e1b"
+  name = "github.com/google/uuid"
+  packages = ["."]
   pruneopts = "UT"
-  revision = "ca7ccc0cf82e05d7ea8edc18b0e9d0d08b79156f"
-  version = "2.2.0"
+  revision = "0cd6bf5da1e1c83f8b45653022c74f71af0538a4"
+  version = "v1.1.1"
 
 [[projects]]
   digest = "1:e47ce9db1f402ee86ac1815fabeb7b7cb7760d427869d22dd7c74fb68875627b"
@@ -75,7 +53,7 @@
   revision = "2e52cf6e685269ed8aefec6390f3cac3ef74e730"
 
 [[projects]]
-  digest = "1:92276714c172546de2ca884cf7cfab6b5c6cc33d2432401cfa81ab269df0a8a9"
+  digest = "1:45848423653d147bedf76daf1918e4d7195a3e42123771f94efcda136cbbeb4f"
   name = "github.com/pinpt/go-common"
   packages = [
     "datamodel",
@@ -89,8 +67,8 @@
     "strings",
   ]
   pruneopts = "UT"
-  revision = "1f8b8c9c21a2c65e9afdcd0257558ec21626590f"
-  version = "8.1.0"
+  revision = "55fa0fca2a494f7c481a955b23980b61c755bc10"
+  version = "8.1.3"
 
 [[projects]]
   digest = "1:1cabe44fb226a08664539c7ff79f25940284d9e2116187a74c90472a51c257ca"
@@ -99,14 +77,6 @@
   pruneopts = "UT"
   revision = "0d1270edf53072da4da781b76d2e1db58831152f"
   version = "v1.0.4"
-
-[[projects]]
-  digest = "1:c25289f43ac4a68d88b02245742347c94f1e108c534dda442188015ff80669b3"
-  name = "google.golang.org/appengine"
-  packages = ["cloudsql"]
-  pruneopts = "UT"
-  revision = "4c25cacc810c02874000e4f7071286a8e96b2515"
-  version = "v1.6.0"
 
 [[projects]]
   digest = "1:9169e569b3e6517da7de4476059f8fa889d508007e53fa5fc6a2ea4ffc5ae199"
