@@ -29,6 +29,7 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
+	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -1825,6 +1826,9 @@ func NewIssueProducer(ctx context.Context, producer eventing.Producer, ch <-chan
 					if tv.IsZero() {
 						tv = time.Now() // if its still zero, use the ingest time
 					}
+					// add generated message headers
+					headers["message-id"] = pstrings.NewUUIDV4()
+					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
 						Key:       item.Key(),

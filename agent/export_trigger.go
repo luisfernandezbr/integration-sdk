@@ -27,6 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -52,120 +53,11 @@ const (
 	ExportTriggerRefIDColumn = "ref_id"
 	// ExportTriggerRefTypeColumn is the ref_type column name
 	ExportTriggerRefTypeColumn = "ref_type"
-	// ExportTriggerRequestDateColumn is the request_date column name
-	ExportTriggerRequestDateColumn = "request_date"
-	// ExportTriggerRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	ExportTriggerRequestDateColumnEpochColumn = "request_date->epoch"
-	// ExportTriggerRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	ExportTriggerRequestDateColumnOffsetColumn = "request_date->offset"
-	// ExportTriggerRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	ExportTriggerRequestDateColumnRfc3339Column = "request_date->rfc3339"
+	// ExportTriggerReprocessHistoricalColumn is the reprocess_historical column name
+	ExportTriggerReprocessHistoricalColumn = "reprocess_historical"
 	// ExportTriggerUpdatedAtColumn is the updated_ts column name
 	ExportTriggerUpdatedAtColumn = "updated_ts"
 )
-
-// ExportTriggerRequestDate represents the object structure for request_date
-type ExportTriggerRequestDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toExportTriggerRequestDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toExportTriggerRequestDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
-	switch v := o.(type) {
-	case *ExportTriggerRequestDate:
-		return v.ToMap(isavro)
-
-	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
-	}
-}
-
-func (o *ExportTriggerRequestDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toExportTriggerRequestDateObject(o.Epoch, isavro, false, "long"),
-		// Offset the timezone offset from GMT
-		"offset": toExportTriggerRequestDateObject(o.Offset, isavro, false, "long"),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toExportTriggerRequestDateObject(o.Rfc3339, isavro, false, "string"),
-	}
-}
-
-func (o *ExportTriggerRequestDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ExportTriggerRequestDate) FromMap(kv map[string]interface{}) {
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
 
 // ExportTrigger used to trigger an agent.ExportRequest
 type ExportTrigger struct {
@@ -177,8 +69,8 @@ type ExportTrigger struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// RequestDate the requested date
-	RequestDate ExportTriggerRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	// ReprocessHistorical This field is to differentiate between historical and incrementals
+	ReprocessHistorical bool `json:"reprocess_historical" bson:"reprocess_historical" yaml:"reprocess_historical" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -201,9 +93,6 @@ func toExportTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype
 	}
 	switch v := o.(type) {
 	case *ExportTrigger:
-		return v.ToMap(isavro)
-
-	case ExportTriggerRequestDate:
 		return v.ToMap(isavro)
 
 	default:
@@ -441,13 +330,13 @@ func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":  toExportTriggerObject(o.CustomerID, isavro, false, "string"),
-		"id":           toExportTriggerObject(o.ID, isavro, false, "string"),
-		"ref_id":       toExportTriggerObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toExportTriggerObject(o.RefType, isavro, false, "string"),
-		"request_date": toExportTriggerObject(o.RequestDate, isavro, false, "request_date"),
-		"updated_ts":   toExportTriggerObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":     toExportTriggerObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":          toExportTriggerObject(o.CustomerID, isavro, false, "string"),
+		"id":                   toExportTriggerObject(o.ID, isavro, false, "string"),
+		"ref_id":               toExportTriggerObject(o.RefID, isavro, false, "string"),
+		"ref_type":             toExportTriggerObject(o.RefType, isavro, false, "string"),
+		"reprocess_historical": toExportTriggerObject(o.ReprocessHistorical, isavro, false, "boolean"),
+		"updated_ts":           toExportTriggerObject(o.UpdatedAt, isavro, false, "long"),
+		"hashcode":             toExportTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -521,37 +410,16 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["request_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.RequestDate.FromMap(kv)
-		} else if sv, ok := val.(ExportTriggerRequestDate); ok {
-			// struct
-			o.RequestDate = sv
-		} else if sp, ok := val.(*ExportTriggerRequestDate); ok {
-			// struct pointer
-			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
+	if val, ok := kv["reprocess_historical"].(bool); ok {
+		o.ReprocessHistorical = val
+	} else {
+		if val, ok := kv["reprocess_historical"]; ok {
+			if val == nil {
+				o.ReprocessHistorical = number.ToBoolAny(nil)
+			} else {
+				o.ReprocessHistorical = number.ToBoolAny(val)
 			}
 		}
-	} else {
-		o.RequestDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["updated_ts"].(int64); ok {
@@ -578,7 +446,7 @@ func (o *ExportTrigger) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.RequestDate)
+	args = append(args, o.ReprocessHistorical)
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -612,8 +480,8 @@ func GetExportTriggerAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "request_date",
-				"type": map[string]interface{}{"doc": "the requested date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
+				"name": "reprocess_historical",
+				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
@@ -958,6 +826,9 @@ func NewExportTriggerProducer(ctx context.Context, producer eventing.Producer, c
 					if tv.IsZero() {
 						tv = time.Now() // if its still zero, use the ingest time
 					}
+					// add generated message headers
+					headers["message-id"] = pstrings.NewUUIDV4()
+					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
 						Key:       item.Key(),
