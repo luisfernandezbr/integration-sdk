@@ -53,7 +53,7 @@
   revision = "2e52cf6e685269ed8aefec6390f3cac3ef74e730"
 
 [[projects]]
-  digest = "1:45848423653d147bedf76daf1918e4d7195a3e42123771f94efcda136cbbeb4f"
+  digest = "1:3101085105fd552951980bee1fabd11a47a48497fd79fee6e4dab8f2762ac352"
   name = "github.com/pinpt/go-common"
   packages = [
     "datamodel",
@@ -67,8 +67,8 @@
     "strings",
   ]
   pruneopts = "UT"
-  revision = "55fa0fca2a494f7c481a955b23980b61c755bc10"
-  version = "8.1.3"
+  revision = "fbc59fefc97b77c2ee8f64c82083734c7a39f134"
+  version = "8.1.4"
 
 [[projects]]
   digest = "1:1cabe44fb226a08664539c7ff79f25940284d9e2116187a74c90472a51c257ca"
@@ -77,14 +77,6 @@
   pruneopts = "UT"
   revision = "0d1270edf53072da4da781b76d2e1db58831152f"
   version = "v1.0.4"
-
-[[projects]]
-  digest = "1:9169e569b3e6517da7de4476059f8fa889d508007e53fa5fc6a2ea4ffc5ae199"
-  name = "gopkg.in/confluentinc/confluent-kafka-go.v1"
-  packages = ["kafka"]
-  pruneopts = "UT"
-  revision = "48acc03b9ddd85b5c8c268b480d5a9a3d523b9ad"
-  version = "v1.1.0"
 
 [solve-meta]
   analyzer-name = "dep"
