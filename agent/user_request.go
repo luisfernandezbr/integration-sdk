@@ -66,6 +66,8 @@ const (
 	UserRequestIntegrationColumnExclusionsColumn = "integration->exclusions"
 	// UserRequestIntegrationColumnIDColumn is the id column property of the Integration name
 	UserRequestIntegrationColumnIDColumn = "integration->id"
+	// UserRequestIntegrationColumnLocationColumn is the location column property of the Integration name
+	UserRequestIntegrationColumnLocationColumn = "integration->location"
 	// UserRequestIntegrationColumnNameColumn is the name column property of the Integration name
 	UserRequestIntegrationColumnNameColumn = "integration->name"
 	// UserRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
@@ -74,6 +76,8 @@ const (
 	UserRequestIntegrationColumnRefIDColumn = "integration->ref_id"
 	// UserRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
 	UserRequestIntegrationColumnRefTypeColumn = "integration->ref_type"
+	// UserRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
+	UserRequestIntegrationColumnSystemTypeColumn = "integration->system_type"
 	// UserRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
 	UserRequestIntegrationColumnValidatedColumn = "integration->validated"
 	// UserRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
@@ -302,6 +306,27 @@ func (o *UserRequestIntegrationAuthorization) FromMap(kv map[string]interface{})
 	o.setDefaults(false)
 }
 
+// UserRequestIntegrationLocation is the enumeration type for location
+type UserRequestIntegrationLocation int32
+
+// String returns the string value for IntegrationLocation
+func (v UserRequestIntegrationLocation) String() string {
+	switch int32(v) {
+	case 0:
+		return "PRIVATE"
+	case 1:
+		return "CLOUD"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationLocationPrivate is the enumeration value for private
+	UserRequestIntegrationLocationPrivate UserRequestIntegrationLocation = 0
+	// IntegrationLocationCloud is the enumeration value for cloud
+	UserRequestIntegrationLocationCloud UserRequestIntegrationLocation = 1
+)
+
 // UserRequestIntegrationProgress represents the object structure for progress
 type UserRequestIntegrationProgress struct {
 	// Message Any relevant messaging during processing
@@ -404,6 +429,27 @@ func (o *UserRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
+
+// UserRequestIntegrationSystemType is the enumeration type for system_type
+type UserRequestIntegrationSystemType int32
+
+// String returns the string value for IntegrationSystemType
+func (v UserRequestIntegrationSystemType) String() string {
+	switch int32(v) {
+	case 0:
+		return "WORK"
+	case 1:
+		return "SOURCECODE"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationSystemTypeWork is the enumeration value for work
+	UserRequestIntegrationSystemTypeWork UserRequestIntegrationSystemType = 0
+	// IntegrationSystemTypeSourcecode is the enumeration value for sourcecode
+	UserRequestIntegrationSystemTypeSourcecode UserRequestIntegrationSystemType = 1
+)
 
 // UserRequestIntegrationValidatedDate represents the object structure for validated_date
 type UserRequestIntegrationValidatedDate struct {
@@ -522,6 +568,8 @@ type UserRequestIntegration struct {
 	Exclusions []string `json:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Location The location of this integration (on-premise / private or cloud)
+	Location UserRequestIntegrationLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
@@ -530,6 +578,8 @@ type UserRequestIntegration struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+	SystemType UserRequestIntegrationSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
 	// ValidatedDate Date when validated
@@ -556,8 +606,14 @@ func toUserRequestIntegrationObject(o interface{}, isavro bool, isoptional bool,
 	case UserRequestIntegrationAuthorization:
 		return v.ToMap(isavro)
 
+	case UserRequestIntegrationLocation:
+		return v.String()
+
 	case UserRequestIntegrationProgress:
 		return v.ToMap(isavro)
+
+	case UserRequestIntegrationSystemType:
+		return v.String()
 
 	case UserRequestIntegrationValidatedDate:
 		return v.ToMap(isavro)
@@ -586,6 +642,8 @@ func (o *UserRequestIntegration) ToMap(avro ...bool) map[string]interface{} {
 		"exclusions": toUserRequestIntegrationObject(o.Exclusions, isavro, false, "exclusions"),
 		// ID the primary key for the model instance
 		"id": toUserRequestIntegrationObject(o.ID, isavro, false, "string"),
+		// Location The location of this integration (on-premise / private or cloud)
+		"location": toUserRequestIntegrationObject(o.Location, isavro, false, "location"),
 		// Name The user friendly name of the integration
 		"name": toUserRequestIntegrationObject(o.Name, isavro, false, "string"),
 		// Progress Agent processing progress
@@ -594,6 +652,8 @@ func (o *UserRequestIntegration) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id": toUserRequestIntegrationObject(o.RefID, isavro, false, "string"),
 		// RefType the source system identifier for the model instance
 		"ref_type": toUserRequestIntegrationObject(o.RefType, isavro, false, "string"),
+		// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+		"system_type": toUserRequestIntegrationObject(o.SystemType, isavro, false, "system_type"),
 		// Validated If the validation has been run against this instance
 		"validated": toUserRequestIntegrationObject(o.Validated, isavro, true, "boolean"),
 		// ValidatedDate Date when validated
@@ -748,6 +808,28 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["location"].(UserRequestIntegrationLocation); ok {
+		o.Location = val
+	} else {
+		if em, ok := kv["location"].(map[string]interface{}); ok {
+			ev := em["agent.location"].(string)
+			switch ev {
+			case "private", "PRIVATE":
+				o.Location = 0
+			case "cloud", "CLOUD":
+				o.Location = 1
+			}
+		}
+		if em, ok := kv["location"].(string); ok {
+			switch em {
+			case "private", "PRIVATE":
+				o.Location = 0
+			case "cloud", "CLOUD":
+				o.Location = 1
+			}
+		}
+	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -803,6 +885,28 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["system_type"].(UserRequestIntegrationSystemType); ok {
+		o.SystemType = val
+	} else {
+		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+			ev := em["agent.system_type"].(string)
+			switch ev {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
+		if em, ok := kv["system_type"].(string); ok {
+			switch em {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
 			}
 		}
 	}
@@ -877,27 +981,6 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
-
-// UserRequestLocation is the enumeration type for location
-type UserRequestLocation int32
-
-// String returns the string value for Location
-func (v UserRequestLocation) String() string {
-	switch int32(v) {
-	case 0:
-		return "PRIVATE"
-	case 1:
-		return "CLOUD"
-	}
-	return "unset"
-}
-
-const (
-	// LocationPrivate is the enumeration value for private
-	UserRequestLocationPrivate UserRequestLocation = 0
-	// LocationCloud is the enumeration value for cloud
-	UserRequestLocationCloud UserRequestLocation = 1
-)
 
 // UserRequestRequestDate represents the object structure for request_date
 type UserRequestRequestDate struct {
@@ -1002,27 +1085,6 @@ func (o *UserRequestRequestDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// UserRequestSystemType is the enumeration type for system_type
-type UserRequestSystemType int32
-
-// String returns the string value for SystemType
-func (v UserRequestSystemType) String() string {
-	switch int32(v) {
-	case 0:
-		return "WORK"
-	case 1:
-		return "SOURCECODE"
-	}
-	return "unset"
-}
-
-const (
-	// SystemTypeWork is the enumeration value for work
-	UserRequestSystemTypeWork UserRequestSystemType = 0
-	// SystemTypeSourcecode is the enumeration value for sourcecode
-	UserRequestSystemTypeSourcecode UserRequestSystemType = 1
-)
-
 // UserRequest an agent action to request adding new users
 type UserRequest struct {
 	// CustomerID the customer id for the model instance
@@ -1031,16 +1093,12 @@ type UserRequest struct {
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to use
 	Integration UserRequestIntegration `json:"integration" bson:"integration" yaml:"integration" faker:"-"`
-	// Location The location of this integration (on-premise / private or cloud)
-	Location UserRequestLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate UserRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
-	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
-	SystemType UserRequestSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
@@ -1070,14 +1128,8 @@ func toUserRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case UserRequestIntegration:
 		return v.ToMap(isavro)
 
-	case UserRequestLocation:
-		return v.String()
-
 	case UserRequestRequestDate:
 		return v.ToMap(isavro)
-
-	case UserRequestSystemType:
-		return v.String()
 
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
@@ -1317,11 +1369,9 @@ func (o *UserRequest) ToMap(avro ...bool) map[string]interface{} {
 		"customer_id":  toUserRequestObject(o.CustomerID, isavro, false, "string"),
 		"id":           toUserRequestObject(o.ID, isavro, false, "string"),
 		"integration":  toUserRequestObject(o.Integration, isavro, false, "integration"),
-		"location":     toUserRequestObject(o.Location, isavro, false, "location"),
 		"ref_id":       toUserRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toUserRequestObject(o.RefType, isavro, false, "string"),
 		"request_date": toUserRequestObject(o.RequestDate, isavro, false, "request_date"),
-		"system_type":  toUserRequestObject(o.SystemType, isavro, false, "system_type"),
 		"updated_ts":   toUserRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":         toUserRequestObject(o.UUID, isavro, false, "string"),
 		"hashcode":     toUserRequestObject(o.Hashcode, isavro, false, "string"),
@@ -1382,28 +1432,6 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		o.Integration.FromMap(map[string]interface{}{})
 	}
 
-	if val, ok := kv["location"].(UserRequestLocation); ok {
-		o.Location = val
-	} else {
-		if em, ok := kv["location"].(map[string]interface{}); ok {
-			ev := em["agent.location"].(string)
-			switch ev {
-			case "private", "PRIVATE":
-				o.Location = 0
-			case "cloud", "CLOUD":
-				o.Location = 1
-			}
-		}
-		if em, ok := kv["location"].(string); ok {
-			switch em {
-			case "private", "PRIVATE":
-				o.Location = 0
-			case "cloud", "CLOUD":
-				o.Location = 1
-			}
-		}
-	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1448,28 +1476,6 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		o.RequestDate.FromMap(map[string]interface{}{})
 	}
 
-	if val, ok := kv["system_type"].(UserRequestSystemType); ok {
-		o.SystemType = val
-	} else {
-		if em, ok := kv["system_type"].(map[string]interface{}); ok {
-			ev := em["agent.system_type"].(string)
-			switch ev {
-			case "work", "WORK":
-				o.SystemType = 0
-			case "sourcecode", "SOURCECODE":
-				o.SystemType = 1
-			}
-		}
-		if em, ok := kv["system_type"].(string); ok {
-			switch em {
-			case "work", "WORK":
-				o.SystemType = 0
-			case "sourcecode", "SOURCECODE":
-				o.SystemType = 1
-			}
-		}
-	}
-
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -1508,11 +1514,9 @@ func (o *UserRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
-	args = append(args, o.Location)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
-	args = append(args, o.SystemType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
@@ -1540,15 +1544,7 @@ func GetUserRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"doc": "the integration details to use", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "Authorization information", "name": "authorization", "type": map[string]interface{}{"doc": "Authorization information", "fields": []interface{}{map[string]interface{}{"default": nil, "doc": "Access token", "name": "access_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Refresh token", "name": "refresh_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "URL of instance if relevant", "name": "url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Username for instance, if relevant", "name": "username", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Password for instance, if relevant", "name": "password", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Token for instance, if relevant", "name": "api_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the agents encrypted authorization", "name": "authorization", "type": []interface{}{"null", "string"}}}, "name": "integration.authorization", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If authorization failed by the agent", "name": "errored", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "The exclusion list for this integration", "name": "exclusions", "type": map[string]interface{}{"items": "string", "name": "exclusions", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "The user friendly name of the integration", "name": "name", "type": "string"}, map[string]interface{}{"doc": "Agent processing progress", "name": "progress", "type": map[string]interface{}{"doc": "Agent processing progress", "fields": []interface{}{map[string]interface{}{"doc": "Any relevant messaging during processing", "name": "message", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "name": "total", "type": "long"}, map[string]interface{}{"doc": "The total amount processed thus far", "name": "completed", "type": "long"}}, "name": "integration.progress", "type": "record"}}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If the validation has been run against this instance", "name": "validated", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "Date when validated", "name": "validated_date", "type": map[string]interface{}{"doc": "Date when validated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "integration.validated_date", "type": "record"}}, map[string]interface{}{"default": nil, "doc": "The validation message from the agent", "name": "validation_message", "type": []interface{}{"null", "string"}}}, "name": "integration", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "location",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "location",
-					"symbols": []interface{}{"PRIVATE", "CLOUD"},
-				},
+				"type": map[string]interface{}{"doc": "the integration details to use", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "Authorization information", "name": "authorization", "type": map[string]interface{}{"doc": "Authorization information", "fields": []interface{}{map[string]interface{}{"default": nil, "doc": "Access token", "name": "access_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Refresh token", "name": "refresh_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "URL of instance if relevant", "name": "url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Username for instance, if relevant", "name": "username", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Password for instance, if relevant", "name": "password", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Token for instance, if relevant", "name": "api_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the agents encrypted authorization", "name": "authorization", "type": []interface{}{"null", "string"}}}, "name": "integration.authorization", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If authorization failed by the agent", "name": "errored", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "The exclusion list for this integration", "name": "exclusions", "type": map[string]interface{}{"items": "string", "name": "exclusions", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "The location of this integration (on-premise / private or cloud)", "name": "location", "type": map[string]interface{}{"doc": "The location of this integration (on-premise / private or cloud)", "name": "integration.location", "symbols": []string{"PRIVATE", "CLOUD"}, "type": "enum"}}, map[string]interface{}{"doc": "The user friendly name of the integration", "name": "name", "type": "string"}, map[string]interface{}{"doc": "Agent processing progress", "name": "progress", "type": map[string]interface{}{"doc": "Agent processing progress", "fields": []interface{}{map[string]interface{}{"doc": "Any relevant messaging during processing", "name": "message", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "name": "total", "type": "long"}, map[string]interface{}{"doc": "The total amount processed thus far", "name": "completed", "type": "long"}}, "name": "integration.progress", "type": "record"}}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "The system type of the integration (sourcecode / work (jira) / etc.)", "name": "system_type", "type": map[string]interface{}{"doc": "The system type of the integration (sourcecode / work (jira) / etc.)", "name": "integration.system_type", "symbols": []string{"WORK", "SOURCECODE"}, "type": "enum"}}, map[string]interface{}{"default": nil, "doc": "If the validation has been run against this instance", "name": "validated", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "Date when validated", "name": "validated_date", "type": map[string]interface{}{"doc": "Date when validated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "integration.validated_date", "type": "record"}}, map[string]interface{}{"default": nil, "doc": "The validation message from the agent", "name": "validation_message", "type": []interface{}{"null", "string"}}}, "name": "integration", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1561,14 +1557,6 @@ func GetUserRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "system_type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "system_type",
-					"symbols": []interface{}{"WORK", "SOURCECODE"},
-				},
 			},
 			map[string]interface{}{
 				"name": "updated_ts",

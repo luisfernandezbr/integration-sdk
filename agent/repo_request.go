@@ -66,6 +66,8 @@ const (
 	RepoRequestIntegrationColumnExclusionsColumn = "integration->exclusions"
 	// RepoRequestIntegrationColumnIDColumn is the id column property of the Integration name
 	RepoRequestIntegrationColumnIDColumn = "integration->id"
+	// RepoRequestIntegrationColumnLocationColumn is the location column property of the Integration name
+	RepoRequestIntegrationColumnLocationColumn = "integration->location"
 	// RepoRequestIntegrationColumnNameColumn is the name column property of the Integration name
 	RepoRequestIntegrationColumnNameColumn = "integration->name"
 	// RepoRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
@@ -74,6 +76,8 @@ const (
 	RepoRequestIntegrationColumnRefIDColumn = "integration->ref_id"
 	// RepoRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
 	RepoRequestIntegrationColumnRefTypeColumn = "integration->ref_type"
+	// RepoRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
+	RepoRequestIntegrationColumnSystemTypeColumn = "integration->system_type"
 	// RepoRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
 	RepoRequestIntegrationColumnValidatedColumn = "integration->validated"
 	// RepoRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
@@ -302,6 +306,27 @@ func (o *RepoRequestIntegrationAuthorization) FromMap(kv map[string]interface{})
 	o.setDefaults(false)
 }
 
+// RepoRequestIntegrationLocation is the enumeration type for location
+type RepoRequestIntegrationLocation int32
+
+// String returns the string value for IntegrationLocation
+func (v RepoRequestIntegrationLocation) String() string {
+	switch int32(v) {
+	case 0:
+		return "PRIVATE"
+	case 1:
+		return "CLOUD"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationLocationPrivate is the enumeration value for private
+	RepoRequestIntegrationLocationPrivate RepoRequestIntegrationLocation = 0
+	// IntegrationLocationCloud is the enumeration value for cloud
+	RepoRequestIntegrationLocationCloud RepoRequestIntegrationLocation = 1
+)
+
 // RepoRequestIntegrationProgress represents the object structure for progress
 type RepoRequestIntegrationProgress struct {
 	// Message Any relevant messaging during processing
@@ -404,6 +429,27 @@ func (o *RepoRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
+
+// RepoRequestIntegrationSystemType is the enumeration type for system_type
+type RepoRequestIntegrationSystemType int32
+
+// String returns the string value for IntegrationSystemType
+func (v RepoRequestIntegrationSystemType) String() string {
+	switch int32(v) {
+	case 0:
+		return "WORK"
+	case 1:
+		return "SOURCECODE"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationSystemTypeWork is the enumeration value for work
+	RepoRequestIntegrationSystemTypeWork RepoRequestIntegrationSystemType = 0
+	// IntegrationSystemTypeSourcecode is the enumeration value for sourcecode
+	RepoRequestIntegrationSystemTypeSourcecode RepoRequestIntegrationSystemType = 1
+)
 
 // RepoRequestIntegrationValidatedDate represents the object structure for validated_date
 type RepoRequestIntegrationValidatedDate struct {
@@ -522,6 +568,8 @@ type RepoRequestIntegration struct {
 	Exclusions []string `json:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Location The location of this integration (on-premise / private or cloud)
+	Location RepoRequestIntegrationLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
@@ -530,6 +578,8 @@ type RepoRequestIntegration struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+	SystemType RepoRequestIntegrationSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
 	// ValidatedDate Date when validated
@@ -556,8 +606,14 @@ func toRepoRequestIntegrationObject(o interface{}, isavro bool, isoptional bool,
 	case RepoRequestIntegrationAuthorization:
 		return v.ToMap(isavro)
 
+	case RepoRequestIntegrationLocation:
+		return v.String()
+
 	case RepoRequestIntegrationProgress:
 		return v.ToMap(isavro)
+
+	case RepoRequestIntegrationSystemType:
+		return v.String()
 
 	case RepoRequestIntegrationValidatedDate:
 		return v.ToMap(isavro)
@@ -586,6 +642,8 @@ func (o *RepoRequestIntegration) ToMap(avro ...bool) map[string]interface{} {
 		"exclusions": toRepoRequestIntegrationObject(o.Exclusions, isavro, false, "exclusions"),
 		// ID the primary key for the model instance
 		"id": toRepoRequestIntegrationObject(o.ID, isavro, false, "string"),
+		// Location The location of this integration (on-premise / private or cloud)
+		"location": toRepoRequestIntegrationObject(o.Location, isavro, false, "location"),
 		// Name The user friendly name of the integration
 		"name": toRepoRequestIntegrationObject(o.Name, isavro, false, "string"),
 		// Progress Agent processing progress
@@ -594,6 +652,8 @@ func (o *RepoRequestIntegration) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id": toRepoRequestIntegrationObject(o.RefID, isavro, false, "string"),
 		// RefType the source system identifier for the model instance
 		"ref_type": toRepoRequestIntegrationObject(o.RefType, isavro, false, "string"),
+		// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+		"system_type": toRepoRequestIntegrationObject(o.SystemType, isavro, false, "system_type"),
 		// Validated If the validation has been run against this instance
 		"validated": toRepoRequestIntegrationObject(o.Validated, isavro, true, "boolean"),
 		// ValidatedDate Date when validated
@@ -748,6 +808,28 @@ func (o *RepoRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["location"].(RepoRequestIntegrationLocation); ok {
+		o.Location = val
+	} else {
+		if em, ok := kv["location"].(map[string]interface{}); ok {
+			ev := em["agent.location"].(string)
+			switch ev {
+			case "private", "PRIVATE":
+				o.Location = 0
+			case "cloud", "CLOUD":
+				o.Location = 1
+			}
+		}
+		if em, ok := kv["location"].(string); ok {
+			switch em {
+			case "private", "PRIVATE":
+				o.Location = 0
+			case "cloud", "CLOUD":
+				o.Location = 1
+			}
+		}
+	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -803,6 +885,28 @@ func (o *RepoRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["system_type"].(RepoRequestIntegrationSystemType); ok {
+		o.SystemType = val
+	} else {
+		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+			ev := em["agent.system_type"].(string)
+			switch ev {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
+		if em, ok := kv["system_type"].(string); ok {
+			switch em {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
 			}
 		}
 	}
@@ -877,27 +981,6 @@ func (o *RepoRequestIntegration) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
-
-// RepoRequestLocation is the enumeration type for location
-type RepoRequestLocation int32
-
-// String returns the string value for Location
-func (v RepoRequestLocation) String() string {
-	switch int32(v) {
-	case 0:
-		return "PRIVATE"
-	case 1:
-		return "CLOUD"
-	}
-	return "unset"
-}
-
-const (
-	// LocationPrivate is the enumeration value for private
-	RepoRequestLocationPrivate RepoRequestLocation = 0
-	// LocationCloud is the enumeration value for cloud
-	RepoRequestLocationCloud RepoRequestLocation = 1
-)
 
 // RepoRequestRequestDate represents the object structure for request_date
 type RepoRequestRequestDate struct {
@@ -1002,27 +1085,6 @@ func (o *RepoRequestRequestDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// RepoRequestSystemType is the enumeration type for system_type
-type RepoRequestSystemType int32
-
-// String returns the string value for SystemType
-func (v RepoRequestSystemType) String() string {
-	switch int32(v) {
-	case 0:
-		return "WORK"
-	case 1:
-		return "SOURCECODE"
-	}
-	return "unset"
-}
-
-const (
-	// SystemTypeWork is the enumeration value for work
-	RepoRequestSystemTypeWork RepoRequestSystemType = 0
-	// SystemTypeSourcecode is the enumeration value for sourcecode
-	RepoRequestSystemTypeSourcecode RepoRequestSystemType = 1
-)
-
 // RepoRequest an agent action to request adding new repos
 type RepoRequest struct {
 	// CustomerID the customer id for the model instance
@@ -1031,16 +1093,12 @@ type RepoRequest struct {
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to use
 	Integration RepoRequestIntegration `json:"integration" bson:"integration" yaml:"integration" faker:"-"`
-	// Location The location of this integration (on-premise / private or cloud)
-	Location RepoRequestLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate RepoRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
-	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
-	SystemType RepoRequestSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
@@ -1070,14 +1128,8 @@ func toRepoRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 	case RepoRequestIntegration:
 		return v.ToMap(isavro)
 
-	case RepoRequestLocation:
-		return v.String()
-
 	case RepoRequestRequestDate:
 		return v.ToMap(isavro)
-
-	case RepoRequestSystemType:
-		return v.String()
 
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
@@ -1317,11 +1369,9 @@ func (o *RepoRequest) ToMap(avro ...bool) map[string]interface{} {
 		"customer_id":  toRepoRequestObject(o.CustomerID, isavro, false, "string"),
 		"id":           toRepoRequestObject(o.ID, isavro, false, "string"),
 		"integration":  toRepoRequestObject(o.Integration, isavro, false, "integration"),
-		"location":     toRepoRequestObject(o.Location, isavro, false, "location"),
 		"ref_id":       toRepoRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toRepoRequestObject(o.RefType, isavro, false, "string"),
 		"request_date": toRepoRequestObject(o.RequestDate, isavro, false, "request_date"),
-		"system_type":  toRepoRequestObject(o.SystemType, isavro, false, "system_type"),
 		"updated_ts":   toRepoRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"uuid":         toRepoRequestObject(o.UUID, isavro, false, "string"),
 		"hashcode":     toRepoRequestObject(o.Hashcode, isavro, false, "string"),
@@ -1382,28 +1432,6 @@ func (o *RepoRequest) FromMap(kv map[string]interface{}) {
 		o.Integration.FromMap(map[string]interface{}{})
 	}
 
-	if val, ok := kv["location"].(RepoRequestLocation); ok {
-		o.Location = val
-	} else {
-		if em, ok := kv["location"].(map[string]interface{}); ok {
-			ev := em["agent.location"].(string)
-			switch ev {
-			case "private", "PRIVATE":
-				o.Location = 0
-			case "cloud", "CLOUD":
-				o.Location = 1
-			}
-		}
-		if em, ok := kv["location"].(string); ok {
-			switch em {
-			case "private", "PRIVATE":
-				o.Location = 0
-			case "cloud", "CLOUD":
-				o.Location = 1
-			}
-		}
-	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1443,31 +1471,28 @@ func (o *RepoRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["system_type"].(RepoRequestSystemType); ok {
-		o.SystemType = val
-	} else {
-		if em, ok := kv["system_type"].(map[string]interface{}); ok {
-			ev := em["agent.system_type"].(string)
-			switch ev {
-			case "work", "WORK":
-				o.SystemType = 0
-			case "sourcecode", "SOURCECODE":
-				o.SystemType = 1
-			}
-		}
-		if em, ok := kv["system_type"].(string); ok {
-			switch em {
-			case "work", "WORK":
-				o.SystemType = 0
-			case "sourcecode", "SOURCECODE":
-				o.SystemType = 1
-			}
-		}
 	}
 
 	if val, ok := kv["updated_ts"].(int64); ok {
@@ -1508,11 +1533,9 @@ func (o *RepoRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
-	args = append(args, o.Location)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
-	args = append(args, o.SystemType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
@@ -1540,15 +1563,7 @@ func GetRepoRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integration",
-				"type": map[string]interface{}{"doc": "the integration details to use", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "Authorization information", "name": "authorization", "type": map[string]interface{}{"doc": "Authorization information", "fields": []interface{}{map[string]interface{}{"default": nil, "doc": "Access token", "name": "access_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Refresh token", "name": "refresh_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "URL of instance if relevant", "name": "url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Username for instance, if relevant", "name": "username", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Password for instance, if relevant", "name": "password", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Token for instance, if relevant", "name": "api_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the agents encrypted authorization", "name": "authorization", "type": []interface{}{"null", "string"}}}, "name": "integration.authorization", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If authorization failed by the agent", "name": "errored", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "The exclusion list for this integration", "name": "exclusions", "type": map[string]interface{}{"items": "string", "name": "exclusions", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "The user friendly name of the integration", "name": "name", "type": "string"}, map[string]interface{}{"doc": "Agent processing progress", "name": "progress", "type": map[string]interface{}{"doc": "Agent processing progress", "fields": []interface{}{map[string]interface{}{"doc": "Any relevant messaging during processing", "name": "message", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "name": "total", "type": "long"}, map[string]interface{}{"doc": "The total amount processed thus far", "name": "completed", "type": "long"}}, "name": "integration.progress", "type": "record"}}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If the validation has been run against this instance", "name": "validated", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "Date when validated", "name": "validated_date", "type": map[string]interface{}{"doc": "Date when validated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "integration.validated_date", "type": "record"}}, map[string]interface{}{"default": nil, "doc": "The validation message from the agent", "name": "validation_message", "type": []interface{}{"null", "string"}}}, "name": "integration", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "location",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "location",
-					"symbols": []interface{}{"PRIVATE", "CLOUD"},
-				},
+				"type": map[string]interface{}{"doc": "the integration details to use", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "Authorization information", "name": "authorization", "type": map[string]interface{}{"doc": "Authorization information", "fields": []interface{}{map[string]interface{}{"default": nil, "doc": "Access token", "name": "access_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Refresh token", "name": "refresh_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "URL of instance if relevant", "name": "url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Username for instance, if relevant", "name": "username", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Password for instance, if relevant", "name": "password", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Token for instance, if relevant", "name": "api_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the agents encrypted authorization", "name": "authorization", "type": []interface{}{"null", "string"}}}, "name": "integration.authorization", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If authorization failed by the agent", "name": "errored", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "The exclusion list for this integration", "name": "exclusions", "type": map[string]interface{}{"items": "string", "name": "exclusions", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "The location of this integration (on-premise / private or cloud)", "name": "location", "type": map[string]interface{}{"doc": "The location of this integration (on-premise / private or cloud)", "name": "integration.location", "symbols": []string{"PRIVATE", "CLOUD"}, "type": "enum"}}, map[string]interface{}{"doc": "The user friendly name of the integration", "name": "name", "type": "string"}, map[string]interface{}{"doc": "Agent processing progress", "name": "progress", "type": map[string]interface{}{"doc": "Agent processing progress", "fields": []interface{}{map[string]interface{}{"doc": "Any relevant messaging during processing", "name": "message", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "name": "total", "type": "long"}, map[string]interface{}{"doc": "The total amount processed thus far", "name": "completed", "type": "long"}}, "name": "integration.progress", "type": "record"}}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "The system type of the integration (sourcecode / work (jira) / etc.)", "name": "system_type", "type": map[string]interface{}{"doc": "The system type of the integration (sourcecode / work (jira) / etc.)", "name": "integration.system_type", "symbols": []string{"WORK", "SOURCECODE"}, "type": "enum"}}, map[string]interface{}{"default": nil, "doc": "If the validation has been run against this instance", "name": "validated", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "Date when validated", "name": "validated_date", "type": map[string]interface{}{"doc": "Date when validated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "integration.validated_date", "type": "record"}}, map[string]interface{}{"default": nil, "doc": "The validation message from the agent", "name": "validation_message", "type": []interface{}{"null", "string"}}}, "name": "integration", "type": "record"},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1561,14 +1576,6 @@ func GetRepoRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "system_type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "system_type",
-					"symbols": []interface{}{"WORK", "SOURCECODE"},
-				},
 			},
 			map[string]interface{}{
 				"name": "updated_ts",

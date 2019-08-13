@@ -66,6 +66,8 @@ const (
 	ExportRequestIntegrationsColumnExclusionsColumn = "integrations->exclusions"
 	// ExportRequestIntegrationsColumnIDColumn is the id column property of the Integrations name
 	ExportRequestIntegrationsColumnIDColumn = "integrations->id"
+	// ExportRequestIntegrationsColumnLocationColumn is the location column property of the Integrations name
+	ExportRequestIntegrationsColumnLocationColumn = "integrations->location"
 	// ExportRequestIntegrationsColumnNameColumn is the name column property of the Integrations name
 	ExportRequestIntegrationsColumnNameColumn = "integrations->name"
 	// ExportRequestIntegrationsColumnProgressColumn is the progress column property of the Integrations name
@@ -74,6 +76,8 @@ const (
 	ExportRequestIntegrationsColumnRefIDColumn = "integrations->ref_id"
 	// ExportRequestIntegrationsColumnRefTypeColumn is the ref_type column property of the Integrations name
 	ExportRequestIntegrationsColumnRefTypeColumn = "integrations->ref_type"
+	// ExportRequestIntegrationsColumnSystemTypeColumn is the system_type column property of the Integrations name
+	ExportRequestIntegrationsColumnSystemTypeColumn = "integrations->system_type"
 	// ExportRequestIntegrationsColumnValidatedColumn is the validated column property of the Integrations name
 	ExportRequestIntegrationsColumnValidatedColumn = "integrations->validated"
 	// ExportRequestIntegrationsColumnValidatedDateColumn is the validated_date column property of the Integrations name
@@ -308,6 +312,27 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 	o.setDefaults(false)
 }
 
+// ExportRequestIntegrationsLocation is the enumeration type for location
+type ExportRequestIntegrationsLocation int32
+
+// String returns the string value for IntegrationsLocation
+func (v ExportRequestIntegrationsLocation) String() string {
+	switch int32(v) {
+	case 0:
+		return "PRIVATE"
+	case 1:
+		return "CLOUD"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationsLocationPrivate is the enumeration value for private
+	ExportRequestIntegrationsLocationPrivate ExportRequestIntegrationsLocation = 0
+	// IntegrationsLocationCloud is the enumeration value for cloud
+	ExportRequestIntegrationsLocationCloud ExportRequestIntegrationsLocation = 1
+)
+
 // ExportRequestIntegrationsProgress represents the object structure for progress
 type ExportRequestIntegrationsProgress struct {
 	// Message Any relevant messaging during processing
@@ -410,6 +435,27 @@ func (o *ExportRequestIntegrationsProgress) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
+
+// ExportRequestIntegrationsSystemType is the enumeration type for system_type
+type ExportRequestIntegrationsSystemType int32
+
+// String returns the string value for IntegrationsSystemType
+func (v ExportRequestIntegrationsSystemType) String() string {
+	switch int32(v) {
+	case 0:
+		return "WORK"
+	case 1:
+		return "SOURCECODE"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationsSystemTypeWork is the enumeration value for work
+	ExportRequestIntegrationsSystemTypeWork ExportRequestIntegrationsSystemType = 0
+	// IntegrationsSystemTypeSourcecode is the enumeration value for sourcecode
+	ExportRequestIntegrationsSystemTypeSourcecode ExportRequestIntegrationsSystemType = 1
+)
 
 // ExportRequestIntegrationsValidatedDate represents the object structure for validated_date
 type ExportRequestIntegrationsValidatedDate struct {
@@ -528,6 +574,8 @@ type ExportRequestIntegrations struct {
 	Exclusions []string `json:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Location The location of this integration (on-premise / private or cloud)
+	Location ExportRequestIntegrationsLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
 	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
@@ -536,6 +584,8 @@ type ExportRequestIntegrations struct {
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+	SystemType ExportRequestIntegrationsSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
 	// ValidatedDate Date when validated
@@ -562,8 +612,14 @@ func toExportRequestIntegrationsObject(o interface{}, isavro bool, isoptional bo
 	case ExportRequestIntegrationsAuthorization:
 		return v.ToMap(isavro)
 
+	case ExportRequestIntegrationsLocation:
+		return v.String()
+
 	case ExportRequestIntegrationsProgress:
 		return v.ToMap(isavro)
+
+	case ExportRequestIntegrationsSystemType:
+		return v.String()
 
 	case ExportRequestIntegrationsValidatedDate:
 		return v.ToMap(isavro)
@@ -592,6 +648,8 @@ func (o *ExportRequestIntegrations) ToMap(avro ...bool) map[string]interface{} {
 		"exclusions": toExportRequestIntegrationsObject(o.Exclusions, isavro, false, "exclusions"),
 		// ID the primary key for the model instance
 		"id": toExportRequestIntegrationsObject(o.ID, isavro, false, "string"),
+		// Location The location of this integration (on-premise / private or cloud)
+		"location": toExportRequestIntegrationsObject(o.Location, isavro, false, "location"),
 		// Name The user friendly name of the integration
 		"name": toExportRequestIntegrationsObject(o.Name, isavro, false, "string"),
 		// Progress Agent processing progress
@@ -600,6 +658,8 @@ func (o *ExportRequestIntegrations) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id": toExportRequestIntegrationsObject(o.RefID, isavro, false, "string"),
 		// RefType the source system identifier for the model instance
 		"ref_type": toExportRequestIntegrationsObject(o.RefType, isavro, false, "string"),
+		// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
+		"system_type": toExportRequestIntegrationsObject(o.SystemType, isavro, false, "system_type"),
 		// Validated If the validation has been run against this instance
 		"validated": toExportRequestIntegrationsObject(o.Validated, isavro, true, "boolean"),
 		// ValidatedDate Date when validated
@@ -754,6 +814,28 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["location"].(ExportRequestIntegrationsLocation); ok {
+		o.Location = val
+	} else {
+		if em, ok := kv["location"].(map[string]interface{}); ok {
+			ev := em["agent.location"].(string)
+			switch ev {
+			case "private", "PRIVATE":
+				o.Location = 0
+			case "cloud", "CLOUD":
+				o.Location = 1
+			}
+		}
+		if em, ok := kv["location"].(string); ok {
+			switch em {
+			case "private", "PRIVATE":
+				o.Location = 0
+			case "cloud", "CLOUD":
+				o.Location = 1
+			}
+		}
+	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -809,6 +891,28 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["system_type"].(ExportRequestIntegrationsSystemType); ok {
+		o.SystemType = val
+	} else {
+		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+			ev := em["agent.system_type"].(string)
+			switch ev {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			}
+		}
+		if em, ok := kv["system_type"].(string); ok {
+			switch em {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
 			}
 		}
 	}
@@ -883,27 +987,6 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
-
-// ExportRequestLocation is the enumeration type for location
-type ExportRequestLocation int32
-
-// String returns the string value for Location
-func (v ExportRequestLocation) String() string {
-	switch int32(v) {
-	case 0:
-		return "PRIVATE"
-	case 1:
-		return "CLOUD"
-	}
-	return "unset"
-}
-
-const (
-	// LocationPrivate is the enumeration value for private
-	ExportRequestLocationPrivate ExportRequestLocation = 0
-	// LocationCloud is the enumeration value for cloud
-	ExportRequestLocationCloud ExportRequestLocation = 1
-)
 
 // ExportRequestRequestDate represents the object structure for request_date
 type ExportRequestRequestDate struct {
@@ -1008,27 +1091,6 @@ func (o *ExportRequestRequestDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// ExportRequestSystemType is the enumeration type for system_type
-type ExportRequestSystemType int32
-
-// String returns the string value for SystemType
-func (v ExportRequestSystemType) String() string {
-	switch int32(v) {
-	case 0:
-		return "WORK"
-	case 1:
-		return "SOURCECODE"
-	}
-	return "unset"
-}
-
-const (
-	// SystemTypeWork is the enumeration value for work
-	ExportRequestSystemTypeWork ExportRequestSystemType = 0
-	// SystemTypeSourcecode is the enumeration value for sourcecode
-	ExportRequestSystemTypeSourcecode ExportRequestSystemType = 1
-)
-
 // ExportRequest an agent action to request an export
 type ExportRequest struct {
 	// CustomerID the customer id for the model instance
@@ -1039,8 +1101,6 @@ type ExportRequest struct {
 	Integrations []ExportRequestIntegrations `json:"integrations" bson:"integrations" yaml:"integrations" faker:"-"`
 	// JobID The job ID
 	JobID string `json:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
-	// Location The location of this integration (on-premise / private or cloud)
-	Location ExportRequestLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -1049,8 +1109,6 @@ type ExportRequest struct {
 	ReprocessHistorical bool `json:"reprocess_historical" bson:"reprocess_historical" yaml:"reprocess_historical" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate ExportRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
-	// SystemType The system type of the integration (sourcecode / work (jira) / etc.)
-	SystemType ExportRequestSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UploadURL The one time upload URL to use for uploading a job to the Pinpoint cloud
@@ -1086,14 +1144,8 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 		}
 		return arr
 
-	case ExportRequestLocation:
-		return v.String()
-
 	case ExportRequestRequestDate:
 		return v.ToMap(isavro)
-
-	case ExportRequestSystemType:
-		return v.String()
 
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
@@ -1343,12 +1395,10 @@ func (o *ExportRequest) ToMap(avro ...bool) map[string]interface{} {
 		"id":                   toExportRequestObject(o.ID, isavro, false, "string"),
 		"integrations":         toExportRequestObject(o.Integrations, isavro, false, "integrations"),
 		"job_id":               toExportRequestObject(o.JobID, isavro, false, "string"),
-		"location":             toExportRequestObject(o.Location, isavro, false, "location"),
 		"ref_id":               toExportRequestObject(o.RefID, isavro, false, "string"),
 		"ref_type":             toExportRequestObject(o.RefType, isavro, false, "string"),
 		"reprocess_historical": toExportRequestObject(o.ReprocessHistorical, isavro, false, "boolean"),
 		"request_date":         toExportRequestObject(o.RequestDate, isavro, false, "request_date"),
-		"system_type":          toExportRequestObject(o.SystemType, isavro, false, "system_type"),
 		"updated_ts":           toExportRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"upload_url":           toExportRequestObject(o.UploadURL, isavro, true, "string"),
 		"uuid":                 toExportRequestObject(o.UUID, isavro, false, "string"),
@@ -1466,28 +1516,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["location"].(ExportRequestLocation); ok {
-		o.Location = val
-	} else {
-		if em, ok := kv["location"].(map[string]interface{}); ok {
-			ev := em["agent.location"].(string)
-			switch ev {
-			case "private", "PRIVATE":
-				o.Location = 0
-			case "cloud", "CLOUD":
-				o.Location = 1
-			}
-		}
-		if em, ok := kv["location"].(string); ok {
-			switch em {
-			case "private", "PRIVATE":
-				o.Location = 0
-			case "cloud", "CLOUD":
-				o.Location = 1
-			}
-		}
-	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1542,28 +1570,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["system_type"].(ExportRequestSystemType); ok {
-		o.SystemType = val
-	} else {
-		if em, ok := kv["system_type"].(map[string]interface{}); ok {
-			ev := em["agent.system_type"].(string)
-			switch ev {
-			case "work", "WORK":
-				o.SystemType = 0
-			case "sourcecode", "SOURCECODE":
-				o.SystemType = 1
-			}
-		}
-		if em, ok := kv["system_type"].(string); ok {
-			switch em {
-			case "work", "WORK":
-				o.SystemType = 0
-			case "sourcecode", "SOURCECODE":
-				o.SystemType = 1
-			}
-		}
 	}
 
 	if val, ok := kv["updated_ts"].(int64); ok {
@@ -1623,12 +1629,10 @@ func (o *ExportRequest) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.Integrations)
 	args = append(args, o.JobID)
-	args = append(args, o.Location)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.ReprocessHistorical)
 	args = append(args, o.RequestDate)
-	args = append(args, o.SystemType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UploadURL)
 	args = append(args, o.UUID)
@@ -1657,19 +1661,11 @@ func GetExportRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "integrations",
-				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "The integrations that should be exported and their current configuration", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "Authorization information", "name": "authorization", "type": map[string]interface{}{"doc": "Authorization information", "fields": []interface{}{map[string]interface{}{"default": nil, "doc": "Access token", "name": "access_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Refresh token", "name": "refresh_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "URL of instance if relevant", "name": "url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Username for instance, if relevant", "name": "username", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Password for instance, if relevant", "name": "password", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Token for instance, if relevant", "name": "api_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the agents encrypted authorization", "name": "authorization", "type": []interface{}{"null", "string"}}}, "name": "integrations.authorization", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If authorization failed by the agent", "name": "errored", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "The exclusion list for this integration", "name": "exclusions", "type": map[string]interface{}{"items": "string", "name": "exclusions", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "The user friendly name of the integration", "name": "name", "type": "string"}, map[string]interface{}{"doc": "Agent processing progress", "name": "progress", "type": map[string]interface{}{"doc": "Agent processing progress", "fields": []interface{}{map[string]interface{}{"doc": "Any relevant messaging during processing", "name": "message", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "name": "total", "type": "long"}, map[string]interface{}{"doc": "The total amount processed thus far", "name": "completed", "type": "long"}}, "name": "integrations.progress", "type": "record"}}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If the validation has been run against this instance", "name": "validated", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "Date when validated", "name": "validated_date", "type": map[string]interface{}{"doc": "Date when validated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "integrations.validated_date", "type": "record"}}, map[string]interface{}{"default": nil, "doc": "The validation message from the agent", "name": "validation_message", "type": []interface{}{"null", "string"}}}, "name": "integrations", "type": "record"}, "name": "integrations", "type": "array"},
+				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "The integrations that should be exported and their current configuration", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "Authorization information", "name": "authorization", "type": map[string]interface{}{"doc": "Authorization information", "fields": []interface{}{map[string]interface{}{"default": nil, "doc": "Access token", "name": "access_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Refresh token", "name": "refresh_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "URL of instance if relevant", "name": "url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Username for instance, if relevant", "name": "username", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Password for instance, if relevant", "name": "password", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Token for instance, if relevant", "name": "api_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the agents encrypted authorization", "name": "authorization", "type": []interface{}{"null", "string"}}}, "name": "integrations.authorization", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If authorization failed by the agent", "name": "errored", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "The exclusion list for this integration", "name": "exclusions", "type": map[string]interface{}{"items": "string", "name": "exclusions", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "The location of this integration (on-premise / private or cloud)", "name": "location", "type": map[string]interface{}{"doc": "The location of this integration (on-premise / private or cloud)", "name": "integrations.location", "symbols": []string{"PRIVATE", "CLOUD"}, "type": "enum"}}, map[string]interface{}{"doc": "The user friendly name of the integration", "name": "name", "type": "string"}, map[string]interface{}{"doc": "Agent processing progress", "name": "progress", "type": map[string]interface{}{"doc": "Agent processing progress", "fields": []interface{}{map[string]interface{}{"doc": "Any relevant messaging during processing", "name": "message", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "name": "total", "type": "long"}, map[string]interface{}{"doc": "The total amount processed thus far", "name": "completed", "type": "long"}}, "name": "integrations.progress", "type": "record"}}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "The system type of the integration (sourcecode / work (jira) / etc.)", "name": "system_type", "type": map[string]interface{}{"doc": "The system type of the integration (sourcecode / work (jira) / etc.)", "name": "integrations.system_type", "symbols": []string{"WORK", "SOURCECODE"}, "type": "enum"}}, map[string]interface{}{"default": nil, "doc": "If the validation has been run against this instance", "name": "validated", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "Date when validated", "name": "validated_date", "type": map[string]interface{}{"doc": "Date when validated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "integrations.validated_date", "type": "record"}}, map[string]interface{}{"default": nil, "doc": "The validation message from the agent", "name": "validation_message", "type": []interface{}{"null", "string"}}}, "name": "integrations", "type": "record"}, "name": "integrations", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "job_id",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "location",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "location",
-					"symbols": []interface{}{"PRIVATE", "CLOUD"},
-				},
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1686,14 +1682,6 @@ func GetExportRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "request_date",
 				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "system_type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "system_type",
-					"symbols": []interface{}{"WORK", "SOURCECODE"},
-				},
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
