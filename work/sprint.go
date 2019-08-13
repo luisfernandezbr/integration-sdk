@@ -151,6 +151,11 @@ func (o *SprintCompletedDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *SprintCompletedDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -253,6 +258,11 @@ func (o *SprintEndedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *SprintEndedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -357,6 +367,11 @@ func (o *SprintFetchedDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *SprintFetchedDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -459,6 +474,11 @@ func (o *SprintStartedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *SprintStartedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val

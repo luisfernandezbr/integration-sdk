@@ -174,6 +174,11 @@ func (o *IssueCreatedDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *IssueCreatedDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -276,6 +281,11 @@ func (o *IssueCustomFields) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *IssueCustomFields) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
@@ -380,6 +390,11 @@ func (o *IssueDueDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -482,6 +497,11 @@ func (o *IssueUpdatedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val

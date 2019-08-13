@@ -127,6 +127,11 @@ func (o *MetricCreatedDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {

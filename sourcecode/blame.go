@@ -166,6 +166,11 @@ func (o *BlameChangeDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *BlameChangeDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -280,6 +285,11 @@ func (o *BlameLines) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *BlameLines) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["author_ref_id"].(string); ok {
 		o.AuthorRefID = val

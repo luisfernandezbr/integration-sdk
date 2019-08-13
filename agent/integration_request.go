@@ -178,6 +178,11 @@ func (o *IntegrationRequestIntegrationAuthorization) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *IntegrationRequestIntegrationAuthorization) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["access_token"].(*string); ok {
 		o.AccessToken = val
 	} else if val, ok := kv["access_token"].(string); ok {
@@ -383,6 +388,11 @@ func (o *IntegrationRequestIntegrationProgress) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *IntegrationRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -506,6 +516,11 @@ func (o *IntegrationRequestIntegrationValidatedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *IntegrationRequestIntegrationValidatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -682,6 +697,11 @@ func (o *IntegrationRequestIntegration) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
@@ -1037,6 +1057,11 @@ func (o *IntegrationRequestRequestDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *IntegrationRequestRequestDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -1471,6 +1496,25 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

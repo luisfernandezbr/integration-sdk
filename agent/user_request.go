@@ -178,6 +178,11 @@ func (o *UserRequestIntegrationAuthorization) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *UserRequestIntegrationAuthorization) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["access_token"].(*string); ok {
 		o.AccessToken = val
 	} else if val, ok := kv["access_token"].(string); ok {
@@ -383,6 +388,11 @@ func (o *UserRequestIntegrationProgress) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *UserRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -506,6 +516,11 @@ func (o *UserRequestIntegrationValidatedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *UserRequestIntegrationValidatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -682,6 +697,11 @@ func (o *UserRequestIntegration) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
@@ -1037,6 +1057,11 @@ func (o *UserRequestRequestDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *UserRequestRequestDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val

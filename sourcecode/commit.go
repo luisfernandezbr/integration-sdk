@@ -208,6 +208,11 @@ func (o *CommitCreatedDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *CommitCreatedDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -310,6 +315,11 @@ func (o *CommitFilesCreatedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *CommitFilesCreatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -496,6 +506,11 @@ func (o *CommitFiles) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *CommitFiles) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["additions"].(int64); ok {
 		o.Additions = val

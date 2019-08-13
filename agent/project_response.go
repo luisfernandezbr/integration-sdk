@@ -188,6 +188,11 @@ func (o *ProjectResponseEventDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *ProjectResponseEventDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -290,6 +295,11 @@ func (o *ProjectResponseLastExportDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectResponseLastExportDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -394,6 +404,11 @@ func (o *ProjectResponseProjectsLastIssueCreatedDate) setDefaults(frommap bool) 
 // FromMap attempts to load data into object from a map
 func (o *ProjectResponseProjectsLastIssueCreatedDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -496,6 +511,11 @@ func (o *ProjectResponseProjectsLastIssueLastUser) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectResponseProjectsLastIssueLastUser) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["user_id"].(string); ok {
 		o.UserID = val
@@ -608,6 +628,11 @@ func (o *ProjectResponseProjectsLastIssue) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectResponseProjectsLastIssue) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["issue_id"].(string); ok {
 		o.IssueID = val
@@ -756,6 +781,11 @@ func (o *ProjectResponseProjects) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
@@ -1445,25 +1475,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1553,25 +1564,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

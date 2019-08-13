@@ -184,6 +184,11 @@ func (o *RepoResponseEventDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseEventDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -286,6 +291,11 @@ func (o *RepoResponseLastExportDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseLastExportDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
@@ -390,6 +400,11 @@ func (o *RepoResponseReposCreatedDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseReposCreatedDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -493,6 +508,11 @@ func (o *RepoResponseReposLastCommitCreatedDate) setDefaults(frommap bool) {
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseReposLastCommitCreatedDate) FromMap(kv map[string]interface{}) {
 
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
 	if val, ok := kv["epoch"].(int64); ok {
 		o.Epoch = val
 	} else {
@@ -595,6 +615,11 @@ func (o *RepoResponseReposLastCommitAuthor) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseReposLastCommitAuthor) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
@@ -711,6 +736,11 @@ func (o *RepoResponseReposLastCommit) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseReposLastCommit) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["commit_id"].(string); ok {
 		o.CommitID = val
@@ -869,6 +899,11 @@ func (o *RepoResponseRepos) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *RepoResponseRepos) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
 
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
