@@ -16,6 +16,18 @@ import (
 // New returns a new instanceof from a ModelNameType
 func New(name datamodel.ModelNameType) datamodel.Model {
 	switch name {
+	case "agent.CodequalityRequest":
+		o := new(dm_agent.CodequalityRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.CodequalityResponse":
+		o := new(dm_agent.CodequalityResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.CodequalityTrigger":
+		o := new(dm_agent.CodequalityTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Crash":
 		o := new(dm_agent.Crash)
 		o.FromMap(map[string]interface{}{})
@@ -82,6 +94,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "agent.RepoResponse":
 		o := new(dm_agent.RepoResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.RepoTrigger":
+		o := new(dm_agent.RepoTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent.Start":
@@ -203,6 +219,18 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
+	case "agent_CodequalityRequest_topic":
+		o := new(dm_agent.CodequalityRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_CodequalityResponse_topic":
+		o := new(dm_agent.CodequalityResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_CodequalityTrigger_topic":
+		o := new(dm_agent.CodequalityTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_Crash_topic":
 		o := new(dm_agent.Crash)
 		o.FromMap(map[string]interface{}{})
@@ -269,6 +297,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		return o
 	case "agent_RepoResponse_topic":
 		o := new(dm_agent.RepoResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_RepoTrigger_topic":
+		o := new(dm_agent.RepoTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent_Start_topic":
@@ -409,6 +441,9 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
+		datamodel.TopicNameType("agent_CodequalityRequest_topic"),
+		datamodel.TopicNameType("agent_CodequalityResponse_topic"),
+		datamodel.TopicNameType("agent_CodequalityTrigger_topic"),
 		datamodel.TopicNameType("agent_Crash_topic"),
 		datamodel.TopicNameType("agent_Enabled_topic"),
 		datamodel.TopicNameType("agent_EnrollRequest_topic"),
@@ -426,6 +461,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_ProjectTrigger_topic"),
 		datamodel.TopicNameType("agent_RepoRequest_topic"),
 		datamodel.TopicNameType("agent_RepoResponse_topic"),
+		datamodel.TopicNameType("agent_RepoTrigger_topic"),
 		datamodel.TopicNameType("agent_Start_topic"),
 		datamodel.TopicNameType("agent_Stop_topic"),
 		datamodel.TopicNameType("agent_Uninstall_topic"),
@@ -460,6 +496,9 @@ func GetTopics() []datamodel.TopicNameType {
 // GetModelNames returns an array of model names that are configured
 func GetModelNames() []datamodel.ModelNameType {
 	return []datamodel.ModelNameType{
+		datamodel.ModelNameType("agent.CodequalityRequest"),
+		datamodel.ModelNameType("agent.CodequalityResponse"),
+		datamodel.ModelNameType("agent.CodequalityTrigger"),
 		datamodel.ModelNameType("agent.Crash"),
 		datamodel.ModelNameType("agent.Enabled"),
 		datamodel.ModelNameType("agent.EnrollRequest"),
@@ -477,6 +516,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.ProjectTrigger"),
 		datamodel.ModelNameType("agent.RepoRequest"),
 		datamodel.ModelNameType("agent.RepoResponse"),
+		datamodel.ModelNameType("agent.RepoTrigger"),
 		datamodel.ModelNameType("agent.Start"),
 		datamodel.ModelNameType("agent.Stop"),
 		datamodel.ModelNameType("agent.Uninstall"),

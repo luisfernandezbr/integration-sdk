@@ -31,36 +31,36 @@ import (
 )
 
 const (
-	// ProjectTriggerTopic is the default topic name
-	ProjectTriggerTopic datamodel.TopicNameType = "agent_ProjectTrigger_topic"
+	// CodequalityTriggerTopic is the default topic name
+	CodequalityTriggerTopic datamodel.TopicNameType = "agent_CodequalityTrigger_topic"
 
-	// ProjectTriggerStream is the default stream name
-	ProjectTriggerStream datamodel.TopicNameType = "agent_ProjectTrigger_stream"
+	// CodequalityTriggerStream is the default stream name
+	CodequalityTriggerStream datamodel.TopicNameType = "agent_CodequalityTrigger_stream"
 
-	// ProjectTriggerTable is the default table name
-	ProjectTriggerTable datamodel.TopicNameType = "agent_ProjectTrigger"
+	// CodequalityTriggerTable is the default table name
+	CodequalityTriggerTable datamodel.TopicNameType = "agent_CodequalityTrigger"
 
-	// ProjectTriggerModelName is the model name
-	ProjectTriggerModelName datamodel.ModelNameType = "agent.ProjectTrigger"
+	// CodequalityTriggerModelName is the model name
+	CodequalityTriggerModelName datamodel.ModelNameType = "agent.CodequalityTrigger"
 )
 
 const (
-	// ProjectTriggerCustomerIDColumn is the customer_id column name
-	ProjectTriggerCustomerIDColumn = "customer_id"
-	// ProjectTriggerIDColumn is the id column name
-	ProjectTriggerIDColumn = "id"
-	// ProjectTriggerIntegrationIDColumn is the integration_id column name
-	ProjectTriggerIntegrationIDColumn = "integration_id"
-	// ProjectTriggerRefIDColumn is the ref_id column name
-	ProjectTriggerRefIDColumn = "ref_id"
-	// ProjectTriggerRefTypeColumn is the ref_type column name
-	ProjectTriggerRefTypeColumn = "ref_type"
-	// ProjectTriggerUpdatedAtColumn is the updated_ts column name
-	ProjectTriggerUpdatedAtColumn = "updated_ts"
+	// CodequalityTriggerCustomerIDColumn is the customer_id column name
+	CodequalityTriggerCustomerIDColumn = "customer_id"
+	// CodequalityTriggerIDColumn is the id column name
+	CodequalityTriggerIDColumn = "id"
+	// CodequalityTriggerIntegrationIDColumn is the integration_id column name
+	CodequalityTriggerIntegrationIDColumn = "integration_id"
+	// CodequalityTriggerRefIDColumn is the ref_id column name
+	CodequalityTriggerRefIDColumn = "ref_id"
+	// CodequalityTriggerRefTypeColumn is the ref_type column name
+	CodequalityTriggerRefTypeColumn = "ref_type"
+	// CodequalityTriggerUpdatedAtColumn is the updated_ts column name
+	CodequalityTriggerUpdatedAtColumn = "updated_ts"
 )
 
-// ProjectTrigger used to trigger an agent.ProjectRequest
-type ProjectTrigger struct {
+// CodequalityTrigger used to trigger an agent.CodequalityRequest
+type CodequalityTrigger struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
@@ -78,21 +78,21 @@ type ProjectTrigger struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*ProjectTrigger)(nil)
+var _ datamodel.Model = (*CodequalityTrigger)(nil)
 
-func toProjectTriggerObjectNil(isavro bool, isoptional bool) interface{} {
+func toCodequalityTriggerObjectNil(isavro bool, isoptional bool) interface{} {
 	if isavro && isoptional {
 		return goavro.Union("null", nil)
 	}
 	return nil
 }
 
-func toProjectTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
+func toCodequalityTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
 	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
 		return res
 	}
 	switch v := o.(type) {
-	case *ProjectTrigger:
+	case *CodequalityTrigger:
 		return v.ToMap(isavro)
 
 	default:
@@ -100,26 +100,26 @@ func toProjectTriggerObject(o interface{}, isavro bool, isoptional bool, avrotyp
 	}
 }
 
-// String returns a string representation of ProjectTrigger
-func (o *ProjectTrigger) String() string {
-	return fmt.Sprintf("agent.ProjectTrigger<%s>", o.ID)
+// String returns a string representation of CodequalityTrigger
+func (o *CodequalityTrigger) String() string {
+	return fmt.Sprintf("agent.CodequalityTrigger<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *ProjectTrigger) GetTopicName() datamodel.TopicNameType {
-	return ProjectTriggerTopic
+func (o *CodequalityTrigger) GetTopicName() datamodel.TopicNameType {
+	return CodequalityTriggerTopic
 }
 
 // GetModelName returns the name of the model
-func (o *ProjectTrigger) GetModelName() datamodel.ModelNameType {
-	return ProjectTriggerModelName
+func (o *CodequalityTrigger) GetModelName() datamodel.ModelNameType {
+	return CodequalityTriggerModelName
 }
 
-func (o *ProjectTrigger) setDefaults(frommap bool) {
+func (o *CodequalityTrigger) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("ProjectTrigger", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("CodequalityTrigger", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -130,12 +130,12 @@ func (o *ProjectTrigger) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *ProjectTrigger) GetID() string {
+func (o *CodequalityTrigger) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *ProjectTrigger) GetTopicKey() string {
+func (o *CodequalityTrigger) GetTopicKey() string {
 	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
@@ -144,7 +144,7 @@ func (o *ProjectTrigger) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *ProjectTrigger) GetTimestamp() time.Time {
+func (o *CodequalityTrigger) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -158,37 +158,37 @@ func (o *ProjectTrigger) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for ProjectTrigger")
+	panic("not sure how to handle the date time format for CodequalityTrigger")
 }
 
 // GetRefID returns the RefID for the object
-func (o *ProjectTrigger) GetRefID() string {
+func (o *CodequalityTrigger) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *ProjectTrigger) IsMaterialized() bool {
+func (o *CodequalityTrigger) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *ProjectTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *CodequalityTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *ProjectTrigger) IsEvented() bool {
+func (o *CodequalityTrigger) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *ProjectTrigger) SetEventHeaders(kv map[string]string) {
+func (o *CodequalityTrigger) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = ProjectTriggerModelName.String()
+	kv["model"] = CodequalityTriggerModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *ProjectTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *CodequalityTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("168h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
@@ -213,28 +213,28 @@ func (o *ProjectTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetStateKey returns a key for use in state store
-func (o *ProjectTrigger) GetStateKey() string {
+func (o *CodequalityTrigger) GetStateKey() string {
 	key := "id"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
 // GetCustomerID will return the customer_id
-func (o *ProjectTrigger) GetCustomerID() string {
+func (o *CodequalityTrigger) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of ProjectTrigger
-func (o *ProjectTrigger) Clone() datamodel.Model {
-	c := new(ProjectTrigger)
+// Clone returns an exact copy of CodequalityTrigger
+func (o *CodequalityTrigger) Clone() datamodel.Model {
+	c := new(CodequalityTrigger)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *ProjectTrigger) Anon() datamodel.Model {
-	c := new(ProjectTrigger)
+func (o *CodequalityTrigger) Anon() datamodel.Model {
+	c := new(CodequalityTrigger)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -249,12 +249,12 @@ func (o *ProjectTrigger) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *ProjectTrigger) MarshalJSON() ([]byte, error) {
+func (o *CodequalityTrigger) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *ProjectTrigger) UnmarshalJSON(data []byte) error {
+func (o *CodequalityTrigger) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -266,22 +266,22 @@ func (o *ProjectTrigger) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecProjectTrigger *goavro.Codec
+var cachedCodecCodequalityTrigger *goavro.Codec
 
 // GetAvroCodec returns the avro codec for this model
-func (o *ProjectTrigger) GetAvroCodec() *goavro.Codec {
-	if cachedCodecProjectTrigger == nil {
-		c, err := GetProjectTriggerAvroSchema()
+func (o *CodequalityTrigger) GetAvroCodec() *goavro.Codec {
+	if cachedCodecCodequalityTrigger == nil {
+		c, err := GetCodequalityTriggerAvroSchema()
 		if err != nil {
 			panic(err)
 		}
-		cachedCodecProjectTrigger = c
+		cachedCodecCodequalityTrigger = c
 	}
-	return cachedCodecProjectTrigger
+	return cachedCodecCodequalityTrigger
 }
 
 // ToAvroBinary returns the data as Avro binary data
-func (o *ProjectTrigger) ToAvroBinary() ([]byte, *goavro.Codec, error) {
+func (o *CodequalityTrigger) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 	kv := o.ToMap(true)
 	jbuf, _ := json.Marshal(kv)
 	codec := o.GetAvroCodec()
@@ -295,7 +295,7 @@ func (o *ProjectTrigger) ToAvroBinary() ([]byte, *goavro.Codec, error) {
 }
 
 // FromAvroBinary will convert from Avro binary data into data in this object
-func (o *ProjectTrigger) FromAvroBinary(value []byte) error {
+func (o *CodequalityTrigger) FromAvroBinary(value []byte) error {
 	var nullHeader = []byte{byte(0)}
 	// if this still has the schema encoded in the header, move past it to the avro payload
 	if bytes.HasPrefix(value, nullHeader) {
@@ -310,18 +310,18 @@ func (o *ProjectTrigger) FromAvroBinary(value []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *ProjectTrigger) Stringify() string {
+func (o *CodequalityTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two ProjectTrigger objects are equal
-func (o *ProjectTrigger) IsEqual(other *ProjectTrigger) bool {
+// IsEqual returns true if the two CodequalityTrigger objects are equal
+func (o *CodequalityTrigger) IsEqual(other *CodequalityTrigger) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *ProjectTrigger) ToMap(avro ...bool) map[string]interface{} {
+func (o *CodequalityTrigger) ToMap(avro ...bool) map[string]interface{} {
 	var isavro bool
 	if len(avro) > 0 && avro[0] {
 		isavro = true
@@ -330,18 +330,18 @@ func (o *ProjectTrigger) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":    toProjectTriggerObject(o.CustomerID, isavro, false, "string"),
-		"id":             toProjectTriggerObject(o.ID, isavro, false, "string"),
-		"integration_id": toProjectTriggerObject(o.IntegrationID, isavro, false, "string"),
-		"ref_id":         toProjectTriggerObject(o.RefID, isavro, false, "string"),
-		"ref_type":       toProjectTriggerObject(o.RefType, isavro, false, "string"),
-		"updated_ts":     toProjectTriggerObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":       toProjectTriggerObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":    toCodequalityTriggerObject(o.CustomerID, isavro, false, "string"),
+		"id":             toCodequalityTriggerObject(o.ID, isavro, false, "string"),
+		"integration_id": toCodequalityTriggerObject(o.IntegrationID, isavro, false, "string"),
+		"ref_id":         toCodequalityTriggerObject(o.RefID, isavro, false, "string"),
+		"ref_type":       toCodequalityTriggerObject(o.RefType, isavro, false, "string"),
+		"updated_ts":     toCodequalityTriggerObject(o.UpdatedAt, isavro, false, "long"),
+		"hashcode":       toCodequalityTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *ProjectTrigger) FromMap(kv map[string]interface{}) {
+func (o *CodequalityTrigger) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -443,7 +443,7 @@ func (o *ProjectTrigger) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *ProjectTrigger) Hash() string {
+func (o *CodequalityTrigger) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
@@ -455,12 +455,12 @@ func (o *ProjectTrigger) Hash() string {
 	return o.Hashcode
 }
 
-// GetProjectTriggerAvroSchemaSpec creates the avro schema specification for ProjectTrigger
-func GetProjectTriggerAvroSchemaSpec() string {
+// GetCodequalityTriggerAvroSchemaSpec creates the avro schema specification for CodequalityTrigger
+func GetCodequalityTriggerAvroSchemaSpec() string {
 	spec := map[string]interface{}{
 		"type":      "record",
 		"namespace": "agent",
-		"name":      "ProjectTrigger",
+		"name":      "CodequalityTrigger",
 		"fields": []map[string]interface{}{
 			map[string]interface{}{
 				"name": "hashcode",
@@ -496,7 +496,7 @@ func GetProjectTriggerAvroSchemaSpec() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *ProjectTrigger) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *CodequalityTrigger) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
@@ -508,25 +508,25 @@ func (o *ProjectTrigger) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// GetProjectTriggerAvroSchema creates the avro schema for ProjectTrigger
-func GetProjectTriggerAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetProjectTriggerAvroSchemaSpec())
+// GetCodequalityTriggerAvroSchema creates the avro schema for CodequalityTrigger
+func GetCodequalityTriggerAvroSchema() (*goavro.Codec, error) {
+	return goavro.NewCodec(GetCodequalityTriggerAvroSchemaSpec())
 }
 
-// TransformProjectTriggerFunc is a function for transforming ProjectTrigger during processing
-type TransformProjectTriggerFunc func(input *ProjectTrigger) (*ProjectTrigger, error)
+// TransformCodequalityTriggerFunc is a function for transforming CodequalityTrigger during processing
+type TransformCodequalityTriggerFunc func(input *CodequalityTrigger) (*CodequalityTrigger, error)
 
-// NewProjectTriggerPipe creates a pipe for processing ProjectTrigger items
-func NewProjectTriggerPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformProjectTriggerFunc) <-chan bool {
+// NewCodequalityTriggerPipe creates a pipe for processing CodequalityTrigger items
+func NewCodequalityTriggerPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCodequalityTriggerFunc) <-chan bool {
 	done := make(chan bool, 1)
-	inch, indone := NewProjectTriggerInputStream(input, errors)
-	var stream chan ProjectTrigger
+	inch, indone := NewCodequalityTriggerInputStream(input, errors)
+	var stream chan CodequalityTrigger
 	if len(transforms) > 0 {
-		stream = make(chan ProjectTrigger, 1000)
+		stream = make(chan CodequalityTrigger, 1000)
 	} else {
 		stream = inch
 	}
-	outdone := NewProjectTriggerOutputStream(output, stream, errors)
+	outdone := NewCodequalityTriggerOutputStream(output, stream, errors)
 	go func() {
 		if len(transforms) > 0 {
 			var stop bool
@@ -562,12 +562,12 @@ func NewProjectTriggerPipe(input io.ReadCloser, output io.WriteCloser, errors ch
 	return done
 }
 
-// NewProjectTriggerInputStreamDir creates a channel for reading ProjectTrigger as JSON newlines from a directory of files
-func NewProjectTriggerInputStreamDir(dir string, errors chan<- error, transforms ...TransformProjectTriggerFunc) (chan ProjectTrigger, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/project_trigger\\.json(\\.gz)?$"))
+// NewCodequalityTriggerInputStreamDir creates a channel for reading CodequalityTrigger as JSON newlines from a directory of files
+func NewCodequalityTriggerInputStreamDir(dir string, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) (chan CodequalityTrigger, <-chan bool) {
+	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/codequality_trigger\\.json(\\.gz)?$"))
 	if err != nil {
 		errors <- err
-		ch := make(chan ProjectTrigger)
+		ch := make(chan CodequalityTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -575,16 +575,16 @@ func NewProjectTriggerInputStreamDir(dir string, errors chan<- error, transforms
 	}
 	l := len(files)
 	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for project_trigger")
-		ch := make(chan ProjectTrigger)
+		errors <- fmt.Errorf("too many files matched our finder regular expression for codequality_trigger")
+		ch := make(chan CodequalityTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
 		return ch, done
 	} else if l == 1 {
-		return NewProjectTriggerInputStreamFile(files[0], errors, transforms...)
+		return NewCodequalityTriggerInputStreamFile(files[0], errors, transforms...)
 	} else {
-		ch := make(chan ProjectTrigger)
+		ch := make(chan CodequalityTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -592,12 +592,12 @@ func NewProjectTriggerInputStreamDir(dir string, errors chan<- error, transforms
 	}
 }
 
-// NewProjectTriggerInputStreamFile creates an channel for reading ProjectTrigger as JSON newlines from filename
-func NewProjectTriggerInputStreamFile(filename string, errors chan<- error, transforms ...TransformProjectTriggerFunc) (chan ProjectTrigger, <-chan bool) {
+// NewCodequalityTriggerInputStreamFile creates an channel for reading CodequalityTrigger as JSON newlines from filename
+func NewCodequalityTriggerInputStreamFile(filename string, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) (chan CodequalityTrigger, <-chan bool) {
 	of, err := os.Open(filename)
 	if err != nil {
 		errors <- err
-		ch := make(chan ProjectTrigger)
+		ch := make(chan CodequalityTrigger)
 		close(ch)
 		done := make(chan bool, 1)
 		done <- true
@@ -609,7 +609,7 @@ func NewProjectTriggerInputStreamFile(filename string, errors chan<- error, tran
 		if err != nil {
 			of.Close()
 			errors <- err
-			ch := make(chan ProjectTrigger)
+			ch := make(chan CodequalityTrigger)
 			close(ch)
 			done := make(chan bool, 1)
 			done <- true
@@ -617,13 +617,13 @@ func NewProjectTriggerInputStreamFile(filename string, errors chan<- error, tran
 		}
 		f = gz
 	}
-	return NewProjectTriggerInputStream(f, errors, transforms...)
+	return NewCodequalityTriggerInputStream(f, errors, transforms...)
 }
 
-// NewProjectTriggerInputStream creates an channel for reading ProjectTrigger as JSON newlines from stream
-func NewProjectTriggerInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformProjectTriggerFunc) (chan ProjectTrigger, <-chan bool) {
+// NewCodequalityTriggerInputStream creates an channel for reading CodequalityTrigger as JSON newlines from stream
+func NewCodequalityTriggerInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) (chan CodequalityTrigger, <-chan bool) {
 	done := make(chan bool, 1)
-	ch := make(chan ProjectTrigger, 1000)
+	ch := make(chan CodequalityTrigger, 1000)
 	go func() {
 		defer func() { stream.Close(); close(ch); done <- true }()
 		r := bufio.NewReader(stream)
@@ -636,7 +636,7 @@ func NewProjectTriggerInputStream(stream io.ReadCloser, errors chan<- error, tra
 				errors <- err
 				return
 			}
-			var item ProjectTrigger
+			var item CodequalityTrigger
 			if err := json.Unmarshal(buf, &item); err != nil {
 				errors <- err
 				return
@@ -662,9 +662,9 @@ func NewProjectTriggerInputStream(stream io.ReadCloser, errors chan<- error, tra
 	return ch, done
 }
 
-// NewProjectTriggerOutputStreamDir will output json newlines from channel and save in dir
-func NewProjectTriggerOutputStreamDir(dir string, ch chan ProjectTrigger, errors chan<- error, transforms ...TransformProjectTriggerFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/project_trigger\\.json(\\.gz)?$")
+// NewCodequalityTriggerOutputStreamDir will output json newlines from channel and save in dir
+func NewCodequalityTriggerOutputStreamDir(dir string, ch chan CodequalityTrigger, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) <-chan bool {
+	fp := filepath.Join(dir, "/agent/codequality_trigger\\.json(\\.gz)?$")
 	os.MkdirAll(filepath.Dir(fp), 0777)
 	of, err := os.Create(fp)
 	if err != nil {
@@ -680,11 +680,11 @@ func NewProjectTriggerOutputStreamDir(dir string, ch chan ProjectTrigger, errors
 		done <- true
 		return done
 	}
-	return NewProjectTriggerOutputStream(gz, ch, errors, transforms...)
+	return NewCodequalityTriggerOutputStream(gz, ch, errors, transforms...)
 }
 
-// NewProjectTriggerOutputStream will output json newlines from channel to the stream
-func NewProjectTriggerOutputStream(stream io.WriteCloser, ch chan ProjectTrigger, errors chan<- error, transforms ...TransformProjectTriggerFunc) <-chan bool {
+// NewCodequalityTriggerOutputStream will output json newlines from channel to the stream
+func NewCodequalityTriggerOutputStream(stream io.WriteCloser, ch chan CodequalityTrigger, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() {
@@ -724,59 +724,59 @@ func NewProjectTriggerOutputStream(stream io.WriteCloser, ch chan ProjectTrigger
 	return done
 }
 
-// ProjectTriggerSendEvent is an event detail for sending data
-type ProjectTriggerSendEvent struct {
-	ProjectTrigger *ProjectTrigger
-	headers        map[string]string
-	time           time.Time
-	key            string
+// CodequalityTriggerSendEvent is an event detail for sending data
+type CodequalityTriggerSendEvent struct {
+	CodequalityTrigger *CodequalityTrigger
+	headers            map[string]string
+	time               time.Time
+	key                string
 }
 
-var _ datamodel.ModelSendEvent = (*ProjectTriggerSendEvent)(nil)
+var _ datamodel.ModelSendEvent = (*CodequalityTriggerSendEvent)(nil)
 
 // Key is the key to use for the message
-func (e *ProjectTriggerSendEvent) Key() string {
+func (e *CodequalityTriggerSendEvent) Key() string {
 	if e.key == "" {
-		return e.ProjectTrigger.GetID()
+		return e.CodequalityTrigger.GetID()
 	}
 	return e.key
 }
 
 // Object returns an instance of the Model that will be send
-func (e *ProjectTriggerSendEvent) Object() datamodel.Model {
-	return e.ProjectTrigger
+func (e *CodequalityTriggerSendEvent) Object() datamodel.Model {
+	return e.CodequalityTrigger
 }
 
 // Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *ProjectTriggerSendEvent) Headers() map[string]string {
+func (e *CodequalityTriggerSendEvent) Headers() map[string]string {
 	return e.headers
 }
 
 // Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *ProjectTriggerSendEvent) Timestamp() time.Time {
+func (e *CodequalityTriggerSendEvent) Timestamp() time.Time {
 	return e.time
 }
 
-// ProjectTriggerSendEventOpts is a function handler for setting opts
-type ProjectTriggerSendEventOpts func(o *ProjectTriggerSendEvent)
+// CodequalityTriggerSendEventOpts is a function handler for setting opts
+type CodequalityTriggerSendEventOpts func(o *CodequalityTriggerSendEvent)
 
-// WithProjectTriggerSendEventKey sets the key value to a value different than the object ID
-func WithProjectTriggerSendEventKey(key string) ProjectTriggerSendEventOpts {
-	return func(o *ProjectTriggerSendEvent) {
+// WithCodequalityTriggerSendEventKey sets the key value to a value different than the object ID
+func WithCodequalityTriggerSendEventKey(key string) CodequalityTriggerSendEventOpts {
+	return func(o *CodequalityTriggerSendEvent) {
 		o.key = key
 	}
 }
 
-// WithProjectTriggerSendEventTimestamp sets the timestamp value
-func WithProjectTriggerSendEventTimestamp(tv time.Time) ProjectTriggerSendEventOpts {
-	return func(o *ProjectTriggerSendEvent) {
+// WithCodequalityTriggerSendEventTimestamp sets the timestamp value
+func WithCodequalityTriggerSendEventTimestamp(tv time.Time) CodequalityTriggerSendEventOpts {
+	return func(o *CodequalityTriggerSendEvent) {
 		o.time = tv
 	}
 }
 
-// WithProjectTriggerSendEventHeader sets the timestamp value
-func WithProjectTriggerSendEventHeader(key, value string) ProjectTriggerSendEventOpts {
-	return func(o *ProjectTriggerSendEvent) {
+// WithCodequalityTriggerSendEventHeader sets the timestamp value
+func WithCodequalityTriggerSendEventHeader(key, value string) CodequalityTriggerSendEventOpts {
+	return func(o *CodequalityTriggerSendEvent) {
 		if o.headers == nil {
 			o.headers = make(map[string]string)
 		}
@@ -784,10 +784,10 @@ func WithProjectTriggerSendEventHeader(key, value string) ProjectTriggerSendEven
 	}
 }
 
-// NewProjectTriggerSendEvent returns a new ProjectTriggerSendEvent instance
-func NewProjectTriggerSendEvent(o *ProjectTrigger, opts ...ProjectTriggerSendEventOpts) *ProjectTriggerSendEvent {
-	res := &ProjectTriggerSendEvent{
-		ProjectTrigger: o,
+// NewCodequalityTriggerSendEvent returns a new CodequalityTriggerSendEvent instance
+func NewCodequalityTriggerSendEvent(o *CodequalityTrigger, opts ...CodequalityTriggerSendEventOpts) *CodequalityTriggerSendEvent {
+	res := &CodequalityTriggerSendEvent{
+		CodequalityTrigger: o,
 	}
 	if len(opts) > 0 {
 		for _, opt := range opts {
@@ -797,8 +797,8 @@ func NewProjectTriggerSendEvent(o *ProjectTrigger, opts ...ProjectTriggerSendEve
 	return res
 }
 
-// NewProjectTriggerProducer will stream data from the channel
-func NewProjectTriggerProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+// NewCodequalityTriggerProducer will stream data from the channel
+func NewCodequalityTriggerProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	go func() {
 		defer func() { done <- true }()
@@ -811,7 +811,7 @@ func NewProjectTriggerProducer(ctx context.Context, producer eventing.Producer, 
 					empty <- true
 					return
 				}
-				if object, ok := item.Object().(*ProjectTrigger); ok {
+				if object, ok := item.Object().(*CodequalityTrigger); ok {
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -845,7 +845,7 @@ func NewProjectTriggerProducer(ctx context.Context, producer eventing.Producer, 
 						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
 					}
 				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.ProjectTrigger but received on of type %v", reflect.TypeOf(item.Object()))
+					errors <- fmt.Errorf("invalid event received. expected an object of type agent.CodequalityTrigger but received on of type %v", reflect.TypeOf(item.Object()))
 				}
 			}
 		}
@@ -853,22 +853,22 @@ func NewProjectTriggerProducer(ctx context.Context, producer eventing.Producer, 
 	return done
 }
 
-// NewProjectTriggerConsumer will stream data from the topic into the provided channel
-func NewProjectTriggerConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+// NewCodequalityTriggerConsumer will stream data from the topic into the provided channel
+func NewCodequalityTriggerConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
 	adapter := &eventing.ConsumerCallbackAdapter{
 		OnDataReceived: func(msg eventing.Message) error {
-			var object ProjectTrigger
+			var object CodequalityTrigger
 			switch msg.Encoding {
 			case eventing.JSONEncoding:
 				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.ProjectTrigger: %s", err)
+					return fmt.Errorf("error unmarshaling json data into agent.CodequalityTrigger: %s", err)
 				}
 			case eventing.AvroEncoding:
 				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.ProjectTrigger: %s", err)
+					return fmt.Errorf("error unmarshaling avro data into agent.CodequalityTrigger: %s", err)
 				}
 			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.ProjectTrigger")
+				return fmt.Errorf("unsure of the encoding since it was not set for agent.CodequalityTrigger")
 			}
 
 			// ignore messages that have exceeded the TTL
@@ -882,51 +882,51 @@ func NewProjectTriggerConsumer(consumer eventing.Consumer, ch chan<- datamodel.M
 			}
 			msg.Codec = object.GetAvroCodec() // match the codec
 
-			ch <- &ProjectTriggerReceiveEvent{&object, msg, false}
+			ch <- &CodequalityTriggerReceiveEvent{&object, msg, false}
 			return nil
 		},
 		OnErrorReceived: func(err error) {
 			errors <- err
 		},
 		OnEOF: func(topic string, partition int32, offset int64) {
-			var object ProjectTrigger
+			var object CodequalityTrigger
 			var msg eventing.Message
 			msg.Topic = topic
 			msg.Partition = partition
 			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &ProjectTriggerReceiveEvent{nil, msg, true}
+			ch <- &CodequalityTriggerReceiveEvent{nil, msg, true}
 		},
 	}
 	consumer.Consume(adapter)
 	return adapter
 }
 
-// ProjectTriggerReceiveEvent is an event detail for receiving data
-type ProjectTriggerReceiveEvent struct {
-	ProjectTrigger *ProjectTrigger
-	message        eventing.Message
-	eof            bool
+// CodequalityTriggerReceiveEvent is an event detail for receiving data
+type CodequalityTriggerReceiveEvent struct {
+	CodequalityTrigger *CodequalityTrigger
+	message            eventing.Message
+	eof                bool
 }
 
-var _ datamodel.ModelReceiveEvent = (*ProjectTriggerReceiveEvent)(nil)
+var _ datamodel.ModelReceiveEvent = (*CodequalityTriggerReceiveEvent)(nil)
 
 // Object returns an instance of the Model that was received
-func (e *ProjectTriggerReceiveEvent) Object() datamodel.Model {
-	return e.ProjectTrigger
+func (e *CodequalityTriggerReceiveEvent) Object() datamodel.Model {
+	return e.CodequalityTrigger
 }
 
 // Message returns the underlying message data for the event
-func (e *ProjectTriggerReceiveEvent) Message() eventing.Message {
+func (e *CodequalityTriggerReceiveEvent) Message() eventing.Message {
 	return e.message
 }
 
 // EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *ProjectTriggerReceiveEvent) EOF() bool {
+func (e *CodequalityTriggerReceiveEvent) EOF() bool {
 	return e.eof
 }
 
-// ProjectTriggerProducer implements the datamodel.ModelEventProducer
-type ProjectTriggerProducer struct {
+// CodequalityTriggerProducer implements the datamodel.ModelEventProducer
+type CodequalityTriggerProducer struct {
 	ch       chan datamodel.ModelSendEvent
 	done     <-chan bool
 	producer eventing.Producer
@@ -937,15 +937,15 @@ type ProjectTriggerProducer struct {
 	empty    chan bool
 }
 
-var _ datamodel.ModelEventProducer = (*ProjectTriggerProducer)(nil)
+var _ datamodel.ModelEventProducer = (*CodequalityTriggerProducer)(nil)
 
 // Channel returns the producer channel to produce new events
-func (p *ProjectTriggerProducer) Channel() chan<- datamodel.ModelSendEvent {
+func (p *CodequalityTriggerProducer) Channel() chan<- datamodel.ModelSendEvent {
 	return p.ch
 }
 
 // Close is called to shutdown the producer
-func (p *ProjectTriggerProducer) Close() error {
+func (p *CodequalityTriggerProducer) Close() error {
 	p.mu.Lock()
 	closed := p.closed
 	p.closed = true
@@ -960,47 +960,47 @@ func (p *ProjectTriggerProducer) Close() error {
 }
 
 // NewProducerChannel returns a channel which can be used for producing Model events
-func (o *ProjectTrigger) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+func (o *CodequalityTrigger) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
 	return o.NewProducerChannelSize(producer, 0, errors)
 }
 
 // NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *ProjectTrigger) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+func (o *CodequalityTrigger) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &ProjectTriggerProducer{
+	return &CodequalityTriggerProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewProjectTriggerProducer(newctx, producer, ch, errors, empty),
+		done:     NewCodequalityTriggerProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// NewProjectTriggerProducerChannel returns a channel which can be used for producing Model events
-func NewProjectTriggerProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewProjectTriggerProducerChannelSize(producer, 0, errors)
+// NewCodequalityTriggerProducerChannel returns a channel which can be used for producing Model events
+func NewCodequalityTriggerProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewCodequalityTriggerProducerChannelSize(producer, 0, errors)
 }
 
-// NewProjectTriggerProducerChannelSize returns a channel which can be used for producing Model events
-func NewProjectTriggerProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+// NewCodequalityTriggerProducerChannelSize returns a channel which can be used for producing Model events
+func NewCodequalityTriggerProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
 	ch := make(chan datamodel.ModelSendEvent, size)
 	empty := make(chan bool, 1)
 	newctx, cancel := context.WithCancel(context.Background())
-	return &ProjectTriggerProducer{
+	return &CodequalityTriggerProducer{
 		ch:       ch,
 		ctx:      newctx,
 		cancel:   cancel,
 		producer: producer,
 		empty:    empty,
-		done:     NewProjectTriggerProducer(newctx, producer, ch, errors, empty),
+		done:     NewCodequalityTriggerProducer(newctx, producer, ch, errors, empty),
 	}
 }
 
-// ProjectTriggerConsumer implements the datamodel.ModelEventConsumer
-type ProjectTriggerConsumer struct {
+// CodequalityTriggerConsumer implements the datamodel.ModelEventConsumer
+type CodequalityTriggerConsumer struct {
 	ch       chan datamodel.ModelReceiveEvent
 	consumer eventing.Consumer
 	callback *eventing.ConsumerCallbackAdapter
@@ -1008,15 +1008,15 @@ type ProjectTriggerConsumer struct {
 	mu       sync.Mutex
 }
 
-var _ datamodel.ModelEventConsumer = (*ProjectTriggerConsumer)(nil)
+var _ datamodel.ModelEventConsumer = (*CodequalityTriggerConsumer)(nil)
 
 // Channel returns the consumer channel to consume new events
-func (c *ProjectTriggerConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+func (c *CodequalityTriggerConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
 	return c.ch
 }
 
 // Close is called to shutdown the producer
-func (c *ProjectTriggerConsumer) Close() error {
+func (c *CodequalityTriggerConsumer) Close() error {
 	c.mu.Lock()
 	closed := c.closed
 	c.closed = true
@@ -1030,21 +1030,21 @@ func (c *ProjectTriggerConsumer) Close() error {
 }
 
 // NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *ProjectTrigger) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+func (o *CodequalityTrigger) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &ProjectTriggerConsumer{
+	return &CodequalityTriggerConsumer{
 		ch:       ch,
-		callback: NewProjectTriggerConsumer(consumer, ch, errors),
+		callback: NewCodequalityTriggerConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }
 
-// NewProjectTriggerConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewProjectTriggerConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+// NewCodequalityTriggerConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewCodequalityTriggerConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
 	ch := make(chan datamodel.ModelReceiveEvent)
-	return &ProjectTriggerConsumer{
+	return &CodequalityTriggerConsumer{
 		ch:       ch,
-		callback: NewProjectTriggerConsumer(consumer, ch, errors),
+		callback: NewCodequalityTriggerConsumer(consumer, ch, errors),
 		consumer: consumer,
 	}
 }

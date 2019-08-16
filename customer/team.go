@@ -101,7 +101,7 @@ type Team struct {
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// TeamCostID the team cost id
-	TeamCostID string `json:"team_cost_id" bson:"team_cost_id" yaml:"team_cost_id" faker:"-"`
+	TeamCostID *string `json:"team_cost_id" bson:"team_cost_id" yaml:"team_cost_id" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -155,6 +155,9 @@ func (o *Team) setDefaults(frommap bool) {
 	}
 	if o.ParentIds == nil {
 		o.ParentIds = make([]string, 0)
+	}
+	if o.TeamCostID == nil {
+		o.TeamCostID = &emptyString
 	}
 
 	if o.ID == "" {
@@ -401,7 +404,7 @@ func (o *Team) ToMap(avro ...bool) map[string]interface{} {
 		"parent_ids":   toTeamObject(o.ParentIds, isavro, false, "parent_ids"),
 		"ref_id":       toTeamObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toTeamObject(o.RefType, isavro, false, "string"),
-		"team_cost_id": toTeamObject(o.TeamCostID, isavro, false, "string"),
+		"team_cost_id": toTeamObject(o.TeamCostID, isavro, true, "string"),
 		"updated_ts":   toTeamObject(o.UpdatedAt, isavro, false, "long"),
 		"hashcode":     toTeamObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -654,17 +657,20 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["team_cost_id"].(string); ok {
+	if val, ok := kv["team_cost_id"].(*string); ok {
 		o.TeamCostID = val
+	} else if val, ok := kv["team_cost_id"].(string); ok {
+		o.TeamCostID = &val
 	} else {
 		if val, ok := kv["team_cost_id"]; ok {
 			if val == nil {
-				o.TeamCostID = ""
+				o.TeamCostID = pstrings.Pointer("")
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				o.TeamCostID = fmt.Sprintf("%v", val)
+				o.TeamCostID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -809,8 +815,9 @@ func GetTeamAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
-				"name": "team_cost_id",
-				"type": "string",
+				"name":    "team_cost_id",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
