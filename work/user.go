@@ -154,7 +154,7 @@ func (o *User) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *User) GetTopicKey() string {
-	var i interface{} = o.ID
+	var i interface{} = o.CustomerID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -229,7 +229,7 @@ func (o *User) GetTopicConfig() *datamodel.ModelTopicConfig {
 		ttl = retention // they should be the same if not set
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "id",
+		Key:               "customer_id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
@@ -241,7 +241,7 @@ func (o *User) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetStateKey returns a key for use in state store
 func (o *User) GetStateKey() string {
-	key := "id"
+	key := "customer_id"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
@@ -273,6 +273,15 @@ func (o *User) Anon() datamodel.Model {
 	}
 	c.FromMap(kv)
 	return c
+}
+
+// MarshalBinary returns the bytes for marshaling to binary
+func (o *User) MarshalBinary() ([]byte, error) {
+	return o.MarshalJSON()
+}
+
+func (o *User) UnmarshalBinary(data []byte) error {
+	return o.UnmarshalJSON(data)
 }
 
 // MarshalJSON returns the bytes for marshaling to json
@@ -937,6 +946,7 @@ func NewUserProducer(ctx context.Context, producer eventing.Producer, ch <-chan 
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
+						Partition: -1, // select any partition based on partitioner strategy in kafka
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {

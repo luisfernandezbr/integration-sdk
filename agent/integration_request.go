@@ -1317,6 +1317,15 @@ func (o *IntegrationRequest) Anon() datamodel.Model {
 	return c
 }
 
+// MarshalBinary returns the bytes for marshaling to binary
+func (o *IntegrationRequest) MarshalBinary() ([]byte, error) {
+	return o.MarshalJSON()
+}
+
+func (o *IntegrationRequest) UnmarshalBinary(data []byte) error {
+	return o.UnmarshalJSON(data)
+}
+
 // MarshalJSON returns the bytes for marshaling to json
 func (o *IntegrationRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -1504,6 +1513,25 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1948,6 +1976,7 @@ func NewIntegrationRequestProducer(ctx context.Context, producer eventing.Produc
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
+						Partition: -1, // select any partition based on partitioner strategy in kafka
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {

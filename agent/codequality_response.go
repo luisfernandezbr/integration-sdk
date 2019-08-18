@@ -824,6 +824,15 @@ func (o *CodequalityResponse) Anon() datamodel.Model {
 	return c
 }
 
+// MarshalBinary returns the bytes for marshaling to binary
+func (o *CodequalityResponse) MarshalBinary() ([]byte, error) {
+	return o.MarshalJSON()
+}
+
+func (o *CodequalityResponse) UnmarshalBinary(data []byte) error {
+	return o.UnmarshalJSON(data)
+}
+
 // MarshalJSON returns the bytes for marshaling to json
 func (o *CodequalityResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -1974,6 +1983,7 @@ func NewCodequalityResponseProducer(ctx context.Context, producer eventing.Produ
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
+						Partition: -1, // select any partition based on partitioner strategy in kafka
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {

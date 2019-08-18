@@ -885,6 +885,15 @@ func (o *ExportResponse) Anon() datamodel.Model {
 	return c
 }
 
+// MarshalBinary returns the bytes for marshaling to binary
+func (o *ExportResponse) MarshalBinary() ([]byte, error) {
+	return o.MarshalJSON()
+}
+
+func (o *ExportResponse) UnmarshalBinary(data []byte) error {
+	return o.UnmarshalJSON(data)
+}
+
 // MarshalJSON returns the bytes for marshaling to json
 func (o *ExportResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -1133,25 +1142,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1241,25 +1231,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -2095,6 +2066,7 @@ func NewExportResponseProducer(ctx context.Context, producer eventing.Producer, 
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
+						Partition: -1, // select any partition based on partitioner strategy in kafka
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {

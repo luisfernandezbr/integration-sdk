@@ -69,6 +69,8 @@ const (
 	ChangelogIssueIDColumn = "issue_id"
 	// ChangelogOrdinalColumn is the ordinal column name
 	ChangelogOrdinalColumn = "ordinal"
+	// ChangelogProjectIDColumn is the project_id column name
+	ChangelogProjectIDColumn = "project_id"
 	// ChangelogRefIDColumn is the ref_id column name
 	ChangelogRefIDColumn = "ref_id"
 	// ChangelogRefTypeColumn is the ref_type column name
@@ -211,6 +213,8 @@ type Changelog struct {
 	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
 	// Ordinal so we can order correctly in queries since dates could be equal
 	Ordinal int64 `json:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
+	// ProjectID project id of the issue
+	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -289,7 +293,7 @@ func (o *Changelog) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Changelog) GetTopicKey() string {
-	var i interface{} = o.IssueID
+	var i interface{} = o.ProjectID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -355,7 +359,7 @@ func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 		ttl = retention // they should be the same if not set
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "issue_id",
+		Key:               "project_id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
@@ -367,7 +371,7 @@ func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetStateKey returns a key for use in state store
 func (o *Changelog) GetStateKey() string {
-	key := "issue_id"
+	key := "project_id"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
@@ -399,6 +403,15 @@ func (o *Changelog) Anon() datamodel.Model {
 	}
 	c.FromMap(kv)
 	return c
+}
+
+// MarshalBinary returns the bytes for marshaling to binary
+func (o *Changelog) MarshalBinary() ([]byte, error) {
+	return o.MarshalJSON()
+}
+
+func (o *Changelog) UnmarshalBinary(data []byte) error {
+	return o.UnmarshalJSON(data)
 }
 
 // MarshalJSON returns the bytes for marshaling to json
@@ -492,6 +505,7 @@ func (o *Changelog) ToMap(avro ...bool) map[string]interface{} {
 		"id":           toChangelogObject(o.ID, isavro, false, "string"),
 		"issue_id":     toChangelogObject(o.IssueID, isavro, false, "string"),
 		"ordinal":      toChangelogObject(o.Ordinal, isavro, false, "long"),
+		"project_id":   toChangelogObject(o.ProjectID, isavro, false, "string"),
 		"ref_id":       toChangelogObject(o.RefID, isavro, false, "string"),
 		"ref_type":     toChangelogObject(o.RefType, isavro, false, "string"),
 		"to":           toChangelogObject(o.To, isavro, false, "string"),
@@ -665,6 +679,21 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = val
+	} else {
+		if val, ok := kv["project_id"]; ok {
+			if val == nil {
+				o.ProjectID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ProjectID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -769,6 +798,7 @@ func (o *Changelog) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.IssueID)
 	args = append(args, o.Ordinal)
+	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.To)
@@ -825,6 +855,10 @@ func GetChangelogAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "ordinal",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "project_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "ref_id",
@@ -1199,6 +1233,7 @@ func NewChangelogProducer(ctx context.Context, producer eventing.Producer, ch <-
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
+						Partition: -1, // select any partition based on partitioner strategy in kafka
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {
