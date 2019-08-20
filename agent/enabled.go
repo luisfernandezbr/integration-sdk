@@ -95,6 +95,8 @@ const (
 	EnabledRequestIDColumn = "request_id"
 	// EnabledSuccessColumn is the success column name
 	EnabledSuccessColumn = "success"
+	// EnabledSystemIDColumn is the system_id column name
+	EnabledSystemIDColumn = "system_id"
 	// EnabledTypeColumn is the type column name
 	EnabledTypeColumn = "type"
 	// EnabledUpdatedAtColumn is the updated_ts column name
@@ -428,6 +430,8 @@ type Enabled struct {
 	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	// SystemID system unique device ID
+	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type EnabledType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
@@ -738,6 +742,7 @@ func (o *Enabled) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":         toEnabledObject(o.RefType, isavro, false, "string"),
 		"request_id":       toEnabledObject(o.RequestID, isavro, false, "string"),
 		"success":          toEnabledObject(o.Success, isavro, false, "boolean"),
+		"system_id":        toEnabledObject(o.SystemID, isavro, false, "string"),
 		"type":             toEnabledObject(o.Type, isavro, false, "type"),
 		"updated_ts":       toEnabledObject(o.UpdatedAt, isavro, false, "long"),
 		"uptime":           toEnabledObject(o.Uptime, isavro, false, "long"),
@@ -847,6 +852,25 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -921,6 +945,25 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1039,6 +1082,21 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 				o.Success = number.ToBoolAny(nil)
 			} else {
 				o.Success = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["system_id"].(string); ok {
+		o.SystemID = val
+	} else {
+		if val, ok := kv["system_id"]; ok {
+			if val == nil {
+				o.SystemID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.SystemID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1193,6 +1251,7 @@ func (o *Enabled) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
+	args = append(args, o.SystemID)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
@@ -1290,6 +1349,10 @@ func GetEnabledAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "success",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "system_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "type",

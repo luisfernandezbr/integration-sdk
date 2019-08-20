@@ -95,6 +95,8 @@ const (
 	LogRequestIDColumn = "request_id"
 	// LogSuccessColumn is the success column name
 	LogSuccessColumn = "success"
+	// LogSystemIDColumn is the system_id column name
+	LogSystemIDColumn = "system_id"
 	// LogTypeColumn is the type column name
 	LogTypeColumn = "type"
 	// LogUpdatedAtColumn is the updated_ts column name
@@ -428,6 +430,8 @@ type Log struct {
 	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	// SystemID system unique device ID
+	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type LogType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
@@ -738,6 +742,7 @@ func (o *Log) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":         toLogObject(o.RefType, isavro, false, "string"),
 		"request_id":       toLogObject(o.RequestID, isavro, false, "string"),
 		"success":          toLogObject(o.Success, isavro, false, "boolean"),
+		"system_id":        toLogObject(o.SystemID, isavro, false, "string"),
 		"type":             toLogObject(o.Type, isavro, false, "type"),
 		"updated_ts":       toLogObject(o.UpdatedAt, isavro, false, "long"),
 		"uptime":           toLogObject(o.Uptime, isavro, false, "long"),
@@ -1043,6 +1048,21 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["system_id"].(string); ok {
+		o.SystemID = val
+	} else {
+		if val, ok := kv["system_id"]; ok {
+			if val == nil {
+				o.SystemID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.SystemID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["type"].(LogType); ok {
 		o.Type = val
 	} else {
@@ -1193,6 +1213,7 @@ func (o *Log) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
+	args = append(args, o.SystemID)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
@@ -1290,6 +1311,10 @@ func GetLogAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "success",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "system_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "type",

@@ -97,6 +97,8 @@ const (
 	UpgradeRequestIDColumn = "request_id"
 	// UpgradeSuccessColumn is the success column name
 	UpgradeSuccessColumn = "success"
+	// UpgradeSystemIDColumn is the system_id column name
+	UpgradeSystemIDColumn = "system_id"
 	// UpgradeToVersionColumn is the to_version column name
 	UpgradeToVersionColumn = "to_version"
 	// UpgradeTypeColumn is the type column name
@@ -434,6 +436,8 @@ type Upgrade struct {
 	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	// SystemID system unique device ID
+	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// ToVersion the version we're installing
 	ToVersion string `json:"to_version" bson:"to_version" yaml:"to_version" faker:"-"`
 	// Type the type of event
@@ -747,6 +751,7 @@ func (o *Upgrade) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":         toUpgradeObject(o.RefType, isavro, false, "string"),
 		"request_id":       toUpgradeObject(o.RequestID, isavro, false, "string"),
 		"success":          toUpgradeObject(o.Success, isavro, false, "boolean"),
+		"system_id":        toUpgradeObject(o.SystemID, isavro, false, "string"),
 		"to_version":       toUpgradeObject(o.ToVersion, isavro, false, "string"),
 		"type":             toUpgradeObject(o.Type, isavro, false, "type"),
 		"updated_ts":       toUpgradeObject(o.UpdatedAt, isavro, false, "long"),
@@ -1068,6 +1073,21 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["system_id"].(string); ok {
+		o.SystemID = val
+	} else {
+		if val, ok := kv["system_id"]; ok {
+			if val == nil {
+				o.SystemID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.SystemID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["to_version"].(string); ok {
 		o.ToVersion = val
 	} else {
@@ -1234,6 +1254,7 @@ func (o *Upgrade) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
+	args = append(args, o.SystemID)
 	args = append(args, o.ToVersion)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
@@ -1336,6 +1357,10 @@ func GetUpgradeAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "success",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "system_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "to_version",

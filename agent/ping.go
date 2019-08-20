@@ -97,6 +97,8 @@ const (
 	PingStateColumn = "state"
 	// PingSuccessColumn is the success column name
 	PingSuccessColumn = "success"
+	// PingSystemIDColumn is the system_id column name
+	PingSystemIDColumn = "system_id"
 	// PingTypeColumn is the type column name
 	PingTypeColumn = "type"
 	// PingUpdatedAtColumn is the updated_ts column name
@@ -461,6 +463,8 @@ type Ping struct {
 	State PingState `json:"state" bson:"state" yaml:"state" faker:"-"`
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	// SystemID system unique device ID
+	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type PingType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
@@ -775,6 +779,7 @@ func (o *Ping) ToMap(avro ...bool) map[string]interface{} {
 		"request_id":       toPingObject(o.RequestID, isavro, false, "string"),
 		"state":            toPingObject(o.State, isavro, false, "state"),
 		"success":          toPingObject(o.Success, isavro, false, "boolean"),
+		"system_id":        toPingObject(o.SystemID, isavro, false, "string"),
 		"type":             toPingObject(o.Type, isavro, false, "type"),
 		"updated_ts":       toPingObject(o.UpdatedAt, isavro, false, "long"),
 		"uptime":           toPingObject(o.Uptime, isavro, false, "long"),
@@ -884,6 +889,25 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -958,6 +982,25 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1106,6 +1149,21 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 				o.Success = number.ToBoolAny(nil)
 			} else {
 				o.Success = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["system_id"].(string); ok {
+		o.SystemID = val
+	} else {
+		if val, ok := kv["system_id"]; ok {
+			if val == nil {
+				o.SystemID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.SystemID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1261,6 +1319,7 @@ func (o *Ping) Hash() string {
 	args = append(args, o.RequestID)
 	args = append(args, o.State)
 	args = append(args, o.Success)
+	args = append(args, o.SystemID)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
@@ -1366,6 +1425,10 @@ func GetPingAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "success",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "system_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "type",

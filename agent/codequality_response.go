@@ -112,6 +112,8 @@ const (
 	CodequalityResponseRequestIDColumn = "request_id"
 	// CodequalityResponseSuccessColumn is the success column name
 	CodequalityResponseSuccessColumn = "success"
+	// CodequalityResponseSystemIDColumn is the system_id column name
+	CodequalityResponseSystemIDColumn = "system_id"
 	// CodequalityResponseTypeColumn is the type column name
 	CodequalityResponseTypeColumn = "type"
 	// CodequalityResponseUpdatedAtColumn is the updated_ts column name
@@ -614,6 +616,8 @@ type CodequalityResponse struct {
 	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
 	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	// SystemID system unique device ID
+	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type CodequalityResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
@@ -939,6 +943,7 @@ func (o *CodequalityResponse) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":         toCodequalityResponseObject(o.RefType, isavro, false, "string"),
 		"request_id":       toCodequalityResponseObject(o.RequestID, isavro, false, "string"),
 		"success":          toCodequalityResponseObject(o.Success, isavro, false, "boolean"),
+		"system_id":        toCodequalityResponseObject(o.SystemID, isavro, false, "string"),
 		"type":             toCodequalityResponseObject(o.Type, isavro, false, "type"),
 		"updated_ts":       toCodequalityResponseObject(o.UpdatedAt, isavro, false, "long"),
 		"uptime":           toCodequalityResponseObject(o.Uptime, isavro, false, "long"),
@@ -1314,6 +1319,21 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["system_id"].(string); ok {
+		o.SystemID = val
+	} else {
+		if val, ok := kv["system_id"]; ok {
+			if val == nil {
+				o.SystemID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.SystemID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["type"].(CodequalityResponseType); ok {
 		o.Type = val
 	} else {
@@ -1466,6 +1486,7 @@ func (o *CodequalityResponse) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
+	args = append(args, o.SystemID)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
@@ -1571,6 +1592,10 @@ func GetCodequalityResponseAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "success",
 				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "system_id",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "type",
