@@ -1098,6 +1098,7 @@ func NewBranchSendEvent(o *Branch, opts ...BranchSendEventOpts) *BranchSendEvent
 // NewBranchProducer will stream data from the channel
 func NewBranchProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
+	emptyTime := time.Unix(0, 0)
 	go func() {
 		defer func() { done <- true }()
 		for {
@@ -1121,11 +1122,10 @@ func NewBranchProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 						headers[k] = v
 					}
 					tv := item.Timestamp()
-					emptyTime := time.Unix(0, 0)
 					if tv.IsZero() {
 						tv = object.GetTimestamp() // if not provided in the message, use the objects value
 					}
-					if tv.IsZero() || ts.Equal(emptyTime) {
+					if tv.IsZero() || tv.Equal(emptyTime) {
 						tv = time.Now() // if its still zero, use the ingest time
 					}
 					// add generated message headers

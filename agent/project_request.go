@@ -1557,6 +1557,25 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1962,6 +1981,7 @@ func NewProjectRequestSendEvent(o *ProjectRequest, opts ...ProjectRequestSendEve
 // NewProjectRequestProducer will stream data from the channel
 func NewProjectRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
+	emptyTime := time.Unix(0, 0)
 	go func() {
 		defer func() { done <- true }()
 		for {
@@ -1985,11 +2005,10 @@ func NewProjectRequestProducer(ctx context.Context, producer eventing.Producer, 
 						headers[k] = v
 					}
 					tv := item.Timestamp()
-					emptyTime := time.Unix(0, 0)
 					if tv.IsZero() {
 						tv = object.GetTimestamp() // if not provided in the message, use the objects value
 					}
-					if tv.IsZero() || ts.Equal(emptyTime) {
+					if tv.IsZero() || tv.Equal(emptyTime) {
 						tv = time.Now() // if its still zero, use the ingest time
 					}
 					// add generated message headers
