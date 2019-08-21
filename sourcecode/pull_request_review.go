@@ -1076,10 +1076,11 @@ func NewPullRequestReviewProducer(ctx context.Context, producer eventing.Produce
 						headers[k] = v
 					}
 					tv := item.Timestamp()
+					emptyTime := time.Unix(0, 0)
 					if tv.IsZero() {
 						tv = object.GetTimestamp() // if not provided in the message, use the objects value
 					}
-					if tv.IsZero() {
+					if tv.IsZero() || ts.Equal(emptyTime) {
 						tv = time.Now() // if its still zero, use the ingest time
 					}
 					// add generated message headers

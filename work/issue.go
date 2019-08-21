@@ -690,7 +690,7 @@ func (o *Issue) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Issue) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
+	var dt interface{} = o.CreatedDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -702,6 +702,8 @@ func (o *Issue) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case IssueCreatedDate:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Issue")
 }
@@ -748,7 +750,7 @@ func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "project_id",
-		Timestamp:         "updated_ts",
+		Timestamp:         "created_date",
 		NumPartitions:     8,
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -1849,10 +1851,11 @@ func NewIssueProducer(ctx context.Context, producer eventing.Producer, ch <-chan
 						headers[k] = v
 					}
 					tv := item.Timestamp()
+					emptyTime := time.Unix(0, 0)
 					if tv.IsZero() {
 						tv = object.GetTimestamp() // if not provided in the message, use the objects value
 					}
-					if tv.IsZero() {
+					if tv.IsZero() || ts.Equal(emptyTime) {
 						tv = time.Now() // if its still zero, use the ingest time
 					}
 					// add generated message headers
