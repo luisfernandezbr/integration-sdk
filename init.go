@@ -427,7 +427,6 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("customer_CostCenter_topic"),
 		datamodel.TopicNameType("customer_Team_topic"),
 		datamodel.TopicNameType("customer_User_topic"),
-		datamodel.TopicNameType("sourcecode_Branch_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequestReview_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequest_topic"),
