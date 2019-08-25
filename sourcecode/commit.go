@@ -1136,9 +1136,11 @@ func (o *Commit) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecCommit *goavro.Codec
+var cachedCodecCommitLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *Commit) GetAvroCodec() *goavro.Codec {
+	cachedCodecCommitLock.Lock()
 	if cachedCodecCommit == nil {
 		c, err := GetCommitAvroSchema()
 		if err != nil {
@@ -1146,6 +1148,7 @@ func (o *Commit) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecCommit = c
 	}
+	cachedCodecCommitLock.Unlock()
 	return cachedCodecCommit
 }
 

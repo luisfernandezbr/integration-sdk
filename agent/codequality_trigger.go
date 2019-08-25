@@ -276,9 +276,11 @@ func (o *CodequalityTrigger) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecCodequalityTrigger *goavro.Codec
+var cachedCodecCodequalityTriggerLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *CodequalityTrigger) GetAvroCodec() *goavro.Codec {
+	cachedCodecCodequalityTriggerLock.Lock()
 	if cachedCodecCodequalityTrigger == nil {
 		c, err := GetCodequalityTriggerAvroSchema()
 		if err != nil {
@@ -286,6 +288,7 @@ func (o *CodequalityTrigger) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecCodequalityTrigger = c
 	}
+	cachedCodecCodequalityTriggerLock.Unlock()
 	return cachedCodecCodequalityTrigger
 }
 

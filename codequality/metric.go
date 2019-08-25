@@ -414,9 +414,11 @@ func (o *Metric) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecMetric *goavro.Codec
+var cachedCodecMetricLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *Metric) GetAvroCodec() *goavro.Codec {
+	cachedCodecMetricLock.Lock()
 	if cachedCodecMetric == nil {
 		c, err := GetMetricAvroSchema()
 		if err != nil {
@@ -424,6 +426,7 @@ func (o *Metric) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecMetric = c
 	}
+	cachedCodecMetricLock.Unlock()
 	return cachedCodecMetric
 }
 

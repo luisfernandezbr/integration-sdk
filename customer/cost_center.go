@@ -301,9 +301,11 @@ func (o *CostCenter) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecCostCenter *goavro.Codec
+var cachedCodecCostCenterLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *CostCenter) GetAvroCodec() *goavro.Codec {
+	cachedCodecCostCenterLock.Lock()
 	if cachedCodecCostCenter == nil {
 		c, err := GetCostCenterAvroSchema()
 		if err != nil {
@@ -311,6 +313,7 @@ func (o *CostCenter) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecCostCenter = c
 	}
+	cachedCodecCostCenterLock.Unlock()
 	return cachedCodecCostCenter
 }
 

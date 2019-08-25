@@ -539,9 +539,11 @@ func (o *PullRequestComment) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecPullRequestComment *goavro.Codec
+var cachedCodecPullRequestCommentLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *PullRequestComment) GetAvroCodec() *goavro.Codec {
+	cachedCodecPullRequestCommentLock.Lock()
 	if cachedCodecPullRequestComment == nil {
 		c, err := GetPullRequestCommentAvroSchema()
 		if err != nil {
@@ -549,6 +551,7 @@ func (o *PullRequestComment) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecPullRequestComment = c
 	}
+	cachedCodecPullRequestCommentLock.Unlock()
 	return cachedCodecPullRequestComment
 }
 

@@ -795,9 +795,11 @@ func (o *Sprint) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecSprint *goavro.Codec
+var cachedCodecSprintLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *Sprint) GetAvroCodec() *goavro.Codec {
+	cachedCodecSprintLock.Lock()
 	if cachedCodecSprint == nil {
 		c, err := GetSprintAvroSchema()
 		if err != nil {
@@ -805,6 +807,7 @@ func (o *Sprint) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecSprint = c
 	}
+	cachedCodecSprintLock.Unlock()
 	return cachedCodecSprint
 }
 

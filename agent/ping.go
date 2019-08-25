@@ -696,9 +696,11 @@ func (o *Ping) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecPing *goavro.Codec
+var cachedCodecPingLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *Ping) GetAvroCodec() *goavro.Codec {
+	cachedCodecPingLock.Lock()
 	if cachedCodecPing == nil {
 		c, err := GetPingAvroSchema()
 		if err != nil {
@@ -706,6 +708,7 @@ func (o *Ping) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecPing = c
 	}
+	cachedCodecPingLock.Unlock()
 	return cachedCodecPing
 }
 

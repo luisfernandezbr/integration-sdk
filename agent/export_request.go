@@ -1411,9 +1411,11 @@ func (o *ExportRequest) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecExportRequest *goavro.Codec
+var cachedCodecExportRequestLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *ExportRequest) GetAvroCodec() *goavro.Codec {
+	cachedCodecExportRequestLock.Lock()
 	if cachedCodecExportRequest == nil {
 		c, err := GetExportRequestAvroSchema()
 		if err != nil {
@@ -1421,6 +1423,7 @@ func (o *ExportRequest) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecExportRequest = c
 	}
+	cachedCodecExportRequestLock.Unlock()
 	return cachedCodecExportRequest
 }
 
@@ -1653,25 +1656,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

@@ -333,9 +333,11 @@ func (o *Team) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecTeam *goavro.Codec
+var cachedCodecTeamLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *Team) GetAvroCodec() *goavro.Codec {
+	cachedCodecTeamLock.Lock()
 	if cachedCodecTeam == nil {
 		c, err := GetTeamAvroSchema()
 		if err != nil {
@@ -343,6 +345,7 @@ func (o *Team) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecTeam = c
 	}
+	cachedCodecTeamLock.Unlock()
 	return cachedCodecTeam
 }
 

@@ -660,9 +660,11 @@ func (o *Crash) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecCrash *goavro.Codec
+var cachedCodecCrashLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *Crash) GetAvroCodec() *goavro.Codec {
+	cachedCodecCrashLock.Lock()
 	if cachedCodecCrash == nil {
 		c, err := GetCrashAvroSchema()
 		if err != nil {
@@ -670,6 +672,7 @@ func (o *Crash) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecCrash = c
 	}
+	cachedCodecCrashLock.Unlock()
 	return cachedCodecCrash
 }
 

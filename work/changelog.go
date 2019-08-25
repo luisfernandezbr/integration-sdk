@@ -433,9 +433,11 @@ func (o *Changelog) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecChangelog *goavro.Codec
+var cachedCodecChangelogLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *Changelog) GetAvroCodec() *goavro.Codec {
+	cachedCodecChangelogLock.Lock()
 	if cachedCodecChangelog == nil {
 		c, err := GetChangelogAvroSchema()
 		if err != nil {
@@ -443,6 +445,7 @@ func (o *Changelog) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecChangelog = c
 	}
+	cachedCodecChangelogLock.Unlock()
 	return cachedCodecChangelog
 }
 

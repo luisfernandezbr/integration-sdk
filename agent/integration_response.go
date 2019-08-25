@@ -664,9 +664,11 @@ func (o *IntegrationResponse) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecIntegrationResponse *goavro.Codec
+var cachedCodecIntegrationResponseLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *IntegrationResponse) GetAvroCodec() *goavro.Codec {
+	cachedCodecIntegrationResponseLock.Lock()
 	if cachedCodecIntegrationResponse == nil {
 		c, err := GetIntegrationResponseAvroSchema()
 		if err != nil {
@@ -674,6 +676,7 @@ func (o *IntegrationResponse) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecIntegrationResponse = c
 	}
+	cachedCodecIntegrationResponseLock.Unlock()
 	return cachedCodecIntegrationResponse
 }
 

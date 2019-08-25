@@ -373,9 +373,11 @@ func (o *EnrollRequest) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecEnrollRequest *goavro.Codec
+var cachedCodecEnrollRequestLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *EnrollRequest) GetAvroCodec() *goavro.Codec {
+	cachedCodecEnrollRequestLock.Lock()
 	if cachedCodecEnrollRequest == nil {
 		c, err := GetEnrollRequestAvroSchema()
 		if err != nil {
@@ -383,6 +385,7 @@ func (o *EnrollRequest) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecEnrollRequest = c
 	}
+	cachedCodecEnrollRequestLock.Unlock()
 	return cachedCodecEnrollRequest
 }
 

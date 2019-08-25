@@ -280,9 +280,11 @@ func (o *CustomField) UnmarshalJSON(data []byte) error {
 }
 
 var cachedCodecCustomField *goavro.Codec
+var cachedCodecCustomFieldLock sync.Mutex
 
 // GetAvroCodec returns the avro codec for this model
 func (o *CustomField) GetAvroCodec() *goavro.Codec {
+	cachedCodecCustomFieldLock.Lock()
 	if cachedCodecCustomField == nil {
 		c, err := GetCustomFieldAvroSchema()
 		if err != nil {
@@ -290,6 +292,7 @@ func (o *CustomField) GetAvroCodec() *goavro.Codec {
 		}
 		cachedCodecCustomField = c
 	}
+	cachedCodecCustomFieldLock.Unlock()
 	return cachedCodecCustomField
 }
 
