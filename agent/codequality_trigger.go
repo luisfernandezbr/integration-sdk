@@ -38,7 +38,7 @@ const (
 	CodequalityTriggerStream datamodel.TopicNameType = "agent_CodequalityTrigger_stream"
 
 	// CodequalityTriggerTable is the default table name
-	CodequalityTriggerTable datamodel.TopicNameType = "agent_CodequalityTrigger"
+	CodequalityTriggerTable datamodel.TopicNameType = "agent_codequalitytrigger"
 
 	// CodequalityTriggerModelName is the model name
 	CodequalityTriggerModelName datamodel.ModelNameType = "agent.CodequalityTrigger"

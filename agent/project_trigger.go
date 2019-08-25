@@ -38,7 +38,7 @@ const (
 	ProjectTriggerStream datamodel.TopicNameType = "agent_ProjectTrigger_stream"
 
 	// ProjectTriggerTable is the default table name
-	ProjectTriggerTable datamodel.TopicNameType = "agent_ProjectTrigger"
+	ProjectTriggerTable datamodel.TopicNameType = "agent_projecttrigger"
 
 	// ProjectTriggerModelName is the model name
 	ProjectTriggerModelName datamodel.ModelNameType = "agent.ProjectTrigger"

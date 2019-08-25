@@ -38,7 +38,7 @@ const (
 	DeploymentStream datamodel.TopicNameType = "cicd_Deployment_stream"
 
 	// DeploymentTable is the default table name
-	DeploymentTable datamodel.TopicNameType = "cicd_Deployment"
+	DeploymentTable datamodel.TopicNameType = "cicd_deployment"
 
 	// DeploymentModelName is the model name
 	DeploymentModelName datamodel.ModelNameType = "cicd.Deployment"

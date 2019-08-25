@@ -38,7 +38,7 @@ const (
 	ProjectStream datamodel.TopicNameType = "codequality_Project_stream"
 
 	// ProjectTable is the default table name
-	ProjectTable datamodel.TopicNameType = "codequality_Project"
+	ProjectTable datamodel.TopicNameType = "codequality_project"
 
 	// ProjectModelName is the model name
 	ProjectModelName datamodel.ModelNameType = "codequality.Project"

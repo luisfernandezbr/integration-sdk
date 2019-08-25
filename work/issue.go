@@ -41,7 +41,7 @@ const (
 	IssueStream datamodel.TopicNameType = "work_Issue_stream"
 
 	// IssueTable is the default table name
-	IssueTable datamodel.TopicNameType = "work_Issue"
+	IssueTable datamodel.TopicNameType = "work_issue"
 
 	// IssueModelName is the model name
 	IssueModelName datamodel.ModelNameType = "work.Issue"

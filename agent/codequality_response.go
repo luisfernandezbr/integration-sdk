@@ -39,7 +39,7 @@ const (
 	CodequalityResponseStream datamodel.TopicNameType = "agent_CodequalityResponse_stream"
 
 	// CodequalityResponseTable is the default table name
-	CodequalityResponseTable datamodel.TopicNameType = "agent_CodequalityResponse"
+	CodequalityResponseTable datamodel.TopicNameType = "agent_codequalityresponse"
 
 	// CodequalityResponseModelName is the model name
 	CodequalityResponseModelName datamodel.ModelNameType = "agent.CodequalityResponse"

@@ -38,7 +38,7 @@ const (
 	RepoStream datamodel.TopicNameType = "sourcecode_Repo_stream"
 
 	// RepoTable is the default table name
-	RepoTable datamodel.TopicNameType = "sourcecode_Repo"
+	RepoTable datamodel.TopicNameType = "sourcecode_repo"
 
 	// RepoModelName is the model name
 	RepoModelName datamodel.ModelNameType = "sourcecode.Repo"

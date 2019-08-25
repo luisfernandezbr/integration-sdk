@@ -38,7 +38,7 @@ const (
 	StartStream datamodel.TopicNameType = "agent_Start_stream"
 
 	// StartTable is the default table name
-	StartTable datamodel.TopicNameType = "agent_Start"
+	StartTable datamodel.TopicNameType = "agent_start"
 
 	// StartModelName is the model name
 	StartModelName datamodel.ModelNameType = "agent.Start"

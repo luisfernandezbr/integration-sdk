@@ -39,7 +39,7 @@ const (
 	CommitStream datamodel.TopicNameType = "sourcecode_Commit_stream"
 
 	// CommitTable is the default table name
-	CommitTable datamodel.TopicNameType = "sourcecode_Commit"
+	CommitTable datamodel.TopicNameType = "sourcecode_commit"
 
 	// CommitModelName is the model name
 	CommitModelName datamodel.ModelNameType = "sourcecode.Commit"

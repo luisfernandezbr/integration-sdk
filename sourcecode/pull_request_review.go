@@ -38,7 +38,7 @@ const (
 	PullRequestReviewStream datamodel.TopicNameType = "sourcecode_PullRequestReview_stream"
 
 	// PullRequestReviewTable is the default table name
-	PullRequestReviewTable datamodel.TopicNameType = "sourcecode_PullRequestReview"
+	PullRequestReviewTable datamodel.TopicNameType = "sourcecode_pullrequestreview"
 
 	// PullRequestReviewModelName is the model name
 	PullRequestReviewModelName datamodel.ModelNameType = "sourcecode.PullRequestReview"

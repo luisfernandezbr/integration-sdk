@@ -38,7 +38,7 @@ const (
 	BuildStream datamodel.TopicNameType = "cicd_Build_stream"
 
 	// BuildTable is the default table name
-	BuildTable datamodel.TopicNameType = "cicd_Build"
+	BuildTable datamodel.TopicNameType = "cicd_build"
 
 	// BuildModelName is the model name
 	BuildModelName datamodel.ModelNameType = "cicd.Build"

@@ -41,7 +41,7 @@ const (
 	PullRequestStream datamodel.TopicNameType = "sourcecode_PullRequest_stream"
 
 	// PullRequestTable is the default table name
-	PullRequestTable datamodel.TopicNameType = "sourcecode_PullRequest"
+	PullRequestTable datamodel.TopicNameType = "sourcecode_pullrequest"
 
 	// PullRequestModelName is the model name
 	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"

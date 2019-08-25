@@ -41,7 +41,7 @@ const (
 	UserRequestStream datamodel.TopicNameType = "agent_UserRequest_stream"
 
 	// UserRequestTable is the default table name
-	UserRequestTable datamodel.TopicNameType = "agent_UserRequest"
+	UserRequestTable datamodel.TopicNameType = "agent_userrequest"
 
 	// UserRequestModelName is the model name
 	UserRequestModelName datamodel.ModelNameType = "agent.UserRequest"

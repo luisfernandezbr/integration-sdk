@@ -38,7 +38,7 @@ const (
 	CustomFieldStream datamodel.TopicNameType = "work_CustomField_stream"
 
 	// CustomFieldTable is the default table name
-	CustomFieldTable datamodel.TopicNameType = "work_CustomField"
+	CustomFieldTable datamodel.TopicNameType = "work_customfield"
 
 	// CustomFieldModelName is the model name
 	CustomFieldModelName datamodel.ModelNameType = "work.CustomField"

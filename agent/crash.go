@@ -38,7 +38,7 @@ const (
 	CrashStream datamodel.TopicNameType = "agent_Crash_stream"
 
 	// CrashTable is the default table name
-	CrashTable datamodel.TopicNameType = "agent_Crash"
+	CrashTable datamodel.TopicNameType = "agent_crash"
 
 	// CrashModelName is the model name
 	CrashModelName datamodel.ModelNameType = "agent.Crash"

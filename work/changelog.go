@@ -38,7 +38,7 @@ const (
 	ChangelogStream datamodel.TopicNameType = "work_Changelog_stream"
 
 	// ChangelogTable is the default table name
-	ChangelogTable datamodel.TopicNameType = "work_Changelog"
+	ChangelogTable datamodel.TopicNameType = "work_changelog"
 
 	// ChangelogModelName is the model name
 	ChangelogModelName datamodel.ModelNameType = "work.Changelog"

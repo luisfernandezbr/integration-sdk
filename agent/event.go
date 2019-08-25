@@ -38,7 +38,7 @@ const (
 	EventStream datamodel.TopicNameType = "agent_Event_stream"
 
 	// EventTable is the default table name
-	EventTable datamodel.TopicNameType = "agent_Event"
+	EventTable datamodel.TopicNameType = "agent_event"
 
 	// EventModelName is the model name
 	EventModelName datamodel.ModelNameType = "agent.Event"

@@ -38,7 +38,7 @@ const (
 	CostCenterStream datamodel.TopicNameType = "customer_CostCenter_stream"
 
 	// CostCenterTable is the default table name
-	CostCenterTable datamodel.TopicNameType = "customer_CostCenter"
+	CostCenterTable datamodel.TopicNameType = "customer_costcenter"
 
 	// CostCenterModelName is the model name
 	CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"

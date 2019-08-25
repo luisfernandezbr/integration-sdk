@@ -38,7 +38,7 @@ const (
 	RepoTriggerStream datamodel.TopicNameType = "agent_RepoTrigger_stream"
 
 	// RepoTriggerTable is the default table name
-	RepoTriggerTable datamodel.TopicNameType = "agent_RepoTrigger"
+	RepoTriggerTable datamodel.TopicNameType = "agent_repotrigger"
 
 	// RepoTriggerModelName is the model name
 	RepoTriggerModelName datamodel.ModelNameType = "agent.RepoTrigger"

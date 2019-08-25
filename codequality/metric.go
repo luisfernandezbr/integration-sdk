@@ -38,7 +38,7 @@ const (
 	MetricStream datamodel.TopicNameType = "codequality_Metric_stream"
 
 	// MetricTable is the default table name
-	MetricTable datamodel.TopicNameType = "codequality_Metric"
+	MetricTable datamodel.TopicNameType = "codequality_metric"
 
 	// MetricModelName is the model name
 	MetricModelName datamodel.ModelNameType = "codequality.Metric"

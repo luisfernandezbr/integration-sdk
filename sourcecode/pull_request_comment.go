@@ -38,7 +38,7 @@ const (
 	PullRequestCommentStream datamodel.TopicNameType = "sourcecode_PullRequestComment_stream"
 
 	// PullRequestCommentTable is the default table name
-	PullRequestCommentTable datamodel.TopicNameType = "sourcecode_PullRequestComment"
+	PullRequestCommentTable datamodel.TopicNameType = "sourcecode_pullrequestcomment"
 
 	// PullRequestCommentModelName is the model name
 	PullRequestCommentModelName datamodel.ModelNameType = "sourcecode.PullRequestComment"

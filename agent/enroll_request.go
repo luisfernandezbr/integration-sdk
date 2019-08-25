@@ -38,7 +38,7 @@ const (
 	EnrollRequestStream datamodel.TopicNameType = "agent_EnrollRequest_stream"
 
 	// EnrollRequestTable is the default table name
-	EnrollRequestTable datamodel.TopicNameType = "agent_EnrollRequest"
+	EnrollRequestTable datamodel.TopicNameType = "agent_enrollrequest"
 
 	// EnrollRequestModelName is the model name
 	EnrollRequestModelName datamodel.ModelNameType = "agent.EnrollRequest"

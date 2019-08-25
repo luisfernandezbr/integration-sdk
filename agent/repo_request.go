@@ -41,7 +41,7 @@ const (
 	RepoRequestStream datamodel.TopicNameType = "agent_RepoRequest_stream"
 
 	// RepoRequestTable is the default table name
-	RepoRequestTable datamodel.TopicNameType = "agent_RepoRequest"
+	RepoRequestTable datamodel.TopicNameType = "agent_reporequest"
 
 	// RepoRequestModelName is the model name
 	RepoRequestModelName datamodel.ModelNameType = "agent.RepoRequest"

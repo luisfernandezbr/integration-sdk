@@ -39,7 +39,7 @@ const (
 	BlameStream datamodel.TopicNameType = "sourcecode_Blame_stream"
 
 	// BlameTable is the default table name
-	BlameTable datamodel.TopicNameType = "sourcecode_Blame"
+	BlameTable datamodel.TopicNameType = "sourcecode_blame"
 
 	// BlameModelName is the model name
 	BlameModelName datamodel.ModelNameType = "sourcecode.Blame"

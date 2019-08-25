@@ -41,7 +41,7 @@ const (
 	TeamStream datamodel.TopicNameType = "customer_Team_stream"
 
 	// TeamTable is the default table name
-	TeamTable datamodel.TopicNameType = "customer_Team"
+	TeamTable datamodel.TopicNameType = "customer_team"
 
 	// TeamModelName is the model name
 	TeamModelName datamodel.ModelNameType = "customer.Team"

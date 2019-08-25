@@ -41,7 +41,7 @@ const (
 	BranchStream datamodel.TopicNameType = "sourcecode_Branch_stream"
 
 	// BranchTable is the default table name
-	BranchTable datamodel.TopicNameType = "sourcecode_Branch"
+	BranchTable datamodel.TopicNameType = "sourcecode_branch"
 
 	// BranchModelName is the model name
 	BranchModelName datamodel.ModelNameType = "sourcecode.Branch"

@@ -38,7 +38,7 @@ const (
 	UserTriggerStream datamodel.TopicNameType = "agent_UserTrigger_stream"
 
 	// UserTriggerTable is the default table name
-	UserTriggerTable datamodel.TopicNameType = "agent_UserTrigger"
+	UserTriggerTable datamodel.TopicNameType = "agent_usertrigger"
 
 	// UserTriggerModelName is the model name
 	UserTriggerModelName datamodel.ModelNameType = "agent.UserTrigger"

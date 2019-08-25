@@ -38,7 +38,7 @@ const (
 	SprintStream datamodel.TopicNameType = "work_Sprint_stream"
 
 	// SprintTable is the default table name
-	SprintTable datamodel.TopicNameType = "work_Sprint"
+	SprintTable datamodel.TopicNameType = "work_sprint"
 
 	// SprintModelName is the model name
 	SprintModelName datamodel.ModelNameType = "work.Sprint"

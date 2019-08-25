@@ -38,7 +38,7 @@ const (
 	ExportTriggerStream datamodel.TopicNameType = "agent_ExportTrigger_stream"
 
 	// ExportTriggerTable is the default table name
-	ExportTriggerTable datamodel.TopicNameType = "agent_ExportTrigger"
+	ExportTriggerTable datamodel.TopicNameType = "agent_exporttrigger"
 
 	// ExportTriggerModelName is the model name
 	ExportTriggerModelName datamodel.ModelNameType = "agent.ExportTrigger"

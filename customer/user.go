@@ -41,7 +41,7 @@ const (
 	UserStream datamodel.TopicNameType = "customer_User_stream"
 
 	// UserTable is the default table name
-	UserTable datamodel.TopicNameType = "customer_User"
+	UserTable datamodel.TopicNameType = "customer_user"
 
 	// UserModelName is the model name
 	UserModelName datamodel.ModelNameType = "customer.User"
