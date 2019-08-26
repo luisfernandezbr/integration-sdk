@@ -730,21 +730,12 @@ func (o *PullRequest) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *PullRequest) IsMaterialized() bool {
-	return true
+	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *PullRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	idletime, err := time.ParseDuration("1s")
-	if err != nil {
-		panic(err)
-	}
-	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "id",
-		TableName: "sourcecode_pullrequest",
-		BatchSize: 5000,
-		IdleTime:  idletime,
-	}
+	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
