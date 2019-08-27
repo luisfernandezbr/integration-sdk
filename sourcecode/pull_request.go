@@ -15,7 +15,6 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
-	"strings"
 	"sync"
 	"time"
 
@@ -28,9 +27,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -48,6 +45,8 @@ const (
 )
 
 const (
+	// PullRequestBranchIDColumn is the branch_id column name
+	PullRequestBranchIDColumn = "branch_id"
 	// PullRequestClosedByRefIDColumn is the closed_by_ref_id column name
 	PullRequestClosedByRefIDColumn = "closed_by_ref_id"
 	// PullRequestClosedDateColumn is the closed_date column name
@@ -58,8 +57,6 @@ const (
 	PullRequestClosedDateColumnOffsetColumn = "closed_date->offset"
 	// PullRequestClosedDateColumnRfc3339Column is the rfc3339 column property of the ClosedDate name
 	PullRequestClosedDateColumnRfc3339Column = "closed_date->rfc3339"
-	// PullRequestCommitsColumn is the commits column name
-	PullRequestCommitsColumn = "commits"
 	// PullRequestCreatedByRefIDColumn is the created_by_ref_id column name
 	PullRequestCreatedByRefIDColumn = "created_by_ref_id"
 	// PullRequestCreatedDateColumn is the created_date column name
@@ -579,12 +576,12 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
+	// BranchID the unique id for the branch
+	BranchID string `json:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
 	// ClosedByRefID the id of user who closed the pull request
 	ClosedByRefID string `json:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
 	// ClosedDate the timestamp in UTC that the pull request was closed
 	ClosedDate PullRequestClosedDate `json:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
-	// Commits the commits in the pull request
-	Commits []string `json:"commits" bson:"commits" yaml:"commits" faker:"-"`
 	// CreatedByRefID the user ref_id in the source system
 	CreatedByRefID string `json:"created_by_ref_id" bson:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
 	// CreatedDate the timestamp in UTC that the pull request was created
@@ -675,9 +672,6 @@ func (o *PullRequest) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *PullRequest) setDefaults(frommap bool) {
-	if o.Commits == nil {
-		o.Commits = make([]string, 0)
-	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -901,15 +895,12 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
-		if o.Commits == nil {
-			o.Commits = make([]string, 0)
-		}
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"branch_id":         toPullRequestObject(o.BranchID, isavro, false, "string"),
 		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
 		"closed_date":       toPullRequestObject(o.ClosedDate, isavro, false, "closed_date"),
-		"commits":           toPullRequestObject(o.Commits, isavro, false, "commits"),
 		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, isavro, false, "string"),
 		"created_date":      toPullRequestObject(o.CreatedDate, isavro, false, "created_date"),
 		"customer_id":       toPullRequestObject(o.CustomerID, isavro, false, "string"),
@@ -938,6 +929,21 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["branch_id"].(string); ok {
+		o.BranchID = val
+	} else {
+		if val, ok := kv["branch_id"]; ok {
+			if val == nil {
+				o.BranchID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.BranchID = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 
 	if val, ok := kv["closed_by_ref_id"].(string); ok {
@@ -986,57 +992,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.ClosedDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["commits"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for commits field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for commits field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for commits field")
-				}
-			}
-			o.Commits = na
-		}
-	}
-	if o.Commits == nil {
-		o.Commits = make([]string, 0)
 	}
 
 	if val, ok := kv["created_by_ref_id"].(string); ok {
@@ -1357,9 +1312,9 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequest) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.BranchID)
 	args = append(args, o.ClosedByRefID)
 	args = append(args, o.ClosedDate)
-	args = append(args, o.Commits)
 	args = append(args, o.CreatedByRefID)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
@@ -1392,16 +1347,16 @@ func GetPullRequestAvroSchemaSpec() string {
 				"type": "string",
 			},
 			map[string]interface{}{
+				"name": "branch_id",
+				"type": "string",
+			},
+			map[string]interface{}{
 				"name": "closed_by_ref_id",
 				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "closed_date",
 				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "closed_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "commits",
-				"type": map[string]interface{}{"items": "string", "name": "commits", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "created_by_ref_id",

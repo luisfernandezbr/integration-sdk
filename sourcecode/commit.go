@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -27,6 +28,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -52,8 +54,8 @@ const (
 	CommitAuthorRefIDColumn = "author_ref_id"
 	// CommitBlanksColumn is the blanks column name
 	CommitBlanksColumn = "blanks"
-	// CommitBranchColumn is the branch column name
-	CommitBranchColumn = "branch"
+	// CommitBranchIdsColumn is the branch_ids column name
+	CommitBranchIdsColumn = "branch_ids"
 	// CommitCommentsColumn is the comments column name
 	CommitCommentsColumn = "comments"
 	// CommitCommitterRefIDColumn is the committer_ref_id column name
@@ -873,8 +875,8 @@ type Commit struct {
 	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Blanks the number of blank lines in the commit
 	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
-	// Branch the branch that the commit was made to
-	Branch string `json:"branch" bson:"branch" yaml:"branch" faker:"-"`
+	// BranchIds the branches that the commit was a part of
+	BranchIds []string `json:"branch_ids" bson:"branch_ids" yaml:"branch_ids" faker:"-"`
 	// Comments the number of comment lines in the commit
 	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
 	// CommitterRefID the committer ref_id in the source system
@@ -972,6 +974,9 @@ func (o *Commit) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *Commit) setDefaults(frommap bool) {
+	if o.BranchIds == nil {
+		o.BranchIds = make([]string, 0)
+	}
 	if o.Files == nil {
 		o.Files = make([]CommitFiles, 0)
 	}
@@ -1199,6 +1204,9 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
+		if o.BranchIds == nil {
+			o.BranchIds = make([]string, 0)
+		}
 		if o.Files == nil {
 			o.Files = make([]CommitFiles, 0)
 		}
@@ -1208,7 +1216,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"additions":        toCommitObject(o.Additions, isavro, false, "long"),
 		"author_ref_id":    toCommitObject(o.AuthorRefID, isavro, false, "string"),
 		"blanks":           toCommitObject(o.Blanks, isavro, false, "long"),
-		"branch":           toCommitObject(o.Branch, isavro, false, "string"),
+		"branch_ids":       toCommitObject(o.BranchIds, isavro, false, "branch_ids"),
 		"comments":         toCommitObject(o.Comments, isavro, false, "long"),
 		"committer_ref_id": toCommitObject(o.CommitterRefID, isavro, false, "string"),
 		"complexity":       toCommitObject(o.Complexity, isavro, false, "long"),
@@ -1290,19 +1298,55 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["branch"].(string); ok {
-		o.Branch = val
-	} else {
-		if val, ok := kv["branch"]; ok {
-			if val == nil {
-				o.Branch = ""
+	if val, ok := kv["branch_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for branch_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for branch_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for branch_ids field")
 				}
-				o.Branch = fmt.Sprintf("%v", val)
 			}
+			o.BranchIds = na
 		}
+	}
+	if o.BranchIds == nil {
+		o.BranchIds = make([]string, 0)
 	}
 
 	if val, ok := kv["comments"].(int64); ok {
@@ -1703,7 +1747,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Additions)
 	args = append(args, o.AuthorRefID)
 	args = append(args, o.Blanks)
-	args = append(args, o.Branch)
+	args = append(args, o.BranchIds)
 	args = append(args, o.Comments)
 	args = append(args, o.CommitterRefID)
 	args = append(args, o.Complexity)
@@ -1754,8 +1798,8 @@ func GetCommitAvroSchemaSpec() string {
 				"type": "long",
 			},
 			map[string]interface{}{
-				"name": "branch",
-				"type": "string",
+				"name": "branch_ids",
+				"type": map[string]interface{}{"items": "string", "name": "branch_ids", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "comments",
