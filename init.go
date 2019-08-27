@@ -422,8 +422,6 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 // GetMaterializedTopics returns an array of topics to be materialized
 func GetMaterializedTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
-		datamodel.TopicNameType("codequality_Metric_topic"),
-		datamodel.TopicNameType("codequality_Project_topic"),
 		datamodel.TopicNameType("customer_CostCenter_topic"),
 		datamodel.TopicNameType("customer_Team_topic"),
 		datamodel.TopicNameType("customer_User_topic"),
