@@ -181,6 +181,39 @@ func (o *PullRequestReviewCreatedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// PullRequestReviewState is the enumeration type for state
+type PullRequestReviewState int32
+
+// String returns the string value for State
+func (v PullRequestReviewState) String() string {
+	switch int32(v) {
+	case 0:
+		return "APPROVED"
+	case 1:
+		return "COMMENTED"
+	case 2:
+		return "CHANGES_REQUESTED"
+	case 3:
+		return "PENDING"
+	case 4:
+		return "DISMISSED"
+	}
+	return "unset"
+}
+
+const (
+	// StateApproved is the enumeration value for approved
+	PullRequestReviewStateApproved PullRequestReviewState = 0
+	// StateCommented is the enumeration value for commented
+	PullRequestReviewStateCommented PullRequestReviewState = 1
+	// StateChangesRequested is the enumeration value for changes_requested
+	PullRequestReviewStateChangesRequested PullRequestReviewState = 2
+	// StatePending is the enumeration value for pending
+	PullRequestReviewStatePending PullRequestReviewState = 3
+	// StateDismissed is the enumeration value for dismissed
+	PullRequestReviewStateDismissed PullRequestReviewState = 4
+)
+
 // PullRequestReview the review for a given pull request
 type PullRequestReview struct {
 	// CreatedDate the timestamp in UTC that the review was created
@@ -198,7 +231,7 @@ type PullRequestReview struct {
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// State the state of the review
-	State string `json:"state" bson:"state" yaml:"state" faker:"-"`
+	State PullRequestReviewState `json:"state" bson:"state" yaml:"state" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UserRefID the user ref_id in the source system
@@ -227,6 +260,9 @@ func toPullRequestReviewObject(o interface{}, isavro bool, isoptional bool, avro
 
 	case PullRequestReviewCreatedDate:
 		return v.ToMap(isavro)
+
+	case PullRequestReviewState:
+		return v.String()
 
 	default:
 		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
@@ -482,7 +518,7 @@ func (o *PullRequestReview) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":          toPullRequestReviewObject(o.RefID, isavro, false, "string"),
 		"ref_type":        toPullRequestReviewObject(o.RefType, isavro, false, "string"),
 		"repo_id":         toPullRequestReviewObject(o.RepoID, isavro, false, "string"),
-		"state":           toPullRequestReviewObject(o.State, isavro, false, "string"),
+		"state":           toPullRequestReviewObject(o.State, isavro, false, "state"),
 		"updated_ts":      toPullRequestReviewObject(o.UpdatedAt, isavro, false, "long"),
 		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, isavro, false, "string"),
 		"hashcode":        toPullRequestReviewObject(o.Hashcode, isavro, false, "string"),
@@ -622,17 +658,36 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["state"].(string); ok {
+	if val, ok := kv["state"].(PullRequestReviewState); ok {
 		o.State = val
 	} else {
-		if val, ok := kv["state"]; ok {
-			if val == nil {
-				o.State = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.State = fmt.Sprintf("%v", val)
+		if em, ok := kv["state"].(map[string]interface{}); ok {
+			ev := em["sourcecode.state"].(string)
+			switch ev {
+			case "approved", "APPROVED":
+				o.State = 0
+			case "commented", "COMMENTED":
+				o.State = 1
+			case "changes_requested", "CHANGES_REQUESTED":
+				o.State = 2
+			case "pending", "PENDING":
+				o.State = 3
+			case "dismissed", "DISMISSED":
+				o.State = 4
+			}
+		}
+		if em, ok := kv["state"].(string); ok {
+			switch em {
+			case "approved", "APPROVED":
+				o.State = 0
+			case "commented", "COMMENTED":
+				o.State = 1
+			case "changes_requested", "CHANGES_REQUESTED":
+				o.State = 2
+			case "pending", "PENDING":
+				o.State = 3
+			case "dismissed", "DISMISSED":
+				o.State = 4
 			}
 		}
 	}
@@ -727,7 +782,11 @@ func GetPullRequestReviewAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "state",
-				"type": "string",
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "state",
+					"symbols": []interface{}{"APPROVED", "COMMENTED", "CHANGES_REQUESTED", "PENDING", "DISMISSED"},
+				},
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
