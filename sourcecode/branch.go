@@ -74,6 +74,8 @@ const (
 	BranchRefTypeColumn = "ref_type"
 	// BranchRepoIDColumn is the repo_id column name
 	BranchRepoIDColumn = "repo_id"
+	// BranchStaleColumn is the stale column name
+	BranchStaleColumn = "stale"
 	// BranchUpdatedAtColumn is the updated_ts column name
 	BranchUpdatedAtColumn = "updated_ts"
 )
@@ -106,6 +108,8 @@ type Branch struct {
 	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	// Stale if the branch is older than 90 days
+	Stale bool `json:"stale" bson:"stale" yaml:"stale" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -159,7 +163,7 @@ func (o *Branch) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		o.ID = hash.Values(o.RefID, o.RepoID)
+		o.ID = hash.Values(o.RefType, o.RepoID, o.CustomerID, o.Name)
 	}
 
 	if frommap {
@@ -401,6 +405,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"ref_id":                   toBranchObject(o.RefID, isavro, false, "string"),
 		"ref_type":                 toBranchObject(o.RefType, isavro, false, "string"),
 		"repo_id":                  toBranchObject(o.RepoID, isavro, false, "string"),
+		"stale":                    toBranchObject(o.Stale, isavro, false, "boolean"),
 		"updated_ts":               toBranchObject(o.UpdatedAt, isavro, false, "long"),
 		"hashcode":                 toBranchObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -677,6 +682,18 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["stale"].(bool); ok {
+		o.Stale = val
+	} else {
+		if val, ok := kv["stale"]; ok {
+			if val == nil {
+				o.Stale = number.ToBoolAny(nil)
+			} else {
+				o.Stale = number.ToBoolAny(val)
+			}
+		}
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -710,6 +727,7 @@ func (o *Branch) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
+	args = append(args, o.Stale)
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -777,6 +795,10 @@ func GetBranchAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "repo_id",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "stale",
+				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
