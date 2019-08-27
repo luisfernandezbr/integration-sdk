@@ -1011,6 +1011,10 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			for _, ae := range a {
 				if av, ok := ae.(IssueCustomFields); ok {
 					o.CustomFields = append(o.CustomFields, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IssueCustomFields
+					fm.FromMap(av)
+					o.CustomFields = append(o.CustomFields, fm)
 				} else {
 					b, _ := json.Marshal(ae)
 					var av IssueCustomFields
@@ -1026,6 +1030,10 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					o.CustomFields = append(o.CustomFields, r)
 				} else if r, ok := item.(map[string]interface{}); ok {
 					var fm IssueCustomFields
+					fm.FromMap(r)
+					o.CustomFields = append(o.CustomFields, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IssueCustomFields{}
 					fm.FromMap(r)
 					o.CustomFields = append(o.CustomFields, fm)
 				}

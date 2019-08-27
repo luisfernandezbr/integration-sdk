@@ -1701,6 +1701,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 			for _, ae := range a {
 				if av, ok := ae.(ProjectResponseProjects); ok {
 					o.Projects = append(o.Projects, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectResponseProjects
+					fm.FromMap(av)
+					o.Projects = append(o.Projects, fm)
 				} else {
 					b, _ := json.Marshal(ae)
 					var av ProjectResponseProjects
@@ -1716,6 +1720,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 					o.Projects = append(o.Projects, r)
 				} else if r, ok := item.(map[string]interface{}); ok {
 					var fm ProjectResponseProjects
+					fm.FromMap(r)
+					o.Projects = append(o.Projects, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectResponseProjects{}
 					fm.FromMap(r)
 					o.Projects = append(o.Projects, fm)
 				}

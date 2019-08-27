@@ -1793,6 +1793,10 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			for _, ae := range a {
 				if av, ok := ae.(RepoResponseRepos); ok {
 					o.Repos = append(o.Repos, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm RepoResponseRepos
+					fm.FromMap(av)
+					o.Repos = append(o.Repos, fm)
 				} else {
 					b, _ := json.Marshal(ae)
 					var av RepoResponseRepos
@@ -1808,6 +1812,10 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 					o.Repos = append(o.Repos, r)
 				} else if r, ok := item.(map[string]interface{}); ok {
 					var fm RepoResponseRepos
+					fm.FromMap(r)
+					o.Repos = append(o.Repos, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := RepoResponseRepos{}
 					fm.FromMap(r)
 					o.Repos = append(o.Repos, fm)
 				}

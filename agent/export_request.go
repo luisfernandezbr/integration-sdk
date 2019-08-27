@@ -1552,6 +1552,10 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 			for _, ae := range a {
 				if av, ok := ae.(ExportRequestIntegrations); ok {
 					o.Integrations = append(o.Integrations, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ExportRequestIntegrations
+					fm.FromMap(av)
+					o.Integrations = append(o.Integrations, fm)
 				} else {
 					b, _ := json.Marshal(ae)
 					var av ExportRequestIntegrations
@@ -1567,6 +1571,10 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 					o.Integrations = append(o.Integrations, r)
 				} else if r, ok := item.(map[string]interface{}); ok {
 					var fm ExportRequestIntegrations
+					fm.FromMap(r)
+					o.Integrations = append(o.Integrations, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ExportRequestIntegrations{}
 					fm.FromMap(r)
 					o.Integrations = append(o.Integrations, fm)
 				}

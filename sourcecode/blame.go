@@ -987,6 +987,10 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			for _, ae := range a {
 				if av, ok := ae.(BlameLines); ok {
 					o.Lines = append(o.Lines, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm BlameLines
+					fm.FromMap(av)
+					o.Lines = append(o.Lines, fm)
 				} else {
 					b, _ := json.Marshal(ae)
 					var av BlameLines
@@ -1002,6 +1006,10 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 					o.Lines = append(o.Lines, r)
 				} else if r, ok := item.(map[string]interface{}); ok {
 					var fm BlameLines
+					fm.FromMap(r)
+					o.Lines = append(o.Lines, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := BlameLines{}
 					fm.FromMap(r)
 					o.Lines = append(o.Lines, fm)
 				}

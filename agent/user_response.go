@@ -715,6 +715,10 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 			for _, ae := range a {
 				if av, ok := ae.(UserResponseUsersGroups); ok {
 					o.Groups = append(o.Groups, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm UserResponseUsersGroups
+					fm.FromMap(av)
+					o.Groups = append(o.Groups, fm)
 				} else {
 					b, _ := json.Marshal(ae)
 					var av UserResponseUsersGroups
@@ -730,6 +734,10 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 					o.Groups = append(o.Groups, r)
 				} else if r, ok := item.(map[string]interface{}); ok {
 					var fm UserResponseUsersGroups
+					fm.FromMap(r)
+					o.Groups = append(o.Groups, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := UserResponseUsersGroups{}
 					fm.FromMap(r)
 					o.Groups = append(o.Groups, fm)
 				}
@@ -1691,6 +1699,10 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 			for _, ae := range a {
 				if av, ok := ae.(UserResponseUsers); ok {
 					o.Users = append(o.Users, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm UserResponseUsers
+					fm.FromMap(av)
+					o.Users = append(o.Users, fm)
 				} else {
 					b, _ := json.Marshal(ae)
 					var av UserResponseUsers
@@ -1706,6 +1718,10 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 					o.Users = append(o.Users, r)
 				} else if r, ok := item.(map[string]interface{}); ok {
 					var fm UserResponseUsers
+					fm.FromMap(r)
+					o.Users = append(o.Users, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := UserResponseUsers{}
 					fm.FromMap(r)
 					o.Users = append(o.Users, fm)
 				}

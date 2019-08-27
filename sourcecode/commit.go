@@ -1442,6 +1442,10 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			for _, ae := range a {
 				if av, ok := ae.(CommitFiles); ok {
 					o.Files = append(o.Files, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm CommitFiles
+					fm.FromMap(av)
+					o.Files = append(o.Files, fm)
 				} else {
 					b, _ := json.Marshal(ae)
 					var av CommitFiles
@@ -1457,6 +1461,10 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 					o.Files = append(o.Files, r)
 				} else if r, ok := item.(map[string]interface{}); ok {
 					var fm CommitFiles
+					fm.FromMap(r)
+					o.Files = append(o.Files, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := CommitFiles{}
 					fm.FromMap(r)
 					o.Files = append(o.Files, fm)
 				}
