@@ -57,6 +57,8 @@ const (
 	ExportTriggerReprocessHistoricalColumn = "reprocess_historical"
 	// ExportTriggerUpdatedAtColumn is the updated_ts column name
 	ExportTriggerUpdatedAtColumn = "updated_ts"
+	// ExportTriggerUUIDColumn is the uuid column name
+	ExportTriggerUUIDColumn = "uuid"
 )
 
 // ExportTrigger used to trigger an agent.ExportRequest
@@ -73,6 +75,8 @@ type ExportTrigger struct {
 	ReprocessHistorical bool `json:"reprocess_historical" bson:"reprocess_historical" yaml:"reprocess_historical" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// UUID This UUID of the agent to trigger
+	UUID *string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -116,6 +120,9 @@ func (o *ExportTrigger) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *ExportTrigger) setDefaults(frommap bool) {
+	if o.UUID == nil {
+		o.UUID = &emptyString
+	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -348,6 +355,7 @@ func (o *ExportTrigger) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":             toExportTriggerObject(o.RefType, isavro, false, "string"),
 		"reprocess_historical": toExportTriggerObject(o.ReprocessHistorical, isavro, false, "boolean"),
 		"updated_ts":           toExportTriggerObject(o.UpdatedAt, isavro, false, "long"),
+		"uuid":                 toExportTriggerObject(o.UUID, isavro, true, "string"),
 		"hashcode":             toExportTriggerObject(o.Hashcode, isavro, false, "string"),
 	}
 }
@@ -448,6 +456,24 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["uuid"].(*string); ok {
+		o.UUID = val
+	} else if val, ok := kv["uuid"].(string); ok {
+		o.UUID = &val
+	} else {
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UUID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -460,6 +486,7 @@ func (o *ExportTrigger) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.ReprocessHistorical)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -498,6 +525,11 @@ func GetExportTriggerAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_ts",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name":    "uuid",
+				"type":    []interface{}{"null", "string"},
+				"default": nil,
 			},
 		},
 	}
