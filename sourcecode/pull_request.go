@@ -7,6 +7,7 @@ import (
 	"bufio"
 	"bytes"
 	"compress/gzip"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -21,13 +22,23 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
+	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
+	// PullRequestTopic is the default topic name
+	PullRequestTopic datamodel.TopicNameType = "sourcecode_PullRequest_topic"
+
+	// PullRequestStream is the default stream name
+	PullRequestStream datamodel.TopicNameType = "sourcecode_PullRequest_stream"
+
+	// PullRequestTable is the default table name
+	PullRequestTable datamodel.TopicNameType = "sourcecode_pullrequest"
 
 	// PullRequestModelName is the model name
 	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
@@ -92,6 +103,8 @@ const (
 	PullRequestUpdatedDateColumnOffsetColumn = "updated_date->offset"
 	// PullRequestUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
 	PullRequestUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
+	// PullRequestUpdatedAtColumn is the updated_ts column name
+	PullRequestUpdatedAtColumn = "updated_ts"
 	// PullRequestURLColumn is the url column name
 	PullRequestURLColumn = "url"
 )
@@ -597,6 +610,8 @@ type PullRequest struct {
 	Title string `json:"title" bson:"title" yaml:"title" faker:"commit_message"`
 	// UpdatedDate the timestamp in UTC that the pull request was closed
 	UpdatedDate PullRequestUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the pull request home page
 	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -648,7 +663,7 @@ func (o *PullRequest) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *PullRequest) GetTopicName() datamodel.TopicNameType {
-	return ""
+	return PullRequestTopic
 }
 
 // GetModelName returns the name of the model
@@ -677,12 +692,31 @@ func (o *PullRequest) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *PullRequest) GetTopicKey() string {
-	return ""
+	var i interface{} = o.RepoID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequest) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.CreatedDate
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	case PullRequestCreatedDate:
+		return datetime.DateFromEpoch(v.Epoch)
+	}
+	panic("not sure how to handle the date time format for PullRequest")
 }
 
 // GetRefID returns the RefID for the object
@@ -702,17 +736,43 @@ func (o *PullRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeCon
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *PullRequest) IsEvented() bool {
-	return false
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *PullRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = PullRequestModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
 func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	return nil
+	retention, err := time.ParseDuration("168h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "repo_id",
+		Timestamp:         "created_date",
+		NumPartitions:     8,
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetStateKey returns a key for use in state store
 func (o *PullRequest) GetStateKey() string {
-	key := ""
+	key := "repo_id"
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
@@ -857,6 +917,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		"status":            toPullRequestObject(o.Status, isavro, false, "status"),
 		"title":             toPullRequestObject(o.Title, isavro, false, "string"),
 		"updated_date":      toPullRequestObject(o.UpdatedDate, isavro, false, "updated_date"),
+		"updated_ts":        toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
 		"url":               toPullRequestObject(o.URL, isavro, false, "string"),
 		"hashcode":          toPullRequestObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -1218,6 +1279,21 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -1255,6 +1331,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.Status)
 	args = append(args, o.Title)
 	args = append(args, o.UpdatedDate)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -1342,6 +1419,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_date",
 				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "updated_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "updated_ts",
+				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "url",
@@ -1579,4 +1660,331 @@ func NewPullRequestOutputStream(stream io.WriteCloser, ch chan PullRequest, erro
 		}
 	}()
 	return done
+}
+
+// PullRequestSendEvent is an event detail for sending data
+type PullRequestSendEvent struct {
+	PullRequest *PullRequest
+	headers     map[string]string
+	time        time.Time
+	key         string
+}
+
+var _ datamodel.ModelSendEvent = (*PullRequestSendEvent)(nil)
+
+// Key is the key to use for the message
+func (e *PullRequestSendEvent) Key() string {
+	if e.key == "" {
+		return e.PullRequest.GetID()
+	}
+	return e.key
+}
+
+// Object returns an instance of the Model that will be send
+func (e *PullRequestSendEvent) Object() datamodel.Model {
+	return e.PullRequest
+}
+
+// Headers returns any headers for the event. can be nil to not send any additional headers
+func (e *PullRequestSendEvent) Headers() map[string]string {
+	return e.headers
+}
+
+// Timestamp returns the event timestamp. If empty, will default to time.Now()
+func (e *PullRequestSendEvent) Timestamp() time.Time {
+	return e.time
+}
+
+// PullRequestSendEventOpts is a function handler for setting opts
+type PullRequestSendEventOpts func(o *PullRequestSendEvent)
+
+// WithPullRequestSendEventKey sets the key value to a value different than the object ID
+func WithPullRequestSendEventKey(key string) PullRequestSendEventOpts {
+	return func(o *PullRequestSendEvent) {
+		o.key = key
+	}
+}
+
+// WithPullRequestSendEventTimestamp sets the timestamp value
+func WithPullRequestSendEventTimestamp(tv time.Time) PullRequestSendEventOpts {
+	return func(o *PullRequestSendEvent) {
+		o.time = tv
+	}
+}
+
+// WithPullRequestSendEventHeader sets the timestamp value
+func WithPullRequestSendEventHeader(key, value string) PullRequestSendEventOpts {
+	return func(o *PullRequestSendEvent) {
+		if o.headers == nil {
+			o.headers = make(map[string]string)
+		}
+		o.headers[key] = value
+	}
+}
+
+// NewPullRequestSendEvent returns a new PullRequestSendEvent instance
+func NewPullRequestSendEvent(o *PullRequest, opts ...PullRequestSendEventOpts) *PullRequestSendEvent {
+	res := &PullRequestSendEvent{
+		PullRequest: o,
+	}
+	if len(opts) > 0 {
+		for _, opt := range opts {
+			opt(res)
+		}
+	}
+	return res
+}
+
+// NewPullRequestProducer will stream data from the channel
+func NewPullRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
+	done := make(chan bool, 1)
+	emptyTime := time.Unix(0, 0)
+	go func() {
+		defer func() { done <- true }()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case item := <-ch:
+				if item == nil {
+					empty <- true
+					return
+				}
+				if object, ok := item.Object().(*PullRequest); ok {
+					binary, codec, err := object.ToAvroBinary()
+					if err != nil {
+						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
+						return
+					}
+					headers := map[string]string{}
+					object.SetEventHeaders(headers)
+					for k, v := range item.Headers() {
+						headers[k] = v
+					}
+					tv := item.Timestamp()
+					if tv.IsZero() {
+						tv = object.GetTimestamp() // if not provided in the message, use the objects value
+					}
+					if tv.IsZero() || tv.Equal(emptyTime) {
+						tv = time.Now() // if its still zero, use the ingest time
+					}
+					// add generated message headers
+					headers["message-id"] = pstrings.NewUUIDV4()
+					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
+					msg := eventing.Message{
+						Encoding:  eventing.AvroEncoding,
+						Key:       item.Key(),
+						Value:     binary,
+						Codec:     codec,
+						Headers:   headers,
+						Timestamp: tv,
+						Partition: -1, // select any partition based on partitioner strategy in kafka
+						Topic:     object.GetTopicName().String(),
+					}
+					if err := producer.Send(ctx, msg); err != nil {
+						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
+					}
+				} else {
+					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.PullRequest but received on of type %v", reflect.TypeOf(item.Object()))
+				}
+			}
+		}
+	}()
+	return done
+}
+
+// NewPullRequestConsumer will stream data from the topic into the provided channel
+func NewPullRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
+	adapter := &eventing.ConsumerCallbackAdapter{
+		OnDataReceived: func(msg eventing.Message) error {
+			var object PullRequest
+			switch msg.Encoding {
+			case eventing.JSONEncoding:
+				if err := json.Unmarshal(msg.Value, &object); err != nil {
+					return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequest: %s", err)
+				}
+			case eventing.AvroEncoding:
+				if err := object.FromAvroBinary(msg.Value); err != nil {
+					return fmt.Errorf("error unmarshaling avro data into sourcecode.PullRequest: %s", err)
+				}
+			default:
+				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.PullRequest")
+			}
+
+			// ignore messages that have exceeded the TTL
+			cfg := object.GetTopicConfig()
+			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
+				// if disable auto and we're skipping, we need to commit the message
+				if !msg.IsAutoCommit() {
+					msg.Commit()
+				}
+				return nil
+			}
+			msg.Codec = object.GetAvroCodec() // match the codec
+
+			ch <- &PullRequestReceiveEvent{&object, msg, false}
+			return nil
+		},
+		OnErrorReceived: func(err error) {
+			errors <- err
+		},
+		OnEOF: func(topic string, partition int32, offset int64) {
+			var object PullRequest
+			var msg eventing.Message
+			msg.Topic = topic
+			msg.Partition = partition
+			msg.Codec = object.GetAvroCodec() // match the codec
+			ch <- &PullRequestReceiveEvent{nil, msg, true}
+		},
+	}
+	consumer.Consume(adapter)
+	return adapter
+}
+
+// PullRequestReceiveEvent is an event detail for receiving data
+type PullRequestReceiveEvent struct {
+	PullRequest *PullRequest
+	message     eventing.Message
+	eof         bool
+}
+
+var _ datamodel.ModelReceiveEvent = (*PullRequestReceiveEvent)(nil)
+
+// Object returns an instance of the Model that was received
+func (e *PullRequestReceiveEvent) Object() datamodel.Model {
+	return e.PullRequest
+}
+
+// Message returns the underlying message data for the event
+func (e *PullRequestReceiveEvent) Message() eventing.Message {
+	return e.message
+}
+
+// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
+func (e *PullRequestReceiveEvent) EOF() bool {
+	return e.eof
+}
+
+// PullRequestProducer implements the datamodel.ModelEventProducer
+type PullRequestProducer struct {
+	ch       chan datamodel.ModelSendEvent
+	done     <-chan bool
+	producer eventing.Producer
+	closed   bool
+	mu       sync.Mutex
+	ctx      context.Context
+	cancel   context.CancelFunc
+	empty    chan bool
+}
+
+var _ datamodel.ModelEventProducer = (*PullRequestProducer)(nil)
+
+// Channel returns the producer channel to produce new events
+func (p *PullRequestProducer) Channel() chan<- datamodel.ModelSendEvent {
+	return p.ch
+}
+
+// Close is called to shutdown the producer
+func (p *PullRequestProducer) Close() error {
+	p.mu.Lock()
+	closed := p.closed
+	p.closed = true
+	p.mu.Unlock()
+	if !closed {
+		close(p.ch)
+		<-p.empty
+		p.cancel()
+		<-p.done
+	}
+	return nil
+}
+
+// NewProducerChannel returns a channel which can be used for producing Model events
+func (o *PullRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return o.NewProducerChannelSize(producer, 0, errors)
+}
+
+// NewProducerChannelSize returns a channel which can be used for producing Model events
+func (o *PullRequest) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
+	empty := make(chan bool, 1)
+	newctx, cancel := context.WithCancel(context.Background())
+	return &PullRequestProducer{
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		empty:    empty,
+		done:     NewPullRequestProducer(newctx, producer, ch, errors, empty),
+	}
+}
+
+// NewPullRequestProducerChannel returns a channel which can be used for producing Model events
+func NewPullRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
+	return NewPullRequestProducerChannelSize(producer, 0, errors)
+}
+
+// NewPullRequestProducerChannelSize returns a channel which can be used for producing Model events
+func NewPullRequestProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
+	ch := make(chan datamodel.ModelSendEvent, size)
+	empty := make(chan bool, 1)
+	newctx, cancel := context.WithCancel(context.Background())
+	return &PullRequestProducer{
+		ch:       ch,
+		ctx:      newctx,
+		cancel:   cancel,
+		producer: producer,
+		empty:    empty,
+		done:     NewPullRequestProducer(newctx, producer, ch, errors, empty),
+	}
+}
+
+// PullRequestConsumer implements the datamodel.ModelEventConsumer
+type PullRequestConsumer struct {
+	ch       chan datamodel.ModelReceiveEvent
+	consumer eventing.Consumer
+	callback *eventing.ConsumerCallbackAdapter
+	closed   bool
+	mu       sync.Mutex
+}
+
+var _ datamodel.ModelEventConsumer = (*PullRequestConsumer)(nil)
+
+// Channel returns the consumer channel to consume new events
+func (c *PullRequestConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
+	return c.ch
+}
+
+// Close is called to shutdown the producer
+func (c *PullRequestConsumer) Close() error {
+	c.mu.Lock()
+	closed := c.closed
+	c.closed = true
+	c.mu.Unlock()
+	var err error
+	if !closed {
+		c.callback.Close()
+		err = c.consumer.Close()
+	}
+	return err
+}
+
+// NewConsumerChannel returns a consumer channel which can be used to consume Model events
+func (o *PullRequest) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	return &PullRequestConsumer{
+		ch:       ch,
+		callback: NewPullRequestConsumer(consumer, ch, errors),
+		consumer: consumer,
+	}
+}
+
+// NewPullRequestConsumerChannel returns a consumer channel which can be used to consume Model events
+func NewPullRequestConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
+	ch := make(chan datamodel.ModelReceiveEvent)
+	return &PullRequestConsumer{
+		ch:       ch,
+		callback: NewPullRequestConsumer(consumer, ch, errors),
+		consumer: consumer,
+	}
 }
