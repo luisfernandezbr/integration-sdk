@@ -7,7 +7,6 @@ import (
 	"bufio"
 	"bytes"
 	"compress/gzip"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -22,23 +21,13 @@ import (
 	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
-	// PullRequestCommentTopic is the default topic name
-	PullRequestCommentTopic datamodel.TopicNameType = "sourcecode_PullRequestComment_topic"
-
-	// PullRequestCommentStream is the default stream name
-	PullRequestCommentStream datamodel.TopicNameType = "sourcecode_PullRequestComment_stream"
-
-	// PullRequestCommentTable is the default table name
-	PullRequestCommentTable datamodel.TopicNameType = "sourcecode_pullrequestcomment"
 
 	// PullRequestCommentModelName is the model name
 	PullRequestCommentModelName datamodel.ModelNameType = "sourcecode.PullRequestComment"
@@ -75,8 +64,6 @@ const (
 	PullRequestCommentUpdatedDateColumnOffsetColumn = "updated_date->offset"
 	// PullRequestCommentUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
 	PullRequestCommentUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
-	// PullRequestCommentUpdatedAtColumn is the updated_ts column name
-	PullRequestCommentUpdatedAtColumn = "updated_ts"
 	// PullRequestCommentUserRefIDColumn is the user_ref_id column name
 	PullRequestCommentUserRefIDColumn = "user_ref_id"
 )
@@ -317,8 +304,6 @@ type PullRequestComment struct {
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// UpdatedDate the timestamp in UTC that the comment was closed
 	UpdatedDate PullRequestCommentUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -361,7 +346,7 @@ func (o *PullRequestComment) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *PullRequestComment) GetTopicName() datamodel.TopicNameType {
-	return PullRequestCommentTopic
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -390,29 +375,12 @@ func (o *PullRequestComment) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *PullRequestComment) GetTopicKey() string {
-	var i interface{} = o.RepoID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequestComment) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for PullRequestComment")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -432,43 +400,17 @@ func (o *PullRequestComment) GetModelMaterializeConfig() *datamodel.ModelMateria
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *PullRequestComment) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *PullRequestComment) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = PullRequestCommentModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *PullRequestComment) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("168h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "repo_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetStateKey returns a key for use in state store
 func (o *PullRequestComment) GetStateKey() string {
-	key := "repo_id"
+	key := ""
 	return fmt.Sprintf("%s_%s", key, o.GetID())
 }
 
@@ -605,7 +547,6 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":        toPullRequestCommentObject(o.RefType, isavro, false, "string"),
 		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
 		"updated_date":    toPullRequestCommentObject(o.UpdatedDate, isavro, false, "updated_date"),
-		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, isavro, false, "long"),
 		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, isavro, false, "string"),
 		"hashcode":        toPullRequestCommentObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -792,21 +733,6 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["user_ref_id"].(string); ok {
 		o.UserRefID = val
 	} else {
@@ -836,7 +762,6 @@ func (o *PullRequestComment) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
 	args = append(args, o.UpdatedDate)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -888,10 +813,6 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_date",
 				"type": map[string]interface{}{"doc": "the timestamp in UTC that the comment was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "updated_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
 			},
 			map[string]interface{}{
 				"name": "user_ref_id",
@@ -1129,331 +1050,4 @@ func NewPullRequestCommentOutputStream(stream io.WriteCloser, ch chan PullReques
 		}
 	}()
 	return done
-}
-
-// PullRequestCommentSendEvent is an event detail for sending data
-type PullRequestCommentSendEvent struct {
-	PullRequestComment *PullRequestComment
-	headers            map[string]string
-	time               time.Time
-	key                string
-}
-
-var _ datamodel.ModelSendEvent = (*PullRequestCommentSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *PullRequestCommentSendEvent) Key() string {
-	if e.key == "" {
-		return e.PullRequestComment.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *PullRequestCommentSendEvent) Object() datamodel.Model {
-	return e.PullRequestComment
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *PullRequestCommentSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *PullRequestCommentSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// PullRequestCommentSendEventOpts is a function handler for setting opts
-type PullRequestCommentSendEventOpts func(o *PullRequestCommentSendEvent)
-
-// WithPullRequestCommentSendEventKey sets the key value to a value different than the object ID
-func WithPullRequestCommentSendEventKey(key string) PullRequestCommentSendEventOpts {
-	return func(o *PullRequestCommentSendEvent) {
-		o.key = key
-	}
-}
-
-// WithPullRequestCommentSendEventTimestamp sets the timestamp value
-func WithPullRequestCommentSendEventTimestamp(tv time.Time) PullRequestCommentSendEventOpts {
-	return func(o *PullRequestCommentSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithPullRequestCommentSendEventHeader sets the timestamp value
-func WithPullRequestCommentSendEventHeader(key, value string) PullRequestCommentSendEventOpts {
-	return func(o *PullRequestCommentSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewPullRequestCommentSendEvent returns a new PullRequestCommentSendEvent instance
-func NewPullRequestCommentSendEvent(o *PullRequestComment, opts ...PullRequestCommentSendEventOpts) *PullRequestCommentSendEvent {
-	res := &PullRequestCommentSendEvent{
-		PullRequestComment: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewPullRequestCommentProducer will stream data from the channel
-func NewPullRequestCommentProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*PullRequestComment); ok {
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       item.Key(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: -1, // select any partition based on partitioner strategy in kafka
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.PullRequestComment but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewPullRequestCommentConsumer will stream data from the topic into the provided channel
-func NewPullRequestCommentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object PullRequestComment
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequestComment: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into sourcecode.PullRequestComment: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.PullRequestComment")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &PullRequestCommentReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object PullRequestComment
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &PullRequestCommentReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// PullRequestCommentReceiveEvent is an event detail for receiving data
-type PullRequestCommentReceiveEvent struct {
-	PullRequestComment *PullRequestComment
-	message            eventing.Message
-	eof                bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*PullRequestCommentReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *PullRequestCommentReceiveEvent) Object() datamodel.Model {
-	return e.PullRequestComment
-}
-
-// Message returns the underlying message data for the event
-func (e *PullRequestCommentReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *PullRequestCommentReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// PullRequestCommentProducer implements the datamodel.ModelEventProducer
-type PullRequestCommentProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*PullRequestCommentProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *PullRequestCommentProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *PullRequestCommentProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *PullRequestComment) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *PullRequestComment) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PullRequestCommentProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPullRequestCommentProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewPullRequestCommentProducerChannel returns a channel which can be used for producing Model events
-func NewPullRequestCommentProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewPullRequestCommentProducerChannelSize(producer, 0, errors)
-}
-
-// NewPullRequestCommentProducerChannelSize returns a channel which can be used for producing Model events
-func NewPullRequestCommentProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PullRequestCommentProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPullRequestCommentProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// PullRequestCommentConsumer implements the datamodel.ModelEventConsumer
-type PullRequestCommentConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*PullRequestCommentConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *PullRequestCommentConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *PullRequestCommentConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *PullRequestComment) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PullRequestCommentConsumer{
-		ch:       ch,
-		callback: NewPullRequestCommentConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewPullRequestCommentConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewPullRequestCommentConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PullRequestCommentConsumer{
-		ch:       ch,
-		callback: NewPullRequestCommentConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
 }
