@@ -193,9 +193,9 @@ func (o *Project) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("168h0m0s")
+	retention, err := time.ParseDuration("87360h0m0s")
 	if err != nil {
-		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
 	}
 
 	ttl, err := time.ParseDuration("0s")

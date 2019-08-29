@@ -1302,9 +1302,9 @@ func (o *UserRequest) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *UserRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("168h0m0s")
+	retention, err := time.ParseDuration("87360h0m0s")
 	if err != nil {
-		panic("Invalid topic retention duration provided: 168h0m0s. " + err.Error())
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
 	}
 
 	ttl, err := time.ParseDuration("0s")
@@ -1560,25 +1560,6 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
