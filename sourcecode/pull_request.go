@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 
@@ -27,7 +28,9 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -57,6 +60,8 @@ const (
 	PullRequestClosedDateColumnOffsetColumn = "closed_date->offset"
 	// PullRequestClosedDateColumnRfc3339Column is the rfc3339 column property of the ClosedDate name
 	PullRequestClosedDateColumnRfc3339Column = "closed_date->rfc3339"
+	// PullRequestCommitIdsColumn is the commit_ids column name
+	PullRequestCommitIdsColumn = "commit_ids"
 	// PullRequestCreatedByRefIDColumn is the created_by_ref_id column name
 	PullRequestCreatedByRefIDColumn = "created_by_ref_id"
 	// PullRequestCreatedDateColumn is the created_date column name
@@ -582,6 +587,8 @@ type PullRequest struct {
 	ClosedByRefID string `json:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
 	// ClosedDate the timestamp in UTC that the pull request was closed
 	ClosedDate PullRequestClosedDate `json:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
+	// CommitIds list of commit ids added in this pr
+	CommitIds []string `json:"commit_ids" bson:"commit_ids" yaml:"commit_ids" faker:"-"`
 	// CreatedByRefID the user ref_id in the source system
 	CreatedByRefID string `json:"created_by_ref_id" bson:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
 	// CreatedDate the timestamp in UTC that the pull request was created
@@ -672,6 +679,9 @@ func (o *PullRequest) GetModelName() datamodel.ModelNameType {
 }
 
 func (o *PullRequest) setDefaults(frommap bool) {
+	if o.CommitIds == nil {
+		o.CommitIds = make([]string, 0)
+	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -898,12 +908,16 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		isavro = true
 	}
 	if isavro {
+		if o.CommitIds == nil {
+			o.CommitIds = make([]string, 0)
+		}
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"branch_id":         toPullRequestObject(o.BranchID, isavro, false, "string"),
 		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
 		"closed_date":       toPullRequestObject(o.ClosedDate, isavro, false, "closed_date"),
+		"commit_ids":        toPullRequestObject(o.CommitIds, isavro, false, "commit_ids"),
 		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, isavro, false, "string"),
 		"created_date":      toPullRequestObject(o.CreatedDate, isavro, false, "created_date"),
 		"customer_id":       toPullRequestObject(o.CustomerID, isavro, false, "string"),
@@ -995,6 +1009,57 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.ClosedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["commit_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for commit_ids field")
+				}
+			}
+			o.CommitIds = na
+		}
+	}
+	if o.CommitIds == nil {
+		o.CommitIds = make([]string, 0)
 	}
 
 	if val, ok := kv["created_by_ref_id"].(string); ok {
@@ -1318,6 +1383,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.BranchID)
 	args = append(args, o.ClosedByRefID)
 	args = append(args, o.ClosedDate)
+	args = append(args, o.CommitIds)
 	args = append(args, o.CreatedByRefID)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
@@ -1360,6 +1426,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "closed_date",
 				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "closed_date", "type": "record"},
+			},
+			map[string]interface{}{
+				"name": "commit_ids",
+				"type": map[string]interface{}{"items": "string", "name": "commit_ids", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "created_by_ref_id",

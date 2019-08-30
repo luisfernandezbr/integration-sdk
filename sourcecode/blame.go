@@ -536,7 +536,7 @@ func (o *Blame) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Blame) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
+	var dt interface{} = o.ChangeDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -548,6 +548,8 @@ func (o *Blame) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case BlameChangeDate:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Blame")
 }
@@ -594,7 +596,7 @@ func (o *Blame) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "repo_id",
-		Timestamp:         "updated_ts",
+		Timestamp:         "change_date",
 		NumPartitions:     8,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
