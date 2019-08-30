@@ -309,6 +309,7 @@ func (o *EnrollRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Key:               "uuid",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,
 		MaxSize:           5242880,

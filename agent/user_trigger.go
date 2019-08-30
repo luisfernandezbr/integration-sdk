@@ -189,9 +189,9 @@ func (o *UserTrigger) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *UserTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
+	retention, err := time.ParseDuration("24h0m0s")
 	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
 	}
 
 	ttl, err := time.ParseDuration("0s")
@@ -205,6 +205,7 @@ func (o *UserTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Key:               "id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,
 		MaxSize:           5242880,

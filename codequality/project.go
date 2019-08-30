@@ -209,6 +209,7 @@ func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Key:               "customer_id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,
 		MaxSize:           5242880,

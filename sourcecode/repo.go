@@ -232,6 +232,7 @@ func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Key:               "id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,
 		MaxSize:           5242880,

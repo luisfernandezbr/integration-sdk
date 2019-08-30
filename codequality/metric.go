@@ -334,6 +334,7 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Key:               "project_id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,
 		MaxSize:           5242880,
