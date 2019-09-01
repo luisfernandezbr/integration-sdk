@@ -77,6 +77,8 @@ const (
 	PullRequestCommentUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
 	// PullRequestCommentUpdatedAtColumn is the updated_ts column name
 	PullRequestCommentUpdatedAtColumn = "updated_ts"
+	// PullRequestCommentURLColumn is the url column name
+	PullRequestCommentURLColumn = "url"
 	// PullRequestCommentUserRefIDColumn is the user_ref_id column name
 	PullRequestCommentUserRefIDColumn = "user_ref_id"
 )
@@ -319,6 +321,8 @@ type PullRequestComment struct {
 	UpdatedDate PullRequestCommentUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// URL the URL to the source system for this comment
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// UserRefID the user ref_id in the source system
 	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -609,6 +613,7 @@ func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
 		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
 		"updated_date":    toPullRequestCommentObject(o.UpdatedDate, isavro, false, "updated_date"),
 		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, isavro, false, "long"),
+		"url":             toPullRequestCommentObject(o.URL, isavro, false, "string"),
 		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, isavro, false, "string"),
 		"hashcode":        toPullRequestCommentObject(o.Hashcode, isavro, false, "string"),
 	}
@@ -810,6 +815,21 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["user_ref_id"].(string); ok {
 		o.UserRefID = val
 	} else {
@@ -840,6 +860,7 @@ func (o *PullRequestComment) Hash() string {
 	args = append(args, o.RepoID)
 	args = append(args, o.UpdatedDate)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.URL)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -895,6 +916,10 @@ func GetPullRequestCommentAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_ts",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "url",
+				"type": "string",
 			},
 			map[string]interface{}{
 				"name": "user_ref_id",

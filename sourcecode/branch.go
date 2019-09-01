@@ -76,6 +76,8 @@ const (
 	BranchRepoIDColumn = "repo_id"
 	// BranchUpdatedAtColumn is the updated_ts column name
 	BranchUpdatedAtColumn = "updated_ts"
+	// BranchURLColumn is the url column name
+	BranchURLColumn = "url"
 )
 
 // Branch git branches
@@ -108,6 +110,8 @@ type Branch struct {
 	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// URL the URL to the source system for this branch
+	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -403,6 +407,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"ref_type":                 toBranchObject(o.RefType, isavro, false, "string"),
 		"repo_id":                  toBranchObject(o.RepoID, isavro, false, "string"),
 		"updated_ts":               toBranchObject(o.UpdatedAt, isavro, false, "long"),
+		"url":                      toBranchObject(o.URL, isavro, false, "string"),
 		"hashcode":                 toBranchObject(o.Hashcode, isavro, false, "string"),
 	}
 }
@@ -692,6 +697,21 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -712,6 +732,7 @@ func (o *Branch) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -782,6 +803,10 @@ func GetBranchAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "updated_ts",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "url",
+				"type": "string",
 			},
 		},
 	}
