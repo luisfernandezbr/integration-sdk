@@ -50,6 +50,8 @@ const (
 const (
 	// PullRequestBranchIDColumn is the branch_id column name
 	PullRequestBranchIDColumn = "branch_id"
+	// PullRequestBranchNameColumn is the branch_name column name
+	PullRequestBranchNameColumn = "branch_name"
 	// PullRequestClosedByRefIDColumn is the closed_by_ref_id column name
 	PullRequestClosedByRefIDColumn = "closed_by_ref_id"
 	// PullRequestClosedDateColumn is the closed_date column name
@@ -583,8 +585,10 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
-	// BranchID the unique id for the branch
+	// BranchID id for the branch based on branch_name, could be already deleted
 	BranchID string `json:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
+	// BranchName branch name of the pr, could be  deleted
+	BranchName string `json:"branch_name" bson:"branch_name" yaml:"branch_name" faker:"-"`
 	// ClosedByRefID the id of user who closed the pull request
 	ClosedByRefID string `json:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
 	// ClosedDate the timestamp in UTC that the pull request was closed
@@ -925,6 +929,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"branch_id":         toPullRequestObject(o.BranchID, isavro, false, "string"),
+		"branch_name":       toPullRequestObject(o.BranchName, isavro, false, "string"),
 		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
 		"closed_date":       toPullRequestObject(o.ClosedDate, isavro, false, "closed_date"),
 		"commit_ids":        toPullRequestObject(o.CommitIds, isavro, false, "commit_ids"),
@@ -970,6 +975,21 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.BranchID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["branch_name"].(string); ok {
+		o.BranchName = val
+	} else {
+		if val, ok := kv["branch_name"]; ok {
+			if val == nil {
+				o.BranchName = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.BranchName = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1443,6 +1463,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 func (o *PullRequest) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.BranchID)
+	args = append(args, o.BranchName)
 	args = append(args, o.ClosedByRefID)
 	args = append(args, o.ClosedDate)
 	args = append(args, o.CommitIds)
@@ -1480,6 +1501,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "branch_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "branch_name",
 				"type": "string",
 			},
 			map[string]interface{}{
