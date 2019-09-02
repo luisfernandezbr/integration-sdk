@@ -54,8 +54,12 @@ const (
 	BranchBehindDefaultCountColumn = "behind_default_count"
 	// BranchBranchedFromCommitIdsColumn is the branched_from_commit_ids column name
 	BranchBranchedFromCommitIdsColumn = "branched_from_commit_ids"
+	// BranchBranchedFromCommitShasColumn is the branched_from_commit_shas column name
+	BranchBranchedFromCommitShasColumn = "branched_from_commit_shas"
 	// BranchCommitIdsColumn is the commit_ids column name
 	BranchCommitIdsColumn = "commit_ids"
+	// BranchCommitShasColumn is the commit_shas column name
+	BranchCommitShasColumn = "commit_shas"
 	// BranchCustomerIDColumn is the customer_id column name
 	BranchCustomerIDColumn = "customer_id"
 	// BranchDefaultColumn is the default column name
@@ -64,6 +68,8 @@ const (
 	BranchIDColumn = "id"
 	// BranchMergeCommitIDColumn is the merge_commit_id column name
 	BranchMergeCommitIDColumn = "merge_commit_id"
+	// BranchMergeCommitShaColumn is the merge_commit_sha column name
+	BranchMergeCommitShaColumn = "merge_commit_sha"
 	// BranchMergedColumn is the merged column name
 	BranchMergedColumn = "merged"
 	// BranchNameColumn is the name column name
@@ -88,16 +94,22 @@ type Branch struct {
 	BehindDefaultCount int64 `json:"behind_default_count" bson:"behind_default_count" yaml:"behind_default_count" faker:"-"`
 	// BranchedFromCommitIds the commit ids from which the branch was created
 	BranchedFromCommitIds []string `json:"branched_from_commit_ids" bson:"branched_from_commit_ids" yaml:"branched_from_commit_ids" faker:"-"`
+	// BranchedFromCommitShas the commit shas from which the branch was created
+	BranchedFromCommitShas []string `json:"branched_from_commit_shas" bson:"branched_from_commit_shas" yaml:"branched_from_commit_shas" faker:"-"`
 	// CommitIds list of commit ids contained on this branch
 	CommitIds []string `json:"commit_ids" bson:"commit_ids" yaml:"commit_ids" faker:"-"`
+	// CommitShas list of commit shas contained on this branch
+	CommitShas []string `json:"commit_shas" bson:"commit_shas" yaml:"commit_shas" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Default true if the branch is the default branch
 	Default bool `json:"default" bson:"default" yaml:"default" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
-	// MergeCommitID commit id to which the branch was merged
+	// MergeCommitID commit id in which the branch was merged
 	MergeCommitID string `json:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
+	// MergeCommitSha commit sha in which the branch was merged
+	MergeCommitSha string `json:"merge_commit_sha" bson:"merge_commit_sha" yaml:"merge_commit_sha" faker:"-"`
 	// Merged true if the branch has been merged into the default branch
 	Merged bool `json:"merged" bson:"merged" yaml:"merged" faker:"-"`
 	// Name name of the branch
@@ -158,8 +170,14 @@ func (o *Branch) setDefaults(frommap bool) {
 	if o.BranchedFromCommitIds == nil {
 		o.BranchedFromCommitIds = make([]string, 0)
 	}
+	if o.BranchedFromCommitShas == nil {
+		o.BranchedFromCommitShas = make([]string, 0)
+	}
 	if o.CommitIds == nil {
 		o.CommitIds = make([]string, 0)
+	}
+	if o.CommitShas == nil {
+		o.CommitShas = make([]string, 0)
 	}
 
 	if o.ID == "" {
@@ -387,28 +405,37 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		if o.BranchedFromCommitIds == nil {
 			o.BranchedFromCommitIds = make([]string, 0)
 		}
+		if o.BranchedFromCommitShas == nil {
+			o.BranchedFromCommitShas = make([]string, 0)
+		}
 		if o.CommitIds == nil {
 			o.CommitIds = make([]string, 0)
+		}
+		if o.CommitShas == nil {
+			o.CommitShas = make([]string, 0)
 		}
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"ahead_default_count":      toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
-		"behind_default_count":     toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
-		"branched_from_commit_ids": toBranchObject(o.BranchedFromCommitIds, isavro, false, "branched_from_commit_ids"),
-		"commit_ids":               toBranchObject(o.CommitIds, isavro, false, "commit_ids"),
-		"customer_id":              toBranchObject(o.CustomerID, isavro, false, "string"),
-		"default":                  toBranchObject(o.Default, isavro, false, "boolean"),
-		"id":                       toBranchObject(o.ID, isavro, false, "string"),
-		"merge_commit_id":          toBranchObject(o.MergeCommitID, isavro, false, "string"),
-		"merged":                   toBranchObject(o.Merged, isavro, false, "boolean"),
-		"name":                     toBranchObject(o.Name, isavro, false, "string"),
-		"ref_id":                   toBranchObject(o.RefID, isavro, false, "string"),
-		"ref_type":                 toBranchObject(o.RefType, isavro, false, "string"),
-		"repo_id":                  toBranchObject(o.RepoID, isavro, false, "string"),
-		"updated_ts":               toBranchObject(o.UpdatedAt, isavro, false, "long"),
-		"url":                      toBranchObject(o.URL, isavro, false, "string"),
-		"hashcode":                 toBranchObject(o.Hashcode, isavro, false, "string"),
+		"ahead_default_count":       toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
+		"behind_default_count":      toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
+		"branched_from_commit_ids":  toBranchObject(o.BranchedFromCommitIds, isavro, false, "branched_from_commit_ids"),
+		"branched_from_commit_shas": toBranchObject(o.BranchedFromCommitShas, isavro, false, "branched_from_commit_shas"),
+		"commit_ids":                toBranchObject(o.CommitIds, isavro, false, "commit_ids"),
+		"commit_shas":               toBranchObject(o.CommitShas, isavro, false, "commit_shas"),
+		"customer_id":               toBranchObject(o.CustomerID, isavro, false, "string"),
+		"default":                   toBranchObject(o.Default, isavro, false, "boolean"),
+		"id":                        toBranchObject(o.ID, isavro, false, "string"),
+		"merge_commit_id":           toBranchObject(o.MergeCommitID, isavro, false, "string"),
+		"merge_commit_sha":          toBranchObject(o.MergeCommitSha, isavro, false, "string"),
+		"merged":                    toBranchObject(o.Merged, isavro, false, "boolean"),
+		"name":                      toBranchObject(o.Name, isavro, false, "string"),
+		"ref_id":                    toBranchObject(o.RefID, isavro, false, "string"),
+		"ref_type":                  toBranchObject(o.RefType, isavro, false, "string"),
+		"repo_id":                   toBranchObject(o.RepoID, isavro, false, "string"),
+		"updated_ts":                toBranchObject(o.UpdatedAt, isavro, false, "long"),
+		"url":                       toBranchObject(o.URL, isavro, false, "string"),
+		"hashcode":                  toBranchObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -503,6 +530,57 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		o.BranchedFromCommitIds = make([]string, 0)
 	}
 
+	if val, ok := kv["branched_from_commit_shas"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for branched_from_commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for branched_from_commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for branched_from_commit_shas field")
+				}
+			}
+			o.BranchedFromCommitShas = na
+		}
+	}
+	if o.BranchedFromCommitShas == nil {
+		o.BranchedFromCommitShas = make([]string, 0)
+	}
+
 	if val, ok := kv["commit_ids"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -552,6 +630,57 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	}
 	if o.CommitIds == nil {
 		o.CommitIds = make([]string, 0)
+	}
+
+	if val, ok := kv["commit_shas"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for commit_shas field")
+				}
+			}
+			o.CommitShas = na
+		}
+	}
+	if o.CommitShas == nil {
+		o.CommitShas = make([]string, 0)
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
@@ -607,6 +736,21 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.MergeCommitID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["merge_commit_sha"].(string); ok {
+		o.MergeCommitSha = val
+	} else {
+		if val, ok := kv["merge_commit_sha"]; ok {
+			if val == nil {
+				o.MergeCommitSha = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.MergeCommitSha = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -721,11 +865,14 @@ func (o *Branch) Hash() string {
 	args = append(args, o.AheadDefaultCount)
 	args = append(args, o.BehindDefaultCount)
 	args = append(args, o.BranchedFromCommitIds)
+	args = append(args, o.BranchedFromCommitShas)
 	args = append(args, o.CommitIds)
+	args = append(args, o.CommitShas)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Default)
 	args = append(args, o.ID)
 	args = append(args, o.MergeCommitID)
+	args = append(args, o.MergeCommitSha)
 	args = append(args, o.Merged)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
@@ -761,8 +908,16 @@ func GetBranchAvroSchemaSpec() string {
 				"type": map[string]interface{}{"items": "string", "name": "branched_from_commit_ids", "type": "array"},
 			},
 			map[string]interface{}{
+				"name": "branched_from_commit_shas",
+				"type": map[string]interface{}{"items": "string", "name": "branched_from_commit_shas", "type": "array"},
+			},
+			map[string]interface{}{
 				"name": "commit_ids",
 				"type": map[string]interface{}{"items": "string", "name": "commit_ids", "type": "array"},
+			},
+			map[string]interface{}{
+				"name": "commit_shas",
+				"type": map[string]interface{}{"items": "string", "name": "commit_shas", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "customer_id",
@@ -778,6 +933,10 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "merge_commit_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "merge_commit_sha",
 				"type": "string",
 			},
 			map[string]interface{}{

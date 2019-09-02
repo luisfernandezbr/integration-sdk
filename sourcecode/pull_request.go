@@ -62,6 +62,8 @@ const (
 	PullRequestClosedDateColumnRfc3339Column = "closed_date->rfc3339"
 	// PullRequestCommitIdsColumn is the commit_ids column name
 	PullRequestCommitIdsColumn = "commit_ids"
+	// PullRequestCommitShasColumn is the commit_shas column name
+	PullRequestCommitShasColumn = "commit_shas"
 	// PullRequestCreatedByRefIDColumn is the created_by_ref_id column name
 	PullRequestCreatedByRefIDColumn = "created_by_ref_id"
 	// PullRequestCreatedDateColumn is the created_date column name
@@ -589,6 +591,8 @@ type PullRequest struct {
 	ClosedDate PullRequestClosedDate `json:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
 	// CommitIds list of commit ids added in this pr
 	CommitIds []string `json:"commit_ids" bson:"commit_ids" yaml:"commit_ids" faker:"-"`
+	// CommitShas list of commit shas added in this pr
+	CommitShas []string `json:"commit_shas" bson:"commit_shas" yaml:"commit_shas" faker:"-"`
 	// CreatedByRefID the user ref_id in the source system
 	CreatedByRefID string `json:"created_by_ref_id" bson:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
 	// CreatedDate the timestamp in UTC that the pull request was created
@@ -681,6 +685,9 @@ func (o *PullRequest) GetModelName() datamodel.ModelNameType {
 func (o *PullRequest) setDefaults(frommap bool) {
 	if o.CommitIds == nil {
 		o.CommitIds = make([]string, 0)
+	}
+	if o.CommitShas == nil {
+		o.CommitShas = make([]string, 0)
 	}
 
 	if o.ID == "" {
@@ -911,6 +918,9 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		if o.CommitIds == nil {
 			o.CommitIds = make([]string, 0)
 		}
+		if o.CommitShas == nil {
+			o.CommitShas = make([]string, 0)
+		}
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
@@ -918,6 +928,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
 		"closed_date":       toPullRequestObject(o.ClosedDate, isavro, false, "closed_date"),
 		"commit_ids":        toPullRequestObject(o.CommitIds, isavro, false, "commit_ids"),
+		"commit_shas":       toPullRequestObject(o.CommitShas, isavro, false, "commit_shas"),
 		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, isavro, false, "string"),
 		"created_date":      toPullRequestObject(o.CreatedDate, isavro, false, "created_date"),
 		"customer_id":       toPullRequestObject(o.CustomerID, isavro, false, "string"),
@@ -1060,6 +1071,57 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	}
 	if o.CommitIds == nil {
 		o.CommitIds = make([]string, 0)
+	}
+
+	if val, ok := kv["commit_shas"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for commit_shas field")
+				}
+			}
+			o.CommitShas = na
+		}
+	}
+	if o.CommitShas == nil {
+		o.CommitShas = make([]string, 0)
 	}
 
 	if val, ok := kv["created_by_ref_id"].(string); ok {
@@ -1384,6 +1446,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.ClosedByRefID)
 	args = append(args, o.ClosedDate)
 	args = append(args, o.CommitIds)
+	args = append(args, o.CommitShas)
 	args = append(args, o.CreatedByRefID)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
@@ -1430,6 +1493,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "commit_ids",
 				"type": map[string]interface{}{"items": "string", "name": "commit_ids", "type": "array"},
+			},
+			map[string]interface{}{
+				"name": "commit_shas",
+				"type": map[string]interface{}{"items": "string", "name": "commit_shas", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "created_by_ref_id",
