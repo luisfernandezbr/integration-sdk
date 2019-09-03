@@ -82,6 +82,8 @@ const (
 	PullRequestDescriptionColumn = "description"
 	// PullRequestIDColumn is the id column name
 	PullRequestIDColumn = "id"
+	// PullRequestMergeCommitIDColumn is the merge_commit_id column name
+	PullRequestMergeCommitIDColumn = "merge_commit_id"
 	// PullRequestMergeShaColumn is the merge_sha column name
 	PullRequestMergeShaColumn = "merge_sha"
 	// PullRequestMergedByRefIDColumn is the merged_by_ref_id column name
@@ -607,6 +609,8 @@ type PullRequest struct {
 	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	// MergeCommitID the id of the merge commit
+	MergeCommitID string `json:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeSha the sha of the merge commit
 	MergeSha string `json:"merge_sha" bson:"merge_sha" yaml:"merge_sha" faker:"-"`
 	// MergedByRefID the id of user who merged the pull request
@@ -939,6 +943,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		"customer_id":       toPullRequestObject(o.CustomerID, isavro, false, "string"),
 		"description":       toPullRequestObject(o.Description, isavro, false, "string"),
 		"id":                toPullRequestObject(o.ID, isavro, false, "string"),
+		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, isavro, false, "string"),
 		"merge_sha":         toPullRequestObject(o.MergeSha, isavro, false, "string"),
 		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
 		"merged_date":       toPullRequestObject(o.MergedDate, isavro, false, "merged_date"),
@@ -1237,6 +1242,21 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["merge_commit_id"].(string); ok {
+		o.MergeCommitID = val
+	} else {
+		if val, ok := kv["merge_commit_id"]; ok {
+			if val == nil {
+				o.MergeCommitID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.MergeCommitID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["merge_sha"].(string); ok {
 		o.MergeSha = val
 	} else {
@@ -1473,6 +1493,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
+	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeSha)
 	args = append(args, o.MergedByRefID)
 	args = append(args, o.MergedDate)
@@ -1541,6 +1562,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "merge_commit_id",
 				"type": "string",
 			},
 			map[string]interface{}{
