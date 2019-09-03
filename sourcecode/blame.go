@@ -501,8 +501,8 @@ func (o *Blame) GetModelName() datamodel.ModelNameType {
 }
 
 // NewBlameID provides a template for generating an ID field for Blame
-func NewBlameID(customerID string, refType string, refID string) string {
-	return hash.Values("Blame", customerID, refType, refID)
+func NewBlameID(customerID string, refID string, refType string, RepoID string, Filename string) string {
+	return hash.Values(customerID, refID, refType, RepoID, Filename)
 }
 
 func (o *Blame) setDefaults(frommap bool) {
@@ -514,8 +514,7 @@ func (o *Blame) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Blame", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID, o.Filename)
 	}
 
 	if frommap {

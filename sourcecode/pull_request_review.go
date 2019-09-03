@@ -289,15 +289,14 @@ func (o *PullRequestReview) GetModelName() datamodel.ModelNameType {
 }
 
 // NewPullRequestReviewID provides a template for generating an ID field for PullRequestReview
-func NewPullRequestReviewID(customerID string, refType string, refID string) string {
-	return hash.Values("PullRequestReview", customerID, refType, refID)
+func NewPullRequestReviewID(customerID string, refID string, refType string, RepoID string) string {
+	return hash.Values(customerID, refID, refType, RepoID)
 }
 
 func (o *PullRequestReview) setDefaults(frommap bool) {
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("PullRequestReview", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID)
 	}
 
 	if frommap {

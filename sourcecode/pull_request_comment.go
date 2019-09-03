@@ -374,15 +374,14 @@ func (o *PullRequestComment) GetModelName() datamodel.ModelNameType {
 }
 
 // NewPullRequestCommentID provides a template for generating an ID field for PullRequestComment
-func NewPullRequestCommentID(customerID string, refType string, refID string) string {
-	return hash.Values("PullRequestComment", customerID, refType, refID)
+func NewPullRequestCommentID(customerID string, refID string, refType string, RepoID string) string {
+	return hash.Values(customerID, refID, refType, RepoID)
 }
 
 func (o *PullRequestComment) setDefaults(frommap bool) {
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("PullRequestComment", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID)
 	}
 
 	if frommap {

@@ -695,8 +695,8 @@ func (o *PullRequest) GetModelName() datamodel.ModelNameType {
 }
 
 // NewPullRequestID provides a template for generating an ID field for PullRequest
-func NewPullRequestID(customerID string, refType string, refID string) string {
-	return hash.Values("PullRequest", customerID, refType, refID)
+func NewPullRequestID(customerID string, refID string, refType string, RepoID string) string {
+	return hash.Values(customerID, refID, refType, RepoID)
 }
 
 func (o *PullRequest) setDefaults(frommap bool) {
@@ -708,8 +708,7 @@ func (o *PullRequest) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("PullRequest", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID)
 	}
 
 	if frommap {
