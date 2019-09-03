@@ -272,6 +272,11 @@ func (o *Changelog) GetModelName() datamodel.ModelNameType {
 	return ChangelogModelName
 }
 
+// NewChangelogID provides a template for generating an ID field for Changelog
+func NewChangelogID(customerID string, refType string, refID string) string {
+	return hash.Values("Changelog", customerID, refType, refID)
+}
+
 func (o *Changelog) setDefaults(frommap bool) {
 
 	if o.ID == "" {

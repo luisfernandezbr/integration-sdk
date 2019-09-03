@@ -373,6 +373,11 @@ func (o *PullRequestComment) GetModelName() datamodel.ModelNameType {
 	return PullRequestCommentModelName
 }
 
+// NewPullRequestCommentID provides a template for generating an ID field for PullRequestComment
+func NewPullRequestCommentID(customerID string, refType string, refID string) string {
+	return hash.Values("PullRequestComment", customerID, refType, refID)
+}
+
 func (o *PullRequestComment) setDefaults(frommap bool) {
 
 	if o.ID == "" {

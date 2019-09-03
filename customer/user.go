@@ -533,6 +533,11 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 	return UserModelName
 }
 
+// NewUserID provides a template for generating an ID field for User
+func NewUserID(customerID string, Email string) string {
+	return hash.Values(customerID, Email)
+}
+
 func (o *User) setDefaults(frommap bool) {
 	if o.AvatarURL == nil {
 		o.AvatarURL = &emptyString

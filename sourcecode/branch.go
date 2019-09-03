@@ -64,6 +64,8 @@ const (
 	BranchCustomerIDColumn = "customer_id"
 	// BranchDefaultColumn is the default column name
 	BranchDefaultColumn = "default"
+	// BranchGeneratedColumn is the generated column name
+	BranchGeneratedColumn = "generated"
 	// BranchIDColumn is the id column name
 	BranchIDColumn = "id"
 	// BranchMergeCommitIDColumn is the merge_commit_id column name
@@ -104,6 +106,8 @@ type Branch struct {
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Default true if the branch is the default branch
 	Default bool `json:"default" bson:"default" yaml:"default" faker:"-"`
+	// Generated if the brach was generated from a pull request
+	Generated bool `json:"generated" bson:"generated" yaml:"generated" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// MergeCommitID commit id in which the branch was merged
@@ -164,6 +168,11 @@ func (o *Branch) GetTopicName() datamodel.TopicNameType {
 // GetModelName returns the name of the model
 func (o *Branch) GetModelName() datamodel.ModelNameType {
 	return BranchModelName
+}
+
+// NewBranchID provides a template for generating an ID field for Branch
+func NewBranchID(refType string, RepoID string, customerID string, Name string) string {
+	return hash.Values(refType, RepoID, customerID, Name)
 }
 
 func (o *Branch) setDefaults(frommap bool) {
@@ -425,6 +434,7 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"commit_shas":               toBranchObject(o.CommitShas, isavro, false, "commit_shas"),
 		"customer_id":               toBranchObject(o.CustomerID, isavro, false, "string"),
 		"default":                   toBranchObject(o.Default, isavro, false, "boolean"),
+		"generated":                 toBranchObject(o.Generated, isavro, false, "boolean"),
 		"id":                        toBranchObject(o.ID, isavro, false, "string"),
 		"merge_commit_id":           toBranchObject(o.MergeCommitID, isavro, false, "string"),
 		"merge_commit_sha":          toBranchObject(o.MergeCommitSha, isavro, false, "string"),
@@ -710,6 +720,18 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["generated"].(bool); ok {
+		o.Generated = val
+	} else {
+		if val, ok := kv["generated"]; ok {
+			if val == nil {
+				o.Generated = number.ToBoolAny(nil)
+			} else {
+				o.Generated = number.ToBoolAny(val)
+			}
+		}
+	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -870,6 +892,7 @@ func (o *Branch) Hash() string {
 	args = append(args, o.CommitShas)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Default)
+	args = append(args, o.Generated)
 	args = append(args, o.ID)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeCommitSha)
@@ -925,6 +948,10 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "default",
+				"type": "boolean",
+			},
+			map[string]interface{}{
+				"name": "generated",
 				"type": "boolean",
 			},
 			map[string]interface{}{

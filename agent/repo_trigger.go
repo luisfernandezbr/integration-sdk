@@ -115,6 +115,11 @@ func (o *RepoTrigger) GetModelName() datamodel.ModelNameType {
 	return RepoTriggerModelName
 }
 
+// NewRepoTriggerID provides a template for generating an ID field for RepoTrigger
+func NewRepoTriggerID(customerID string, refType string, refID string) string {
+	return hash.Values("RepoTrigger", customerID, refType, refID)
+}
+
 func (o *RepoTrigger) setDefaults(frommap bool) {
 
 	if o.ID == "" {

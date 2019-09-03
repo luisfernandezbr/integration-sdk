@@ -167,6 +167,11 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 	return UserModelName
 }
 
+// NewUserID provides a template for generating an ID field for User
+func NewUserID(customerID string, refType string, refID string) string {
+	return hash.Values("User", customerID, refType, refID)
+}
+
 func (o *User) setDefaults(frommap bool) {
 	if o.AssociatedRefID == nil {
 		o.AssociatedRefID = &emptyString

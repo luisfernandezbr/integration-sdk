@@ -500,6 +500,11 @@ func (o *Blame) GetModelName() datamodel.ModelNameType {
 	return BlameModelName
 }
 
+// NewBlameID provides a template for generating an ID field for Blame
+func NewBlameID(customerID string, refType string, refID string) string {
+	return hash.Values("Blame", customerID, refType, refID)
+}
+
 func (o *Blame) setDefaults(frommap bool) {
 	if o.License == nil {
 		o.License = &emptyString

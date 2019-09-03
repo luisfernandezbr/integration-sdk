@@ -1228,6 +1228,11 @@ func (o *RepoRequest) GetModelName() datamodel.ModelNameType {
 	return RepoRequestModelName
 }
 
+// NewRepoRequestID provides a template for generating an ID field for RepoRequest
+func NewRepoRequestID(customerID string, refType string, refID string) string {
+	return hash.Values("RepoRequest", customerID, refType, refID)
+}
+
 func (o *RepoRequest) setDefaults(frommap bool) {
 
 	if o.ID == "" {

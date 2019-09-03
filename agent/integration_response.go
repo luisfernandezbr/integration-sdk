@@ -497,6 +497,11 @@ func (o *IntegrationResponse) GetModelName() datamodel.ModelNameType {
 	return IntegrationResponseModelName
 }
 
+// NewIntegrationResponseID provides a template for generating an ID field for IntegrationResponse
+func NewIntegrationResponseID(customerID string, refType string, refID string) string {
+	return hash.Values("IntegrationResponse", customerID, refType, refID)
+}
+
 func (o *IntegrationResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString

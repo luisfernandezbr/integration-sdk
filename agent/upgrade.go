@@ -501,6 +501,11 @@ func (o *Upgrade) GetModelName() datamodel.ModelNameType {
 	return UpgradeModelName
 }
 
+// NewUpgradeID provides a template for generating an ID field for Upgrade
+func NewUpgradeID(customerID string, refType string, refID string) string {
+	return hash.Values("Upgrade", customerID, refType, refID)
+}
+
 func (o *Upgrade) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString

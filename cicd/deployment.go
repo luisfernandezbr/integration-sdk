@@ -449,6 +449,11 @@ func (o *Deployment) GetModelName() datamodel.ModelNameType {
 	return DeploymentModelName
 }
 
+// NewDeploymentID provides a template for generating an ID field for Deployment
+func NewDeploymentID(customerID string, refType string, refID string) string {
+	return hash.Values("Deployment", customerID, refType, refID)
+}
+
 func (o *Deployment) setDefaults(frommap bool) {
 	if o.URL == nil {
 		o.URL = &emptyString

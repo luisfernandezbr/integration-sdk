@@ -1228,6 +1228,11 @@ func (o *CodequalityRequest) GetModelName() datamodel.ModelNameType {
 	return CodequalityRequestModelName
 }
 
+// NewCodequalityRequestID provides a template for generating an ID field for CodequalityRequest
+func NewCodequalityRequestID(customerID string, refType string, refID string) string {
+	return hash.Values("CodequalityRequest", customerID, refType, refID)
+}
+
 func (o *CodequalityRequest) setDefaults(frommap bool) {
 
 	if o.ID == "" {

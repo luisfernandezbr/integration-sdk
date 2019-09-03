@@ -635,6 +635,11 @@ func (o *Sprint) GetModelName() datamodel.ModelNameType {
 	return SprintModelName
 }
 
+// NewSprintID provides a template for generating an ID field for Sprint
+func NewSprintID(customerID string, refID string, refType string) string {
+	return hash.Values(customerID, refID, refType)
+}
+
 func (o *Sprint) setDefaults(frommap bool) {
 
 	if o.ID == "" {

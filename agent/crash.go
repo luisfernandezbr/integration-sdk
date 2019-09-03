@@ -493,6 +493,11 @@ func (o *Crash) GetModelName() datamodel.ModelNameType {
 	return CrashModelName
 }
 
+// NewCrashID provides a template for generating an ID field for Crash
+func NewCrashID(customerID string, refType string, refID string) string {
+	return hash.Values("Crash", customerID, refType, refID)
+}
+
 func (o *Crash) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString

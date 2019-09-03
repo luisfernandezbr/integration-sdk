@@ -1228,6 +1228,11 @@ func (o *ProjectRequest) GetModelName() datamodel.ModelNameType {
 	return ProjectRequestModelName
 }
 
+// NewProjectRequestID provides a template for generating an ID field for ProjectRequest
+func NewProjectRequestID(customerID string, refType string, refID string) string {
+	return hash.Values("ProjectRequest", customerID, refType, refID)
+}
+
 func (o *ProjectRequest) setDefaults(frommap bool) {
 
 	if o.ID == "" {

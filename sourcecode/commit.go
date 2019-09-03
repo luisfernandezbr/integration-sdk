@@ -973,6 +973,11 @@ func (o *Commit) GetModelName() datamodel.ModelNameType {
 	return CommitModelName
 }
 
+// NewCommitID provides a template for generating an ID field for Commit
+func NewCommitID(customerID string, refID string, refType string, RepoID string) string {
+	return hash.Values(customerID, refID, refType, RepoID)
+}
+
 func (o *Commit) setDefaults(frommap bool) {
 	if o.BranchIds == nil {
 		o.BranchIds = make([]string, 0)
@@ -982,8 +987,7 @@ func (o *Commit) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Commit", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID)
 	}
 
 	if frommap {

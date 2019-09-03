@@ -135,6 +135,11 @@ func (o *Repo) GetModelName() datamodel.ModelNameType {
 	return RepoModelName
 }
 
+// NewRepoID provides a template for generating an ID field for Repo
+func NewRepoID(customerID string, refType string, refID string) string {
+	return hash.Values("Repo", customerID, refType, refID)
+}
+
 func (o *Repo) setDefaults(frommap bool) {
 
 	if o.ID == "" {

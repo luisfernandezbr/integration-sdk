@@ -131,6 +131,11 @@ func (o *CostCenter) GetModelName() datamodel.ModelNameType {
 	return CostCenterModelName
 }
 
+// NewCostCenterID provides a template for generating an ID field for CostCenter
+func NewCostCenterID(customerID string) string {
+	return hash.Values(customerID, randomString(64))
+}
+
 func (o *CostCenter) setDefaults(frommap bool) {
 
 	if o.ID == "" {

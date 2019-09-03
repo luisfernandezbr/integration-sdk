@@ -445,6 +445,11 @@ func (o *Build) GetModelName() datamodel.ModelNameType {
 	return BuildModelName
 }
 
+// NewBuildID provides a template for generating an ID field for Build
+func NewBuildID(customerID string, refType string, refID string) string {
+	return hash.Values("Build", customerID, refType, refID)
+}
+
 func (o *Build) setDefaults(frommap bool) {
 	if o.URL == nil {
 		o.URL = &emptyString

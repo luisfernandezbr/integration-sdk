@@ -288,6 +288,11 @@ func (o *PullRequestReview) GetModelName() datamodel.ModelNameType {
 	return PullRequestReviewModelName
 }
 
+// NewPullRequestReviewID provides a template for generating an ID field for PullRequestReview
+func NewPullRequestReviewID(customerID string, refType string, refID string) string {
+	return hash.Values("PullRequestReview", customerID, refType, refID)
+}
+
 func (o *PullRequestReview) setDefaults(frommap bool) {
 
 	if o.ID == "" {

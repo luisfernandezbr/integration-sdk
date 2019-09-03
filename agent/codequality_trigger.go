@@ -115,6 +115,11 @@ func (o *CodequalityTrigger) GetModelName() datamodel.ModelNameType {
 	return CodequalityTriggerModelName
 }
 
+// NewCodequalityTriggerID provides a template for generating an ID field for CodequalityTrigger
+func NewCodequalityTriggerID(customerID string, refType string, refID string) string {
+	return hash.Values("CodequalityTrigger", customerID, refType, refID)
+}
+
 func (o *CodequalityTrigger) setDefaults(frommap bool) {
 
 	if o.ID == "" {

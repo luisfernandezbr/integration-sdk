@@ -1244,6 +1244,11 @@ func (o *ExportRequest) GetModelName() datamodel.ModelNameType {
 	return ExportRequestModelName
 }
 
+// NewExportRequestID provides a template for generating an ID field for ExportRequest
+func NewExportRequestID(customerID string, refType string, refID string) string {
+	return hash.Values("ExportRequest", customerID, refType, refID)
+}
+
 func (o *ExportRequest) setDefaults(frommap bool) {
 	if o.Integrations == nil {
 		o.Integrations = make([]ExportRequestIntegrations, 0)

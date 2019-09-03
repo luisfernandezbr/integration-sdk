@@ -244,6 +244,11 @@ func (o *Metric) GetModelName() datamodel.ModelNameType {
 	return MetricModelName
 }
 
+// NewMetricID provides a template for generating an ID field for Metric
+func NewMetricID(customerID string, refType string, refID string) string {
+	return hash.Values("Metric", customerID, refType, refID)
+}
+
 func (o *Metric) setDefaults(frommap bool) {
 
 	if o.ID == "" {

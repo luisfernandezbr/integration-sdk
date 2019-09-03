@@ -493,6 +493,11 @@ func (o *Log) GetModelName() datamodel.ModelNameType {
 	return LogModelName
 }
 
+// NewLogID provides a template for generating an ID field for Log
+func NewLogID(customerID string, refType string, refID string) string {
+	return hash.Values("Log", customerID, refType, refID)
+}
+
 func (o *Log) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString

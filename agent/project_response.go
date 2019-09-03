@@ -1122,6 +1122,11 @@ func (o *ProjectResponse) GetModelName() datamodel.ModelNameType {
 	return ProjectResponseModelName
 }
 
+// NewProjectResponseID provides a template for generating an ID field for ProjectResponse
+func NewProjectResponseID(customerID string, refType string, refID string) string {
+	return hash.Values("ProjectResponse", customerID, refType, refID)
+}
+
 func (o *ProjectResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString

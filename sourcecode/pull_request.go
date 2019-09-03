@@ -80,6 +80,8 @@ const (
 	PullRequestCustomerIDColumn = "customer_id"
 	// PullRequestDescriptionColumn is the description column name
 	PullRequestDescriptionColumn = "description"
+	// PullRequestGeneratedColumn is the generated column name
+	PullRequestGeneratedColumn = "generated"
 	// PullRequestIDColumn is the id column name
 	PullRequestIDColumn = "id"
 	// PullRequestMergeCommitIDColumn is the merge_commit_id column name
@@ -607,6 +609,8 @@ type PullRequest struct {
 	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the pull request
 	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	// Generated if the commit data was generated from the merge commit, indicating that there is no initial commit additions/deletions/ids
+	Generated bool `json:"generated" bson:"generated" yaml:"generated" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// MergeCommitID the id of the merge commit
@@ -688,6 +692,11 @@ func (o *PullRequest) GetTopicName() datamodel.TopicNameType {
 // GetModelName returns the name of the model
 func (o *PullRequest) GetModelName() datamodel.ModelNameType {
 	return PullRequestModelName
+}
+
+// NewPullRequestID provides a template for generating an ID field for PullRequest
+func NewPullRequestID(customerID string, refType string, refID string) string {
+	return hash.Values("PullRequest", customerID, refType, refID)
 }
 
 func (o *PullRequest) setDefaults(frommap bool) {
@@ -942,6 +951,7 @@ func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
 		"created_date":      toPullRequestObject(o.CreatedDate, isavro, false, "created_date"),
 		"customer_id":       toPullRequestObject(o.CustomerID, isavro, false, "string"),
 		"description":       toPullRequestObject(o.Description, isavro, false, "string"),
+		"generated":         toPullRequestObject(o.Generated, isavro, false, "boolean"),
 		"id":                toPullRequestObject(o.ID, isavro, false, "string"),
 		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, isavro, false, "string"),
 		"merge_sha":         toPullRequestObject(o.MergeSha, isavro, false, "string"),
@@ -1227,6 +1237,18 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["generated"].(bool); ok {
+		o.Generated = val
+	} else {
+		if val, ok := kv["generated"]; ok {
+			if val == nil {
+				o.Generated = number.ToBoolAny(nil)
+			} else {
+				o.Generated = number.ToBoolAny(val)
+			}
+		}
+	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1492,6 +1514,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
+	args = append(args, o.Generated)
 	args = append(args, o.ID)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeSha)
@@ -1559,6 +1582,10 @@ func GetPullRequestAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "description",
 				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "generated",
+				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "id",

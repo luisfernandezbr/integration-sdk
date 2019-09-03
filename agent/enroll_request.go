@@ -228,6 +228,11 @@ func (o *EnrollRequest) GetModelName() datamodel.ModelNameType {
 	return EnrollRequestModelName
 }
 
+// NewEnrollRequestID provides a template for generating an ID field for EnrollRequest
+func NewEnrollRequestID(Code string, UUID string) string {
+	return hash.Values(Code, UUID)
+}
+
 func (o *EnrollRequest) setDefaults(frommap bool) {
 
 	if o.ID == "" {

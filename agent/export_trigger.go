@@ -119,6 +119,11 @@ func (o *ExportTrigger) GetModelName() datamodel.ModelNameType {
 	return ExportTriggerModelName
 }
 
+// NewExportTriggerID provides a template for generating an ID field for ExportTrigger
+func NewExportTriggerID(customerID string, refType string, refID string) string {
+	return hash.Values("ExportTrigger", customerID, refType, refID)
+}
+
 func (o *ExportTrigger) setDefaults(frommap bool) {
 	if o.UUID == nil {
 		o.UUID = &emptyString

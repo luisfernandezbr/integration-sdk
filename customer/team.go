@@ -146,6 +146,11 @@ func (o *Team) GetModelName() datamodel.ModelNameType {
 	return TeamModelName
 }
 
+// NewTeamID provides a template for generating an ID field for Team
+func NewTeamID(customerID string) string {
+	return hash.Values(customerID, randomString(64))
+}
+
 func (o *Team) setDefaults(frommap bool) {
 	if o.Active == nil {
 		o.Active = &emptyBool

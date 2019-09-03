@@ -654,6 +654,11 @@ func (o *Issue) GetModelName() datamodel.ModelNameType {
 	return IssueModelName
 }
 
+// NewIssueID provides a template for generating an ID field for Issue
+func NewIssueID(customerID string, refType string, refID string) string {
+	return hash.Values("Issue", customerID, refType, refID)
+}
+
 func (o *Issue) setDefaults(frommap bool) {
 	if o.CustomFields == nil {
 		o.CustomFields = make([]IssueCustomFields, 0)

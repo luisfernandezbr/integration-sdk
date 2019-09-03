@@ -119,6 +119,11 @@ func (o *CustomField) GetModelName() datamodel.ModelNameType {
 	return CustomFieldModelName
 }
 
+// NewCustomFieldID provides a template for generating an ID field for CustomField
+func NewCustomFieldID(customerID string, refType string, refID string) string {
+	return hash.Values("CustomField", customerID, refType, refID)
+}
+
 func (o *CustomField) setDefaults(frommap bool) {
 
 	if o.ID == "" {

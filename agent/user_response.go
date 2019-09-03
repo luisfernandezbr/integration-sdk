@@ -952,6 +952,11 @@ func (o *UserResponse) GetModelName() datamodel.ModelNameType {
 	return UserResponseModelName
 }
 
+// NewUserResponseID provides a template for generating an ID field for UserResponse
+func NewUserResponseID(customerID string, refType string, refID string) string {
+	return hash.Values("UserResponse", customerID, refType, refID)
+}
+
 func (o *UserResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString

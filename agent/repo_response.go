@@ -1241,6 +1241,11 @@ func (o *RepoResponse) GetModelName() datamodel.ModelNameType {
 	return RepoResponseModelName
 }
 
+// NewRepoResponseID provides a template for generating an ID field for RepoResponse
+func NewRepoResponseID(customerID string, refType string, refID string) string {
+	return hash.Values("RepoResponse", customerID, refType, refID)
+}
+
 func (o *RepoResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString

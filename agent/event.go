@@ -485,6 +485,11 @@ func (o *Event) GetModelName() datamodel.ModelNameType {
 	return EventModelName
 }
 
+// NewEventID provides a template for generating an ID field for Event
+func NewEventID(customerID string, refType string, refID string) string {
+	return hash.Values("Event", customerID, refType, refID)
+}
+
 func (o *Event) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = &emptyString
