@@ -66,6 +66,12 @@ const (
 	BranchDefaultColumn = "default"
 	// BranchFirstBranchedFromCommitIDColumn is the first_branched_from_commit_id column name
 	BranchFirstBranchedFromCommitIDColumn = "first_branched_from_commit_id"
+	// BranchFirstBranchedFromCommitShaColumn is the first_branched_from_commit_sha column name
+	BranchFirstBranchedFromCommitShaColumn = "first_branched_from_commit_sha"
+	// BranchFirstCommitIDColumn is the first_commit_id column name
+	BranchFirstCommitIDColumn = "first_commit_id"
+	// BranchFirstCommitShaColumn is the first_commit_sha column name
+	BranchFirstCommitShaColumn = "first_commit_sha"
 	// BranchGeneratedColumn is the generated column name
 	BranchGeneratedColumn = "generated"
 	// BranchIDColumn is the id column name
@@ -110,6 +116,12 @@ type Branch struct {
 	Default bool `json:"default" bson:"default" yaml:"default" faker:"-"`
 	// FirstBranchedFromCommitID the first commit id from which the branch was created
 	FirstBranchedFromCommitID string `json:"first_branched_from_commit_id" bson:"first_branched_from_commit_id" yaml:"first_branched_from_commit_id" faker:"-"`
+	// FirstBranchedFromCommitSha the first commit sha from which the branch was created
+	FirstBranchedFromCommitSha string `json:"first_branched_from_commit_sha" bson:"first_branched_from_commit_sha" yaml:"first_branched_from_commit_sha" faker:"-"`
+	// FirstCommitID the first commit id on the branch
+	FirstCommitID string `json:"first_commit_id" bson:"first_commit_id" yaml:"first_commit_id" faker:"-"`
+	// FirstCommitSha the first commit sha on the branch
+	FirstCommitSha string `json:"first_commit_sha" bson:"first_commit_sha" yaml:"first_commit_sha" faker:"-"`
 	// Generated if the brach was generated from a pull request
 	Generated bool `json:"generated" bson:"generated" yaml:"generated" faker:"-"`
 	// ID the primary key for the model instance
@@ -175,8 +187,8 @@ func (o *Branch) GetModelName() datamodel.ModelNameType {
 }
 
 // NewBranchID provides a template for generating an ID field for Branch
-func NewBranchID(refType string, RepoID string, customerID string, Name string, FirstBranchedFromCommitID string) string {
-	return hash.Values(refType, RepoID, customerID, Name, FirstBranchedFromCommitID)
+func NewBranchID(refType string, RepoID string, customerID string, Name string, FirstCommitID string) string {
+	return hash.Values(refType, RepoID, customerID, Name, FirstCommitID)
 }
 
 func (o *Branch) setDefaults(frommap bool) {
@@ -194,7 +206,7 @@ func (o *Branch) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		o.ID = hash.Values(o.RefType, o.RepoID, o.CustomerID, o.Name, o.FirstBranchedFromCommitID)
+		o.ID = hash.Values(o.RefType, o.RepoID, o.CustomerID, o.Name, o.FirstCommitID)
 	}
 
 	if frommap {
@@ -430,27 +442,30 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 	}
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"ahead_default_count":           toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
-		"behind_default_count":          toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
-		"branched_from_commit_ids":      toBranchObject(o.BranchedFromCommitIds, isavro, false, "branched_from_commit_ids"),
-		"branched_from_commit_shas":     toBranchObject(o.BranchedFromCommitShas, isavro, false, "branched_from_commit_shas"),
-		"commit_ids":                    toBranchObject(o.CommitIds, isavro, false, "commit_ids"),
-		"commit_shas":                   toBranchObject(o.CommitShas, isavro, false, "commit_shas"),
-		"customer_id":                   toBranchObject(o.CustomerID, isavro, false, "string"),
-		"default":                       toBranchObject(o.Default, isavro, false, "boolean"),
-		"first_branched_from_commit_id": toBranchObject(o.FirstBranchedFromCommitID, isavro, false, "string"),
-		"generated":                     toBranchObject(o.Generated, isavro, false, "boolean"),
-		"id":                            toBranchObject(o.ID, isavro, false, "string"),
-		"merge_commit_id":               toBranchObject(o.MergeCommitID, isavro, false, "string"),
-		"merge_commit_sha":              toBranchObject(o.MergeCommitSha, isavro, false, "string"),
-		"merged":                        toBranchObject(o.Merged, isavro, false, "boolean"),
-		"name":                          toBranchObject(o.Name, isavro, false, "string"),
-		"ref_id":                        toBranchObject(o.RefID, isavro, false, "string"),
-		"ref_type":                      toBranchObject(o.RefType, isavro, false, "string"),
-		"repo_id":                       toBranchObject(o.RepoID, isavro, false, "string"),
-		"updated_ts":                    toBranchObject(o.UpdatedAt, isavro, false, "long"),
-		"url":                           toBranchObject(o.URL, isavro, false, "string"),
-		"hashcode":                      toBranchObject(o.Hashcode, isavro, false, "string"),
+		"ahead_default_count":            toBranchObject(o.AheadDefaultCount, isavro, false, "long"),
+		"behind_default_count":           toBranchObject(o.BehindDefaultCount, isavro, false, "long"),
+		"branched_from_commit_ids":       toBranchObject(o.BranchedFromCommitIds, isavro, false, "branched_from_commit_ids"),
+		"branched_from_commit_shas":      toBranchObject(o.BranchedFromCommitShas, isavro, false, "branched_from_commit_shas"),
+		"commit_ids":                     toBranchObject(o.CommitIds, isavro, false, "commit_ids"),
+		"commit_shas":                    toBranchObject(o.CommitShas, isavro, false, "commit_shas"),
+		"customer_id":                    toBranchObject(o.CustomerID, isavro, false, "string"),
+		"default":                        toBranchObject(o.Default, isavro, false, "boolean"),
+		"first_branched_from_commit_id":  toBranchObject(o.FirstBranchedFromCommitID, isavro, false, "string"),
+		"first_branched_from_commit_sha": toBranchObject(o.FirstBranchedFromCommitSha, isavro, false, "string"),
+		"first_commit_id":                toBranchObject(o.FirstCommitID, isavro, false, "string"),
+		"first_commit_sha":               toBranchObject(o.FirstCommitSha, isavro, false, "string"),
+		"generated":                      toBranchObject(o.Generated, isavro, false, "boolean"),
+		"id":                             toBranchObject(o.ID, isavro, false, "string"),
+		"merge_commit_id":                toBranchObject(o.MergeCommitID, isavro, false, "string"),
+		"merge_commit_sha":               toBranchObject(o.MergeCommitSha, isavro, false, "string"),
+		"merged":                         toBranchObject(o.Merged, isavro, false, "boolean"),
+		"name":                           toBranchObject(o.Name, isavro, false, "string"),
+		"ref_id":                         toBranchObject(o.RefID, isavro, false, "string"),
+		"ref_type":                       toBranchObject(o.RefType, isavro, false, "string"),
+		"repo_id":                        toBranchObject(o.RepoID, isavro, false, "string"),
+		"updated_ts":                     toBranchObject(o.UpdatedAt, isavro, false, "long"),
+		"url":                            toBranchObject(o.URL, isavro, false, "string"),
+		"hashcode":                       toBranchObject(o.Hashcode, isavro, false, "string"),
 	}
 }
 
@@ -740,6 +755,51 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["first_branched_from_commit_sha"].(string); ok {
+		o.FirstBranchedFromCommitSha = val
+	} else {
+		if val, ok := kv["first_branched_from_commit_sha"]; ok {
+			if val == nil {
+				o.FirstBranchedFromCommitSha = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.FirstBranchedFromCommitSha = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["first_commit_id"].(string); ok {
+		o.FirstCommitID = val
+	} else {
+		if val, ok := kv["first_commit_id"]; ok {
+			if val == nil {
+				o.FirstCommitID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.FirstCommitID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["first_commit_sha"].(string); ok {
+		o.FirstCommitSha = val
+	} else {
+		if val, ok := kv["first_commit_sha"]; ok {
+			if val == nil {
+				o.FirstCommitSha = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.FirstCommitSha = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["generated"].(bool); ok {
 		o.Generated = val
 	} else {
@@ -913,6 +973,9 @@ func (o *Branch) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Default)
 	args = append(args, o.FirstBranchedFromCommitID)
+	args = append(args, o.FirstBranchedFromCommitSha)
+	args = append(args, o.FirstCommitID)
+	args = append(args, o.FirstCommitSha)
 	args = append(args, o.Generated)
 	args = append(args, o.ID)
 	args = append(args, o.MergeCommitID)
@@ -973,6 +1036,18 @@ func GetBranchAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "first_branched_from_commit_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "first_branched_from_commit_sha",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "first_commit_id",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "first_commit_sha",
 				"type": "string",
 			},
 			map[string]interface{}{
