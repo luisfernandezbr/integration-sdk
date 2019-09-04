@@ -72,8 +72,6 @@ const (
 	BranchFirstCommitIDColumn = "first_commit_id"
 	// BranchFirstCommitShaColumn is the first_commit_sha column name
 	BranchFirstCommitShaColumn = "first_commit_sha"
-	// BranchGeneratedColumn is the generated column name
-	BranchGeneratedColumn = "generated"
 	// BranchIDColumn is the id column name
 	BranchIDColumn = "id"
 	// BranchMergeCommitIDColumn is the merge_commit_id column name
@@ -122,8 +120,6 @@ type Branch struct {
 	FirstCommitID string `json:"first_commit_id" bson:"first_commit_id" yaml:"first_commit_id" faker:"-"`
 	// FirstCommitSha the first commit sha on the branch
 	FirstCommitSha string `json:"first_commit_sha" bson:"first_commit_sha" yaml:"first_commit_sha" faker:"-"`
-	// Generated if the brach was generated from a pull request
-	Generated bool `json:"generated" bson:"generated" yaml:"generated" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// MergeCommitID commit id in which the branch was merged
@@ -454,7 +450,6 @@ func (o *Branch) ToMap(avro ...bool) map[string]interface{} {
 		"first_branched_from_commit_sha": toBranchObject(o.FirstBranchedFromCommitSha, isavro, false, "string"),
 		"first_commit_id":                toBranchObject(o.FirstCommitID, isavro, false, "string"),
 		"first_commit_sha":               toBranchObject(o.FirstCommitSha, isavro, false, "string"),
-		"generated":                      toBranchObject(o.Generated, isavro, false, "boolean"),
 		"id":                             toBranchObject(o.ID, isavro, false, "string"),
 		"merge_commit_id":                toBranchObject(o.MergeCommitID, isavro, false, "string"),
 		"merge_commit_sha":               toBranchObject(o.MergeCommitSha, isavro, false, "string"),
@@ -800,18 +795,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["generated"].(bool); ok {
-		o.Generated = val
-	} else {
-		if val, ok := kv["generated"]; ok {
-			if val == nil {
-				o.Generated = number.ToBoolAny(nil)
-			} else {
-				o.Generated = number.ToBoolAny(val)
-			}
-		}
-	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -976,7 +959,6 @@ func (o *Branch) Hash() string {
 	args = append(args, o.FirstBranchedFromCommitSha)
 	args = append(args, o.FirstCommitID)
 	args = append(args, o.FirstCommitSha)
-	args = append(args, o.Generated)
 	args = append(args, o.ID)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeCommitSha)
@@ -1049,10 +1031,6 @@ func GetBranchAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "first_commit_sha",
 				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "generated",
-				"type": "boolean",
 			},
 			map[string]interface{}{
 				"name": "id",
