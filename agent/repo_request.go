@@ -144,7 +144,7 @@ func toRepoRequestIntegrationAuthorizationObject(o interface{}, isavro bool, iso
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -402,7 +402,7 @@ func toRepoRequestIntegrationProgressObject(o interface{}, isavro bool, isoption
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -535,7 +535,7 @@ func toRepoRequestIntegrationValidatedDateObject(o interface{}, isavro bool, iso
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -682,7 +682,7 @@ func toRepoRequestIntegrationObject(o interface{}, isavro bool, isoptional bool,
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1080,7 +1080,7 @@ func toRepoRequestRequestDateObject(o interface{}, isavro bool, isoptional bool,
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1209,7 +1209,7 @@ func toRepoRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

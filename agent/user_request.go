@@ -144,7 +144,7 @@ func toUserRequestIntegrationAuthorizationObject(o interface{}, isavro bool, iso
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -402,7 +402,7 @@ func toUserRequestIntegrationProgressObject(o interface{}, isavro bool, isoption
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -535,7 +535,7 @@ func toUserRequestIntegrationValidatedDateObject(o interface{}, isavro bool, iso
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -682,7 +682,7 @@ func toUserRequestIntegrationObject(o interface{}, isavro bool, isoptional bool,
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1080,7 +1080,7 @@ func toUserRequestRequestDateObject(o interface{}, isavro bool, isoptional bool,
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1209,7 +1209,7 @@ func toUserRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1566,6 +1566,25 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

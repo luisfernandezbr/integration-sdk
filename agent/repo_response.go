@@ -156,7 +156,7 @@ func toRepoResponseEventDateObject(o interface{}, isavro bool, isoptional bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -264,7 +264,7 @@ func toRepoResponseLastExportDateObject(o interface{}, isavro bool, isoptional b
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -372,7 +372,7 @@ func toRepoResponseReposCreatedDateObject(o interface{}, isavro bool, isoptional
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -480,7 +480,7 @@ func toRepoResponseReposLastCommitCreatedDateObject(o interface{}, isavro bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -588,7 +588,7 @@ func toRepoResponseReposLastCommitAuthorObject(o interface{}, isavro bool, isopt
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -707,7 +707,7 @@ func toRepoResponseReposLastCommitObject(o interface{}, isavro bool, isoptional 
 	case RepoResponseReposLastCommitAuthor:
 		return v.ToMap(isavro)
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -881,7 +881,7 @@ func toRepoResponseReposObject(o interface{}, isavro bool, isoptional bool, avro
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1222,7 +1222,7 @@ func toRepoResponseObject(o interface{}, isavro bool, isoptional bool, avrotype 
 		return v.String()
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1617,6 +1617,25 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1706,6 +1725,25 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

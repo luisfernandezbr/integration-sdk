@@ -101,7 +101,7 @@ func toPullRequestReviewCreatedDateObject(o interface{}, isavro bool, isoptional
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -269,7 +269,7 @@ func toPullRequestReviewObject(o interface{}, isavro bool, isoptional bool, avro
 		return v.String()
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

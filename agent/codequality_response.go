@@ -152,7 +152,7 @@ func toCodequalityResponseEventDateObject(o interface{}, isavro bool, isoptional
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -260,7 +260,7 @@ func toCodequalityResponseLastExportDateObject(o interface{}, isavro bool, isopt
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -374,7 +374,7 @@ func toCodequalityResponseProjectsObject(o interface{}, isavro bool, isoptional 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -667,7 +667,7 @@ func toCodequalityResponseObject(o interface{}, isavro bool, isoptional bool, av
 		return v.String()
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

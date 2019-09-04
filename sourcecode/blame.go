@@ -136,7 +136,7 @@ func toBlameChangeDateObject(o interface{}, isavro bool, isoptional bool, avroty
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -250,7 +250,7 @@ func toBlameLinesObject(o interface{}, isavro bool, isoptional bool, avrotype st
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -481,7 +481,7 @@ func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		return v.String()
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

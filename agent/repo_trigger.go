@@ -96,7 +96,7 @@ func toRepoTriggerObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

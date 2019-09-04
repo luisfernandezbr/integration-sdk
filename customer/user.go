@@ -138,7 +138,7 @@ func toUserDeletedDateObject(o interface{}, isavro bool, isoptional bool, avroty
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -246,7 +246,7 @@ func toUserHiredDateObject(o interface{}, isavro bool, isoptional bool, avrotype
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -354,7 +354,7 @@ func toUserTerminatedDateObject(o interface{}, isavro bool, isoptional bool, avr
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -514,7 +514,7 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

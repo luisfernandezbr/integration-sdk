@@ -109,7 +109,7 @@ func toPullRequestCommentCreatedDateObject(o interface{}, isavro bool, isoptiona
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -217,7 +217,7 @@ func toPullRequestCommentUpdatedDateObject(o interface{}, isavro bool, isoptiona
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -354,7 +354,7 @@ func toPullRequestCommentObject(o interface{}, isavro bool, isoptional bool, avr
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

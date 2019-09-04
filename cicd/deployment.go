@@ -113,7 +113,7 @@ func toDeploymentEndDateObject(o interface{}, isavro bool, isoptional bool, avro
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -258,7 +258,7 @@ func toDeploymentStartDateObject(o interface{}, isavro bool, isoptional bool, av
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -430,7 +430,7 @@ func toDeploymentObject(o interface{}, isavro bool, isoptional bool, avrotype st
 		return v.String()
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

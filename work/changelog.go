@@ -111,7 +111,7 @@ func toChangelogCreatedDateObject(o interface{}, isavro bool, isoptional bool, a
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -253,7 +253,7 @@ func toChangelogObject(o interface{}, isavro bool, isoptional bool, avrotype str
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

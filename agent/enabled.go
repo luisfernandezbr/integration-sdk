@@ -135,7 +135,7 @@ func toEnabledEventDateObject(o interface{}, isavro bool, isoptional bool, avrot
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -243,7 +243,7 @@ func toEnabledLastExportDateObject(o interface{}, isavro bool, isoptional bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -474,7 +474,7 @@ func toEnabledObject(o interface{}, isavro bool, isoptional bool, avrotype strin
 		return v.String()
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

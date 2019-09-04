@@ -146,7 +146,7 @@ func toPullRequestClosedDateObject(o interface{}, isavro bool, isoptional bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -254,7 +254,7 @@ func toPullRequestCreatedDateObject(o interface{}, isavro bool, isoptional bool,
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -362,7 +362,7 @@ func toPullRequestMergedDateObject(o interface{}, isavro bool, isoptional bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -503,7 +503,7 @@ func toPullRequestUpdatedDateObject(o interface{}, isavro bool, isoptional bool,
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -671,7 +671,7 @@ func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype s
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

@@ -97,7 +97,7 @@ func toMetricCreatedDateObject(o interface{}, isavro bool, isoptional bool, avro
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -225,7 +225,7 @@ func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

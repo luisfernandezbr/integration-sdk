@@ -144,7 +144,7 @@ func toProjectRequestIntegrationAuthorizationObject(o interface{}, isavro bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -402,7 +402,7 @@ func toProjectRequestIntegrationProgressObject(o interface{}, isavro bool, isopt
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -535,7 +535,7 @@ func toProjectRequestIntegrationValidatedDateObject(o interface{}, isavro bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -682,7 +682,7 @@ func toProjectRequestIntegrationObject(o interface{}, isavro bool, isoptional bo
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1080,7 +1080,7 @@ func toProjectRequestRequestDateObject(o interface{}, isavro bool, isoptional bo
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1209,7 +1209,7 @@ func toProjectRequestObject(o interface{}, isavro bool, isoptional bool, avrotyp
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

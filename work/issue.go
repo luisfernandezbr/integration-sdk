@@ -144,7 +144,7 @@ func toIssueCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrot
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -252,7 +252,7 @@ func toIssueCustomFieldsObject(o interface{}, isavro bool, isoptional bool, avro
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -360,7 +360,7 @@ func toIssueDueDateObject(o interface{}, isavro bool, isoptional bool, avrotype 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -468,7 +468,7 @@ func toIssueUpdatedDateObject(o interface{}, isavro bool, isoptional bool, avrot
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -635,7 +635,7 @@ func toIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string)
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

@@ -150,7 +150,7 @@ func toExportRequestIntegrationsAuthorizationObject(o interface{}, isavro bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -408,7 +408,7 @@ func toExportRequestIntegrationsProgressObject(o interface{}, isavro bool, isopt
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -541,7 +541,7 @@ func toExportRequestIntegrationsValidatedDateObject(o interface{}, isavro bool, 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -688,7 +688,7 @@ func toExportRequestIntegrationsObject(o interface{}, isavro bool, isoptional bo
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1086,7 +1086,7 @@ func toExportRequestRequestDateObject(o interface{}, isavro bool, isoptional boo
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1225,7 +1225,7 @@ func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

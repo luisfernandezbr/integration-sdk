@@ -144,7 +144,7 @@ func toIntegrationRequestIntegrationAuthorizationObject(o interface{}, isavro bo
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -402,7 +402,7 @@ func toIntegrationRequestIntegrationProgressObject(o interface{}, isavro bool, i
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -535,7 +535,7 @@ func toIntegrationRequestIntegrationValidatedDateObject(o interface{}, isavro bo
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -682,7 +682,7 @@ func toIntegrationRequestIntegrationObject(o interface{}, isavro bool, isoptiona
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1080,7 +1080,7 @@ func toIntegrationRequestRequestDateObject(o interface{}, isavro bool, isoptiona
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -1209,7 +1209,7 @@ func toIntegrationRequestObject(o interface{}, isavro bool, isoptional bool, avr
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

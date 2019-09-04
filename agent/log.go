@@ -135,7 +135,7 @@ func toLogEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype 
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -243,7 +243,7 @@ func toLogLastExportDateObject(o interface{}, isavro bool, isoptional bool, avro
 		return v.ToMap(isavro)
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
@@ -474,7 +474,7 @@ func toLogObject(o interface{}, isavro bool, isoptional bool, avrotype string) i
 		return v.String()
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 

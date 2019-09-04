@@ -148,7 +148,7 @@ func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) 
 		return v.String()
 
 	default:
-		panic("couldn't figure out the object type: " + reflect.TypeOf(v).String())
+		return o
 	}
 }
 
