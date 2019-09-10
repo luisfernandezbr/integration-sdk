@@ -445,6 +445,16 @@ func (o *Build) GetModelName() datamodel.ModelNameType {
 	return BuildModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Build) GetStreamName() string {
+	return BuildStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Build) GetTableName() string {
+	return BuildTable.String()
+}
+
 // NewBuildID provides a template for generating an ID field for Build
 func NewBuildID(customerID string, refType string, refID string) string {
 	return hash.Values("Build", customerID, refType, refID)

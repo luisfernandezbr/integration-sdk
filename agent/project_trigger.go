@@ -115,6 +115,16 @@ func (o *ProjectTrigger) GetModelName() datamodel.ModelNameType {
 	return ProjectTriggerModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *ProjectTrigger) GetStreamName() string {
+	return ProjectTriggerStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *ProjectTrigger) GetTableName() string {
+	return ProjectTriggerTable.String()
+}
+
 // NewProjectTriggerID provides a template for generating an ID field for ProjectTrigger
 func NewProjectTriggerID(customerID string, refType string, refID string) string {
 	return hash.Values("ProjectTrigger", customerID, refType, refID)

@@ -1250,6 +1250,16 @@ func (o *IntegrationRequest) GetModelName() datamodel.ModelNameType {
 	return IntegrationRequestModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *IntegrationRequest) GetStreamName() string {
+	return IntegrationRequestStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *IntegrationRequest) GetTableName() string {
+	return IntegrationRequestTable.String()
+}
+
 // NewIntegrationRequestID provides a template for generating an ID field for IntegrationRequest
 func NewIntegrationRequestID(customerID string, refType string, refID string) string {
 	return hash.Values("IntegrationRequest", customerID, refType, refID)
@@ -1588,6 +1598,25 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

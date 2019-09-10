@@ -1241,6 +1241,16 @@ func (o *RepoResponse) GetModelName() datamodel.ModelNameType {
 	return RepoResponseModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *RepoResponse) GetStreamName() string {
+	return RepoResponseStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *RepoResponse) GetTableName() string {
+	return RepoResponseTable.String()
+}
+
 // NewRepoResponseID provides a template for generating an ID field for RepoResponse
 func NewRepoResponseID(customerID string, refType string, refID string) string {
 	return hash.Values("RepoResponse", customerID, refType, refID)

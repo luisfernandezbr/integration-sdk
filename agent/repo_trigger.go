@@ -115,6 +115,16 @@ func (o *RepoTrigger) GetModelName() datamodel.ModelNameType {
 	return RepoTriggerModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *RepoTrigger) GetStreamName() string {
+	return RepoTriggerStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *RepoTrigger) GetTableName() string {
+	return RepoTriggerTable.String()
+}
+
 // NewRepoTriggerID provides a template for generating an ID field for RepoTrigger
 func NewRepoTriggerID(customerID string, refType string, refID string) string {
 	return hash.Values("RepoTrigger", customerID, refType, refID)

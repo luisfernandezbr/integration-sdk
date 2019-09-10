@@ -373,6 +373,16 @@ func (o *PullRequestComment) GetModelName() datamodel.ModelNameType {
 	return PullRequestCommentModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *PullRequestComment) GetStreamName() string {
+	return PullRequestCommentStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *PullRequestComment) GetTableName() string {
+	return PullRequestCommentTable.String()
+}
+
 // NewPullRequestCommentID provides a template for generating an ID field for PullRequestComment
 func NewPullRequestCommentID(customerID string, refID string, refType string, RepoID string) string {
 	return hash.Values(customerID, refID, refType, RepoID)

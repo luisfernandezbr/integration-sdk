@@ -493,6 +493,16 @@ func (o *Start) GetModelName() datamodel.ModelNameType {
 	return StartModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Start) GetStreamName() string {
+	return StartStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Start) GetTableName() string {
+	return StartTable.String()
+}
+
 // NewStartID provides a template for generating an ID field for Start
 func NewStartID(customerID string, refType string, refID string) string {
 	return hash.Values("Start", customerID, refType, refID)

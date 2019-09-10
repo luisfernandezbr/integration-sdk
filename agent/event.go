@@ -485,6 +485,16 @@ func (o *Event) GetModelName() datamodel.ModelNameType {
 	return EventModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Event) GetStreamName() string {
+	return EventStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Event) GetTableName() string {
+	return EventTable.String()
+}
+
 // NewEventID provides a template for generating an ID field for Event
 func NewEventID(customerID string, refType string, refID string) string {
 	return hash.Values("Event", customerID, refType, refID)

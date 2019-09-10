@@ -182,6 +182,16 @@ func (o *Branch) GetModelName() datamodel.ModelNameType {
 	return BranchModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Branch) GetStreamName() string {
+	return BranchStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Branch) GetTableName() string {
+	return BranchTable.String()
+}
+
 // NewBranchID provides a template for generating an ID field for Branch
 func NewBranchID(refType string, RepoID string, customerID string, Name string, FirstCommitID string) string {
 	return hash.Values(refType, RepoID, customerID, Name, FirstCommitID)

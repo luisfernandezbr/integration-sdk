@@ -635,6 +635,16 @@ func (o *Sprint) GetModelName() datamodel.ModelNameType {
 	return SprintModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Sprint) GetStreamName() string {
+	return SprintStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Sprint) GetTableName() string {
+	return SprintTable.String()
+}
+
 // NewSprintID provides a template for generating an ID field for Sprint
 func NewSprintID(customerID string, refID string, refType string) string {
 	return hash.Values(customerID, refID, refType)

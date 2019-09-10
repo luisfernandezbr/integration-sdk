@@ -500,6 +500,16 @@ func (o *Blame) GetModelName() datamodel.ModelNameType {
 	return BlameModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Blame) GetStreamName() string {
+	return BlameStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Blame) GetTableName() string {
+	return BlameTable.String()
+}
+
 // NewBlameID provides a template for generating an ID field for Blame
 func NewBlameID(customerID string, refID string, refType string, RepoID string, Filename string) string {
 	return hash.Values(customerID, refID, refType, RepoID, Filename)

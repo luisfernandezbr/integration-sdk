@@ -115,6 +115,16 @@ func (o *CodequalityTrigger) GetModelName() datamodel.ModelNameType {
 	return CodequalityTriggerModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *CodequalityTrigger) GetStreamName() string {
+	return CodequalityTriggerStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *CodequalityTrigger) GetTableName() string {
+	return CodequalityTriggerTable.String()
+}
+
 // NewCodequalityTriggerID provides a template for generating an ID field for CodequalityTrigger
 func NewCodequalityTriggerID(customerID string, refType string, refID string) string {
 	return hash.Values("CodequalityTrigger", customerID, refType, refID)

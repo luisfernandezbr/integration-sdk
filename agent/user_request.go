@@ -1250,6 +1250,16 @@ func (o *UserRequest) GetModelName() datamodel.ModelNameType {
 	return UserRequestModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *UserRequest) GetStreamName() string {
+	return UserRequestStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *UserRequest) GetTableName() string {
+	return UserRequestTable.String()
+}
+
 // NewUserRequestID provides a template for generating an ID field for UserRequest
 func NewUserRequestID(customerID string, refType string, refID string) string {
 	return hash.Values("UserRequest", customerID, refType, refID)

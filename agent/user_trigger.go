@@ -115,6 +115,16 @@ func (o *UserTrigger) GetModelName() datamodel.ModelNameType {
 	return UserTriggerModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *UserTrigger) GetStreamName() string {
+	return UserTriggerStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *UserTrigger) GetTableName() string {
+	return UserTriggerTable.String()
+}
+
 // NewUserTriggerID provides a template for generating an ID field for UserTrigger
 func NewUserTriggerID(customerID string, refType string, refID string) string {
 	return hash.Values("UserTrigger", customerID, refType, refID)

@@ -493,6 +493,16 @@ func (o *Log) GetModelName() datamodel.ModelNameType {
 	return LogModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Log) GetStreamName() string {
+	return LogStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Log) GetTableName() string {
+	return LogTable.String()
+}
+
 // NewLogID provides a template for generating an ID field for Log
 func NewLogID(customerID string, refType string, refID string) string {
 	return hash.Values("Log", customerID, refType, refID)

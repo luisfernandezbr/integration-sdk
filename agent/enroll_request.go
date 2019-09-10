@@ -228,6 +228,16 @@ func (o *EnrollRequest) GetModelName() datamodel.ModelNameType {
 	return EnrollRequestModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *EnrollRequest) GetStreamName() string {
+	return EnrollRequestStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *EnrollRequest) GetTableName() string {
+	return EnrollRequestTable.String()
+}
+
 // NewEnrollRequestID provides a template for generating an ID field for EnrollRequest
 func NewEnrollRequestID(Code string, UUID string) string {
 	return hash.Values(Code, UUID)

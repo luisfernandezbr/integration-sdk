@@ -288,6 +288,16 @@ func (o *PullRequestReview) GetModelName() datamodel.ModelNameType {
 	return PullRequestReviewModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *PullRequestReview) GetStreamName() string {
+	return PullRequestReviewStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *PullRequestReview) GetTableName() string {
+	return PullRequestReviewTable.String()
+}
+
 // NewPullRequestReviewID provides a template for generating an ID field for PullRequestReview
 func NewPullRequestReviewID(customerID string, refID string, refType string, RepoID string) string {
 	return hash.Values(customerID, refID, refType, RepoID)

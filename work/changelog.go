@@ -272,6 +272,16 @@ func (o *Changelog) GetModelName() datamodel.ModelNameType {
 	return ChangelogModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Changelog) GetStreamName() string {
+	return ChangelogStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Changelog) GetTableName() string {
+	return ChangelogTable.String()
+}
+
 // NewChangelogID provides a template for generating an ID field for Changelog
 func NewChangelogID(customerID string, refType string, refID string) string {
 	return hash.Values("Changelog", customerID, refType, refID)

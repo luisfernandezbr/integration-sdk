@@ -119,6 +119,16 @@ func (o *Project) GetModelName() datamodel.ModelNameType {
 	return ProjectModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Project) GetStreamName() string {
+	return ProjectStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Project) GetTableName() string {
+	return ProjectTable.String()
+}
+
 // NewProjectID provides a template for generating an ID field for Project
 func NewProjectID(customerID string, refType string, refID string) string {
 	return hash.Values("Project", customerID, refType, refID)

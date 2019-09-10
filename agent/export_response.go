@@ -747,6 +747,16 @@ func (o *ExportResponse) GetModelName() datamodel.ModelNameType {
 	return ExportResponseModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *ExportResponse) GetStreamName() string {
+	return ExportResponseStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *ExportResponse) GetTableName() string {
+	return ExportResponseTable.String()
+}
+
 // NewExportResponseID provides a template for generating an ID field for ExportResponse
 func NewExportResponseID(customerID string, refType string, refID string) string {
 	return hash.Values("ExportResponse", customerID, refType, refID)

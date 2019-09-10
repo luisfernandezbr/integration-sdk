@@ -244,6 +244,16 @@ func (o *Metric) GetModelName() datamodel.ModelNameType {
 	return MetricModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Metric) GetStreamName() string {
+	return MetricStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Metric) GetTableName() string {
+	return MetricTable.String()
+}
+
 // NewMetricID provides a template for generating an ID field for Metric
 func NewMetricID(customerID string, refType string, refID string) string {
 	return hash.Values("Metric", customerID, refType, refID)

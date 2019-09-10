@@ -952,6 +952,16 @@ func (o *UserResponse) GetModelName() datamodel.ModelNameType {
 	return UserResponseModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *UserResponse) GetStreamName() string {
+	return UserResponseStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *UserResponse) GetTableName() string {
+	return UserResponseTable.String()
+}
+
 // NewUserResponseID provides a template for generating an ID field for UserResponse
 func NewUserResponseID(customerID string, refType string, refID string) string {
 	return hash.Values("UserResponse", customerID, refType, refID)

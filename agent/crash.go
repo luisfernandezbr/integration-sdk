@@ -493,6 +493,16 @@ func (o *Crash) GetModelName() datamodel.ModelNameType {
 	return CrashModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Crash) GetStreamName() string {
+	return CrashStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Crash) GetTableName() string {
+	return CrashTable.String()
+}
+
 // NewCrashID provides a template for generating an ID field for Crash
 func NewCrashID(customerID string, refType string, refID string) string {
 	return hash.Values("Crash", customerID, refType, refID)

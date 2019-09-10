@@ -119,6 +119,16 @@ func (o *ExportTrigger) GetModelName() datamodel.ModelNameType {
 	return ExportTriggerModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *ExportTrigger) GetStreamName() string {
+	return ExportTriggerStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *ExportTrigger) GetTableName() string {
+	return ExportTriggerTable.String()
+}
+
 // NewExportTriggerID provides a template for generating an ID field for ExportTrigger
 func NewExportTriggerID(customerID string, refType string, refID string) string {
 	return hash.Values("ExportTrigger", customerID, refType, refID)

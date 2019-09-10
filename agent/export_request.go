@@ -1266,6 +1266,16 @@ func (o *ExportRequest) GetModelName() datamodel.ModelNameType {
 	return ExportRequestModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *ExportRequest) GetStreamName() string {
+	return ExportRequestStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *ExportRequest) GetTableName() string {
+	return ExportRequestTable.String()
+}
+
 // NewExportRequestID provides a template for generating an ID field for ExportRequest
 func NewExportRequestID(customerID string, refType string, refID string) string {
 	return hash.Values("ExportRequest", customerID, refType, refID)
@@ -1692,6 +1702,25 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

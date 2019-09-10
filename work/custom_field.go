@@ -119,6 +119,16 @@ func (o *CustomField) GetModelName() datamodel.ModelNameType {
 	return CustomFieldModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *CustomField) GetStreamName() string {
+	return CustomFieldStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *CustomField) GetTableName() string {
+	return CustomFieldTable.String()
+}
+
 // NewCustomFieldID provides a template for generating an ID field for CustomField
 func NewCustomFieldID(customerID string, refType string, refID string) string {
 	return hash.Values("CustomField", customerID, refType, refID)

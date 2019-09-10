@@ -131,6 +131,16 @@ func (o *CostCenter) GetModelName() datamodel.ModelNameType {
 	return CostCenterModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *CostCenter) GetStreamName() string {
+	return CostCenterStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *CostCenter) GetTableName() string {
+	return CostCenterTable.String()
+}
+
 // NewCostCenterID provides a template for generating an ID field for CostCenter
 func NewCostCenterID(customerID string) string {
 	return hash.Values(customerID, randomString(64))

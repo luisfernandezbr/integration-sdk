@@ -146,6 +146,16 @@ func (o *Team) GetModelName() datamodel.ModelNameType {
 	return TeamModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Team) GetStreamName() string {
+	return TeamStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Team) GetTableName() string {
+	return TeamTable.String()
+}
+
 // NewTeamID provides a template for generating an ID field for Team
 func NewTeamID(customerID string) string {
 	return hash.Values(customerID, randomString(64))

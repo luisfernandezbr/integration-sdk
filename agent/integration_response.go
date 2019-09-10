@@ -497,6 +497,16 @@ func (o *IntegrationResponse) GetModelName() datamodel.ModelNameType {
 	return IntegrationResponseModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *IntegrationResponse) GetStreamName() string {
+	return IntegrationResponseStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *IntegrationResponse) GetTableName() string {
+	return IntegrationResponseTable.String()
+}
+
 // NewIntegrationResponseID provides a template for generating an ID field for IntegrationResponse
 func NewIntegrationResponseID(customerID string, refType string, refID string) string {
 	return hash.Values("IntegrationResponse", customerID, refType, refID)

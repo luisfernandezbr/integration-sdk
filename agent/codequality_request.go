@@ -1250,6 +1250,16 @@ func (o *CodequalityRequest) GetModelName() datamodel.ModelNameType {
 	return CodequalityRequestModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *CodequalityRequest) GetStreamName() string {
+	return CodequalityRequestStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *CodequalityRequest) GetTableName() string {
+	return CodequalityRequestTable.String()
+}
+
 // NewCodequalityRequestID provides a template for generating an ID field for CodequalityRequest
 func NewCodequalityRequestID(customerID string, refType string, refID string) string {
 	return hash.Values("CodequalityRequest", customerID, refType, refID)

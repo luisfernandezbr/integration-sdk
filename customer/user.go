@@ -533,6 +533,16 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 	return UserModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *User) GetStreamName() string {
+	return UserStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *User) GetTableName() string {
+	return UserTable.String()
+}
+
 // NewUserID provides a template for generating an ID field for User
 func NewUserID(customerID string, Email string) string {
 	return hash.Values(customerID, Email)

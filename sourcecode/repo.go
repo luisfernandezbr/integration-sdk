@@ -135,6 +135,16 @@ func (o *Repo) GetModelName() datamodel.ModelNameType {
 	return RepoModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Repo) GetStreamName() string {
+	return RepoStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Repo) GetTableName() string {
+	return RepoTable.String()
+}
+
 // NewRepoID provides a template for generating an ID field for Repo
 func NewRepoID(customerID string, refType string, refID string) string {
 	return hash.Values("Repo", customerID, refType, refID)

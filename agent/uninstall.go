@@ -493,6 +493,16 @@ func (o *Uninstall) GetModelName() datamodel.ModelNameType {
 	return UninstallModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Uninstall) GetStreamName() string {
+	return UninstallStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Uninstall) GetTableName() string {
+	return UninstallTable.String()
+}
+
 // NewUninstallID provides a template for generating an ID field for Uninstall
 func NewUninstallID(customerID string, refType string, refID string) string {
 	return hash.Values("Uninstall", customerID, refType, refID)

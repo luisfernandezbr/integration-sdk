@@ -449,6 +449,16 @@ func (o *Deployment) GetModelName() datamodel.ModelNameType {
 	return DeploymentModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Deployment) GetStreamName() string {
+	return DeploymentStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Deployment) GetTableName() string {
+	return DeploymentTable.String()
+}
+
 // NewDeploymentID provides a template for generating an ID field for Deployment
 func NewDeploymentID(customerID string, refType string, refID string) string {
 	return hash.Values("Deployment", customerID, refType, refID)

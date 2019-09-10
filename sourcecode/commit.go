@@ -973,6 +973,16 @@ func (o *Commit) GetModelName() datamodel.ModelNameType {
 	return CommitModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Commit) GetStreamName() string {
+	return CommitStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Commit) GetTableName() string {
+	return CommitTable.String()
+}
+
 // NewCommitID provides a template for generating an ID field for Commit
 func NewCommitID(customerID string, refID string, refType string, RepoID string) string {
 	return hash.Values(customerID, refID, refType, RepoID)

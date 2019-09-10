@@ -529,6 +529,16 @@ func (o *Ping) GetModelName() datamodel.ModelNameType {
 	return PingModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Ping) GetStreamName() string {
+	return PingStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Ping) GetTableName() string {
+	return PingTable.String()
+}
+
 // NewPingID provides a template for generating an ID field for Ping
 func NewPingID(customerID string, refType string, refID string) string {
 	return hash.Values("Ping", customerID, refType, refID)

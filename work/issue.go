@@ -654,6 +654,16 @@ func (o *Issue) GetModelName() datamodel.ModelNameType {
 	return IssueModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *Issue) GetStreamName() string {
+	return IssueStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *Issue) GetTableName() string {
+	return IssueTable.String()
+}
+
 // NewIssueID provides a template for generating an ID field for Issue
 func NewIssueID(customerID string, refType string, refID string) string {
 	return hash.Values("Issue", customerID, refType, refID)

@@ -690,6 +690,16 @@ func (o *PullRequest) GetModelName() datamodel.ModelNameType {
 	return PullRequestModelName
 }
 
+// GetStreamName returns the name of the stream
+func (o *PullRequest) GetStreamName() string {
+	return PullRequestStream.String()
+}
+
+// GetTableName returns the name of the table
+func (o *PullRequest) GetTableName() string {
+	return PullRequestTable.String()
+}
+
 // NewPullRequestID provides a template for generating an ID field for PullRequest
 func NewPullRequestID(customerID string, refID string, refType string, RepoID string) string {
 	return hash.Values(customerID, refID, refType, RepoID)
