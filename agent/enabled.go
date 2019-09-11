@@ -1493,7 +1493,7 @@ func NewEnabledProducer(ctx context.Context, producer eventing.Producer, ch <-ch
 					partition := hash.Modulo(item.Key(), numPartitions)
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
-						Key:       item.(ModelWithID).GetID(),
+						Key:       object.GetID(),
 						Value:     binary,
 						Codec:     codec,
 						Headers:   headers,

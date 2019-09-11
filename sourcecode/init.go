@@ -29,8 +29,3 @@ var emptyString string
 var emptyInt int64
 var emptyBool bool
 var emptyFloat float64
-
-// ModelWithID is a model interface that has a GetID method
-type ModelWithID interface {
-	GetID() string
-}
