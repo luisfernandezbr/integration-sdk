@@ -4,17 +4,11 @@
 package agent
 
 import (
-	"bufio"
 	"bytes"
-	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
 	"reflect"
-	"regexp"
 	"sync"
 	"time"
 
@@ -23,7 +17,6 @@ import (
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
-	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -871,6 +864,25 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*LogEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -945,6 +957,25 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*LogLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1382,217 +1413,6 @@ func GetLogAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetLogAvroSchemaSpec())
 }
 
-// TransformLogFunc is a function for transforming Log during processing
-type TransformLogFunc func(input *Log) (*Log, error)
-
-// NewLogPipe creates a pipe for processing Log items
-func NewLogPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformLogFunc) <-chan bool {
-	done := make(chan bool, 1)
-	inch, indone := NewLogInputStream(input, errors)
-	var stream chan Log
-	if len(transforms) > 0 {
-		stream = make(chan Log, 1000)
-	} else {
-		stream = inch
-	}
-	outdone := NewLogOutputStream(output, stream, errors)
-	go func() {
-		if len(transforms) > 0 {
-			var stop bool
-			for item := range inch {
-				input := &item
-				for _, transform := range transforms {
-					out, err := transform(input)
-					if err != nil {
-						stop = true
-						errors <- err
-						break
-					}
-					if out == nil {
-						input = nil
-						break
-					} else {
-						input = out
-					}
-				}
-				if stop {
-					break
-				}
-				if input != nil {
-					stream <- *input
-				}
-			}
-			close(stream)
-		}
-		<-indone
-		<-outdone
-		done <- true
-	}()
-	return done
-}
-
-// NewLogInputStreamDir creates a channel for reading Log as JSON newlines from a directory of files
-func NewLogInputStreamDir(dir string, errors chan<- error, transforms ...TransformLogFunc) (chan Log, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/log\\.json(\\.gz)?$"))
-	if err != nil {
-		errors <- err
-		ch := make(chan Log)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	l := len(files)
-	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for log")
-		ch := make(chan Log)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	} else if l == 1 {
-		return NewLogInputStreamFile(files[0], errors, transforms...)
-	} else {
-		ch := make(chan Log)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-}
-
-// NewLogInputStreamFile creates an channel for reading Log as JSON newlines from filename
-func NewLogInputStreamFile(filename string, errors chan<- error, transforms ...TransformLogFunc) (chan Log, <-chan bool) {
-	of, err := os.Open(filename)
-	if err != nil {
-		errors <- err
-		ch := make(chan Log)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	var f io.ReadCloser = of
-	if filepath.Ext(filename) == ".gz" {
-		gz, err := gzip.NewReader(f)
-		if err != nil {
-			of.Close()
-			errors <- err
-			ch := make(chan Log)
-			close(ch)
-			done := make(chan bool, 1)
-			done <- true
-			return ch, done
-		}
-		f = gz
-	}
-	return NewLogInputStream(f, errors, transforms...)
-}
-
-// NewLogInputStream creates an channel for reading Log as JSON newlines from stream
-func NewLogInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformLogFunc) (chan Log, <-chan bool) {
-	done := make(chan bool, 1)
-	ch := make(chan Log, 1000)
-	go func() {
-		defer func() { stream.Close(); close(ch); done <- true }()
-		r := bufio.NewReader(stream)
-		for {
-			buf, err := r.ReadBytes('\n')
-			if err != nil {
-				if err == io.EOF {
-					return
-				}
-				errors <- err
-				return
-			}
-			var item Log
-			if err := json.Unmarshal(buf, &item); err != nil {
-				errors <- err
-				return
-			}
-			in := &item
-			var skip bool
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				ch <- *in
-			}
-		}
-	}()
-	return ch, done
-}
-
-// NewLogOutputStreamDir will output json newlines from channel and save in dir
-func NewLogOutputStreamDir(dir string, ch chan Log, errors chan<- error, transforms ...TransformLogFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/log\\.json(\\.gz)?$")
-	os.MkdirAll(filepath.Dir(fp), 0777)
-	of, err := os.Create(fp)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	gz, err := gzip.NewWriterLevel(of, gzip.BestCompression)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	return NewLogOutputStream(gz, ch, errors, transforms...)
-}
-
-// NewLogOutputStream will output json newlines from channel to the stream
-func NewLogOutputStream(stream io.WriteCloser, ch chan Log, errors chan<- error, transforms ...TransformLogFunc) <-chan bool {
-	done := make(chan bool, 1)
-	go func() {
-		defer func() {
-			if gz, ok := stream.(*gzip.Writer); ok {
-				gz.Flush()
-				gz.Close()
-			}
-			stream.Close()
-			done <- true
-		}()
-		for item := range ch {
-			in := &item
-			var skip bool
-			var err error
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				buf, err := json.Marshal(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				stream.Write(buf)
-				stream.Write([]byte{'\n'})
-			}
-		}
-	}()
-	return done
-}
-
 // LogSendEvent is an event detail for sending data
 type LogSendEvent struct {
 	Log     *Log
@@ -1670,6 +1490,7 @@ func NewLogSendEvent(o *Log, opts ...LogSendEventOpts) *LogSendEvent {
 func NewLogProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	emptyTime := time.Unix(0, 0)
+	var numPartitions int
 	go func() {
 		defer func() { done <- true }()
 		for {
@@ -1682,6 +1503,9 @@ func NewLogProducer(ctx context.Context, producer eventing.Producer, ch <-chan d
 					return
 				}
 				if object, ok := item.Object().(*Log); ok {
+					if numPartitions == 0 {
+						numPartitions = object.GetTopicConfig().NumPartitions
+					}
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1702,14 +1526,17 @@ func NewLogProducer(ctx context.Context, producer eventing.Producer, ch <-chan d
 					// add generated message headers
 					headers["message-id"] = pstrings.NewUUIDV4()
 					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
+					// determine the partition selection by using the partition key
+					// and taking the modulo over the number of partitions for the topic
+					partition := hash.Modulo(item.Key(), numPartitions)
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
-						Key:       item.Key(),
+						Key:       item.(ModelWithID).GetID(),
 						Value:     binary,
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
-						Partition: -1, // select any partition based on partitioner strategy in kafka
+						Partition: int32(partition),
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {

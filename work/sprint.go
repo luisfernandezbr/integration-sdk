@@ -4,17 +4,11 @@
 package work
 
 import (
-	"bufio"
 	"bytes"
-	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
 	"reflect"
-	"regexp"
 	"sync"
 	"time"
 
@@ -23,7 +17,6 @@ import (
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
-	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -1275,217 +1268,6 @@ func GetSprintAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetSprintAvroSchemaSpec())
 }
 
-// TransformSprintFunc is a function for transforming Sprint during processing
-type TransformSprintFunc func(input *Sprint) (*Sprint, error)
-
-// NewSprintPipe creates a pipe for processing Sprint items
-func NewSprintPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformSprintFunc) <-chan bool {
-	done := make(chan bool, 1)
-	inch, indone := NewSprintInputStream(input, errors)
-	var stream chan Sprint
-	if len(transforms) > 0 {
-		stream = make(chan Sprint, 1000)
-	} else {
-		stream = inch
-	}
-	outdone := NewSprintOutputStream(output, stream, errors)
-	go func() {
-		if len(transforms) > 0 {
-			var stop bool
-			for item := range inch {
-				input := &item
-				for _, transform := range transforms {
-					out, err := transform(input)
-					if err != nil {
-						stop = true
-						errors <- err
-						break
-					}
-					if out == nil {
-						input = nil
-						break
-					} else {
-						input = out
-					}
-				}
-				if stop {
-					break
-				}
-				if input != nil {
-					stream <- *input
-				}
-			}
-			close(stream)
-		}
-		<-indone
-		<-outdone
-		done <- true
-	}()
-	return done
-}
-
-// NewSprintInputStreamDir creates a channel for reading Sprint as JSON newlines from a directory of files
-func NewSprintInputStreamDir(dir string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/work/sprint\\.json(\\.gz)?$"))
-	if err != nil {
-		errors <- err
-		ch := make(chan Sprint)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	l := len(files)
-	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for sprint")
-		ch := make(chan Sprint)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	} else if l == 1 {
-		return NewSprintInputStreamFile(files[0], errors, transforms...)
-	} else {
-		ch := make(chan Sprint)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-}
-
-// NewSprintInputStreamFile creates an channel for reading Sprint as JSON newlines from filename
-func NewSprintInputStreamFile(filename string, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
-	of, err := os.Open(filename)
-	if err != nil {
-		errors <- err
-		ch := make(chan Sprint)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	var f io.ReadCloser = of
-	if filepath.Ext(filename) == ".gz" {
-		gz, err := gzip.NewReader(f)
-		if err != nil {
-			of.Close()
-			errors <- err
-			ch := make(chan Sprint)
-			close(ch)
-			done := make(chan bool, 1)
-			done <- true
-			return ch, done
-		}
-		f = gz
-	}
-	return NewSprintInputStream(f, errors, transforms...)
-}
-
-// NewSprintInputStream creates an channel for reading Sprint as JSON newlines from stream
-func NewSprintInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformSprintFunc) (chan Sprint, <-chan bool) {
-	done := make(chan bool, 1)
-	ch := make(chan Sprint, 1000)
-	go func() {
-		defer func() { stream.Close(); close(ch); done <- true }()
-		r := bufio.NewReader(stream)
-		for {
-			buf, err := r.ReadBytes('\n')
-			if err != nil {
-				if err == io.EOF {
-					return
-				}
-				errors <- err
-				return
-			}
-			var item Sprint
-			if err := json.Unmarshal(buf, &item); err != nil {
-				errors <- err
-				return
-			}
-			in := &item
-			var skip bool
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				ch <- *in
-			}
-		}
-	}()
-	return ch, done
-}
-
-// NewSprintOutputStreamDir will output json newlines from channel and save in dir
-func NewSprintOutputStreamDir(dir string, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
-	fp := filepath.Join(dir, "/work/sprint\\.json(\\.gz)?$")
-	os.MkdirAll(filepath.Dir(fp), 0777)
-	of, err := os.Create(fp)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	gz, err := gzip.NewWriterLevel(of, gzip.BestCompression)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	return NewSprintOutputStream(gz, ch, errors, transforms...)
-}
-
-// NewSprintOutputStream will output json newlines from channel to the stream
-func NewSprintOutputStream(stream io.WriteCloser, ch chan Sprint, errors chan<- error, transforms ...TransformSprintFunc) <-chan bool {
-	done := make(chan bool, 1)
-	go func() {
-		defer func() {
-			if gz, ok := stream.(*gzip.Writer); ok {
-				gz.Flush()
-				gz.Close()
-			}
-			stream.Close()
-			done <- true
-		}()
-		for item := range ch {
-			in := &item
-			var skip bool
-			var err error
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				buf, err := json.Marshal(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				stream.Write(buf)
-				stream.Write([]byte{'\n'})
-			}
-		}
-	}()
-	return done
-}
-
 // SprintSendEvent is an event detail for sending data
 type SprintSendEvent struct {
 	Sprint  *Sprint
@@ -1563,6 +1345,7 @@ func NewSprintSendEvent(o *Sprint, opts ...SprintSendEventOpts) *SprintSendEvent
 func NewSprintProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	emptyTime := time.Unix(0, 0)
+	var numPartitions int
 	go func() {
 		defer func() { done <- true }()
 		for {
@@ -1575,6 +1358,9 @@ func NewSprintProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 					return
 				}
 				if object, ok := item.Object().(*Sprint); ok {
+					if numPartitions == 0 {
+						numPartitions = object.GetTopicConfig().NumPartitions
+					}
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1595,14 +1381,17 @@ func NewSprintProducer(ctx context.Context, producer eventing.Producer, ch <-cha
 					// add generated message headers
 					headers["message-id"] = pstrings.NewUUIDV4()
 					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
+					// determine the partition selection by using the partition key
+					// and taking the modulo over the number of partitions for the topic
+					partition := hash.Modulo(item.Key(), numPartitions)
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
-						Key:       item.Key(),
+						Key:       item.(ModelWithID).GetID(),
 						Value:     binary,
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
-						Partition: -1, // select any partition based on partitioner strategy in kafka
+						Partition: int32(partition),
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {

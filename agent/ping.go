@@ -4,17 +4,11 @@
 package agent
 
 import (
-	"bufio"
 	"bytes"
-	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
 	"reflect"
-	"regexp"
 	"sync"
 	"time"
 
@@ -23,7 +17,6 @@ import (
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
-	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -1458,217 +1451,6 @@ func GetPingAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetPingAvroSchemaSpec())
 }
 
-// TransformPingFunc is a function for transforming Ping during processing
-type TransformPingFunc func(input *Ping) (*Ping, error)
-
-// NewPingPipe creates a pipe for processing Ping items
-func NewPingPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformPingFunc) <-chan bool {
-	done := make(chan bool, 1)
-	inch, indone := NewPingInputStream(input, errors)
-	var stream chan Ping
-	if len(transforms) > 0 {
-		stream = make(chan Ping, 1000)
-	} else {
-		stream = inch
-	}
-	outdone := NewPingOutputStream(output, stream, errors)
-	go func() {
-		if len(transforms) > 0 {
-			var stop bool
-			for item := range inch {
-				input := &item
-				for _, transform := range transforms {
-					out, err := transform(input)
-					if err != nil {
-						stop = true
-						errors <- err
-						break
-					}
-					if out == nil {
-						input = nil
-						break
-					} else {
-						input = out
-					}
-				}
-				if stop {
-					break
-				}
-				if input != nil {
-					stream <- *input
-				}
-			}
-			close(stream)
-		}
-		<-indone
-		<-outdone
-		done <- true
-	}()
-	return done
-}
-
-// NewPingInputStreamDir creates a channel for reading Ping as JSON newlines from a directory of files
-func NewPingInputStreamDir(dir string, errors chan<- error, transforms ...TransformPingFunc) (chan Ping, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/ping\\.json(\\.gz)?$"))
-	if err != nil {
-		errors <- err
-		ch := make(chan Ping)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	l := len(files)
-	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for ping")
-		ch := make(chan Ping)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	} else if l == 1 {
-		return NewPingInputStreamFile(files[0], errors, transforms...)
-	} else {
-		ch := make(chan Ping)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-}
-
-// NewPingInputStreamFile creates an channel for reading Ping as JSON newlines from filename
-func NewPingInputStreamFile(filename string, errors chan<- error, transforms ...TransformPingFunc) (chan Ping, <-chan bool) {
-	of, err := os.Open(filename)
-	if err != nil {
-		errors <- err
-		ch := make(chan Ping)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	var f io.ReadCloser = of
-	if filepath.Ext(filename) == ".gz" {
-		gz, err := gzip.NewReader(f)
-		if err != nil {
-			of.Close()
-			errors <- err
-			ch := make(chan Ping)
-			close(ch)
-			done := make(chan bool, 1)
-			done <- true
-			return ch, done
-		}
-		f = gz
-	}
-	return NewPingInputStream(f, errors, transforms...)
-}
-
-// NewPingInputStream creates an channel for reading Ping as JSON newlines from stream
-func NewPingInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformPingFunc) (chan Ping, <-chan bool) {
-	done := make(chan bool, 1)
-	ch := make(chan Ping, 1000)
-	go func() {
-		defer func() { stream.Close(); close(ch); done <- true }()
-		r := bufio.NewReader(stream)
-		for {
-			buf, err := r.ReadBytes('\n')
-			if err != nil {
-				if err == io.EOF {
-					return
-				}
-				errors <- err
-				return
-			}
-			var item Ping
-			if err := json.Unmarshal(buf, &item); err != nil {
-				errors <- err
-				return
-			}
-			in := &item
-			var skip bool
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				ch <- *in
-			}
-		}
-	}()
-	return ch, done
-}
-
-// NewPingOutputStreamDir will output json newlines from channel and save in dir
-func NewPingOutputStreamDir(dir string, ch chan Ping, errors chan<- error, transforms ...TransformPingFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/ping\\.json(\\.gz)?$")
-	os.MkdirAll(filepath.Dir(fp), 0777)
-	of, err := os.Create(fp)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	gz, err := gzip.NewWriterLevel(of, gzip.BestCompression)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	return NewPingOutputStream(gz, ch, errors, transforms...)
-}
-
-// NewPingOutputStream will output json newlines from channel to the stream
-func NewPingOutputStream(stream io.WriteCloser, ch chan Ping, errors chan<- error, transforms ...TransformPingFunc) <-chan bool {
-	done := make(chan bool, 1)
-	go func() {
-		defer func() {
-			if gz, ok := stream.(*gzip.Writer); ok {
-				gz.Flush()
-				gz.Close()
-			}
-			stream.Close()
-			done <- true
-		}()
-		for item := range ch {
-			in := &item
-			var skip bool
-			var err error
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				buf, err := json.Marshal(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				stream.Write(buf)
-				stream.Write([]byte{'\n'})
-			}
-		}
-	}()
-	return done
-}
-
 // PingSendEvent is an event detail for sending data
 type PingSendEvent struct {
 	Ping    *Ping
@@ -1746,6 +1528,7 @@ func NewPingSendEvent(o *Ping, opts ...PingSendEventOpts) *PingSendEvent {
 func NewPingProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	emptyTime := time.Unix(0, 0)
+	var numPartitions int
 	go func() {
 		defer func() { done <- true }()
 		for {
@@ -1758,6 +1541,9 @@ func NewPingProducer(ctx context.Context, producer eventing.Producer, ch <-chan 
 					return
 				}
 				if object, ok := item.Object().(*Ping); ok {
+					if numPartitions == 0 {
+						numPartitions = object.GetTopicConfig().NumPartitions
+					}
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1778,14 +1564,17 @@ func NewPingProducer(ctx context.Context, producer eventing.Producer, ch <-chan 
 					// add generated message headers
 					headers["message-id"] = pstrings.NewUUIDV4()
 					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
+					// determine the partition selection by using the partition key
+					// and taking the modulo over the number of partitions for the topic
+					partition := hash.Modulo(item.Key(), numPartitions)
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
-						Key:       item.Key(),
+						Key:       item.(ModelWithID).GetID(),
 						Value:     binary,
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
-						Partition: -1, // select any partition based on partitioner strategy in kafka
+						Partition: int32(partition),
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {

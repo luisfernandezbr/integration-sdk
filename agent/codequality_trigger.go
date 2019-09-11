@@ -4,17 +4,11 @@
 package agent
 
 import (
-	"bufio"
 	"bytes"
-	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
 	"reflect"
-	"regexp"
 	"sync"
 	"time"
 
@@ -23,7 +17,6 @@ import (
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
-	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -541,217 +534,6 @@ func GetCodequalityTriggerAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetCodequalityTriggerAvroSchemaSpec())
 }
 
-// TransformCodequalityTriggerFunc is a function for transforming CodequalityTrigger during processing
-type TransformCodequalityTriggerFunc func(input *CodequalityTrigger) (*CodequalityTrigger, error)
-
-// NewCodequalityTriggerPipe creates a pipe for processing CodequalityTrigger items
-func NewCodequalityTriggerPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformCodequalityTriggerFunc) <-chan bool {
-	done := make(chan bool, 1)
-	inch, indone := NewCodequalityTriggerInputStream(input, errors)
-	var stream chan CodequalityTrigger
-	if len(transforms) > 0 {
-		stream = make(chan CodequalityTrigger, 1000)
-	} else {
-		stream = inch
-	}
-	outdone := NewCodequalityTriggerOutputStream(output, stream, errors)
-	go func() {
-		if len(transforms) > 0 {
-			var stop bool
-			for item := range inch {
-				input := &item
-				for _, transform := range transforms {
-					out, err := transform(input)
-					if err != nil {
-						stop = true
-						errors <- err
-						break
-					}
-					if out == nil {
-						input = nil
-						break
-					} else {
-						input = out
-					}
-				}
-				if stop {
-					break
-				}
-				if input != nil {
-					stream <- *input
-				}
-			}
-			close(stream)
-		}
-		<-indone
-		<-outdone
-		done <- true
-	}()
-	return done
-}
-
-// NewCodequalityTriggerInputStreamDir creates a channel for reading CodequalityTrigger as JSON newlines from a directory of files
-func NewCodequalityTriggerInputStreamDir(dir string, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) (chan CodequalityTrigger, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/agent/codequality_trigger\\.json(\\.gz)?$"))
-	if err != nil {
-		errors <- err
-		ch := make(chan CodequalityTrigger)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	l := len(files)
-	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for codequality_trigger")
-		ch := make(chan CodequalityTrigger)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	} else if l == 1 {
-		return NewCodequalityTriggerInputStreamFile(files[0], errors, transforms...)
-	} else {
-		ch := make(chan CodequalityTrigger)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-}
-
-// NewCodequalityTriggerInputStreamFile creates an channel for reading CodequalityTrigger as JSON newlines from filename
-func NewCodequalityTriggerInputStreamFile(filename string, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) (chan CodequalityTrigger, <-chan bool) {
-	of, err := os.Open(filename)
-	if err != nil {
-		errors <- err
-		ch := make(chan CodequalityTrigger)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	var f io.ReadCloser = of
-	if filepath.Ext(filename) == ".gz" {
-		gz, err := gzip.NewReader(f)
-		if err != nil {
-			of.Close()
-			errors <- err
-			ch := make(chan CodequalityTrigger)
-			close(ch)
-			done := make(chan bool, 1)
-			done <- true
-			return ch, done
-		}
-		f = gz
-	}
-	return NewCodequalityTriggerInputStream(f, errors, transforms...)
-}
-
-// NewCodequalityTriggerInputStream creates an channel for reading CodequalityTrigger as JSON newlines from stream
-func NewCodequalityTriggerInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) (chan CodequalityTrigger, <-chan bool) {
-	done := make(chan bool, 1)
-	ch := make(chan CodequalityTrigger, 1000)
-	go func() {
-		defer func() { stream.Close(); close(ch); done <- true }()
-		r := bufio.NewReader(stream)
-		for {
-			buf, err := r.ReadBytes('\n')
-			if err != nil {
-				if err == io.EOF {
-					return
-				}
-				errors <- err
-				return
-			}
-			var item CodequalityTrigger
-			if err := json.Unmarshal(buf, &item); err != nil {
-				errors <- err
-				return
-			}
-			in := &item
-			var skip bool
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				ch <- *in
-			}
-		}
-	}()
-	return ch, done
-}
-
-// NewCodequalityTriggerOutputStreamDir will output json newlines from channel and save in dir
-func NewCodequalityTriggerOutputStreamDir(dir string, ch chan CodequalityTrigger, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) <-chan bool {
-	fp := filepath.Join(dir, "/agent/codequality_trigger\\.json(\\.gz)?$")
-	os.MkdirAll(filepath.Dir(fp), 0777)
-	of, err := os.Create(fp)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	gz, err := gzip.NewWriterLevel(of, gzip.BestCompression)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	return NewCodequalityTriggerOutputStream(gz, ch, errors, transforms...)
-}
-
-// NewCodequalityTriggerOutputStream will output json newlines from channel to the stream
-func NewCodequalityTriggerOutputStream(stream io.WriteCloser, ch chan CodequalityTrigger, errors chan<- error, transforms ...TransformCodequalityTriggerFunc) <-chan bool {
-	done := make(chan bool, 1)
-	go func() {
-		defer func() {
-			if gz, ok := stream.(*gzip.Writer); ok {
-				gz.Flush()
-				gz.Close()
-			}
-			stream.Close()
-			done <- true
-		}()
-		for item := range ch {
-			in := &item
-			var skip bool
-			var err error
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				buf, err := json.Marshal(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				stream.Write(buf)
-				stream.Write([]byte{'\n'})
-			}
-		}
-	}()
-	return done
-}
-
 // CodequalityTriggerSendEvent is an event detail for sending data
 type CodequalityTriggerSendEvent struct {
 	CodequalityTrigger *CodequalityTrigger
@@ -829,6 +611,7 @@ func NewCodequalityTriggerSendEvent(o *CodequalityTrigger, opts ...CodequalityTr
 func NewCodequalityTriggerProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	emptyTime := time.Unix(0, 0)
+	var numPartitions int
 	go func() {
 		defer func() { done <- true }()
 		for {
@@ -841,6 +624,9 @@ func NewCodequalityTriggerProducer(ctx context.Context, producer eventing.Produc
 					return
 				}
 				if object, ok := item.Object().(*CodequalityTrigger); ok {
+					if numPartitions == 0 {
+						numPartitions = object.GetTopicConfig().NumPartitions
+					}
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -861,14 +647,17 @@ func NewCodequalityTriggerProducer(ctx context.Context, producer eventing.Produc
 					// add generated message headers
 					headers["message-id"] = pstrings.NewUUIDV4()
 					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
+					// determine the partition selection by using the partition key
+					// and taking the modulo over the number of partitions for the topic
+					partition := hash.Modulo(item.Key(), numPartitions)
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
-						Key:       item.Key(),
+						Key:       item.(ModelWithID).GetID(),
 						Value:     binary,
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
-						Partition: -1, // select any partition based on partitioner strategy in kafka
+						Partition: int32(partition),
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {

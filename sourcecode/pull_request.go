@@ -4,17 +4,11 @@
 package sourcecode
 
 import (
-	"bufio"
 	"bytes"
-	"compress/gzip"
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
-	"os"
-	"path/filepath"
 	"reflect"
-	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -24,7 +18,6 @@ import (
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/eventing"
-	"github.com/pinpt/go-common/fileutil"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -1653,217 +1646,6 @@ func GetPullRequestAvroSchema() (*goavro.Codec, error) {
 	return goavro.NewCodec(GetPullRequestAvroSchemaSpec())
 }
 
-// TransformPullRequestFunc is a function for transforming PullRequest during processing
-type TransformPullRequestFunc func(input *PullRequest) (*PullRequest, error)
-
-// NewPullRequestPipe creates a pipe for processing PullRequest items
-func NewPullRequestPipe(input io.ReadCloser, output io.WriteCloser, errors chan error, transforms ...TransformPullRequestFunc) <-chan bool {
-	done := make(chan bool, 1)
-	inch, indone := NewPullRequestInputStream(input, errors)
-	var stream chan PullRequest
-	if len(transforms) > 0 {
-		stream = make(chan PullRequest, 1000)
-	} else {
-		stream = inch
-	}
-	outdone := NewPullRequestOutputStream(output, stream, errors)
-	go func() {
-		if len(transforms) > 0 {
-			var stop bool
-			for item := range inch {
-				input := &item
-				for _, transform := range transforms {
-					out, err := transform(input)
-					if err != nil {
-						stop = true
-						errors <- err
-						break
-					}
-					if out == nil {
-						input = nil
-						break
-					} else {
-						input = out
-					}
-				}
-				if stop {
-					break
-				}
-				if input != nil {
-					stream <- *input
-				}
-			}
-			close(stream)
-		}
-		<-indone
-		<-outdone
-		done <- true
-	}()
-	return done
-}
-
-// NewPullRequestInputStreamDir creates a channel for reading PullRequest as JSON newlines from a directory of files
-func NewPullRequestInputStreamDir(dir string, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
-	files, err := fileutil.FindFiles(dir, regexp.MustCompile("/sourcecode/pull_request\\.json(\\.gz)?$"))
-	if err != nil {
-		errors <- err
-		ch := make(chan PullRequest)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	l := len(files)
-	if l > 1 {
-		errors <- fmt.Errorf("too many files matched our finder regular expression for pull_request")
-		ch := make(chan PullRequest)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	} else if l == 1 {
-		return NewPullRequestInputStreamFile(files[0], errors, transforms...)
-	} else {
-		ch := make(chan PullRequest)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-}
-
-// NewPullRequestInputStreamFile creates an channel for reading PullRequest as JSON newlines from filename
-func NewPullRequestInputStreamFile(filename string, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
-	of, err := os.Open(filename)
-	if err != nil {
-		errors <- err
-		ch := make(chan PullRequest)
-		close(ch)
-		done := make(chan bool, 1)
-		done <- true
-		return ch, done
-	}
-	var f io.ReadCloser = of
-	if filepath.Ext(filename) == ".gz" {
-		gz, err := gzip.NewReader(f)
-		if err != nil {
-			of.Close()
-			errors <- err
-			ch := make(chan PullRequest)
-			close(ch)
-			done := make(chan bool, 1)
-			done <- true
-			return ch, done
-		}
-		f = gz
-	}
-	return NewPullRequestInputStream(f, errors, transforms...)
-}
-
-// NewPullRequestInputStream creates an channel for reading PullRequest as JSON newlines from stream
-func NewPullRequestInputStream(stream io.ReadCloser, errors chan<- error, transforms ...TransformPullRequestFunc) (chan PullRequest, <-chan bool) {
-	done := make(chan bool, 1)
-	ch := make(chan PullRequest, 1000)
-	go func() {
-		defer func() { stream.Close(); close(ch); done <- true }()
-		r := bufio.NewReader(stream)
-		for {
-			buf, err := r.ReadBytes('\n')
-			if err != nil {
-				if err == io.EOF {
-					return
-				}
-				errors <- err
-				return
-			}
-			var item PullRequest
-			if err := json.Unmarshal(buf, &item); err != nil {
-				errors <- err
-				return
-			}
-			in := &item
-			var skip bool
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				ch <- *in
-			}
-		}
-	}()
-	return ch, done
-}
-
-// NewPullRequestOutputStreamDir will output json newlines from channel and save in dir
-func NewPullRequestOutputStreamDir(dir string, ch chan PullRequest, errors chan<- error, transforms ...TransformPullRequestFunc) <-chan bool {
-	fp := filepath.Join(dir, "/sourcecode/pull_request\\.json(\\.gz)?$")
-	os.MkdirAll(filepath.Dir(fp), 0777)
-	of, err := os.Create(fp)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	gz, err := gzip.NewWriterLevel(of, gzip.BestCompression)
-	if err != nil {
-		errors <- err
-		done := make(chan bool, 1)
-		done <- true
-		return done
-	}
-	return NewPullRequestOutputStream(gz, ch, errors, transforms...)
-}
-
-// NewPullRequestOutputStream will output json newlines from channel to the stream
-func NewPullRequestOutputStream(stream io.WriteCloser, ch chan PullRequest, errors chan<- error, transforms ...TransformPullRequestFunc) <-chan bool {
-	done := make(chan bool, 1)
-	go func() {
-		defer func() {
-			if gz, ok := stream.(*gzip.Writer); ok {
-				gz.Flush()
-				gz.Close()
-			}
-			stream.Close()
-			done <- true
-		}()
-		for item := range ch {
-			in := &item
-			var skip bool
-			var err error
-			for _, transform := range transforms {
-				in, err = transform(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				if in == nil {
-					skip = true
-					break
-				}
-			}
-			if !skip {
-				buf, err := json.Marshal(in)
-				if err != nil {
-					errors <- err
-					return
-				}
-				stream.Write(buf)
-				stream.Write([]byte{'\n'})
-			}
-		}
-	}()
-	return done
-}
-
 // PullRequestSendEvent is an event detail for sending data
 type PullRequestSendEvent struct {
 	PullRequest *PullRequest
@@ -1941,6 +1723,7 @@ func NewPullRequestSendEvent(o *PullRequest, opts ...PullRequestSendEventOpts) *
 func NewPullRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
 	done := make(chan bool, 1)
 	emptyTime := time.Unix(0, 0)
+	var numPartitions int
 	go func() {
 		defer func() { done <- true }()
 		for {
@@ -1953,6 +1736,9 @@ func NewPullRequestProducer(ctx context.Context, producer eventing.Producer, ch 
 					return
 				}
 				if object, ok := item.Object().(*PullRequest); ok {
+					if numPartitions == 0 {
+						numPartitions = object.GetTopicConfig().NumPartitions
+					}
 					binary, codec, err := object.ToAvroBinary()
 					if err != nil {
 						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
@@ -1973,14 +1759,17 @@ func NewPullRequestProducer(ctx context.Context, producer eventing.Producer, ch 
 					// add generated message headers
 					headers["message-id"] = pstrings.NewUUIDV4()
 					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
+					// determine the partition selection by using the partition key
+					// and taking the modulo over the number of partitions for the topic
+					partition := hash.Modulo(item.Key(), numPartitions)
 					msg := eventing.Message{
 						Encoding:  eventing.AvroEncoding,
-						Key:       item.Key(),
+						Key:       item.(ModelWithID).GetID(),
 						Value:     binary,
 						Codec:     codec,
 						Headers:   headers,
 						Timestamp: tv,
-						Partition: -1, // select any partition based on partitioner strategy in kafka
+						Partition: int32(partition),
 						Topic:     object.GetTopicName().String(),
 					}
 					if err := producer.Send(ctx, msg); err != nil {
