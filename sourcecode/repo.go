@@ -67,7 +67,7 @@ type Repo struct {
 	// Active the status of the repo
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
 	// DefaultBranch the repo default branch
 	DefaultBranch string `json:"default_branch" bson:"default_branch" yaml:"default_branch" faker:"-"`
 	// Description brief explanation of the repo

@@ -405,7 +405,7 @@ type Blame struct {
 	// Complexity the cyclomatic complexity for the change
 	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
 	// Excluded if the result was excluded
 	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
 	// ExcludedReason why the result was excluded

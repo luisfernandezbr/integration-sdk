@@ -550,7 +550,7 @@ type Sprint struct {
 	// CompletedDate the date that the sprint was completed
 	CompletedDate SprintCompletedDate `json:"completed_date" bson:"completed_date" yaml:"completed_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
 	// EndedDate the date that the sprint was ended
 	EndedDate SprintEndedDate `json:"ended_date" bson:"ended_date" yaml:"ended_date" faker:"-"`
 	// FetchedDate date in when the api was called

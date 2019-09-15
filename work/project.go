@@ -69,7 +69,7 @@ type Project struct {
 	// Category the project category
 	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
 	// Description the description of the project
 	Description *string `json:"description" bson:"description" yaml:"description" faker:"sentence"`
 	// ID the primary key for the model instance

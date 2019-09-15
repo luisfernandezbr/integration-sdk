@@ -554,7 +554,7 @@ type Issue struct {
 	// CustomFields list of custom fields and their values
 	CustomFields []IssueCustomFields `json:"customFields" bson:"customFields" yaml:"customFields" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
 	// DueDate due date of the issue
 	DueDate IssueDueDate `json:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
 	// ID the primary key for the model instance
