@@ -440,7 +440,7 @@ type User struct {
 	// CreatedAt the date the record was created in Epoch time
 	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DeletedDate when the user record was deleted in epoch timestamp
 	DeletedDate UserDeletedDate `json:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
 	// Email the email of the user

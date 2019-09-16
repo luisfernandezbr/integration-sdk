@@ -102,7 +102,7 @@ type Branch struct {
 	// CommitShas list of commit shas contained on this branch
 	CommitShas []string `json:"commit_shas" bson:"commit_shas" yaml:"commit_shas" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Default true if the branch is the default branch
 	Default bool `json:"default" bson:"default" yaml:"default" faker:"-"`
 	// FirstBranchedFromCommitID the first commit id from which the branch was created

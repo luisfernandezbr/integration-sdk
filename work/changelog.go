@@ -191,7 +191,7 @@ type Changelog struct {
 	// CreatedDate the date when this change was created
 	CreatedDate ChangelogCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Field name of the field that was changed
 	Field string `json:"field" bson:"field" yaml:"field" faker:"-"`
 	// FieldType type of the field that was changed

@@ -367,7 +367,7 @@ type Deployment struct {
 	// CommitSha the commit sha for the commit that triggered the deployment
 	CommitSha string `json:"commit_sha" bson:"commit_sha" yaml:"commit_sha" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// EndDate the date when the deployment finished
 	EndDate DeploymentEndDate `json:"end_date" bson:"end_date" yaml:"end_date" faker:"-"`
 	// Environment the environment for the deployment

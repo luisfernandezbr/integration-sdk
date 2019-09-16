@@ -597,7 +597,7 @@ type PullRequest struct {
 	// CreatedDate the timestamp in UTC that the pull request was created
 	CreatedDate PullRequestCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the pull request
 	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance

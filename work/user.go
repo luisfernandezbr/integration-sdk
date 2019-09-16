@@ -63,7 +63,7 @@ type User struct {
 	// AvatarURL the url to users avatar
 	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-" badgerhold:"index"`
+	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Email the email for the user
 	Email *string `json:"email" bson:"email" yaml:"email" faker:"email"`
 	// ID the primary key for the model instance
