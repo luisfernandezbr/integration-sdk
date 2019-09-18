@@ -105,6 +105,8 @@ const (
 	UserResponseUsersColumn = "users"
 	// UserResponseUsersColumnActiveColumn is the active column property of the Users name
 	UserResponseUsersColumnActiveColumn = "users->active"
+	// UserResponseUsersColumnAssociatedRefIDColumn is the associated_ref_id column property of the Users name
+	UserResponseUsersColumnAssociatedRefIDColumn = "users->associated_ref_id"
 	// UserResponseUsersColumnAvatarURLColumn is the avatar_url column property of the Users name
 	UserResponseUsersColumnAvatarURLColumn = "users->avatar_url"
 	// UserResponseUsersColumnCustomerIDColumn is the customer_id column property of the Users name
@@ -503,6 +505,8 @@ func (o *UserResponseUsersGroups) FromMap(kv map[string]interface{}) {
 type UserResponseUsers struct {
 	// Active if user is active
 	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	// AssociatedRefID the ref id associated for this user in another system
+	AssociatedRefID *string `json:"associated_ref_id" bson:"associated_ref_id" yaml:"associated_ref_id" faker:"-"`
 	// AvatarURL the url to users avatar
 	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 	// CustomerID the customer id for the model instance
@@ -559,6 +563,8 @@ func (o *UserResponseUsers) ToMap(avro ...bool) map[string]interface{} {
 	return map[string]interface{}{
 		// Active if user is active
 		"active": toUserResponseUsersObject(o.Active, isavro, false, "boolean"),
+		// AssociatedRefID the ref id associated for this user in another system
+		"associated_ref_id": toUserResponseUsersObject(o.AssociatedRefID, isavro, true, "string"),
 		// AvatarURL the url to users avatar
 		"avatar_url": toUserResponseUsersObject(o.AvatarURL, isavro, true, "string"),
 		// CustomerID the customer id for the model instance
@@ -603,6 +609,24 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 				o.Active = number.ToBoolAny(nil)
 			} else {
 				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["associated_ref_id"].(*string); ok {
+		o.AssociatedRefID = val
+	} else if val, ok := kv["associated_ref_id"].(string); ok {
+		o.AssociatedRefID = &val
+	} else {
+		if val, ok := kv["associated_ref_id"]; ok {
+			if val == nil {
+				o.AssociatedRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as avro union, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AssociatedRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1935,7 +1959,7 @@ func GetUserResponseAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "users",
-				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "the exported users", "fields": []interface{}{map[string]interface{}{"doc": "if user is active", "name": "active", "type": "boolean"}, map[string]interface{}{"default": nil, "doc": "the url to users avatar", "name": "avatar_url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"doc": "the email for the user", "name": "emails", "type": map[string]interface{}{"items": "string", "name": "emails", "type": "array"}}, map[string]interface{}{"doc": "Group names", "name": "groups", "type": map[string]interface{}{"items": map[string]interface{}{"doc": "Group names", "fields": []interface{}{map[string]interface{}{"doc": "Group id", "name": "group_id", "type": "string"}, map[string]interface{}{"doc": "Group name", "name": "name", "type": "string"}}, "name": "groups", "type": "record"}, "name": "groups", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "the name of the user", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "the username of the user", "name": "username", "type": "string"}}, "name": "users", "type": "record"}, "name": "users", "type": "array"},
+				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "the exported users", "fields": []interface{}{map[string]interface{}{"doc": "if user is active", "name": "active", "type": "boolean"}, map[string]interface{}{"default": nil, "doc": "the ref id associated for this user in another system", "name": "associated_ref_id", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the url to users avatar", "name": "avatar_url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"doc": "the email for the user", "name": "emails", "type": map[string]interface{}{"items": "string", "name": "emails", "type": "array"}}, map[string]interface{}{"doc": "Group names", "name": "groups", "type": map[string]interface{}{"items": map[string]interface{}{"doc": "Group names", "fields": []interface{}{map[string]interface{}{"doc": "Group id", "name": "group_id", "type": "string"}, map[string]interface{}{"doc": "Group name", "name": "name", "type": "string"}}, "name": "groups", "type": "record"}, "name": "groups", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "the name of the user", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "the username of the user", "name": "username", "type": "string"}}, "name": "users", "type": "record"}, "name": "users", "type": "array"},
 			},
 			map[string]interface{}{
 				"name": "uuid",
