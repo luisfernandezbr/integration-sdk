@@ -141,6 +141,8 @@ const (
 	CommitSizeColumn = "size"
 	// CommitSlocColumn is the sloc column name
 	CommitSlocColumn = "sloc"
+	// CommitSourceColumn is the source column name
+	CommitSourceColumn = "source"
 	// CommitUpdatedAtColumn is the updated_ts column name
 	CommitUpdatedAtColumn = "updated_ts"
 	// CommitURLColumn is the url column name
@@ -860,6 +862,27 @@ func (o *CommitFiles) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// CommitSource is the enumeration type for source
+type CommitSource int32
+
+// String returns the string value for Source
+func (v CommitSource) String() string {
+	switch int32(v) {
+	case 0:
+		return "GIT"
+	case 1:
+		return "API"
+	}
+	return "unset"
+}
+
+const (
+	// SourceGit is the enumeration value for git
+	CommitSourceGit CommitSource = 0
+	// SourceAPI is the enumeration value for api
+	CommitSourceAPI CommitSource = 1
+)
+
 // Commit the commit is a specific change in a repo
 type Commit struct {
 	// Additions the number of additions for the commit
@@ -910,6 +933,8 @@ type Commit struct {
 	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
 	// Sloc the number of source lines in the commit
 	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	// Source the section of source system that the commit was exported from
+	Source CommitSource `json:"source" bson:"source" yaml:"source" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the commit detail
@@ -945,6 +970,9 @@ func toCommitObject(o interface{}, isavro bool, isoptional bool, avrotype string
 			arr = append(arr, i.ToMap(isavro))
 		}
 		return arr
+
+	case CommitSource:
+		return v.String()
 
 	default:
 		return o
@@ -1245,6 +1273,7 @@ func (o *Commit) ToMap(avro ...bool) map[string]interface{} {
 		"sha":              toCommitObject(o.Sha, isavro, false, "string"),
 		"size":             toCommitObject(o.Size, isavro, false, "long"),
 		"sloc":             toCommitObject(o.Sloc, isavro, false, "long"),
+		"source":           toCommitObject(o.Source, isavro, false, "source"),
 		"updated_ts":       toCommitObject(o.UpdatedAt, isavro, false, "long"),
 		"url":              toCommitObject(o.URL, isavro, false, "string"),
 		"hashcode":         toCommitObject(o.Hashcode, isavro, false, "string"),
@@ -1717,6 +1746,28 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["source"].(CommitSource); ok {
+		o.Source = val
+	} else {
+		if em, ok := kv["source"].(map[string]interface{}); ok {
+			ev := em["sourcecode.source"].(string)
+			switch ev {
+			case "git", "GIT":
+				o.Source = 0
+			case "api", "API":
+				o.Source = 1
+			}
+		}
+		if em, ok := kv["source"].(string); ok {
+			switch em {
+			case "git", "GIT":
+				o.Source = 0
+			case "api", "API":
+				o.Source = 1
+			}
+		}
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -1776,6 +1827,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Sha)
 	args = append(args, o.Size)
 	args = append(args, o.Sloc)
+	args = append(args, o.Source)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
@@ -1888,6 +1940,14 @@ func GetCommitAvroSchemaSpec() string {
 			map[string]interface{}{
 				"name": "sloc",
 				"type": "long",
+			},
+			map[string]interface{}{
+				"name": "source",
+				"type": map[string]interface{}{
+					"type":    "enum",
+					"name":    "source",
+					"symbols": []interface{}{"GIT", "API"},
+				},
 			},
 			map[string]interface{}{
 				"name": "updated_ts",
