@@ -62,6 +62,8 @@ const (
 	PullRequestCommitIDColumn = "id"
 	// PullRequestCommitMessageColumn is the message column name
 	PullRequestCommitMessageColumn = "message"
+	// PullRequestCommitPullRequestIDColumn is the pull_request_id column name
+	PullRequestCommitPullRequestIDColumn = "pull_request_id"
 	// PullRequestCommitRefIDColumn is the ref_id column name
 	PullRequestCommitRefIDColumn = "ref_id"
 	// PullRequestCommitRefTypeColumn is the ref_type column name
@@ -204,6 +206,8 @@ type PullRequestCommit struct {
 	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Message the commit message
 	Message string `json:"message" bson:"message" yaml:"message" faker:"commit_message"`
+	// PullRequestID the pull request this commit was taken from
+	PullRequestID string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -513,6 +517,7 @@ func (o *PullRequestCommit) ToMap(avro ...bool) map[string]interface{} {
 		"deletions":        toPullRequestCommitObject(o.Deletions, isavro, false, "long"),
 		"id":               toPullRequestCommitObject(o.ID, isavro, false, "string"),
 		"message":          toPullRequestCommitObject(o.Message, isavro, false, "string"),
+		"pull_request_id":  toPullRequestCommitObject(o.PullRequestID, isavro, false, "string"),
 		"ref_id":           toPullRequestCommitObject(o.RefID, isavro, false, "string"),
 		"ref_type":         toPullRequestCommitObject(o.RefType, isavro, false, "string"),
 		"repo_id":          toPullRequestCommitObject(o.RepoID, isavro, false, "string"),
@@ -686,6 +691,21 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["pull_request_id"].(string); ok {
+		o.PullRequestID = val
+	} else {
+		if val, ok := kv["pull_request_id"]; ok {
+			if val == nil {
+				o.PullRequestID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.PullRequestID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -790,6 +810,7 @@ func (o *PullRequestCommit) Hash() string {
 	args = append(args, o.Deletions)
 	args = append(args, o.ID)
 	args = append(args, o.Message)
+	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
@@ -845,6 +866,10 @@ func GetPullRequestCommitAvroSchemaSpec() string {
 			},
 			map[string]interface{}{
 				"name": "message",
+				"type": "string",
+			},
+			map[string]interface{}{
+				"name": "pull_request_id",
 				"type": "string",
 			},
 			map[string]interface{}{
