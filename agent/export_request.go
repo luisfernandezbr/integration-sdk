@@ -4,20 +4,15 @@
 package agent
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -108,74 +103,60 @@ const (
 // ExportRequestIntegrationsAuthorization represents the object structure for authorization
 type ExportRequestIntegrationsAuthorization struct {
 	// AccessToken Access token
-	AccessToken *string `json:"access_token" bson:"access_token" yaml:"access_token" faker:"-"`
+	AccessToken *string `json:"access_token,omitempty" codec:"access_token,omitempty" bson:"access_token" yaml:"access_token,omitempty" faker:"-"`
 	// RefreshToken Refresh token
-	RefreshToken *string `json:"refresh_token" bson:"refresh_token" yaml:"refresh_token" faker:"-"`
+	RefreshToken *string `json:"refresh_token,omitempty" codec:"refresh_token,omitempty" bson:"refresh_token" yaml:"refresh_token,omitempty" faker:"-"`
 	// URL URL of instance if relevant
-	URL *string `json:"url" bson:"url" yaml:"url" faker:"-"`
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
 	// Username Username for instance, if relevant
-	Username *string `json:"username" bson:"username" yaml:"username" faker:"-"`
+	Username *string `json:"username,omitempty" codec:"username,omitempty" bson:"username" yaml:"username,omitempty" faker:"-"`
 	// Password Password for instance, if relevant
-	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
+	Password *string `json:"password,omitempty" codec:"password,omitempty" bson:"password" yaml:"password,omitempty" faker:"-"`
 	// APIToken API Token for instance, if relevant
-	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
+	APIToken *string `json:"api_token,omitempty" codec:"api_token,omitempty" bson:"api_token" yaml:"api_token,omitempty" faker:"-"`
 	// Collection Collection for instance, if relevant
-	Collection *string `json:"collection" bson:"collection" yaml:"collection" faker:"-"`
+	Collection *string `json:"collection,omitempty" codec:"collection,omitempty" bson:"collection" yaml:"collection,omitempty" faker:"-"`
 	// APIKey API Key for instance, if relevant
-	APIKey *string `json:"api_key" bson:"api_key" yaml:"api_key" faker:"-"`
+	APIKey *string `json:"api_key,omitempty" codec:"api_key,omitempty" bson:"api_key" yaml:"api_key,omitempty" faker:"-"`
 	// Authorization the agents encrypted authorization
-	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization *string `json:"authorization,omitempty" codec:"authorization,omitempty" bson:"authorization" yaml:"authorization,omitempty" faker:"-"`
 	// Hostname Hostname for instance, if relevant
-	Hostname *string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname *string `json:"hostname,omitempty" codec:"hostname,omitempty" bson:"hostname" yaml:"hostname,omitempty" faker:"-"`
 }
 
-func toExportRequestIntegrationsAuthorizationObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toExportRequestIntegrationsAuthorizationObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toExportRequestIntegrationsAuthorizationObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ExportRequestIntegrationsAuthorization:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ExportRequestIntegrationsAuthorization) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ExportRequestIntegrationsAuthorization) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// AccessToken Access token
-		"access_token": toExportRequestIntegrationsAuthorizationObject(o.AccessToken, isavro, true, "string"),
+		"access_token": toExportRequestIntegrationsAuthorizationObject(o.AccessToken, true),
 		// RefreshToken Refresh token
-		"refresh_token": toExportRequestIntegrationsAuthorizationObject(o.RefreshToken, isavro, true, "string"),
+		"refresh_token": toExportRequestIntegrationsAuthorizationObject(o.RefreshToken, true),
 		// URL URL of instance if relevant
-		"url": toExportRequestIntegrationsAuthorizationObject(o.URL, isavro, true, "string"),
+		"url": toExportRequestIntegrationsAuthorizationObject(o.URL, true),
 		// Username Username for instance, if relevant
-		"username": toExportRequestIntegrationsAuthorizationObject(o.Username, isavro, true, "string"),
+		"username": toExportRequestIntegrationsAuthorizationObject(o.Username, true),
 		// Password Password for instance, if relevant
-		"password": toExportRequestIntegrationsAuthorizationObject(o.Password, isavro, true, "string"),
+		"password": toExportRequestIntegrationsAuthorizationObject(o.Password, true),
 		// APIToken API Token for instance, if relevant
-		"api_token": toExportRequestIntegrationsAuthorizationObject(o.APIToken, isavro, true, "string"),
+		"api_token": toExportRequestIntegrationsAuthorizationObject(o.APIToken, true),
 		// Collection Collection for instance, if relevant
-		"collection": toExportRequestIntegrationsAuthorizationObject(o.Collection, isavro, true, "string"),
+		"collection": toExportRequestIntegrationsAuthorizationObject(o.Collection, true),
 		// APIKey API Key for instance, if relevant
-		"api_key": toExportRequestIntegrationsAuthorizationObject(o.APIKey, isavro, true, "string"),
+		"api_key": toExportRequestIntegrationsAuthorizationObject(o.APIKey, true),
 		// Authorization the agents encrypted authorization
-		"authorization": toExportRequestIntegrationsAuthorizationObject(o.Authorization, isavro, true, "string"),
+		"authorization": toExportRequestIntegrationsAuthorizationObject(o.Authorization, true),
 		// Hostname Hostname for instance, if relevant
-		"hostname": toExportRequestIntegrationsAuthorizationObject(o.Hostname, isavro, true, "string"),
+		"hostname": toExportRequestIntegrationsAuthorizationObject(o.Hostname, true),
 	}
 }
 
@@ -203,7 +184,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.AccessToken = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -221,7 +202,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.RefreshToken = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -239,7 +220,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.URL = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -257,7 +238,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.Username = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -275,7 +256,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.Password = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -293,7 +274,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.APIToken = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -311,7 +292,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.Collection = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -329,7 +310,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.APIKey = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -347,7 +328,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.Authorization = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -365,7 +346,7 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 			if val == nil {
 				o.Hostname = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -400,46 +381,32 @@ const (
 // ExportRequestIntegrationsProgress represents the object structure for progress
 type ExportRequestIntegrationsProgress struct {
 	// Message Any relevant messaging during processing
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// Total The total amount to be processed
-	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
+	Total int64 `json:"total" codec:"total" bson:"total" yaml:"total" faker:"-"`
 	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
+	Completed int64 `json:"completed" codec:"completed" bson:"completed" yaml:"completed" faker:"-"`
 }
 
-func toExportRequestIntegrationsProgressObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toExportRequestIntegrationsProgressObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toExportRequestIntegrationsProgressObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ExportRequestIntegrationsProgress:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ExportRequestIntegrationsProgress) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ExportRequestIntegrationsProgress) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Message Any relevant messaging during processing
-		"message": toExportRequestIntegrationsProgressObject(o.Message, isavro, false, "string"),
+		"message": toExportRequestIntegrationsProgressObject(o.Message, false),
 		// Total The total amount to be processed
-		"total": toExportRequestIntegrationsProgressObject(o.Total, isavro, false, "long"),
+		"total": toExportRequestIntegrationsProgressObject(o.Total, false),
 		// Completed The total amount processed thus far
-		"completed": toExportRequestIntegrationsProgressObject(o.Completed, isavro, false, "long"),
+		"completed": toExportRequestIntegrationsProgressObject(o.Completed, false),
 	}
 }
 
@@ -533,46 +500,32 @@ const (
 // ExportRequestIntegrationsValidatedDate represents the object structure for validated_date
 type ExportRequestIntegrationsValidatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toExportRequestIntegrationsValidatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toExportRequestIntegrationsValidatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toExportRequestIntegrationsValidatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ExportRequestIntegrationsValidatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ExportRequestIntegrationsValidatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ExportRequestIntegrationsValidatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toExportRequestIntegrationsValidatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toExportRequestIntegrationsValidatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toExportRequestIntegrationsValidatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toExportRequestIntegrationsValidatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toExportRequestIntegrationsValidatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toExportRequestIntegrationsValidatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -641,109 +594,95 @@ func (o *ExportRequestIntegrationsValidatedDate) FromMap(kv map[string]interface
 // ExportRequestIntegrations represents the object structure for integrations
 type ExportRequestIntegrations struct {
 	// Active If true, the integration is still active
-	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
-	Authorization ExportRequestIntegrationsAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization ExportRequestIntegrationsAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Errored If authorization failed by the agent
-	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
+	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
 	// Exclusions The exclusion list for this integration
-	Exclusions []string `json:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
+	Exclusions []string `json:"exclusions" codec:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
-	Location ExportRequestIntegrationsLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
+	Location ExportRequestIntegrationsLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
-	Progress ExportRequestIntegrationsProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	Progress ExportRequestIntegrationsProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
-	SystemType ExportRequestIntegrationsSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
+	SystemType ExportRequestIntegrationsSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// Validated If the validation has been run against this instance
-	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
+	Validated *bool `json:"validated,omitempty" codec:"validated,omitempty" bson:"validated" yaml:"validated,omitempty" faker:"-"`
 	// ValidatedDate Date when validated
-	ValidatedDate ExportRequestIntegrationsValidatedDate `json:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
+	ValidatedDate ExportRequestIntegrationsValidatedDate `json:"validated_date" codec:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
 	// ValidationMessage The validation message from the agent
-	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
+	ValidationMessage *string `json:"validation_message,omitempty" codec:"validation_message,omitempty" bson:"validation_message" yaml:"validation_message,omitempty" faker:"-"`
 }
 
-func toExportRequestIntegrationsObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toExportRequestIntegrationsObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toExportRequestIntegrationsObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ExportRequestIntegrations:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case ExportRequestIntegrationsAuthorization:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case ExportRequestIntegrationsLocation:
 		return v.String()
 
 	case ExportRequestIntegrationsProgress:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case ExportRequestIntegrationsSystemType:
 		return v.String()
 
 	case ExportRequestIntegrationsValidatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ExportRequestIntegrations) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ExportRequestIntegrations) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Active If true, the integration is still active
-		"active": toExportRequestIntegrationsObject(o.Active, isavro, false, "boolean"),
+		"active": toExportRequestIntegrationsObject(o.Active, false),
 		// Authorization Authorization information
-		"authorization": toExportRequestIntegrationsObject(o.Authorization, isavro, false, "authorization"),
+		"authorization": toExportRequestIntegrationsObject(o.Authorization, false),
 		// CustomerID the customer id for the model instance
-		"customer_id": toExportRequestIntegrationsObject(o.CustomerID, isavro, false, "string"),
+		"customer_id": toExportRequestIntegrationsObject(o.CustomerID, false),
 		// Errored If authorization failed by the agent
-		"errored": toExportRequestIntegrationsObject(o.Errored, isavro, true, "boolean"),
+		"errored": toExportRequestIntegrationsObject(o.Errored, true),
 		// Exclusions The exclusion list for this integration
-		"exclusions": toExportRequestIntegrationsObject(o.Exclusions, isavro, false, "exclusions"),
+		"exclusions": toExportRequestIntegrationsObject(o.Exclusions, false),
 		// ID the primary key for the model instance
-		"id": toExportRequestIntegrationsObject(o.ID, isavro, false, "string"),
+		"id": toExportRequestIntegrationsObject(o.ID, false),
 		// Location The location of this integration (on-premise / private or cloud)
-		"location": toExportRequestIntegrationsObject(o.Location, isavro, false, "location"),
+		"location": toExportRequestIntegrationsObject(o.Location, false),
 		// Name The user friendly name of the integration
-		"name": toExportRequestIntegrationsObject(o.Name, isavro, false, "string"),
+		"name": toExportRequestIntegrationsObject(o.Name, false),
 		// Progress Agent processing progress
-		"progress": toExportRequestIntegrationsObject(o.Progress, isavro, false, "progress"),
+		"progress": toExportRequestIntegrationsObject(o.Progress, false),
 		// RefID the source system id for the model instance
-		"ref_id": toExportRequestIntegrationsObject(o.RefID, isavro, false, "string"),
+		"ref_id": toExportRequestIntegrationsObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
-		"ref_type": toExportRequestIntegrationsObject(o.RefType, isavro, false, "string"),
+		"ref_type": toExportRequestIntegrationsObject(o.RefType, false),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
-		"system_type": toExportRequestIntegrationsObject(o.SystemType, isavro, false, "system_type"),
+		"system_type": toExportRequestIntegrationsObject(o.SystemType, false),
 		// Validated If the validation has been run against this instance
-		"validated": toExportRequestIntegrationsObject(o.Validated, isavro, true, "boolean"),
+		"validated": toExportRequestIntegrationsObject(o.Validated, true),
 		// ValidatedDate Date when validated
-		"validated_date": toExportRequestIntegrationsObject(o.ValidatedDate, isavro, false, "validated_date"),
+		"validated_date": toExportRequestIntegrationsObject(o.ValidatedDate, false),
 		// ValidationMessage The validation message from the agent
-		"validation_message": toExportRequestIntegrationsObject(o.ValidationMessage, isavro, true, "string"),
+		"validation_message": toExportRequestIntegrationsObject(o.ValidationMessage, true),
 	}
 }
 
@@ -822,7 +761,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Errored = number.BoolPointer(number.ToBoolAny(nil))
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["bool"]
 				}
@@ -1013,7 +952,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Validated = number.BoolPointer(number.ToBoolAny(nil))
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["bool"]
 				}
@@ -1064,7 +1003,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.ValidationMessage = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1078,46 +1017,32 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 // ExportRequestRequestDate represents the object structure for request_date
 type ExportRequestRequestDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toExportRequestRequestDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toExportRequestRequestDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toExportRequestRequestDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ExportRequestRequestDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ExportRequestRequestDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ExportRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toExportRequestRequestDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toExportRequestRequestDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toExportRequestRequestDateObject(o.Offset, isavro, false, "long"),
+		"offset": toExportRequestRequestDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toExportRequestRequestDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toExportRequestRequestDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -1186,58 +1111,48 @@ func (o *ExportRequestRequestDate) FromMap(kv map[string]interface{}) {
 // ExportRequest an agent action to request an export
 type ExportRequest struct {
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integrations The integrations that should be exported and their current configuration
-	Integrations []ExportRequestIntegrations `json:"integrations" bson:"integrations" yaml:"integrations" faker:"-"`
+	Integrations []ExportRequestIntegrations `json:"integrations" codec:"integrations" bson:"integrations" yaml:"integrations" faker:"-"`
 	// JobID The job ID
-	JobID string `json:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
+	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// ReprocessHistorical This field is to differentiate between historical and incrementals
-	ReprocessHistorical bool `json:"reprocess_historical" bson:"reprocess_historical" yaml:"reprocess_historical" faker:"-"`
+	ReprocessHistorical bool `json:"reprocess_historical" codec:"reprocess_historical" bson:"reprocess_historical" yaml:"reprocess_historical" faker:"-"`
 	// RequestDate the date when the request was made
-	RequestDate ExportRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	RequestDate ExportRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UploadURL The one time upload URL to use for uploading a job to the Pinpoint cloud
-	UploadURL *string `json:"upload_url" bson:"upload_url" yaml:"upload_url" faker:"-"`
+	UploadURL *string `json:"upload_url,omitempty" codec:"upload_url,omitempty" bson:"upload_url" yaml:"upload_url,omitempty" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*ExportRequest)(nil)
 
-func toExportRequestObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toExportRequestObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toExportRequestObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ExportRequest:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case []ExportRequestIntegrations:
 		arr := make([]interface{}, 0)
 		for _, i := range v {
-			arr = append(arr, i.ToMap(isavro))
+			arr = append(arr, i.ToMap())
 		}
 		return arr
 
 	case ExportRequestRequestDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -1378,12 +1293,6 @@ func (o *ExportRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *ExportRequest) GetStateKey() string {
-	key := "uuid"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *ExportRequest) GetCustomerID() string {
 
@@ -1414,15 +1323,6 @@ func (o *ExportRequest) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *ExportRequest) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *ExportRequest) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *ExportRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -1441,52 +1341,6 @@ func (o *ExportRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecExportRequest *goavro.Codec
-var cachedCodecExportRequestLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *ExportRequest) GetAvroCodec() *goavro.Codec {
-	cachedCodecExportRequestLock.Lock()
-	if cachedCodecExportRequest == nil {
-		c, err := GetExportRequestAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecExportRequest = c
-	}
-	cachedCodecExportRequestLock.Unlock()
-	return cachedCodecExportRequest
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *ExportRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *ExportRequest) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *ExportRequest) Stringify() string {
 	o.Hash()
@@ -1499,30 +1353,21 @@ func (o *ExportRequest) IsEqual(other *ExportRequest) bool {
 }
 
 // ToMap returns the object as a map
-func (o *ExportRequest) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-		if o.Integrations == nil {
-			o.Integrations = make([]ExportRequestIntegrations, 0)
-		}
-	}
+func (o *ExportRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":          toExportRequestObject(o.CustomerID, isavro, false, "string"),
-		"id":                   toExportRequestObject(o.ID, isavro, false, "string"),
-		"integrations":         toExportRequestObject(o.Integrations, isavro, false, "integrations"),
-		"job_id":               toExportRequestObject(o.JobID, isavro, false, "string"),
-		"ref_id":               toExportRequestObject(o.RefID, isavro, false, "string"),
-		"ref_type":             toExportRequestObject(o.RefType, isavro, false, "string"),
-		"reprocess_historical": toExportRequestObject(o.ReprocessHistorical, isavro, false, "boolean"),
-		"request_date":         toExportRequestObject(o.RequestDate, isavro, false, "request_date"),
-		"updated_ts":           toExportRequestObject(o.UpdatedAt, isavro, false, "long"),
-		"upload_url":           toExportRequestObject(o.UploadURL, isavro, true, "string"),
-		"uuid":                 toExportRequestObject(o.UUID, isavro, false, "string"),
-		"hashcode":             toExportRequestObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":          toExportRequestObject(o.CustomerID, false),
+		"id":                   toExportRequestObject(o.ID, false),
+		"integrations":         toExportRequestObject(o.Integrations, false),
+		"job_id":               toExportRequestObject(o.JobID, false),
+		"ref_id":               toExportRequestObject(o.RefID, false),
+		"ref_type":             toExportRequestObject(o.RefType, false),
+		"reprocess_historical": toExportRequestObject(o.ReprocessHistorical, false),
+		"request_date":         toExportRequestObject(o.RequestDate, false),
+		"updated_ts":           toExportRequestObject(o.UpdatedAt, false),
+		"upload_url":           toExportRequestObject(o.UploadURL, true),
+		"uuid":                 toExportRequestObject(o.UUID, false),
+		"hashcode":             toExportRequestObject(o.Hashcode, false),
 	}
 }
 
@@ -1695,6 +1540,25 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1724,7 +1588,7 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.UploadURL = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1768,67 +1632,6 @@ func (o *ExportRequest) Hash() string {
 	return o.Hashcode
 }
 
-// GetExportRequestAvroSchemaSpec creates the avro schema specification for ExportRequest
-func GetExportRequestAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "agent",
-		"name":      "ExportRequest",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "integrations",
-				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "The integrations that should be exported and their current configuration", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "Authorization information", "name": "authorization", "type": map[string]interface{}{"doc": "Authorization information", "fields": []interface{}{map[string]interface{}{"default": nil, "doc": "Access token", "name": "access_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Refresh token", "name": "refresh_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "URL of instance if relevant", "name": "url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Username for instance, if relevant", "name": "username", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Password for instance, if relevant", "name": "password", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Token for instance, if relevant", "name": "api_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Collection for instance, if relevant", "name": "collection", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Key for instance, if relevant", "name": "api_key", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the agents encrypted authorization", "name": "authorization", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Hostname for instance, if relevant", "name": "hostname", "type": []interface{}{"null", "string"}}}, "name": "integrations.authorization", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If authorization failed by the agent", "name": "errored", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "The exclusion list for this integration", "name": "exclusions", "type": map[string]interface{}{"items": "string", "name": "exclusions", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "The location of this integration (on-premise / private or cloud)", "name": "location", "type": map[string]interface{}{"default": "PRIVATE", "doc": "The location of this integration (on-premise / private or cloud)", "name": "integrations.location", "symbols": []string{"PRIVATE", "CLOUD"}, "type": "enum"}}, map[string]interface{}{"doc": "The user friendly name of the integration", "name": "name", "type": "string"}, map[string]interface{}{"doc": "Agent processing progress", "name": "progress", "type": map[string]interface{}{"doc": "Agent processing progress", "fields": []interface{}{map[string]interface{}{"doc": "Any relevant messaging during processing", "name": "message", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "name": "total", "type": "long"}, map[string]interface{}{"doc": "The total amount processed thus far", "name": "completed", "type": "long"}}, "name": "integrations.progress", "type": "record"}}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "The system type of the integration (sourcecode / work (jira) / codequality / etc.)", "name": "system_type", "type": map[string]interface{}{"default": "WORK", "doc": "The system type of the integration (sourcecode / work (jira) / codequality / etc.)", "name": "integrations.system_type", "symbols": []string{"WORK", "SOURCECODE", "CODEQUALITY"}, "type": "enum"}}, map[string]interface{}{"default": nil, "doc": "If the validation has been run against this instance", "name": "validated", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "Date when validated", "name": "validated_date", "type": map[string]interface{}{"doc": "Date when validated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "integrations.validated_date", "type": "record"}}, map[string]interface{}{"default": nil, "doc": "The validation message from the agent", "name": "validation_message", "type": []interface{}{"null", "string"}}}, "name": "integrations", "type": "record"}, "name": "integrations", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "job_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "reprocess_historical",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "request_date",
-				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name":    "upload_url",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "uuid",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *ExportRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1839,344 +1642,5 @@ func (o *ExportRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetExportRequestAvroSchema creates the avro schema for ExportRequest
-func GetExportRequestAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetExportRequestAvroSchemaSpec())
-}
-
-// ExportRequestSendEvent is an event detail for sending data
-type ExportRequestSendEvent struct {
-	ExportRequest *ExportRequest
-	headers       map[string]string
-	time          time.Time
-	key           string
-}
-
-var _ datamodel.ModelSendEvent = (*ExportRequestSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *ExportRequestSendEvent) Key() string {
-	if e.key == "" {
-		return e.ExportRequest.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *ExportRequestSendEvent) Object() datamodel.Model {
-	return e.ExportRequest
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *ExportRequestSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *ExportRequestSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// ExportRequestSendEventOpts is a function handler for setting opts
-type ExportRequestSendEventOpts func(o *ExportRequestSendEvent)
-
-// WithExportRequestSendEventKey sets the key value to a value different than the object ID
-func WithExportRequestSendEventKey(key string) ExportRequestSendEventOpts {
-	return func(o *ExportRequestSendEvent) {
-		o.key = key
-	}
-}
-
-// WithExportRequestSendEventTimestamp sets the timestamp value
-func WithExportRequestSendEventTimestamp(tv time.Time) ExportRequestSendEventOpts {
-	return func(o *ExportRequestSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithExportRequestSendEventHeader sets the timestamp value
-func WithExportRequestSendEventHeader(key, value string) ExportRequestSendEventOpts {
-	return func(o *ExportRequestSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewExportRequestSendEvent returns a new ExportRequestSendEvent instance
-func NewExportRequestSendEvent(o *ExportRequest, opts ...ExportRequestSendEventOpts) *ExportRequestSendEvent {
-	res := &ExportRequestSendEvent{
-		ExportRequest: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewExportRequestProducer will stream data from the channel
-func NewExportRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*ExportRequest); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.ExportRequest but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewExportRequestConsumer will stream data from the topic into the provided channel
-func NewExportRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object ExportRequest
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.ExportRequest: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.ExportRequest: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.ExportRequest")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &ExportRequestReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object ExportRequest
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &ExportRequestReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// ExportRequestReceiveEvent is an event detail for receiving data
-type ExportRequestReceiveEvent struct {
-	ExportRequest *ExportRequest
-	message       eventing.Message
-	eof           bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*ExportRequestReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *ExportRequestReceiveEvent) Object() datamodel.Model {
-	return e.ExportRequest
-}
-
-// Message returns the underlying message data for the event
-func (e *ExportRequestReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *ExportRequestReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// ExportRequestProducer implements the datamodel.ModelEventProducer
-type ExportRequestProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*ExportRequestProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *ExportRequestProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *ExportRequestProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *ExportRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *ExportRequest) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &ExportRequestProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewExportRequestProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewExportRequestProducerChannel returns a channel which can be used for producing Model events
-func NewExportRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewExportRequestProducerChannelSize(producer, 0, errors)
-}
-
-// NewExportRequestProducerChannelSize returns a channel which can be used for producing Model events
-func NewExportRequestProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &ExportRequestProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewExportRequestProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// ExportRequestConsumer implements the datamodel.ModelEventConsumer
-type ExportRequestConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*ExportRequestConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *ExportRequestConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *ExportRequestConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *ExportRequest) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &ExportRequestConsumer{
-		ch:       ch,
-		callback: NewExportRequestConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewExportRequestConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewExportRequestConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &ExportRequestConsumer{
-		ch:       ch,
-		callback: NewExportRequestConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

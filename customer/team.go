@@ -4,20 +4,15 @@
 package customer
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -72,52 +67,42 @@ const (
 // Team a team is a grouping of one or more users
 type Team struct {
 	// Active whether the team is tracked in pinpoint
-	Active *bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	Active *bool `json:"active,omitempty" codec:"active,omitempty" bson:"active" yaml:"active,omitempty" faker:"-"`
 	// ChildrenIds the children_ids for this team
-	ChildrenIds []string `json:"children_ids" bson:"children_ids" yaml:"children_ids" faker:"-"`
+	ChildrenIds []string `json:"children_ids" codec:"children_ids" bson:"children_ids" yaml:"children_ids" faker:"-"`
 	// CreatedAt the date the record was created in Epoch time
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" codec:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the team
-	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Leaf True when team has no children_ids
-	Leaf bool `json:"leaf" bson:"leaf" yaml:"leaf" faker:"-"`
+	Leaf bool `json:"leaf" codec:"leaf" bson:"leaf" yaml:"leaf" faker:"-"`
 	// Name the name of the team
-	Name string `json:"name" bson:"name" yaml:"name" faker:"team"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"team"`
 	// ParentIds the parent_ids for this team
-	ParentIds []string `json:"parent_ids" bson:"parent_ids" yaml:"parent_ids" faker:"-"`
+	ParentIds []string `json:"parent_ids" codec:"parent_ids" bson:"parent_ids" yaml:"parent_ids" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// TeamCostID the team cost id
-	TeamCostID *string `json:"team_cost_id" bson:"team_cost_id" yaml:"team_cost_id" faker:"-"`
+	TeamCostID *string `json:"team_cost_id,omitempty" codec:"team_cost_id,omitempty" bson:"team_cost_id" yaml:"team_cost_id,omitempty" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Team)(nil)
 
-func toTeamObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toTeamObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toTeamObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Team:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -278,12 +263,6 @@ func (o *Team) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *Team) GetStateKey() string {
-	key := "customer_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *Team) GetCustomerID() string {
 
@@ -314,15 +293,6 @@ func (o *Team) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *Team) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *Team) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *Team) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -341,52 +311,6 @@ func (o *Team) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecTeam *goavro.Codec
-var cachedCodecTeamLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *Team) GetAvroCodec() *goavro.Codec {
-	cachedCodecTeamLock.Lock()
-	if cachedCodecTeam == nil {
-		c, err := GetTeamAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecTeam = c
-	}
-	cachedCodecTeamLock.Unlock()
-	return cachedCodecTeam
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *Team) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Team) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *Team) Stringify() string {
 	o.Hash()
@@ -399,35 +323,23 @@ func (o *Team) IsEqual(other *Team) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Team) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-		if o.ChildrenIds == nil {
-			o.ChildrenIds = make([]string, 0)
-		}
-		if o.ParentIds == nil {
-			o.ParentIds = make([]string, 0)
-		}
-	}
+func (o *Team) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":       toTeamObject(o.Active, isavro, true, "boolean"),
-		"children_ids": toTeamObject(o.ChildrenIds, isavro, false, "children_ids"),
-		"created_ts":   toTeamObject(o.CreatedAt, isavro, false, "long"),
-		"customer_id":  toTeamObject(o.CustomerID, isavro, false, "string"),
-		"description":  toTeamObject(o.Description, isavro, false, "string"),
-		"id":           toTeamObject(o.ID, isavro, false, "string"),
-		"leaf":         toTeamObject(o.Leaf, isavro, false, "boolean"),
-		"name":         toTeamObject(o.Name, isavro, false, "string"),
-		"parent_ids":   toTeamObject(o.ParentIds, isavro, false, "parent_ids"),
-		"ref_id":       toTeamObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toTeamObject(o.RefType, isavro, false, "string"),
-		"team_cost_id": toTeamObject(o.TeamCostID, isavro, true, "string"),
-		"updated_ts":   toTeamObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":     toTeamObject(o.Hashcode, isavro, false, "string"),
+		"active":       toTeamObject(o.Active, true),
+		"children_ids": toTeamObject(o.ChildrenIds, false),
+		"created_ts":   toTeamObject(o.CreatedAt, false),
+		"customer_id":  toTeamObject(o.CustomerID, false),
+		"description":  toTeamObject(o.Description, false),
+		"id":           toTeamObject(o.ID, false),
+		"leaf":         toTeamObject(o.Leaf, false),
+		"name":         toTeamObject(o.Name, false),
+		"parent_ids":   toTeamObject(o.ParentIds, false),
+		"ref_id":       toTeamObject(o.RefID, false),
+		"ref_type":     toTeamObject(o.RefType, false),
+		"team_cost_id": toTeamObject(o.TeamCostID, true),
+		"updated_ts":   toTeamObject(o.UpdatedAt, false),
+		"hashcode":     toTeamObject(o.Hashcode, false),
 	}
 }
 
@@ -450,7 +362,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Active = number.BoolPointer(number.ToBoolAny(nil))
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["bool"]
 				}
@@ -687,7 +599,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.TeamCostID = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -733,122 +645,6 @@ func (o *Team) Hash() string {
 	return o.Hashcode
 }
 
-// CreateTeam creates a new Team in the database
-func CreateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
-	o.setDefaults(true)
-	return db.Create(ctx, o)
-}
-
-// DeleteTeam deletes a Team in the database
-func DeleteTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
-	o.setDefaults(true)
-	return db.Delete(ctx, o)
-}
-
-// UpdateTeam updates a Team in the database
-func UpdateTeam(ctx context.Context, db datamodel.Storage, o *Team) error {
-	o.setDefaults(true)
-	return db.Update(ctx, o)
-}
-
-// FindTeam returns a Team from the database
-func FindTeam(ctx context.Context, db datamodel.Storage, id string) (*Team, error) {
-	kv, err := db.FindOne(ctx, TeamModelName, id)
-	if err != nil {
-		return nil, err
-	}
-	if kv == nil {
-		return nil, nil
-	}
-	return kv.(*Team), nil
-}
-
-// FindTeams returns all Team from the database matching keys
-func FindTeams(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*Team, error) {
-	res, err := db.Find(ctx, TeamModelName, kv)
-	if err != nil {
-		return nil, err
-	}
-	if res != nil {
-		arr := make([]*Team, 0)
-		for _, m := range res {
-			arr = append(arr, m.(*Team))
-		}
-		return arr, nil
-	}
-	return nil, nil
-}
-
-// GetTeamAvroSchemaSpec creates the avro schema specification for Team
-func GetTeamAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "customer",
-		"name":      "Team",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "active",
-				"type":    []interface{}{"null", "boolean"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "children_ids",
-				"type": map[string]interface{}{"items": "string", "name": "children_ids", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "description",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "leaf",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "parent_ids",
-				"type": map[string]interface{}{"items": "string", "name": "parent_ids", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "team_cost_id",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *Team) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -859,344 +655,5 @@ func (o *Team) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetTeamAvroSchema creates the avro schema for Team
-func GetTeamAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetTeamAvroSchemaSpec())
-}
-
-// TeamSendEvent is an event detail for sending data
-type TeamSendEvent struct {
-	Team    *Team
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*TeamSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *TeamSendEvent) Key() string {
-	if e.key == "" {
-		return e.Team.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *TeamSendEvent) Object() datamodel.Model {
-	return e.Team
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *TeamSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *TeamSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// TeamSendEventOpts is a function handler for setting opts
-type TeamSendEventOpts func(o *TeamSendEvent)
-
-// WithTeamSendEventKey sets the key value to a value different than the object ID
-func WithTeamSendEventKey(key string) TeamSendEventOpts {
-	return func(o *TeamSendEvent) {
-		o.key = key
-	}
-}
-
-// WithTeamSendEventTimestamp sets the timestamp value
-func WithTeamSendEventTimestamp(tv time.Time) TeamSendEventOpts {
-	return func(o *TeamSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithTeamSendEventHeader sets the timestamp value
-func WithTeamSendEventHeader(key, value string) TeamSendEventOpts {
-	return func(o *TeamSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewTeamSendEvent returns a new TeamSendEvent instance
-func NewTeamSendEvent(o *Team, opts ...TeamSendEventOpts) *TeamSendEvent {
-	res := &TeamSendEvent{
-		Team: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewTeamProducer will stream data from the channel
-func NewTeamProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*Team); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type customer.Team but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewTeamConsumer will stream data from the topic into the provided channel
-func NewTeamConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object Team
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into customer.Team: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into customer.Team: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for customer.Team")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &TeamReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Team
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &TeamReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// TeamReceiveEvent is an event detail for receiving data
-type TeamReceiveEvent struct {
-	Team    *Team
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*TeamReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *TeamReceiveEvent) Object() datamodel.Model {
-	return e.Team
-}
-
-// Message returns the underlying message data for the event
-func (e *TeamReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *TeamReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// TeamProducer implements the datamodel.ModelEventProducer
-type TeamProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*TeamProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *TeamProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *TeamProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Team) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Team) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &TeamProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewTeamProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewTeamProducerChannel returns a channel which can be used for producing Model events
-func NewTeamProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewTeamProducerChannelSize(producer, 0, errors)
-}
-
-// NewTeamProducerChannelSize returns a channel which can be used for producing Model events
-func NewTeamProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &TeamProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewTeamProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// TeamConsumer implements the datamodel.ModelEventConsumer
-type TeamConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*TeamConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *TeamConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *TeamConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Team) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &TeamConsumer{
-		ch:       ch,
-		callback: NewTeamConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewTeamConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewTeamConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &TeamConsumer{
-		ch:       ch,
-		callback: NewTeamConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

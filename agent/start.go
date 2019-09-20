@@ -4,19 +4,13 @@
 package agent
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -105,46 +99,32 @@ const (
 // StartEventDate represents the object structure for event_date
 type StartEventDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toStartEventDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toStartEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toStartEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *StartEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *StartEventDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *StartEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toStartEventDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toStartEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toStartEventDateObject(o.Offset, isavro, false, "long"),
+		"offset": toStartEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toStartEventDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toStartEventDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -213,46 +193,32 @@ func (o *StartEventDate) FromMap(kv map[string]interface{}) {
 // StartLastExportDate represents the object structure for last_export_date
 type StartLastExportDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toStartLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toStartLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toStartLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *StartLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *StartLastExportDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *StartLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toStartLastExportDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toStartLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toStartLastExportDateObject(o.Offset, isavro, false, "long"),
+		"offset": toStartLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toStartLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toStartLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -386,82 +352,72 @@ const (
 // Start an agent event which is sent on start
 type Start struct {
 	// Architecture the architecture of the agent machine
-	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
-	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
+	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
 	// Distro the agent os distribution
-	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
-	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate StartEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate StartEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
-	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
-	GoVersion string `json:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
-	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate StartLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate StartLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
-	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
-	NumCPU int64 `json:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
 	// OS the agent operating system
-	OS string `json:"os" bson:"os" yaml:"os" faker:"-"`
+	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
-	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
-	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
-	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type StartType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type StartType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
-	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
+	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
-	Version string `json:"version" bson:"version" yaml:"version" faker:"-"`
+	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Start)(nil)
 
-func toStartObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toStartObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toStartObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Start:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case StartEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case StartLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case StartType:
 		return v.String()
@@ -605,12 +561,6 @@ func (o *Start) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *Start) GetStateKey() string {
-	key := "uuid"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *Start) GetCustomerID() string {
 
@@ -641,15 +591,6 @@ func (o *Start) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *Start) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *Start) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *Start) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -668,52 +609,6 @@ func (o *Start) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecStart *goavro.Codec
-var cachedCodecStartLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *Start) GetAvroCodec() *goavro.Codec {
-	cachedCodecStartLock.Lock()
-	if cachedCodecStart == nil {
-		c, err := GetStartAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecStart = c
-	}
-	cachedCodecStartLock.Unlock()
-	return cachedCodecStart
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *Start) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Start) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *Start) Stringify() string {
 	o.Hash()
@@ -726,41 +621,35 @@ func (o *Start) IsEqual(other *Start) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Start) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *Start) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toStartObject(o.Architecture, isavro, false, "string"),
-		"customer_id":      toStartObject(o.CustomerID, isavro, false, "string"),
-		"data":             toStartObject(o.Data, isavro, true, "string"),
-		"distro":           toStartObject(o.Distro, isavro, false, "string"),
-		"error":            toStartObject(o.Error, isavro, true, "string"),
-		"event_date":       toStartObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":       toStartObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":       toStartObject(o.GoVersion, isavro, false, "string"),
-		"hostname":         toStartObject(o.Hostname, isavro, false, "string"),
-		"id":               toStartObject(o.ID, isavro, false, "string"),
-		"last_export_date": toStartObject(o.LastExportDate, isavro, false, "last_export_date"),
-		"memory":           toStartObject(o.Memory, isavro, false, "long"),
-		"message":          toStartObject(o.Message, isavro, false, "string"),
-		"num_cpu":          toStartObject(o.NumCPU, isavro, false, "long"),
-		"os":               toStartObject(o.OS, isavro, false, "string"),
-		"ref_id":           toStartObject(o.RefID, isavro, false, "string"),
-		"ref_type":         toStartObject(o.RefType, isavro, false, "string"),
-		"request_id":       toStartObject(o.RequestID, isavro, false, "string"),
-		"success":          toStartObject(o.Success, isavro, false, "boolean"),
-		"system_id":        toStartObject(o.SystemID, isavro, false, "string"),
-		"type":             toStartObject(o.Type, isavro, false, "type"),
-		"updated_ts":       toStartObject(o.UpdatedAt, isavro, false, "long"),
-		"uptime":           toStartObject(o.Uptime, isavro, false, "long"),
-		"uuid":             toStartObject(o.UUID, isavro, false, "string"),
-		"version":          toStartObject(o.Version, isavro, false, "string"),
-		"hashcode":         toStartObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toStartObject(o.Architecture, false),
+		"customer_id":      toStartObject(o.CustomerID, false),
+		"data":             toStartObject(o.Data, true),
+		"distro":           toStartObject(o.Distro, false),
+		"error":            toStartObject(o.Error, true),
+		"event_date":       toStartObject(o.EventDate, false),
+		"free_space":       toStartObject(o.FreeSpace, false),
+		"go_version":       toStartObject(o.GoVersion, false),
+		"hostname":         toStartObject(o.Hostname, false),
+		"id":               toStartObject(o.ID, false),
+		"last_export_date": toStartObject(o.LastExportDate, false),
+		"memory":           toStartObject(o.Memory, false),
+		"message":          toStartObject(o.Message, false),
+		"num_cpu":          toStartObject(o.NumCPU, false),
+		"os":               toStartObject(o.OS, false),
+		"ref_id":           toStartObject(o.RefID, false),
+		"ref_type":         toStartObject(o.RefType, false),
+		"request_id":       toStartObject(o.RequestID, false),
+		"success":          toStartObject(o.Success, false),
+		"system_id":        toStartObject(o.SystemID, false),
+		"type":             toStartObject(o.Type, false),
+		"updated_ts":       toStartObject(o.UpdatedAt, false),
+		"uptime":           toStartObject(o.Uptime, false),
+		"uuid":             toStartObject(o.UUID, false),
+		"version":          toStartObject(o.Version, false),
+		"hashcode":         toStartObject(o.Hashcode, false),
 	}
 }
 
@@ -813,7 +702,7 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Data = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -846,7 +735,7 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Error = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -864,6 +753,25 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StartEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -938,6 +846,25 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StartLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1235,128 +1162,6 @@ func (o *Start) Hash() string {
 	return o.Hashcode
 }
 
-// GetStartAvroSchemaSpec creates the avro schema specification for Start
-func GetStartAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "agent",
-		"name":      "Start",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "architecture",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "data",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "distro",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "error",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"doc": "the date of the event", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "event_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "free_space",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "go_version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hostname",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "last_export_date",
-				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "memory",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "message",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "num_cpu",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "os",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "request_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "success",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "system_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE", "START", "STOP"},
-				},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uptime",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uuid",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "version",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *Start) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1367,344 +1172,5 @@ func (o *Start) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetStartAvroSchema creates the avro schema for Start
-func GetStartAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetStartAvroSchemaSpec())
-}
-
-// StartSendEvent is an event detail for sending data
-type StartSendEvent struct {
-	Start   *Start
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*StartSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *StartSendEvent) Key() string {
-	if e.key == "" {
-		return e.Start.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *StartSendEvent) Object() datamodel.Model {
-	return e.Start
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *StartSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *StartSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// StartSendEventOpts is a function handler for setting opts
-type StartSendEventOpts func(o *StartSendEvent)
-
-// WithStartSendEventKey sets the key value to a value different than the object ID
-func WithStartSendEventKey(key string) StartSendEventOpts {
-	return func(o *StartSendEvent) {
-		o.key = key
-	}
-}
-
-// WithStartSendEventTimestamp sets the timestamp value
-func WithStartSendEventTimestamp(tv time.Time) StartSendEventOpts {
-	return func(o *StartSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithStartSendEventHeader sets the timestamp value
-func WithStartSendEventHeader(key, value string) StartSendEventOpts {
-	return func(o *StartSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewStartSendEvent returns a new StartSendEvent instance
-func NewStartSendEvent(o *Start, opts ...StartSendEventOpts) *StartSendEvent {
-	res := &StartSendEvent{
-		Start: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewStartProducer will stream data from the channel
-func NewStartProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*Start); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Start but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewStartConsumer will stream data from the topic into the provided channel
-func NewStartConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object Start
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.Start: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.Start: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.Start")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &StartReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Start
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &StartReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// StartReceiveEvent is an event detail for receiving data
-type StartReceiveEvent struct {
-	Start   *Start
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*StartReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *StartReceiveEvent) Object() datamodel.Model {
-	return e.Start
-}
-
-// Message returns the underlying message data for the event
-func (e *StartReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *StartReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// StartProducer implements the datamodel.ModelEventProducer
-type StartProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*StartProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *StartProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *StartProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Start) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Start) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &StartProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewStartProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewStartProducerChannel returns a channel which can be used for producing Model events
-func NewStartProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewStartProducerChannelSize(producer, 0, errors)
-}
-
-// NewStartProducerChannelSize returns a channel which can be used for producing Model events
-func NewStartProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &StartProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewStartProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// StartConsumer implements the datamodel.ModelEventConsumer
-type StartConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*StartConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *StartConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *StartConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Start) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &StartConsumer{
-		ch:       ch,
-		callback: NewStartConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewStartConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewStartConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &StartConsumer{
-		ch:       ch,
-		callback: NewStartConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

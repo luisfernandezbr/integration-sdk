@@ -4,19 +4,14 @@
 package agent
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -122,46 +117,32 @@ const (
 // CodequalityResponseEventDate represents the object structure for event_date
 type CodequalityResponseEventDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toCodequalityResponseEventDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityResponseEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityResponseEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityResponseEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *CodequalityResponseEventDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *CodequalityResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toCodequalityResponseEventDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toCodequalityResponseEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toCodequalityResponseEventDateObject(o.Offset, isavro, false, "long"),
+		"offset": toCodequalityResponseEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCodequalityResponseEventDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toCodequalityResponseEventDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -230,46 +211,32 @@ func (o *CodequalityResponseEventDate) FromMap(kv map[string]interface{}) {
 // CodequalityResponseLastExportDate represents the object structure for last_export_date
 type CodequalityResponseLastExportDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toCodequalityResponseLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityResponseLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityResponseLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *CodequalityResponseLastExportDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *CodequalityResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toCodequalityResponseLastExportDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toCodequalityResponseLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toCodequalityResponseLastExportDateObject(o.Offset, isavro, false, "long"),
+		"offset": toCodequalityResponseLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCodequalityResponseLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toCodequalityResponseLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -338,58 +305,44 @@ func (o *CodequalityResponseLastExportDate) FromMap(kv map[string]interface{}) {
 // CodequalityResponseProjects represents the object structure for projects
 type CodequalityResponseProjects struct {
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier of the project
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// Name the name of the project
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 }
 
-func toCodequalityResponseProjectsObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityResponseProjectsObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityResponseProjectsObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityResponseProjects:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *CodequalityResponseProjects) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *CodequalityResponseProjects) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// CustomerID the customer id for the model instance
-		"customer_id": toCodequalityResponseProjectsObject(o.CustomerID, isavro, false, "string"),
+		"customer_id": toCodequalityResponseProjectsObject(o.CustomerID, false),
 		// ID the primary key for the model instance
-		"id": toCodequalityResponseProjectsObject(o.ID, isavro, false, "string"),
+		"id": toCodequalityResponseProjectsObject(o.ID, false),
 		// Identifier the common identifier of the project
-		"identifier": toCodequalityResponseProjectsObject(o.Identifier, isavro, false, "string"),
+		"identifier": toCodequalityResponseProjectsObject(o.Identifier, false),
 		// Name the name of the project
-		"name": toCodequalityResponseProjectsObject(o.Name, isavro, false, "string"),
+		"name": toCodequalityResponseProjectsObject(o.Name, false),
 		// RefID the source system id for the model instance
-		"ref_id": toCodequalityResponseProjectsObject(o.RefID, isavro, false, "string"),
+		"ref_id": toCodequalityResponseProjectsObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
-		"ref_type": toCodequalityResponseProjectsObject(o.RefType, isavro, false, "string"),
+		"ref_type": toCodequalityResponseProjectsObject(o.RefType, false),
 	}
 }
 
@@ -568,91 +521,81 @@ const (
 // CodequalityResponse an agent response to an action request adding codequality entities
 type CodequalityResponse struct {
 	// Architecture the architecture of the agent machine
-	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
-	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
+	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
 	// Distro the agent os distribution
-	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
-	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate CodequalityResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate CodequalityResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
-	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
-	GoVersion string `json:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
-	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
-	IntegrationID string `json:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate CodequalityResponseLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate CodequalityResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
-	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
-	NumCPU int64 `json:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
 	// OS the agent operating system
-	OS string `json:"os" bson:"os" yaml:"os" faker:"-"`
+	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
 	// Projects the codequality projects exported
-	Projects []CodequalityResponseProjects `json:"projects" bson:"projects" yaml:"projects" faker:"-"`
+	Projects []CodequalityResponseProjects `json:"projects" codec:"projects" bson:"projects" yaml:"projects" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
-	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
-	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
-	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type CodequalityResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type CodequalityResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
-	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
+	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
-	Version string `json:"version" bson:"version" yaml:"version" faker:"-"`
+	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*CodequalityResponse)(nil)
 
-func toCodequalityResponseObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityResponse:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case CodequalityResponseEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case CodequalityResponseLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case []CodequalityResponseProjects:
 		arr := make([]interface{}, 0)
 		for _, i := range v {
-			arr = append(arr, i.ToMap(isavro))
+			arr = append(arr, i.ToMap())
 		}
 		return arr
 
@@ -801,12 +744,6 @@ func (o *CodequalityResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *CodequalityResponse) GetStateKey() string {
-	key := "uuid"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *CodequalityResponse) GetCustomerID() string {
 
@@ -837,15 +774,6 @@ func (o *CodequalityResponse) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *CodequalityResponse) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *CodequalityResponse) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *CodequalityResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -864,52 +792,6 @@ func (o *CodequalityResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecCodequalityResponse *goavro.Codec
-var cachedCodecCodequalityResponseLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *CodequalityResponse) GetAvroCodec() *goavro.Codec {
-	cachedCodecCodequalityResponseLock.Lock()
-	if cachedCodecCodequalityResponse == nil {
-		c, err := GetCodequalityResponseAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecCodequalityResponse = c
-	}
-	cachedCodecCodequalityResponseLock.Unlock()
-	return cachedCodecCodequalityResponse
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *CodequalityResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *CodequalityResponse) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *CodequalityResponse) Stringify() string {
 	o.Hash()
@@ -922,46 +804,37 @@ func (o *CodequalityResponse) IsEqual(other *CodequalityResponse) bool {
 }
 
 // ToMap returns the object as a map
-func (o *CodequalityResponse) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-		if o.Projects == nil {
-			o.Projects = make([]CodequalityResponseProjects, 0)
-		}
-	}
+func (o *CodequalityResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toCodequalityResponseObject(o.Architecture, isavro, false, "string"),
-		"customer_id":      toCodequalityResponseObject(o.CustomerID, isavro, false, "string"),
-		"data":             toCodequalityResponseObject(o.Data, isavro, true, "string"),
-		"distro":           toCodequalityResponseObject(o.Distro, isavro, false, "string"),
-		"error":            toCodequalityResponseObject(o.Error, isavro, true, "string"),
-		"event_date":       toCodequalityResponseObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":       toCodequalityResponseObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":       toCodequalityResponseObject(o.GoVersion, isavro, false, "string"),
-		"hostname":         toCodequalityResponseObject(o.Hostname, isavro, false, "string"),
-		"id":               toCodequalityResponseObject(o.ID, isavro, false, "string"),
-		"integration_id":   toCodequalityResponseObject(o.IntegrationID, isavro, false, "string"),
-		"last_export_date": toCodequalityResponseObject(o.LastExportDate, isavro, false, "last_export_date"),
-		"memory":           toCodequalityResponseObject(o.Memory, isavro, false, "long"),
-		"message":          toCodequalityResponseObject(o.Message, isavro, false, "string"),
-		"num_cpu":          toCodequalityResponseObject(o.NumCPU, isavro, false, "long"),
-		"os":               toCodequalityResponseObject(o.OS, isavro, false, "string"),
-		"projects":         toCodequalityResponseObject(o.Projects, isavro, false, "projects"),
-		"ref_id":           toCodequalityResponseObject(o.RefID, isavro, false, "string"),
-		"ref_type":         toCodequalityResponseObject(o.RefType, isavro, false, "string"),
-		"request_id":       toCodequalityResponseObject(o.RequestID, isavro, false, "string"),
-		"success":          toCodequalityResponseObject(o.Success, isavro, false, "boolean"),
-		"system_id":        toCodequalityResponseObject(o.SystemID, isavro, false, "string"),
-		"type":             toCodequalityResponseObject(o.Type, isavro, false, "type"),
-		"updated_ts":       toCodequalityResponseObject(o.UpdatedAt, isavro, false, "long"),
-		"uptime":           toCodequalityResponseObject(o.Uptime, isavro, false, "long"),
-		"uuid":             toCodequalityResponseObject(o.UUID, isavro, false, "string"),
-		"version":          toCodequalityResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":         toCodequalityResponseObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toCodequalityResponseObject(o.Architecture, false),
+		"customer_id":      toCodequalityResponseObject(o.CustomerID, false),
+		"data":             toCodequalityResponseObject(o.Data, true),
+		"distro":           toCodequalityResponseObject(o.Distro, false),
+		"error":            toCodequalityResponseObject(o.Error, true),
+		"event_date":       toCodequalityResponseObject(o.EventDate, false),
+		"free_space":       toCodequalityResponseObject(o.FreeSpace, false),
+		"go_version":       toCodequalityResponseObject(o.GoVersion, false),
+		"hostname":         toCodequalityResponseObject(o.Hostname, false),
+		"id":               toCodequalityResponseObject(o.ID, false),
+		"integration_id":   toCodequalityResponseObject(o.IntegrationID, false),
+		"last_export_date": toCodequalityResponseObject(o.LastExportDate, false),
+		"memory":           toCodequalityResponseObject(o.Memory, false),
+		"message":          toCodequalityResponseObject(o.Message, false),
+		"num_cpu":          toCodequalityResponseObject(o.NumCPU, false),
+		"os":               toCodequalityResponseObject(o.OS, false),
+		"projects":         toCodequalityResponseObject(o.Projects, false),
+		"ref_id":           toCodequalityResponseObject(o.RefID, false),
+		"ref_type":         toCodequalityResponseObject(o.RefType, false),
+		"request_id":       toCodequalityResponseObject(o.RequestID, false),
+		"success":          toCodequalityResponseObject(o.Success, false),
+		"system_id":        toCodequalityResponseObject(o.SystemID, false),
+		"type":             toCodequalityResponseObject(o.Type, false),
+		"updated_ts":       toCodequalityResponseObject(o.UpdatedAt, false),
+		"uptime":           toCodequalityResponseObject(o.Uptime, false),
+		"uuid":             toCodequalityResponseObject(o.UUID, false),
+		"version":          toCodequalityResponseObject(o.Version, false),
+		"hashcode":         toCodequalityResponseObject(o.Hashcode, false),
 	}
 }
 
@@ -1014,7 +887,7 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Data = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1047,7 +920,7 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Error = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1065,6 +938,25 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1154,6 +1046,25 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1516,136 +1427,6 @@ func (o *CodequalityResponse) Hash() string {
 	return o.Hashcode
 }
 
-// GetCodequalityResponseAvroSchemaSpec creates the avro schema specification for CodequalityResponse
-func GetCodequalityResponseAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "agent",
-		"name":      "CodequalityResponse",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "architecture",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "data",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "distro",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "error",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"doc": "the date of the event", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "event_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "free_space",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "go_version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hostname",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "integration_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "last_export_date",
-				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "memory",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "message",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "num_cpu",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "os",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "projects",
-				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "the codequality projects exported", "fields": []interface{}{map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "the common identifier of the project", "name": "identifier", "type": "string"}, map[string]interface{}{"doc": "the name of the project", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}}, "name": "projects", "type": "record"}, "name": "projects", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "request_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "success",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "system_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE", "START", "STOP"},
-				},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uptime",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uuid",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "version",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *CodequalityResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1656,344 +1437,5 @@ func (o *CodequalityResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetCodequalityResponseAvroSchema creates the avro schema for CodequalityResponse
-func GetCodequalityResponseAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetCodequalityResponseAvroSchemaSpec())
-}
-
-// CodequalityResponseSendEvent is an event detail for sending data
-type CodequalityResponseSendEvent struct {
-	CodequalityResponse *CodequalityResponse
-	headers             map[string]string
-	time                time.Time
-	key                 string
-}
-
-var _ datamodel.ModelSendEvent = (*CodequalityResponseSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *CodequalityResponseSendEvent) Key() string {
-	if e.key == "" {
-		return e.CodequalityResponse.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *CodequalityResponseSendEvent) Object() datamodel.Model {
-	return e.CodequalityResponse
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *CodequalityResponseSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *CodequalityResponseSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// CodequalityResponseSendEventOpts is a function handler for setting opts
-type CodequalityResponseSendEventOpts func(o *CodequalityResponseSendEvent)
-
-// WithCodequalityResponseSendEventKey sets the key value to a value different than the object ID
-func WithCodequalityResponseSendEventKey(key string) CodequalityResponseSendEventOpts {
-	return func(o *CodequalityResponseSendEvent) {
-		o.key = key
-	}
-}
-
-// WithCodequalityResponseSendEventTimestamp sets the timestamp value
-func WithCodequalityResponseSendEventTimestamp(tv time.Time) CodequalityResponseSendEventOpts {
-	return func(o *CodequalityResponseSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithCodequalityResponseSendEventHeader sets the timestamp value
-func WithCodequalityResponseSendEventHeader(key, value string) CodequalityResponseSendEventOpts {
-	return func(o *CodequalityResponseSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewCodequalityResponseSendEvent returns a new CodequalityResponseSendEvent instance
-func NewCodequalityResponseSendEvent(o *CodequalityResponse, opts ...CodequalityResponseSendEventOpts) *CodequalityResponseSendEvent {
-	res := &CodequalityResponseSendEvent{
-		CodequalityResponse: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewCodequalityResponseProducer will stream data from the channel
-func NewCodequalityResponseProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*CodequalityResponse); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.CodequalityResponse but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewCodequalityResponseConsumer will stream data from the topic into the provided channel
-func NewCodequalityResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object CodequalityResponse
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.CodequalityResponse: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.CodequalityResponse: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.CodequalityResponse")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &CodequalityResponseReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object CodequalityResponse
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &CodequalityResponseReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// CodequalityResponseReceiveEvent is an event detail for receiving data
-type CodequalityResponseReceiveEvent struct {
-	CodequalityResponse *CodequalityResponse
-	message             eventing.Message
-	eof                 bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*CodequalityResponseReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *CodequalityResponseReceiveEvent) Object() datamodel.Model {
-	return e.CodequalityResponse
-}
-
-// Message returns the underlying message data for the event
-func (e *CodequalityResponseReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *CodequalityResponseReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// CodequalityResponseProducer implements the datamodel.ModelEventProducer
-type CodequalityResponseProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*CodequalityResponseProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *CodequalityResponseProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *CodequalityResponseProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *CodequalityResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *CodequalityResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &CodequalityResponseProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewCodequalityResponseProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewCodequalityResponseProducerChannel returns a channel which can be used for producing Model events
-func NewCodequalityResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewCodequalityResponseProducerChannelSize(producer, 0, errors)
-}
-
-// NewCodequalityResponseProducerChannelSize returns a channel which can be used for producing Model events
-func NewCodequalityResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &CodequalityResponseProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewCodequalityResponseProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// CodequalityResponseConsumer implements the datamodel.ModelEventConsumer
-type CodequalityResponseConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*CodequalityResponseConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *CodequalityResponseConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *CodequalityResponseConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *CodequalityResponse) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &CodequalityResponseConsumer{
-		ch:       ch,
-		callback: NewCodequalityResponseConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewCodequalityResponseConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewCodequalityResponseConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &CodequalityResponseConsumer{
-		ch:       ch,
-		callback: NewCodequalityResponseConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

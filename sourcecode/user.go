@@ -4,19 +4,13 @@
 package sourcecode
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -92,50 +86,40 @@ const (
 // User the source code user
 type User struct {
 	// AssociatedRefID the ref id associated for this user in another system
-	AssociatedRefID *string `json:"associated_ref_id" bson:"associated_ref_id" yaml:"associated_ref_id" faker:"-"`
+	AssociatedRefID *string `json:"associated_ref_id,omitempty" codec:"associated_ref_id,omitempty" bson:"associated_ref_id" yaml:"associated_ref_id,omitempty" faker:"-"`
 	// AvatarURL the url to users avatar
-	AvatarURL *string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
+	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"avatar"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Email the email for the user
-	Email *string `json:"email" bson:"email" yaml:"email" faker:"email"`
+	Email *string `json:"email,omitempty" codec:"email,omitempty" bson:"email" yaml:"email,omitempty" faker:"email"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Member if the user is a member of organization
-	Member bool `json:"member" bson:"member" yaml:"member" faker:"-"`
+	Member bool `json:"member" codec:"member" bson:"member" yaml:"member" faker:"-"`
 	// Name the name of the user
-	Name string `json:"name" bson:"name" yaml:"name" faker:"person"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Type type of the user
-	Type UserType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type UserType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Username username of the user
-	Username *string `json:"username" bson:"username" yaml:"username" faker:"username"`
+	Username *string `json:"username,omitempty" codec:"username,omitempty" bson:"username" yaml:"username,omitempty" faker:"username"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*User)(nil)
 
-func toUserObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toUserObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *User:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case UserType:
 		return v.String()
@@ -285,12 +269,6 @@ func (o *User) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *User) GetStateKey() string {
-	key := "customer_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *User) GetCustomerID() string {
 
@@ -321,15 +299,6 @@ func (o *User) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *User) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *User) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *User) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -348,52 +317,6 @@ func (o *User) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecUser *goavro.Codec
-var cachedCodecUserLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *User) GetAvroCodec() *goavro.Codec {
-	cachedCodecUserLock.Lock()
-	if cachedCodecUser == nil {
-		c, err := GetUserAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecUser = c
-	}
-	cachedCodecUserLock.Unlock()
-	return cachedCodecUser
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *User) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *User) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *User) Stringify() string {
 	o.Hash()
@@ -406,28 +329,22 @@ func (o *User) IsEqual(other *User) bool {
 }
 
 // ToMap returns the object as a map
-func (o *User) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *User) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"associated_ref_id": toUserObject(o.AssociatedRefID, isavro, true, "string"),
-		"avatar_url":        toUserObject(o.AvatarURL, isavro, true, "string"),
-		"customer_id":       toUserObject(o.CustomerID, isavro, false, "string"),
-		"email":             toUserObject(o.Email, isavro, true, "string"),
-		"id":                toUserObject(o.ID, isavro, false, "string"),
-		"member":            toUserObject(o.Member, isavro, false, "boolean"),
-		"name":              toUserObject(o.Name, isavro, false, "string"),
-		"ref_id":            toUserObject(o.RefID, isavro, false, "string"),
-		"ref_type":          toUserObject(o.RefType, isavro, false, "string"),
-		"type":              toUserObject(o.Type, isavro, false, "type"),
-		"updated_ts":        toUserObject(o.UpdatedAt, isavro, false, "long"),
-		"username":          toUserObject(o.Username, isavro, true, "string"),
-		"hashcode":          toUserObject(o.Hashcode, isavro, false, "string"),
+		"associated_ref_id": toUserObject(o.AssociatedRefID, true),
+		"avatar_url":        toUserObject(o.AvatarURL, true),
+		"customer_id":       toUserObject(o.CustomerID, false),
+		"email":             toUserObject(o.Email, true),
+		"id":                toUserObject(o.ID, false),
+		"member":            toUserObject(o.Member, false),
+		"name":              toUserObject(o.Name, false),
+		"ref_id":            toUserObject(o.RefID, false),
+		"ref_type":          toUserObject(o.RefType, false),
+		"type":              toUserObject(o.Type, false),
+		"updated_ts":        toUserObject(o.UpdatedAt, false),
+		"username":          toUserObject(o.Username, true),
+		"hashcode":          toUserObject(o.Hashcode, false),
 	}
 }
 
@@ -450,7 +367,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.AssociatedRefID = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -468,7 +385,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.AvatarURL = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -501,7 +418,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Email = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -632,7 +549,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Username = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -662,78 +579,6 @@ func (o *User) Hash() string {
 	return o.Hashcode
 }
 
-// GetUserAvroSchemaSpec creates the avro schema specification for User
-func GetUserAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "sourcecode",
-		"name":      "User",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "associated_ref_id",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name":    "avatar_url",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "email",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "member",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "type",
-					"symbols": []interface{}{"HUMAN", "BOT", "DELETED_SPECIAL_USER"},
-				},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name":    "username",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *User) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -744,344 +589,5 @@ func (o *User) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetUserAvroSchema creates the avro schema for User
-func GetUserAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetUserAvroSchemaSpec())
-}
-
-// UserSendEvent is an event detail for sending data
-type UserSendEvent struct {
-	User    *User
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*UserSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *UserSendEvent) Key() string {
-	if e.key == "" {
-		return e.User.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *UserSendEvent) Object() datamodel.Model {
-	return e.User
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *UserSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *UserSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// UserSendEventOpts is a function handler for setting opts
-type UserSendEventOpts func(o *UserSendEvent)
-
-// WithUserSendEventKey sets the key value to a value different than the object ID
-func WithUserSendEventKey(key string) UserSendEventOpts {
-	return func(o *UserSendEvent) {
-		o.key = key
-	}
-}
-
-// WithUserSendEventTimestamp sets the timestamp value
-func WithUserSendEventTimestamp(tv time.Time) UserSendEventOpts {
-	return func(o *UserSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithUserSendEventHeader sets the timestamp value
-func WithUserSendEventHeader(key, value string) UserSendEventOpts {
-	return func(o *UserSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewUserSendEvent returns a new UserSendEvent instance
-func NewUserSendEvent(o *User, opts ...UserSendEventOpts) *UserSendEvent {
-	res := &UserSendEvent{
-		User: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewUserProducer will stream data from the channel
-func NewUserProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*User); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.User but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewUserConsumer will stream data from the topic into the provided channel
-func NewUserConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object User
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.User: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into sourcecode.User: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.User")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &UserReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object User
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &UserReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// UserReceiveEvent is an event detail for receiving data
-type UserReceiveEvent struct {
-	User    *User
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*UserReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *UserReceiveEvent) Object() datamodel.Model {
-	return e.User
-}
-
-// Message returns the underlying message data for the event
-func (e *UserReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *UserReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// UserProducer implements the datamodel.ModelEventProducer
-type UserProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*UserProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *UserProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *UserProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *User) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *User) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &UserProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewUserProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewUserProducerChannel returns a channel which can be used for producing Model events
-func NewUserProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewUserProducerChannelSize(producer, 0, errors)
-}
-
-// NewUserProducerChannelSize returns a channel which can be used for producing Model events
-func NewUserProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &UserProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewUserProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// UserConsumer implements the datamodel.ModelEventConsumer
-type UserConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*UserConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *UserConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *UserConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *User) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &UserConsumer{
-		ch:       ch,
-		callback: NewUserConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewUserConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewUserConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &UserConsumer{
-		ch:       ch,
-		callback: NewUserConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

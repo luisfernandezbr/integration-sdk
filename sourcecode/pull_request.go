@@ -4,25 +4,19 @@
 package sourcecode
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
-	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -116,46 +110,32 @@ const (
 // PullRequestClosedDate represents the object structure for closed_date
 type PullRequestClosedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPullRequestClosedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestClosedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestClosedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestClosedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PullRequestClosedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PullRequestClosedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPullRequestClosedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPullRequestClosedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPullRequestClosedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPullRequestClosedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPullRequestClosedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPullRequestClosedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -224,46 +204,32 @@ func (o *PullRequestClosedDate) FromMap(kv map[string]interface{}) {
 // PullRequestCreatedDate represents the object structure for created_date
 type PullRequestCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPullRequestCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestCreatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PullRequestCreatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PullRequestCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPullRequestCreatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPullRequestCreatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPullRequestCreatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPullRequestCreatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPullRequestCreatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPullRequestCreatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -332,46 +298,32 @@ func (o *PullRequestCreatedDate) FromMap(kv map[string]interface{}) {
 // PullRequestMergedDate represents the object structure for merged_date
 type PullRequestMergedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPullRequestMergedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestMergedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestMergedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestMergedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PullRequestMergedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PullRequestMergedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPullRequestMergedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPullRequestMergedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPullRequestMergedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPullRequestMergedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPullRequestMergedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPullRequestMergedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -473,46 +425,32 @@ const (
 // PullRequestUpdatedDate represents the object structure for updated_date
 type PullRequestUpdatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPullRequestUpdatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestUpdatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestUpdatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestUpdatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PullRequestUpdatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PullRequestUpdatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPullRequestUpdatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPullRequestUpdatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPullRequestUpdatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPullRequestUpdatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPullRequestUpdatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPullRequestUpdatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -581,87 +519,77 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 // PullRequest the pull request for a given repo
 type PullRequest struct {
 	// BranchID id for the branch based on branch_name, could be already deleted
-	BranchID string `json:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
+	BranchID string `json:"branch_id" codec:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
 	// BranchName branch name of the pr, could be  deleted
-	BranchName string `json:"branch_name" bson:"branch_name" yaml:"branch_name" faker:"-"`
+	BranchName string `json:"branch_name" codec:"branch_name" bson:"branch_name" yaml:"branch_name" faker:"-"`
 	// ClosedByRefID the id of user who closed the pull request
-	ClosedByRefID string `json:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
+	ClosedByRefID string `json:"closed_by_ref_id" codec:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
 	// ClosedDate the timestamp in UTC that the pull request was closed
-	ClosedDate PullRequestClosedDate `json:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
+	ClosedDate PullRequestClosedDate `json:"closed_date" codec:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
 	// CommitIds list of commit ids added in this pr
-	CommitIds []string `json:"commit_ids" bson:"commit_ids" yaml:"commit_ids" faker:"-"`
+	CommitIds []string `json:"commit_ids" codec:"commit_ids" bson:"commit_ids" yaml:"commit_ids" faker:"-"`
 	// CommitShas list of commit shas added in this pr
-	CommitShas []string `json:"commit_shas" bson:"commit_shas" yaml:"commit_shas" faker:"-"`
+	CommitShas []string `json:"commit_shas" codec:"commit_shas" bson:"commit_shas" yaml:"commit_shas" faker:"-"`
 	// CreatedByRefID the user ref_id in the source system
-	CreatedByRefID string `json:"created_by_ref_id" bson:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
+	CreatedByRefID string `json:"created_by_ref_id" codec:"created_by_ref_id" bson:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
 	// CreatedDate the timestamp in UTC that the pull request was created
-	CreatedDate PullRequestCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate PullRequestCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the pull request
-	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// MergeCommitID the id of the merge commit
-	MergeCommitID string `json:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
+	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeSha the sha of the merge commit
-	MergeSha string `json:"merge_sha" bson:"merge_sha" yaml:"merge_sha" faker:"-"`
+	MergeSha string `json:"merge_sha" codec:"merge_sha" bson:"merge_sha" yaml:"merge_sha" faker:"-"`
 	// MergedByRefID the id of user who merged the pull request
-	MergedByRefID string `json:"merged_by_ref_id" bson:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
+	MergedByRefID string `json:"merged_by_ref_id" codec:"merged_by_ref_id" bson:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
 	// MergedDate the timestamp in UTC that the pull request was merged
-	MergedDate PullRequestMergedDate `json:"merged_date" bson:"merged_date" yaml:"merged_date" faker:"-"`
+	MergedDate PullRequestMergedDate `json:"merged_date" codec:"merged_date" bson:"merged_date" yaml:"merged_date" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Status the status of the pull request
-	Status PullRequestStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
+	Status PullRequestStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// Title the title of the pull request
-	Title string `json:"title" bson:"title" yaml:"title" faker:"commit_message"`
+	Title string `json:"title" codec:"title" bson:"title" yaml:"title" faker:"commit_message"`
 	// UpdatedDate the timestamp in UTC that the pull request was closed
-	UpdatedDate PullRequestUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	UpdatedDate PullRequestUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the pull request home page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*PullRequest)(nil)
 
-func toPullRequestObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequest:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PullRequestClosedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PullRequestCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PullRequestMergedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PullRequestStatus:
 		return v.String()
 
 	case PullRequestUpdatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -803,12 +731,6 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *PullRequest) GetStateKey() string {
-	key := "repo_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *PullRequest) GetCustomerID() string {
 
@@ -839,15 +761,6 @@ func (o *PullRequest) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *PullRequest) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *PullRequest) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *PullRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -866,52 +779,6 @@ func (o *PullRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecPullRequest *goavro.Codec
-var cachedCodecPullRequestLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *PullRequest) GetAvroCodec() *goavro.Codec {
-	cachedCodecPullRequestLock.Lock()
-	if cachedCodecPullRequest == nil {
-		c, err := GetPullRequestAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecPullRequest = c
-	}
-	cachedCodecPullRequestLock.Unlock()
-	return cachedCodecPullRequest
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *PullRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *PullRequest) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *PullRequest) Stringify() string {
 	o.Hash()
@@ -924,45 +791,33 @@ func (o *PullRequest) IsEqual(other *PullRequest) bool {
 }
 
 // ToMap returns the object as a map
-func (o *PullRequest) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-		if o.CommitIds == nil {
-			o.CommitIds = make([]string, 0)
-		}
-		if o.CommitShas == nil {
-			o.CommitShas = make([]string, 0)
-		}
-	}
+func (o *PullRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"branch_id":         toPullRequestObject(o.BranchID, isavro, false, "string"),
-		"branch_name":       toPullRequestObject(o.BranchName, isavro, false, "string"),
-		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, isavro, false, "string"),
-		"closed_date":       toPullRequestObject(o.ClosedDate, isavro, false, "closed_date"),
-		"commit_ids":        toPullRequestObject(o.CommitIds, isavro, false, "commit_ids"),
-		"commit_shas":       toPullRequestObject(o.CommitShas, isavro, false, "commit_shas"),
-		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, isavro, false, "string"),
-		"created_date":      toPullRequestObject(o.CreatedDate, isavro, false, "created_date"),
-		"customer_id":       toPullRequestObject(o.CustomerID, isavro, false, "string"),
-		"description":       toPullRequestObject(o.Description, isavro, false, "string"),
-		"id":                toPullRequestObject(o.ID, isavro, false, "string"),
-		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, isavro, false, "string"),
-		"merge_sha":         toPullRequestObject(o.MergeSha, isavro, false, "string"),
-		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, isavro, false, "string"),
-		"merged_date":       toPullRequestObject(o.MergedDate, isavro, false, "merged_date"),
-		"ref_id":            toPullRequestObject(o.RefID, isavro, false, "string"),
-		"ref_type":          toPullRequestObject(o.RefType, isavro, false, "string"),
-		"repo_id":           toPullRequestObject(o.RepoID, isavro, false, "string"),
-		"status":            toPullRequestObject(o.Status, isavro, false, "status"),
-		"title":             toPullRequestObject(o.Title, isavro, false, "string"),
-		"updated_date":      toPullRequestObject(o.UpdatedDate, isavro, false, "updated_date"),
-		"updated_ts":        toPullRequestObject(o.UpdatedAt, isavro, false, "long"),
-		"url":               toPullRequestObject(o.URL, isavro, false, "string"),
-		"hashcode":          toPullRequestObject(o.Hashcode, isavro, false, "string"),
+		"branch_id":         toPullRequestObject(o.BranchID, false),
+		"branch_name":       toPullRequestObject(o.BranchName, false),
+		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, false),
+		"closed_date":       toPullRequestObject(o.ClosedDate, false),
+		"commit_ids":        toPullRequestObject(o.CommitIds, false),
+		"commit_shas":       toPullRequestObject(o.CommitShas, false),
+		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, false),
+		"created_date":      toPullRequestObject(o.CreatedDate, false),
+		"customer_id":       toPullRequestObject(o.CustomerID, false),
+		"description":       toPullRequestObject(o.Description, false),
+		"id":                toPullRequestObject(o.ID, false),
+		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, false),
+		"merge_sha":         toPullRequestObject(o.MergeSha, false),
+		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, false),
+		"merged_date":       toPullRequestObject(o.MergedDate, false),
+		"ref_id":            toPullRequestObject(o.RefID, false),
+		"ref_type":          toPullRequestObject(o.RefType, false),
+		"repo_id":           toPullRequestObject(o.RepoID, false),
+		"status":            toPullRequestObject(o.Status, false),
+		"title":             toPullRequestObject(o.Title, false),
+		"updated_date":      toPullRequestObject(o.UpdatedDate, false),
+		"updated_ts":        toPullRequestObject(o.UpdatedAt, false),
+		"url":               toPullRequestObject(o.URL, false),
+		"hashcode":          toPullRequestObject(o.Hashcode, false),
 	}
 }
 
@@ -1516,118 +1371,6 @@ func (o *PullRequest) Hash() string {
 	return o.Hashcode
 }
 
-// GetPullRequestAvroSchemaSpec creates the avro schema specification for PullRequest
-func GetPullRequestAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "sourcecode",
-		"name":      "PullRequest",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "branch_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "branch_name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "closed_by_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "closed_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "closed_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "commit_ids",
-				"type": map[string]interface{}{"items": "string", "name": "commit_ids", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "commit_shas",
-				"type": map[string]interface{}{"items": "string", "name": "commit_shas", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "created_by_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was created", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "created_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "description",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "merge_commit_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "merge_sha",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "merged_by_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "merged_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was merged", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "merged_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "repo_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "status",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "status",
-					"symbols": []interface{}{"OPEN", "CLOSED", "MERGED", "SUPERSEDED", "LOCKED"},
-				},
-			},
-			map[string]interface{}{
-				"name": "title",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "updated_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the pull request was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "updated_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *PullRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1638,344 +1381,5 @@ func (o *PullRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetPullRequestAvroSchema creates the avro schema for PullRequest
-func GetPullRequestAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetPullRequestAvroSchemaSpec())
-}
-
-// PullRequestSendEvent is an event detail for sending data
-type PullRequestSendEvent struct {
-	PullRequest *PullRequest
-	headers     map[string]string
-	time        time.Time
-	key         string
-}
-
-var _ datamodel.ModelSendEvent = (*PullRequestSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *PullRequestSendEvent) Key() string {
-	if e.key == "" {
-		return e.PullRequest.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *PullRequestSendEvent) Object() datamodel.Model {
-	return e.PullRequest
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *PullRequestSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *PullRequestSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// PullRequestSendEventOpts is a function handler for setting opts
-type PullRequestSendEventOpts func(o *PullRequestSendEvent)
-
-// WithPullRequestSendEventKey sets the key value to a value different than the object ID
-func WithPullRequestSendEventKey(key string) PullRequestSendEventOpts {
-	return func(o *PullRequestSendEvent) {
-		o.key = key
-	}
-}
-
-// WithPullRequestSendEventTimestamp sets the timestamp value
-func WithPullRequestSendEventTimestamp(tv time.Time) PullRequestSendEventOpts {
-	return func(o *PullRequestSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithPullRequestSendEventHeader sets the timestamp value
-func WithPullRequestSendEventHeader(key, value string) PullRequestSendEventOpts {
-	return func(o *PullRequestSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewPullRequestSendEvent returns a new PullRequestSendEvent instance
-func NewPullRequestSendEvent(o *PullRequest, opts ...PullRequestSendEventOpts) *PullRequestSendEvent {
-	res := &PullRequestSendEvent{
-		PullRequest: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewPullRequestProducer will stream data from the channel
-func NewPullRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*PullRequest); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.PullRequest but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewPullRequestConsumer will stream data from the topic into the provided channel
-func NewPullRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object PullRequest
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequest: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into sourcecode.PullRequest: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.PullRequest")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &PullRequestReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object PullRequest
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &PullRequestReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// PullRequestReceiveEvent is an event detail for receiving data
-type PullRequestReceiveEvent struct {
-	PullRequest *PullRequest
-	message     eventing.Message
-	eof         bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*PullRequestReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *PullRequestReceiveEvent) Object() datamodel.Model {
-	return e.PullRequest
-}
-
-// Message returns the underlying message data for the event
-func (e *PullRequestReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *PullRequestReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// PullRequestProducer implements the datamodel.ModelEventProducer
-type PullRequestProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*PullRequestProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *PullRequestProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *PullRequestProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *PullRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *PullRequest) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PullRequestProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPullRequestProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewPullRequestProducerChannel returns a channel which can be used for producing Model events
-func NewPullRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewPullRequestProducerChannelSize(producer, 0, errors)
-}
-
-// NewPullRequestProducerChannelSize returns a channel which can be used for producing Model events
-func NewPullRequestProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PullRequestProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPullRequestProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// PullRequestConsumer implements the datamodel.ModelEventConsumer
-type PullRequestConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*PullRequestConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *PullRequestConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *PullRequestConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *PullRequest) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PullRequestConsumer{
-		ch:       ch,
-		callback: NewPullRequestConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewPullRequestConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewPullRequestConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PullRequestConsumer{
-		ch:       ch,
-		callback: NewPullRequestConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

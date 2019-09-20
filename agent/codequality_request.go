@@ -4,20 +4,15 @@
 package agent
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -102,74 +97,60 @@ const (
 // CodequalityRequestIntegrationAuthorization represents the object structure for authorization
 type CodequalityRequestIntegrationAuthorization struct {
 	// AccessToken Access token
-	AccessToken *string `json:"access_token" bson:"access_token" yaml:"access_token" faker:"-"`
+	AccessToken *string `json:"access_token,omitempty" codec:"access_token,omitempty" bson:"access_token" yaml:"access_token,omitempty" faker:"-"`
 	// RefreshToken Refresh token
-	RefreshToken *string `json:"refresh_token" bson:"refresh_token" yaml:"refresh_token" faker:"-"`
+	RefreshToken *string `json:"refresh_token,omitempty" codec:"refresh_token,omitempty" bson:"refresh_token" yaml:"refresh_token,omitempty" faker:"-"`
 	// URL URL of instance if relevant
-	URL *string `json:"url" bson:"url" yaml:"url" faker:"-"`
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
 	// Username Username for instance, if relevant
-	Username *string `json:"username" bson:"username" yaml:"username" faker:"-"`
+	Username *string `json:"username,omitempty" codec:"username,omitempty" bson:"username" yaml:"username,omitempty" faker:"-"`
 	// Password Password for instance, if relevant
-	Password *string `json:"password" bson:"password" yaml:"password" faker:"-"`
+	Password *string `json:"password,omitempty" codec:"password,omitempty" bson:"password" yaml:"password,omitempty" faker:"-"`
 	// APIToken API Token for instance, if relevant
-	APIToken *string `json:"api_token" bson:"api_token" yaml:"api_token" faker:"-"`
+	APIToken *string `json:"api_token,omitempty" codec:"api_token,omitempty" bson:"api_token" yaml:"api_token,omitempty" faker:"-"`
 	// Collection Collection for instance, if relevant
-	Collection *string `json:"collection" bson:"collection" yaml:"collection" faker:"-"`
+	Collection *string `json:"collection,omitempty" codec:"collection,omitempty" bson:"collection" yaml:"collection,omitempty" faker:"-"`
 	// APIKey API Key for instance, if relevant
-	APIKey *string `json:"api_key" bson:"api_key" yaml:"api_key" faker:"-"`
+	APIKey *string `json:"api_key,omitempty" codec:"api_key,omitempty" bson:"api_key" yaml:"api_key,omitempty" faker:"-"`
 	// Authorization the agents encrypted authorization
-	Authorization *string `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization *string `json:"authorization,omitempty" codec:"authorization,omitempty" bson:"authorization" yaml:"authorization,omitempty" faker:"-"`
 	// Hostname Hostname for instance, if relevant
-	Hostname *string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname *string `json:"hostname,omitempty" codec:"hostname,omitempty" bson:"hostname" yaml:"hostname,omitempty" faker:"-"`
 }
 
-func toCodequalityRequestIntegrationAuthorizationObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityRequestIntegrationAuthorizationObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityRequestIntegrationAuthorizationObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityRequestIntegrationAuthorization:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *CodequalityRequestIntegrationAuthorization) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *CodequalityRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// AccessToken Access token
-		"access_token": toCodequalityRequestIntegrationAuthorizationObject(o.AccessToken, isavro, true, "string"),
+		"access_token": toCodequalityRequestIntegrationAuthorizationObject(o.AccessToken, true),
 		// RefreshToken Refresh token
-		"refresh_token": toCodequalityRequestIntegrationAuthorizationObject(o.RefreshToken, isavro, true, "string"),
+		"refresh_token": toCodequalityRequestIntegrationAuthorizationObject(o.RefreshToken, true),
 		// URL URL of instance if relevant
-		"url": toCodequalityRequestIntegrationAuthorizationObject(o.URL, isavro, true, "string"),
+		"url": toCodequalityRequestIntegrationAuthorizationObject(o.URL, true),
 		// Username Username for instance, if relevant
-		"username": toCodequalityRequestIntegrationAuthorizationObject(o.Username, isavro, true, "string"),
+		"username": toCodequalityRequestIntegrationAuthorizationObject(o.Username, true),
 		// Password Password for instance, if relevant
-		"password": toCodequalityRequestIntegrationAuthorizationObject(o.Password, isavro, true, "string"),
+		"password": toCodequalityRequestIntegrationAuthorizationObject(o.Password, true),
 		// APIToken API Token for instance, if relevant
-		"api_token": toCodequalityRequestIntegrationAuthorizationObject(o.APIToken, isavro, true, "string"),
+		"api_token": toCodequalityRequestIntegrationAuthorizationObject(o.APIToken, true),
 		// Collection Collection for instance, if relevant
-		"collection": toCodequalityRequestIntegrationAuthorizationObject(o.Collection, isavro, true, "string"),
+		"collection": toCodequalityRequestIntegrationAuthorizationObject(o.Collection, true),
 		// APIKey API Key for instance, if relevant
-		"api_key": toCodequalityRequestIntegrationAuthorizationObject(o.APIKey, isavro, true, "string"),
+		"api_key": toCodequalityRequestIntegrationAuthorizationObject(o.APIKey, true),
 		// Authorization the agents encrypted authorization
-		"authorization": toCodequalityRequestIntegrationAuthorizationObject(o.Authorization, isavro, true, "string"),
+		"authorization": toCodequalityRequestIntegrationAuthorizationObject(o.Authorization, true),
 		// Hostname Hostname for instance, if relevant
-		"hostname": toCodequalityRequestIntegrationAuthorizationObject(o.Hostname, isavro, true, "string"),
+		"hostname": toCodequalityRequestIntegrationAuthorizationObject(o.Hostname, true),
 	}
 }
 
@@ -197,7 +178,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.AccessToken = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -215,7 +196,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.RefreshToken = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -233,7 +214,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.URL = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -251,7 +232,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.Username = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -269,7 +250,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.Password = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -287,7 +268,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.APIToken = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -305,7 +286,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.Collection = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -323,7 +304,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.APIKey = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -341,7 +322,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.Authorization = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -359,7 +340,7 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 			if val == nil {
 				o.Hostname = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -394,46 +375,32 @@ const (
 // CodequalityRequestIntegrationProgress represents the object structure for progress
 type CodequalityRequestIntegrationProgress struct {
 	// Message Any relevant messaging during processing
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// Total The total amount to be processed
-	Total int64 `json:"total" bson:"total" yaml:"total" faker:"-"`
+	Total int64 `json:"total" codec:"total" bson:"total" yaml:"total" faker:"-"`
 	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" bson:"completed" yaml:"completed" faker:"-"`
+	Completed int64 `json:"completed" codec:"completed" bson:"completed" yaml:"completed" faker:"-"`
 }
 
-func toCodequalityRequestIntegrationProgressObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityRequestIntegrationProgressObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityRequestIntegrationProgressObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityRequestIntegrationProgress:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *CodequalityRequestIntegrationProgress) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *CodequalityRequestIntegrationProgress) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Message Any relevant messaging during processing
-		"message": toCodequalityRequestIntegrationProgressObject(o.Message, isavro, false, "string"),
+		"message": toCodequalityRequestIntegrationProgressObject(o.Message, false),
 		// Total The total amount to be processed
-		"total": toCodequalityRequestIntegrationProgressObject(o.Total, isavro, false, "long"),
+		"total": toCodequalityRequestIntegrationProgressObject(o.Total, false),
 		// Completed The total amount processed thus far
-		"completed": toCodequalityRequestIntegrationProgressObject(o.Completed, isavro, false, "long"),
+		"completed": toCodequalityRequestIntegrationProgressObject(o.Completed, false),
 	}
 }
 
@@ -527,46 +494,32 @@ const (
 // CodequalityRequestIntegrationValidatedDate represents the object structure for validated_date
 type CodequalityRequestIntegrationValidatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toCodequalityRequestIntegrationValidatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityRequestIntegrationValidatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityRequestIntegrationValidatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityRequestIntegrationValidatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *CodequalityRequestIntegrationValidatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *CodequalityRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toCodequalityRequestIntegrationValidatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toCodequalityRequestIntegrationValidatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toCodequalityRequestIntegrationValidatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toCodequalityRequestIntegrationValidatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCodequalityRequestIntegrationValidatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toCodequalityRequestIntegrationValidatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -635,109 +588,95 @@ func (o *CodequalityRequestIntegrationValidatedDate) FromMap(kv map[string]inter
 // CodequalityRequestIntegration represents the object structure for integration
 type CodequalityRequestIntegration struct {
 	// Active If true, the integration is still active
-	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
-	Authorization CodequalityRequestIntegrationAuthorization `json:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization CodequalityRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Errored If authorization failed by the agent
-	Errored *bool `json:"errored" bson:"errored" yaml:"errored" faker:"-"`
+	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
 	// Exclusions The exclusion list for this integration
-	Exclusions []string `json:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
+	Exclusions []string `json:"exclusions" codec:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
-	Location CodequalityRequestIntegrationLocation `json:"location" bson:"location" yaml:"location" faker:"-"`
+	Location CodequalityRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
-	Progress CodequalityRequestIntegrationProgress `json:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	Progress CodequalityRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
-	SystemType CodequalityRequestIntegrationSystemType `json:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
+	SystemType CodequalityRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// Validated If the validation has been run against this instance
-	Validated *bool `json:"validated" bson:"validated" yaml:"validated" faker:"-"`
+	Validated *bool `json:"validated,omitempty" codec:"validated,omitempty" bson:"validated" yaml:"validated,omitempty" faker:"-"`
 	// ValidatedDate Date when validated
-	ValidatedDate CodequalityRequestIntegrationValidatedDate `json:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
+	ValidatedDate CodequalityRequestIntegrationValidatedDate `json:"validated_date" codec:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
 	// ValidationMessage The validation message from the agent
-	ValidationMessage *string `json:"validation_message" bson:"validation_message" yaml:"validation_message" faker:"-"`
+	ValidationMessage *string `json:"validation_message,omitempty" codec:"validation_message,omitempty" bson:"validation_message" yaml:"validation_message,omitempty" faker:"-"`
 }
 
-func toCodequalityRequestIntegrationObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityRequestIntegrationObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityRequestIntegration:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case CodequalityRequestIntegrationAuthorization:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case CodequalityRequestIntegrationLocation:
 		return v.String()
 
 	case CodequalityRequestIntegrationProgress:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case CodequalityRequestIntegrationSystemType:
 		return v.String()
 
 	case CodequalityRequestIntegrationValidatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *CodequalityRequestIntegration) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *CodequalityRequestIntegration) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Active If true, the integration is still active
-		"active": toCodequalityRequestIntegrationObject(o.Active, isavro, false, "boolean"),
+		"active": toCodequalityRequestIntegrationObject(o.Active, false),
 		// Authorization Authorization information
-		"authorization": toCodequalityRequestIntegrationObject(o.Authorization, isavro, false, "authorization"),
+		"authorization": toCodequalityRequestIntegrationObject(o.Authorization, false),
 		// CustomerID the customer id for the model instance
-		"customer_id": toCodequalityRequestIntegrationObject(o.CustomerID, isavro, false, "string"),
+		"customer_id": toCodequalityRequestIntegrationObject(o.CustomerID, false),
 		// Errored If authorization failed by the agent
-		"errored": toCodequalityRequestIntegrationObject(o.Errored, isavro, true, "boolean"),
+		"errored": toCodequalityRequestIntegrationObject(o.Errored, true),
 		// Exclusions The exclusion list for this integration
-		"exclusions": toCodequalityRequestIntegrationObject(o.Exclusions, isavro, false, "exclusions"),
+		"exclusions": toCodequalityRequestIntegrationObject(o.Exclusions, false),
 		// ID the primary key for the model instance
-		"id": toCodequalityRequestIntegrationObject(o.ID, isavro, false, "string"),
+		"id": toCodequalityRequestIntegrationObject(o.ID, false),
 		// Location The location of this integration (on-premise / private or cloud)
-		"location": toCodequalityRequestIntegrationObject(o.Location, isavro, false, "location"),
+		"location": toCodequalityRequestIntegrationObject(o.Location, false),
 		// Name The user friendly name of the integration
-		"name": toCodequalityRequestIntegrationObject(o.Name, isavro, false, "string"),
+		"name": toCodequalityRequestIntegrationObject(o.Name, false),
 		// Progress Agent processing progress
-		"progress": toCodequalityRequestIntegrationObject(o.Progress, isavro, false, "progress"),
+		"progress": toCodequalityRequestIntegrationObject(o.Progress, false),
 		// RefID the source system id for the model instance
-		"ref_id": toCodequalityRequestIntegrationObject(o.RefID, isavro, false, "string"),
+		"ref_id": toCodequalityRequestIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
-		"ref_type": toCodequalityRequestIntegrationObject(o.RefType, isavro, false, "string"),
+		"ref_type": toCodequalityRequestIntegrationObject(o.RefType, false),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
-		"system_type": toCodequalityRequestIntegrationObject(o.SystemType, isavro, false, "system_type"),
+		"system_type": toCodequalityRequestIntegrationObject(o.SystemType, false),
 		// Validated If the validation has been run against this instance
-		"validated": toCodequalityRequestIntegrationObject(o.Validated, isavro, true, "boolean"),
+		"validated": toCodequalityRequestIntegrationObject(o.Validated, true),
 		// ValidatedDate Date when validated
-		"validated_date": toCodequalityRequestIntegrationObject(o.ValidatedDate, isavro, false, "validated_date"),
+		"validated_date": toCodequalityRequestIntegrationObject(o.ValidatedDate, false),
 		// ValidationMessage The validation message from the agent
-		"validation_message": toCodequalityRequestIntegrationObject(o.ValidationMessage, isavro, true, "string"),
+		"validation_message": toCodequalityRequestIntegrationObject(o.ValidationMessage, true),
 	}
 }
 
@@ -816,7 +755,7 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Errored = number.BoolPointer(number.ToBoolAny(nil))
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["bool"]
 				}
@@ -1007,7 +946,7 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Validated = number.BoolPointer(number.ToBoolAny(nil))
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["bool"]
 				}
@@ -1058,7 +997,7 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.ValidationMessage = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1072,46 +1011,32 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 // CodequalityRequestRequestDate represents the object structure for request_date
 type CodequalityRequestRequestDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toCodequalityRequestRequestDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityRequestRequestDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityRequestRequestDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityRequestRequestDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *CodequalityRequestRequestDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *CodequalityRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toCodequalityRequestRequestDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toCodequalityRequestRequestDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toCodequalityRequestRequestDateObject(o.Offset, isavro, false, "long"),
+		"offset": toCodequalityRequestRequestDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCodequalityRequestRequestDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toCodequalityRequestRequestDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -1180,48 +1105,38 @@ func (o *CodequalityRequestRequestDate) FromMap(kv map[string]interface{}) {
 // CodequalityRequest an agent action to request adding new codequality entities
 type CodequalityRequest struct {
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to use
-	Integration CodequalityRequestIntegration `json:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	Integration CodequalityRequestIntegration `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
-	RequestDate CodequalityRequestRequestDate `json:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	RequestDate CodequalityRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*CodequalityRequest)(nil)
 
-func toCodequalityRequestObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCodequalityRequestObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCodequalityRequestObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityRequest:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case CodequalityRequestIntegration:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case CodequalityRequestRequestDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -1356,12 +1271,6 @@ func (o *CodequalityRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *CodequalityRequest) GetStateKey() string {
-	key := "uuid"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *CodequalityRequest) GetCustomerID() string {
 
@@ -1392,15 +1301,6 @@ func (o *CodequalityRequest) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *CodequalityRequest) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *CodequalityRequest) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *CodequalityRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -1419,52 +1319,6 @@ func (o *CodequalityRequest) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecCodequalityRequest *goavro.Codec
-var cachedCodecCodequalityRequestLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *CodequalityRequest) GetAvroCodec() *goavro.Codec {
-	cachedCodecCodequalityRequestLock.Lock()
-	if cachedCodecCodequalityRequest == nil {
-		c, err := GetCodequalityRequestAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecCodequalityRequest = c
-	}
-	cachedCodecCodequalityRequestLock.Unlock()
-	return cachedCodecCodequalityRequest
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *CodequalityRequest) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *CodequalityRequest) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *CodequalityRequest) Stringify() string {
 	o.Hash()
@@ -1477,24 +1331,18 @@ func (o *CodequalityRequest) IsEqual(other *CodequalityRequest) bool {
 }
 
 // ToMap returns the object as a map
-func (o *CodequalityRequest) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *CodequalityRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":  toCodequalityRequestObject(o.CustomerID, isavro, false, "string"),
-		"id":           toCodequalityRequestObject(o.ID, isavro, false, "string"),
-		"integration":  toCodequalityRequestObject(o.Integration, isavro, false, "integration"),
-		"ref_id":       toCodequalityRequestObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toCodequalityRequestObject(o.RefType, isavro, false, "string"),
-		"request_date": toCodequalityRequestObject(o.RequestDate, isavro, false, "request_date"),
-		"updated_ts":   toCodequalityRequestObject(o.UpdatedAt, isavro, false, "long"),
-		"uuid":         toCodequalityRequestObject(o.UUID, isavro, false, "string"),
-		"hashcode":     toCodequalityRequestObject(o.Hashcode, isavro, false, "string"),
+		"customer_id":  toCodequalityRequestObject(o.CustomerID, false),
+		"id":           toCodequalityRequestObject(o.ID, false),
+		"integration":  toCodequalityRequestObject(o.Integration, false),
+		"ref_id":       toCodequalityRequestObject(o.RefID, false),
+		"ref_type":     toCodequalityRequestObject(o.RefType, false),
+		"request_date": toCodequalityRequestObject(o.RequestDate, false),
+		"updated_ts":   toCodequalityRequestObject(o.UpdatedAt, false),
+		"uuid":         toCodequalityRequestObject(o.UUID, false),
+		"hashcode":     toCodequalityRequestObject(o.Hashcode, false),
 	}
 }
 
@@ -1643,54 +1491,6 @@ func (o *CodequalityRequest) Hash() string {
 	return o.Hashcode
 }
 
-// GetCodequalityRequestAvroSchemaSpec creates the avro schema specification for CodequalityRequest
-func GetCodequalityRequestAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "agent",
-		"name":      "CodequalityRequest",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "integration",
-				"type": map[string]interface{}{"doc": "the integration details to use", "fields": []interface{}{map[string]interface{}{"doc": "If true, the integration is still active", "name": "active", "type": "boolean"}, map[string]interface{}{"doc": "Authorization information", "name": "authorization", "type": map[string]interface{}{"doc": "Authorization information", "fields": []interface{}{map[string]interface{}{"default": nil, "doc": "Access token", "name": "access_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Refresh token", "name": "refresh_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "URL of instance if relevant", "name": "url", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Username for instance, if relevant", "name": "username", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Password for instance, if relevant", "name": "password", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Token for instance, if relevant", "name": "api_token", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Collection for instance, if relevant", "name": "collection", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "API Key for instance, if relevant", "name": "api_key", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the agents encrypted authorization", "name": "authorization", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "Hostname for instance, if relevant", "name": "hostname", "type": []interface{}{"null", "string"}}}, "name": "integration.authorization", "type": "record"}}, map[string]interface{}{"doc": "the customer id for the model instance", "name": "customer_id", "type": "string"}, map[string]interface{}{"default": nil, "doc": "If authorization failed by the agent", "name": "errored", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "The exclusion list for this integration", "name": "exclusions", "type": map[string]interface{}{"items": "string", "name": "exclusions", "type": "array"}}, map[string]interface{}{"doc": "the primary key for the model instance", "name": "id", "type": "string"}, map[string]interface{}{"doc": "The location of this integration (on-premise / private or cloud)", "name": "location", "type": map[string]interface{}{"default": "PRIVATE", "doc": "The location of this integration (on-premise / private or cloud)", "name": "integration.location", "symbols": []string{"PRIVATE", "CLOUD"}, "type": "enum"}}, map[string]interface{}{"doc": "The user friendly name of the integration", "name": "name", "type": "string"}, map[string]interface{}{"doc": "Agent processing progress", "name": "progress", "type": map[string]interface{}{"doc": "Agent processing progress", "fields": []interface{}{map[string]interface{}{"doc": "Any relevant messaging during processing", "name": "message", "type": "string"}, map[string]interface{}{"doc": "The total amount to be processed", "name": "total", "type": "long"}, map[string]interface{}{"doc": "The total amount processed thus far", "name": "completed", "type": "long"}}, "name": "integration.progress", "type": "record"}}, map[string]interface{}{"doc": "the source system id for the model instance", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the source system identifier for the model instance", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "The system type of the integration (sourcecode / work (jira) / codequality / etc.)", "name": "system_type", "type": map[string]interface{}{"default": "WORK", "doc": "The system type of the integration (sourcecode / work (jira) / codequality / etc.)", "name": "integration.system_type", "symbols": []string{"WORK", "SOURCECODE", "CODEQUALITY"}, "type": "enum"}}, map[string]interface{}{"default": nil, "doc": "If the validation has been run against this instance", "name": "validated", "type": []interface{}{"null", "boolean"}}, map[string]interface{}{"doc": "Date when validated", "name": "validated_date", "type": map[string]interface{}{"doc": "Date when validated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "integration.validated_date", "type": "record"}}, map[string]interface{}{"default": nil, "doc": "The validation message from the agent", "name": "validation_message", "type": []interface{}{"null", "string"}}}, "name": "integration", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "request_date",
-				"type": map[string]interface{}{"doc": "the date when the request was made", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "request_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uuid",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *CodequalityRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1701,344 +1501,5 @@ func (o *CodequalityRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetCodequalityRequestAvroSchema creates the avro schema for CodequalityRequest
-func GetCodequalityRequestAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetCodequalityRequestAvroSchemaSpec())
-}
-
-// CodequalityRequestSendEvent is an event detail for sending data
-type CodequalityRequestSendEvent struct {
-	CodequalityRequest *CodequalityRequest
-	headers            map[string]string
-	time               time.Time
-	key                string
-}
-
-var _ datamodel.ModelSendEvent = (*CodequalityRequestSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *CodequalityRequestSendEvent) Key() string {
-	if e.key == "" {
-		return e.CodequalityRequest.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *CodequalityRequestSendEvent) Object() datamodel.Model {
-	return e.CodequalityRequest
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *CodequalityRequestSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *CodequalityRequestSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// CodequalityRequestSendEventOpts is a function handler for setting opts
-type CodequalityRequestSendEventOpts func(o *CodequalityRequestSendEvent)
-
-// WithCodequalityRequestSendEventKey sets the key value to a value different than the object ID
-func WithCodequalityRequestSendEventKey(key string) CodequalityRequestSendEventOpts {
-	return func(o *CodequalityRequestSendEvent) {
-		o.key = key
-	}
-}
-
-// WithCodequalityRequestSendEventTimestamp sets the timestamp value
-func WithCodequalityRequestSendEventTimestamp(tv time.Time) CodequalityRequestSendEventOpts {
-	return func(o *CodequalityRequestSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithCodequalityRequestSendEventHeader sets the timestamp value
-func WithCodequalityRequestSendEventHeader(key, value string) CodequalityRequestSendEventOpts {
-	return func(o *CodequalityRequestSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewCodequalityRequestSendEvent returns a new CodequalityRequestSendEvent instance
-func NewCodequalityRequestSendEvent(o *CodequalityRequest, opts ...CodequalityRequestSendEventOpts) *CodequalityRequestSendEvent {
-	res := &CodequalityRequestSendEvent{
-		CodequalityRequest: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewCodequalityRequestProducer will stream data from the channel
-func NewCodequalityRequestProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*CodequalityRequest); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.CodequalityRequest but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewCodequalityRequestConsumer will stream data from the topic into the provided channel
-func NewCodequalityRequestConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object CodequalityRequest
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.CodequalityRequest: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.CodequalityRequest: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.CodequalityRequest")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &CodequalityRequestReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object CodequalityRequest
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &CodequalityRequestReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// CodequalityRequestReceiveEvent is an event detail for receiving data
-type CodequalityRequestReceiveEvent struct {
-	CodequalityRequest *CodequalityRequest
-	message            eventing.Message
-	eof                bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*CodequalityRequestReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *CodequalityRequestReceiveEvent) Object() datamodel.Model {
-	return e.CodequalityRequest
-}
-
-// Message returns the underlying message data for the event
-func (e *CodequalityRequestReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *CodequalityRequestReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// CodequalityRequestProducer implements the datamodel.ModelEventProducer
-type CodequalityRequestProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*CodequalityRequestProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *CodequalityRequestProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *CodequalityRequestProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *CodequalityRequest) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *CodequalityRequest) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &CodequalityRequestProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewCodequalityRequestProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewCodequalityRequestProducerChannel returns a channel which can be used for producing Model events
-func NewCodequalityRequestProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewCodequalityRequestProducerChannelSize(producer, 0, errors)
-}
-
-// NewCodequalityRequestProducerChannelSize returns a channel which can be used for producing Model events
-func NewCodequalityRequestProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &CodequalityRequestProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewCodequalityRequestProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// CodequalityRequestConsumer implements the datamodel.ModelEventConsumer
-type CodequalityRequestConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*CodequalityRequestConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *CodequalityRequestConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *CodequalityRequestConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *CodequalityRequest) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &CodequalityRequestConsumer{
-		ch:       ch,
-		callback: NewCodequalityRequestConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewCodequalityRequestConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewCodequalityRequestConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &CodequalityRequestConsumer{
-		ch:       ch,
-		callback: NewCodequalityRequestConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

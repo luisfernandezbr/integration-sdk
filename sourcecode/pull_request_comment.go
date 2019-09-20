@@ -4,23 +4,16 @@
 package sourcecode
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -79,46 +72,32 @@ const (
 // PullRequestCommentCreatedDate represents the object structure for created_date
 type PullRequestCommentCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPullRequestCommentCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestCommentCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestCommentCreatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestCommentCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PullRequestCommentCreatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PullRequestCommentCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPullRequestCommentCreatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPullRequestCommentCreatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPullRequestCommentCreatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPullRequestCommentCreatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPullRequestCommentCreatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPullRequestCommentCreatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -187,46 +166,32 @@ func (o *PullRequestCommentCreatedDate) FromMap(kv map[string]interface{}) {
 // PullRequestCommentUpdatedDate represents the object structure for updated_date
 type PullRequestCommentUpdatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPullRequestCommentUpdatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestCommentUpdatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestCommentUpdatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestCommentUpdatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PullRequestCommentUpdatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PullRequestCommentUpdatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPullRequestCommentUpdatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPullRequestCommentUpdatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPullRequestCommentUpdatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPullRequestCommentUpdatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPullRequestCommentUpdatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPullRequestCommentUpdatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -295,56 +260,46 @@ func (o *PullRequestCommentUpdatedDate) FromMap(kv map[string]interface{}) {
 // PullRequestComment the comment for a given pull request
 type PullRequestComment struct {
 	// Body the body of the comment
-	Body string `json:"body" bson:"body" yaml:"body" faker:"commit_message"`
+	Body string `json:"body" codec:"body" bson:"body" yaml:"body" faker:"commit_message"`
 	// CreatedDate the timestamp in UTC that the comment was created
-	CreatedDate PullRequestCommentCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate PullRequestCommentCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// PullRequestID the pull request this comment is associated with
-	PullRequestID string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// UpdatedDate the timestamp in UTC that the comment was closed
-	UpdatedDate PullRequestCommentUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	UpdatedDate PullRequestCommentUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the URL to the source system for this comment
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// UserRefID the user ref_id in the source system
-	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
+	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*PullRequestComment)(nil)
 
-func toPullRequestCommentObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestCommentObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestCommentObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestComment:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PullRequestCommentCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PullRequestCommentUpdatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -480,12 +435,6 @@ func (o *PullRequestComment) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *PullRequestComment) GetStateKey() string {
-	key := "repo_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *PullRequestComment) GetCustomerID() string {
 
@@ -516,15 +465,6 @@ func (o *PullRequestComment) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *PullRequestComment) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *PullRequestComment) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *PullRequestComment) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -543,52 +483,6 @@ func (o *PullRequestComment) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecPullRequestComment *goavro.Codec
-var cachedCodecPullRequestCommentLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *PullRequestComment) GetAvroCodec() *goavro.Codec {
-	cachedCodecPullRequestCommentLock.Lock()
-	if cachedCodecPullRequestComment == nil {
-		c, err := GetPullRequestCommentAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecPullRequestComment = c
-	}
-	cachedCodecPullRequestCommentLock.Unlock()
-	return cachedCodecPullRequestComment
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *PullRequestComment) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *PullRequestComment) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *PullRequestComment) Stringify() string {
 	o.Hash()
@@ -601,28 +495,22 @@ func (o *PullRequestComment) IsEqual(other *PullRequestComment) bool {
 }
 
 // ToMap returns the object as a map
-func (o *PullRequestComment) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *PullRequestComment) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"body":            toPullRequestCommentObject(o.Body, isavro, false, "string"),
-		"created_date":    toPullRequestCommentObject(o.CreatedDate, isavro, false, "created_date"),
-		"customer_id":     toPullRequestCommentObject(o.CustomerID, isavro, false, "string"),
-		"id":              toPullRequestCommentObject(o.ID, isavro, false, "string"),
-		"pull_request_id": toPullRequestCommentObject(o.PullRequestID, isavro, false, "string"),
-		"ref_id":          toPullRequestCommentObject(o.RefID, isavro, false, "string"),
-		"ref_type":        toPullRequestCommentObject(o.RefType, isavro, false, "string"),
-		"repo_id":         toPullRequestCommentObject(o.RepoID, isavro, false, "string"),
-		"updated_date":    toPullRequestCommentObject(o.UpdatedDate, isavro, false, "updated_date"),
-		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, isavro, false, "long"),
-		"url":             toPullRequestCommentObject(o.URL, isavro, false, "string"),
-		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, isavro, false, "string"),
-		"hashcode":        toPullRequestCommentObject(o.Hashcode, isavro, false, "string"),
+		"body":            toPullRequestCommentObject(o.Body, false),
+		"created_date":    toPullRequestCommentObject(o.CreatedDate, false),
+		"customer_id":     toPullRequestCommentObject(o.CustomerID, false),
+		"id":              toPullRequestCommentObject(o.ID, false),
+		"pull_request_id": toPullRequestCommentObject(o.PullRequestID, false),
+		"ref_id":          toPullRequestCommentObject(o.RefID, false),
+		"ref_type":        toPullRequestCommentObject(o.RefType, false),
+		"repo_id":         toPullRequestCommentObject(o.RepoID, false),
+		"updated_date":    toPullRequestCommentObject(o.UpdatedDate, false),
+		"updated_ts":      toPullRequestCommentObject(o.UpdatedAt, false),
+		"url":             toPullRequestCommentObject(o.URL, false),
+		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, false),
+		"hashcode":        toPullRequestCommentObject(o.Hashcode, false),
 	}
 }
 
@@ -873,70 +761,6 @@ func (o *PullRequestComment) Hash() string {
 	return o.Hashcode
 }
 
-// GetPullRequestCommentAvroSchemaSpec creates the avro schema specification for PullRequestComment
-func GetPullRequestCommentAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "sourcecode",
-		"name":      "PullRequestComment",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "body",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the comment was created", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "created_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "pull_request_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "repo_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "updated_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the comment was closed", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "updated_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "user_ref_id",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *PullRequestComment) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -947,344 +771,5 @@ func (o *PullRequestComment) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetPullRequestCommentAvroSchema creates the avro schema for PullRequestComment
-func GetPullRequestCommentAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetPullRequestCommentAvroSchemaSpec())
-}
-
-// PullRequestCommentSendEvent is an event detail for sending data
-type PullRequestCommentSendEvent struct {
-	PullRequestComment *PullRequestComment
-	headers            map[string]string
-	time               time.Time
-	key                string
-}
-
-var _ datamodel.ModelSendEvent = (*PullRequestCommentSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *PullRequestCommentSendEvent) Key() string {
-	if e.key == "" {
-		return e.PullRequestComment.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *PullRequestCommentSendEvent) Object() datamodel.Model {
-	return e.PullRequestComment
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *PullRequestCommentSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *PullRequestCommentSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// PullRequestCommentSendEventOpts is a function handler for setting opts
-type PullRequestCommentSendEventOpts func(o *PullRequestCommentSendEvent)
-
-// WithPullRequestCommentSendEventKey sets the key value to a value different than the object ID
-func WithPullRequestCommentSendEventKey(key string) PullRequestCommentSendEventOpts {
-	return func(o *PullRequestCommentSendEvent) {
-		o.key = key
-	}
-}
-
-// WithPullRequestCommentSendEventTimestamp sets the timestamp value
-func WithPullRequestCommentSendEventTimestamp(tv time.Time) PullRequestCommentSendEventOpts {
-	return func(o *PullRequestCommentSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithPullRequestCommentSendEventHeader sets the timestamp value
-func WithPullRequestCommentSendEventHeader(key, value string) PullRequestCommentSendEventOpts {
-	return func(o *PullRequestCommentSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewPullRequestCommentSendEvent returns a new PullRequestCommentSendEvent instance
-func NewPullRequestCommentSendEvent(o *PullRequestComment, opts ...PullRequestCommentSendEventOpts) *PullRequestCommentSendEvent {
-	res := &PullRequestCommentSendEvent{
-		PullRequestComment: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewPullRequestCommentProducer will stream data from the channel
-func NewPullRequestCommentProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*PullRequestComment); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.PullRequestComment but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewPullRequestCommentConsumer will stream data from the topic into the provided channel
-func NewPullRequestCommentConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object PullRequestComment
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequestComment: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into sourcecode.PullRequestComment: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.PullRequestComment")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &PullRequestCommentReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object PullRequestComment
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &PullRequestCommentReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// PullRequestCommentReceiveEvent is an event detail for receiving data
-type PullRequestCommentReceiveEvent struct {
-	PullRequestComment *PullRequestComment
-	message            eventing.Message
-	eof                bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*PullRequestCommentReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *PullRequestCommentReceiveEvent) Object() datamodel.Model {
-	return e.PullRequestComment
-}
-
-// Message returns the underlying message data for the event
-func (e *PullRequestCommentReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *PullRequestCommentReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// PullRequestCommentProducer implements the datamodel.ModelEventProducer
-type PullRequestCommentProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*PullRequestCommentProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *PullRequestCommentProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *PullRequestCommentProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *PullRequestComment) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *PullRequestComment) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PullRequestCommentProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPullRequestCommentProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewPullRequestCommentProducerChannel returns a channel which can be used for producing Model events
-func NewPullRequestCommentProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewPullRequestCommentProducerChannelSize(producer, 0, errors)
-}
-
-// NewPullRequestCommentProducerChannelSize returns a channel which can be used for producing Model events
-func NewPullRequestCommentProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PullRequestCommentProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPullRequestCommentProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// PullRequestCommentConsumer implements the datamodel.ModelEventConsumer
-type PullRequestCommentConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*PullRequestCommentConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *PullRequestCommentConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *PullRequestCommentConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *PullRequestComment) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PullRequestCommentConsumer{
-		ch:       ch,
-		callback: NewPullRequestCommentConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewPullRequestCommentConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewPullRequestCommentConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PullRequestCommentConsumer{
-		ch:       ch,
-		callback: NewPullRequestCommentConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

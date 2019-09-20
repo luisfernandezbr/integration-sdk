@@ -4,19 +4,13 @@
 package agent
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -109,46 +103,32 @@ const (
 // UpgradeEventDate represents the object structure for event_date
 type UpgradeEventDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toUpgradeEventDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toUpgradeEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toUpgradeEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *UpgradeEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *UpgradeEventDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *UpgradeEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toUpgradeEventDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toUpgradeEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toUpgradeEventDateObject(o.Offset, isavro, false, "long"),
+		"offset": toUpgradeEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toUpgradeEventDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toUpgradeEventDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -217,46 +197,32 @@ func (o *UpgradeEventDate) FromMap(kv map[string]interface{}) {
 // UpgradeLastExportDate represents the object structure for last_export_date
 type UpgradeLastExportDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toUpgradeLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toUpgradeLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toUpgradeLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *UpgradeLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *UpgradeLastExportDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *UpgradeLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toUpgradeLastExportDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toUpgradeLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toUpgradeLastExportDateObject(o.Offset, isavro, false, "long"),
+		"offset": toUpgradeLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toUpgradeLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toUpgradeLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -390,86 +356,76 @@ const (
 // Upgrade an agent event to indicate the agent version was upgraded
 type Upgrade struct {
 	// Architecture the architecture of the agent machine
-	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
-	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
+	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
 	// Distro the agent os distribution
-	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
-	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate UpgradeEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate UpgradeEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
-	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// FromVersion the version we're upgrading
-	FromVersion string `json:"from_version" bson:"from_version" yaml:"from_version" faker:"-"`
+	FromVersion string `json:"from_version" codec:"from_version" bson:"from_version" yaml:"from_version" faker:"-"`
 	// GoVersion the go version that the agent build was built with
-	GoVersion string `json:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
-	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate UpgradeLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate UpgradeLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
-	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
-	NumCPU int64 `json:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
 	// OS the agent operating system
-	OS string `json:"os" bson:"os" yaml:"os" faker:"-"`
+	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
-	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
-	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
-	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// ToVersion the version we're installing
-	ToVersion string `json:"to_version" bson:"to_version" yaml:"to_version" faker:"-"`
+	ToVersion string `json:"to_version" codec:"to_version" bson:"to_version" yaml:"to_version" faker:"-"`
 	// Type the type of event
-	Type UpgradeType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type UpgradeType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
-	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
+	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
-	Version string `json:"version" bson:"version" yaml:"version" faker:"-"`
+	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Upgrade)(nil)
 
-func toUpgradeObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toUpgradeObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toUpgradeObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Upgrade:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case UpgradeEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case UpgradeLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case UpgradeType:
 		return v.String()
@@ -613,12 +569,6 @@ func (o *Upgrade) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *Upgrade) GetStateKey() string {
-	key := "uuid"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *Upgrade) GetCustomerID() string {
 
@@ -649,15 +599,6 @@ func (o *Upgrade) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *Upgrade) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *Upgrade) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *Upgrade) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -676,52 +617,6 @@ func (o *Upgrade) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecUpgrade *goavro.Codec
-var cachedCodecUpgradeLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *Upgrade) GetAvroCodec() *goavro.Codec {
-	cachedCodecUpgradeLock.Lock()
-	if cachedCodecUpgrade == nil {
-		c, err := GetUpgradeAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecUpgrade = c
-	}
-	cachedCodecUpgradeLock.Unlock()
-	return cachedCodecUpgrade
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *Upgrade) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Upgrade) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *Upgrade) Stringify() string {
 	o.Hash()
@@ -734,43 +629,37 @@ func (o *Upgrade) IsEqual(other *Upgrade) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Upgrade) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *Upgrade) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toUpgradeObject(o.Architecture, isavro, false, "string"),
-		"customer_id":      toUpgradeObject(o.CustomerID, isavro, false, "string"),
-		"data":             toUpgradeObject(o.Data, isavro, true, "string"),
-		"distro":           toUpgradeObject(o.Distro, isavro, false, "string"),
-		"error":            toUpgradeObject(o.Error, isavro, true, "string"),
-		"event_date":       toUpgradeObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":       toUpgradeObject(o.FreeSpace, isavro, false, "long"),
-		"from_version":     toUpgradeObject(o.FromVersion, isavro, false, "string"),
-		"go_version":       toUpgradeObject(o.GoVersion, isavro, false, "string"),
-		"hostname":         toUpgradeObject(o.Hostname, isavro, false, "string"),
-		"id":               toUpgradeObject(o.ID, isavro, false, "string"),
-		"last_export_date": toUpgradeObject(o.LastExportDate, isavro, false, "last_export_date"),
-		"memory":           toUpgradeObject(o.Memory, isavro, false, "long"),
-		"message":          toUpgradeObject(o.Message, isavro, false, "string"),
-		"num_cpu":          toUpgradeObject(o.NumCPU, isavro, false, "long"),
-		"os":               toUpgradeObject(o.OS, isavro, false, "string"),
-		"ref_id":           toUpgradeObject(o.RefID, isavro, false, "string"),
-		"ref_type":         toUpgradeObject(o.RefType, isavro, false, "string"),
-		"request_id":       toUpgradeObject(o.RequestID, isavro, false, "string"),
-		"success":          toUpgradeObject(o.Success, isavro, false, "boolean"),
-		"system_id":        toUpgradeObject(o.SystemID, isavro, false, "string"),
-		"to_version":       toUpgradeObject(o.ToVersion, isavro, false, "string"),
-		"type":             toUpgradeObject(o.Type, isavro, false, "type"),
-		"updated_ts":       toUpgradeObject(o.UpdatedAt, isavro, false, "long"),
-		"uptime":           toUpgradeObject(o.Uptime, isavro, false, "long"),
-		"uuid":             toUpgradeObject(o.UUID, isavro, false, "string"),
-		"version":          toUpgradeObject(o.Version, isavro, false, "string"),
-		"hashcode":         toUpgradeObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toUpgradeObject(o.Architecture, false),
+		"customer_id":      toUpgradeObject(o.CustomerID, false),
+		"data":             toUpgradeObject(o.Data, true),
+		"distro":           toUpgradeObject(o.Distro, false),
+		"error":            toUpgradeObject(o.Error, true),
+		"event_date":       toUpgradeObject(o.EventDate, false),
+		"free_space":       toUpgradeObject(o.FreeSpace, false),
+		"from_version":     toUpgradeObject(o.FromVersion, false),
+		"go_version":       toUpgradeObject(o.GoVersion, false),
+		"hostname":         toUpgradeObject(o.Hostname, false),
+		"id":               toUpgradeObject(o.ID, false),
+		"last_export_date": toUpgradeObject(o.LastExportDate, false),
+		"memory":           toUpgradeObject(o.Memory, false),
+		"message":          toUpgradeObject(o.Message, false),
+		"num_cpu":          toUpgradeObject(o.NumCPU, false),
+		"os":               toUpgradeObject(o.OS, false),
+		"ref_id":           toUpgradeObject(o.RefID, false),
+		"ref_type":         toUpgradeObject(o.RefType, false),
+		"request_id":       toUpgradeObject(o.RequestID, false),
+		"success":          toUpgradeObject(o.Success, false),
+		"system_id":        toUpgradeObject(o.SystemID, false),
+		"to_version":       toUpgradeObject(o.ToVersion, false),
+		"type":             toUpgradeObject(o.Type, false),
+		"updated_ts":       toUpgradeObject(o.UpdatedAt, false),
+		"uptime":           toUpgradeObject(o.Uptime, false),
+		"uuid":             toUpgradeObject(o.UUID, false),
+		"version":          toUpgradeObject(o.Version, false),
+		"hashcode":         toUpgradeObject(o.Hashcode, false),
 	}
 }
 
@@ -823,7 +712,7 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Data = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -856,7 +745,7 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Error = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1277,136 +1166,6 @@ func (o *Upgrade) Hash() string {
 	return o.Hashcode
 }
 
-// GetUpgradeAvroSchemaSpec creates the avro schema specification for Upgrade
-func GetUpgradeAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "agent",
-		"name":      "Upgrade",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "architecture",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "data",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "distro",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "error",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"doc": "the date of the event", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "event_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "free_space",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "from_version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "go_version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hostname",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "last_export_date",
-				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "memory",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "message",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "num_cpu",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "os",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "request_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "success",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "system_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "to_version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE", "START", "STOP"},
-				},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uptime",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uuid",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "version",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *Upgrade) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1417,344 +1176,5 @@ func (o *Upgrade) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetUpgradeAvroSchema creates the avro schema for Upgrade
-func GetUpgradeAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetUpgradeAvroSchemaSpec())
-}
-
-// UpgradeSendEvent is an event detail for sending data
-type UpgradeSendEvent struct {
-	Upgrade *Upgrade
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*UpgradeSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *UpgradeSendEvent) Key() string {
-	if e.key == "" {
-		return e.Upgrade.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *UpgradeSendEvent) Object() datamodel.Model {
-	return e.Upgrade
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *UpgradeSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *UpgradeSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// UpgradeSendEventOpts is a function handler for setting opts
-type UpgradeSendEventOpts func(o *UpgradeSendEvent)
-
-// WithUpgradeSendEventKey sets the key value to a value different than the object ID
-func WithUpgradeSendEventKey(key string) UpgradeSendEventOpts {
-	return func(o *UpgradeSendEvent) {
-		o.key = key
-	}
-}
-
-// WithUpgradeSendEventTimestamp sets the timestamp value
-func WithUpgradeSendEventTimestamp(tv time.Time) UpgradeSendEventOpts {
-	return func(o *UpgradeSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithUpgradeSendEventHeader sets the timestamp value
-func WithUpgradeSendEventHeader(key, value string) UpgradeSendEventOpts {
-	return func(o *UpgradeSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewUpgradeSendEvent returns a new UpgradeSendEvent instance
-func NewUpgradeSendEvent(o *Upgrade, opts ...UpgradeSendEventOpts) *UpgradeSendEvent {
-	res := &UpgradeSendEvent{
-		Upgrade: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewUpgradeProducer will stream data from the channel
-func NewUpgradeProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*Upgrade); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Upgrade but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewUpgradeConsumer will stream data from the topic into the provided channel
-func NewUpgradeConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object Upgrade
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.Upgrade: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.Upgrade: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.Upgrade")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &UpgradeReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Upgrade
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &UpgradeReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// UpgradeReceiveEvent is an event detail for receiving data
-type UpgradeReceiveEvent struct {
-	Upgrade *Upgrade
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*UpgradeReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *UpgradeReceiveEvent) Object() datamodel.Model {
-	return e.Upgrade
-}
-
-// Message returns the underlying message data for the event
-func (e *UpgradeReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *UpgradeReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// UpgradeProducer implements the datamodel.ModelEventProducer
-type UpgradeProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*UpgradeProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *UpgradeProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *UpgradeProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Upgrade) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Upgrade) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &UpgradeProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewUpgradeProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewUpgradeProducerChannel returns a channel which can be used for producing Model events
-func NewUpgradeProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewUpgradeProducerChannelSize(producer, 0, errors)
-}
-
-// NewUpgradeProducerChannelSize returns a channel which can be used for producing Model events
-func NewUpgradeProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &UpgradeProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewUpgradeProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// UpgradeConsumer implements the datamodel.ModelEventConsumer
-type UpgradeConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*UpgradeConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *UpgradeConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *UpgradeConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Upgrade) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &UpgradeConsumer{
-		ch:       ch,
-		callback: NewUpgradeConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewUpgradeConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewUpgradeConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &UpgradeConsumer{
-		ch:       ch,
-		callback: NewUpgradeConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

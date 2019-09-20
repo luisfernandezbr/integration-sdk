@@ -4,19 +4,13 @@
 package agent
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -107,46 +101,32 @@ const (
 // PingEventDate represents the object structure for event_date
 type PingEventDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPingEventDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPingEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPingEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PingEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PingEventDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PingEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPingEventDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPingEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPingEventDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPingEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPingEventDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPingEventDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -215,46 +195,32 @@ func (o *PingEventDate) FromMap(kv map[string]interface{}) {
 // PingLastExportDate represents the object structure for last_export_date
 type PingLastExportDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPingLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPingLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPingLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PingLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PingLastExportDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PingLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPingLastExportDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPingLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPingLastExportDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPingLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPingLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPingLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -417,84 +383,74 @@ const (
 // Ping an agent event for recording a ping
 type Ping struct {
 	// Architecture the architecture of the agent machine
-	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
-	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
+	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
 	// Distro the agent os distribution
-	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
-	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate PingEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate PingEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
-	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
-	GoVersion string `json:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
-	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate PingLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate PingLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
-	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
-	NumCPU int64 `json:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
 	// OS the agent operating system
-	OS string `json:"os" bson:"os" yaml:"os" faker:"-"`
+	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
-	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// State the state of the agent
-	State PingState `json:"state" bson:"state" yaml:"state" faker:"-"`
+	State PingState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// Success if the response was successful
-	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
-	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type PingType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type PingType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
-	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
+	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
-	Version string `json:"version" bson:"version" yaml:"version" faker:"-"`
+	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Ping)(nil)
 
-func toPingObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPingObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPingObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Ping:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PingEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PingLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PingState:
 		return v.String()
@@ -641,12 +597,6 @@ func (o *Ping) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *Ping) GetStateKey() string {
-	key := "id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *Ping) GetCustomerID() string {
 
@@ -677,15 +627,6 @@ func (o *Ping) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *Ping) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *Ping) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *Ping) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -704,52 +645,6 @@ func (o *Ping) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecPing *goavro.Codec
-var cachedCodecPingLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *Ping) GetAvroCodec() *goavro.Codec {
-	cachedCodecPingLock.Lock()
-	if cachedCodecPing == nil {
-		c, err := GetPingAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecPing = c
-	}
-	cachedCodecPingLock.Unlock()
-	return cachedCodecPing
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *Ping) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Ping) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *Ping) Stringify() string {
 	o.Hash()
@@ -762,42 +657,36 @@ func (o *Ping) IsEqual(other *Ping) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Ping) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *Ping) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toPingObject(o.Architecture, isavro, false, "string"),
-		"customer_id":      toPingObject(o.CustomerID, isavro, false, "string"),
-		"data":             toPingObject(o.Data, isavro, true, "string"),
-		"distro":           toPingObject(o.Distro, isavro, false, "string"),
-		"error":            toPingObject(o.Error, isavro, true, "string"),
-		"event_date":       toPingObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":       toPingObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":       toPingObject(o.GoVersion, isavro, false, "string"),
-		"hostname":         toPingObject(o.Hostname, isavro, false, "string"),
-		"id":               toPingObject(o.ID, isavro, false, "string"),
-		"last_export_date": toPingObject(o.LastExportDate, isavro, false, "last_export_date"),
-		"memory":           toPingObject(o.Memory, isavro, false, "long"),
-		"message":          toPingObject(o.Message, isavro, false, "string"),
-		"num_cpu":          toPingObject(o.NumCPU, isavro, false, "long"),
-		"os":               toPingObject(o.OS, isavro, false, "string"),
-		"ref_id":           toPingObject(o.RefID, isavro, false, "string"),
-		"ref_type":         toPingObject(o.RefType, isavro, false, "string"),
-		"request_id":       toPingObject(o.RequestID, isavro, false, "string"),
-		"state":            toPingObject(o.State, isavro, false, "state"),
-		"success":          toPingObject(o.Success, isavro, false, "boolean"),
-		"system_id":        toPingObject(o.SystemID, isavro, false, "string"),
-		"type":             toPingObject(o.Type, isavro, false, "type"),
-		"updated_ts":       toPingObject(o.UpdatedAt, isavro, false, "long"),
-		"uptime":           toPingObject(o.Uptime, isavro, false, "long"),
-		"uuid":             toPingObject(o.UUID, isavro, false, "string"),
-		"version":          toPingObject(o.Version, isavro, false, "string"),
-		"hashcode":         toPingObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toPingObject(o.Architecture, false),
+		"customer_id":      toPingObject(o.CustomerID, false),
+		"data":             toPingObject(o.Data, true),
+		"distro":           toPingObject(o.Distro, false),
+		"error":            toPingObject(o.Error, true),
+		"event_date":       toPingObject(o.EventDate, false),
+		"free_space":       toPingObject(o.FreeSpace, false),
+		"go_version":       toPingObject(o.GoVersion, false),
+		"hostname":         toPingObject(o.Hostname, false),
+		"id":               toPingObject(o.ID, false),
+		"last_export_date": toPingObject(o.LastExportDate, false),
+		"memory":           toPingObject(o.Memory, false),
+		"message":          toPingObject(o.Message, false),
+		"num_cpu":          toPingObject(o.NumCPU, false),
+		"os":               toPingObject(o.OS, false),
+		"ref_id":           toPingObject(o.RefID, false),
+		"ref_type":         toPingObject(o.RefType, false),
+		"request_id":       toPingObject(o.RequestID, false),
+		"state":            toPingObject(o.State, false),
+		"success":          toPingObject(o.Success, false),
+		"system_id":        toPingObject(o.SystemID, false),
+		"type":             toPingObject(o.Type, false),
+		"updated_ts":       toPingObject(o.UpdatedAt, false),
+		"uptime":           toPingObject(o.Uptime, false),
+		"uuid":             toPingObject(o.UUID, false),
+		"version":          toPingObject(o.Version, false),
+		"hashcode":         toPingObject(o.Hashcode, false),
 	}
 }
 
@@ -850,7 +739,7 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Data = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -883,7 +772,7 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Error = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1303,136 +1192,6 @@ func (o *Ping) Hash() string {
 	return o.Hashcode
 }
 
-// GetPingAvroSchemaSpec creates the avro schema specification for Ping
-func GetPingAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "agent",
-		"name":      "Ping",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "architecture",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "data",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "distro",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "error",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"doc": "the date of the event", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "event_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "free_space",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "go_version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hostname",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "last_export_date",
-				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "memory",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "message",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "num_cpu",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "os",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "request_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "state",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "state",
-					"symbols": []interface{}{"IDLE", "STARTING", "STOPPING", "EXPORTING"},
-				},
-			},
-			map[string]interface{}{
-				"name": "success",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "system_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE", "START", "STOP"},
-				},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uptime",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uuid",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "version",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *Ping) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1443,344 +1202,5 @@ func (o *Ping) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetPingAvroSchema creates the avro schema for Ping
-func GetPingAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetPingAvroSchemaSpec())
-}
-
-// PingSendEvent is an event detail for sending data
-type PingSendEvent struct {
-	Ping    *Ping
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*PingSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *PingSendEvent) Key() string {
-	if e.key == "" {
-		return e.Ping.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *PingSendEvent) Object() datamodel.Model {
-	return e.Ping
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *PingSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *PingSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// PingSendEventOpts is a function handler for setting opts
-type PingSendEventOpts func(o *PingSendEvent)
-
-// WithPingSendEventKey sets the key value to a value different than the object ID
-func WithPingSendEventKey(key string) PingSendEventOpts {
-	return func(o *PingSendEvent) {
-		o.key = key
-	}
-}
-
-// WithPingSendEventTimestamp sets the timestamp value
-func WithPingSendEventTimestamp(tv time.Time) PingSendEventOpts {
-	return func(o *PingSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithPingSendEventHeader sets the timestamp value
-func WithPingSendEventHeader(key, value string) PingSendEventOpts {
-	return func(o *PingSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewPingSendEvent returns a new PingSendEvent instance
-func NewPingSendEvent(o *Ping, opts ...PingSendEventOpts) *PingSendEvent {
-	res := &PingSendEvent{
-		Ping: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewPingProducer will stream data from the channel
-func NewPingProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*Ping); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.Ping but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewPingConsumer will stream data from the topic into the provided channel
-func NewPingConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object Ping
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.Ping: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.Ping: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.Ping")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &PingReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Ping
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &PingReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// PingReceiveEvent is an event detail for receiving data
-type PingReceiveEvent struct {
-	Ping    *Ping
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*PingReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *PingReceiveEvent) Object() datamodel.Model {
-	return e.Ping
-}
-
-// Message returns the underlying message data for the event
-func (e *PingReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *PingReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// PingProducer implements the datamodel.ModelEventProducer
-type PingProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*PingProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *PingProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *PingProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Ping) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Ping) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PingProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPingProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewPingProducerChannel returns a channel which can be used for producing Model events
-func NewPingProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewPingProducerChannelSize(producer, 0, errors)
-}
-
-// NewPingProducerChannelSize returns a channel which can be used for producing Model events
-func NewPingProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PingProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPingProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// PingConsumer implements the datamodel.ModelEventConsumer
-type PingConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*PingConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *PingConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *PingConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Ping) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PingConsumer{
-		ch:       ch,
-		callback: NewPingConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewPingConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewPingConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PingConsumer{
-		ch:       ch,
-		callback: NewPingConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

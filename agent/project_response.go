@@ -4,19 +4,14 @@
 package agent
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -130,46 +125,32 @@ const (
 // ProjectResponseEventDate represents the object structure for event_date
 type ProjectResponseEventDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toProjectResponseEventDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toProjectResponseEventDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toProjectResponseEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectResponseEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ProjectResponseEventDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ProjectResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toProjectResponseEventDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toProjectResponseEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toProjectResponseEventDateObject(o.Offset, isavro, false, "long"),
+		"offset": toProjectResponseEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toProjectResponseEventDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toProjectResponseEventDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -238,46 +219,32 @@ func (o *ProjectResponseEventDate) FromMap(kv map[string]interface{}) {
 // ProjectResponseLastExportDate represents the object structure for last_export_date
 type ProjectResponseLastExportDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toProjectResponseLastExportDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toProjectResponseLastExportDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toProjectResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectResponseLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ProjectResponseLastExportDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ProjectResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toProjectResponseLastExportDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toProjectResponseLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toProjectResponseLastExportDateObject(o.Offset, isavro, false, "long"),
+		"offset": toProjectResponseLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toProjectResponseLastExportDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toProjectResponseLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -346,46 +313,32 @@ func (o *ProjectResponseLastExportDate) FromMap(kv map[string]interface{}) {
 // ProjectResponseProjectsLastIssueCreatedDate represents the object structure for created_date
 type ProjectResponseProjectsLastIssueCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toProjectResponseProjectsLastIssueCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toProjectResponseProjectsLastIssueCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toProjectResponseProjectsLastIssueCreatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectResponseProjectsLastIssueCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ProjectResponseProjectsLastIssueCreatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ProjectResponseProjectsLastIssueCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toProjectResponseProjectsLastIssueCreatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toProjectResponseProjectsLastIssueCreatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toProjectResponseProjectsLastIssueCreatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toProjectResponseProjectsLastIssueCreatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toProjectResponseProjectsLastIssueCreatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toProjectResponseProjectsLastIssueCreatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -454,46 +407,32 @@ func (o *ProjectResponseProjectsLastIssueCreatedDate) FromMap(kv map[string]inte
 // ProjectResponseProjectsLastIssueLastUser represents the object structure for last_user
 type ProjectResponseProjectsLastIssueLastUser struct {
 	// UserID the work project user id
-	UserID string `json:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
+	UserID string `json:"user_id" codec:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
 	// Name the user name
-	Name string `json:"name" bson:"name" yaml:"name" faker:"name"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"name"`
 	// AvatarURL the avatar url
-	AvatarURL string `json:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
+	AvatarURL string `json:"avatar_url" codec:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 }
 
-func toProjectResponseProjectsLastIssueLastUserObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toProjectResponseProjectsLastIssueLastUserObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toProjectResponseProjectsLastIssueLastUserObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectResponseProjectsLastIssueLastUser:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ProjectResponseProjectsLastIssueLastUser) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ProjectResponseProjectsLastIssueLastUser) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// UserID the work project user id
-		"user_id": toProjectResponseProjectsLastIssueLastUserObject(o.UserID, isavro, false, "string"),
+		"user_id": toProjectResponseProjectsLastIssueLastUserObject(o.UserID, false),
 		// Name the user name
-		"name": toProjectResponseProjectsLastIssueLastUserObject(o.Name, isavro, false, "string"),
+		"name": toProjectResponseProjectsLastIssueLastUserObject(o.Name, false),
 		// AvatarURL the avatar url
-		"avatar_url": toProjectResponseProjectsLastIssueLastUserObject(o.AvatarURL, isavro, false, "string"),
+		"avatar_url": toProjectResponseProjectsLastIssueLastUserObject(o.AvatarURL, false),
 	}
 }
 
@@ -562,55 +501,41 @@ func (o *ProjectResponseProjectsLastIssueLastUser) FromMap(kv map[string]interfa
 // ProjectResponseProjectsLastIssue represents the object structure for last_issue
 type ProjectResponseProjectsLastIssue struct {
 	// IssueID issue id
-	IssueID string `json:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
+	IssueID string `json:"issue_id" codec:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
 	// Identifier the issue key from the source
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// CreatedDate the date of the change
-	CreatedDate ProjectResponseProjectsLastIssueCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate ProjectResponseProjectsLastIssueCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// LastUser the last user
-	LastUser ProjectResponseProjectsLastIssueLastUser `json:"last_user" bson:"last_user" yaml:"last_user" faker:"-"`
+	LastUser ProjectResponseProjectsLastIssueLastUser `json:"last_user" codec:"last_user" bson:"last_user" yaml:"last_user" faker:"-"`
 }
 
-func toProjectResponseProjectsLastIssueObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toProjectResponseProjectsLastIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toProjectResponseProjectsLastIssueObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectResponseProjectsLastIssue:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case ProjectResponseProjectsLastIssueCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case ProjectResponseProjectsLastIssueLastUser:
-		return v.ToMap(isavro)
+		return v.ToMap()
 	default:
 		return o
 	}
 }
 
-func (o *ProjectResponseProjectsLastIssue) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ProjectResponseProjectsLastIssue) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// IssueID issue id
-		"issue_id": toProjectResponseProjectsLastIssueObject(o.IssueID, isavro, false, "string"),
+		"issue_id": toProjectResponseProjectsLastIssueObject(o.IssueID, false),
 		// Identifier the issue key from the source
-		"identifier": toProjectResponseProjectsLastIssueObject(o.Identifier, isavro, false, "string"),
+		"identifier": toProjectResponseProjectsLastIssueObject(o.Identifier, false),
 		// CreatedDate the date of the change
-		"created_date": toProjectResponseProjectsLastIssueObject(o.CreatedDate, isavro, false, "created_date"),
+		"created_date": toProjectResponseProjectsLastIssueObject(o.CreatedDate, false),
 		// LastUser the last user
-		"last_user": toProjectResponseProjectsLastIssueObject(o.LastUser, isavro, false, "last_user"),
+		"last_user": toProjectResponseProjectsLastIssueObject(o.LastUser, false),
 	}
 }
 
@@ -693,77 +618,63 @@ func (o *ProjectResponseProjectsLastIssue) FromMap(kv map[string]interface{}) {
 // ProjectResponseProjects represents the object structure for projects
 type ProjectResponseProjects struct {
 	// Active the status of the project
-	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Category the project category
-	Category *string `json:"category" bson:"category" yaml:"category" faker:"-"`
+	Category *string `json:"category,omitempty" codec:"category,omitempty" bson:"category" yaml:"category,omitempty" faker:"-"`
 	// Description the description of the project
-	Description *string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	Description *string `json:"description,omitempty" codec:"description,omitempty" bson:"description" yaml:"description,omitempty" faker:"-"`
 	// Identifier the common identifier for the project
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// LastIssue last issue for this project
-	LastIssue ProjectResponseProjectsLastIssue `json:"last_issue" bson:"last_issue" yaml:"last_issue" faker:"-"`
+	LastIssue ProjectResponseProjectsLastIssue `json:"last_issue" codec:"last_issue" bson:"last_issue" yaml:"last_issue" faker:"-"`
 	// Name the name of the project
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the id of the project
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the record type
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// TotalIssues the total issues count for the project
-	TotalIssues int64 `json:"total_issues" bson:"total_issues" yaml:"total_issues" faker:"-"`
+	TotalIssues int64 `json:"total_issues" codec:"total_issues" bson:"total_issues" yaml:"total_issues" faker:"-"`
 	// URL the url to the project home page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"-"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
 }
 
-func toProjectResponseProjectsObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toProjectResponseProjectsObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toProjectResponseProjectsObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectResponseProjects:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case ProjectResponseProjectsLastIssue:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *ProjectResponseProjects) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Active the status of the project
-		"active": toProjectResponseProjectsObject(o.Active, isavro, false, "boolean"),
+		"active": toProjectResponseProjectsObject(o.Active, false),
 		// Category the project category
-		"category": toProjectResponseProjectsObject(o.Category, isavro, true, "string"),
+		"category": toProjectResponseProjectsObject(o.Category, true),
 		// Description the description of the project
-		"description": toProjectResponseProjectsObject(o.Description, isavro, true, "string"),
+		"description": toProjectResponseProjectsObject(o.Description, true),
 		// Identifier the common identifier for the project
-		"identifier": toProjectResponseProjectsObject(o.Identifier, isavro, false, "string"),
+		"identifier": toProjectResponseProjectsObject(o.Identifier, false),
 		// LastIssue last issue for this project
-		"last_issue": toProjectResponseProjectsObject(o.LastIssue, isavro, false, "last_issue"),
+		"last_issue": toProjectResponseProjectsObject(o.LastIssue, false),
 		// Name the name of the project
-		"name": toProjectResponseProjectsObject(o.Name, isavro, false, "string"),
+		"name": toProjectResponseProjectsObject(o.Name, false),
 		// RefID the id of the project
-		"ref_id": toProjectResponseProjectsObject(o.RefID, isavro, false, "string"),
+		"ref_id": toProjectResponseProjectsObject(o.RefID, false),
 		// RefType the record type
-		"ref_type": toProjectResponseProjectsObject(o.RefType, isavro, false, "string"),
+		"ref_type": toProjectResponseProjectsObject(o.RefType, false),
 		// TotalIssues the total issues count for the project
-		"total_issues": toProjectResponseProjectsObject(o.TotalIssues, isavro, false, "long"),
+		"total_issues": toProjectResponseProjectsObject(o.TotalIssues, false),
 		// URL the url to the project home page
-		"url": toProjectResponseProjectsObject(o.URL, isavro, false, "string"),
+		"url": toProjectResponseProjectsObject(o.URL, false),
 	}
 }
 
@@ -803,7 +714,7 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Category = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -821,7 +732,7 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Description = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1004,91 +915,81 @@ const (
 // ProjectResponse an agent response to an action request adding project(s)
 type ProjectResponse struct {
 	// Architecture the architecture of the agent machine
-	Architecture string `json:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
-	Data *string `json:"data" bson:"data" yaml:"data" faker:"-"`
+	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
 	// Distro the agent os distribution
-	Distro string `json:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
-	Error *string `json:"error" bson:"error" yaml:"error" faker:"-"`
+	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate ProjectResponseEventDate `json:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate ProjectResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
-	FreeSpace int64 `json:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
-	GoVersion string `json:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
-	Hostname string `json:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
-	IntegrationID string `json:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate ProjectResponseLastExportDate `json:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate ProjectResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
-	Memory int64 `json:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
-	Message string `json:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
-	NumCPU int64 `json:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
 	// OS the agent operating system
-	OS string `json:"os" bson:"os" yaml:"os" faker:"-"`
+	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
 	// Projects the projects exported
-	Projects []ProjectResponseProjects `json:"projects" bson:"projects" yaml:"projects" faker:"-"`
+	Projects []ProjectResponseProjects `json:"projects" codec:"projects" bson:"projects" yaml:"projects" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
-	RequestID string `json:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
-	Success bool `json:"success" bson:"success" yaml:"success" faker:"-"`
+	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
-	SystemID string `json:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type ProjectResponseType `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type ProjectResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
-	Uptime int64 `json:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
+	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
-	Version string `json:"version" bson:"version" yaml:"version" faker:"-"`
+	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*ProjectResponse)(nil)
 
-func toProjectResponseObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toProjectResponseObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toProjectResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectResponse:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case ProjectResponseEventDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case ProjectResponseLastExportDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case []ProjectResponseProjects:
 		arr := make([]interface{}, 0)
 		for _, i := range v {
-			arr = append(arr, i.ToMap(isavro))
+			arr = append(arr, i.ToMap())
 		}
 		return arr
 
@@ -1237,12 +1138,6 @@ func (o *ProjectResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *ProjectResponse) GetStateKey() string {
-	key := "uuid"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *ProjectResponse) GetCustomerID() string {
 
@@ -1273,15 +1168,6 @@ func (o *ProjectResponse) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *ProjectResponse) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *ProjectResponse) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *ProjectResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -1300,52 +1186,6 @@ func (o *ProjectResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecProjectResponse *goavro.Codec
-var cachedCodecProjectResponseLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *ProjectResponse) GetAvroCodec() *goavro.Codec {
-	cachedCodecProjectResponseLock.Lock()
-	if cachedCodecProjectResponse == nil {
-		c, err := GetProjectResponseAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecProjectResponse = c
-	}
-	cachedCodecProjectResponseLock.Unlock()
-	return cachedCodecProjectResponse
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *ProjectResponse) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *ProjectResponse) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *ProjectResponse) Stringify() string {
 	o.Hash()
@@ -1358,46 +1198,37 @@ func (o *ProjectResponse) IsEqual(other *ProjectResponse) bool {
 }
 
 // ToMap returns the object as a map
-func (o *ProjectResponse) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-		if o.Projects == nil {
-			o.Projects = make([]ProjectResponseProjects, 0)
-		}
-	}
+func (o *ProjectResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toProjectResponseObject(o.Architecture, isavro, false, "string"),
-		"customer_id":      toProjectResponseObject(o.CustomerID, isavro, false, "string"),
-		"data":             toProjectResponseObject(o.Data, isavro, true, "string"),
-		"distro":           toProjectResponseObject(o.Distro, isavro, false, "string"),
-		"error":            toProjectResponseObject(o.Error, isavro, true, "string"),
-		"event_date":       toProjectResponseObject(o.EventDate, isavro, false, "event_date"),
-		"free_space":       toProjectResponseObject(o.FreeSpace, isavro, false, "long"),
-		"go_version":       toProjectResponseObject(o.GoVersion, isavro, false, "string"),
-		"hostname":         toProjectResponseObject(o.Hostname, isavro, false, "string"),
-		"id":               toProjectResponseObject(o.ID, isavro, false, "string"),
-		"integration_id":   toProjectResponseObject(o.IntegrationID, isavro, false, "string"),
-		"last_export_date": toProjectResponseObject(o.LastExportDate, isavro, false, "last_export_date"),
-		"memory":           toProjectResponseObject(o.Memory, isavro, false, "long"),
-		"message":          toProjectResponseObject(o.Message, isavro, false, "string"),
-		"num_cpu":          toProjectResponseObject(o.NumCPU, isavro, false, "long"),
-		"os":               toProjectResponseObject(o.OS, isavro, false, "string"),
-		"projects":         toProjectResponseObject(o.Projects, isavro, false, "projects"),
-		"ref_id":           toProjectResponseObject(o.RefID, isavro, false, "string"),
-		"ref_type":         toProjectResponseObject(o.RefType, isavro, false, "string"),
-		"request_id":       toProjectResponseObject(o.RequestID, isavro, false, "string"),
-		"success":          toProjectResponseObject(o.Success, isavro, false, "boolean"),
-		"system_id":        toProjectResponseObject(o.SystemID, isavro, false, "string"),
-		"type":             toProjectResponseObject(o.Type, isavro, false, "type"),
-		"updated_ts":       toProjectResponseObject(o.UpdatedAt, isavro, false, "long"),
-		"uptime":           toProjectResponseObject(o.Uptime, isavro, false, "long"),
-		"uuid":             toProjectResponseObject(o.UUID, isavro, false, "string"),
-		"version":          toProjectResponseObject(o.Version, isavro, false, "string"),
-		"hashcode":         toProjectResponseObject(o.Hashcode, isavro, false, "string"),
+		"architecture":     toProjectResponseObject(o.Architecture, false),
+		"customer_id":      toProjectResponseObject(o.CustomerID, false),
+		"data":             toProjectResponseObject(o.Data, true),
+		"distro":           toProjectResponseObject(o.Distro, false),
+		"error":            toProjectResponseObject(o.Error, true),
+		"event_date":       toProjectResponseObject(o.EventDate, false),
+		"free_space":       toProjectResponseObject(o.FreeSpace, false),
+		"go_version":       toProjectResponseObject(o.GoVersion, false),
+		"hostname":         toProjectResponseObject(o.Hostname, false),
+		"id":               toProjectResponseObject(o.ID, false),
+		"integration_id":   toProjectResponseObject(o.IntegrationID, false),
+		"last_export_date": toProjectResponseObject(o.LastExportDate, false),
+		"memory":           toProjectResponseObject(o.Memory, false),
+		"message":          toProjectResponseObject(o.Message, false),
+		"num_cpu":          toProjectResponseObject(o.NumCPU, false),
+		"os":               toProjectResponseObject(o.OS, false),
+		"projects":         toProjectResponseObject(o.Projects, false),
+		"ref_id":           toProjectResponseObject(o.RefID, false),
+		"ref_type":         toProjectResponseObject(o.RefType, false),
+		"request_id":       toProjectResponseObject(o.RequestID, false),
+		"success":          toProjectResponseObject(o.Success, false),
+		"system_id":        toProjectResponseObject(o.SystemID, false),
+		"type":             toProjectResponseObject(o.Type, false),
+		"updated_ts":       toProjectResponseObject(o.UpdatedAt, false),
+		"uptime":           toProjectResponseObject(o.Uptime, false),
+		"uuid":             toProjectResponseObject(o.UUID, false),
+		"version":          toProjectResponseObject(o.Version, false),
+		"hashcode":         toProjectResponseObject(o.Hashcode, false),
 	}
 }
 
@@ -1450,7 +1281,7 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Data = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1483,7 +1314,7 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Error = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1501,6 +1332,25 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1590,6 +1440,25 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1952,136 +1821,6 @@ func (o *ProjectResponse) Hash() string {
 	return o.Hashcode
 }
 
-// GetProjectResponseAvroSchemaSpec creates the avro schema specification for ProjectResponse
-func GetProjectResponseAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "agent",
-		"name":      "ProjectResponse",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "architecture",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "data",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "distro",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "error",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "event_date",
-				"type": map[string]interface{}{"doc": "the date of the event", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "event_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "free_space",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "go_version",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "hostname",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "integration_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "last_export_date",
-				"type": map[string]interface{}{"doc": "the last export date", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_export_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "memory",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "message",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "num_cpu",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "os",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "projects",
-				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "the projects exported", "fields": []interface{}{map[string]interface{}{"doc": "the status of the project", "name": "active", "type": "boolean"}, map[string]interface{}{"default": nil, "doc": "the project category", "name": "category", "type": []interface{}{"null", "string"}}, map[string]interface{}{"default": nil, "doc": "the description of the project", "name": "description", "type": []interface{}{"null", "string"}}, map[string]interface{}{"doc": "the common identifier for the project", "name": "identifier", "type": "string"}, map[string]interface{}{"doc": "last issue for this project", "name": "last_issue", "type": map[string]interface{}{"doc": "last issue for this project", "fields": []interface{}{map[string]interface{}{"doc": "issue id", "name": "issue_id", "type": "string"}, map[string]interface{}{"doc": "the issue key from the source", "name": "identifier", "type": "string"}, map[string]interface{}{"doc": "the date of the change", "name": "created_date", "type": map[string]interface{}{"doc": "the date of the change", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "last_issue.created_date", "type": "record"}}, map[string]interface{}{"doc": "the last user", "name": "last_user", "type": map[string]interface{}{"doc": "the last user", "fields": []interface{}{map[string]interface{}{"doc": "the work project user id", "name": "user_id", "type": "string"}, map[string]interface{}{"doc": "the user name", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the avatar url", "name": "avatar_url", "type": "string"}}, "name": "last_issue.last_user", "type": "record"}}}, "name": "projects.last_issue", "type": "record"}}, map[string]interface{}{"doc": "the name of the project", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the id of the project", "name": "ref_id", "type": "string"}, map[string]interface{}{"doc": "the record type", "name": "ref_type", "type": "string"}, map[string]interface{}{"doc": "the total issues count for the project", "name": "total_issues", "type": "long"}, map[string]interface{}{"doc": "the url to the project home page", "name": "url", "type": "string"}}, "name": "projects", "type": "record"}, "name": "projects", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "request_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "success",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "system_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "type",
-					"symbols": []interface{}{"ENROLL", "PING", "CRASH", "LOG", "INTEGRATION", "EXPORT", "PROJECT", "REPO", "USER", "UNINSTALL", "UPGRADE", "START", "STOP"},
-				},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uptime",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "uuid",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "version",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *ProjectResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -2092,344 +1831,5 @@ func (o *ProjectResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetProjectResponseAvroSchema creates the avro schema for ProjectResponse
-func GetProjectResponseAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetProjectResponseAvroSchemaSpec())
-}
-
-// ProjectResponseSendEvent is an event detail for sending data
-type ProjectResponseSendEvent struct {
-	ProjectResponse *ProjectResponse
-	headers         map[string]string
-	time            time.Time
-	key             string
-}
-
-var _ datamodel.ModelSendEvent = (*ProjectResponseSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *ProjectResponseSendEvent) Key() string {
-	if e.key == "" {
-		return e.ProjectResponse.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *ProjectResponseSendEvent) Object() datamodel.Model {
-	return e.ProjectResponse
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *ProjectResponseSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *ProjectResponseSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// ProjectResponseSendEventOpts is a function handler for setting opts
-type ProjectResponseSendEventOpts func(o *ProjectResponseSendEvent)
-
-// WithProjectResponseSendEventKey sets the key value to a value different than the object ID
-func WithProjectResponseSendEventKey(key string) ProjectResponseSendEventOpts {
-	return func(o *ProjectResponseSendEvent) {
-		o.key = key
-	}
-}
-
-// WithProjectResponseSendEventTimestamp sets the timestamp value
-func WithProjectResponseSendEventTimestamp(tv time.Time) ProjectResponseSendEventOpts {
-	return func(o *ProjectResponseSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithProjectResponseSendEventHeader sets the timestamp value
-func WithProjectResponseSendEventHeader(key, value string) ProjectResponseSendEventOpts {
-	return func(o *ProjectResponseSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewProjectResponseSendEvent returns a new ProjectResponseSendEvent instance
-func NewProjectResponseSendEvent(o *ProjectResponse, opts ...ProjectResponseSendEventOpts) *ProjectResponseSendEvent {
-	res := &ProjectResponseSendEvent{
-		ProjectResponse: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewProjectResponseProducer will stream data from the channel
-func NewProjectResponseProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*ProjectResponse); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type agent.ProjectResponse but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewProjectResponseConsumer will stream data from the topic into the provided channel
-func NewProjectResponseConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object ProjectResponse
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into agent.ProjectResponse: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into agent.ProjectResponse: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for agent.ProjectResponse")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &ProjectResponseReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object ProjectResponse
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &ProjectResponseReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// ProjectResponseReceiveEvent is an event detail for receiving data
-type ProjectResponseReceiveEvent struct {
-	ProjectResponse *ProjectResponse
-	message         eventing.Message
-	eof             bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*ProjectResponseReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *ProjectResponseReceiveEvent) Object() datamodel.Model {
-	return e.ProjectResponse
-}
-
-// Message returns the underlying message data for the event
-func (e *ProjectResponseReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *ProjectResponseReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// ProjectResponseProducer implements the datamodel.ModelEventProducer
-type ProjectResponseProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*ProjectResponseProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *ProjectResponseProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *ProjectResponseProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *ProjectResponse) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *ProjectResponse) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &ProjectResponseProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewProjectResponseProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewProjectResponseProducerChannel returns a channel which can be used for producing Model events
-func NewProjectResponseProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewProjectResponseProducerChannelSize(producer, 0, errors)
-}
-
-// NewProjectResponseProducerChannelSize returns a channel which can be used for producing Model events
-func NewProjectResponseProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &ProjectResponseProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewProjectResponseProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// ProjectResponseConsumer implements the datamodel.ModelEventConsumer
-type ProjectResponseConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*ProjectResponseConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *ProjectResponseConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *ProjectResponseConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *ProjectResponse) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &ProjectResponseConsumer{
-		ch:       ch,
-		callback: NewProjectResponseConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewProjectResponseConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewProjectResponseConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &ProjectResponseConsumer{
-		ch:       ch,
-		callback: NewProjectResponseConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

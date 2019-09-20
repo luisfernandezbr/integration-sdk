@@ -4,23 +4,16 @@
 package customer
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -63,46 +56,36 @@ const (
 // CostCenter a cost center represents information about users and their cost
 type CostCenter struct {
 	// Active whether the cost center is tracked in pinpoint
-	Active bool `json:"active" bson:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Cost the cost value of the cost center
-	Cost float64 `json:"cost" bson:"cost" yaml:"cost" faker:"salary"`
+	Cost float64 `json:"cost" codec:"cost" bson:"cost" yaml:"cost" faker:"salary"`
 	// CreatedAt the date the record was created in Epoch time
-	CreatedAt int64 `json:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" codec:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description for the cost center
-	Description string `json:"description" bson:"description" yaml:"description" faker:"-"`
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the cost center
-	Name string `json:"name" bson:"name" yaml:"name" faker:"costcenter"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"costcenter"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*CostCenter)(nil)
 
-func toCostCenterObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toCostCenterObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toCostCenterObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CostCenter:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -246,12 +229,6 @@ func (o *CostCenter) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *CostCenter) GetStateKey() string {
-	key := "customer_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *CostCenter) GetCustomerID() string {
 
@@ -282,15 +259,6 @@ func (o *CostCenter) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *CostCenter) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *CostCenter) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *CostCenter) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -309,52 +277,6 @@ func (o *CostCenter) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecCostCenter *goavro.Codec
-var cachedCodecCostCenterLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *CostCenter) GetAvroCodec() *goavro.Codec {
-	cachedCodecCostCenterLock.Lock()
-	if cachedCodecCostCenter == nil {
-		c, err := GetCostCenterAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecCostCenter = c
-	}
-	cachedCodecCostCenterLock.Unlock()
-	return cachedCodecCostCenter
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *CostCenter) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *CostCenter) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *CostCenter) Stringify() string {
 	o.Hash()
@@ -367,26 +289,20 @@ func (o *CostCenter) IsEqual(other *CostCenter) bool {
 }
 
 // ToMap returns the object as a map
-func (o *CostCenter) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *CostCenter) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":      toCostCenterObject(o.Active, isavro, false, "boolean"),
-		"cost":        toCostCenterObject(o.Cost, isavro, false, "float"),
-		"created_ts":  toCostCenterObject(o.CreatedAt, isavro, false, "long"),
-		"customer_id": toCostCenterObject(o.CustomerID, isavro, false, "string"),
-		"description": toCostCenterObject(o.Description, isavro, false, "string"),
-		"id":          toCostCenterObject(o.ID, isavro, false, "string"),
-		"name":        toCostCenterObject(o.Name, isavro, false, "string"),
-		"ref_id":      toCostCenterObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toCostCenterObject(o.RefType, isavro, false, "string"),
-		"updated_ts":  toCostCenterObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":    toCostCenterObject(o.Hashcode, isavro, false, "string"),
+		"active":      toCostCenterObject(o.Active, false),
+		"cost":        toCostCenterObject(o.Cost, false),
+		"created_ts":  toCostCenterObject(o.CreatedAt, false),
+		"customer_id": toCostCenterObject(o.CustomerID, false),
+		"description": toCostCenterObject(o.Description, false),
+		"id":          toCostCenterObject(o.ID, false),
+		"name":        toCostCenterObject(o.Name, false),
+		"ref_id":      toCostCenterObject(o.RefID, false),
+		"ref_type":    toCostCenterObject(o.RefType, false),
+		"updated_ts":  toCostCenterObject(o.UpdatedAt, false),
+		"hashcode":    toCostCenterObject(o.Hashcode, false),
 	}
 }
 
@@ -563,108 +479,6 @@ func (o *CostCenter) Hash() string {
 	return o.Hashcode
 }
 
-// CreateCostCenter creates a new CostCenter in the database
-func CreateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
-	o.setDefaults(true)
-	return db.Create(ctx, o)
-}
-
-// DeleteCostCenter deletes a CostCenter in the database
-func DeleteCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
-	o.setDefaults(true)
-	return db.Delete(ctx, o)
-}
-
-// UpdateCostCenter updates a CostCenter in the database
-func UpdateCostCenter(ctx context.Context, db datamodel.Storage, o *CostCenter) error {
-	o.setDefaults(true)
-	return db.Update(ctx, o)
-}
-
-// FindCostCenter returns a CostCenter from the database
-func FindCostCenter(ctx context.Context, db datamodel.Storage, id string) (*CostCenter, error) {
-	kv, err := db.FindOne(ctx, CostCenterModelName, id)
-	if err != nil {
-		return nil, err
-	}
-	if kv == nil {
-		return nil, nil
-	}
-	return kv.(*CostCenter), nil
-}
-
-// FindCostCenters returns all CostCenter from the database matching keys
-func FindCostCenters(ctx context.Context, db datamodel.Storage, kv map[string]interface{}) ([]*CostCenter, error) {
-	res, err := db.Find(ctx, CostCenterModelName, kv)
-	if err != nil {
-		return nil, err
-	}
-	if res != nil {
-		arr := make([]*CostCenter, 0)
-		for _, m := range res {
-			arr = append(arr, m.(*CostCenter))
-		}
-		return arr, nil
-	}
-	return nil, nil
-}
-
-// GetCostCenterAvroSchemaSpec creates the avro schema specification for CostCenter
-func GetCostCenterAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "customer",
-		"name":      "CostCenter",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "active",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "cost",
-				"type": "float",
-			},
-			map[string]interface{}{
-				"name": "created_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "description",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *CostCenter) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -675,344 +489,5 @@ func (o *CostCenter) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetCostCenterAvroSchema creates the avro schema for CostCenter
-func GetCostCenterAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetCostCenterAvroSchemaSpec())
-}
-
-// CostCenterSendEvent is an event detail for sending data
-type CostCenterSendEvent struct {
-	CostCenter *CostCenter
-	headers    map[string]string
-	time       time.Time
-	key        string
-}
-
-var _ datamodel.ModelSendEvent = (*CostCenterSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *CostCenterSendEvent) Key() string {
-	if e.key == "" {
-		return e.CostCenter.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *CostCenterSendEvent) Object() datamodel.Model {
-	return e.CostCenter
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *CostCenterSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *CostCenterSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// CostCenterSendEventOpts is a function handler for setting opts
-type CostCenterSendEventOpts func(o *CostCenterSendEvent)
-
-// WithCostCenterSendEventKey sets the key value to a value different than the object ID
-func WithCostCenterSendEventKey(key string) CostCenterSendEventOpts {
-	return func(o *CostCenterSendEvent) {
-		o.key = key
-	}
-}
-
-// WithCostCenterSendEventTimestamp sets the timestamp value
-func WithCostCenterSendEventTimestamp(tv time.Time) CostCenterSendEventOpts {
-	return func(o *CostCenterSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithCostCenterSendEventHeader sets the timestamp value
-func WithCostCenterSendEventHeader(key, value string) CostCenterSendEventOpts {
-	return func(o *CostCenterSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewCostCenterSendEvent returns a new CostCenterSendEvent instance
-func NewCostCenterSendEvent(o *CostCenter, opts ...CostCenterSendEventOpts) *CostCenterSendEvent {
-	res := &CostCenterSendEvent{
-		CostCenter: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewCostCenterProducer will stream data from the channel
-func NewCostCenterProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*CostCenter); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type customer.CostCenter but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewCostCenterConsumer will stream data from the topic into the provided channel
-func NewCostCenterConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object CostCenter
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into customer.CostCenter: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into customer.CostCenter: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for customer.CostCenter")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &CostCenterReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object CostCenter
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &CostCenterReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// CostCenterReceiveEvent is an event detail for receiving data
-type CostCenterReceiveEvent struct {
-	CostCenter *CostCenter
-	message    eventing.Message
-	eof        bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*CostCenterReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *CostCenterReceiveEvent) Object() datamodel.Model {
-	return e.CostCenter
-}
-
-// Message returns the underlying message data for the event
-func (e *CostCenterReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *CostCenterReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// CostCenterProducer implements the datamodel.ModelEventProducer
-type CostCenterProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*CostCenterProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *CostCenterProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *CostCenterProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *CostCenter) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *CostCenter) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &CostCenterProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewCostCenterProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewCostCenterProducerChannel returns a channel which can be used for producing Model events
-func NewCostCenterProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewCostCenterProducerChannelSize(producer, 0, errors)
-}
-
-// NewCostCenterProducerChannelSize returns a channel which can be used for producing Model events
-func NewCostCenterProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &CostCenterProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewCostCenterProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// CostCenterConsumer implements the datamodel.ModelEventConsumer
-type CostCenterConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*CostCenterConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *CostCenterConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *CostCenterConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *CostCenter) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &CostCenterConsumer{
-		ch:       ch,
-		callback: NewCostCenterConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewCostCenterConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewCostCenterConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &CostCenterConsumer{
-		ch:       ch,
-		callback: NewCostCenterConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

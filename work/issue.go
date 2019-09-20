@@ -4,25 +4,19 @@
 package work
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
-	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -114,46 +108,32 @@ const (
 // IssueCreatedDate represents the object structure for created_date
 type IssueCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toIssueCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toIssueCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toIssueCreatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *IssueCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *IssueCreatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *IssueCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toIssueCreatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toIssueCreatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toIssueCreatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toIssueCreatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIssueCreatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toIssueCreatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -222,46 +202,32 @@ func (o *IssueCreatedDate) FromMap(kv map[string]interface{}) {
 // IssueCustomFields represents the object structure for customFields
 type IssueCustomFields struct {
 	// ID the id of the custom field
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the custom field
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// Value the value of the custom field
-	Value string `json:"value" bson:"value" yaml:"value" faker:"-"`
+	Value string `json:"value" codec:"value" bson:"value" yaml:"value" faker:"-"`
 }
 
-func toIssueCustomFieldsObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toIssueCustomFieldsObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toIssueCustomFieldsObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *IssueCustomFields:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *IssueCustomFields) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *IssueCustomFields) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// ID the id of the custom field
-		"id": toIssueCustomFieldsObject(o.ID, isavro, false, "string"),
+		"id": toIssueCustomFieldsObject(o.ID, false),
 		// Name the name of the custom field
-		"name": toIssueCustomFieldsObject(o.Name, isavro, false, "string"),
+		"name": toIssueCustomFieldsObject(o.Name, false),
 		// Value the value of the custom field
-		"value": toIssueCustomFieldsObject(o.Value, isavro, false, "string"),
+		"value": toIssueCustomFieldsObject(o.Value, false),
 	}
 }
 
@@ -330,46 +296,32 @@ func (o *IssueCustomFields) FromMap(kv map[string]interface{}) {
 // IssueDueDate represents the object structure for due_date
 type IssueDueDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toIssueDueDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toIssueDueDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toIssueDueDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *IssueDueDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *IssueDueDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *IssueDueDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toIssueDueDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toIssueDueDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toIssueDueDateObject(o.Offset, isavro, false, "long"),
+		"offset": toIssueDueDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIssueDueDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toIssueDueDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -438,46 +390,32 @@ func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 // IssueUpdatedDate represents the object structure for updated_date
 type IssueUpdatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toIssueUpdatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toIssueUpdatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toIssueUpdatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *IssueUpdatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *IssueUpdatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *IssueUpdatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toIssueUpdatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toIssueUpdatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toIssueUpdatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toIssueUpdatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIssueUpdatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toIssueUpdatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -546,86 +484,76 @@ func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
 // Issue the issue is a specific work item for a project
 type Issue struct {
 	// AssigneeRefID user id of the assignee
-	AssigneeRefID string `json:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
+	AssigneeRefID string `json:"assignee_ref_id" codec:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
 	// CreatedDate the date that the issue was created
-	CreatedDate IssueCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate IssueCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CreatorRefID user id of the creator
-	CreatorRefID string `json:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
+	CreatorRefID string `json:"creator_ref_id" codec:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
 	// CustomFields list of custom fields and their values
-	CustomFields []IssueCustomFields `json:"customFields" bson:"customFields" yaml:"customFields" faker:"-"`
+	CustomFields []IssueCustomFields `json:"customFields" codec:"customFields" bson:"customFields" yaml:"customFields" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DueDate due date of the issue
-	DueDate IssueDueDate `json:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
+	DueDate IssueDueDate `json:"due_date" codec:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the issue
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
+	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
 	// ParentID parent issue id, if any
-	ParentID string `json:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
+	ParentID string `json:"parent_id" codec:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
 	// Priority priority of the issue
-	Priority string `json:"priority" bson:"priority" yaml:"priority" faker:"-"`
+	Priority string `json:"priority" codec:"priority" bson:"priority" yaml:"priority" faker:"-"`
 	// ProjectID unique project id
-	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// ReporterRefID user id of the reporter
-	ReporterRefID string `json:"reporter_ref_id" bson:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
+	ReporterRefID string `json:"reporter_ref_id" codec:"reporter_ref_id" bson:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
 	// Resolution resolution of the issue
-	Resolution string `json:"resolution" bson:"resolution" yaml:"resolution" faker:"-"`
+	Resolution string `json:"resolution" codec:"resolution" bson:"resolution" yaml:"resolution" faker:"-"`
 	// Status status of the issue
-	Status string `json:"status" bson:"status" yaml:"status" faker:"-"`
+	Status string `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// Tags tags on the issue
-	Tags []string `json:"tags" bson:"tags" yaml:"tags" faker:"-"`
+	Tags []string `json:"tags" codec:"tags" bson:"tags" yaml:"tags" faker:"-"`
 	// Title the issue title
-	Title string `json:"title" bson:"title" yaml:"title" faker:"issue_title"`
+	Title string `json:"title" codec:"title" bson:"title" yaml:"title" faker:"issue_title"`
 	// Type type of issue
-	Type string `json:"type" bson:"type" yaml:"type" faker:"-"`
+	Type string `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedDate the date that the issue was updated
-	UpdatedDate IssueUpdatedDate `json:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	UpdatedDate IssueUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the issue page
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Issue)(nil)
 
-func toIssueObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toIssueObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toIssueObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Issue:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case IssueCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case []IssueCustomFields:
 		arr := make([]interface{}, 0)
 		for _, i := range v {
-			arr = append(arr, i.ToMap(isavro))
+			arr = append(arr, i.ToMap())
 		}
 		return arr
 
 	case IssueDueDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case IssueUpdatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -768,12 +696,6 @@ func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *Issue) GetStateKey() string {
-	key := "project_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *Issue) GetCustomerID() string {
 
@@ -804,15 +726,6 @@ func (o *Issue) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *Issue) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *Issue) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *Issue) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -831,52 +744,6 @@ func (o *Issue) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecIssue *goavro.Codec
-var cachedCodecIssueLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *Issue) GetAvroCodec() *goavro.Codec {
-	cachedCodecIssueLock.Lock()
-	if cachedCodecIssue == nil {
-		c, err := GetIssueAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecIssue = c
-	}
-	cachedCodecIssueLock.Unlock()
-	return cachedCodecIssue
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *Issue) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Issue) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *Issue) Stringify() string {
 	o.Hash()
@@ -889,44 +756,32 @@ func (o *Issue) IsEqual(other *Issue) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Issue) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-		if o.CustomFields == nil {
-			o.CustomFields = make([]IssueCustomFields, 0)
-		}
-		if o.Tags == nil {
-			o.Tags = make([]string, 0)
-		}
-	}
+func (o *Issue) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"assignee_ref_id": toIssueObject(o.AssigneeRefID, isavro, false, "string"),
-		"created_date":    toIssueObject(o.CreatedDate, isavro, false, "created_date"),
-		"creator_ref_id":  toIssueObject(o.CreatorRefID, isavro, false, "string"),
-		"customFields":    toIssueObject(o.CustomFields, isavro, false, "customFields"),
-		"customer_id":     toIssueObject(o.CustomerID, isavro, false, "string"),
-		"due_date":        toIssueObject(o.DueDate, isavro, false, "due_date"),
-		"id":              toIssueObject(o.ID, isavro, false, "string"),
-		"identifier":      toIssueObject(o.Identifier, isavro, false, "string"),
-		"parent_id":       toIssueObject(o.ParentID, isavro, false, "string"),
-		"priority":        toIssueObject(o.Priority, isavro, false, "string"),
-		"project_id":      toIssueObject(o.ProjectID, isavro, false, "string"),
-		"ref_id":          toIssueObject(o.RefID, isavro, false, "string"),
-		"ref_type":        toIssueObject(o.RefType, isavro, false, "string"),
-		"reporter_ref_id": toIssueObject(o.ReporterRefID, isavro, false, "string"),
-		"resolution":      toIssueObject(o.Resolution, isavro, false, "string"),
-		"status":          toIssueObject(o.Status, isavro, false, "string"),
-		"tags":            toIssueObject(o.Tags, isavro, false, "tags"),
-		"title":           toIssueObject(o.Title, isavro, false, "string"),
-		"type":            toIssueObject(o.Type, isavro, false, "string"),
-		"updated_date":    toIssueObject(o.UpdatedDate, isavro, false, "updated_date"),
-		"updated_ts":      toIssueObject(o.UpdatedAt, isavro, false, "long"),
-		"url":             toIssueObject(o.URL, isavro, false, "string"),
-		"hashcode":        toIssueObject(o.Hashcode, isavro, false, "string"),
+		"assignee_ref_id": toIssueObject(o.AssigneeRefID, false),
+		"created_date":    toIssueObject(o.CreatedDate, false),
+		"creator_ref_id":  toIssueObject(o.CreatorRefID, false),
+		"customFields":    toIssueObject(o.CustomFields, false),
+		"customer_id":     toIssueObject(o.CustomerID, false),
+		"due_date":        toIssueObject(o.DueDate, false),
+		"id":              toIssueObject(o.ID, false),
+		"identifier":      toIssueObject(o.Identifier, false),
+		"parent_id":       toIssueObject(o.ParentID, false),
+		"priority":        toIssueObject(o.Priority, false),
+		"project_id":      toIssueObject(o.ProjectID, false),
+		"ref_id":          toIssueObject(o.RefID, false),
+		"ref_type":        toIssueObject(o.RefType, false),
+		"reporter_ref_id": toIssueObject(o.ReporterRefID, false),
+		"resolution":      toIssueObject(o.Resolution, false),
+		"status":          toIssueObject(o.Status, false),
+		"tags":            toIssueObject(o.Tags, false),
+		"title":           toIssueObject(o.Title, false),
+		"type":            toIssueObject(o.Type, false),
+		"updated_date":    toIssueObject(o.UpdatedDate, false),
+		"updated_ts":      toIssueObject(o.UpdatedAt, false),
+		"url":             toIssueObject(o.URL, false),
+		"hashcode":        toIssueObject(o.Hashcode, false),
 	}
 }
 
@@ -1439,110 +1294,6 @@ func (o *Issue) Hash() string {
 	return o.Hashcode
 }
 
-// GetIssueAvroSchemaSpec creates the avro schema specification for Issue
-func GetIssueAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "work",
-		"name":      "Issue",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "assignee_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_date",
-				"type": map[string]interface{}{"doc": "the date that the issue was created", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "created_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "creator_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customFields",
-				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "list of custom fields and their values", "fields": []interface{}{map[string]interface{}{"doc": "the id of the custom field", "name": "id", "type": "string"}, map[string]interface{}{"doc": "the name of the custom field", "name": "name", "type": "string"}, map[string]interface{}{"doc": "the value of the custom field", "name": "value", "type": "string"}}, "name": "customFields", "type": "record"}, "name": "customFields", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "due_date",
-				"type": map[string]interface{}{"doc": "due date of the issue", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "due_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "identifier",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "parent_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "priority",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "project_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "reporter_ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "resolution",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "status",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "tags",
-				"type": map[string]interface{}{"items": "string", "name": "tags", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "title",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "updated_date",
-				"type": map[string]interface{}{"doc": "the date that the issue was updated", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "updated_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *Issue) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1553,344 +1304,5 @@ func (o *Issue) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetIssueAvroSchema creates the avro schema for Issue
-func GetIssueAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetIssueAvroSchemaSpec())
-}
-
-// IssueSendEvent is an event detail for sending data
-type IssueSendEvent struct {
-	Issue   *Issue
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*IssueSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *IssueSendEvent) Key() string {
-	if e.key == "" {
-		return e.Issue.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *IssueSendEvent) Object() datamodel.Model {
-	return e.Issue
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *IssueSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *IssueSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// IssueSendEventOpts is a function handler for setting opts
-type IssueSendEventOpts func(o *IssueSendEvent)
-
-// WithIssueSendEventKey sets the key value to a value different than the object ID
-func WithIssueSendEventKey(key string) IssueSendEventOpts {
-	return func(o *IssueSendEvent) {
-		o.key = key
-	}
-}
-
-// WithIssueSendEventTimestamp sets the timestamp value
-func WithIssueSendEventTimestamp(tv time.Time) IssueSendEventOpts {
-	return func(o *IssueSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithIssueSendEventHeader sets the timestamp value
-func WithIssueSendEventHeader(key, value string) IssueSendEventOpts {
-	return func(o *IssueSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewIssueSendEvent returns a new IssueSendEvent instance
-func NewIssueSendEvent(o *Issue, opts ...IssueSendEventOpts) *IssueSendEvent {
-	res := &IssueSendEvent{
-		Issue: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewIssueProducer will stream data from the channel
-func NewIssueProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*Issue); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type work.Issue but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewIssueConsumer will stream data from the topic into the provided channel
-func NewIssueConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object Issue
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into work.Issue: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into work.Issue: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for work.Issue")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &IssueReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Issue
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &IssueReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// IssueReceiveEvent is an event detail for receiving data
-type IssueReceiveEvent struct {
-	Issue   *Issue
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*IssueReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *IssueReceiveEvent) Object() datamodel.Model {
-	return e.Issue
-}
-
-// Message returns the underlying message data for the event
-func (e *IssueReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *IssueReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// IssueProducer implements the datamodel.ModelEventProducer
-type IssueProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*IssueProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *IssueProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *IssueProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Issue) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Issue) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &IssueProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewIssueProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewIssueProducerChannel returns a channel which can be used for producing Model events
-func NewIssueProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewIssueProducerChannelSize(producer, 0, errors)
-}
-
-// NewIssueProducerChannelSize returns a channel which can be used for producing Model events
-func NewIssueProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &IssueProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewIssueProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// IssueConsumer implements the datamodel.ModelEventConsumer
-type IssueConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*IssueConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *IssueConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *IssueConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Issue) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &IssueConsumer{
-		ch:       ch,
-		callback: NewIssueConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewIssueConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewIssueConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &IssueConsumer{
-		ch:       ch,
-		callback: NewIssueConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

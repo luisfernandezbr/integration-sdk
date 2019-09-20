@@ -4,23 +4,16 @@
 package sourcecode
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -71,46 +64,32 @@ const (
 // PullRequestReviewCreatedDate represents the object structure for created_date
 type PullRequestReviewCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toPullRequestReviewCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestReviewCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestReviewCreatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestReviewCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *PullRequestReviewCreatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *PullRequestReviewCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toPullRequestReviewCreatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toPullRequestReviewCreatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toPullRequestReviewCreatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toPullRequestReviewCreatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPullRequestReviewCreatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toPullRequestReviewCreatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -212,51 +191,41 @@ const (
 // PullRequestReview the review for a given pull request
 type PullRequestReview struct {
 	// CreatedDate the timestamp in UTC that the review was created
-	CreatedDate PullRequestReviewCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate PullRequestReviewCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// PullRequestID the pull request this review is associated with
-	PullRequestID string `json:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// State the state of the review
-	State PullRequestReviewState `json:"state" bson:"state" yaml:"state" faker:"-"`
+	State PullRequestReviewState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the URL to the source system for this review
-	URL string `json:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// UserRefID the user ref_id in the source system
-	UserRefID string `json:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
+	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*PullRequestReview)(nil)
 
-func toPullRequestReviewObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toPullRequestReviewObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toPullRequestReviewObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestReview:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PullRequestReviewCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case PullRequestReviewState:
 		return v.String()
@@ -395,12 +364,6 @@ func (o *PullRequestReview) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *PullRequestReview) GetStateKey() string {
-	key := "repo_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *PullRequestReview) GetCustomerID() string {
 
@@ -431,15 +394,6 @@ func (o *PullRequestReview) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *PullRequestReview) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *PullRequestReview) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *PullRequestReview) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -458,52 +412,6 @@ func (o *PullRequestReview) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecPullRequestReview *goavro.Codec
-var cachedCodecPullRequestReviewLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *PullRequestReview) GetAvroCodec() *goavro.Codec {
-	cachedCodecPullRequestReviewLock.Lock()
-	if cachedCodecPullRequestReview == nil {
-		c, err := GetPullRequestReviewAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecPullRequestReview = c
-	}
-	cachedCodecPullRequestReviewLock.Unlock()
-	return cachedCodecPullRequestReview
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *PullRequestReview) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *PullRequestReview) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *PullRequestReview) Stringify() string {
 	o.Hash()
@@ -516,27 +424,21 @@ func (o *PullRequestReview) IsEqual(other *PullRequestReview) bool {
 }
 
 // ToMap returns the object as a map
-func (o *PullRequestReview) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *PullRequestReview) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"created_date":    toPullRequestReviewObject(o.CreatedDate, isavro, false, "created_date"),
-		"customer_id":     toPullRequestReviewObject(o.CustomerID, isavro, false, "string"),
-		"id":              toPullRequestReviewObject(o.ID, isavro, false, "string"),
-		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, isavro, false, "string"),
-		"ref_id":          toPullRequestReviewObject(o.RefID, isavro, false, "string"),
-		"ref_type":        toPullRequestReviewObject(o.RefType, isavro, false, "string"),
-		"repo_id":         toPullRequestReviewObject(o.RepoID, isavro, false, "string"),
-		"state":           toPullRequestReviewObject(o.State, isavro, false, "state"),
-		"updated_ts":      toPullRequestReviewObject(o.UpdatedAt, isavro, false, "long"),
-		"url":             toPullRequestReviewObject(o.URL, isavro, false, "string"),
-		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, isavro, false, "string"),
-		"hashcode":        toPullRequestReviewObject(o.Hashcode, isavro, false, "string"),
+		"created_date":    toPullRequestReviewObject(o.CreatedDate, false),
+		"customer_id":     toPullRequestReviewObject(o.CustomerID, false),
+		"id":              toPullRequestReviewObject(o.ID, false),
+		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, false),
+		"ref_id":          toPullRequestReviewObject(o.RefID, false),
+		"ref_type":        toPullRequestReviewObject(o.RefType, false),
+		"repo_id":         toPullRequestReviewObject(o.RepoID, false),
+		"state":           toPullRequestReviewObject(o.State, false),
+		"updated_ts":      toPullRequestReviewObject(o.UpdatedAt, false),
+		"url":             toPullRequestReviewObject(o.URL, false),
+		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, false),
+		"hashcode":        toPullRequestReviewObject(o.Hashcode, false),
 	}
 }
 
@@ -772,70 +674,6 @@ func (o *PullRequestReview) Hash() string {
 	return o.Hashcode
 }
 
-// GetPullRequestReviewAvroSchemaSpec creates the avro schema specification for PullRequestReview
-func GetPullRequestReviewAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "sourcecode",
-		"name":      "PullRequestReview",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_date",
-				"type": map[string]interface{}{"doc": "the timestamp in UTC that the review was created", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "created_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "pull_request_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "repo_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "state",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "state",
-					"symbols": []interface{}{"APPROVED", "COMMENTED", "CHANGES_REQUESTED", "PENDING", "DISMISSED"},
-				},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "url",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "user_ref_id",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *PullRequestReview) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -846,344 +684,5 @@ func (o *PullRequestReview) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetPullRequestReviewAvroSchema creates the avro schema for PullRequestReview
-func GetPullRequestReviewAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetPullRequestReviewAvroSchemaSpec())
-}
-
-// PullRequestReviewSendEvent is an event detail for sending data
-type PullRequestReviewSendEvent struct {
-	PullRequestReview *PullRequestReview
-	headers           map[string]string
-	time              time.Time
-	key               string
-}
-
-var _ datamodel.ModelSendEvent = (*PullRequestReviewSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *PullRequestReviewSendEvent) Key() string {
-	if e.key == "" {
-		return e.PullRequestReview.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *PullRequestReviewSendEvent) Object() datamodel.Model {
-	return e.PullRequestReview
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *PullRequestReviewSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *PullRequestReviewSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// PullRequestReviewSendEventOpts is a function handler for setting opts
-type PullRequestReviewSendEventOpts func(o *PullRequestReviewSendEvent)
-
-// WithPullRequestReviewSendEventKey sets the key value to a value different than the object ID
-func WithPullRequestReviewSendEventKey(key string) PullRequestReviewSendEventOpts {
-	return func(o *PullRequestReviewSendEvent) {
-		o.key = key
-	}
-}
-
-// WithPullRequestReviewSendEventTimestamp sets the timestamp value
-func WithPullRequestReviewSendEventTimestamp(tv time.Time) PullRequestReviewSendEventOpts {
-	return func(o *PullRequestReviewSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithPullRequestReviewSendEventHeader sets the timestamp value
-func WithPullRequestReviewSendEventHeader(key, value string) PullRequestReviewSendEventOpts {
-	return func(o *PullRequestReviewSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewPullRequestReviewSendEvent returns a new PullRequestReviewSendEvent instance
-func NewPullRequestReviewSendEvent(o *PullRequestReview, opts ...PullRequestReviewSendEventOpts) *PullRequestReviewSendEvent {
-	res := &PullRequestReviewSendEvent{
-		PullRequestReview: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewPullRequestReviewProducer will stream data from the channel
-func NewPullRequestReviewProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*PullRequestReview); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.PullRequestReview but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewPullRequestReviewConsumer will stream data from the topic into the provided channel
-func NewPullRequestReviewConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object PullRequestReview
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.PullRequestReview: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into sourcecode.PullRequestReview: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.PullRequestReview")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &PullRequestReviewReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object PullRequestReview
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &PullRequestReviewReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// PullRequestReviewReceiveEvent is an event detail for receiving data
-type PullRequestReviewReceiveEvent struct {
-	PullRequestReview *PullRequestReview
-	message           eventing.Message
-	eof               bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*PullRequestReviewReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *PullRequestReviewReceiveEvent) Object() datamodel.Model {
-	return e.PullRequestReview
-}
-
-// Message returns the underlying message data for the event
-func (e *PullRequestReviewReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *PullRequestReviewReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// PullRequestReviewProducer implements the datamodel.ModelEventProducer
-type PullRequestReviewProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*PullRequestReviewProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *PullRequestReviewProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *PullRequestReviewProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *PullRequestReview) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *PullRequestReview) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PullRequestReviewProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPullRequestReviewProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewPullRequestReviewProducerChannel returns a channel which can be used for producing Model events
-func NewPullRequestReviewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewPullRequestReviewProducerChannelSize(producer, 0, errors)
-}
-
-// NewPullRequestReviewProducerChannelSize returns a channel which can be used for producing Model events
-func NewPullRequestReviewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &PullRequestReviewProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewPullRequestReviewProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// PullRequestReviewConsumer implements the datamodel.ModelEventConsumer
-type PullRequestReviewConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*PullRequestReviewConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *PullRequestReviewConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *PullRequestReviewConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *PullRequestReview) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PullRequestReviewConsumer{
-		ch:       ch,
-		callback: NewPullRequestReviewConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewPullRequestReviewConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewPullRequestReviewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &PullRequestReviewConsumer{
-		ch:       ch,
-		callback: NewPullRequestReviewConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

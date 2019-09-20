@@ -4,23 +4,16 @@
 package codequality
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -67,46 +60,32 @@ const (
 // MetricCreatedDate represents the object structure for created_date
 type MetricCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toMetricCreatedDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toMetricCreatedDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toMetricCreatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *MetricCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *MetricCreatedDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *MetricCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toMetricCreatedDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toMetricCreatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toMetricCreatedDateObject(o.Offset, isavro, false, "long"),
+		"offset": toMetricCreatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toMetricCreatedDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toMetricCreatedDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -175,47 +154,37 @@ func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
 // Metric individual metric details
 type Metric struct {
 	// CreatedDate the date when the metric was created
-	CreatedDate MetricCreatedDate `json:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate MetricCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the metric name
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// ProjectID the project id
-	ProjectID string `json:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Value the value of the metric
-	Value string `json:"value" bson:"value" yaml:"value" faker:"-"`
+	Value string `json:"value" codec:"value" bson:"value" yaml:"value" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Metric)(nil)
 
-func toMetricObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toMetricObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toMetricObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Metric:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case MetricCreatedDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -350,12 +319,6 @@ func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *Metric) GetStateKey() string {
-	key := "project_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *Metric) GetCustomerID() string {
 
@@ -386,15 +349,6 @@ func (o *Metric) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *Metric) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *Metric) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *Metric) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -413,52 +367,6 @@ func (o *Metric) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecMetric *goavro.Codec
-var cachedCodecMetricLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *Metric) GetAvroCodec() *goavro.Codec {
-	cachedCodecMetricLock.Lock()
-	if cachedCodecMetric == nil {
-		c, err := GetMetricAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecMetric = c
-	}
-	cachedCodecMetricLock.Unlock()
-	return cachedCodecMetric
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *Metric) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Metric) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *Metric) Stringify() string {
 	o.Hash()
@@ -471,25 +379,19 @@ func (o *Metric) IsEqual(other *Metric) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Metric) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *Metric) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"created_date": toMetricObject(o.CreatedDate, isavro, false, "created_date"),
-		"customer_id":  toMetricObject(o.CustomerID, isavro, false, "string"),
-		"id":           toMetricObject(o.ID, isavro, false, "string"),
-		"name":         toMetricObject(o.Name, isavro, false, "string"),
-		"project_id":   toMetricObject(o.ProjectID, isavro, false, "string"),
-		"ref_id":       toMetricObject(o.RefID, isavro, false, "string"),
-		"ref_type":     toMetricObject(o.RefType, isavro, false, "string"),
-		"updated_ts":   toMetricObject(o.UpdatedAt, isavro, false, "long"),
-		"value":        toMetricObject(o.Value, isavro, false, "string"),
-		"hashcode":     toMetricObject(o.Hashcode, isavro, false, "string"),
+		"created_date": toMetricObject(o.CreatedDate, false),
+		"customer_id":  toMetricObject(o.CustomerID, false),
+		"id":           toMetricObject(o.ID, false),
+		"name":         toMetricObject(o.Name, false),
+		"project_id":   toMetricObject(o.ProjectID, false),
+		"ref_id":       toMetricObject(o.RefID, false),
+		"ref_type":     toMetricObject(o.RefType, false),
+		"updated_ts":   toMetricObject(o.UpdatedAt, false),
+		"value":        toMetricObject(o.Value, false),
+		"hashcode":     toMetricObject(o.Hashcode, false),
 	}
 }
 
@@ -674,58 +576,6 @@ func (o *Metric) Hash() string {
 	return o.Hashcode
 }
 
-// GetMetricAvroSchemaSpec creates the avro schema specification for Metric
-func GetMetricAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "codequality",
-		"name":      "Metric",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "created_date",
-				"type": map[string]interface{}{"doc": "the date when the metric was created", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "created_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "project_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "value",
-				"type": "string",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *Metric) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -736,344 +586,5 @@ func (o *Metric) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetMetricAvroSchema creates the avro schema for Metric
-func GetMetricAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetMetricAvroSchemaSpec())
-}
-
-// MetricSendEvent is an event detail for sending data
-type MetricSendEvent struct {
-	Metric  *Metric
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*MetricSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *MetricSendEvent) Key() string {
-	if e.key == "" {
-		return e.Metric.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *MetricSendEvent) Object() datamodel.Model {
-	return e.Metric
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *MetricSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *MetricSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// MetricSendEventOpts is a function handler for setting opts
-type MetricSendEventOpts func(o *MetricSendEvent)
-
-// WithMetricSendEventKey sets the key value to a value different than the object ID
-func WithMetricSendEventKey(key string) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
-		o.key = key
-	}
-}
-
-// WithMetricSendEventTimestamp sets the timestamp value
-func WithMetricSendEventTimestamp(tv time.Time) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithMetricSendEventHeader sets the timestamp value
-func WithMetricSendEventHeader(key, value string) MetricSendEventOpts {
-	return func(o *MetricSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewMetricSendEvent returns a new MetricSendEvent instance
-func NewMetricSendEvent(o *Metric, opts ...MetricSendEventOpts) *MetricSendEvent {
-	res := &MetricSendEvent{
-		Metric: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewMetricProducer will stream data from the channel
-func NewMetricProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*Metric); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type codequality.Metric but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewMetricConsumer will stream data from the topic into the provided channel
-func NewMetricConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object Metric
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into codequality.Metric: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into codequality.Metric: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for codequality.Metric")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &MetricReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Metric
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &MetricReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// MetricReceiveEvent is an event detail for receiving data
-type MetricReceiveEvent struct {
-	Metric  *Metric
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*MetricReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *MetricReceiveEvent) Object() datamodel.Model {
-	return e.Metric
-}
-
-// Message returns the underlying message data for the event
-func (e *MetricReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *MetricReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// MetricProducer implements the datamodel.ModelEventProducer
-type MetricProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*MetricProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *MetricProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *MetricProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Metric) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Metric) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &MetricProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewMetricProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewMetricProducerChannel returns a channel which can be used for producing Model events
-func NewMetricProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewMetricProducerChannelSize(producer, 0, errors)
-}
-
-// NewMetricProducerChannelSize returns a channel which can be used for producing Model events
-func NewMetricProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &MetricProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewMetricProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// MetricConsumer implements the datamodel.ModelEventConsumer
-type MetricConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*MetricConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *MetricConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *MetricConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Metric) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &MetricConsumer{
-		ch:       ch,
-		callback: NewMetricConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewMetricConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewMetricConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &MetricConsumer{
-		ch:       ch,
-		callback: NewMetricConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

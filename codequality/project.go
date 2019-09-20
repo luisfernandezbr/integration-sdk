@@ -4,23 +4,16 @@
 package codequality
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -57,40 +50,30 @@ const (
 // Project project information
 type Project struct {
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier of the project
-	Identifier string `json:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// Name the name of the project
-	Name string `json:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Project)(nil)
 
-func toProjectObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toProjectObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toProjectObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Project:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
@@ -225,12 +208,6 @@ func (o *Project) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *Project) GetStateKey() string {
-	key := "customer_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *Project) GetCustomerID() string {
 
@@ -261,15 +238,6 @@ func (o *Project) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *Project) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *Project) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *Project) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -288,52 +256,6 @@ func (o *Project) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecProject *goavro.Codec
-var cachedCodecProjectLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *Project) GetAvroCodec() *goavro.Codec {
-	cachedCodecProjectLock.Lock()
-	if cachedCodecProject == nil {
-		c, err := GetProjectAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecProject = c
-	}
-	cachedCodecProjectLock.Unlock()
-	return cachedCodecProject
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *Project) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Project) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *Project) Stringify() string {
 	o.Hash()
@@ -346,23 +268,17 @@ func (o *Project) IsEqual(other *Project) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Project) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-	}
+func (o *Project) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id": toProjectObject(o.CustomerID, isavro, false, "string"),
-		"id":          toProjectObject(o.ID, isavro, false, "string"),
-		"identifier":  toProjectObject(o.Identifier, isavro, false, "string"),
-		"name":        toProjectObject(o.Name, isavro, false, "string"),
-		"ref_id":      toProjectObject(o.RefID, isavro, false, "string"),
-		"ref_type":    toProjectObject(o.RefType, isavro, false, "string"),
-		"updated_ts":  toProjectObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":    toProjectObject(o.Hashcode, isavro, false, "string"),
+		"customer_id": toProjectObject(o.CustomerID, false),
+		"id":          toProjectObject(o.ID, false),
+		"identifier":  toProjectObject(o.Identifier, false),
+		"name":        toProjectObject(o.Name, false),
+		"ref_id":      toProjectObject(o.RefID, false),
+		"ref_type":    toProjectObject(o.RefType, false),
+		"updated_ts":  toProjectObject(o.UpdatedAt, false),
+		"hashcode":    toProjectObject(o.Hashcode, false),
 	}
 }
 
@@ -497,50 +413,6 @@ func (o *Project) Hash() string {
 	return o.Hashcode
 }
 
-// GetProjectAvroSchemaSpec creates the avro schema specification for Project
-func GetProjectAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "codequality",
-		"name":      "Project",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "identifier",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "name",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *Project) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -551,344 +423,5 @@ func (o *Project) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetProjectAvroSchema creates the avro schema for Project
-func GetProjectAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetProjectAvroSchemaSpec())
-}
-
-// ProjectSendEvent is an event detail for sending data
-type ProjectSendEvent struct {
-	Project *Project
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*ProjectSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *ProjectSendEvent) Key() string {
-	if e.key == "" {
-		return e.Project.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *ProjectSendEvent) Object() datamodel.Model {
-	return e.Project
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *ProjectSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *ProjectSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// ProjectSendEventOpts is a function handler for setting opts
-type ProjectSendEventOpts func(o *ProjectSendEvent)
-
-// WithProjectSendEventKey sets the key value to a value different than the object ID
-func WithProjectSendEventKey(key string) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
-		o.key = key
-	}
-}
-
-// WithProjectSendEventTimestamp sets the timestamp value
-func WithProjectSendEventTimestamp(tv time.Time) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithProjectSendEventHeader sets the timestamp value
-func WithProjectSendEventHeader(key, value string) ProjectSendEventOpts {
-	return func(o *ProjectSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewProjectSendEvent returns a new ProjectSendEvent instance
-func NewProjectSendEvent(o *Project, opts ...ProjectSendEventOpts) *ProjectSendEvent {
-	res := &ProjectSendEvent{
-		Project: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewProjectProducer will stream data from the channel
-func NewProjectProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*Project); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type codequality.Project but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewProjectConsumer will stream data from the topic into the provided channel
-func NewProjectConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object Project
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into codequality.Project: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into codequality.Project: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for codequality.Project")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &ProjectReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Project
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &ProjectReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// ProjectReceiveEvent is an event detail for receiving data
-type ProjectReceiveEvent struct {
-	Project *Project
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*ProjectReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *ProjectReceiveEvent) Object() datamodel.Model {
-	return e.Project
-}
-
-// Message returns the underlying message data for the event
-func (e *ProjectReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *ProjectReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// ProjectProducer implements the datamodel.ModelEventProducer
-type ProjectProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*ProjectProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *ProjectProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *ProjectProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Project) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Project) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &ProjectProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewProjectProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewProjectProducerChannel returns a channel which can be used for producing Model events
-func NewProjectProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewProjectProducerChannelSize(producer, 0, errors)
-}
-
-// NewProjectProducerChannelSize returns a channel which can be used for producing Model events
-func NewProjectProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &ProjectProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewProjectProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// ProjectConsumer implements the datamodel.ModelEventConsumer
-type ProjectConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*ProjectConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *ProjectConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *ProjectConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Project) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &ProjectConsumer{
-		ch:       ch,
-		callback: NewProjectConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewProjectConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewProjectConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &ProjectConsumer{
-		ch:       ch,
-		callback: NewProjectConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }

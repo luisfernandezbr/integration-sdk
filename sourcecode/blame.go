@@ -4,19 +4,14 @@
 package sourcecode
 
 import (
-	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"sync"
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/linkedin/goavro"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/eventing"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -106,46 +101,32 @@ const (
 // BlameChangeDate represents the object structure for change_date
 type BlameChangeDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toBlameChangeDateObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toBlameChangeDateObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toBlameChangeDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *BlameChangeDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *BlameChangeDate) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *BlameChangeDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toBlameChangeDateObject(o.Epoch, isavro, false, "long"),
+		"epoch": toBlameChangeDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toBlameChangeDateObject(o.Offset, isavro, false, "long"),
+		"offset": toBlameChangeDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toBlameChangeDateObject(o.Rfc3339, isavro, false, "string"),
+		"rfc3339": toBlameChangeDateObject(o.Rfc3339, false),
 	}
 }
 
@@ -214,58 +195,44 @@ func (o *BlameChangeDate) FromMap(kv map[string]interface{}) {
 // BlameLines represents the object structure for lines
 type BlameLines struct {
 	// AuthorRefID the author ref_id of this line when last changed
-	AuthorRefID string `json:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	AuthorRefID string `json:"author_ref_id" codec:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Blank if the line is a blank line
-	Blank bool `json:"blank" bson:"blank" yaml:"blank" faker:"-"`
+	Blank bool `json:"blank" codec:"blank" bson:"blank" yaml:"blank" faker:"-"`
 	// Code if the line is sourcecode
-	Code bool `json:"code" bson:"code" yaml:"code" faker:"-"`
+	Code bool `json:"code" codec:"code" bson:"code" yaml:"code" faker:"-"`
 	// Comment if the line is a comment
-	Comment bool `json:"comment" bson:"comment" yaml:"comment" faker:"-"`
+	Comment bool `json:"comment" codec:"comment" bson:"comment" yaml:"comment" faker:"-"`
 	// Date the change date in RFC3339 format of this line when last changed
-	Date string `json:"date" bson:"date" yaml:"date" faker:"-"`
+	Date string `json:"date" codec:"date" bson:"date" yaml:"date" faker:"-"`
 	// Sha the sha when this line was last changed
-	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
+	Sha string `json:"sha" codec:"sha" bson:"sha" yaml:"sha" faker:"-"`
 }
 
-func toBlameLinesObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toBlameLinesObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toBlameLinesObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *BlameLines:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	default:
 		return o
 	}
 }
 
-func (o *BlameLines) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
+func (o *BlameLines) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// AuthorRefID the author ref_id of this line when last changed
-		"author_ref_id": toBlameLinesObject(o.AuthorRefID, isavro, false, "string"),
+		"author_ref_id": toBlameLinesObject(o.AuthorRefID, false),
 		// Blank if the line is a blank line
-		"blank": toBlameLinesObject(o.Blank, isavro, false, "boolean"),
+		"blank": toBlameLinesObject(o.Blank, false),
 		// Code if the line is sourcecode
-		"code": toBlameLinesObject(o.Code, isavro, false, "boolean"),
+		"code": toBlameLinesObject(o.Code, false),
 		// Comment if the line is a comment
-		"comment": toBlameLinesObject(o.Comment, isavro, false, "boolean"),
+		"comment": toBlameLinesObject(o.Comment, false),
 		// Date the change date in RFC3339 format of this line when last changed
-		"date": toBlameLinesObject(o.Date, isavro, false, "string"),
+		"date": toBlameLinesObject(o.Date, false),
 		// Sha the sha when this line was last changed
-		"sha": toBlameLinesObject(o.Sha, isavro, false, "string"),
+		"sha": toBlameLinesObject(o.Sha, false),
 	}
 }
 
@@ -395,78 +362,68 @@ const (
 // Blame the blame detail for each commit in a repo
 type Blame struct {
 	// Blanks the count of blank lines in the file
-	Blanks int64 `json:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
+	Blanks int64 `json:"blanks" codec:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
 	// ChangeDate the date of the change
-	ChangeDate BlameChangeDate `json:"change_date" bson:"change_date" yaml:"change_date" faker:"-"`
+	ChangeDate BlameChangeDate `json:"change_date" codec:"change_date" bson:"change_date" yaml:"change_date" faker:"-"`
 	// Comments the count of comment lines in the file based on language rules
-	Comments int64 `json:"comments" bson:"comments" yaml:"comments" faker:"-"`
+	Comments int64 `json:"comments" codec:"comments" bson:"comments" yaml:"comments" faker:"-"`
 	// CommitID the commit ID
-	CommitID string `json:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
+	CommitID string `json:"commit_id" codec:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
 	// Complexity the cyclomatic complexity for the change
-	Complexity int64 `json:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
+	Complexity int64 `json:"complexity" codec:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Excluded if the result was excluded
-	Excluded bool `json:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	Excluded bool `json:"excluded" codec:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
 	// ExcludedReason why the result was excluded
-	ExcludedReason string `json:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
+	ExcludedReason string `json:"excluded_reason" codec:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
 	// Filename the filename
-	Filename string `json:"filename" bson:"filename" yaml:"filename" faker:"-"`
+	Filename string `json:"filename" codec:"filename" bson:"filename" yaml:"filename" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Language the detected language
-	Language string `json:"language" bson:"language" yaml:"language" faker:"-"`
+	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// License if a license was detected in the file, what was the license SPDX
-	License *string `json:"license" bson:"license" yaml:"license" faker:"-"`
+	License *string `json:"license,omitempty" codec:"license,omitempty" bson:"license" yaml:"license,omitempty" faker:"-"`
 	// Lines the individual line attributions
-	Lines []BlameLines `json:"lines" bson:"lines" yaml:"lines" faker:"-"`
+	Lines []BlameLines `json:"lines" codec:"lines" bson:"lines" yaml:"lines" faker:"-"`
 	// Loc the count of lines in the file
-	Loc int64 `json:"loc" bson:"loc" yaml:"loc" faker:"-"`
+	Loc int64 `json:"loc" codec:"loc" bson:"loc" yaml:"loc" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Sha the commit SHA
-	Sha string `json:"sha" bson:"sha" yaml:"sha" faker:"-"`
+	Sha string `json:"sha" codec:"sha" bson:"sha" yaml:"sha" faker:"-"`
 	// Size the size of the file
-	Size int64 `json:"size" bson:"size" yaml:"size" faker:"-"`
+	Size int64 `json:"size" codec:"size" bson:"size" yaml:"size" faker:"-"`
 	// Sloc the count of source lines in the file based on language rules
-	Sloc int64 `json:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	Sloc int64 `json:"sloc" codec:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
 	// Status the status of the change
-	Status BlameStatus `json:"status" bson:"status" yaml:"status" faker:"-"`
+	Status BlameStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Blame)(nil)
 
-func toBlameObjectNil(isavro bool, isoptional bool) interface{} {
-	if isavro && isoptional {
-		return goavro.Union("null", nil)
-	}
-	return nil
-}
-
-func toBlameObject(o interface{}, isavro bool, isoptional bool, avrotype string) interface{} {
-	if res, ok := datamodel.ToGolangObject(o, isavro, isoptional, avrotype); ok {
-		return res
-	}
+func toBlameObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Blame:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case BlameChangeDate:
-		return v.ToMap(isavro)
+		return v.ToMap()
 
 	case []BlameLines:
 		arr := make([]interface{}, 0)
 		for _, i := range v {
-			arr = append(arr, i.ToMap(isavro))
+			arr = append(arr, i.ToMap())
 		}
 		return arr
 
@@ -613,12 +570,6 @@ func (o *Blame) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 }
 
-// GetStateKey returns a key for use in state store
-func (o *Blame) GetStateKey() string {
-	key := "repo_id"
-	return fmt.Sprintf("%s_%s", key, o.GetID())
-}
-
 // GetCustomerID will return the customer_id
 func (o *Blame) GetCustomerID() string {
 
@@ -649,15 +600,6 @@ func (o *Blame) Anon() datamodel.Model {
 	return c
 }
 
-// MarshalBinary returns the bytes for marshaling to binary
-func (o *Blame) MarshalBinary() ([]byte, error) {
-	return o.MarshalJSON()
-}
-
-func (o *Blame) UnmarshalBinary(data []byte) error {
-	return o.UnmarshalJSON(data)
-}
-
 // MarshalJSON returns the bytes for marshaling to json
 func (o *Blame) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
@@ -676,52 +618,6 @@ func (o *Blame) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-var cachedCodecBlame *goavro.Codec
-var cachedCodecBlameLock sync.Mutex
-
-// GetAvroCodec returns the avro codec for this model
-func (o *Blame) GetAvroCodec() *goavro.Codec {
-	cachedCodecBlameLock.Lock()
-	if cachedCodecBlame == nil {
-		c, err := GetBlameAvroSchema()
-		if err != nil {
-			panic(err)
-		}
-		cachedCodecBlame = c
-	}
-	cachedCodecBlameLock.Unlock()
-	return cachedCodecBlame
-}
-
-// ToAvroBinary returns the data as Avro binary data
-func (o *Blame) ToAvroBinary() ([]byte, *goavro.Codec, error) {
-	kv := o.ToMap(true)
-	jbuf, _ := json.Marshal(kv)
-	codec := o.GetAvroCodec()
-	native, _, err := codec.NativeFromTextual(jbuf)
-	if err != nil {
-		return nil, nil, err
-	}
-	// Convert native Go form to binary Avro data
-	buf, err := codec.BinaryFromNative(nil, native)
-	return buf, codec, err
-}
-
-// FromAvroBinary will convert from Avro binary data into data in this object
-func (o *Blame) FromAvroBinary(value []byte) error {
-	var nullHeader = []byte{byte(0)}
-	// if this still has the schema encoded in the header, move past it to the avro payload
-	if bytes.HasPrefix(value, nullHeader) {
-		value = value[5:]
-	}
-	kv, _, err := o.GetAvroCodec().NativeFromBinary(value)
-	if err != nil {
-		return err
-	}
-	o.FromMap(kv.(map[string]interface{}))
-	return nil
-}
-
 // Stringify returns the object in JSON format as a string
 func (o *Blame) Stringify() string {
 	o.Hash()
@@ -734,41 +630,32 @@ func (o *Blame) IsEqual(other *Blame) bool {
 }
 
 // ToMap returns the object as a map
-func (o *Blame) ToMap(avro ...bool) map[string]interface{} {
-	var isavro bool
-	if len(avro) > 0 && avro[0] {
-		isavro = true
-	}
-	if isavro {
-		if o.Lines == nil {
-			o.Lines = make([]BlameLines, 0)
-		}
-	}
+func (o *Blame) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"blanks":          toBlameObject(o.Blanks, isavro, false, "long"),
-		"change_date":     toBlameObject(o.ChangeDate, isavro, false, "change_date"),
-		"comments":        toBlameObject(o.Comments, isavro, false, "long"),
-		"commit_id":       toBlameObject(o.CommitID, isavro, false, "string"),
-		"complexity":      toBlameObject(o.Complexity, isavro, false, "long"),
-		"customer_id":     toBlameObject(o.CustomerID, isavro, false, "string"),
-		"excluded":        toBlameObject(o.Excluded, isavro, false, "boolean"),
-		"excluded_reason": toBlameObject(o.ExcludedReason, isavro, false, "string"),
-		"filename":        toBlameObject(o.Filename, isavro, false, "string"),
-		"id":              toBlameObject(o.ID, isavro, false, "string"),
-		"language":        toBlameObject(o.Language, isavro, false, "string"),
-		"license":         toBlameObject(o.License, isavro, true, "string"),
-		"lines":           toBlameObject(o.Lines, isavro, false, "lines"),
-		"loc":             toBlameObject(o.Loc, isavro, false, "long"),
-		"ref_id":          toBlameObject(o.RefID, isavro, false, "string"),
-		"ref_type":        toBlameObject(o.RefType, isavro, false, "string"),
-		"repo_id":         toBlameObject(o.RepoID, isavro, false, "string"),
-		"sha":             toBlameObject(o.Sha, isavro, false, "string"),
-		"size":            toBlameObject(o.Size, isavro, false, "long"),
-		"sloc":            toBlameObject(o.Sloc, isavro, false, "long"),
-		"status":          toBlameObject(o.Status, isavro, false, "status"),
-		"updated_ts":      toBlameObject(o.UpdatedAt, isavro, false, "long"),
-		"hashcode":        toBlameObject(o.Hashcode, isavro, false, "string"),
+		"blanks":          toBlameObject(o.Blanks, false),
+		"change_date":     toBlameObject(o.ChangeDate, false),
+		"comments":        toBlameObject(o.Comments, false),
+		"commit_id":       toBlameObject(o.CommitID, false),
+		"complexity":      toBlameObject(o.Complexity, false),
+		"customer_id":     toBlameObject(o.CustomerID, false),
+		"excluded":        toBlameObject(o.Excluded, false),
+		"excluded_reason": toBlameObject(o.ExcludedReason, false),
+		"filename":        toBlameObject(o.Filename, false),
+		"id":              toBlameObject(o.ID, false),
+		"language":        toBlameObject(o.Language, false),
+		"license":         toBlameObject(o.License, true),
+		"lines":           toBlameObject(o.Lines, false),
+		"loc":             toBlameObject(o.Loc, false),
+		"ref_id":          toBlameObject(o.RefID, false),
+		"ref_type":        toBlameObject(o.RefType, false),
+		"repo_id":         toBlameObject(o.RepoID, false),
+		"sha":             toBlameObject(o.Sha, false),
+		"size":            toBlameObject(o.Size, false),
+		"sloc":            toBlameObject(o.Sloc, false),
+		"status":          toBlameObject(o.Status, false),
+		"updated_ts":      toBlameObject(o.UpdatedAt, false),
+		"hashcode":        toBlameObject(o.Hashcode, false),
 	}
 }
 
@@ -971,7 +858,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.License = pstrings.Pointer("")
 			} else {
-				// if coming in as avro union, convert it back
+				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
@@ -1220,115 +1107,6 @@ func (o *Blame) Hash() string {
 	return o.Hashcode
 }
 
-// GetBlameAvroSchemaSpec creates the avro schema specification for Blame
-func GetBlameAvroSchemaSpec() string {
-	spec := map[string]interface{}{
-		"type":      "record",
-		"namespace": "sourcecode",
-		"name":      "Blame",
-		"fields": []map[string]interface{}{
-			map[string]interface{}{
-				"name": "hashcode",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "blanks",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "change_date",
-				"type": map[string]interface{}{"doc": "the date of the change", "fields": []interface{}{map[string]interface{}{"doc": "the date in epoch format", "name": "epoch", "type": "long"}, map[string]interface{}{"doc": "the timezone offset from GMT", "name": "offset", "type": "long"}, map[string]interface{}{"doc": "the date in RFC3339 format", "name": "rfc3339", "type": "string"}}, "name": "change_date", "type": "record"},
-			},
-			map[string]interface{}{
-				"name": "comments",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "commit_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "complexity",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "customer_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "excluded",
-				"type": "boolean",
-			},
-			map[string]interface{}{
-				"name": "excluded_reason",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "filename",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "language",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name":    "license",
-				"type":    []interface{}{"null", "string"},
-				"default": nil,
-			},
-			map[string]interface{}{
-				"name": "lines",
-				"type": map[string]interface{}{"items": map[string]interface{}{"doc": "the individual line attributions", "fields": []interface{}{map[string]interface{}{"doc": "the author ref_id of this line when last changed", "name": "author_ref_id", "type": "string"}, map[string]interface{}{"doc": "if the line is a blank line", "name": "blank", "type": "boolean"}, map[string]interface{}{"doc": "if the line is sourcecode", "name": "code", "type": "boolean"}, map[string]interface{}{"doc": "if the line is a comment", "name": "comment", "type": "boolean"}, map[string]interface{}{"doc": "the change date in RFC3339 format of this line when last changed", "name": "date", "type": "string"}, map[string]interface{}{"doc": "the sha when this line was last changed", "name": "sha", "type": "string"}}, "name": "lines", "type": "record"}, "name": "lines", "type": "array"},
-			},
-			map[string]interface{}{
-				"name": "loc",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "ref_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "ref_type",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "repo_id",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "sha",
-				"type": "string",
-			},
-			map[string]interface{}{
-				"name": "size",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "sloc",
-				"type": "long",
-			},
-			map[string]interface{}{
-				"name": "status",
-				"type": map[string]interface{}{
-					"type":    "enum",
-					"name":    "status",
-					"symbols": []interface{}{"ADDED", "MODIFIED", "REMOVED"},
-				},
-			},
-			map[string]interface{}{
-				"name": "updated_ts",
-				"type": "long",
-			},
-		},
-	}
-	return pjson.Stringify(spec, true)
-}
-
 // GetEventAPIConfig returns the EventAPIConfig
 func (o *Blame) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
@@ -1339,344 +1117,5 @@ func (o *Blame) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Public: false,
 			Key:    "",
 		},
-	}
-}
-
-// GetBlameAvroSchema creates the avro schema for Blame
-func GetBlameAvroSchema() (*goavro.Codec, error) {
-	return goavro.NewCodec(GetBlameAvroSchemaSpec())
-}
-
-// BlameSendEvent is an event detail for sending data
-type BlameSendEvent struct {
-	Blame   *Blame
-	headers map[string]string
-	time    time.Time
-	key     string
-}
-
-var _ datamodel.ModelSendEvent = (*BlameSendEvent)(nil)
-
-// Key is the key to use for the message
-func (e *BlameSendEvent) Key() string {
-	if e.key == "" {
-		return e.Blame.GetID()
-	}
-	return e.key
-}
-
-// Object returns an instance of the Model that will be send
-func (e *BlameSendEvent) Object() datamodel.Model {
-	return e.Blame
-}
-
-// Headers returns any headers for the event. can be nil to not send any additional headers
-func (e *BlameSendEvent) Headers() map[string]string {
-	return e.headers
-}
-
-// Timestamp returns the event timestamp. If empty, will default to time.Now()
-func (e *BlameSendEvent) Timestamp() time.Time {
-	return e.time
-}
-
-// BlameSendEventOpts is a function handler for setting opts
-type BlameSendEventOpts func(o *BlameSendEvent)
-
-// WithBlameSendEventKey sets the key value to a value different than the object ID
-func WithBlameSendEventKey(key string) BlameSendEventOpts {
-	return func(o *BlameSendEvent) {
-		o.key = key
-	}
-}
-
-// WithBlameSendEventTimestamp sets the timestamp value
-func WithBlameSendEventTimestamp(tv time.Time) BlameSendEventOpts {
-	return func(o *BlameSendEvent) {
-		o.time = tv
-	}
-}
-
-// WithBlameSendEventHeader sets the timestamp value
-func WithBlameSendEventHeader(key, value string) BlameSendEventOpts {
-	return func(o *BlameSendEvent) {
-		if o.headers == nil {
-			o.headers = make(map[string]string)
-		}
-		o.headers[key] = value
-	}
-}
-
-// NewBlameSendEvent returns a new BlameSendEvent instance
-func NewBlameSendEvent(o *Blame, opts ...BlameSendEventOpts) *BlameSendEvent {
-	res := &BlameSendEvent{
-		Blame: o,
-	}
-	if len(opts) > 0 {
-		for _, opt := range opts {
-			opt(res)
-		}
-	}
-	return res
-}
-
-// NewBlameProducer will stream data from the channel
-func NewBlameProducer(ctx context.Context, producer eventing.Producer, ch <-chan datamodel.ModelSendEvent, errors chan<- error, empty chan<- bool) <-chan bool {
-	done := make(chan bool, 1)
-	emptyTime := time.Unix(0, 0)
-	var numPartitions int
-	go func() {
-		defer func() { done <- true }()
-		for {
-			select {
-			case <-ctx.Done():
-				return
-			case item := <-ch:
-				if item == nil {
-					empty <- true
-					return
-				}
-				if object, ok := item.Object().(*Blame); ok {
-					if numPartitions == 0 {
-						numPartitions = object.GetTopicConfig().NumPartitions
-					}
-					binary, codec, err := object.ToAvroBinary()
-					if err != nil {
-						errors <- fmt.Errorf("error encoding %s to avro binary data. %v", object.String(), err)
-						return
-					}
-					headers := map[string]string{}
-					object.SetEventHeaders(headers)
-					for k, v := range item.Headers() {
-						headers[k] = v
-					}
-					tv := item.Timestamp()
-					if tv.IsZero() {
-						tv = object.GetTimestamp() // if not provided in the message, use the objects value
-					}
-					if tv.IsZero() || tv.Equal(emptyTime) {
-						tv = time.Now() // if its still zero, use the ingest time
-					}
-					// add generated message headers
-					headers["message-id"] = pstrings.NewUUIDV4()
-					headers["message-ts"] = fmt.Sprintf("%v", datetime.EpochNow())
-					// determine the partition selection by using the partition key
-					// and taking the modulo over the number of partitions for the topic
-					partition := hash.Modulo(item.Key(), numPartitions)
-					msg := eventing.Message{
-						Encoding:  eventing.AvroEncoding,
-						Key:       object.GetID(),
-						Value:     binary,
-						Codec:     codec,
-						Headers:   headers,
-						Timestamp: tv,
-						Partition: int32(partition),
-						Topic:     object.GetTopicName().String(),
-					}
-					if err := producer.Send(ctx, msg); err != nil {
-						errors <- fmt.Errorf("error sending %s. %v", object.String(), err)
-					}
-				} else {
-					errors <- fmt.Errorf("invalid event received. expected an object of type sourcecode.Blame but received on of type %v", reflect.TypeOf(item.Object()))
-				}
-			}
-		}
-	}()
-	return done
-}
-
-// NewBlameConsumer will stream data from the topic into the provided channel
-func NewBlameConsumer(consumer eventing.Consumer, ch chan<- datamodel.ModelReceiveEvent, errors chan<- error) *eventing.ConsumerCallbackAdapter {
-	adapter := &eventing.ConsumerCallbackAdapter{
-		OnDataReceived: func(msg eventing.Message) error {
-			var object Blame
-			switch msg.Encoding {
-			case eventing.JSONEncoding:
-				if err := json.Unmarshal(msg.Value, &object); err != nil {
-					return fmt.Errorf("error unmarshaling json data into sourcecode.Blame: %s", err)
-				}
-			case eventing.AvroEncoding:
-				if err := object.FromAvroBinary(msg.Value); err != nil {
-					return fmt.Errorf("error unmarshaling avro data into sourcecode.Blame: %s", err)
-				}
-			default:
-				return fmt.Errorf("unsure of the encoding since it was not set for sourcecode.Blame")
-			}
-
-			// ignore messages that have exceeded the TTL
-			cfg := object.GetTopicConfig()
-			if cfg != nil && cfg.TTL != 0 && msg.Timestamp.UTC().Add(cfg.TTL).Sub(time.Now().UTC()) < 0 {
-				// if disable auto and we're skipping, we need to commit the message
-				if !msg.IsAutoCommit() {
-					msg.Commit()
-				}
-				return nil
-			}
-			msg.Codec = object.GetAvroCodec() // match the codec
-
-			ch <- &BlameReceiveEvent{&object, msg, false}
-			return nil
-		},
-		OnErrorReceived: func(err error) {
-			errors <- err
-		},
-		OnEOF: func(topic string, partition int32, offset int64) {
-			var object Blame
-			var msg eventing.Message
-			msg.Topic = topic
-			msg.Partition = partition
-			msg.Codec = object.GetAvroCodec() // match the codec
-			ch <- &BlameReceiveEvent{nil, msg, true}
-		},
-	}
-	consumer.Consume(adapter)
-	return adapter
-}
-
-// BlameReceiveEvent is an event detail for receiving data
-type BlameReceiveEvent struct {
-	Blame   *Blame
-	message eventing.Message
-	eof     bool
-}
-
-var _ datamodel.ModelReceiveEvent = (*BlameReceiveEvent)(nil)
-
-// Object returns an instance of the Model that was received
-func (e *BlameReceiveEvent) Object() datamodel.Model {
-	return e.Blame
-}
-
-// Message returns the underlying message data for the event
-func (e *BlameReceiveEvent) Message() eventing.Message {
-	return e.message
-}
-
-// EOF returns true if an EOF event was received. in this case, the Object and Message will return nil
-func (e *BlameReceiveEvent) EOF() bool {
-	return e.eof
-}
-
-// BlameProducer implements the datamodel.ModelEventProducer
-type BlameProducer struct {
-	ch       chan datamodel.ModelSendEvent
-	done     <-chan bool
-	producer eventing.Producer
-	closed   bool
-	mu       sync.Mutex
-	ctx      context.Context
-	cancel   context.CancelFunc
-	empty    chan bool
-}
-
-var _ datamodel.ModelEventProducer = (*BlameProducer)(nil)
-
-// Channel returns the producer channel to produce new events
-func (p *BlameProducer) Channel() chan<- datamodel.ModelSendEvent {
-	return p.ch
-}
-
-// Close is called to shutdown the producer
-func (p *BlameProducer) Close() error {
-	p.mu.Lock()
-	closed := p.closed
-	p.closed = true
-	p.mu.Unlock()
-	if !closed {
-		close(p.ch)
-		<-p.empty
-		p.cancel()
-		<-p.done
-	}
-	return nil
-}
-
-// NewProducerChannel returns a channel which can be used for producing Model events
-func (o *Blame) NewProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return o.NewProducerChannelSize(producer, 0, errors)
-}
-
-// NewProducerChannelSize returns a channel which can be used for producing Model events
-func (o *Blame) NewProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &BlameProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewBlameProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// NewBlameProducerChannel returns a channel which can be used for producing Model events
-func NewBlameProducerChannel(producer eventing.Producer, errors chan<- error) datamodel.ModelEventProducer {
-	return NewBlameProducerChannelSize(producer, 0, errors)
-}
-
-// NewBlameProducerChannelSize returns a channel which can be used for producing Model events
-func NewBlameProducerChannelSize(producer eventing.Producer, size int, errors chan<- error) datamodel.ModelEventProducer {
-	ch := make(chan datamodel.ModelSendEvent, size)
-	empty := make(chan bool, 1)
-	newctx, cancel := context.WithCancel(context.Background())
-	return &BlameProducer{
-		ch:       ch,
-		ctx:      newctx,
-		cancel:   cancel,
-		producer: producer,
-		empty:    empty,
-		done:     NewBlameProducer(newctx, producer, ch, errors, empty),
-	}
-}
-
-// BlameConsumer implements the datamodel.ModelEventConsumer
-type BlameConsumer struct {
-	ch       chan datamodel.ModelReceiveEvent
-	consumer eventing.Consumer
-	callback *eventing.ConsumerCallbackAdapter
-	closed   bool
-	mu       sync.Mutex
-}
-
-var _ datamodel.ModelEventConsumer = (*BlameConsumer)(nil)
-
-// Channel returns the consumer channel to consume new events
-func (c *BlameConsumer) Channel() <-chan datamodel.ModelReceiveEvent {
-	return c.ch
-}
-
-// Close is called to shutdown the producer
-func (c *BlameConsumer) Close() error {
-	c.mu.Lock()
-	closed := c.closed
-	c.closed = true
-	c.mu.Unlock()
-	var err error
-	if !closed {
-		c.callback.Close()
-		err = c.consumer.Close()
-	}
-	return err
-}
-
-// NewConsumerChannel returns a consumer channel which can be used to consume Model events
-func (o *Blame) NewConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &BlameConsumer{
-		ch:       ch,
-		callback: NewBlameConsumer(consumer, ch, errors),
-		consumer: consumer,
-	}
-}
-
-// NewBlameConsumerChannel returns a consumer channel which can be used to consume Model events
-func NewBlameConsumerChannel(consumer eventing.Consumer, errors chan<- error) datamodel.ModelEventConsumer {
-	ch := make(chan datamodel.ModelReceiveEvent)
-	return &BlameConsumer{
-		ch:       ch,
-		callback: NewBlameConsumer(consumer, ch, errors),
-		consumer: consumer,
 	}
 }
