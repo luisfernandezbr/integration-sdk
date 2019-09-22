@@ -32,6 +32,8 @@ const (
 )
 
 const (
+	// UserAssociatedRefIDColumn is the associated_ref_id column name
+	UserAssociatedRefIDColumn = "associated_ref_id"
 	// UserAvatarURLColumn is the avatar_url column name
 	UserAvatarURLColumn = "avatar_url"
 	// UserCustomerIDColumn is the customer_id column name
@@ -54,6 +56,8 @@ const (
 
 // User the work user
 type User struct {
+	// AssociatedRefID the ref id associated for this user in another system
+	AssociatedRefID *string `json:"associated_ref_id,omitempty" codec:"associated_ref_id,omitempty" bson:"associated_ref_id" yaml:"associated_ref_id,omitempty" faker:"-"`
 	// AvatarURL the url to users avatar
 	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"avatar"`
 	// CustomerID the customer id for the model instance
@@ -120,6 +124,9 @@ func NewUserID(customerID string, refType string, refID string) string {
 }
 
 func (o *User) setDefaults(frommap bool) {
+	if o.AssociatedRefID == nil {
+		o.AssociatedRefID = &emptyString
+	}
 	if o.AvatarURL == nil {
 		o.AvatarURL = &emptyString
 	}
@@ -286,16 +293,17 @@ func (o *User) IsEqual(other *User) bool {
 func (o *User) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"avatar_url":  toUserObject(o.AvatarURL, true),
-		"customer_id": toUserObject(o.CustomerID, false),
-		"email":       toUserObject(o.Email, true),
-		"id":          toUserObject(o.ID, false),
-		"name":        toUserObject(o.Name, false),
-		"ref_id":      toUserObject(o.RefID, false),
-		"ref_type":    toUserObject(o.RefType, false),
-		"updated_ts":  toUserObject(o.UpdatedAt, false),
-		"username":    toUserObject(o.Username, false),
-		"hashcode":    toUserObject(o.Hashcode, false),
+		"associated_ref_id": toUserObject(o.AssociatedRefID, true),
+		"avatar_url":        toUserObject(o.AvatarURL, true),
+		"customer_id":       toUserObject(o.CustomerID, false),
+		"email":             toUserObject(o.Email, true),
+		"id":                toUserObject(o.ID, false),
+		"name":              toUserObject(o.Name, false),
+		"ref_id":            toUserObject(o.RefID, false),
+		"ref_type":          toUserObject(o.RefType, false),
+		"updated_ts":        toUserObject(o.UpdatedAt, false),
+		"username":          toUserObject(o.Username, false),
+		"hashcode":          toUserObject(o.Hashcode, false),
 	}
 }
 
@@ -307,6 +315,24 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["associated_ref_id"].(*string); ok {
+		o.AssociatedRefID = val
+	} else if val, ok := kv["associated_ref_id"].(string); ok {
+		o.AssociatedRefID = &val
+	} else {
+		if val, ok := kv["associated_ref_id"]; ok {
+			if val == nil {
+				o.AssociatedRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AssociatedRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
 	}
 
 	if val, ok := kv["avatar_url"].(*string); ok {
@@ -455,6 +481,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *User) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.AssociatedRefID)
 	args = append(args, o.AvatarURL)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Email)
