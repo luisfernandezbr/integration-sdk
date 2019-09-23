@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -18,82 +17,8 @@ import (
 )
 
 const (
-	// StopTopic is the default topic name
-	StopTopic datamodel.TopicNameType = "agent_Stop_topic"
-
-	// StopStream is the default stream name
-	StopStream datamodel.TopicNameType = "agent_Stop_stream"
-
-	// StopTable is the default table name
-	StopTable datamodel.TopicNameType = "agent_stop"
-
 	// StopModelName is the model name
 	StopModelName datamodel.ModelNameType = "agent.Stop"
-)
-
-const (
-	// StopArchitectureColumn is the architecture column name
-	StopArchitectureColumn = "architecture"
-	// StopCustomerIDColumn is the customer_id column name
-	StopCustomerIDColumn = "customer_id"
-	// StopDataColumn is the data column name
-	StopDataColumn = "data"
-	// StopDistroColumn is the distro column name
-	StopDistroColumn = "distro"
-	// StopErrorColumn is the error column name
-	StopErrorColumn = "error"
-	// StopEventDateColumn is the event_date column name
-	StopEventDateColumn = "event_date"
-	// StopEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	StopEventDateColumnEpochColumn = "event_date->epoch"
-	// StopEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	StopEventDateColumnOffsetColumn = "event_date->offset"
-	// StopEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	StopEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// StopFreeSpaceColumn is the free_space column name
-	StopFreeSpaceColumn = "free_space"
-	// StopGoVersionColumn is the go_version column name
-	StopGoVersionColumn = "go_version"
-	// StopHostnameColumn is the hostname column name
-	StopHostnameColumn = "hostname"
-	// StopIDColumn is the id column name
-	StopIDColumn = "id"
-	// StopLastExportDateColumn is the last_export_date column name
-	StopLastExportDateColumn = "last_export_date"
-	// StopLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	StopLastExportDateColumnEpochColumn = "last_export_date->epoch"
-	// StopLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	StopLastExportDateColumnOffsetColumn = "last_export_date->offset"
-	// StopLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	StopLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
-	// StopMemoryColumn is the memory column name
-	StopMemoryColumn = "memory"
-	// StopMessageColumn is the message column name
-	StopMessageColumn = "message"
-	// StopNumCPUColumn is the num_cpu column name
-	StopNumCPUColumn = "num_cpu"
-	// StopOSColumn is the os column name
-	StopOSColumn = "os"
-	// StopRefIDColumn is the ref_id column name
-	StopRefIDColumn = "ref_id"
-	// StopRefTypeColumn is the ref_type column name
-	StopRefTypeColumn = "ref_type"
-	// StopRequestIDColumn is the request_id column name
-	StopRequestIDColumn = "request_id"
-	// StopSuccessColumn is the success column name
-	StopSuccessColumn = "success"
-	// StopSystemIDColumn is the system_id column name
-	StopSystemIDColumn = "system_id"
-	// StopTypeColumn is the type column name
-	StopTypeColumn = "type"
-	// StopUpdatedAtColumn is the updated_ts column name
-	StopUpdatedAtColumn = "updated_ts"
-	// StopUptimeColumn is the uptime column name
-	StopUptimeColumn = "uptime"
-	// StopUUIDColumn is the uuid column name
-	StopUUIDColumn = "uuid"
-	// StopVersionColumn is the version column name
-	StopVersionColumn = "version"
 )
 
 // StopEventDate represents the object structure for event_date
@@ -432,24 +357,9 @@ func (o *Stop) String() string {
 	return fmt.Sprintf("agent.Stop<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *Stop) GetTopicName() datamodel.TopicNameType {
-	return StopTopic
-}
-
 // GetModelName returns the name of the model
 func (o *Stop) GetModelName() datamodel.ModelNameType {
 	return StopModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *Stop) GetStreamName() string {
-	return StopStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *Stop) GetTableName() string {
-	return StopTable.String()
 }
 
 // NewStopID provides a template for generating an ID field for Stop
@@ -482,83 +392,9 @@ func (o *Stop) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Stop) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Stop) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Stop")
-}
-
 // GetRefID returns the RefID for the object
 func (o *Stop) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *Stop) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Stop) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Stop) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Stop) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = StopModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *Stop) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -572,22 +408,6 @@ func (o *Stop) GetCustomerID() string {
 func (o *Stop) Clone() datamodel.Model {
 	c := new(Stop)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *Stop) Anon() datamodel.Model {
-	c := new(Stop)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -753,25 +573,6 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -846,25 +647,6 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1160,17 +942,4 @@ func (o *Stop) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *Stop) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

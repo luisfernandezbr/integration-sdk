@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -18,82 +17,8 @@ import (
 )
 
 const (
-	// EnabledTopic is the default topic name
-	EnabledTopic datamodel.TopicNameType = "agent_Enabled_topic"
-
-	// EnabledStream is the default stream name
-	EnabledStream datamodel.TopicNameType = "agent_Enabled_stream"
-
-	// EnabledTable is the default table name
-	EnabledTable datamodel.TopicNameType = "agent_enabled"
-
 	// EnabledModelName is the model name
 	EnabledModelName datamodel.ModelNameType = "agent.Enabled"
-)
-
-const (
-	// EnabledArchitectureColumn is the architecture column name
-	EnabledArchitectureColumn = "architecture"
-	// EnabledCustomerIDColumn is the customer_id column name
-	EnabledCustomerIDColumn = "customer_id"
-	// EnabledDataColumn is the data column name
-	EnabledDataColumn = "data"
-	// EnabledDistroColumn is the distro column name
-	EnabledDistroColumn = "distro"
-	// EnabledErrorColumn is the error column name
-	EnabledErrorColumn = "error"
-	// EnabledEventDateColumn is the event_date column name
-	EnabledEventDateColumn = "event_date"
-	// EnabledEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	EnabledEventDateColumnEpochColumn = "event_date->epoch"
-	// EnabledEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	EnabledEventDateColumnOffsetColumn = "event_date->offset"
-	// EnabledEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	EnabledEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// EnabledFreeSpaceColumn is the free_space column name
-	EnabledFreeSpaceColumn = "free_space"
-	// EnabledGoVersionColumn is the go_version column name
-	EnabledGoVersionColumn = "go_version"
-	// EnabledHostnameColumn is the hostname column name
-	EnabledHostnameColumn = "hostname"
-	// EnabledIDColumn is the id column name
-	EnabledIDColumn = "id"
-	// EnabledLastExportDateColumn is the last_export_date column name
-	EnabledLastExportDateColumn = "last_export_date"
-	// EnabledLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	EnabledLastExportDateColumnEpochColumn = "last_export_date->epoch"
-	// EnabledLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	EnabledLastExportDateColumnOffsetColumn = "last_export_date->offset"
-	// EnabledLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	EnabledLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
-	// EnabledMemoryColumn is the memory column name
-	EnabledMemoryColumn = "memory"
-	// EnabledMessageColumn is the message column name
-	EnabledMessageColumn = "message"
-	// EnabledNumCPUColumn is the num_cpu column name
-	EnabledNumCPUColumn = "num_cpu"
-	// EnabledOSColumn is the os column name
-	EnabledOSColumn = "os"
-	// EnabledRefIDColumn is the ref_id column name
-	EnabledRefIDColumn = "ref_id"
-	// EnabledRefTypeColumn is the ref_type column name
-	EnabledRefTypeColumn = "ref_type"
-	// EnabledRequestIDColumn is the request_id column name
-	EnabledRequestIDColumn = "request_id"
-	// EnabledSuccessColumn is the success column name
-	EnabledSuccessColumn = "success"
-	// EnabledSystemIDColumn is the system_id column name
-	EnabledSystemIDColumn = "system_id"
-	// EnabledTypeColumn is the type column name
-	EnabledTypeColumn = "type"
-	// EnabledUpdatedAtColumn is the updated_ts column name
-	EnabledUpdatedAtColumn = "updated_ts"
-	// EnabledUptimeColumn is the uptime column name
-	EnabledUptimeColumn = "uptime"
-	// EnabledUUIDColumn is the uuid column name
-	EnabledUUIDColumn = "uuid"
-	// EnabledVersionColumn is the version column name
-	EnabledVersionColumn = "version"
 )
 
 // EnabledEventDate represents the object structure for event_date
@@ -432,24 +357,9 @@ func (o *Enabled) String() string {
 	return fmt.Sprintf("agent.Enabled<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *Enabled) GetTopicName() datamodel.TopicNameType {
-	return EnabledTopic
-}
-
 // GetModelName returns the name of the model
 func (o *Enabled) GetModelName() datamodel.ModelNameType {
 	return EnabledModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *Enabled) GetStreamName() string {
-	return EnabledStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *Enabled) GetTableName() string {
-	return EnabledTable.String()
 }
 
 // NewEnabledID provides a template for generating an ID field for Enabled
@@ -482,83 +392,9 @@ func (o *Enabled) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Enabled) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Enabled) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Enabled")
-}
-
 // GetRefID returns the RefID for the object
 func (o *Enabled) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *Enabled) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Enabled) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Enabled) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Enabled) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = EnabledModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *Enabled) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -572,22 +408,6 @@ func (o *Enabled) GetCustomerID() string {
 func (o *Enabled) Clone() datamodel.Model {
 	c := new(Enabled)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *Enabled) Anon() datamodel.Model {
-	c := new(Enabled)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -1160,17 +980,4 @@ func (o *Enabled) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *Enabled) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

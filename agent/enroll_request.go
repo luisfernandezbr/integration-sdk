@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -17,36 +16,8 @@ import (
 )
 
 const (
-	// EnrollRequestTopic is the default topic name
-	EnrollRequestTopic datamodel.TopicNameType = "agent_EnrollRequest_topic"
-
-	// EnrollRequestStream is the default stream name
-	EnrollRequestStream datamodel.TopicNameType = "agent_EnrollRequest_stream"
-
-	// EnrollRequestTable is the default table name
-	EnrollRequestTable datamodel.TopicNameType = "agent_enrollrequest"
-
 	// EnrollRequestModelName is the model name
 	EnrollRequestModelName datamodel.ModelNameType = "agent.EnrollRequest"
-)
-
-const (
-	// EnrollRequestCodeColumn is the code column name
-	EnrollRequestCodeColumn = "code"
-	// EnrollRequestIDColumn is the id column name
-	EnrollRequestIDColumn = "id"
-	// EnrollRequestRequestDateColumn is the request_date column name
-	EnrollRequestRequestDateColumn = "request_date"
-	// EnrollRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	EnrollRequestRequestDateColumnEpochColumn = "request_date->epoch"
-	// EnrollRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	EnrollRequestRequestDateColumnOffsetColumn = "request_date->offset"
-	// EnrollRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	EnrollRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
-	// EnrollRequestUpdatedAtColumn is the updated_ts column name
-	EnrollRequestUpdatedAtColumn = "updated_ts"
-	// EnrollRequestUUIDColumn is the uuid column name
-	EnrollRequestUUIDColumn = "uuid"
 )
 
 // EnrollRequestRequestDate represents the object structure for request_date
@@ -180,24 +151,9 @@ func (o *EnrollRequest) String() string {
 	return fmt.Sprintf("agent.EnrollRequest<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *EnrollRequest) GetTopicName() datamodel.TopicNameType {
-	return EnrollRequestTopic
-}
-
 // GetModelName returns the name of the model
 func (o *EnrollRequest) GetModelName() datamodel.ModelNameType {
 	return EnrollRequestModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *EnrollRequest) GetStreamName() string {
-	return EnrollRequestStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *EnrollRequest) GetTableName() string {
-	return EnrollRequestTable.String()
 }
 
 // NewEnrollRequestID provides a template for generating an ID field for EnrollRequest
@@ -221,99 +177,10 @@ func (o *EnrollRequest) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *EnrollRequest) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *EnrollRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for EnrollRequest")
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *EnrollRequest) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *EnrollRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *EnrollRequest) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *EnrollRequest) SetEventHeaders(kv map[string]string) {
-	kv["model"] = EnrollRequestModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *EnrollRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
-}
-
 // Clone returns an exact copy of EnrollRequest
 func (o *EnrollRequest) Clone() datamodel.Model {
 	c := new(EnrollRequest)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *EnrollRequest) Anon() datamodel.Model {
-	c := new(EnrollRequest)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -460,17 +327,4 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 	o.setDefaults(false)
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *EnrollRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: true,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

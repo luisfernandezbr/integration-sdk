@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -22,46 +21,8 @@ import (
 )
 
 const (
-	// TeamTopic is the default topic name
-	TeamTopic datamodel.TopicNameType = "customer_Team_topic"
-
-	// TeamStream is the default stream name
-	TeamStream datamodel.TopicNameType = "customer_Team_stream"
-
-	// TeamTable is the default table name
-	TeamTable datamodel.TopicNameType = "customer_team"
-
 	// TeamModelName is the model name
 	TeamModelName datamodel.ModelNameType = "customer.Team"
-)
-
-const (
-	// TeamActiveColumn is the active column name
-	TeamActiveColumn = "active"
-	// TeamChildrenIdsColumn is the children_ids column name
-	TeamChildrenIdsColumn = "children_ids"
-	// TeamCreatedAtColumn is the created_ts column name
-	TeamCreatedAtColumn = "created_ts"
-	// TeamCustomerIDColumn is the customer_id column name
-	TeamCustomerIDColumn = "customer_id"
-	// TeamDescriptionColumn is the description column name
-	TeamDescriptionColumn = "description"
-	// TeamIDColumn is the id column name
-	TeamIDColumn = "id"
-	// TeamLeafColumn is the leaf column name
-	TeamLeafColumn = "leaf"
-	// TeamNameColumn is the name column name
-	TeamNameColumn = "name"
-	// TeamParentIdsColumn is the parent_ids column name
-	TeamParentIdsColumn = "parent_ids"
-	// TeamRefIDColumn is the ref_id column name
-	TeamRefIDColumn = "ref_id"
-	// TeamRefTypeColumn is the ref_type column name
-	TeamRefTypeColumn = "ref_type"
-	// TeamTeamCostIDColumn is the team_cost_id column name
-	TeamTeamCostIDColumn = "team_cost_id"
-	// TeamUpdatedAtColumn is the updated_ts column name
-	TeamUpdatedAtColumn = "updated_ts"
 )
 
 // Team a team is a grouping of one or more users
@@ -114,24 +75,9 @@ func (o *Team) String() string {
 	return fmt.Sprintf("customer.Team<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *Team) GetTopicName() datamodel.TopicNameType {
-	return TeamTopic
-}
-
 // GetModelName returns the name of the model
 func (o *Team) GetModelName() datamodel.ModelNameType {
 	return TeamModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *Team) GetStreamName() string {
-	return TeamStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *Team) GetTableName() string {
-	return TeamTable.String()
 }
 
 // NewTeamID provides a template for generating an ID field for Team
@@ -175,92 +121,9 @@ func (o *Team) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Team) GetTopicKey() string {
-	var i interface{} = o.CustomerID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Team) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Team")
-}
-
 // GetRefID returns the RefID for the object
 func (o *Team) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *Team) IsMaterialized() bool {
-	return true
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Team) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	idletime, err := time.ParseDuration("1s")
-	if err != nil {
-		panic(err)
-	}
-	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "id",
-		TableName: "customer_team",
-		BatchSize: 5000,
-		IdleTime:  idletime,
-	}
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Team) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Team) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = TeamModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *Team) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "customer_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -274,22 +137,6 @@ func (o *Team) GetCustomerID() string {
 func (o *Team) Clone() datamodel.Model {
 	c := new(Team)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *Team) Anon() datamodel.Model {
-	c := new(Team)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -643,17 +490,4 @@ func (o *Team) Hash() string {
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *Team) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

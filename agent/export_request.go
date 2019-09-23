@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -22,82 +21,8 @@ import (
 )
 
 const (
-	// ExportRequestTopic is the default topic name
-	ExportRequestTopic datamodel.TopicNameType = "agent_ExportRequest_topic"
-
-	// ExportRequestStream is the default stream name
-	ExportRequestStream datamodel.TopicNameType = "agent_ExportRequest_stream"
-
-	// ExportRequestTable is the default table name
-	ExportRequestTable datamodel.TopicNameType = "agent_exportrequest"
-
 	// ExportRequestModelName is the model name
 	ExportRequestModelName datamodel.ModelNameType = "agent.ExportRequest"
-)
-
-const (
-	// ExportRequestCustomerIDColumn is the customer_id column name
-	ExportRequestCustomerIDColumn = "customer_id"
-	// ExportRequestIDColumn is the id column name
-	ExportRequestIDColumn = "id"
-	// ExportRequestIntegrationsColumn is the integrations column name
-	ExportRequestIntegrationsColumn = "integrations"
-	// ExportRequestIntegrationsColumnActiveColumn is the active column property of the Integrations name
-	ExportRequestIntegrationsColumnActiveColumn = "integrations->active"
-	// ExportRequestIntegrationsColumnAuthorizationColumn is the authorization column property of the Integrations name
-	ExportRequestIntegrationsColumnAuthorizationColumn = "integrations->authorization"
-	// ExportRequestIntegrationsColumnCustomerIDColumn is the customer_id column property of the Integrations name
-	ExportRequestIntegrationsColumnCustomerIDColumn = "integrations->customer_id"
-	// ExportRequestIntegrationsColumnErroredColumn is the errored column property of the Integrations name
-	ExportRequestIntegrationsColumnErroredColumn = "integrations->errored"
-	// ExportRequestIntegrationsColumnExclusionsColumn is the exclusions column property of the Integrations name
-	ExportRequestIntegrationsColumnExclusionsColumn = "integrations->exclusions"
-	// ExportRequestIntegrationsColumnIDColumn is the id column property of the Integrations name
-	ExportRequestIntegrationsColumnIDColumn = "integrations->id"
-	// ExportRequestIntegrationsColumnLocationColumn is the location column property of the Integrations name
-	ExportRequestIntegrationsColumnLocationColumn = "integrations->location"
-	// ExportRequestIntegrationsColumnNameColumn is the name column property of the Integrations name
-	ExportRequestIntegrationsColumnNameColumn = "integrations->name"
-	// ExportRequestIntegrationsColumnProgressColumn is the progress column property of the Integrations name
-	ExportRequestIntegrationsColumnProgressColumn = "integrations->progress"
-	// ExportRequestIntegrationsColumnRefIDColumn is the ref_id column property of the Integrations name
-	ExportRequestIntegrationsColumnRefIDColumn = "integrations->ref_id"
-	// ExportRequestIntegrationsColumnRefTypeColumn is the ref_type column property of the Integrations name
-	ExportRequestIntegrationsColumnRefTypeColumn = "integrations->ref_type"
-	// ExportRequestIntegrationsColumnSystemTypeColumn is the system_type column property of the Integrations name
-	ExportRequestIntegrationsColumnSystemTypeColumn = "integrations->system_type"
-	// ExportRequestIntegrationsColumnValidatedColumn is the validated column property of the Integrations name
-	ExportRequestIntegrationsColumnValidatedColumn = "integrations->validated"
-	// ExportRequestIntegrationsColumnValidatedDateColumn is the validated_date column property of the Integrations name
-	ExportRequestIntegrationsColumnValidatedDateColumn = "integrations->validated_date"
-	// ExportRequestIntegrationsColumnValidationMessageColumn is the validation_message column property of the Integrations name
-	ExportRequestIntegrationsColumnValidationMessageColumn = "integrations->validation_message"
-	// ExportRequestJobIDColumn is the job_id column name
-	ExportRequestJobIDColumn = "job_id"
-	// ExportRequestLocationColumn is the location column name
-	ExportRequestLocationColumn = "location"
-	// ExportRequestRefIDColumn is the ref_id column name
-	ExportRequestRefIDColumn = "ref_id"
-	// ExportRequestRefTypeColumn is the ref_type column name
-	ExportRequestRefTypeColumn = "ref_type"
-	// ExportRequestReprocessHistoricalColumn is the reprocess_historical column name
-	ExportRequestReprocessHistoricalColumn = "reprocess_historical"
-	// ExportRequestRequestDateColumn is the request_date column name
-	ExportRequestRequestDateColumn = "request_date"
-	// ExportRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	ExportRequestRequestDateColumnEpochColumn = "request_date->epoch"
-	// ExportRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	ExportRequestRequestDateColumnOffsetColumn = "request_date->offset"
-	// ExportRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	ExportRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
-	// ExportRequestSystemTypeColumn is the system_type column name
-	ExportRequestSystemTypeColumn = "system_type"
-	// ExportRequestUpdatedAtColumn is the updated_ts column name
-	ExportRequestUpdatedAtColumn = "updated_ts"
-	// ExportRequestUploadURLColumn is the upload_url column name
-	ExportRequestUploadURLColumn = "upload_url"
-	// ExportRequestUUIDColumn is the uuid column name
-	ExportRequestUUIDColumn = "uuid"
 )
 
 // ExportRequestIntegrationsAuthorization represents the object structure for authorization
@@ -1164,24 +1089,9 @@ func (o *ExportRequest) String() string {
 	return fmt.Sprintf("agent.ExportRequest<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *ExportRequest) GetTopicName() datamodel.TopicNameType {
-	return ExportRequestTopic
-}
-
 // GetModelName returns the name of the model
 func (o *ExportRequest) GetModelName() datamodel.ModelNameType {
 	return ExportRequestModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *ExportRequest) GetStreamName() string {
-	return ExportRequestStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *ExportRequest) GetTableName() string {
-	return ExportRequestTable.String()
 }
 
 // NewExportRequestID provides a template for generating an ID field for ExportRequest
@@ -1214,83 +1124,9 @@ func (o *ExportRequest) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *ExportRequest) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *ExportRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for ExportRequest")
-}
-
 // GetRefID returns the RefID for the object
 func (o *ExportRequest) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *ExportRequest) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *ExportRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *ExportRequest) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *ExportRequest) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = ExportRequestModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *ExportRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -1304,22 +1140,6 @@ func (o *ExportRequest) GetCustomerID() string {
 func (o *ExportRequest) Clone() datamodel.Model {
 	c := new(ExportRequest)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *ExportRequest) Anon() datamodel.Model {
-	c := new(ExportRequest)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -1540,6 +1360,25 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1611,17 +1450,4 @@ func (o *ExportRequest) Hash() string {
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *ExportRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -17,56 +16,8 @@ import (
 )
 
 const (
-	// PullRequestCommentTopic is the default topic name
-	PullRequestCommentTopic datamodel.TopicNameType = "sourcecode_PullRequestComment_topic"
-
-	// PullRequestCommentStream is the default stream name
-	PullRequestCommentStream datamodel.TopicNameType = "sourcecode_PullRequestComment_stream"
-
-	// PullRequestCommentTable is the default table name
-	PullRequestCommentTable datamodel.TopicNameType = "sourcecode_pullrequestcomment"
-
 	// PullRequestCommentModelName is the model name
 	PullRequestCommentModelName datamodel.ModelNameType = "sourcecode.PullRequestComment"
-)
-
-const (
-	// PullRequestCommentBodyColumn is the body column name
-	PullRequestCommentBodyColumn = "body"
-	// PullRequestCommentCreatedDateColumn is the created_date column name
-	PullRequestCommentCreatedDateColumn = "created_date"
-	// PullRequestCommentCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	PullRequestCommentCreatedDateColumnEpochColumn = "created_date->epoch"
-	// PullRequestCommentCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	PullRequestCommentCreatedDateColumnOffsetColumn = "created_date->offset"
-	// PullRequestCommentCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	PullRequestCommentCreatedDateColumnRfc3339Column = "created_date->rfc3339"
-	// PullRequestCommentCustomerIDColumn is the customer_id column name
-	PullRequestCommentCustomerIDColumn = "customer_id"
-	// PullRequestCommentIDColumn is the id column name
-	PullRequestCommentIDColumn = "id"
-	// PullRequestCommentPullRequestIDColumn is the pull_request_id column name
-	PullRequestCommentPullRequestIDColumn = "pull_request_id"
-	// PullRequestCommentRefIDColumn is the ref_id column name
-	PullRequestCommentRefIDColumn = "ref_id"
-	// PullRequestCommentRefTypeColumn is the ref_type column name
-	PullRequestCommentRefTypeColumn = "ref_type"
-	// PullRequestCommentRepoIDColumn is the repo_id column name
-	PullRequestCommentRepoIDColumn = "repo_id"
-	// PullRequestCommentUpdatedDateColumn is the updated_date column name
-	PullRequestCommentUpdatedDateColumn = "updated_date"
-	// PullRequestCommentUpdatedDateColumnEpochColumn is the epoch column property of the UpdatedDate name
-	PullRequestCommentUpdatedDateColumnEpochColumn = "updated_date->epoch"
-	// PullRequestCommentUpdatedDateColumnOffsetColumn is the offset column property of the UpdatedDate name
-	PullRequestCommentUpdatedDateColumnOffsetColumn = "updated_date->offset"
-	// PullRequestCommentUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
-	PullRequestCommentUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
-	// PullRequestCommentUpdatedAtColumn is the updated_ts column name
-	PullRequestCommentUpdatedAtColumn = "updated_ts"
-	// PullRequestCommentURLColumn is the url column name
-	PullRequestCommentURLColumn = "url"
-	// PullRequestCommentUserRefIDColumn is the user_ref_id column name
-	PullRequestCommentUserRefIDColumn = "user_ref_id"
 )
 
 // PullRequestCommentCreatedDate represents the object structure for created_date
@@ -311,24 +262,9 @@ func (o *PullRequestComment) String() string {
 	return fmt.Sprintf("sourcecode.PullRequestComment<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *PullRequestComment) GetTopicName() datamodel.TopicNameType {
-	return PullRequestCommentTopic
-}
-
 // GetModelName returns the name of the model
 func (o *PullRequestComment) GetModelName() datamodel.ModelNameType {
 	return PullRequestCommentModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *PullRequestComment) GetStreamName() string {
-	return PullRequestCommentStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *PullRequestComment) GetTableName() string {
-	return PullRequestCommentTable.String()
 }
 
 // NewPullRequestCommentID provides a template for generating an ID field for PullRequestComment
@@ -354,85 +290,9 @@ func (o *PullRequestComment) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *PullRequestComment) GetTopicKey() string {
-	var i interface{} = o.RepoID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *PullRequestComment) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	case PullRequestCommentCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
-	}
-	panic("not sure how to handle the date time format for PullRequestComment")
-}
-
 // GetRefID returns the RefID for the object
 func (o *PullRequestComment) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *PullRequestComment) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *PullRequestComment) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *PullRequestComment) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *PullRequestComment) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = PullRequestCommentModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *PullRequestComment) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "repo_id",
-		Timestamp:         "created_date",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -446,22 +306,6 @@ func (o *PullRequestComment) GetCustomerID() string {
 func (o *PullRequestComment) Clone() datamodel.Model {
 	c := new(PullRequestComment)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *PullRequestComment) Anon() datamodel.Model {
-	c := new(PullRequestComment)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -759,17 +603,4 @@ func (o *PullRequestComment) Hash() string {
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *PullRequestComment) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

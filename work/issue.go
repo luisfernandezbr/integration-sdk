@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -21,88 +20,8 @@ import (
 )
 
 const (
-	// IssueTopic is the default topic name
-	IssueTopic datamodel.TopicNameType = "work_Issue_topic"
-
-	// IssueStream is the default stream name
-	IssueStream datamodel.TopicNameType = "work_Issue_stream"
-
-	// IssueTable is the default table name
-	IssueTable datamodel.TopicNameType = "work_issue"
-
 	// IssueModelName is the model name
 	IssueModelName datamodel.ModelNameType = "work.Issue"
-)
-
-const (
-	// IssueAssigneeRefIDColumn is the assignee_ref_id column name
-	IssueAssigneeRefIDColumn = "assignee_ref_id"
-	// IssueCreatedDateColumn is the created_date column name
-	IssueCreatedDateColumn = "created_date"
-	// IssueCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	IssueCreatedDateColumnEpochColumn = "created_date->epoch"
-	// IssueCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	IssueCreatedDateColumnOffsetColumn = "created_date->offset"
-	// IssueCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	IssueCreatedDateColumnRfc3339Column = "created_date->rfc3339"
-	// IssueCreatorRefIDColumn is the creator_ref_id column name
-	IssueCreatorRefIDColumn = "creator_ref_id"
-	// IssueCustomFieldsColumn is the customFields column name
-	IssueCustomFieldsColumn = "customFields"
-	// IssueCustomFieldsColumnIDColumn is the id column property of the CustomFields name
-	IssueCustomFieldsColumnIDColumn = "customFields->id"
-	// IssueCustomFieldsColumnNameColumn is the name column property of the CustomFields name
-	IssueCustomFieldsColumnNameColumn = "customFields->name"
-	// IssueCustomFieldsColumnValueColumn is the value column property of the CustomFields name
-	IssueCustomFieldsColumnValueColumn = "customFields->value"
-	// IssueCustomerIDColumn is the customer_id column name
-	IssueCustomerIDColumn = "customer_id"
-	// IssueDueDateColumn is the due_date column name
-	IssueDueDateColumn = "due_date"
-	// IssueDueDateColumnEpochColumn is the epoch column property of the DueDate name
-	IssueDueDateColumnEpochColumn = "due_date->epoch"
-	// IssueDueDateColumnOffsetColumn is the offset column property of the DueDate name
-	IssueDueDateColumnOffsetColumn = "due_date->offset"
-	// IssueDueDateColumnRfc3339Column is the rfc3339 column property of the DueDate name
-	IssueDueDateColumnRfc3339Column = "due_date->rfc3339"
-	// IssueIDColumn is the id column name
-	IssueIDColumn = "id"
-	// IssueIdentifierColumn is the identifier column name
-	IssueIdentifierColumn = "identifier"
-	// IssueParentIDColumn is the parent_id column name
-	IssueParentIDColumn = "parent_id"
-	// IssuePriorityColumn is the priority column name
-	IssuePriorityColumn = "priority"
-	// IssueProjectIDColumn is the project_id column name
-	IssueProjectIDColumn = "project_id"
-	// IssueRefIDColumn is the ref_id column name
-	IssueRefIDColumn = "ref_id"
-	// IssueRefTypeColumn is the ref_type column name
-	IssueRefTypeColumn = "ref_type"
-	// IssueReporterRefIDColumn is the reporter_ref_id column name
-	IssueReporterRefIDColumn = "reporter_ref_id"
-	// IssueResolutionColumn is the resolution column name
-	IssueResolutionColumn = "resolution"
-	// IssueStatusColumn is the status column name
-	IssueStatusColumn = "status"
-	// IssueTagsColumn is the tags column name
-	IssueTagsColumn = "tags"
-	// IssueTitleColumn is the title column name
-	IssueTitleColumn = "title"
-	// IssueTypeColumn is the type column name
-	IssueTypeColumn = "type"
-	// IssueUpdatedDateColumn is the updated_date column name
-	IssueUpdatedDateColumn = "updated_date"
-	// IssueUpdatedDateColumnEpochColumn is the epoch column property of the UpdatedDate name
-	IssueUpdatedDateColumnEpochColumn = "updated_date->epoch"
-	// IssueUpdatedDateColumnOffsetColumn is the offset column property of the UpdatedDate name
-	IssueUpdatedDateColumnOffsetColumn = "updated_date->offset"
-	// IssueUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
-	IssueUpdatedDateColumnRfc3339Column = "updated_date->rfc3339"
-	// IssueUpdatedAtColumn is the updated_ts column name
-	IssueUpdatedAtColumn = "updated_ts"
-	// IssueURLColumn is the url column name
-	IssueURLColumn = "url"
 )
 
 // IssueCreatedDate represents the object structure for created_date
@@ -565,24 +484,9 @@ func (o *Issue) String() string {
 	return fmt.Sprintf("work.Issue<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *Issue) GetTopicName() datamodel.TopicNameType {
-	return IssueTopic
-}
-
 // GetModelName returns the name of the model
 func (o *Issue) GetModelName() datamodel.ModelNameType {
 	return IssueModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *Issue) GetStreamName() string {
-	return IssueStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *Issue) GetTableName() string {
-	return IssueTable.String()
 }
 
 // NewIssueID provides a template for generating an ID field for Issue
@@ -615,85 +519,9 @@ func (o *Issue) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Issue) GetTopicKey() string {
-	var i interface{} = o.ProjectID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Issue) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	case IssueCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
-	}
-	panic("not sure how to handle the date time format for Issue")
-}
-
 // GetRefID returns the RefID for the object
 func (o *Issue) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *Issue) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Issue) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Issue) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Issue) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = IssueModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "project_id",
-		Timestamp:         "created_date",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -707,22 +535,6 @@ func (o *Issue) GetCustomerID() string {
 func (o *Issue) Clone() datamodel.Model {
 	c := new(Issue)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *Issue) Anon() datamodel.Model {
-	c := new(Issue)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -1292,17 +1104,4 @@ func (o *Issue) Hash() string {
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *Issue) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

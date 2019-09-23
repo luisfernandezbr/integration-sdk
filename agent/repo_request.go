@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -22,76 +21,8 @@ import (
 )
 
 const (
-	// RepoRequestTopic is the default topic name
-	RepoRequestTopic datamodel.TopicNameType = "agent_RepoRequest_topic"
-
-	// RepoRequestStream is the default stream name
-	RepoRequestStream datamodel.TopicNameType = "agent_RepoRequest_stream"
-
-	// RepoRequestTable is the default table name
-	RepoRequestTable datamodel.TopicNameType = "agent_reporequest"
-
 	// RepoRequestModelName is the model name
 	RepoRequestModelName datamodel.ModelNameType = "agent.RepoRequest"
-)
-
-const (
-	// RepoRequestCustomerIDColumn is the customer_id column name
-	RepoRequestCustomerIDColumn = "customer_id"
-	// RepoRequestIDColumn is the id column name
-	RepoRequestIDColumn = "id"
-	// RepoRequestIntegrationColumn is the integration column name
-	RepoRequestIntegrationColumn = "integration"
-	// RepoRequestIntegrationColumnActiveColumn is the active column property of the Integration name
-	RepoRequestIntegrationColumnActiveColumn = "integration->active"
-	// RepoRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
-	RepoRequestIntegrationColumnAuthorizationColumn = "integration->authorization"
-	// RepoRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
-	RepoRequestIntegrationColumnCustomerIDColumn = "integration->customer_id"
-	// RepoRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
-	RepoRequestIntegrationColumnErroredColumn = "integration->errored"
-	// RepoRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
-	RepoRequestIntegrationColumnExclusionsColumn = "integration->exclusions"
-	// RepoRequestIntegrationColumnIDColumn is the id column property of the Integration name
-	RepoRequestIntegrationColumnIDColumn = "integration->id"
-	// RepoRequestIntegrationColumnLocationColumn is the location column property of the Integration name
-	RepoRequestIntegrationColumnLocationColumn = "integration->location"
-	// RepoRequestIntegrationColumnNameColumn is the name column property of the Integration name
-	RepoRequestIntegrationColumnNameColumn = "integration->name"
-	// RepoRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
-	RepoRequestIntegrationColumnProgressColumn = "integration->progress"
-	// RepoRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
-	RepoRequestIntegrationColumnRefIDColumn = "integration->ref_id"
-	// RepoRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
-	RepoRequestIntegrationColumnRefTypeColumn = "integration->ref_type"
-	// RepoRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
-	RepoRequestIntegrationColumnSystemTypeColumn = "integration->system_type"
-	// RepoRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
-	RepoRequestIntegrationColumnValidatedColumn = "integration->validated"
-	// RepoRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
-	RepoRequestIntegrationColumnValidatedDateColumn = "integration->validated_date"
-	// RepoRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
-	RepoRequestIntegrationColumnValidationMessageColumn = "integration->validation_message"
-	// RepoRequestLocationColumn is the location column name
-	RepoRequestLocationColumn = "location"
-	// RepoRequestRefIDColumn is the ref_id column name
-	RepoRequestRefIDColumn = "ref_id"
-	// RepoRequestRefTypeColumn is the ref_type column name
-	RepoRequestRefTypeColumn = "ref_type"
-	// RepoRequestRequestDateColumn is the request_date column name
-	RepoRequestRequestDateColumn = "request_date"
-	// RepoRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	RepoRequestRequestDateColumnEpochColumn = "request_date->epoch"
-	// RepoRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	RepoRequestRequestDateColumnOffsetColumn = "request_date->offset"
-	// RepoRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	RepoRequestRequestDateColumnRfc3339Column = "request_date->rfc3339"
-	// RepoRequestSystemTypeColumn is the system_type column name
-	RepoRequestSystemTypeColumn = "system_type"
-	// RepoRequestUpdatedAtColumn is the updated_ts column name
-	RepoRequestUpdatedAtColumn = "updated_ts"
-	// RepoRequestUUIDColumn is the uuid column name
-	RepoRequestUUIDColumn = "uuid"
 )
 
 // RepoRequestIntegrationAuthorization represents the object structure for authorization
@@ -1148,24 +1079,9 @@ func (o *RepoRequest) String() string {
 	return fmt.Sprintf("agent.RepoRequest<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *RepoRequest) GetTopicName() datamodel.TopicNameType {
-	return RepoRequestTopic
-}
-
 // GetModelName returns the name of the model
 func (o *RepoRequest) GetModelName() datamodel.ModelNameType {
 	return RepoRequestModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *RepoRequest) GetStreamName() string {
-	return RepoRequestStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *RepoRequest) GetTableName() string {
-	return RepoRequestTable.String()
 }
 
 // NewRepoRequestID provides a template for generating an ID field for RepoRequest
@@ -1192,83 +1108,9 @@ func (o *RepoRequest) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *RepoRequest) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *RepoRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for RepoRequest")
-}
-
 // GetRefID returns the RefID for the object
 func (o *RepoRequest) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *RepoRequest) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *RepoRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *RepoRequest) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *RepoRequest) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = RepoRequestModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *RepoRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -1282,22 +1124,6 @@ func (o *RepoRequest) GetCustomerID() string {
 func (o *RepoRequest) Clone() datamodel.Model {
 	c := new(RepoRequest)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *RepoRequest) Anon() datamodel.Model {
-	c := new(RepoRequest)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -1508,17 +1334,4 @@ func (o *RepoRequest) Hash() string {
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *RepoRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

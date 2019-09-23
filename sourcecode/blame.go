@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -20,82 +19,8 @@ import (
 )
 
 const (
-	// BlameTopic is the default topic name
-	BlameTopic datamodel.TopicNameType = "sourcecode_Blame_topic"
-
-	// BlameStream is the default stream name
-	BlameStream datamodel.TopicNameType = "sourcecode_Blame_stream"
-
-	// BlameTable is the default table name
-	BlameTable datamodel.TopicNameType = "sourcecode_blame"
-
 	// BlameModelName is the model name
 	BlameModelName datamodel.ModelNameType = "sourcecode.Blame"
-)
-
-const (
-	// BlameBlanksColumn is the blanks column name
-	BlameBlanksColumn = "blanks"
-	// BlameChangeDateColumn is the change_date column name
-	BlameChangeDateColumn = "change_date"
-	// BlameChangeDateColumnEpochColumn is the epoch column property of the ChangeDate name
-	BlameChangeDateColumnEpochColumn = "change_date->epoch"
-	// BlameChangeDateColumnOffsetColumn is the offset column property of the ChangeDate name
-	BlameChangeDateColumnOffsetColumn = "change_date->offset"
-	// BlameChangeDateColumnRfc3339Column is the rfc3339 column property of the ChangeDate name
-	BlameChangeDateColumnRfc3339Column = "change_date->rfc3339"
-	// BlameCommentsColumn is the comments column name
-	BlameCommentsColumn = "comments"
-	// BlameCommitIDColumn is the commit_id column name
-	BlameCommitIDColumn = "commit_id"
-	// BlameComplexityColumn is the complexity column name
-	BlameComplexityColumn = "complexity"
-	// BlameCustomerIDColumn is the customer_id column name
-	BlameCustomerIDColumn = "customer_id"
-	// BlameExcludedColumn is the excluded column name
-	BlameExcludedColumn = "excluded"
-	// BlameExcludedReasonColumn is the excluded_reason column name
-	BlameExcludedReasonColumn = "excluded_reason"
-	// BlameFilenameColumn is the filename column name
-	BlameFilenameColumn = "filename"
-	// BlameIDColumn is the id column name
-	BlameIDColumn = "id"
-	// BlameLanguageColumn is the language column name
-	BlameLanguageColumn = "language"
-	// BlameLicenseColumn is the license column name
-	BlameLicenseColumn = "license"
-	// BlameLinesColumn is the lines column name
-	BlameLinesColumn = "lines"
-	// BlameLinesColumnAuthorRefIDColumn is the author_ref_id column property of the Lines name
-	BlameLinesColumnAuthorRefIDColumn = "lines->author_ref_id"
-	// BlameLinesColumnBlankColumn is the blank column property of the Lines name
-	BlameLinesColumnBlankColumn = "lines->blank"
-	// BlameLinesColumnCodeColumn is the code column property of the Lines name
-	BlameLinesColumnCodeColumn = "lines->code"
-	// BlameLinesColumnCommentColumn is the comment column property of the Lines name
-	BlameLinesColumnCommentColumn = "lines->comment"
-	// BlameLinesColumnDateColumn is the date column property of the Lines name
-	BlameLinesColumnDateColumn = "lines->date"
-	// BlameLinesColumnShaColumn is the sha column property of the Lines name
-	BlameLinesColumnShaColumn = "lines->sha"
-	// BlameLocColumn is the loc column name
-	BlameLocColumn = "loc"
-	// BlameRefIDColumn is the ref_id column name
-	BlameRefIDColumn = "ref_id"
-	// BlameRefTypeColumn is the ref_type column name
-	BlameRefTypeColumn = "ref_type"
-	// BlameRepoIDColumn is the repo_id column name
-	BlameRepoIDColumn = "repo_id"
-	// BlameShaColumn is the sha column name
-	BlameShaColumn = "sha"
-	// BlameSizeColumn is the size column name
-	BlameSizeColumn = "size"
-	// BlameSlocColumn is the sloc column name
-	BlameSlocColumn = "sloc"
-	// BlameStatusColumn is the status column name
-	BlameStatusColumn = "status"
-	// BlameUpdatedAtColumn is the updated_ts column name
-	BlameUpdatedAtColumn = "updated_ts"
 )
 
 // BlameChangeDate represents the object structure for change_date
@@ -440,24 +365,9 @@ func (o *Blame) String() string {
 	return fmt.Sprintf("sourcecode.Blame<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *Blame) GetTopicName() datamodel.TopicNameType {
-	return BlameTopic
-}
-
 // GetModelName returns the name of the model
 func (o *Blame) GetModelName() datamodel.ModelNameType {
 	return BlameModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *Blame) GetStreamName() string {
-	return BlameStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *Blame) GetTableName() string {
-	return BlameTable.String()
 }
 
 // NewBlameID provides a template for generating an ID field for Blame
@@ -489,85 +399,9 @@ func (o *Blame) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Blame) GetTopicKey() string {
-	var i interface{} = o.RepoID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Blame) GetTimestamp() time.Time {
-	var dt interface{} = o.ChangeDate
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	case BlameChangeDate:
-		return datetime.DateFromEpoch(v.Epoch)
-	}
-	panic("not sure how to handle the date time format for Blame")
-}
-
 // GetRefID returns the RefID for the object
 func (o *Blame) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *Blame) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Blame) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Blame) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Blame) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = BlameModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *Blame) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "repo_id",
-		Timestamp:         "change_date",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -581,22 +415,6 @@ func (o *Blame) GetCustomerID() string {
 func (o *Blame) Clone() datamodel.Model {
 	c := new(Blame)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *Blame) Anon() datamodel.Model {
-	c := new(Blame)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -1105,17 +923,4 @@ func (o *Blame) Hash() string {
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *Blame) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

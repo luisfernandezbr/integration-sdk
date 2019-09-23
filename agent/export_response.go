@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -18,104 +17,8 @@ import (
 )
 
 const (
-	// ExportResponseTopic is the default topic name
-	ExportResponseTopic datamodel.TopicNameType = "agent_ExportResponse_topic"
-
-	// ExportResponseStream is the default stream name
-	ExportResponseStream datamodel.TopicNameType = "agent_ExportResponse_stream"
-
-	// ExportResponseTable is the default table name
-	ExportResponseTable datamodel.TopicNameType = "agent_exportresponse"
-
 	// ExportResponseModelName is the model name
 	ExportResponseModelName datamodel.ModelNameType = "agent.ExportResponse"
-)
-
-const (
-	// ExportResponseArchitectureColumn is the architecture column name
-	ExportResponseArchitectureColumn = "architecture"
-	// ExportResponseCustomerIDColumn is the customer_id column name
-	ExportResponseCustomerIDColumn = "customer_id"
-	// ExportResponseDataColumn is the data column name
-	ExportResponseDataColumn = "data"
-	// ExportResponseDistroColumn is the distro column name
-	ExportResponseDistroColumn = "distro"
-	// ExportResponseEndDateColumn is the end_date column name
-	ExportResponseEndDateColumn = "end_date"
-	// ExportResponseEndDateColumnEpochColumn is the epoch column property of the EndDate name
-	ExportResponseEndDateColumnEpochColumn = "end_date->epoch"
-	// ExportResponseEndDateColumnOffsetColumn is the offset column property of the EndDate name
-	ExportResponseEndDateColumnOffsetColumn = "end_date->offset"
-	// ExportResponseEndDateColumnRfc3339Column is the rfc3339 column property of the EndDate name
-	ExportResponseEndDateColumnRfc3339Column = "end_date->rfc3339"
-	// ExportResponseErrorColumn is the error column name
-	ExportResponseErrorColumn = "error"
-	// ExportResponseEventDateColumn is the event_date column name
-	ExportResponseEventDateColumn = "event_date"
-	// ExportResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	ExportResponseEventDateColumnEpochColumn = "event_date->epoch"
-	// ExportResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	ExportResponseEventDateColumnOffsetColumn = "event_date->offset"
-	// ExportResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	ExportResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// ExportResponseFreeSpaceColumn is the free_space column name
-	ExportResponseFreeSpaceColumn = "free_space"
-	// ExportResponseGoVersionColumn is the go_version column name
-	ExportResponseGoVersionColumn = "go_version"
-	// ExportResponseHostnameColumn is the hostname column name
-	ExportResponseHostnameColumn = "hostname"
-	// ExportResponseIDColumn is the id column name
-	ExportResponseIDColumn = "id"
-	// ExportResponseJobIDColumn is the job_id column name
-	ExportResponseJobIDColumn = "job_id"
-	// ExportResponseLastExportDateColumn is the last_export_date column name
-	ExportResponseLastExportDateColumn = "last_export_date"
-	// ExportResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	ExportResponseLastExportDateColumnEpochColumn = "last_export_date->epoch"
-	// ExportResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	ExportResponseLastExportDateColumnOffsetColumn = "last_export_date->offset"
-	// ExportResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	ExportResponseLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
-	// ExportResponseMemoryColumn is the memory column name
-	ExportResponseMemoryColumn = "memory"
-	// ExportResponseMessageColumn is the message column name
-	ExportResponseMessageColumn = "message"
-	// ExportResponseNumCPUColumn is the num_cpu column name
-	ExportResponseNumCPUColumn = "num_cpu"
-	// ExportResponseOSColumn is the os column name
-	ExportResponseOSColumn = "os"
-	// ExportResponseRefIDColumn is the ref_id column name
-	ExportResponseRefIDColumn = "ref_id"
-	// ExportResponseRefTypeColumn is the ref_type column name
-	ExportResponseRefTypeColumn = "ref_type"
-	// ExportResponseRequestIDColumn is the request_id column name
-	ExportResponseRequestIDColumn = "request_id"
-	// ExportResponseSizeColumn is the size column name
-	ExportResponseSizeColumn = "size"
-	// ExportResponseStartDateColumn is the start_date column name
-	ExportResponseStartDateColumn = "start_date"
-	// ExportResponseStartDateColumnEpochColumn is the epoch column property of the StartDate name
-	ExportResponseStartDateColumnEpochColumn = "start_date->epoch"
-	// ExportResponseStartDateColumnOffsetColumn is the offset column property of the StartDate name
-	ExportResponseStartDateColumnOffsetColumn = "start_date->offset"
-	// ExportResponseStartDateColumnRfc3339Column is the rfc3339 column property of the StartDate name
-	ExportResponseStartDateColumnRfc3339Column = "start_date->rfc3339"
-	// ExportResponseSuccessColumn is the success column name
-	ExportResponseSuccessColumn = "success"
-	// ExportResponseSystemIDColumn is the system_id column name
-	ExportResponseSystemIDColumn = "system_id"
-	// ExportResponseTypeColumn is the type column name
-	ExportResponseTypeColumn = "type"
-	// ExportResponseUpdatedAtColumn is the updated_ts column name
-	ExportResponseUpdatedAtColumn = "updated_ts"
-	// ExportResponseUploadURLColumn is the upload_url column name
-	ExportResponseUploadURLColumn = "upload_url"
-	// ExportResponseUptimeColumn is the uptime column name
-	ExportResponseUptimeColumn = "uptime"
-	// ExportResponseUUIDColumn is the uuid column name
-	ExportResponseUUIDColumn = "uuid"
-	// ExportResponseVersionColumn is the version column name
-	ExportResponseVersionColumn = "version"
 )
 
 // ExportResponseEndDate represents the object structure for end_date
@@ -658,24 +561,9 @@ func (o *ExportResponse) String() string {
 	return fmt.Sprintf("agent.ExportResponse<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *ExportResponse) GetTopicName() datamodel.TopicNameType {
-	return ExportResponseTopic
-}
-
 // GetModelName returns the name of the model
 func (o *ExportResponse) GetModelName() datamodel.ModelNameType {
 	return ExportResponseModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *ExportResponse) GetStreamName() string {
-	return ExportResponseStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *ExportResponse) GetTableName() string {
-	return ExportResponseTable.String()
 }
 
 // NewExportResponseID provides a template for generating an ID field for ExportResponse
@@ -711,83 +599,9 @@ func (o *ExportResponse) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *ExportResponse) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *ExportResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for ExportResponse")
-}
-
 // GetRefID returns the RefID for the object
 func (o *ExportResponse) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *ExportResponse) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *ExportResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *ExportResponse) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *ExportResponse) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = ExportResponseModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *ExportResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -801,22 +615,6 @@ func (o *ExportResponse) GetCustomerID() string {
 func (o *ExportResponse) Clone() datamodel.Model {
 	c := new(ExportResponse)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *ExportResponse) Anon() datamodel.Model {
-	c := new(ExportResponse)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -1020,25 +818,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1128,25 +907,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1513,17 +1273,4 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *ExportResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

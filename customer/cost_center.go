@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -17,40 +16,8 @@ import (
 )
 
 const (
-	// CostCenterTopic is the default topic name
-	CostCenterTopic datamodel.TopicNameType = "customer_CostCenter_topic"
-
-	// CostCenterStream is the default stream name
-	CostCenterStream datamodel.TopicNameType = "customer_CostCenter_stream"
-
-	// CostCenterTable is the default table name
-	CostCenterTable datamodel.TopicNameType = "customer_costcenter"
-
 	// CostCenterModelName is the model name
 	CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
-)
-
-const (
-	// CostCenterActiveColumn is the active column name
-	CostCenterActiveColumn = "active"
-	// CostCenterCostColumn is the cost column name
-	CostCenterCostColumn = "cost"
-	// CostCenterCreatedAtColumn is the created_ts column name
-	CostCenterCreatedAtColumn = "created_ts"
-	// CostCenterCustomerIDColumn is the customer_id column name
-	CostCenterCustomerIDColumn = "customer_id"
-	// CostCenterDescriptionColumn is the description column name
-	CostCenterDescriptionColumn = "description"
-	// CostCenterIDColumn is the id column name
-	CostCenterIDColumn = "id"
-	// CostCenterNameColumn is the name column name
-	CostCenterNameColumn = "name"
-	// CostCenterRefIDColumn is the ref_id column name
-	CostCenterRefIDColumn = "ref_id"
-	// CostCenterRefTypeColumn is the ref_type column name
-	CostCenterRefTypeColumn = "ref_type"
-	// CostCenterUpdatedAtColumn is the updated_ts column name
-	CostCenterUpdatedAtColumn = "updated_ts"
 )
 
 // CostCenter a cost center represents information about users and their cost
@@ -97,24 +64,9 @@ func (o *CostCenter) String() string {
 	return fmt.Sprintf("customer.CostCenter<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *CostCenter) GetTopicName() datamodel.TopicNameType {
-	return CostCenterTopic
-}
-
 // GetModelName returns the name of the model
 func (o *CostCenter) GetModelName() datamodel.ModelNameType {
 	return CostCenterModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *CostCenter) GetStreamName() string {
-	return CostCenterStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *CostCenter) GetTableName() string {
-	return CostCenterTable.String()
 }
 
 // NewCostCenterID provides a template for generating an ID field for CostCenter
@@ -141,92 +93,9 @@ func (o *CostCenter) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *CostCenter) GetTopicKey() string {
-	var i interface{} = o.CustomerID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *CostCenter) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for CostCenter")
-}
-
 // GetRefID returns the RefID for the object
 func (o *CostCenter) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *CostCenter) IsMaterialized() bool {
-	return true
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *CostCenter) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	idletime, err := time.ParseDuration("1s")
-	if err != nil {
-		panic(err)
-	}
-	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "id",
-		TableName: "customer_costcenter",
-		BatchSize: 5000,
-		IdleTime:  idletime,
-	}
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *CostCenter) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *CostCenter) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = CostCenterModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *CostCenter) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "customer_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -240,22 +109,6 @@ func (o *CostCenter) GetCustomerID() string {
 func (o *CostCenter) Clone() datamodel.Model {
 	c := new(CostCenter)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *CostCenter) Anon() datamodel.Model {
-	c := new(CostCenter)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -477,17 +330,4 @@ func (o *CostCenter) Hash() string {
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *CostCenter) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

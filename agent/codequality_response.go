@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -20,98 +19,8 @@ import (
 )
 
 const (
-	// CodequalityResponseTopic is the default topic name
-	CodequalityResponseTopic datamodel.TopicNameType = "agent_CodequalityResponse_topic"
-
-	// CodequalityResponseStream is the default stream name
-	CodequalityResponseStream datamodel.TopicNameType = "agent_CodequalityResponse_stream"
-
-	// CodequalityResponseTable is the default table name
-	CodequalityResponseTable datamodel.TopicNameType = "agent_codequalityresponse"
-
 	// CodequalityResponseModelName is the model name
 	CodequalityResponseModelName datamodel.ModelNameType = "agent.CodequalityResponse"
-)
-
-const (
-	// CodequalityResponseArchitectureColumn is the architecture column name
-	CodequalityResponseArchitectureColumn = "architecture"
-	// CodequalityResponseCustomerIDColumn is the customer_id column name
-	CodequalityResponseCustomerIDColumn = "customer_id"
-	// CodequalityResponseDataColumn is the data column name
-	CodequalityResponseDataColumn = "data"
-	// CodequalityResponseDistroColumn is the distro column name
-	CodequalityResponseDistroColumn = "distro"
-	// CodequalityResponseErrorColumn is the error column name
-	CodequalityResponseErrorColumn = "error"
-	// CodequalityResponseEventDateColumn is the event_date column name
-	CodequalityResponseEventDateColumn = "event_date"
-	// CodequalityResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	CodequalityResponseEventDateColumnEpochColumn = "event_date->epoch"
-	// CodequalityResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	CodequalityResponseEventDateColumnOffsetColumn = "event_date->offset"
-	// CodequalityResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	CodequalityResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// CodequalityResponseFreeSpaceColumn is the free_space column name
-	CodequalityResponseFreeSpaceColumn = "free_space"
-	// CodequalityResponseGoVersionColumn is the go_version column name
-	CodequalityResponseGoVersionColumn = "go_version"
-	// CodequalityResponseHostnameColumn is the hostname column name
-	CodequalityResponseHostnameColumn = "hostname"
-	// CodequalityResponseIDColumn is the id column name
-	CodequalityResponseIDColumn = "id"
-	// CodequalityResponseIntegrationIDColumn is the integration_id column name
-	CodequalityResponseIntegrationIDColumn = "integration_id"
-	// CodequalityResponseLastExportDateColumn is the last_export_date column name
-	CodequalityResponseLastExportDateColumn = "last_export_date"
-	// CodequalityResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	CodequalityResponseLastExportDateColumnEpochColumn = "last_export_date->epoch"
-	// CodequalityResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	CodequalityResponseLastExportDateColumnOffsetColumn = "last_export_date->offset"
-	// CodequalityResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	CodequalityResponseLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
-	// CodequalityResponseMemoryColumn is the memory column name
-	CodequalityResponseMemoryColumn = "memory"
-	// CodequalityResponseMessageColumn is the message column name
-	CodequalityResponseMessageColumn = "message"
-	// CodequalityResponseNumCPUColumn is the num_cpu column name
-	CodequalityResponseNumCPUColumn = "num_cpu"
-	// CodequalityResponseOSColumn is the os column name
-	CodequalityResponseOSColumn = "os"
-	// CodequalityResponseProjectsColumn is the projects column name
-	CodequalityResponseProjectsColumn = "projects"
-	// CodequalityResponseProjectsColumnCustomerIDColumn is the customer_id column property of the Projects name
-	CodequalityResponseProjectsColumnCustomerIDColumn = "projects->customer_id"
-	// CodequalityResponseProjectsColumnIDColumn is the id column property of the Projects name
-	CodequalityResponseProjectsColumnIDColumn = "projects->id"
-	// CodequalityResponseProjectsColumnIdentifierColumn is the identifier column property of the Projects name
-	CodequalityResponseProjectsColumnIdentifierColumn = "projects->identifier"
-	// CodequalityResponseProjectsColumnNameColumn is the name column property of the Projects name
-	CodequalityResponseProjectsColumnNameColumn = "projects->name"
-	// CodequalityResponseProjectsColumnRefIDColumn is the ref_id column property of the Projects name
-	CodequalityResponseProjectsColumnRefIDColumn = "projects->ref_id"
-	// CodequalityResponseProjectsColumnRefTypeColumn is the ref_type column property of the Projects name
-	CodequalityResponseProjectsColumnRefTypeColumn = "projects->ref_type"
-	// CodequalityResponseRefIDColumn is the ref_id column name
-	CodequalityResponseRefIDColumn = "ref_id"
-	// CodequalityResponseRefTypeColumn is the ref_type column name
-	CodequalityResponseRefTypeColumn = "ref_type"
-	// CodequalityResponseRequestIDColumn is the request_id column name
-	CodequalityResponseRequestIDColumn = "request_id"
-	// CodequalityResponseSuccessColumn is the success column name
-	CodequalityResponseSuccessColumn = "success"
-	// CodequalityResponseSystemIDColumn is the system_id column name
-	CodequalityResponseSystemIDColumn = "system_id"
-	// CodequalityResponseTypeColumn is the type column name
-	CodequalityResponseTypeColumn = "type"
-	// CodequalityResponseUpdatedAtColumn is the updated_ts column name
-	CodequalityResponseUpdatedAtColumn = "updated_ts"
-	// CodequalityResponseUptimeColumn is the uptime column name
-	CodequalityResponseUptimeColumn = "uptime"
-	// CodequalityResponseUUIDColumn is the uuid column name
-	CodequalityResponseUUIDColumn = "uuid"
-	// CodequalityResponseVersionColumn is the version column name
-	CodequalityResponseVersionColumn = "version"
 )
 
 // CodequalityResponseEventDate represents the object structure for event_date
@@ -612,24 +521,9 @@ func (o *CodequalityResponse) String() string {
 	return fmt.Sprintf("agent.CodequalityResponse<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *CodequalityResponse) GetTopicName() datamodel.TopicNameType {
-	return CodequalityResponseTopic
-}
-
 // GetModelName returns the name of the model
 func (o *CodequalityResponse) GetModelName() datamodel.ModelNameType {
 	return CodequalityResponseModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *CodequalityResponse) GetStreamName() string {
-	return CodequalityResponseStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *CodequalityResponse) GetTableName() string {
-	return CodequalityResponseTable.String()
 }
 
 // NewCodequalityResponseID provides a template for generating an ID field for CodequalityResponse
@@ -665,83 +559,9 @@ func (o *CodequalityResponse) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *CodequalityResponse) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *CodequalityResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for CodequalityResponse")
-}
-
 // GetRefID returns the RefID for the object
 func (o *CodequalityResponse) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *CodequalityResponse) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *CodequalityResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *CodequalityResponse) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *CodequalityResponse) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = CodequalityResponseModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *CodequalityResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -755,22 +575,6 @@ func (o *CodequalityResponse) GetCustomerID() string {
 func (o *CodequalityResponse) Clone() datamodel.Model {
 	c := new(CodequalityResponse)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *CodequalityResponse) Anon() datamodel.Model {
-	c := new(CodequalityResponse)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -938,6 +742,25 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1027,6 +850,25 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1387,17 +1229,4 @@ func (o *CodequalityResponse) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *CodequalityResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -17,32 +16,8 @@ import (
 )
 
 const (
-	// RepoTriggerTopic is the default topic name
-	RepoTriggerTopic datamodel.TopicNameType = "agent_RepoTrigger_topic"
-
-	// RepoTriggerStream is the default stream name
-	RepoTriggerStream datamodel.TopicNameType = "agent_RepoTrigger_stream"
-
-	// RepoTriggerTable is the default table name
-	RepoTriggerTable datamodel.TopicNameType = "agent_repotrigger"
-
 	// RepoTriggerModelName is the model name
 	RepoTriggerModelName datamodel.ModelNameType = "agent.RepoTrigger"
-)
-
-const (
-	// RepoTriggerCustomerIDColumn is the customer_id column name
-	RepoTriggerCustomerIDColumn = "customer_id"
-	// RepoTriggerIDColumn is the id column name
-	RepoTriggerIDColumn = "id"
-	// RepoTriggerIntegrationIDColumn is the integration_id column name
-	RepoTriggerIntegrationIDColumn = "integration_id"
-	// RepoTriggerRefIDColumn is the ref_id column name
-	RepoTriggerRefIDColumn = "ref_id"
-	// RepoTriggerRefTypeColumn is the ref_type column name
-	RepoTriggerRefTypeColumn = "ref_type"
-	// RepoTriggerUpdatedAtColumn is the updated_ts column name
-	RepoTriggerUpdatedAtColumn = "updated_ts"
 )
 
 // RepoTrigger used to trigger an agent.RepoRequest
@@ -81,24 +56,9 @@ func (o *RepoTrigger) String() string {
 	return fmt.Sprintf("agent.RepoTrigger<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *RepoTrigger) GetTopicName() datamodel.TopicNameType {
-	return RepoTriggerTopic
-}
-
 // GetModelName returns the name of the model
 func (o *RepoTrigger) GetModelName() datamodel.ModelNameType {
 	return RepoTriggerModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *RepoTrigger) GetStreamName() string {
-	return RepoTriggerStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *RepoTrigger) GetTableName() string {
-	return RepoTriggerTable.String()
 }
 
 // NewRepoTriggerID provides a template for generating an ID field for RepoTrigger
@@ -125,83 +85,9 @@ func (o *RepoTrigger) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *RepoTrigger) GetTopicKey() string {
-	var i interface{} = o.ID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *RepoTrigger) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for RepoTrigger")
-}
-
 // GetRefID returns the RefID for the object
 func (o *RepoTrigger) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *RepoTrigger) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *RepoTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *RepoTrigger) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *RepoTrigger) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = RepoTriggerModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *RepoTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("24h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -215,22 +101,6 @@ func (o *RepoTrigger) GetCustomerID() string {
 func (o *RepoTrigger) Clone() datamodel.Model {
 	c := new(RepoTrigger)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *RepoTrigger) Anon() datamodel.Model {
-	c := new(RepoTrigger)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -390,17 +260,4 @@ func (o *RepoTrigger) Hash() string {
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *RepoTrigger) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

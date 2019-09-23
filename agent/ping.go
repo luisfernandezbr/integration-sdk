@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -18,84 +17,8 @@ import (
 )
 
 const (
-	// PingTopic is the default topic name
-	PingTopic datamodel.TopicNameType = "agent_Ping_topic"
-
-	// PingStream is the default stream name
-	PingStream datamodel.TopicNameType = "agent_Ping_stream"
-
-	// PingTable is the default table name
-	PingTable datamodel.TopicNameType = "agent_ping"
-
 	// PingModelName is the model name
 	PingModelName datamodel.ModelNameType = "agent.Ping"
-)
-
-const (
-	// PingArchitectureColumn is the architecture column name
-	PingArchitectureColumn = "architecture"
-	// PingCustomerIDColumn is the customer_id column name
-	PingCustomerIDColumn = "customer_id"
-	// PingDataColumn is the data column name
-	PingDataColumn = "data"
-	// PingDistroColumn is the distro column name
-	PingDistroColumn = "distro"
-	// PingErrorColumn is the error column name
-	PingErrorColumn = "error"
-	// PingEventDateColumn is the event_date column name
-	PingEventDateColumn = "event_date"
-	// PingEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	PingEventDateColumnEpochColumn = "event_date->epoch"
-	// PingEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	PingEventDateColumnOffsetColumn = "event_date->offset"
-	// PingEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	PingEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// PingFreeSpaceColumn is the free_space column name
-	PingFreeSpaceColumn = "free_space"
-	// PingGoVersionColumn is the go_version column name
-	PingGoVersionColumn = "go_version"
-	// PingHostnameColumn is the hostname column name
-	PingHostnameColumn = "hostname"
-	// PingIDColumn is the id column name
-	PingIDColumn = "id"
-	// PingLastExportDateColumn is the last_export_date column name
-	PingLastExportDateColumn = "last_export_date"
-	// PingLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	PingLastExportDateColumnEpochColumn = "last_export_date->epoch"
-	// PingLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	PingLastExportDateColumnOffsetColumn = "last_export_date->offset"
-	// PingLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	PingLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
-	// PingMemoryColumn is the memory column name
-	PingMemoryColumn = "memory"
-	// PingMessageColumn is the message column name
-	PingMessageColumn = "message"
-	// PingNumCPUColumn is the num_cpu column name
-	PingNumCPUColumn = "num_cpu"
-	// PingOSColumn is the os column name
-	PingOSColumn = "os"
-	// PingRefIDColumn is the ref_id column name
-	PingRefIDColumn = "ref_id"
-	// PingRefTypeColumn is the ref_type column name
-	PingRefTypeColumn = "ref_type"
-	// PingRequestIDColumn is the request_id column name
-	PingRequestIDColumn = "request_id"
-	// PingStateColumn is the state column name
-	PingStateColumn = "state"
-	// PingSuccessColumn is the success column name
-	PingSuccessColumn = "success"
-	// PingSystemIDColumn is the system_id column name
-	PingSystemIDColumn = "system_id"
-	// PingTypeColumn is the type column name
-	PingTypeColumn = "type"
-	// PingUpdatedAtColumn is the updated_ts column name
-	PingUpdatedAtColumn = "updated_ts"
-	// PingUptimeColumn is the uptime column name
-	PingUptimeColumn = "uptime"
-	// PingUUIDColumn is the uuid column name
-	PingUUIDColumn = "uuid"
-	// PingVersionColumn is the version column name
-	PingVersionColumn = "version"
 )
 
 // PingEventDate represents the object structure for event_date
@@ -468,24 +391,9 @@ func (o *Ping) String() string {
 	return fmt.Sprintf("agent.Ping<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *Ping) GetTopicName() datamodel.TopicNameType {
-	return PingTopic
-}
-
 // GetModelName returns the name of the model
 func (o *Ping) GetModelName() datamodel.ModelNameType {
 	return PingModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *Ping) GetStreamName() string {
-	return PingStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *Ping) GetTableName() string {
-	return PingTable.String()
 }
 
 // NewPingID provides a template for generating an ID field for Ping
@@ -518,83 +426,9 @@ func (o *Ping) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Ping) GetTopicKey() string {
-	var i interface{} = o.ID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Ping) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Ping")
-}
-
 // GetRefID returns the RefID for the object
 func (o *Ping) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *Ping) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Ping) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Ping) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Ping) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = PingModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *Ping) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("24h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -608,22 +442,6 @@ func (o *Ping) GetCustomerID() string {
 func (o *Ping) Clone() datamodel.Model {
 	c := new(Ping)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *Ping) Anon() datamodel.Model {
-	c := new(Ping)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -790,6 +608,25 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -864,6 +701,25 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1190,17 +1046,4 @@ func (o *Ping) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *Ping) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -18,84 +17,8 @@ import (
 )
 
 const (
-	// IntegrationResponseTopic is the default topic name
-	IntegrationResponseTopic datamodel.TopicNameType = "agent_IntegrationResponse_topic"
-
-	// IntegrationResponseStream is the default stream name
-	IntegrationResponseStream datamodel.TopicNameType = "agent_IntegrationResponse_stream"
-
-	// IntegrationResponseTable is the default table name
-	IntegrationResponseTable datamodel.TopicNameType = "agent_integrationresponse"
-
 	// IntegrationResponseModelName is the model name
 	IntegrationResponseModelName datamodel.ModelNameType = "agent.IntegrationResponse"
-)
-
-const (
-	// IntegrationResponseArchitectureColumn is the architecture column name
-	IntegrationResponseArchitectureColumn = "architecture"
-	// IntegrationResponseAuthorizationColumn is the authorization column name
-	IntegrationResponseAuthorizationColumn = "authorization"
-	// IntegrationResponseCustomerIDColumn is the customer_id column name
-	IntegrationResponseCustomerIDColumn = "customer_id"
-	// IntegrationResponseDataColumn is the data column name
-	IntegrationResponseDataColumn = "data"
-	// IntegrationResponseDistroColumn is the distro column name
-	IntegrationResponseDistroColumn = "distro"
-	// IntegrationResponseErrorColumn is the error column name
-	IntegrationResponseErrorColumn = "error"
-	// IntegrationResponseEventDateColumn is the event_date column name
-	IntegrationResponseEventDateColumn = "event_date"
-	// IntegrationResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	IntegrationResponseEventDateColumnEpochColumn = "event_date->epoch"
-	// IntegrationResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	IntegrationResponseEventDateColumnOffsetColumn = "event_date->offset"
-	// IntegrationResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	IntegrationResponseEventDateColumnRfc3339Column = "event_date->rfc3339"
-	// IntegrationResponseFreeSpaceColumn is the free_space column name
-	IntegrationResponseFreeSpaceColumn = "free_space"
-	// IntegrationResponseGoVersionColumn is the go_version column name
-	IntegrationResponseGoVersionColumn = "go_version"
-	// IntegrationResponseHostnameColumn is the hostname column name
-	IntegrationResponseHostnameColumn = "hostname"
-	// IntegrationResponseIDColumn is the id column name
-	IntegrationResponseIDColumn = "id"
-	// IntegrationResponseLastExportDateColumn is the last_export_date column name
-	IntegrationResponseLastExportDateColumn = "last_export_date"
-	// IntegrationResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	IntegrationResponseLastExportDateColumnEpochColumn = "last_export_date->epoch"
-	// IntegrationResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	IntegrationResponseLastExportDateColumnOffsetColumn = "last_export_date->offset"
-	// IntegrationResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	IntegrationResponseLastExportDateColumnRfc3339Column = "last_export_date->rfc3339"
-	// IntegrationResponseMemoryColumn is the memory column name
-	IntegrationResponseMemoryColumn = "memory"
-	// IntegrationResponseMessageColumn is the message column name
-	IntegrationResponseMessageColumn = "message"
-	// IntegrationResponseNumCPUColumn is the num_cpu column name
-	IntegrationResponseNumCPUColumn = "num_cpu"
-	// IntegrationResponseOSColumn is the os column name
-	IntegrationResponseOSColumn = "os"
-	// IntegrationResponseRefIDColumn is the ref_id column name
-	IntegrationResponseRefIDColumn = "ref_id"
-	// IntegrationResponseRefTypeColumn is the ref_type column name
-	IntegrationResponseRefTypeColumn = "ref_type"
-	// IntegrationResponseRequestIDColumn is the request_id column name
-	IntegrationResponseRequestIDColumn = "request_id"
-	// IntegrationResponseSuccessColumn is the success column name
-	IntegrationResponseSuccessColumn = "success"
-	// IntegrationResponseSystemIDColumn is the system_id column name
-	IntegrationResponseSystemIDColumn = "system_id"
-	// IntegrationResponseTypeColumn is the type column name
-	IntegrationResponseTypeColumn = "type"
-	// IntegrationResponseUpdatedAtColumn is the updated_ts column name
-	IntegrationResponseUpdatedAtColumn = "updated_ts"
-	// IntegrationResponseUptimeColumn is the uptime column name
-	IntegrationResponseUptimeColumn = "uptime"
-	// IntegrationResponseUUIDColumn is the uuid column name
-	IntegrationResponseUUIDColumn = "uuid"
-	// IntegrationResponseVersionColumn is the version column name
-	IntegrationResponseVersionColumn = "version"
 )
 
 // IntegrationResponseEventDate represents the object structure for event_date
@@ -436,24 +359,9 @@ func (o *IntegrationResponse) String() string {
 	return fmt.Sprintf("agent.IntegrationResponse<%s>", o.ID)
 }
 
-// GetTopicName returns the name of the topic if evented
-func (o *IntegrationResponse) GetTopicName() datamodel.TopicNameType {
-	return IntegrationResponseTopic
-}
-
 // GetModelName returns the name of the model
 func (o *IntegrationResponse) GetModelName() datamodel.ModelNameType {
 	return IntegrationResponseModelName
-}
-
-// GetStreamName returns the name of the stream
-func (o *IntegrationResponse) GetStreamName() string {
-	return IntegrationResponseStream.String()
-}
-
-// GetTableName returns the name of the table
-func (o *IntegrationResponse) GetTableName() string {
-	return IntegrationResponseTable.String()
 }
 
 // NewIntegrationResponseID provides a template for generating an ID field for IntegrationResponse
@@ -486,83 +394,9 @@ func (o *IntegrationResponse) GetID() string {
 	return o.ID
 }
 
-// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *IntegrationResponse) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
-}
-
-// GetTimestamp returns the timestamp for the model or now if not provided
-func (o *IntegrationResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for IntegrationResponse")
-}
-
 // GetRefID returns the RefID for the object
 func (o *IntegrationResponse) GetRefID() string {
 	return o.RefID
-}
-
-// IsMaterialized returns true if the model is materialized
-func (o *IntegrationResponse) IsMaterialized() bool {
-	return false
-}
-
-// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *IntegrationResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	return nil
-}
-
-// IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *IntegrationResponse) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *IntegrationResponse) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = IntegrationResponseModelName.String()
-}
-
-// GetTopicConfig returns the topic config object
-func (o *IntegrationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
 }
 
 // GetCustomerID will return the customer_id
@@ -576,22 +410,6 @@ func (o *IntegrationResponse) GetCustomerID() string {
 func (o *IntegrationResponse) Clone() datamodel.Model {
 	c := new(IntegrationResponse)
 	c.FromMap(o.ToMap())
-	return c
-}
-
-// Anon returns the data structure as anonymous data
-func (o *IntegrationResponse) Anon() datamodel.Model {
-	c := new(IntegrationResponse)
-	if err := faker.FakeData(c); err != nil {
-		panic("couldn't create anon version of object: " + err.Error())
-	}
-	kv := c.ToMap()
-	for k, v := range o.ToMap() {
-		if _, ok := kv[k]; !ok {
-			kv[k] = v
-		}
-	}
-	c.FromMap(kv)
 	return c
 }
 
@@ -1143,17 +961,4 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *IntegrationResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }
