@@ -162,14 +162,83 @@ func (o *ChangelogCreatedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// Changelog change log
+// ChangelogField is the enumeration type for field
+type ChangelogField int32
+
+// String returns the string value for Field
+func (v ChangelogField) String() string {
+	switch int32(v) {
+	case 0:
+		return "ASSIGNEE_REF_ID"
+	case 1:
+		return "DUE_DATE"
+	case 2:
+		return "EPIC_ID"
+	case 3:
+		return "IDENTIFIER"
+	case 4:
+		return "PARENT_ID"
+	case 5:
+		return "PRIORITY"
+	case 6:
+		return "PROJECT_ID"
+	case 7:
+		return "REPORTER_REF_ID"
+	case 8:
+		return "RESOLUTION"
+	case 9:
+		return "SPRINT_IDS"
+	case 10:
+		return "STATUS"
+	case 11:
+		return "TAGS"
+	case 12:
+		return "TITLE"
+	case 13:
+		return "TYPE"
+	}
+	return "unset"
+}
+
+const (
+	// FieldAssigneeRefID is the enumeration value for assignee_ref_id
+	ChangelogFieldAssigneeRefID ChangelogField = 0
+	// FieldDueDate is the enumeration value for due_date
+	ChangelogFieldDueDate ChangelogField = 1
+	// FieldEpicID is the enumeration value for epic_id
+	ChangelogFieldEpicID ChangelogField = 2
+	// FieldIdentifier is the enumeration value for identifier
+	ChangelogFieldIdentifier ChangelogField = 3
+	// FieldParentID is the enumeration value for parent_id
+	ChangelogFieldParentID ChangelogField = 4
+	// FieldPriority is the enumeration value for priority
+	ChangelogFieldPriority ChangelogField = 5
+	// FieldProjectID is the enumeration value for project_id
+	ChangelogFieldProjectID ChangelogField = 6
+	// FieldReporterRefID is the enumeration value for reporter_ref_id
+	ChangelogFieldReporterRefID ChangelogField = 7
+	// FieldResolution is the enumeration value for resolution
+	ChangelogFieldResolution ChangelogField = 8
+	// FieldSprintIds is the enumeration value for sprint_ids
+	ChangelogFieldSprintIds ChangelogField = 9
+	// FieldStatus is the enumeration value for status
+	ChangelogFieldStatus ChangelogField = 10
+	// FieldTags is the enumeration value for tags
+	ChangelogFieldTags ChangelogField = 11
+	// FieldTitle is the enumeration value for title
+	ChangelogFieldTitle ChangelogField = 12
+	// FieldType is the enumeration value for type
+	ChangelogFieldType ChangelogField = 13
+)
+
+// Changelog an individual change to an issue
 type Changelog struct {
 	// CreatedDate the date when this change was created
 	CreatedDate ChangelogCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Field name of the field that was changed
-	Field string `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
+	// Field the field that was changed
+	Field ChangelogField `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
 	// FieldType type of the field that was changed
 	FieldType string `json:"field_type" codec:"field_type" bson:"field_type" yaml:"field_type" faker:"-"`
 	// From id of the change from
@@ -213,6 +282,9 @@ func toChangelogObject(o interface{}, isoptional bool) interface{} {
 
 	case ChangelogCreatedDate:
 		return v.ToMap()
+
+	case ChangelogField:
+		return v.String()
 
 	default:
 		return o
@@ -488,17 +560,72 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["field"].(string); ok {
+	if val, ok := kv["field"].(ChangelogField); ok {
 		o.Field = val
 	} else {
-		if val, ok := kv["field"]; ok {
-			if val == nil {
-				o.Field = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Field = fmt.Sprintf("%v", val)
+		if em, ok := kv["field"].(map[string]interface{}); ok {
+			ev := em["work.field"].(string)
+			switch ev {
+			case "assignee_ref_id", "ASSIGNEE_REF_ID":
+				o.Field = 0
+			case "due_date", "DUE_DATE":
+				o.Field = 1
+			case "epic_id", "EPIC_ID":
+				o.Field = 2
+			case "identifier", "IDENTIFIER":
+				o.Field = 3
+			case "parent_id", "PARENT_ID":
+				o.Field = 4
+			case "priority", "PRIORITY":
+				o.Field = 5
+			case "project_id", "PROJECT_ID":
+				o.Field = 6
+			case "reporter_ref_id", "REPORTER_REF_ID":
+				o.Field = 7
+			case "resolution", "RESOLUTION":
+				o.Field = 8
+			case "sprint_ids", "SPRINT_IDS":
+				o.Field = 9
+			case "status", "STATUS":
+				o.Field = 10
+			case "tags", "TAGS":
+				o.Field = 11
+			case "title", "TITLE":
+				o.Field = 12
+			case "type", "TYPE":
+				o.Field = 13
+			}
+		}
+		if em, ok := kv["field"].(string); ok {
+			switch em {
+			case "assignee_ref_id", "ASSIGNEE_REF_ID":
+				o.Field = 0
+			case "due_date", "DUE_DATE":
+				o.Field = 1
+			case "epic_id", "EPIC_ID":
+				o.Field = 2
+			case "identifier", "IDENTIFIER":
+				o.Field = 3
+			case "parent_id", "PARENT_ID":
+				o.Field = 4
+			case "priority", "PRIORITY":
+				o.Field = 5
+			case "project_id", "PROJECT_ID":
+				o.Field = 6
+			case "reporter_ref_id", "REPORTER_REF_ID":
+				o.Field = 7
+			case "resolution", "RESOLUTION":
+				o.Field = 8
+			case "sprint_ids", "SPRINT_IDS":
+				o.Field = 9
+			case "status", "STATUS":
+				o.Field = 10
+			case "tags", "TAGS":
+				o.Field = 11
+			case "title", "TITLE":
+				o.Field = 12
+			case "type", "TYPE":
+				o.Field = 13
 			}
 		}
 	}

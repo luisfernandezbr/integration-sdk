@@ -68,6 +68,22 @@ const (
 	IssueIdentifierColumn = "Identifier"
 	// IssueParentIDColumn is the parent_id column name
 	IssueParentIDColumn = "ParentID"
+	// IssuePlannedEndDateColumn is the planned_end_date column name
+	IssuePlannedEndDateColumn = "PlannedEndDate"
+	// IssuePlannedEndDateColumnEpochColumn is the epoch column property of the PlannedEndDate name
+	IssuePlannedEndDateColumnEpochColumn = "PlannedEndDate.Epoch"
+	// IssuePlannedEndDateColumnOffsetColumn is the offset column property of the PlannedEndDate name
+	IssuePlannedEndDateColumnOffsetColumn = "PlannedEndDate.Offset"
+	// IssuePlannedEndDateColumnRfc3339Column is the rfc3339 column property of the PlannedEndDate name
+	IssuePlannedEndDateColumnRfc3339Column = "PlannedEndDate.Rfc3339"
+	// IssuePlannedStartDateColumn is the planned_start_date column name
+	IssuePlannedStartDateColumn = "PlannedStartDate"
+	// IssuePlannedStartDateColumnEpochColumn is the epoch column property of the PlannedStartDate name
+	IssuePlannedStartDateColumnEpochColumn = "PlannedStartDate.Epoch"
+	// IssuePlannedStartDateColumnOffsetColumn is the offset column property of the PlannedStartDate name
+	IssuePlannedStartDateColumnOffsetColumn = "PlannedStartDate.Offset"
+	// IssuePlannedStartDateColumnRfc3339Column is the rfc3339 column property of the PlannedStartDate name
+	IssuePlannedStartDateColumnRfc3339Column = "PlannedStartDate.Rfc3339"
 	// IssuePriorityColumn is the priority column name
 	IssuePriorityColumn = "Priority"
 	// IssueProjectIDColumn is the project_id column name
@@ -384,6 +400,194 @@ func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// IssuePlannedEndDate represents the object structure for planned_end_date
+type IssuePlannedEndDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toIssuePlannedEndDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssuePlannedEndDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *IssuePlannedEndDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toIssuePlannedEndDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toIssuePlannedEndDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toIssuePlannedEndDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *IssuePlannedEndDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssuePlannedEndDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// IssuePlannedStartDate represents the object structure for planned_start_date
+type IssuePlannedStartDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toIssuePlannedStartDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssuePlannedStartDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *IssuePlannedStartDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toIssuePlannedStartDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toIssuePlannedStartDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toIssuePlannedStartDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *IssuePlannedStartDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssuePlannedStartDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // IssueUpdatedDate represents the object structure for updated_date
 type IssueUpdatedDate struct {
 	// Epoch the date in epoch format
@@ -498,6 +702,10 @@ type Issue struct {
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
 	// ParentID parent issue id, if any
 	ParentID string `json:"parent_id" codec:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
+	// PlannedEndDate the date that the issue was planned to end
+	PlannedEndDate IssuePlannedEndDate `json:"planned_end_date" codec:"planned_end_date" bson:"planned_end_date" yaml:"planned_end_date" faker:"-"`
+	// PlannedStartDate the date that the issue was planned to start
+	PlannedStartDate IssuePlannedStartDate `json:"planned_start_date" codec:"planned_start_date" bson:"planned_start_date" yaml:"planned_start_date" faker:"-"`
 	// Priority priority of the issue
 	Priority string `json:"priority" codec:"priority" bson:"priority" yaml:"priority" faker:"-"`
 	// ProjectID unique project id
@@ -550,6 +758,12 @@ func toIssueObject(o interface{}, isoptional bool) interface{} {
 		return arr
 
 	case IssueDueDate:
+		return v.ToMap()
+
+	case IssuePlannedEndDate:
+		return v.ToMap()
+
+	case IssuePlannedStartDate:
 		return v.ToMap()
 
 	case IssueUpdatedDate:
@@ -759,29 +973,31 @@ func (o *Issue) IsEqual(other *Issue) bool {
 func (o *Issue) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"assignee_ref_id": toIssueObject(o.AssigneeRefID, false),
-		"created_date":    toIssueObject(o.CreatedDate, false),
-		"creator_ref_id":  toIssueObject(o.CreatorRefID, false),
-		"customFields":    toIssueObject(o.CustomFields, false),
-		"customer_id":     toIssueObject(o.CustomerID, false),
-		"due_date":        toIssueObject(o.DueDate, false),
-		"id":              toIssueObject(o.ID, false),
-		"identifier":      toIssueObject(o.Identifier, false),
-		"parent_id":       toIssueObject(o.ParentID, false),
-		"priority":        toIssueObject(o.Priority, false),
-		"project_id":      toIssueObject(o.ProjectID, false),
-		"ref_id":          toIssueObject(o.RefID, false),
-		"ref_type":        toIssueObject(o.RefType, false),
-		"reporter_ref_id": toIssueObject(o.ReporterRefID, false),
-		"resolution":      toIssueObject(o.Resolution, false),
-		"status":          toIssueObject(o.Status, false),
-		"tags":            toIssueObject(o.Tags, false),
-		"title":           toIssueObject(o.Title, false),
-		"type":            toIssueObject(o.Type, false),
-		"updated_date":    toIssueObject(o.UpdatedDate, false),
-		"updated_ts":      toIssueObject(o.UpdatedAt, false),
-		"url":             toIssueObject(o.URL, false),
-		"hashcode":        toIssueObject(o.Hashcode, false),
+		"assignee_ref_id":    toIssueObject(o.AssigneeRefID, false),
+		"created_date":       toIssueObject(o.CreatedDate, false),
+		"creator_ref_id":     toIssueObject(o.CreatorRefID, false),
+		"customFields":       toIssueObject(o.CustomFields, false),
+		"customer_id":        toIssueObject(o.CustomerID, false),
+		"due_date":           toIssueObject(o.DueDate, false),
+		"id":                 toIssueObject(o.ID, false),
+		"identifier":         toIssueObject(o.Identifier, false),
+		"parent_id":          toIssueObject(o.ParentID, false),
+		"planned_end_date":   toIssueObject(o.PlannedEndDate, false),
+		"planned_start_date": toIssueObject(o.PlannedStartDate, false),
+		"priority":           toIssueObject(o.Priority, false),
+		"project_id":         toIssueObject(o.ProjectID, false),
+		"ref_id":             toIssueObject(o.RefID, false),
+		"ref_type":           toIssueObject(o.RefType, false),
+		"reporter_ref_id":    toIssueObject(o.ReporterRefID, false),
+		"resolution":         toIssueObject(o.Resolution, false),
+		"status":             toIssueObject(o.Status, false),
+		"tags":               toIssueObject(o.Tags, false),
+		"title":              toIssueObject(o.Title, false),
+		"type":               toIssueObject(o.Type, false),
+		"updated_date":       toIssueObject(o.UpdatedDate, false),
+		"updated_ts":         toIssueObject(o.UpdatedAt, false),
+		"url":                toIssueObject(o.URL, false),
+		"hashcode":           toIssueObject(o.Hashcode, false),
 	}
 }
 
@@ -1012,6 +1228,72 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 				o.ParentID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["planned_end_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.PlannedEndDate.FromMap(kv)
+		} else if sv, ok := val.(IssuePlannedEndDate); ok {
+			// struct
+			o.PlannedEndDate = sv
+		} else if sp, ok := val.(*IssuePlannedEndDate); ok {
+			// struct pointer
+			o.PlannedEndDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.PlannedEndDate.Epoch = dt.Epoch
+			o.PlannedEndDate.Rfc3339 = dt.Rfc3339
+			o.PlannedEndDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.PlannedEndDate.Epoch = dt.Epoch
+			o.PlannedEndDate.Rfc3339 = dt.Rfc3339
+			o.PlannedEndDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.PlannedEndDate.Epoch = dt.Epoch
+				o.PlannedEndDate.Rfc3339 = dt.Rfc3339
+				o.PlannedEndDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.PlannedEndDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["planned_start_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.PlannedStartDate.FromMap(kv)
+		} else if sv, ok := val.(IssuePlannedStartDate); ok {
+			// struct
+			o.PlannedStartDate = sv
+		} else if sp, ok := val.(*IssuePlannedStartDate); ok {
+			// struct pointer
+			o.PlannedStartDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.PlannedStartDate.Epoch = dt.Epoch
+			o.PlannedStartDate.Rfc3339 = dt.Rfc3339
+			o.PlannedStartDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.PlannedStartDate.Epoch = dt.Epoch
+			o.PlannedStartDate.Rfc3339 = dt.Rfc3339
+			o.PlannedStartDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.PlannedStartDate.Epoch = dt.Epoch
+				o.PlannedStartDate.Rfc3339 = dt.Rfc3339
+				o.PlannedStartDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.PlannedStartDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["priority"].(string); ok {
@@ -1277,6 +1559,8 @@ func (o *Issue) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
 	args = append(args, o.ParentID)
+	args = append(args, o.PlannedEndDate)
+	args = append(args, o.PlannedStartDate)
 	args = append(args, o.Priority)
 	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
