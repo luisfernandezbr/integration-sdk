@@ -47,6 +47,8 @@ type RepoRequestIntegrationAuthorization struct {
 	Authorization *string `json:"authorization,omitempty" codec:"authorization,omitempty" bson:"authorization" yaml:"authorization,omitempty" faker:"-"`
 	// Hostname Hostname for instance, if relevant
 	Hostname *string `json:"hostname,omitempty" codec:"hostname,omitempty" bson:"hostname" yaml:"hostname,omitempty" faker:"-"`
+	// Organization Organization for instance, if relevant
+	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 }
 
 func toRepoRequestIntegrationAuthorizationObject(o interface{}, isoptional bool) interface{} {
@@ -82,6 +84,8 @@ func (o *RepoRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 		"authorization": toRepoRequestIntegrationAuthorizationObject(o.Authorization, true),
 		// Hostname Hostname for instance, if relevant
 		"hostname": toRepoRequestIntegrationAuthorizationObject(o.Hostname, true),
+		// Organization Organization for instance, if relevant
+		"organization": toRepoRequestIntegrationAuthorizationObject(o.Organization, true),
 	}
 }
 
@@ -276,6 +280,24 @@ func (o *RepoRequestIntegrationAuthorization) FromMap(kv map[string]interface{})
 					val = kv["string"]
 				}
 				o.Hostname = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["organization"].(*string); ok {
+		o.Organization = val
+	} else if val, ok := kv["organization"].(string); ok {
+		o.Organization = &val
+	} else {
+		if val, ok := kv["organization"]; ok {
+			if val == nil {
+				o.Organization = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Organization = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1265,6 +1287,25 @@ func (o *RepoRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

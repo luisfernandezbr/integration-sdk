@@ -47,6 +47,8 @@ type UserRequestIntegrationAuthorization struct {
 	Authorization *string `json:"authorization,omitempty" codec:"authorization,omitempty" bson:"authorization" yaml:"authorization,omitempty" faker:"-"`
 	// Hostname Hostname for instance, if relevant
 	Hostname *string `json:"hostname,omitempty" codec:"hostname,omitempty" bson:"hostname" yaml:"hostname,omitempty" faker:"-"`
+	// Organization Organization for instance, if relevant
+	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 }
 
 func toUserRequestIntegrationAuthorizationObject(o interface{}, isoptional bool) interface{} {
@@ -82,6 +84,8 @@ func (o *UserRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 		"authorization": toUserRequestIntegrationAuthorizationObject(o.Authorization, true),
 		// Hostname Hostname for instance, if relevant
 		"hostname": toUserRequestIntegrationAuthorizationObject(o.Hostname, true),
+		// Organization Organization for instance, if relevant
+		"organization": toUserRequestIntegrationAuthorizationObject(o.Organization, true),
 	}
 }
 
@@ -276,6 +280,24 @@ func (o *UserRequestIntegrationAuthorization) FromMap(kv map[string]interface{})
 					val = kv["string"]
 				}
 				o.Hostname = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["organization"].(*string); ok {
+		o.Organization = val
+	} else if val, ok := kv["organization"].(string); ok {
+		o.Organization = &val
+	} else {
+		if val, ok := kv["organization"]; ok {
+			if val == nil {
+				o.Organization = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Organization = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
