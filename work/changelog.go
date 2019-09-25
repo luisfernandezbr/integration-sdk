@@ -243,7 +243,7 @@ type Changelog struct {
 	FieldType string `json:"field_type" codec:"field_type" bson:"field_type" yaml:"field_type" faker:"-"`
 	// From id of the change from
 	From string `json:"from" codec:"from" bson:"from" yaml:"from" faker:"-"`
-	// FromString name of the change from
+	// FromString human readable representation of the change from, used mostly for debug
 	FromString string `json:"from_string" codec:"from_string" bson:"from_string" yaml:"from_string" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
@@ -259,7 +259,7 @@ type Changelog struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// To id of the change to
 	To string `json:"to" codec:"to" bson:"to" yaml:"to" faker:"-"`
-	// ToString name of the change to
+	// ToString human readable representation name of the change to, used mostly for debug
 	ToString string `json:"to_string" codec:"to_string" bson:"to_string" yaml:"to_string" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`

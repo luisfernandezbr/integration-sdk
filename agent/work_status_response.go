@@ -1818,7 +1818,7 @@ func (o *WorkStatusResponse) setDefaults(frommap bool) {
 		o.Error = &emptyString
 	}
 	if o.WorkConfig.TypeRules == nil {
-		o.WorkConfig.TypeRules = make([]WorkStatusResponseTypeRules, 0)
+		o.WorkConfig.TypeRules = make([]WorkStatusResponseWorkConfigTypeRules, 0)
 	}
 
 	if o.ID == "" {
