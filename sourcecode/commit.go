@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -20,8 +21,121 @@ import (
 )
 
 const (
+	// CommitTopic is the default topic name
+	CommitTopic datamodel.TopicNameType = "sourcecode_Commit_topic"
+
+	// CommitTable is the default table name
+	CommitTable datamodel.ModelNameType = "sourcecode_commit"
+
 	// CommitModelName is the model name
 	CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
+)
+
+const (
+	// CommitAdditionsColumn is the additions column name
+	CommitAdditionsColumn = "Additions"
+	// CommitAuthorRefIDColumn is the author_ref_id column name
+	CommitAuthorRefIDColumn = "AuthorRefID"
+	// CommitBlanksColumn is the blanks column name
+	CommitBlanksColumn = "Blanks"
+	// CommitBranchIdsColumn is the branch_ids column name
+	CommitBranchIdsColumn = "BranchIds"
+	// CommitCommentsColumn is the comments column name
+	CommitCommentsColumn = "Comments"
+	// CommitCommitterRefIDColumn is the committer_ref_id column name
+	CommitCommitterRefIDColumn = "CommitterRefID"
+	// CommitComplexityColumn is the complexity column name
+	CommitComplexityColumn = "Complexity"
+	// CommitCreatedDateColumn is the created_date column name
+	CommitCreatedDateColumn = "CreatedDate"
+	// CommitCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
+	CommitCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
+	// CommitCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
+	CommitCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
+	// CommitCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
+	CommitCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
+	// CommitCustomerIDColumn is the customer_id column name
+	CommitCustomerIDColumn = "CustomerID"
+	// CommitDeletionsColumn is the deletions column name
+	CommitDeletionsColumn = "Deletions"
+	// CommitExcludedColumn is the excluded column name
+	CommitExcludedColumn = "Excluded"
+	// CommitFilesColumn is the files column name
+	CommitFilesColumn = "Files"
+	// CommitFilesColumnAdditionsColumn is the additions column property of the Files name
+	CommitFilesColumnAdditionsColumn = "Files.Additions"
+	// CommitFilesColumnBinaryColumn is the binary column property of the Files name
+	CommitFilesColumnBinaryColumn = "Files.Binary"
+	// CommitFilesColumnBlanksColumn is the blanks column property of the Files name
+	CommitFilesColumnBlanksColumn = "Files.Blanks"
+	// CommitFilesColumnCommentsColumn is the comments column property of the Files name
+	CommitFilesColumnCommentsColumn = "Files.Comments"
+	// CommitFilesColumnCommitIDColumn is the commit_id column property of the Files name
+	CommitFilesColumnCommitIDColumn = "Files.CommitID"
+	// CommitFilesColumnComplexityColumn is the complexity column property of the Files name
+	CommitFilesColumnComplexityColumn = "Files.Complexity"
+	// CommitFilesColumnCreatedDateColumn is the created_date column property of the Files name
+	CommitFilesColumnCreatedDateColumn = "Files.CreatedDate"
+	// CommitFilesColumnDeletionsColumn is the deletions column property of the Files name
+	CommitFilesColumnDeletionsColumn = "Files.Deletions"
+	// CommitFilesColumnExcludedColumn is the excluded column property of the Files name
+	CommitFilesColumnExcludedColumn = "Files.Excluded"
+	// CommitFilesColumnExcludedReasonColumn is the excluded_reason column property of the Files name
+	CommitFilesColumnExcludedReasonColumn = "Files.ExcludedReason"
+	// CommitFilesColumnFilenameColumn is the filename column property of the Files name
+	CommitFilesColumnFilenameColumn = "Files.Filename"
+	// CommitFilesColumnLanguageColumn is the language column property of the Files name
+	CommitFilesColumnLanguageColumn = "Files.Language"
+	// CommitFilesColumnLicenseColumn is the license column property of the Files name
+	CommitFilesColumnLicenseColumn = "Files.License"
+	// CommitFilesColumnLicenseConfidenceColumn is the license_confidence column property of the Files name
+	CommitFilesColumnLicenseConfidenceColumn = "Files.LicenseConfidence"
+	// CommitFilesColumnLocColumn is the loc column property of the Files name
+	CommitFilesColumnLocColumn = "Files.Loc"
+	// CommitFilesColumnOrdinalColumn is the ordinal column property of the Files name
+	CommitFilesColumnOrdinalColumn = "Files.Ordinal"
+	// CommitFilesColumnRenamedColumn is the renamed column property of the Files name
+	CommitFilesColumnRenamedColumn = "Files.Renamed"
+	// CommitFilesColumnRenamedFromColumn is the renamed_from column property of the Files name
+	CommitFilesColumnRenamedFromColumn = "Files.RenamedFrom"
+	// CommitFilesColumnRenamedToColumn is the renamed_to column property of the Files name
+	CommitFilesColumnRenamedToColumn = "Files.RenamedTo"
+	// CommitFilesColumnRepoIDColumn is the repo_id column property of the Files name
+	CommitFilesColumnRepoIDColumn = "Files.RepoID"
+	// CommitFilesColumnSizeColumn is the size column property of the Files name
+	CommitFilesColumnSizeColumn = "Files.Size"
+	// CommitFilesColumnSlocColumn is the sloc column property of the Files name
+	CommitFilesColumnSlocColumn = "Files.Sloc"
+	// CommitFilesColumnStatusColumn is the status column property of the Files name
+	CommitFilesColumnStatusColumn = "Files.Status"
+	// CommitFilesChangedColumn is the files_changed column name
+	CommitFilesChangedColumn = "FilesChanged"
+	// CommitGpgSignedColumn is the gpg_signed column name
+	CommitGpgSignedColumn = "GpgSigned"
+	// CommitIDColumn is the id column name
+	CommitIDColumn = "ID"
+	// CommitLocColumn is the loc column name
+	CommitLocColumn = "Loc"
+	// CommitMessageColumn is the message column name
+	CommitMessageColumn = "Message"
+	// CommitOrdinalColumn is the ordinal column name
+	CommitOrdinalColumn = "Ordinal"
+	// CommitRefIDColumn is the ref_id column name
+	CommitRefIDColumn = "RefID"
+	// CommitRefTypeColumn is the ref_type column name
+	CommitRefTypeColumn = "RefType"
+	// CommitRepoIDColumn is the repo_id column name
+	CommitRepoIDColumn = "RepoID"
+	// CommitShaColumn is the sha column name
+	CommitShaColumn = "Sha"
+	// CommitSizeColumn is the size column name
+	CommitSizeColumn = "Size"
+	// CommitSlocColumn is the sloc column name
+	CommitSlocColumn = "Sloc"
+	// CommitUpdatedAtColumn is the updated_ts column name
+	CommitUpdatedAtColumn = "UpdatedAt"
+	// CommitURLColumn is the url column name
+	CommitURLColumn = "URL"
 )
 
 // CommitCreatedDate represents the object structure for created_date
@@ -756,6 +870,9 @@ type Commit struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Commit)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*Commit)(nil)
+
 func toCommitObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Commit:
@@ -779,6 +896,21 @@ func toCommitObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of Commit
 func (o *Commit) String() string {
 	return fmt.Sprintf("sourcecode.Commit<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *Commit) GetTopicName() datamodel.TopicNameType {
+	return CommitTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *Commit) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *Commit) GetTableName() string {
+	return CommitTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -815,10 +947,84 @@ func (o *Commit) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *Commit) GetTopicKey() string {
+	var i interface{} = o.RepoID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Commit) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Commit")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Commit) GetRefID() string {
 	o.RefID = o.Sha
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *Commit) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Commit) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Commit) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Commit) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CommitModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "repo_id",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -832,6 +1038,22 @@ func (o *Commit) GetCustomerID() string {
 func (o *Commit) Clone() datamodel.Model {
 	c := new(Commit)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Commit) Anon() datamodel.Model {
+	c := new(Commit)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -1427,4 +1649,17 @@ func (o *Commit) Hash() string {
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Commit) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

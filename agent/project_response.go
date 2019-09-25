@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -19,8 +20,103 @@ import (
 )
 
 const (
+	// ProjectResponseTopic is the default topic name
+	ProjectResponseTopic datamodel.TopicNameType = "agent_ProjectResponse_topic"
+
+	// ProjectResponseTable is the default table name
+	ProjectResponseTable datamodel.ModelNameType = "agent_projectresponse"
+
 	// ProjectResponseModelName is the model name
 	ProjectResponseModelName datamodel.ModelNameType = "agent.ProjectResponse"
+)
+
+const (
+	// ProjectResponseArchitectureColumn is the architecture column name
+	ProjectResponseArchitectureColumn = "Architecture"
+	// ProjectResponseCustomerIDColumn is the customer_id column name
+	ProjectResponseCustomerIDColumn = "CustomerID"
+	// ProjectResponseDataColumn is the data column name
+	ProjectResponseDataColumn = "Data"
+	// ProjectResponseDistroColumn is the distro column name
+	ProjectResponseDistroColumn = "Distro"
+	// ProjectResponseErrorColumn is the error column name
+	ProjectResponseErrorColumn = "Error"
+	// ProjectResponseEventDateColumn is the event_date column name
+	ProjectResponseEventDateColumn = "EventDate"
+	// ProjectResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	ProjectResponseEventDateColumnEpochColumn = "EventDate.Epoch"
+	// ProjectResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	ProjectResponseEventDateColumnOffsetColumn = "EventDate.Offset"
+	// ProjectResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	ProjectResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
+	// ProjectResponseFreeSpaceColumn is the free_space column name
+	ProjectResponseFreeSpaceColumn = "FreeSpace"
+	// ProjectResponseGoVersionColumn is the go_version column name
+	ProjectResponseGoVersionColumn = "GoVersion"
+	// ProjectResponseHostnameColumn is the hostname column name
+	ProjectResponseHostnameColumn = "Hostname"
+	// ProjectResponseIDColumn is the id column name
+	ProjectResponseIDColumn = "ID"
+	// ProjectResponseIntegrationIDColumn is the integration_id column name
+	ProjectResponseIntegrationIDColumn = "IntegrationID"
+	// ProjectResponseLastExportDateColumn is the last_export_date column name
+	ProjectResponseLastExportDateColumn = "LastExportDate"
+	// ProjectResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	ProjectResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
+	// ProjectResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	ProjectResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
+	// ProjectResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	ProjectResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
+	// ProjectResponseMemoryColumn is the memory column name
+	ProjectResponseMemoryColumn = "Memory"
+	// ProjectResponseMessageColumn is the message column name
+	ProjectResponseMessageColumn = "Message"
+	// ProjectResponseNumCPUColumn is the num_cpu column name
+	ProjectResponseNumCPUColumn = "NumCPU"
+	// ProjectResponseOSColumn is the os column name
+	ProjectResponseOSColumn = "OS"
+	// ProjectResponseProjectsColumn is the projects column name
+	ProjectResponseProjectsColumn = "Projects"
+	// ProjectResponseProjectsColumnActiveColumn is the active column property of the Projects name
+	ProjectResponseProjectsColumnActiveColumn = "Projects.Active"
+	// ProjectResponseProjectsColumnCategoryColumn is the category column property of the Projects name
+	ProjectResponseProjectsColumnCategoryColumn = "Projects.Category"
+	// ProjectResponseProjectsColumnDescriptionColumn is the description column property of the Projects name
+	ProjectResponseProjectsColumnDescriptionColumn = "Projects.Description"
+	// ProjectResponseProjectsColumnIdentifierColumn is the identifier column property of the Projects name
+	ProjectResponseProjectsColumnIdentifierColumn = "Projects.Identifier"
+	// ProjectResponseProjectsColumnLastIssueColumn is the last_issue column property of the Projects name
+	ProjectResponseProjectsColumnLastIssueColumn = "Projects.LastIssue"
+	// ProjectResponseProjectsColumnNameColumn is the name column property of the Projects name
+	ProjectResponseProjectsColumnNameColumn = "Projects.Name"
+	// ProjectResponseProjectsColumnRefIDColumn is the ref_id column property of the Projects name
+	ProjectResponseProjectsColumnRefIDColumn = "Projects.RefID"
+	// ProjectResponseProjectsColumnRefTypeColumn is the ref_type column property of the Projects name
+	ProjectResponseProjectsColumnRefTypeColumn = "Projects.RefType"
+	// ProjectResponseProjectsColumnTotalIssuesColumn is the total_issues column property of the Projects name
+	ProjectResponseProjectsColumnTotalIssuesColumn = "Projects.TotalIssues"
+	// ProjectResponseProjectsColumnURLColumn is the url column property of the Projects name
+	ProjectResponseProjectsColumnURLColumn = "Projects.URL"
+	// ProjectResponseRefIDColumn is the ref_id column name
+	ProjectResponseRefIDColumn = "RefID"
+	// ProjectResponseRefTypeColumn is the ref_type column name
+	ProjectResponseRefTypeColumn = "RefType"
+	// ProjectResponseRequestIDColumn is the request_id column name
+	ProjectResponseRequestIDColumn = "RequestID"
+	// ProjectResponseSuccessColumn is the success column name
+	ProjectResponseSuccessColumn = "Success"
+	// ProjectResponseSystemIDColumn is the system_id column name
+	ProjectResponseSystemIDColumn = "SystemID"
+	// ProjectResponseTypeColumn is the type column name
+	ProjectResponseTypeColumn = "Type"
+	// ProjectResponseUpdatedAtColumn is the updated_ts column name
+	ProjectResponseUpdatedAtColumn = "UpdatedAt"
+	// ProjectResponseUptimeColumn is the uptime column name
+	ProjectResponseUptimeColumn = "Uptime"
+	// ProjectResponseUUIDColumn is the uuid column name
+	ProjectResponseUUIDColumn = "UUID"
+	// ProjectResponseVersionColumn is the version column name
+	ProjectResponseVersionColumn = "Version"
 )
 
 // ProjectResponseEventDate represents the object structure for event_date
@@ -876,6 +972,9 @@ type ProjectResponse struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*ProjectResponse)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*ProjectResponse)(nil)
+
 func toProjectResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectResponse:
@@ -905,6 +1004,21 @@ func toProjectResponseObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of ProjectResponse
 func (o *ProjectResponse) String() string {
 	return fmt.Sprintf("agent.ProjectResponse<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *ProjectResponse) GetTopicName() datamodel.TopicNameType {
+	return ProjectResponseTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *ProjectResponse) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *ProjectResponse) GetTableName() string {
+	return ProjectResponseTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -945,9 +1059,83 @@ func (o *ProjectResponse) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *ProjectResponse) GetTopicKey() string {
+	var i interface{} = o.UUID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *ProjectResponse) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for ProjectResponse")
+}
+
 // GetRefID returns the RefID for the object
 func (o *ProjectResponse) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *ProjectResponse) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *ProjectResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *ProjectResponse) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *ProjectResponse) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = ProjectResponseModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *ProjectResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "uuid",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -961,6 +1149,22 @@ func (o *ProjectResponse) GetCustomerID() string {
 func (o *ProjectResponse) Clone() datamodel.Model {
 	c := new(ProjectResponse)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *ProjectResponse) Anon() datamodel.Model {
+	c := new(ProjectResponse)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -1615,4 +1819,17 @@ func (o *ProjectResponse) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *ProjectResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

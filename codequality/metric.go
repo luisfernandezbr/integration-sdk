@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -16,8 +17,41 @@ import (
 )
 
 const (
+	// MetricTopic is the default topic name
+	MetricTopic datamodel.TopicNameType = "codequality_Metric_topic"
+
+	// MetricTable is the default table name
+	MetricTable datamodel.ModelNameType = "codequality_metric"
+
 	// MetricModelName is the model name
 	MetricModelName datamodel.ModelNameType = "codequality.Metric"
+)
+
+const (
+	// MetricCreatedDateColumn is the created_date column name
+	MetricCreatedDateColumn = "CreatedDate"
+	// MetricCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
+	MetricCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
+	// MetricCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
+	MetricCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
+	// MetricCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
+	MetricCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
+	// MetricCustomerIDColumn is the customer_id column name
+	MetricCustomerIDColumn = "CustomerID"
+	// MetricIDColumn is the id column name
+	MetricIDColumn = "ID"
+	// MetricNameColumn is the name column name
+	MetricNameColumn = "Name"
+	// MetricProjectIDColumn is the project_id column name
+	MetricProjectIDColumn = "ProjectID"
+	// MetricRefIDColumn is the ref_id column name
+	MetricRefIDColumn = "RefID"
+	// MetricRefTypeColumn is the ref_type column name
+	MetricRefTypeColumn = "RefType"
+	// MetricUpdatedAtColumn is the updated_ts column name
+	MetricUpdatedAtColumn = "UpdatedAt"
+	// MetricValueColumn is the value column name
+	MetricValueColumn = "Value"
 )
 
 // MetricCreatedDate represents the object structure for created_date
@@ -141,6 +175,9 @@ type Metric struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Metric)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*Metric)(nil)
+
 func toMetricObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Metric:
@@ -157,6 +194,21 @@ func toMetricObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of Metric
 func (o *Metric) String() string {
 	return fmt.Sprintf("codequality.Metric<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *Metric) GetTopicName() datamodel.TopicNameType {
+	return MetricTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *Metric) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *Metric) GetTableName() string {
+	return MetricTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -188,9 +240,83 @@ func (o *Metric) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *Metric) GetTopicKey() string {
+	var i interface{} = o.ProjectID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Metric) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Metric")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Metric) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *Metric) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Metric) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Metric) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Metric) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = MetricModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "project_id",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -204,6 +330,22 @@ func (o *Metric) GetCustomerID() string {
 func (o *Metric) Clone() datamodel.Model {
 	c := new(Metric)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Metric) Anon() datamodel.Model {
+	c := new(Metric)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -432,4 +574,17 @@ func (o *Metric) Hash() string {
 	args = append(args, o.Value)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Metric) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

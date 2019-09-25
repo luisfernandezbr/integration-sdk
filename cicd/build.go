@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -17,8 +18,55 @@ import (
 )
 
 const (
+	// BuildTopic is the default topic name
+	BuildTopic datamodel.TopicNameType = "cicd_Build_topic"
+
+	// BuildTable is the default table name
+	BuildTable datamodel.ModelNameType = "cicd_build"
+
 	// BuildModelName is the model name
 	BuildModelName datamodel.ModelNameType = "cicd.Build"
+)
+
+const (
+	// BuildAutomatedColumn is the automated column name
+	BuildAutomatedColumn = "Automated"
+	// BuildCommitShaColumn is the commit_sha column name
+	BuildCommitShaColumn = "CommitSha"
+	// BuildCustomerIDColumn is the customer_id column name
+	BuildCustomerIDColumn = "CustomerID"
+	// BuildEndDateColumn is the end_date column name
+	BuildEndDateColumn = "EndDate"
+	// BuildEndDateColumnEpochColumn is the epoch column property of the EndDate name
+	BuildEndDateColumnEpochColumn = "EndDate.Epoch"
+	// BuildEndDateColumnOffsetColumn is the offset column property of the EndDate name
+	BuildEndDateColumnOffsetColumn = "EndDate.Offset"
+	// BuildEndDateColumnRfc3339Column is the rfc3339 column property of the EndDate name
+	BuildEndDateColumnRfc3339Column = "EndDate.Rfc3339"
+	// BuildEnvironmentColumn is the environment column name
+	BuildEnvironmentColumn = "Environment"
+	// BuildIDColumn is the id column name
+	BuildIDColumn = "ID"
+	// BuildRefIDColumn is the ref_id column name
+	BuildRefIDColumn = "RefID"
+	// BuildRefTypeColumn is the ref_type column name
+	BuildRefTypeColumn = "RefType"
+	// BuildRepoNameColumn is the repo_name column name
+	BuildRepoNameColumn = "RepoName"
+	// BuildStartDateColumn is the start_date column name
+	BuildStartDateColumn = "StartDate"
+	// BuildStartDateColumnEpochColumn is the epoch column property of the StartDate name
+	BuildStartDateColumnEpochColumn = "StartDate.Epoch"
+	// BuildStartDateColumnOffsetColumn is the offset column property of the StartDate name
+	BuildStartDateColumnOffsetColumn = "StartDate.Offset"
+	// BuildStartDateColumnRfc3339Column is the rfc3339 column property of the StartDate name
+	BuildStartDateColumnRfc3339Column = "StartDate.Rfc3339"
+	// BuildStatusColumn is the status column name
+	BuildStatusColumn = "Status"
+	// BuildUpdatedAtColumn is the updated_ts column name
+	BuildUpdatedAtColumn = "UpdatedAt"
+	// BuildURLColumn is the url column name
+	BuildURLColumn = "URL"
 )
 
 // BuildEndDate represents the object structure for end_date
@@ -306,6 +354,9 @@ type Build struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Build)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*Build)(nil)
+
 func toBuildObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Build:
@@ -331,6 +382,21 @@ func toBuildObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of Build
 func (o *Build) String() string {
 	return fmt.Sprintf("cicd.Build<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *Build) GetTopicName() datamodel.TopicNameType {
+	return BuildTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *Build) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *Build) GetTableName() string {
+	return BuildTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -365,9 +431,83 @@ func (o *Build) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *Build) GetTopicKey() string {
+	var i interface{} = o.CustomerID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Build) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Build")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Build) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *Build) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Build) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Build) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Build) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = BuildModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *Build) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "customer_id",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -381,6 +521,22 @@ func (o *Build) GetCustomerID() string {
 func (o *Build) Clone() datamodel.Model {
 	c := new(Build)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Build) Anon() datamodel.Model {
+	c := new(Build)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -729,4 +885,17 @@ func (o *Build) Hash() string {
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Build) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

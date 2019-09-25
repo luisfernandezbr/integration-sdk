@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -17,8 +18,79 @@ import (
 )
 
 const (
+	// LogTopic is the default topic name
+	LogTopic datamodel.TopicNameType = "agent_Log_topic"
+
+	// LogTable is the default table name
+	LogTable datamodel.ModelNameType = "agent_log"
+
 	// LogModelName is the model name
 	LogModelName datamodel.ModelNameType = "agent.Log"
+)
+
+const (
+	// LogArchitectureColumn is the architecture column name
+	LogArchitectureColumn = "Architecture"
+	// LogCustomerIDColumn is the customer_id column name
+	LogCustomerIDColumn = "CustomerID"
+	// LogDataColumn is the data column name
+	LogDataColumn = "Data"
+	// LogDistroColumn is the distro column name
+	LogDistroColumn = "Distro"
+	// LogErrorColumn is the error column name
+	LogErrorColumn = "Error"
+	// LogEventDateColumn is the event_date column name
+	LogEventDateColumn = "EventDate"
+	// LogEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	LogEventDateColumnEpochColumn = "EventDate.Epoch"
+	// LogEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	LogEventDateColumnOffsetColumn = "EventDate.Offset"
+	// LogEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	LogEventDateColumnRfc3339Column = "EventDate.Rfc3339"
+	// LogFreeSpaceColumn is the free_space column name
+	LogFreeSpaceColumn = "FreeSpace"
+	// LogGoVersionColumn is the go_version column name
+	LogGoVersionColumn = "GoVersion"
+	// LogHostnameColumn is the hostname column name
+	LogHostnameColumn = "Hostname"
+	// LogIDColumn is the id column name
+	LogIDColumn = "ID"
+	// LogLastExportDateColumn is the last_export_date column name
+	LogLastExportDateColumn = "LastExportDate"
+	// LogLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	LogLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
+	// LogLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	LogLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
+	// LogLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	LogLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
+	// LogMemoryColumn is the memory column name
+	LogMemoryColumn = "Memory"
+	// LogMessageColumn is the message column name
+	LogMessageColumn = "Message"
+	// LogNumCPUColumn is the num_cpu column name
+	LogNumCPUColumn = "NumCPU"
+	// LogOSColumn is the os column name
+	LogOSColumn = "OS"
+	// LogRefIDColumn is the ref_id column name
+	LogRefIDColumn = "RefID"
+	// LogRefTypeColumn is the ref_type column name
+	LogRefTypeColumn = "RefType"
+	// LogRequestIDColumn is the request_id column name
+	LogRequestIDColumn = "RequestID"
+	// LogSuccessColumn is the success column name
+	LogSuccessColumn = "Success"
+	// LogSystemIDColumn is the system_id column name
+	LogSystemIDColumn = "SystemID"
+	// LogTypeColumn is the type column name
+	LogTypeColumn = "Type"
+	// LogUpdatedAtColumn is the updated_ts column name
+	LogUpdatedAtColumn = "UpdatedAt"
+	// LogUptimeColumn is the uptime column name
+	LogUptimeColumn = "Uptime"
+	// LogUUIDColumn is the uuid column name
+	LogUUIDColumn = "UUID"
+	// LogVersionColumn is the version column name
+	LogVersionColumn = "Version"
 )
 
 // LogEventDate represents the object structure for event_date
@@ -333,6 +405,9 @@ type Log struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Log)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*Log)(nil)
+
 func toLogObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Log:
@@ -355,6 +430,21 @@ func toLogObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of Log
 func (o *Log) String() string {
 	return fmt.Sprintf("agent.Log<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *Log) GetTopicName() datamodel.TopicNameType {
+	return LogTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *Log) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *Log) GetTableName() string {
+	return LogTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -392,9 +482,83 @@ func (o *Log) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *Log) GetTopicKey() string {
+	var i interface{} = o.UUID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Log) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Log")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Log) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *Log) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Log) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Log) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Log) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = LogModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *Log) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "uuid",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -408,6 +572,22 @@ func (o *Log) GetCustomerID() string {
 func (o *Log) Clone() datamodel.Model {
 	c := new(Log)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Log) Anon() datamodel.Model {
+	c := new(Log)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -573,25 +753,6 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*LogEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -666,25 +827,6 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*LogLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -980,4 +1122,17 @@ func (o *Log) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Log) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

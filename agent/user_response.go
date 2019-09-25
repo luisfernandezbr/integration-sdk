@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -21,8 +22,105 @@ import (
 )
 
 const (
+	// UserResponseTopic is the default topic name
+	UserResponseTopic datamodel.TopicNameType = "agent_UserResponse_topic"
+
+	// UserResponseTable is the default table name
+	UserResponseTable datamodel.ModelNameType = "agent_userresponse"
+
 	// UserResponseModelName is the model name
 	UserResponseModelName datamodel.ModelNameType = "agent.UserResponse"
+)
+
+const (
+	// UserResponseArchitectureColumn is the architecture column name
+	UserResponseArchitectureColumn = "Architecture"
+	// UserResponseCustomerIDColumn is the customer_id column name
+	UserResponseCustomerIDColumn = "CustomerID"
+	// UserResponseDataColumn is the data column name
+	UserResponseDataColumn = "Data"
+	// UserResponseDistroColumn is the distro column name
+	UserResponseDistroColumn = "Distro"
+	// UserResponseErrorColumn is the error column name
+	UserResponseErrorColumn = "Error"
+	// UserResponseEventDateColumn is the event_date column name
+	UserResponseEventDateColumn = "EventDate"
+	// UserResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	UserResponseEventDateColumnEpochColumn = "EventDate.Epoch"
+	// UserResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	UserResponseEventDateColumnOffsetColumn = "EventDate.Offset"
+	// UserResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	UserResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
+	// UserResponseFreeSpaceColumn is the free_space column name
+	UserResponseFreeSpaceColumn = "FreeSpace"
+	// UserResponseGoVersionColumn is the go_version column name
+	UserResponseGoVersionColumn = "GoVersion"
+	// UserResponseHostnameColumn is the hostname column name
+	UserResponseHostnameColumn = "Hostname"
+	// UserResponseIDColumn is the id column name
+	UserResponseIDColumn = "ID"
+	// UserResponseIntegrationIDColumn is the integration_id column name
+	UserResponseIntegrationIDColumn = "IntegrationID"
+	// UserResponseLastExportDateColumn is the last_export_date column name
+	UserResponseLastExportDateColumn = "LastExportDate"
+	// UserResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	UserResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
+	// UserResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	UserResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
+	// UserResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	UserResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
+	// UserResponseMemoryColumn is the memory column name
+	UserResponseMemoryColumn = "Memory"
+	// UserResponseMessageColumn is the message column name
+	UserResponseMessageColumn = "Message"
+	// UserResponseNumCPUColumn is the num_cpu column name
+	UserResponseNumCPUColumn = "NumCPU"
+	// UserResponseOSColumn is the os column name
+	UserResponseOSColumn = "OS"
+	// UserResponseRefIDColumn is the ref_id column name
+	UserResponseRefIDColumn = "RefID"
+	// UserResponseRefTypeColumn is the ref_type column name
+	UserResponseRefTypeColumn = "RefType"
+	// UserResponseRequestIDColumn is the request_id column name
+	UserResponseRequestIDColumn = "RequestID"
+	// UserResponseSuccessColumn is the success column name
+	UserResponseSuccessColumn = "Success"
+	// UserResponseSystemIDColumn is the system_id column name
+	UserResponseSystemIDColumn = "SystemID"
+	// UserResponseTypeColumn is the type column name
+	UserResponseTypeColumn = "Type"
+	// UserResponseUpdatedAtColumn is the updated_ts column name
+	UserResponseUpdatedAtColumn = "UpdatedAt"
+	// UserResponseUptimeColumn is the uptime column name
+	UserResponseUptimeColumn = "Uptime"
+	// UserResponseUsersColumn is the users column name
+	UserResponseUsersColumn = "Users"
+	// UserResponseUsersColumnActiveColumn is the active column property of the Users name
+	UserResponseUsersColumnActiveColumn = "Users.Active"
+	// UserResponseUsersColumnAssociatedRefIDColumn is the associated_ref_id column property of the Users name
+	UserResponseUsersColumnAssociatedRefIDColumn = "Users.AssociatedRefID"
+	// UserResponseUsersColumnAvatarURLColumn is the avatar_url column property of the Users name
+	UserResponseUsersColumnAvatarURLColumn = "Users.AvatarURL"
+	// UserResponseUsersColumnCustomerIDColumn is the customer_id column property of the Users name
+	UserResponseUsersColumnCustomerIDColumn = "Users.CustomerID"
+	// UserResponseUsersColumnEmailsColumn is the emails column property of the Users name
+	UserResponseUsersColumnEmailsColumn = "Users.Emails"
+	// UserResponseUsersColumnGroupsColumn is the groups column property of the Users name
+	UserResponseUsersColumnGroupsColumn = "Users.Groups"
+	// UserResponseUsersColumnIDColumn is the id column property of the Users name
+	UserResponseUsersColumnIDColumn = "Users.ID"
+	// UserResponseUsersColumnNameColumn is the name column property of the Users name
+	UserResponseUsersColumnNameColumn = "Users.Name"
+	// UserResponseUsersColumnRefIDColumn is the ref_id column property of the Users name
+	UserResponseUsersColumnRefIDColumn = "Users.RefID"
+	// UserResponseUsersColumnRefTypeColumn is the ref_type column property of the Users name
+	UserResponseUsersColumnRefTypeColumn = "Users.RefType"
+	// UserResponseUsersColumnUsernameColumn is the username column property of the Users name
+	UserResponseUsersColumnUsernameColumn = "Users.Username"
+	// UserResponseUUIDColumn is the uuid column name
+	UserResponseUUIDColumn = "UUID"
+	// UserResponseVersionColumn is the version column name
+	UserResponseVersionColumn = "Version"
 )
 
 // UserResponseEventDate represents the object structure for event_date
@@ -756,6 +854,9 @@ type UserResponse struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*UserResponse)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*UserResponse)(nil)
+
 func toUserResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *UserResponse:
@@ -785,6 +886,21 @@ func toUserResponseObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of UserResponse
 func (o *UserResponse) String() string {
 	return fmt.Sprintf("agent.UserResponse<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *UserResponse) GetTopicName() datamodel.TopicNameType {
+	return UserResponseTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *UserResponse) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *UserResponse) GetTableName() string {
+	return UserResponseTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -825,9 +941,83 @@ func (o *UserResponse) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *UserResponse) GetTopicKey() string {
+	var i interface{} = o.UUID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *UserResponse) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for UserResponse")
+}
+
 // GetRefID returns the RefID for the object
 func (o *UserResponse) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *UserResponse) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *UserResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *UserResponse) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *UserResponse) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = UserResponseModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *UserResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "uuid",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -841,6 +1031,22 @@ func (o *UserResponse) GetCustomerID() string {
 func (o *UserResponse) Clone() datamodel.Model {
 	c := new(UserResponse)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *UserResponse) Anon() datamodel.Model {
+	c := new(UserResponse)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -1495,4 +1701,17 @@ func (o *UserResponse) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *UserResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -21,8 +22,73 @@ import (
 )
 
 const (
+	// CodequalityRequestTopic is the default topic name
+	CodequalityRequestTopic datamodel.TopicNameType = "agent_CodequalityRequest_topic"
+
+	// CodequalityRequestTable is the default table name
+	CodequalityRequestTable datamodel.ModelNameType = "agent_codequalityrequest"
+
 	// CodequalityRequestModelName is the model name
 	CodequalityRequestModelName datamodel.ModelNameType = "agent.CodequalityRequest"
+)
+
+const (
+	// CodequalityRequestCustomerIDColumn is the customer_id column name
+	CodequalityRequestCustomerIDColumn = "CustomerID"
+	// CodequalityRequestIDColumn is the id column name
+	CodequalityRequestIDColumn = "ID"
+	// CodequalityRequestIntegrationColumn is the integration column name
+	CodequalityRequestIntegrationColumn = "Integration"
+	// CodequalityRequestIntegrationColumnActiveColumn is the active column property of the Integration name
+	CodequalityRequestIntegrationColumnActiveColumn = "Integration.Active"
+	// CodequalityRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
+	CodequalityRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
+	// CodequalityRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
+	CodequalityRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
+	// CodequalityRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
+	CodequalityRequestIntegrationColumnErroredColumn = "Integration.Errored"
+	// CodequalityRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
+	CodequalityRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
+	// CodequalityRequestIntegrationColumnIDColumn is the id column property of the Integration name
+	CodequalityRequestIntegrationColumnIDColumn = "Integration.ID"
+	// CodequalityRequestIntegrationColumnLocationColumn is the location column property of the Integration name
+	CodequalityRequestIntegrationColumnLocationColumn = "Integration.Location"
+	// CodequalityRequestIntegrationColumnNameColumn is the name column property of the Integration name
+	CodequalityRequestIntegrationColumnNameColumn = "Integration.Name"
+	// CodequalityRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
+	CodequalityRequestIntegrationColumnProgressColumn = "Integration.Progress"
+	// CodequalityRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
+	CodequalityRequestIntegrationColumnRefIDColumn = "Integration.RefID"
+	// CodequalityRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
+	CodequalityRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
+	// CodequalityRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
+	CodequalityRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
+	// CodequalityRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
+	CodequalityRequestIntegrationColumnValidatedColumn = "Integration.Validated"
+	// CodequalityRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
+	CodequalityRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
+	// CodequalityRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
+	CodequalityRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
+	// CodequalityRequestLocationColumn is the location column name
+	CodequalityRequestLocationColumn = "Location"
+	// CodequalityRequestRefIDColumn is the ref_id column name
+	CodequalityRequestRefIDColumn = "RefID"
+	// CodequalityRequestRefTypeColumn is the ref_type column name
+	CodequalityRequestRefTypeColumn = "RefType"
+	// CodequalityRequestRequestDateColumn is the request_date column name
+	CodequalityRequestRequestDateColumn = "RequestDate"
+	// CodequalityRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	CodequalityRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
+	// CodequalityRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	CodequalityRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
+	// CodequalityRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	CodequalityRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
+	// CodequalityRequestSystemTypeColumn is the system_type column name
+	CodequalityRequestSystemTypeColumn = "SystemType"
+	// CodequalityRequestUpdatedAtColumn is the updated_ts column name
+	CodequalityRequestUpdatedAtColumn = "UpdatedAt"
+	// CodequalityRequestUUIDColumn is the uuid column name
+	CodequalityRequestUUIDColumn = "UUID"
 )
 
 // CodequalityRequestIntegrationAuthorization represents the object structure for authorization
@@ -1080,6 +1146,9 @@ type CodequalityRequest struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*CodequalityRequest)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*CodequalityRequest)(nil)
+
 func toCodequalityRequestObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityRequest:
@@ -1099,6 +1168,21 @@ func toCodequalityRequestObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of CodequalityRequest
 func (o *CodequalityRequest) String() string {
 	return fmt.Sprintf("agent.CodequalityRequest<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *CodequalityRequest) GetTopicName() datamodel.TopicNameType {
+	return CodequalityRequestTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *CodequalityRequest) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *CodequalityRequest) GetTableName() string {
+	return CodequalityRequestTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -1130,9 +1214,83 @@ func (o *CodequalityRequest) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *CodequalityRequest) GetTopicKey() string {
+	var i interface{} = o.UUID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *CodequalityRequest) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for CodequalityRequest")
+}
+
 // GetRefID returns the RefID for the object
 func (o *CodequalityRequest) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *CodequalityRequest) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *CodequalityRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *CodequalityRequest) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *CodequalityRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CodequalityRequestModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *CodequalityRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "uuid",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -1146,6 +1304,22 @@ func (o *CodequalityRequest) GetCustomerID() string {
 func (o *CodequalityRequest) Clone() datamodel.Model {
 	c := new(CodequalityRequest)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *CodequalityRequest) Anon() datamodel.Model {
+	c := new(CodequalityRequest)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -1287,6 +1461,25 @@ func (o *CodequalityRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1337,4 +1530,17 @@ func (o *CodequalityRequest) Hash() string {
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *CodequalityRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -16,8 +17,45 @@ import (
 )
 
 const (
+	// PullRequestReviewTopic is the default topic name
+	PullRequestReviewTopic datamodel.TopicNameType = "sourcecode_PullRequestReview_topic"
+
+	// PullRequestReviewTable is the default table name
+	PullRequestReviewTable datamodel.ModelNameType = "sourcecode_pullrequestreview"
+
 	// PullRequestReviewModelName is the model name
 	PullRequestReviewModelName datamodel.ModelNameType = "sourcecode.PullRequestReview"
+)
+
+const (
+	// PullRequestReviewCreatedDateColumn is the created_date column name
+	PullRequestReviewCreatedDateColumn = "CreatedDate"
+	// PullRequestReviewCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
+	PullRequestReviewCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
+	// PullRequestReviewCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
+	PullRequestReviewCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
+	// PullRequestReviewCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
+	PullRequestReviewCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
+	// PullRequestReviewCustomerIDColumn is the customer_id column name
+	PullRequestReviewCustomerIDColumn = "CustomerID"
+	// PullRequestReviewIDColumn is the id column name
+	PullRequestReviewIDColumn = "ID"
+	// PullRequestReviewPullRequestIDColumn is the pull_request_id column name
+	PullRequestReviewPullRequestIDColumn = "PullRequestID"
+	// PullRequestReviewRefIDColumn is the ref_id column name
+	PullRequestReviewRefIDColumn = "RefID"
+	// PullRequestReviewRefTypeColumn is the ref_type column name
+	PullRequestReviewRefTypeColumn = "RefType"
+	// PullRequestReviewRepoIDColumn is the repo_id column name
+	PullRequestReviewRepoIDColumn = "RepoID"
+	// PullRequestReviewStateColumn is the state column name
+	PullRequestReviewStateColumn = "State"
+	// PullRequestReviewUpdatedAtColumn is the updated_ts column name
+	PullRequestReviewUpdatedAtColumn = "UpdatedAt"
+	// PullRequestReviewURLColumn is the url column name
+	PullRequestReviewURLColumn = "URL"
+	// PullRequestReviewUserRefIDColumn is the user_ref_id column name
+	PullRequestReviewUserRefIDColumn = "UserRefID"
 )
 
 // PullRequestReviewCreatedDate represents the object structure for created_date
@@ -178,6 +216,9 @@ type PullRequestReview struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*PullRequestReview)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*PullRequestReview)(nil)
+
 func toPullRequestReviewObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequestReview:
@@ -197,6 +238,21 @@ func toPullRequestReviewObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of PullRequestReview
 func (o *PullRequestReview) String() string {
 	return fmt.Sprintf("sourcecode.PullRequestReview<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *PullRequestReview) GetTopicName() datamodel.TopicNameType {
+	return PullRequestReviewTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *PullRequestReview) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *PullRequestReview) GetTableName() string {
+	return PullRequestReviewTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -227,9 +283,85 @@ func (o *PullRequestReview) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *PullRequestReview) GetTopicKey() string {
+	var i interface{} = o.RepoID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *PullRequestReview) GetTimestamp() time.Time {
+	var dt interface{} = o.CreatedDate
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	case PullRequestReviewCreatedDate:
+		return datetime.DateFromEpoch(v.Epoch)
+	}
+	panic("not sure how to handle the date time format for PullRequestReview")
+}
+
 // GetRefID returns the RefID for the object
 func (o *PullRequestReview) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *PullRequestReview) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *PullRequestReview) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *PullRequestReview) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *PullRequestReview) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = PullRequestReviewModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *PullRequestReview) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "repo_id",
+		Timestamp:         "created_date",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -243,6 +375,22 @@ func (o *PullRequestReview) GetCustomerID() string {
 func (o *PullRequestReview) Clone() datamodel.Model {
 	c := new(PullRequestReview)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *PullRequestReview) Anon() datamodel.Model {
+	c := new(PullRequestReview)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -524,4 +672,17 @@ func (o *PullRequestReview) Hash() string {
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *PullRequestReview) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

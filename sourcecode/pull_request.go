@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -20,8 +21,87 @@ import (
 )
 
 const (
+	// PullRequestTopic is the default topic name
+	PullRequestTopic datamodel.TopicNameType = "sourcecode_PullRequest_topic"
+
+	// PullRequestTable is the default table name
+	PullRequestTable datamodel.ModelNameType = "sourcecode_pullrequest"
+
 	// PullRequestModelName is the model name
 	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
+)
+
+const (
+	// PullRequestBranchIDColumn is the branch_id column name
+	PullRequestBranchIDColumn = "BranchID"
+	// PullRequestBranchNameColumn is the branch_name column name
+	PullRequestBranchNameColumn = "BranchName"
+	// PullRequestClosedByRefIDColumn is the closed_by_ref_id column name
+	PullRequestClosedByRefIDColumn = "ClosedByRefID"
+	// PullRequestClosedDateColumn is the closed_date column name
+	PullRequestClosedDateColumn = "ClosedDate"
+	// PullRequestClosedDateColumnEpochColumn is the epoch column property of the ClosedDate name
+	PullRequestClosedDateColumnEpochColumn = "ClosedDate.Epoch"
+	// PullRequestClosedDateColumnOffsetColumn is the offset column property of the ClosedDate name
+	PullRequestClosedDateColumnOffsetColumn = "ClosedDate.Offset"
+	// PullRequestClosedDateColumnRfc3339Column is the rfc3339 column property of the ClosedDate name
+	PullRequestClosedDateColumnRfc3339Column = "ClosedDate.Rfc3339"
+	// PullRequestCommitIdsColumn is the commit_ids column name
+	PullRequestCommitIdsColumn = "CommitIds"
+	// PullRequestCommitShasColumn is the commit_shas column name
+	PullRequestCommitShasColumn = "CommitShas"
+	// PullRequestCreatedByRefIDColumn is the created_by_ref_id column name
+	PullRequestCreatedByRefIDColumn = "CreatedByRefID"
+	// PullRequestCreatedDateColumn is the created_date column name
+	PullRequestCreatedDateColumn = "CreatedDate"
+	// PullRequestCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
+	PullRequestCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
+	// PullRequestCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
+	PullRequestCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
+	// PullRequestCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
+	PullRequestCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
+	// PullRequestCustomerIDColumn is the customer_id column name
+	PullRequestCustomerIDColumn = "CustomerID"
+	// PullRequestDescriptionColumn is the description column name
+	PullRequestDescriptionColumn = "Description"
+	// PullRequestIDColumn is the id column name
+	PullRequestIDColumn = "ID"
+	// PullRequestMergeCommitIDColumn is the merge_commit_id column name
+	PullRequestMergeCommitIDColumn = "MergeCommitID"
+	// PullRequestMergeShaColumn is the merge_sha column name
+	PullRequestMergeShaColumn = "MergeSha"
+	// PullRequestMergedByRefIDColumn is the merged_by_ref_id column name
+	PullRequestMergedByRefIDColumn = "MergedByRefID"
+	// PullRequestMergedDateColumn is the merged_date column name
+	PullRequestMergedDateColumn = "MergedDate"
+	// PullRequestMergedDateColumnEpochColumn is the epoch column property of the MergedDate name
+	PullRequestMergedDateColumnEpochColumn = "MergedDate.Epoch"
+	// PullRequestMergedDateColumnOffsetColumn is the offset column property of the MergedDate name
+	PullRequestMergedDateColumnOffsetColumn = "MergedDate.Offset"
+	// PullRequestMergedDateColumnRfc3339Column is the rfc3339 column property of the MergedDate name
+	PullRequestMergedDateColumnRfc3339Column = "MergedDate.Rfc3339"
+	// PullRequestRefIDColumn is the ref_id column name
+	PullRequestRefIDColumn = "RefID"
+	// PullRequestRefTypeColumn is the ref_type column name
+	PullRequestRefTypeColumn = "RefType"
+	// PullRequestRepoIDColumn is the repo_id column name
+	PullRequestRepoIDColumn = "RepoID"
+	// PullRequestStatusColumn is the status column name
+	PullRequestStatusColumn = "Status"
+	// PullRequestTitleColumn is the title column name
+	PullRequestTitleColumn = "Title"
+	// PullRequestUpdatedDateColumn is the updated_date column name
+	PullRequestUpdatedDateColumn = "UpdatedDate"
+	// PullRequestUpdatedDateColumnEpochColumn is the epoch column property of the UpdatedDate name
+	PullRequestUpdatedDateColumnEpochColumn = "UpdatedDate.Epoch"
+	// PullRequestUpdatedDateColumnOffsetColumn is the offset column property of the UpdatedDate name
+	PullRequestUpdatedDateColumnOffsetColumn = "UpdatedDate.Offset"
+	// PullRequestUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
+	PullRequestUpdatedDateColumnRfc3339Column = "UpdatedDate.Rfc3339"
+	// PullRequestUpdatedAtColumn is the updated_ts column name
+	PullRequestUpdatedAtColumn = "UpdatedAt"
+	// PullRequestURLColumn is the url column name
+	PullRequestURLColumn = "URL"
 )
 
 // PullRequestClosedDate represents the object structure for closed_date
@@ -488,6 +568,9 @@ type PullRequest struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*PullRequest)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*PullRequest)(nil)
+
 func toPullRequestObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *PullRequest:
@@ -516,6 +599,21 @@ func toPullRequestObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of PullRequest
 func (o *PullRequest) String() string {
 	return fmt.Sprintf("sourcecode.PullRequest<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *PullRequest) GetTopicName() datamodel.TopicNameType {
+	return PullRequestTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *PullRequest) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *PullRequest) GetTableName() string {
+	return PullRequestTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -552,9 +650,85 @@ func (o *PullRequest) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *PullRequest) GetTopicKey() string {
+	var i interface{} = o.RepoID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *PullRequest) GetTimestamp() time.Time {
+	var dt interface{} = o.CreatedDate
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	case PullRequestCreatedDate:
+		return datetime.DateFromEpoch(v.Epoch)
+	}
+	panic("not sure how to handle the date time format for PullRequest")
+}
+
 // GetRefID returns the RefID for the object
 func (o *PullRequest) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *PullRequest) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *PullRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *PullRequest) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *PullRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = PullRequestModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "repo_id",
+		Timestamp:         "created_date",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -568,6 +742,22 @@ func (o *PullRequest) GetCustomerID() string {
 func (o *PullRequest) Clone() datamodel.Model {
 	c := new(PullRequest)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *PullRequest) Anon() datamodel.Model {
+	c := new(PullRequest)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -1179,4 +1369,17 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *PullRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }
