@@ -115,8 +115,12 @@ const (
 	WorkStatusResponseWorkConfigColumnIntegrationIDColumn = "WorkConfig.IntegrationID"
 	// WorkStatusResponseWorkConfigColumnIssueTypeColumn is the issue_type column property of the WorkConfig name
 	WorkStatusResponseWorkConfigColumnIssueTypeColumn = "WorkConfig.IssueType"
+	// WorkStatusResponseWorkConfigColumnLabelsColumn is the labels column property of the WorkConfig name
+	WorkStatusResponseWorkConfigColumnLabelsColumn = "WorkConfig.Labels"
 	// WorkStatusResponseWorkConfigColumnOperatorColumn is the operator column property of the WorkConfig name
 	WorkStatusResponseWorkConfigColumnOperatorColumn = "WorkConfig.Operator"
+	// WorkStatusResponseWorkConfigColumnPrioritiesColumn is the priorities column property of the WorkConfig name
+	WorkStatusResponseWorkConfigColumnPrioritiesColumn = "WorkConfig.Priorities"
 	// WorkStatusResponseWorkConfigColumnRefIDColumn is the ref_id column property of the WorkConfig name
 	WorkStatusResponseWorkConfigColumnRefIDColumn = "WorkConfig.RefID"
 	// WorkStatusResponseWorkConfigColumnRefTypeColumn is the ref_type column property of the WorkConfig name
@@ -127,6 +131,8 @@ const (
 	WorkStatusResponseWorkConfigColumnTopLevelIssueColumn = "WorkConfig.TopLevelIssue"
 	// WorkStatusResponseWorkConfigColumnTypeRulesColumn is the type_rules column property of the WorkConfig name
 	WorkStatusResponseWorkConfigColumnTypeRulesColumn = "WorkConfig.TypeRules"
+	// WorkStatusResponseWorkConfigColumnTypesColumn is the types column property of the WorkConfig name
+	WorkStatusResponseWorkConfigColumnTypesColumn = "WorkConfig.Types"
 )
 
 // WorkStatusResponseEventDate represents the object structure for event_date
@@ -1345,8 +1351,12 @@ type WorkStatusResponseWorkConfig struct {
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// IssueType The type to map the issue as if all predicates are true
 	IssueType WorkStatusResponseWorkConfigIssueType `json:"issue_type" codec:"issue_type" bson:"issue_type" yaml:"issue_type" faker:"-"`
+	// Labels all the values of labels on the integration
+	Labels []string `json:"labels" codec:"labels" bson:"labels" yaml:"labels" faker:"-"`
 	// Operator The operation
 	Operator WorkStatusResponseWorkConfigOperator `json:"operator" codec:"operator" bson:"operator" yaml:"operator" faker:"-"`
+	// Priorities all the values for priority on the integration
+	Priorities []string `json:"priorities" codec:"priorities" bson:"priorities" yaml:"priorities" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -1357,6 +1367,8 @@ type WorkStatusResponseWorkConfig struct {
 	TopLevelIssue WorkStatusResponseWorkConfigTopLevelIssue `json:"top_level_issue" codec:"top_level_issue" bson:"top_level_issue" yaml:"top_level_issue" faker:"-"`
 	// TypeRules The rules for mapping issue types for this integration
 	TypeRules []WorkStatusResponseWorkConfigTypeRules `json:"type_rules" codec:"type_rules" bson:"type_rules" yaml:"type_rules" faker:"-"`
+	// Types all the values for type on the integration
+	Types []string `json:"types" codec:"types" bson:"types" yaml:"types" faker:"-"`
 }
 
 func toWorkStatusResponseWorkConfigObject(o interface{}, isoptional bool) interface{} {
@@ -1404,8 +1416,12 @@ func (o *WorkStatusResponseWorkConfig) ToMap() map[string]interface{} {
 		"integration_id": toWorkStatusResponseWorkConfigObject(o.IntegrationID, false),
 		// IssueType The type to map the issue as if all predicates are true
 		"issue_type": toWorkStatusResponseWorkConfigObject(o.IssueType, false),
+		// Labels all the values of labels on the integration
+		"labels": toWorkStatusResponseWorkConfigObject(o.Labels, false),
 		// Operator The operation
 		"operator": toWorkStatusResponseWorkConfigObject(o.Operator, false),
+		// Priorities all the values for priority on the integration
+		"priorities": toWorkStatusResponseWorkConfigObject(o.Priorities, false),
 		// RefID the source system id for the model instance
 		"ref_id": toWorkStatusResponseWorkConfigObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
@@ -1416,6 +1432,8 @@ func (o *WorkStatusResponseWorkConfig) ToMap() map[string]interface{} {
 		"top_level_issue": toWorkStatusResponseWorkConfigObject(o.TopLevelIssue, false),
 		// TypeRules The rules for mapping issue types for this integration
 		"type_rules": toWorkStatusResponseWorkConfigObject(o.TypeRules, false),
+		// Types all the values for type on the integration
+		"types": toWorkStatusResponseWorkConfigObject(o.Types, false),
 	}
 }
 
@@ -1539,6 +1557,57 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["labels"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for labels field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for labels field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for labels field")
+				}
+			}
+			o.Labels = na
+		}
+	}
+	if o.Labels == nil {
+		o.Labels = make([]string, 0)
+	}
+
 	if val, ok := kv["operator"].(WorkStatusResponseWorkConfigOperator); ok {
 		o.Operator = val
 	} else {
@@ -1567,6 +1636,57 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 				o.Operator = 3
 			}
 		}
+	}
+
+	if val, ok := kv["priorities"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for priorities field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for priorities field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for priorities field")
+				}
+			}
+			o.Priorities = na
+		}
+	}
+	if o.Priorities == nil {
+		o.Priorities = make([]string, 0)
 	}
 
 	if val, ok := kv["ref_id"].(string); ok {
@@ -1690,6 +1810,56 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["types"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for types field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for types field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for types field")
+				}
+			}
+			o.Types = na
+		}
+	}
+	if o.Types == nil {
+		o.Types = make([]string, 0)
+	}
 	o.setDefaults(false)
 }
 
@@ -1818,7 +1988,7 @@ func (o *WorkStatusResponse) setDefaults(frommap bool) {
 		o.Error = &emptyString
 	}
 	if o.WorkConfig.TypeRules == nil {
-		o.WorkConfig.TypeRules = make([]WorkStatusResponseWorkConfigTypeRules, 0)
+		o.WorkConfig.TypeRules = make([]WorkStatusResponseTypeRules, 0)
 	}
 
 	if o.ID == "" {
@@ -2111,6 +2281,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2200,6 +2389,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
