@@ -113,6 +113,8 @@ type ProjectRequestIntegrationAuthorization struct {
 	Authorization *string `json:"authorization,omitempty" codec:"authorization,omitempty" bson:"authorization" yaml:"authorization,omitempty" faker:"-"`
 	// Hostname Hostname for instance, if relevant
 	Hostname *string `json:"hostname,omitempty" codec:"hostname,omitempty" bson:"hostname" yaml:"hostname,omitempty" faker:"-"`
+	// APIVersion the api version of the integration
+	APIVersion *string `json:"api_version,omitempty" codec:"api_version,omitempty" bson:"api_version" yaml:"api_version,omitempty" faker:"-"`
 	// Organization Organization for instance, if relevant
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 }
@@ -150,6 +152,8 @@ func (o *ProjectRequestIntegrationAuthorization) ToMap() map[string]interface{} 
 		"authorization": toProjectRequestIntegrationAuthorizationObject(o.Authorization, true),
 		// Hostname Hostname for instance, if relevant
 		"hostname": toProjectRequestIntegrationAuthorizationObject(o.Hostname, true),
+		// APIVersion the api version of the integration
+		"api_version": toProjectRequestIntegrationAuthorizationObject(o.APIVersion, true),
 		// Organization Organization for instance, if relevant
 		"organization": toProjectRequestIntegrationAuthorizationObject(o.Organization, true),
 	}
@@ -346,6 +350,24 @@ func (o *ProjectRequestIntegrationAuthorization) FromMap(kv map[string]interface
 					val = kv["string"]
 				}
 				o.Hostname = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["api_version"].(*string); ok {
+		o.APIVersion = val
+	} else if val, ok := kv["api_version"].(string); ok {
+		o.APIVersion = &val
+	} else {
+		if val, ok := kv["api_version"]; ok {
+			if val == nil {
+				o.APIVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.APIVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
