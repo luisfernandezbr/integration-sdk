@@ -6,8 +6,6 @@ package customer
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -16,9 +14,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -33,24 +29,12 @@ const (
 )
 
 const (
-	// UserActiveColumn is the active column name
-	UserActiveColumn = "Active"
 	// UserAvatarURLColumn is the avatar_url column name
 	UserAvatarURLColumn = "AvatarURL"
 	// UserCostCenterIDColumn is the cost_center_id column name
 	UserCostCenterIDColumn = "CostCenterID"
-	// UserCreatedAtColumn is the created_ts column name
-	UserCreatedAtColumn = "CreatedAt"
 	// UserCustomerIDColumn is the customer_id column name
 	UserCustomerIDColumn = "CustomerID"
-	// UserDeletedDateColumn is the deleted_date column name
-	UserDeletedDateColumn = "DeletedDate"
-	// UserDeletedDateColumnEpochColumn is the epoch column property of the DeletedDate name
-	UserDeletedDateColumnEpochColumn = "DeletedDate.Epoch"
-	// UserDeletedDateColumnOffsetColumn is the offset column property of the DeletedDate name
-	UserDeletedDateColumnOffsetColumn = "DeletedDate.Offset"
-	// UserDeletedDateColumnRfc3339Column is the rfc3339 column property of the DeletedDate name
-	UserDeletedDateColumnRfc3339Column = "DeletedDate.Rfc3339"
 	// UserEmailColumn is the email column name
 	UserEmailColumn = "Email"
 	// UserHiredDateColumn is the hired_date column name
@@ -69,18 +53,12 @@ const (
 	UserManagerIDColumn = "ManagerID"
 	// UserNameColumn is the name column name
 	UserNameColumn = "Name"
-	// UserOwnerColumn is the owner column name
-	UserOwnerColumn = "Owner"
 	// UserPrimaryTeamIDColumn is the primary_team_id column name
 	UserPrimaryTeamIDColumn = "PrimaryTeamID"
 	// UserRefIDColumn is the ref_id column name
 	UserRefIDColumn = "RefID"
 	// UserRefTypeColumn is the ref_type column name
 	UserRefTypeColumn = "RefType"
-	// UserRoleIdsColumn is the role_ids column name
-	UserRoleIdsColumn = "RoleIds"
-	// UserTeamIdsColumn is the team_ids column name
-	UserTeamIdsColumn = "TeamIds"
 	// UserTerminatedDateColumn is the terminated_date column name
 	UserTerminatedDateColumn = "TerminatedDate"
 	// UserTerminatedDateColumnEpochColumn is the epoch column property of the TerminatedDate name
@@ -91,105 +69,9 @@ const (
 	UserTerminatedDateColumnRfc3339Column = "TerminatedDate.Rfc3339"
 	// UserTitleColumn is the title column name
 	UserTitleColumn = "Title"
-	// UserTrackableColumn is the trackable column name
-	UserTrackableColumn = "Trackable"
 	// UserUpdatedAtColumn is the updated_ts column name
 	UserUpdatedAtColumn = "UpdatedAt"
 )
-
-// UserDeletedDate represents the object structure for deleted_date
-type UserDeletedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toUserDeletedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *UserDeletedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *UserDeletedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toUserDeletedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toUserDeletedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toUserDeletedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *UserDeletedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *UserDeletedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
 
 // UserHiredDate represents the object structure for hired_date
 type UserHiredDate struct {
@@ -381,18 +263,12 @@ func (o *UserTerminatedDate) FromMap(kv map[string]interface{}) {
 
 // User the customer's user record
 type User struct {
-	// Active if true, the user is active and able to login
-	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// AvatarURL the user avatar url
 	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"avatar"`
 	// CostCenterID the id of the cost center
 	CostCenterID *string `json:"cost_center_id,omitempty" codec:"cost_center_id,omitempty" bson:"cost_center_id" yaml:"cost_center_id,omitempty" faker:"-"`
-	// CreatedAt the date the record was created in Epoch time
-	CreatedAt int64 `json:"created_ts" codec:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// DeletedDate when the user record was deleted in epoch timestamp
-	DeletedDate UserDeletedDate `json:"deleted_date" codec:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
 	// Email the email of the user
 	Email string `json:"email" codec:"email" bson:"email" yaml:"email" faker:"email"`
 	// HiredDate when the user was hired in epoch timestamp
@@ -405,25 +281,17 @@ type User struct {
 	ManagerID *string `json:"manager_id,omitempty" codec:"manager_id,omitempty" bson:"manager_id" yaml:"manager_id,omitempty" faker:"-"`
 	// Name name of the user
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
-	// Owner if true, the user is an owner of the account
-	Owner bool `json:"owner" codec:"owner" bson:"owner" yaml:"owner" faker:"-"`
 	// PrimaryTeamID the team id of the user's primary team
 	PrimaryTeamID *string `json:"primary_team_id,omitempty" codec:"primary_team_id,omitempty" bson:"primary_team_id" yaml:"primary_team_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// RoleIds the auth role ids for the user
-	RoleIds []string `json:"role_ids" codec:"role_ids" bson:"role_ids" yaml:"role_ids" faker:"-"`
-	// TeamIds the team ids that the user is part of
-	TeamIds []string `json:"team_ids" codec:"team_ids" bson:"team_ids" yaml:"team_ids" faker:"-"`
 	// TerminatedDate when the user was terminated in epoch timestamp
 	TerminatedDate UserTerminatedDate `json:"terminated_date" codec:"terminated_date" bson:"terminated_date" yaml:"terminated_date" faker:"-"`
 	// Title the title of the user
 	Title *string `json:"title,omitempty" codec:"title,omitempty" bson:"title" yaml:"title,omitempty" faker:"jobtitle"`
-	// Trackable if true, the user is trackable in the pinpoint system
-	Trackable bool `json:"trackable" codec:"trackable" bson:"trackable" yaml:"trackable" faker:"-"`
-	// UpdatedAt the date the record was updated in Epoch time
+	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
@@ -438,9 +306,6 @@ var _ datamodel.StreamedModel = (*User)(nil)
 func toUserObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *User:
-		return v.ToMap()
-
-	case UserDeletedDate:
 		return v.ToMap()
 
 	case UserHiredDate:
@@ -500,18 +365,11 @@ func (o *User) setDefaults(frommap bool) {
 	if o.PrimaryTeamID == nil {
 		o.PrimaryTeamID = &emptyString
 	}
-	if o.RoleIds == nil {
-		o.RoleIds = make([]string, 0)
-	}
-	if o.TeamIds == nil {
-		o.TeamIds = make([]string, 0)
-	}
 	if o.Title == nil {
 		o.Title = &emptyString
 	}
 
 	if o.ID == "" {
-		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.CustomerID, o.Email)
 	}
 
@@ -678,27 +536,20 @@ func (o *User) IsEqual(other *User) bool {
 func (o *User) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":          toUserObject(o.Active, false),
 		"avatar_url":      toUserObject(o.AvatarURL, true),
 		"cost_center_id":  toUserObject(o.CostCenterID, true),
-		"created_ts":      toUserObject(o.CreatedAt, false),
 		"customer_id":     toUserObject(o.CustomerID, false),
-		"deleted_date":    toUserObject(o.DeletedDate, false),
 		"email":           toUserObject(o.Email, false),
 		"hired_date":      toUserObject(o.HiredDate, false),
 		"id":              toUserObject(o.ID, false),
 		"location":        toUserObject(o.Location, true),
 		"manager_id":      toUserObject(o.ManagerID, true),
 		"name":            toUserObject(o.Name, false),
-		"owner":           toUserObject(o.Owner, false),
 		"primary_team_id": toUserObject(o.PrimaryTeamID, true),
 		"ref_id":          toUserObject(o.RefID, false),
 		"ref_type":        toUserObject(o.RefType, false),
-		"role_ids":        toUserObject(o.RoleIds, false),
-		"team_ids":        toUserObject(o.TeamIds, false),
 		"terminated_date": toUserObject(o.TerminatedDate, false),
 		"title":           toUserObject(o.Title, true),
-		"trackable":       toUserObject(o.Trackable, false),
 		"updated_ts":      toUserObject(o.UpdatedAt, false),
 		"hashcode":        toUserObject(o.Hashcode, false),
 	}
@@ -712,18 +563,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["active"].(bool); ok {
-		o.Active = val
-	} else {
-		if val, ok := kv["active"]; ok {
-			if val == nil {
-				o.Active = number.ToBoolAny(nil)
-			} else {
-				o.Active = number.ToBoolAny(val)
-			}
-		}
 	}
 
 	if val, ok := kv["avatar_url"].(*string); ok {
@@ -762,21 +601,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		if val, ok := kv["created_ts"]; ok {
-			if val == nil {
-				o.CreatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.CreatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -790,39 +614,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 				o.CustomerID = fmt.Sprintf("%v", val)
 			}
 		}
-	}
-
-	if val, ok := kv["deleted_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.DeletedDate.FromMap(kv)
-		} else if sv, ok := val.(UserDeletedDate); ok {
-			// struct
-			o.DeletedDate = sv
-		} else if sp, ok := val.(*UserDeletedDate); ok {
-			// struct pointer
-			o.DeletedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.DeletedDate.Epoch = dt.Epoch
-			o.DeletedDate.Rfc3339 = dt.Rfc3339
-			o.DeletedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.DeletedDate.Epoch = dt.Epoch
-			o.DeletedDate.Rfc3339 = dt.Rfc3339
-			o.DeletedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.DeletedDate.Epoch = dt.Epoch
-				o.DeletedDate.Rfc3339 = dt.Rfc3339
-				o.DeletedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["email"].(string); ok {
@@ -939,18 +730,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["owner"].(bool); ok {
-		o.Owner = val
-	} else {
-		if val, ok := kv["owner"]; ok {
-			if val == nil {
-				o.Owner = number.ToBoolAny(nil)
-			} else {
-				o.Owner = number.ToBoolAny(val)
-			}
-		}
-	}
-
 	if val, ok := kv["primary_team_id"].(*string); ok {
 		o.PrimaryTeamID = val
 	} else if val, ok := kv["primary_team_id"].(string); ok {
@@ -997,108 +776,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 				o.RefType = fmt.Sprintf("%v", val)
 			}
 		}
-	}
-
-	if val, ok := kv["role_ids"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for role_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for role_ids field")
-				}
-			}
-			o.RoleIds = na
-		}
-	}
-	if o.RoleIds == nil {
-		o.RoleIds = make([]string, 0)
-	}
-
-	if val, ok := kv["team_ids"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for team_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for team_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for team_ids field")
-				}
-			}
-			o.TeamIds = na
-		}
-	}
-	if o.TeamIds == nil {
-		o.TeamIds = make([]string, 0)
 	}
 
 	if val, ok := kv["terminated_date"]; ok {
@@ -1152,18 +829,6 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["trackable"].(bool); ok {
-		o.Trackable = val
-	} else {
-		if val, ok := kv["trackable"]; ok {
-			if val == nil {
-				o.Trackable = number.ToBoolAny(nil)
-			} else {
-				o.Trackable = number.ToBoolAny(val)
-			}
-		}
-	}
-
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -1184,27 +849,20 @@ func (o *User) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *User) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Active)
 	args = append(args, o.AvatarURL)
 	args = append(args, o.CostCenterID)
-	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
-	args = append(args, o.DeletedDate)
 	args = append(args, o.Email)
 	args = append(args, o.HiredDate)
 	args = append(args, o.ID)
 	args = append(args, o.Location)
 	args = append(args, o.ManagerID)
 	args = append(args, o.Name)
-	args = append(args, o.Owner)
 	args = append(args, o.PrimaryTeamID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.RoleIds)
-	args = append(args, o.TeamIds)
 	args = append(args, o.TerminatedDate)
 	args = append(args, o.Title)
-	args = append(args, o.Trackable)
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
