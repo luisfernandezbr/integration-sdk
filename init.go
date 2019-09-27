@@ -136,6 +136,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.WorkStatusResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.WorkStatusTrigger":
+		o := new(dm_agent.WorkStatusTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "cicd.Build":
 		o := new(dm_cicd.Build)
 		o.FromMap(map[string]interface{}{})
@@ -351,6 +355,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.WorkStatusResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent_WorkStatusTrigger_topic":
+		o := new(dm_agent.WorkStatusTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "cicd_Build_topic":
 		o := new(dm_cicd.Build)
 		o.FromMap(map[string]interface{}{})
@@ -485,6 +493,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_UserTrigger_topic"),
 		datamodel.TopicNameType("agent_WorkStatusRequest_topic"),
 		datamodel.TopicNameType("agent_WorkStatusResponse_topic"),
+		datamodel.TopicNameType("agent_WorkStatusTrigger_topic"),
 		datamodel.TopicNameType("cicd_Build_topic"),
 		datamodel.TopicNameType("cicd_Deployment_topic"),
 		datamodel.TopicNameType("codequality_Metric_topic"),
@@ -543,6 +552,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.UserTrigger"),
 		datamodel.ModelNameType("agent.WorkStatusRequest"),
 		datamodel.ModelNameType("agent.WorkStatusResponse"),
+		datamodel.ModelNameType("agent.WorkStatusTrigger"),
 		datamodel.ModelNameType("cicd.Build"),
 		datamodel.ModelNameType("cicd.Deployment"),
 		datamodel.ModelNameType("codequality.Metric"),
