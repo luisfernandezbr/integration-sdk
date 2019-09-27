@@ -2,6 +2,17 @@
 
 
 [[projects]]
+  digest = "1:c952f10089bb57d6e6d56d8880bcbb4d444b1d40b091354cb25b10a6c23b211a"
+  name = "github.com/bxcodec/faker"
+  packages = [
+    ".",
+    "support/slice",
+  ]
+  pruneopts = "UT"
+  revision = "bfe096fd9e446fc441f79f1aa53cf1c9b5594179"
+  version = "v2.0.1"
+
+[[projects]]
   digest = "1:998cf998358a303ac2430c386ba3fd3398477d6013153d3c6e11432765cc9ae6"
   name = "github.com/cespare/xxhash"
   packages = ["."]
@@ -55,6 +66,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/bxcodec/faker",
     "github.com/pinpt/go-common/datamodel",
     "github.com/pinpt/go-common/datetime",
     "github.com/pinpt/go-common/hash",
