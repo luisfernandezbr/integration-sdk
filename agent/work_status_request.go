@@ -22,77 +22,77 @@ import (
 )
 
 const (
-	// CodequalityRequestTopic is the default topic name
-	CodequalityRequestTopic datamodel.TopicNameType = "agent_CodequalityRequest_topic"
+	// WorkStatusRequestTopic is the default topic name
+	WorkStatusRequestTopic datamodel.TopicNameType = "agent_WorkStatusRequest_topic"
 
-	// CodequalityRequestTable is the default table name
-	CodequalityRequestTable datamodel.ModelNameType = "agent_codequalityrequest"
+	// WorkStatusRequestTable is the default table name
+	WorkStatusRequestTable datamodel.ModelNameType = "agent_workstatusrequest"
 
-	// CodequalityRequestModelName is the model name
-	CodequalityRequestModelName datamodel.ModelNameType = "agent.CodequalityRequest"
+	// WorkStatusRequestModelName is the model name
+	WorkStatusRequestModelName datamodel.ModelNameType = "agent.WorkStatusRequest"
 )
 
 const (
-	// CodequalityRequestCustomerIDColumn is the customer_id column name
-	CodequalityRequestCustomerIDColumn = "CustomerID"
-	// CodequalityRequestIDColumn is the id column name
-	CodequalityRequestIDColumn = "ID"
-	// CodequalityRequestIntegrationColumn is the integration column name
-	CodequalityRequestIntegrationColumn = "Integration"
-	// CodequalityRequestIntegrationColumnActiveColumn is the active column property of the Integration name
-	CodequalityRequestIntegrationColumnActiveColumn = "Integration.Active"
-	// CodequalityRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
-	CodequalityRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
-	// CodequalityRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
-	CodequalityRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
-	// CodequalityRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
-	CodequalityRequestIntegrationColumnErroredColumn = "Integration.Errored"
-	// CodequalityRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
-	CodequalityRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
-	// CodequalityRequestIntegrationColumnIDColumn is the id column property of the Integration name
-	CodequalityRequestIntegrationColumnIDColumn = "Integration.ID"
-	// CodequalityRequestIntegrationColumnLocationColumn is the location column property of the Integration name
-	CodequalityRequestIntegrationColumnLocationColumn = "Integration.Location"
-	// CodequalityRequestIntegrationColumnNameColumn is the name column property of the Integration name
-	CodequalityRequestIntegrationColumnNameColumn = "Integration.Name"
-	// CodequalityRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
-	CodequalityRequestIntegrationColumnProgressColumn = "Integration.Progress"
-	// CodequalityRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
-	CodequalityRequestIntegrationColumnRefIDColumn = "Integration.RefID"
-	// CodequalityRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
-	CodequalityRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
-	// CodequalityRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
-	CodequalityRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
-	// CodequalityRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
-	CodequalityRequestIntegrationColumnValidatedColumn = "Integration.Validated"
-	// CodequalityRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
-	CodequalityRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
-	// CodequalityRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
-	CodequalityRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
-	// CodequalityRequestLocationColumn is the location column name
-	CodequalityRequestLocationColumn = "Location"
-	// CodequalityRequestRefIDColumn is the ref_id column name
-	CodequalityRequestRefIDColumn = "RefID"
-	// CodequalityRequestRefTypeColumn is the ref_type column name
-	CodequalityRequestRefTypeColumn = "RefType"
-	// CodequalityRequestRequestDateColumn is the request_date column name
-	CodequalityRequestRequestDateColumn = "RequestDate"
-	// CodequalityRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	CodequalityRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
-	// CodequalityRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	CodequalityRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
-	// CodequalityRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	CodequalityRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
-	// CodequalityRequestSystemTypeColumn is the system_type column name
-	CodequalityRequestSystemTypeColumn = "SystemType"
-	// CodequalityRequestUpdatedAtColumn is the updated_ts column name
-	CodequalityRequestUpdatedAtColumn = "UpdatedAt"
-	// CodequalityRequestUUIDColumn is the uuid column name
-	CodequalityRequestUUIDColumn = "UUID"
+	// WorkStatusRequestCustomerIDColumn is the customer_id column name
+	WorkStatusRequestCustomerIDColumn = "CustomerID"
+	// WorkStatusRequestIDColumn is the id column name
+	WorkStatusRequestIDColumn = "ID"
+	// WorkStatusRequestIntegrationColumn is the integration column name
+	WorkStatusRequestIntegrationColumn = "Integration"
+	// WorkStatusRequestIntegrationColumnActiveColumn is the active column property of the Integration name
+	WorkStatusRequestIntegrationColumnActiveColumn = "Integration.Active"
+	// WorkStatusRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
+	WorkStatusRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
+	// WorkStatusRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
+	WorkStatusRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
+	// WorkStatusRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
+	WorkStatusRequestIntegrationColumnErroredColumn = "Integration.Errored"
+	// WorkStatusRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
+	WorkStatusRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
+	// WorkStatusRequestIntegrationColumnIDColumn is the id column property of the Integration name
+	WorkStatusRequestIntegrationColumnIDColumn = "Integration.ID"
+	// WorkStatusRequestIntegrationColumnLocationColumn is the location column property of the Integration name
+	WorkStatusRequestIntegrationColumnLocationColumn = "Integration.Location"
+	// WorkStatusRequestIntegrationColumnNameColumn is the name column property of the Integration name
+	WorkStatusRequestIntegrationColumnNameColumn = "Integration.Name"
+	// WorkStatusRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
+	WorkStatusRequestIntegrationColumnProgressColumn = "Integration.Progress"
+	// WorkStatusRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
+	WorkStatusRequestIntegrationColumnRefIDColumn = "Integration.RefID"
+	// WorkStatusRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
+	WorkStatusRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
+	// WorkStatusRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
+	WorkStatusRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
+	// WorkStatusRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
+	WorkStatusRequestIntegrationColumnValidatedColumn = "Integration.Validated"
+	// WorkStatusRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
+	WorkStatusRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
+	// WorkStatusRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
+	WorkStatusRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
+	// WorkStatusRequestLocationColumn is the location column name
+	WorkStatusRequestLocationColumn = "Location"
+	// WorkStatusRequestRefIDColumn is the ref_id column name
+	WorkStatusRequestRefIDColumn = "RefID"
+	// WorkStatusRequestRefTypeColumn is the ref_type column name
+	WorkStatusRequestRefTypeColumn = "RefType"
+	// WorkStatusRequestRequestDateColumn is the request_date column name
+	WorkStatusRequestRequestDateColumn = "RequestDate"
+	// WorkStatusRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	WorkStatusRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
+	// WorkStatusRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	WorkStatusRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
+	// WorkStatusRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	WorkStatusRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
+	// WorkStatusRequestSystemTypeColumn is the system_type column name
+	WorkStatusRequestSystemTypeColumn = "SystemType"
+	// WorkStatusRequestUpdatedAtColumn is the updated_ts column name
+	WorkStatusRequestUpdatedAtColumn = "UpdatedAt"
+	// WorkStatusRequestUUIDColumn is the uuid column name
+	WorkStatusRequestUUIDColumn = "UUID"
 )
 
-// CodequalityRequestIntegrationAuthorization represents the object structure for authorization
-type CodequalityRequestIntegrationAuthorization struct {
+// WorkStatusRequestIntegrationAuthorization represents the object structure for authorization
+type WorkStatusRequestIntegrationAuthorization struct {
 	// AccessToken Access token
 	AccessToken *string `json:"access_token,omitempty" codec:"access_token,omitempty" bson:"access_token" yaml:"access_token,omitempty" faker:"-"`
 	// RefreshToken Refresh token
@@ -119,9 +119,9 @@ type CodequalityRequestIntegrationAuthorization struct {
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 }
 
-func toCodequalityRequestIntegrationAuthorizationObject(o interface{}, isoptional bool) interface{} {
+func toWorkStatusRequestIntegrationAuthorizationObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CodequalityRequestIntegrationAuthorization:
+	case *WorkStatusRequestIntegrationAuthorization:
 		return v.ToMap()
 
 	default:
@@ -129,37 +129,37 @@ func toCodequalityRequestIntegrationAuthorizationObject(o interface{}, isoptiona
 	}
 }
 
-func (o *CodequalityRequestIntegrationAuthorization) ToMap() map[string]interface{} {
+func (o *WorkStatusRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// AccessToken Access token
-		"access_token": toCodequalityRequestIntegrationAuthorizationObject(o.AccessToken, true),
+		"access_token": toWorkStatusRequestIntegrationAuthorizationObject(o.AccessToken, true),
 		// RefreshToken Refresh token
-		"refresh_token": toCodequalityRequestIntegrationAuthorizationObject(o.RefreshToken, true),
+		"refresh_token": toWorkStatusRequestIntegrationAuthorizationObject(o.RefreshToken, true),
 		// URL URL of instance if relevant
-		"url": toCodequalityRequestIntegrationAuthorizationObject(o.URL, true),
+		"url": toWorkStatusRequestIntegrationAuthorizationObject(o.URL, true),
 		// Username Username for instance, if relevant
-		"username": toCodequalityRequestIntegrationAuthorizationObject(o.Username, true),
+		"username": toWorkStatusRequestIntegrationAuthorizationObject(o.Username, true),
 		// Password Password for instance, if relevant
-		"password": toCodequalityRequestIntegrationAuthorizationObject(o.Password, true),
+		"password": toWorkStatusRequestIntegrationAuthorizationObject(o.Password, true),
 		// APIToken API Token for instance, if relevant
-		"api_token": toCodequalityRequestIntegrationAuthorizationObject(o.APIToken, true),
+		"api_token": toWorkStatusRequestIntegrationAuthorizationObject(o.APIToken, true),
 		// Collection Collection for instance, if relevant
-		"collection": toCodequalityRequestIntegrationAuthorizationObject(o.Collection, true),
+		"collection": toWorkStatusRequestIntegrationAuthorizationObject(o.Collection, true),
 		// APIKey API Key for instance, if relevant
-		"api_key": toCodequalityRequestIntegrationAuthorizationObject(o.APIKey, true),
+		"api_key": toWorkStatusRequestIntegrationAuthorizationObject(o.APIKey, true),
 		// Authorization the agents encrypted authorization
-		"authorization": toCodequalityRequestIntegrationAuthorizationObject(o.Authorization, true),
+		"authorization": toWorkStatusRequestIntegrationAuthorizationObject(o.Authorization, true),
 		// Hostname Hostname for instance, if relevant
-		"hostname": toCodequalityRequestIntegrationAuthorizationObject(o.Hostname, true),
+		"hostname": toWorkStatusRequestIntegrationAuthorizationObject(o.Hostname, true),
 		// APIVersion the api version of the integration
-		"api_version": toCodequalityRequestIntegrationAuthorizationObject(o.APIVersion, true),
+		"api_version": toWorkStatusRequestIntegrationAuthorizationObject(o.APIVersion, true),
 		// Organization Organization for instance, if relevant
-		"organization": toCodequalityRequestIntegrationAuthorizationObject(o.Organization, true),
+		"organization": toWorkStatusRequestIntegrationAuthorizationObject(o.Organization, true),
 	}
 }
 
-func (o *CodequalityRequestIntegrationAuthorization) setDefaults(frommap bool) {
+func (o *WorkStatusRequestIntegrationAuthorization) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -167,7 +167,7 @@ func (o *CodequalityRequestIntegrationAuthorization) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]interface{}) {
+func (o *WorkStatusRequestIntegrationAuthorization) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -392,11 +392,11 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 	o.setDefaults(false)
 }
 
-// CodequalityRequestIntegrationLocation is the enumeration type for location
-type CodequalityRequestIntegrationLocation int32
+// WorkStatusRequestIntegrationLocation is the enumeration type for location
+type WorkStatusRequestIntegrationLocation int32
 
 // String returns the string value for IntegrationLocation
-func (v CodequalityRequestIntegrationLocation) String() string {
+func (v WorkStatusRequestIntegrationLocation) String() string {
 	switch int32(v) {
 	case 0:
 		return "PRIVATE"
@@ -408,13 +408,13 @@ func (v CodequalityRequestIntegrationLocation) String() string {
 
 const (
 	// IntegrationLocationPrivate is the enumeration value for private
-	CodequalityRequestIntegrationLocationPrivate CodequalityRequestIntegrationLocation = 0
+	WorkStatusRequestIntegrationLocationPrivate WorkStatusRequestIntegrationLocation = 0
 	// IntegrationLocationCloud is the enumeration value for cloud
-	CodequalityRequestIntegrationLocationCloud CodequalityRequestIntegrationLocation = 1
+	WorkStatusRequestIntegrationLocationCloud WorkStatusRequestIntegrationLocation = 1
 )
 
-// CodequalityRequestIntegrationProgress represents the object structure for progress
-type CodequalityRequestIntegrationProgress struct {
+// WorkStatusRequestIntegrationProgress represents the object structure for progress
+type WorkStatusRequestIntegrationProgress struct {
 	// Message Any relevant messaging during processing
 	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// Total The total amount to be processed
@@ -423,9 +423,9 @@ type CodequalityRequestIntegrationProgress struct {
 	Completed int64 `json:"completed" codec:"completed" bson:"completed" yaml:"completed" faker:"-"`
 }
 
-func toCodequalityRequestIntegrationProgressObject(o interface{}, isoptional bool) interface{} {
+func toWorkStatusRequestIntegrationProgressObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CodequalityRequestIntegrationProgress:
+	case *WorkStatusRequestIntegrationProgress:
 		return v.ToMap()
 
 	default:
@@ -433,19 +433,19 @@ func toCodequalityRequestIntegrationProgressObject(o interface{}, isoptional boo
 	}
 }
 
-func (o *CodequalityRequestIntegrationProgress) ToMap() map[string]interface{} {
+func (o *WorkStatusRequestIntegrationProgress) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Message Any relevant messaging during processing
-		"message": toCodequalityRequestIntegrationProgressObject(o.Message, false),
+		"message": toWorkStatusRequestIntegrationProgressObject(o.Message, false),
 		// Total The total amount to be processed
-		"total": toCodequalityRequestIntegrationProgressObject(o.Total, false),
+		"total": toWorkStatusRequestIntegrationProgressObject(o.Total, false),
 		// Completed The total amount processed thus far
-		"completed": toCodequalityRequestIntegrationProgressObject(o.Completed, false),
+		"completed": toWorkStatusRequestIntegrationProgressObject(o.Completed, false),
 	}
 }
 
-func (o *CodequalityRequestIntegrationProgress) setDefaults(frommap bool) {
+func (o *WorkStatusRequestIntegrationProgress) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -453,7 +453,7 @@ func (o *CodequalityRequestIntegrationProgress) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CodequalityRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
+func (o *WorkStatusRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -507,11 +507,11 @@ func (o *CodequalityRequestIntegrationProgress) FromMap(kv map[string]interface{
 	o.setDefaults(false)
 }
 
-// CodequalityRequestIntegrationSystemType is the enumeration type for system_type
-type CodequalityRequestIntegrationSystemType int32
+// WorkStatusRequestIntegrationSystemType is the enumeration type for system_type
+type WorkStatusRequestIntegrationSystemType int32
 
 // String returns the string value for IntegrationSystemType
-func (v CodequalityRequestIntegrationSystemType) String() string {
+func (v WorkStatusRequestIntegrationSystemType) String() string {
 	switch int32(v) {
 	case 0:
 		return "WORK"
@@ -525,15 +525,15 @@ func (v CodequalityRequestIntegrationSystemType) String() string {
 
 const (
 	// IntegrationSystemTypeWork is the enumeration value for work
-	CodequalityRequestIntegrationSystemTypeWork CodequalityRequestIntegrationSystemType = 0
+	WorkStatusRequestIntegrationSystemTypeWork WorkStatusRequestIntegrationSystemType = 0
 	// IntegrationSystemTypeSourcecode is the enumeration value for sourcecode
-	CodequalityRequestIntegrationSystemTypeSourcecode CodequalityRequestIntegrationSystemType = 1
+	WorkStatusRequestIntegrationSystemTypeSourcecode WorkStatusRequestIntegrationSystemType = 1
 	// IntegrationSystemTypeCodequality is the enumeration value for codequality
-	CodequalityRequestIntegrationSystemTypeCodequality CodequalityRequestIntegrationSystemType = 2
+	WorkStatusRequestIntegrationSystemTypeCodequality WorkStatusRequestIntegrationSystemType = 2
 )
 
-// CodequalityRequestIntegrationValidatedDate represents the object structure for validated_date
-type CodequalityRequestIntegrationValidatedDate struct {
+// WorkStatusRequestIntegrationValidatedDate represents the object structure for validated_date
+type WorkStatusRequestIntegrationValidatedDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -542,9 +542,9 @@ type CodequalityRequestIntegrationValidatedDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toCodequalityRequestIntegrationValidatedDateObject(o interface{}, isoptional bool) interface{} {
+func toWorkStatusRequestIntegrationValidatedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CodequalityRequestIntegrationValidatedDate:
+	case *WorkStatusRequestIntegrationValidatedDate:
 		return v.ToMap()
 
 	default:
@@ -552,19 +552,19 @@ func toCodequalityRequestIntegrationValidatedDateObject(o interface{}, isoptiona
 	}
 }
 
-func (o *CodequalityRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
+func (o *WorkStatusRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toCodequalityRequestIntegrationValidatedDateObject(o.Epoch, false),
+		"epoch": toWorkStatusRequestIntegrationValidatedDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toCodequalityRequestIntegrationValidatedDateObject(o.Offset, false),
+		"offset": toWorkStatusRequestIntegrationValidatedDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCodequalityRequestIntegrationValidatedDateObject(o.Rfc3339, false),
+		"rfc3339": toWorkStatusRequestIntegrationValidatedDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *CodequalityRequestIntegrationValidatedDate) setDefaults(frommap bool) {
+func (o *WorkStatusRequestIntegrationValidatedDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -572,7 +572,7 @@ func (o *CodequalityRequestIntegrationValidatedDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CodequalityRequestIntegrationValidatedDate) FromMap(kv map[string]interface{}) {
+func (o *WorkStatusRequestIntegrationValidatedDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -626,12 +626,12 @@ func (o *CodequalityRequestIntegrationValidatedDate) FromMap(kv map[string]inter
 	o.setDefaults(false)
 }
 
-// CodequalityRequestIntegration represents the object structure for integration
-type CodequalityRequestIntegration struct {
+// WorkStatusRequestIntegration represents the object structure for integration
+type WorkStatusRequestIntegration struct {
 	// Active If true, the integration is still active
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
-	Authorization CodequalityRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization WorkStatusRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Errored If authorization failed by the agent
@@ -641,43 +641,43 @@ type CodequalityRequestIntegration struct {
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
-	Location CodequalityRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
+	Location WorkStatusRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
-	Progress CodequalityRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	Progress WorkStatusRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
-	SystemType CodequalityRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
+	SystemType WorkStatusRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated,omitempty" codec:"validated,omitempty" bson:"validated" yaml:"validated,omitempty" faker:"-"`
 	// ValidatedDate Date when validated
-	ValidatedDate CodequalityRequestIntegrationValidatedDate `json:"validated_date" codec:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
+	ValidatedDate WorkStatusRequestIntegrationValidatedDate `json:"validated_date" codec:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
 	// ValidationMessage The validation message from the agent
 	ValidationMessage *string `json:"validation_message,omitempty" codec:"validation_message,omitempty" bson:"validation_message" yaml:"validation_message,omitempty" faker:"-"`
 }
 
-func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) interface{} {
+func toWorkStatusRequestIntegrationObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CodequalityRequestIntegration:
+	case *WorkStatusRequestIntegration:
 		return v.ToMap()
 
-	case CodequalityRequestIntegrationAuthorization:
+	case WorkStatusRequestIntegrationAuthorization:
 		return v.ToMap()
 
-	case CodequalityRequestIntegrationLocation:
+	case WorkStatusRequestIntegrationLocation:
 		return v.String()
 
-	case CodequalityRequestIntegrationProgress:
+	case WorkStatusRequestIntegrationProgress:
 		return v.ToMap()
 
-	case CodequalityRequestIntegrationSystemType:
+	case WorkStatusRequestIntegrationSystemType:
 		return v.String()
 
-	case CodequalityRequestIntegrationValidatedDate:
+	case WorkStatusRequestIntegrationValidatedDate:
 		return v.ToMap()
 
 	default:
@@ -685,43 +685,43 @@ func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) inter
 	}
 }
 
-func (o *CodequalityRequestIntegration) ToMap() map[string]interface{} {
+func (o *WorkStatusRequestIntegration) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Active If true, the integration is still active
-		"active": toCodequalityRequestIntegrationObject(o.Active, false),
+		"active": toWorkStatusRequestIntegrationObject(o.Active, false),
 		// Authorization Authorization information
-		"authorization": toCodequalityRequestIntegrationObject(o.Authorization, false),
+		"authorization": toWorkStatusRequestIntegrationObject(o.Authorization, false),
 		// CustomerID the customer id for the model instance
-		"customer_id": toCodequalityRequestIntegrationObject(o.CustomerID, false),
+		"customer_id": toWorkStatusRequestIntegrationObject(o.CustomerID, false),
 		// Errored If authorization failed by the agent
-		"errored": toCodequalityRequestIntegrationObject(o.Errored, true),
+		"errored": toWorkStatusRequestIntegrationObject(o.Errored, true),
 		// Exclusions The exclusion list for this integration
-		"exclusions": toCodequalityRequestIntegrationObject(o.Exclusions, false),
+		"exclusions": toWorkStatusRequestIntegrationObject(o.Exclusions, false),
 		// ID the primary key for the model instance
-		"id": toCodequalityRequestIntegrationObject(o.ID, false),
+		"id": toWorkStatusRequestIntegrationObject(o.ID, false),
 		// Location The location of this integration (on-premise / private or cloud)
-		"location": toCodequalityRequestIntegrationObject(o.Location, false),
+		"location": toWorkStatusRequestIntegrationObject(o.Location, false),
 		// Name The user friendly name of the integration
-		"name": toCodequalityRequestIntegrationObject(o.Name, false),
+		"name": toWorkStatusRequestIntegrationObject(o.Name, false),
 		// Progress Agent processing progress
-		"progress": toCodequalityRequestIntegrationObject(o.Progress, false),
+		"progress": toWorkStatusRequestIntegrationObject(o.Progress, false),
 		// RefID the source system id for the model instance
-		"ref_id": toCodequalityRequestIntegrationObject(o.RefID, false),
+		"ref_id": toWorkStatusRequestIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
-		"ref_type": toCodequalityRequestIntegrationObject(o.RefType, false),
+		"ref_type": toWorkStatusRequestIntegrationObject(o.RefType, false),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
-		"system_type": toCodequalityRequestIntegrationObject(o.SystemType, false),
+		"system_type": toWorkStatusRequestIntegrationObject(o.SystemType, false),
 		// Validated If the validation has been run against this instance
-		"validated": toCodequalityRequestIntegrationObject(o.Validated, true),
+		"validated": toWorkStatusRequestIntegrationObject(o.Validated, true),
 		// ValidatedDate Date when validated
-		"validated_date": toCodequalityRequestIntegrationObject(o.ValidatedDate, false),
+		"validated_date": toWorkStatusRequestIntegrationObject(o.ValidatedDate, false),
 		// ValidationMessage The validation message from the agent
-		"validation_message": toCodequalityRequestIntegrationObject(o.ValidationMessage, true),
+		"validation_message": toWorkStatusRequestIntegrationObject(o.ValidationMessage, true),
 	}
 }
 
-func (o *CodequalityRequestIntegration) setDefaults(frommap bool) {
+func (o *WorkStatusRequestIntegration) setDefaults(frommap bool) {
 
 	if o.Errored == nil {
 		var v bool
@@ -739,7 +739,7 @@ func (o *CodequalityRequestIntegration) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
+func (o *WorkStatusRequestIntegration) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -761,10 +761,10 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["authorization"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.Authorization.FromMap(kv)
-		} else if sv, ok := val.(CodequalityRequestIntegrationAuthorization); ok {
+		} else if sv, ok := val.(WorkStatusRequestIntegrationAuthorization); ok {
 			// struct
 			o.Authorization = sv
-		} else if sp, ok := val.(*CodequalityRequestIntegrationAuthorization); ok {
+		} else if sp, ok := val.(*WorkStatusRequestIntegrationAuthorization); ok {
 			// struct pointer
 			o.Authorization = *sp
 		}
@@ -871,7 +871,7 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["location"].(CodequalityRequestIntegrationLocation); ok {
+	if val, ok := kv["location"].(WorkStatusRequestIntegrationLocation); ok {
 		o.Location = val
 	} else {
 		if em, ok := kv["location"].(map[string]interface{}); ok {
@@ -911,10 +911,10 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["progress"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.Progress.FromMap(kv)
-		} else if sv, ok := val.(CodequalityRequestIntegrationProgress); ok {
+		} else if sv, ok := val.(WorkStatusRequestIntegrationProgress); ok {
 			// struct
 			o.Progress = sv
-		} else if sp, ok := val.(*CodequalityRequestIntegrationProgress); ok {
+		} else if sp, ok := val.(*WorkStatusRequestIntegrationProgress); ok {
 			// struct pointer
 			o.Progress = *sp
 		}
@@ -952,7 +952,7 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["system_type"].(CodequalityRequestIntegrationSystemType); ok {
+	if val, ok := kv["system_type"].(WorkStatusRequestIntegrationSystemType); ok {
 		o.SystemType = val
 	} else {
 		if em, ok := kv["system_type"].(map[string]interface{}); ok {
@@ -999,10 +999,10 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["validated_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.ValidatedDate.FromMap(kv)
-		} else if sv, ok := val.(CodequalityRequestIntegrationValidatedDate); ok {
+		} else if sv, ok := val.(WorkStatusRequestIntegrationValidatedDate); ok {
 			// struct
 			o.ValidatedDate = sv
-		} else if sp, ok := val.(*CodequalityRequestIntegrationValidatedDate); ok {
+		} else if sp, ok := val.(*WorkStatusRequestIntegrationValidatedDate); ok {
 			// struct pointer
 			o.ValidatedDate = *sp
 		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
@@ -1049,8 +1049,8 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// CodequalityRequestRequestDate represents the object structure for request_date
-type CodequalityRequestRequestDate struct {
+// WorkStatusRequestRequestDate represents the object structure for request_date
+type WorkStatusRequestRequestDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -1059,9 +1059,9 @@ type CodequalityRequestRequestDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toCodequalityRequestRequestDateObject(o interface{}, isoptional bool) interface{} {
+func toWorkStatusRequestRequestDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CodequalityRequestRequestDate:
+	case *WorkStatusRequestRequestDate:
 		return v.ToMap()
 
 	default:
@@ -1069,19 +1069,19 @@ func toCodequalityRequestRequestDateObject(o interface{}, isoptional bool) inter
 	}
 }
 
-func (o *CodequalityRequestRequestDate) ToMap() map[string]interface{} {
+func (o *WorkStatusRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toCodequalityRequestRequestDateObject(o.Epoch, false),
+		"epoch": toWorkStatusRequestRequestDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toCodequalityRequestRequestDateObject(o.Offset, false),
+		"offset": toWorkStatusRequestRequestDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCodequalityRequestRequestDateObject(o.Rfc3339, false),
+		"rfc3339": toWorkStatusRequestRequestDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *CodequalityRequestRequestDate) setDefaults(frommap bool) {
+func (o *WorkStatusRequestRequestDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -1089,7 +1089,7 @@ func (o *CodequalityRequestRequestDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CodequalityRequestRequestDate) FromMap(kv map[string]interface{}) {
+func (o *WorkStatusRequestRequestDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -1143,20 +1143,20 @@ func (o *CodequalityRequestRequestDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// CodequalityRequest an agent action to request adding new codequality entities
-type CodequalityRequest struct {
+// WorkStatusRequest an agent action to request fetching issue statuses
+type WorkStatusRequest struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to use
-	Integration CodequalityRequestIntegration `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	Integration WorkStatusRequestIntegration `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
-	RequestDate CodequalityRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	RequestDate WorkStatusRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
@@ -1166,20 +1166,20 @@ type CodequalityRequest struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*CodequalityRequest)(nil)
+var _ datamodel.Model = (*WorkStatusRequest)(nil)
 
 // ensure that this type implements the streamed data model interface
-var _ datamodel.StreamedModel = (*CodequalityRequest)(nil)
+var _ datamodel.StreamedModel = (*WorkStatusRequest)(nil)
 
-func toCodequalityRequestObject(o interface{}, isoptional bool) interface{} {
+func toWorkStatusRequestObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CodequalityRequest:
+	case *WorkStatusRequest:
 		return v.ToMap()
 
-	case CodequalityRequestIntegration:
+	case WorkStatusRequestIntegration:
 		return v.ToMap()
 
-	case CodequalityRequestRequestDate:
+	case WorkStatusRequestRequestDate:
 		return v.ToMap()
 
 	default:
@@ -1187,41 +1187,41 @@ func toCodequalityRequestObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-// String returns a string representation of CodequalityRequest
-func (o *CodequalityRequest) String() string {
-	return fmt.Sprintf("agent.CodequalityRequest<%s>", o.ID)
+// String returns a string representation of WorkStatusRequest
+func (o *WorkStatusRequest) String() string {
+	return fmt.Sprintf("agent.WorkStatusRequest<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *CodequalityRequest) GetTopicName() datamodel.TopicNameType {
-	return CodequalityRequestTopic
+func (o *WorkStatusRequest) GetTopicName() datamodel.TopicNameType {
+	return WorkStatusRequestTopic
 }
 
 // GetStreamName returns the name of the stream
-func (o *CodequalityRequest) GetStreamName() string {
+func (o *WorkStatusRequest) GetStreamName() string {
 	return ""
 }
 
 // GetTableName returns the name of the table
-func (o *CodequalityRequest) GetTableName() string {
-	return CodequalityRequestTable.String()
+func (o *WorkStatusRequest) GetTableName() string {
+	return WorkStatusRequestTable.String()
 }
 
 // GetModelName returns the name of the model
-func (o *CodequalityRequest) GetModelName() datamodel.ModelNameType {
-	return CodequalityRequestModelName
+func (o *WorkStatusRequest) GetModelName() datamodel.ModelNameType {
+	return WorkStatusRequestModelName
 }
 
-// NewCodequalityRequestID provides a template for generating an ID field for CodequalityRequest
-func NewCodequalityRequestID(customerID string, refType string, refID string) string {
-	return hash.Values("CodequalityRequest", customerID, refType, refID)
+// NewWorkStatusRequestID provides a template for generating an ID field for WorkStatusRequest
+func NewWorkStatusRequestID(customerID string, refType string, refID string) string {
+	return hash.Values("WorkStatusRequest", customerID, refType, refID)
 }
 
-func (o *CodequalityRequest) setDefaults(frommap bool) {
+func (o *WorkStatusRequest) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("CodequalityRequest", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("WorkStatusRequest", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -1232,12 +1232,12 @@ func (o *CodequalityRequest) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *CodequalityRequest) GetID() string {
+func (o *WorkStatusRequest) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *CodequalityRequest) GetTopicKey() string {
+func (o *WorkStatusRequest) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -1246,7 +1246,7 @@ func (o *CodequalityRequest) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *CodequalityRequest) GetTimestamp() time.Time {
+func (o *WorkStatusRequest) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -1260,37 +1260,37 @@ func (o *CodequalityRequest) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for CodequalityRequest")
+	panic("not sure how to handle the date time format for WorkStatusRequest")
 }
 
 // GetRefID returns the RefID for the object
-func (o *CodequalityRequest) GetRefID() string {
+func (o *WorkStatusRequest) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *CodequalityRequest) IsMaterialized() bool {
+func (o *WorkStatusRequest) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *CodequalityRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *WorkStatusRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *CodequalityRequest) IsEvented() bool {
+func (o *WorkStatusRequest) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *CodequalityRequest) SetEventHeaders(kv map[string]string) {
+func (o *WorkStatusRequest) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = CodequalityRequestModelName.String()
+	kv["model"] = WorkStatusRequestModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *CodequalityRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *WorkStatusRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("87360h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
@@ -1316,22 +1316,22 @@ func (o *CodequalityRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetCustomerID will return the customer_id
-func (o *CodequalityRequest) GetCustomerID() string {
+func (o *WorkStatusRequest) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of CodequalityRequest
-func (o *CodequalityRequest) Clone() datamodel.Model {
-	c := new(CodequalityRequest)
+// Clone returns an exact copy of WorkStatusRequest
+func (o *WorkStatusRequest) Clone() datamodel.Model {
+	c := new(WorkStatusRequest)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *CodequalityRequest) Anon() datamodel.Model {
-	c := new(CodequalityRequest)
+func (o *WorkStatusRequest) Anon() datamodel.Model {
+	c := new(WorkStatusRequest)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -1346,12 +1346,12 @@ func (o *CodequalityRequest) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *CodequalityRequest) MarshalJSON() ([]byte, error) {
+func (o *WorkStatusRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *CodequalityRequest) UnmarshalJSON(data []byte) error {
+func (o *WorkStatusRequest) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -1364,34 +1364,34 @@ func (o *CodequalityRequest) UnmarshalJSON(data []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *CodequalityRequest) Stringify() string {
+func (o *WorkStatusRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two CodequalityRequest objects are equal
-func (o *CodequalityRequest) IsEqual(other *CodequalityRequest) bool {
+// IsEqual returns true if the two WorkStatusRequest objects are equal
+func (o *WorkStatusRequest) IsEqual(other *WorkStatusRequest) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *CodequalityRequest) ToMap() map[string]interface{} {
+func (o *WorkStatusRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":  toCodequalityRequestObject(o.CustomerID, false),
-		"id":           toCodequalityRequestObject(o.ID, false),
-		"integration":  toCodequalityRequestObject(o.Integration, false),
-		"ref_id":       toCodequalityRequestObject(o.RefID, false),
-		"ref_type":     toCodequalityRequestObject(o.RefType, false),
-		"request_date": toCodequalityRequestObject(o.RequestDate, false),
-		"updated_ts":   toCodequalityRequestObject(o.UpdatedAt, false),
-		"uuid":         toCodequalityRequestObject(o.UUID, false),
-		"hashcode":     toCodequalityRequestObject(o.Hashcode, false),
+		"customer_id":  toWorkStatusRequestObject(o.CustomerID, false),
+		"id":           toWorkStatusRequestObject(o.ID, false),
+		"integration":  toWorkStatusRequestObject(o.Integration, false),
+		"ref_id":       toWorkStatusRequestObject(o.RefID, false),
+		"ref_type":     toWorkStatusRequestObject(o.RefType, false),
+		"request_date": toWorkStatusRequestObject(o.RequestDate, false),
+		"updated_ts":   toWorkStatusRequestObject(o.UpdatedAt, false),
+		"uuid":         toWorkStatusRequestObject(o.UUID, false),
+		"hashcode":     toWorkStatusRequestObject(o.Hashcode, false),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CodequalityRequest) FromMap(kv map[string]interface{}) {
+func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -1433,10 +1433,10 @@ func (o *CodequalityRequest) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["integration"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.Integration.FromMap(kv)
-		} else if sv, ok := val.(CodequalityRequestIntegration); ok {
+		} else if sv, ok := val.(WorkStatusRequestIntegration); ok {
 			// struct
 			o.Integration = sv
-		} else if sp, ok := val.(*CodequalityRequestIntegration); ok {
+		} else if sp, ok := val.(*WorkStatusRequestIntegration); ok {
 			// struct pointer
 			o.Integration = *sp
 		}
@@ -1477,10 +1477,10 @@ func (o *CodequalityRequest) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["request_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.RequestDate.FromMap(kv)
-		} else if sv, ok := val.(CodequalityRequestRequestDate); ok {
+		} else if sv, ok := val.(WorkStatusRequestRequestDate); ok {
 			// struct
 			o.RequestDate = sv
-		} else if sp, ok := val.(*CodequalityRequestRequestDate); ok {
+		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
 		}
@@ -1521,7 +1521,7 @@ func (o *CodequalityRequest) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *CodequalityRequest) Hash() string {
+func (o *WorkStatusRequest) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
@@ -1536,7 +1536,7 @@ func (o *CodequalityRequest) Hash() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *CodequalityRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *WorkStatusRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,

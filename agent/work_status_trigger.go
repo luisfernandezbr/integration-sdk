@@ -1,7 +1,7 @@
 // DO NOT EDIT -- generated code
 
-// Package work - the system which contains project work
-package work
+// Package agent - the agent communicates with pinpoint cloud to send integration data
+package agent
 
 import (
 	"encoding/json"
@@ -17,43 +17,39 @@ import (
 )
 
 const (
-	// CustomFieldTopic is the default topic name
-	CustomFieldTopic datamodel.TopicNameType = "work_CustomField_topic"
+	// WorkStatusTriggerTopic is the default topic name
+	WorkStatusTriggerTopic datamodel.TopicNameType = "agent_WorkStatusTrigger_topic"
 
-	// CustomFieldTable is the default table name
-	CustomFieldTable datamodel.ModelNameType = "work_customfield"
+	// WorkStatusTriggerTable is the default table name
+	WorkStatusTriggerTable datamodel.ModelNameType = "agent_workstatustrigger"
 
-	// CustomFieldModelName is the model name
-	CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
+	// WorkStatusTriggerModelName is the model name
+	WorkStatusTriggerModelName datamodel.ModelNameType = "agent.WorkStatusTrigger"
 )
 
 const (
-	// CustomFieldCustomerIDColumn is the customer_id column name
-	CustomFieldCustomerIDColumn = "CustomerID"
-	// CustomFieldIDColumn is the id column name
-	CustomFieldIDColumn = "ID"
-	// CustomFieldKeyColumn is the key column name
-	CustomFieldKeyColumn = "Key"
-	// CustomFieldNameColumn is the name column name
-	CustomFieldNameColumn = "Name"
-	// CustomFieldRefIDColumn is the ref_id column name
-	CustomFieldRefIDColumn = "RefID"
-	// CustomFieldRefTypeColumn is the ref_type column name
-	CustomFieldRefTypeColumn = "RefType"
-	// CustomFieldUpdatedAtColumn is the updated_ts column name
-	CustomFieldUpdatedAtColumn = "UpdatedAt"
+	// WorkStatusTriggerCustomerIDColumn is the customer_id column name
+	WorkStatusTriggerCustomerIDColumn = "CustomerID"
+	// WorkStatusTriggerIDColumn is the id column name
+	WorkStatusTriggerIDColumn = "ID"
+	// WorkStatusTriggerIntegrationIDColumn is the integration_id column name
+	WorkStatusTriggerIntegrationIDColumn = "IntegrationID"
+	// WorkStatusTriggerRefIDColumn is the ref_id column name
+	WorkStatusTriggerRefIDColumn = "RefID"
+	// WorkStatusTriggerRefTypeColumn is the ref_type column name
+	WorkStatusTriggerRefTypeColumn = "RefType"
+	// WorkStatusTriggerUpdatedAtColumn is the updated_ts column name
+	WorkStatusTriggerUpdatedAtColumn = "UpdatedAt"
 )
 
-// CustomField user defined fields
-type CustomField struct {
+// WorkStatusTrigger used to trigger an agent.WorkStatusRequest
+type WorkStatusTrigger struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Key key of the field
-	Key string `json:"key" codec:"key" bson:"key" yaml:"key" faker:"-"`
-	// Name the name of the field
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// IntegrationID the integration id
+	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -65,14 +61,14 @@ type CustomField struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*CustomField)(nil)
+var _ datamodel.Model = (*WorkStatusTrigger)(nil)
 
 // ensure that this type implements the streamed data model interface
-var _ datamodel.StreamedModel = (*CustomField)(nil)
+var _ datamodel.StreamedModel = (*WorkStatusTrigger)(nil)
 
-func toCustomFieldObject(o interface{}, isoptional bool) interface{} {
+func toWorkStatusTriggerObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CustomField:
+	case *WorkStatusTrigger:
 		return v.ToMap()
 
 	default:
@@ -80,41 +76,41 @@ func toCustomFieldObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-// String returns a string representation of CustomField
-func (o *CustomField) String() string {
-	return fmt.Sprintf("work.CustomField<%s>", o.ID)
+// String returns a string representation of WorkStatusTrigger
+func (o *WorkStatusTrigger) String() string {
+	return fmt.Sprintf("agent.WorkStatusTrigger<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *CustomField) GetTopicName() datamodel.TopicNameType {
-	return CustomFieldTopic
+func (o *WorkStatusTrigger) GetTopicName() datamodel.TopicNameType {
+	return WorkStatusTriggerTopic
 }
 
 // GetStreamName returns the name of the stream
-func (o *CustomField) GetStreamName() string {
+func (o *WorkStatusTrigger) GetStreamName() string {
 	return ""
 }
 
 // GetTableName returns the name of the table
-func (o *CustomField) GetTableName() string {
-	return CustomFieldTable.String()
+func (o *WorkStatusTrigger) GetTableName() string {
+	return WorkStatusTriggerTable.String()
 }
 
 // GetModelName returns the name of the model
-func (o *CustomField) GetModelName() datamodel.ModelNameType {
-	return CustomFieldModelName
+func (o *WorkStatusTrigger) GetModelName() datamodel.ModelNameType {
+	return WorkStatusTriggerModelName
 }
 
-// NewCustomFieldID provides a template for generating an ID field for CustomField
-func NewCustomFieldID(customerID string, refType string, refID string) string {
-	return hash.Values("CustomField", customerID, refType, refID)
+// NewWorkStatusTriggerID provides a template for generating an ID field for WorkStatusTrigger
+func NewWorkStatusTriggerID(customerID string, refType string, refID string) string {
+	return hash.Values("WorkStatusTrigger", customerID, refType, refID)
 }
 
-func (o *CustomField) setDefaults(frommap bool) {
+func (o *WorkStatusTrigger) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("CustomField", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("WorkStatusTrigger", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -125,13 +121,13 @@ func (o *CustomField) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *CustomField) GetID() string {
+func (o *WorkStatusTrigger) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *CustomField) GetTopicKey() string {
-	var i interface{} = o.CustomerID
+func (o *WorkStatusTrigger) GetTopicKey() string {
+	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -139,7 +135,7 @@ func (o *CustomField) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *CustomField) GetTimestamp() time.Time {
+func (o *WorkStatusTrigger) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -153,40 +149,40 @@ func (o *CustomField) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for CustomField")
+	panic("not sure how to handle the date time format for WorkStatusTrigger")
 }
 
 // GetRefID returns the RefID for the object
-func (o *CustomField) GetRefID() string {
+func (o *WorkStatusTrigger) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *CustomField) IsMaterialized() bool {
+func (o *WorkStatusTrigger) IsMaterialized() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *CustomField) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *WorkStatusTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *CustomField) IsEvented() bool {
+func (o *WorkStatusTrigger) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *CustomField) SetEventHeaders(kv map[string]string) {
+func (o *WorkStatusTrigger) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = CustomFieldModelName.String()
+	kv["model"] = WorkStatusTriggerModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *CustomField) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
+func (o *WorkStatusTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("24h0m0s")
 	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
 	}
 
 	ttl, err := time.ParseDuration("0s")
@@ -197,7 +193,7 @@ func (o *CustomField) GetTopicConfig() *datamodel.ModelTopicConfig {
 		ttl = retention // they should be the same if not set
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "customer_id",
+		Key:               "id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
@@ -209,22 +205,22 @@ func (o *CustomField) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetCustomerID will return the customer_id
-func (o *CustomField) GetCustomerID() string {
+func (o *WorkStatusTrigger) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of CustomField
-func (o *CustomField) Clone() datamodel.Model {
-	c := new(CustomField)
+// Clone returns an exact copy of WorkStatusTrigger
+func (o *WorkStatusTrigger) Clone() datamodel.Model {
+	c := new(WorkStatusTrigger)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *CustomField) Anon() datamodel.Model {
-	c := new(CustomField)
+func (o *WorkStatusTrigger) Anon() datamodel.Model {
+	c := new(WorkStatusTrigger)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -239,12 +235,12 @@ func (o *CustomField) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *CustomField) MarshalJSON() ([]byte, error) {
+func (o *WorkStatusTrigger) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *CustomField) UnmarshalJSON(data []byte) error {
+func (o *WorkStatusTrigger) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -257,33 +253,32 @@ func (o *CustomField) UnmarshalJSON(data []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *CustomField) Stringify() string {
+func (o *WorkStatusTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two CustomField objects are equal
-func (o *CustomField) IsEqual(other *CustomField) bool {
+// IsEqual returns true if the two WorkStatusTrigger objects are equal
+func (o *WorkStatusTrigger) IsEqual(other *WorkStatusTrigger) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *CustomField) ToMap() map[string]interface{} {
+func (o *WorkStatusTrigger) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id": toCustomFieldObject(o.CustomerID, false),
-		"id":          toCustomFieldObject(o.ID, false),
-		"key":         toCustomFieldObject(o.Key, false),
-		"name":        toCustomFieldObject(o.Name, false),
-		"ref_id":      toCustomFieldObject(o.RefID, false),
-		"ref_type":    toCustomFieldObject(o.RefType, false),
-		"updated_ts":  toCustomFieldObject(o.UpdatedAt, false),
-		"hashcode":    toCustomFieldObject(o.Hashcode, false),
+		"customer_id":    toWorkStatusTriggerObject(o.CustomerID, false),
+		"id":             toWorkStatusTriggerObject(o.ID, false),
+		"integration_id": toWorkStatusTriggerObject(o.IntegrationID, false),
+		"ref_id":         toWorkStatusTriggerObject(o.RefID, false),
+		"ref_type":       toWorkStatusTriggerObject(o.RefType, false),
+		"updated_ts":     toWorkStatusTriggerObject(o.UpdatedAt, false),
+		"hashcode":       toWorkStatusTriggerObject(o.Hashcode, false),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CustomField) FromMap(kv map[string]interface{}) {
+func (o *WorkStatusTrigger) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -322,32 +317,17 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["key"].(string); ok {
-		o.Key = val
+	if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = val
 	} else {
-		if val, ok := kv["key"]; ok {
+		if val, ok := kv["integration_id"]; ok {
 			if val == nil {
-				o.Key = ""
+				o.IntegrationID = ""
 			} else {
 				if m, ok := val.(map[string]interface{}); ok {
 					val = pjson.Stringify(m)
 				}
-				o.Key = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Name = fmt.Sprintf("%v", val)
+				o.IntegrationID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -400,12 +380,11 @@ func (o *CustomField) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *CustomField) Hash() string {
+func (o *WorkStatusTrigger) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
-	args = append(args, o.Key)
-	args = append(args, o.Name)
+	args = append(args, o.IntegrationID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
@@ -414,7 +393,7 @@ func (o *CustomField) Hash() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *CustomField) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *WorkStatusTrigger) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,

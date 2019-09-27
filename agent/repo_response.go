@@ -9,6 +9,7 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -19,8 +20,99 @@ import (
 )
 
 const (
+	// RepoResponseTopic is the default topic name
+	RepoResponseTopic datamodel.TopicNameType = "agent_RepoResponse_topic"
+
+	// RepoResponseTable is the default table name
+	RepoResponseTable datamodel.ModelNameType = "agent_reporesponse"
+
 	// RepoResponseModelName is the model name
 	RepoResponseModelName datamodel.ModelNameType = "agent.RepoResponse"
+)
+
+const (
+	// RepoResponseArchitectureColumn is the architecture column name
+	RepoResponseArchitectureColumn = "Architecture"
+	// RepoResponseCustomerIDColumn is the customer_id column name
+	RepoResponseCustomerIDColumn = "CustomerID"
+	// RepoResponseDataColumn is the data column name
+	RepoResponseDataColumn = "Data"
+	// RepoResponseDistroColumn is the distro column name
+	RepoResponseDistroColumn = "Distro"
+	// RepoResponseErrorColumn is the error column name
+	RepoResponseErrorColumn = "Error"
+	// RepoResponseEventDateColumn is the event_date column name
+	RepoResponseEventDateColumn = "EventDate"
+	// RepoResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	RepoResponseEventDateColumnEpochColumn = "EventDate.Epoch"
+	// RepoResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	RepoResponseEventDateColumnOffsetColumn = "EventDate.Offset"
+	// RepoResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	RepoResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
+	// RepoResponseFreeSpaceColumn is the free_space column name
+	RepoResponseFreeSpaceColumn = "FreeSpace"
+	// RepoResponseGoVersionColumn is the go_version column name
+	RepoResponseGoVersionColumn = "GoVersion"
+	// RepoResponseHostnameColumn is the hostname column name
+	RepoResponseHostnameColumn = "Hostname"
+	// RepoResponseIDColumn is the id column name
+	RepoResponseIDColumn = "ID"
+	// RepoResponseIntegrationIDColumn is the integration_id column name
+	RepoResponseIntegrationIDColumn = "IntegrationID"
+	// RepoResponseLastExportDateColumn is the last_export_date column name
+	RepoResponseLastExportDateColumn = "LastExportDate"
+	// RepoResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	RepoResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
+	// RepoResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	RepoResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
+	// RepoResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	RepoResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
+	// RepoResponseMemoryColumn is the memory column name
+	RepoResponseMemoryColumn = "Memory"
+	// RepoResponseMessageColumn is the message column name
+	RepoResponseMessageColumn = "Message"
+	// RepoResponseNumCPUColumn is the num_cpu column name
+	RepoResponseNumCPUColumn = "NumCPU"
+	// RepoResponseOSColumn is the os column name
+	RepoResponseOSColumn = "OS"
+	// RepoResponseRefIDColumn is the ref_id column name
+	RepoResponseRefIDColumn = "RefID"
+	// RepoResponseRefTypeColumn is the ref_type column name
+	RepoResponseRefTypeColumn = "RefType"
+	// RepoResponseReposColumn is the repos column name
+	RepoResponseReposColumn = "Repos"
+	// RepoResponseReposColumnActiveColumn is the active column property of the Repos name
+	RepoResponseReposColumnActiveColumn = "Repos.Active"
+	// RepoResponseReposColumnCreatedDateColumn is the created_date column property of the Repos name
+	RepoResponseReposColumnCreatedDateColumn = "Repos.CreatedDate"
+	// RepoResponseReposColumnDescriptionColumn is the description column property of the Repos name
+	RepoResponseReposColumnDescriptionColumn = "Repos.Description"
+	// RepoResponseReposColumnLanguageColumn is the language column property of the Repos name
+	RepoResponseReposColumnLanguageColumn = "Repos.Language"
+	// RepoResponseReposColumnLastCommitColumn is the last_commit column property of the Repos name
+	RepoResponseReposColumnLastCommitColumn = "Repos.LastCommit"
+	// RepoResponseReposColumnNameColumn is the name column property of the Repos name
+	RepoResponseReposColumnNameColumn = "Repos.Name"
+	// RepoResponseReposColumnRefIDColumn is the ref_id column property of the Repos name
+	RepoResponseReposColumnRefIDColumn = "Repos.RefID"
+	// RepoResponseReposColumnRefTypeColumn is the ref_type column property of the Repos name
+	RepoResponseReposColumnRefTypeColumn = "Repos.RefType"
+	// RepoResponseRequestIDColumn is the request_id column name
+	RepoResponseRequestIDColumn = "RequestID"
+	// RepoResponseSuccessColumn is the success column name
+	RepoResponseSuccessColumn = "Success"
+	// RepoResponseSystemIDColumn is the system_id column name
+	RepoResponseSystemIDColumn = "SystemID"
+	// RepoResponseTypeColumn is the type column name
+	RepoResponseTypeColumn = "Type"
+	// RepoResponseUpdatedAtColumn is the updated_ts column name
+	RepoResponseUpdatedAtColumn = "UpdatedAt"
+	// RepoResponseUptimeColumn is the uptime column name
+	RepoResponseUptimeColumn = "Uptime"
+	// RepoResponseUUIDColumn is the uuid column name
+	RepoResponseUUIDColumn = "UUID"
+	// RepoResponseVersionColumn is the version column name
+	RepoResponseVersionColumn = "Version"
 )
 
 // RepoResponseEventDate represents the object structure for event_date
@@ -985,6 +1077,9 @@ type RepoResponse struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*RepoResponse)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*RepoResponse)(nil)
+
 func toRepoResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *RepoResponse:
@@ -1014,6 +1109,21 @@ func toRepoResponseObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of RepoResponse
 func (o *RepoResponse) String() string {
 	return fmt.Sprintf("agent.RepoResponse<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *RepoResponse) GetTopicName() datamodel.TopicNameType {
+	return RepoResponseTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *RepoResponse) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *RepoResponse) GetTableName() string {
+	return RepoResponseTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -1054,9 +1164,83 @@ func (o *RepoResponse) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *RepoResponse) GetTopicKey() string {
+	var i interface{} = o.UUID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *RepoResponse) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for RepoResponse")
+}
+
 // GetRefID returns the RefID for the object
 func (o *RepoResponse) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *RepoResponse) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *RepoResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *RepoResponse) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *RepoResponse) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = RepoResponseModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *RepoResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "uuid",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -1070,6 +1254,22 @@ func (o *RepoResponse) GetCustomerID() string {
 func (o *RepoResponse) Clone() datamodel.Model {
 	c := new(RepoResponse)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *RepoResponse) Anon() datamodel.Model {
+	c := new(RepoResponse)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -1237,25 +1437,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1345,25 +1526,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1724,4 +1886,17 @@ func (o *RepoResponse) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *RepoResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

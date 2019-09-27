@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -16,8 +17,29 @@ import (
 )
 
 const (
+	// CodequalityTriggerTopic is the default topic name
+	CodequalityTriggerTopic datamodel.TopicNameType = "agent_CodequalityTrigger_topic"
+
+	// CodequalityTriggerTable is the default table name
+	CodequalityTriggerTable datamodel.ModelNameType = "agent_codequalitytrigger"
+
 	// CodequalityTriggerModelName is the model name
 	CodequalityTriggerModelName datamodel.ModelNameType = "agent.CodequalityTrigger"
+)
+
+const (
+	// CodequalityTriggerCustomerIDColumn is the customer_id column name
+	CodequalityTriggerCustomerIDColumn = "CustomerID"
+	// CodequalityTriggerIDColumn is the id column name
+	CodequalityTriggerIDColumn = "ID"
+	// CodequalityTriggerIntegrationIDColumn is the integration_id column name
+	CodequalityTriggerIntegrationIDColumn = "IntegrationID"
+	// CodequalityTriggerRefIDColumn is the ref_id column name
+	CodequalityTriggerRefIDColumn = "RefID"
+	// CodequalityTriggerRefTypeColumn is the ref_type column name
+	CodequalityTriggerRefTypeColumn = "RefType"
+	// CodequalityTriggerUpdatedAtColumn is the updated_ts column name
+	CodequalityTriggerUpdatedAtColumn = "UpdatedAt"
 )
 
 // CodequalityTrigger used to trigger an agent.CodequalityRequest
@@ -41,6 +63,9 @@ type CodequalityTrigger struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*CodequalityTrigger)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*CodequalityTrigger)(nil)
+
 func toCodequalityTriggerObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *CodequalityTrigger:
@@ -54,6 +79,21 @@ func toCodequalityTriggerObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of CodequalityTrigger
 func (o *CodequalityTrigger) String() string {
 	return fmt.Sprintf("agent.CodequalityTrigger<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *CodequalityTrigger) GetTopicName() datamodel.TopicNameType {
+	return CodequalityTriggerTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *CodequalityTrigger) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *CodequalityTrigger) GetTableName() string {
+	return CodequalityTriggerTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -85,9 +125,83 @@ func (o *CodequalityTrigger) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *CodequalityTrigger) GetTopicKey() string {
+	var i interface{} = o.ID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *CodequalityTrigger) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for CodequalityTrigger")
+}
+
 // GetRefID returns the RefID for the object
 func (o *CodequalityTrigger) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *CodequalityTrigger) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *CodequalityTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *CodequalityTrigger) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *CodequalityTrigger) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CodequalityTriggerModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *CodequalityTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("24h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "id",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -101,6 +215,22 @@ func (o *CodequalityTrigger) GetCustomerID() string {
 func (o *CodequalityTrigger) Clone() datamodel.Model {
 	c := new(CodequalityTrigger)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *CodequalityTrigger) Anon() datamodel.Model {
+	c := new(CodequalityTrigger)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -260,4 +390,17 @@ func (o *CodequalityTrigger) Hash() string {
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *CodequalityTrigger) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

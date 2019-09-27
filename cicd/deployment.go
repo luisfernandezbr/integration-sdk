@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -17,8 +18,57 @@ import (
 )
 
 const (
+	// DeploymentTopic is the default topic name
+	DeploymentTopic datamodel.TopicNameType = "cicd_Deployment_topic"
+
+	// DeploymentTable is the default table name
+	DeploymentTable datamodel.ModelNameType = "cicd_deployment"
+
 	// DeploymentModelName is the model name
 	DeploymentModelName datamodel.ModelNameType = "cicd.Deployment"
+)
+
+const (
+	// DeploymentAutomatedColumn is the automated column name
+	DeploymentAutomatedColumn = "Automated"
+	// DeploymentBuildRefIDColumn is the build_ref_id column name
+	DeploymentBuildRefIDColumn = "BuildRefID"
+	// DeploymentCommitShaColumn is the commit_sha column name
+	DeploymentCommitShaColumn = "CommitSha"
+	// DeploymentCustomerIDColumn is the customer_id column name
+	DeploymentCustomerIDColumn = "CustomerID"
+	// DeploymentEndDateColumn is the end_date column name
+	DeploymentEndDateColumn = "EndDate"
+	// DeploymentEndDateColumnEpochColumn is the epoch column property of the EndDate name
+	DeploymentEndDateColumnEpochColumn = "EndDate.Epoch"
+	// DeploymentEndDateColumnOffsetColumn is the offset column property of the EndDate name
+	DeploymentEndDateColumnOffsetColumn = "EndDate.Offset"
+	// DeploymentEndDateColumnRfc3339Column is the rfc3339 column property of the EndDate name
+	DeploymentEndDateColumnRfc3339Column = "EndDate.Rfc3339"
+	// DeploymentEnvironmentColumn is the environment column name
+	DeploymentEnvironmentColumn = "Environment"
+	// DeploymentIDColumn is the id column name
+	DeploymentIDColumn = "ID"
+	// DeploymentRefIDColumn is the ref_id column name
+	DeploymentRefIDColumn = "RefID"
+	// DeploymentRefTypeColumn is the ref_type column name
+	DeploymentRefTypeColumn = "RefType"
+	// DeploymentRepoNameColumn is the repo_name column name
+	DeploymentRepoNameColumn = "RepoName"
+	// DeploymentStartDateColumn is the start_date column name
+	DeploymentStartDateColumn = "StartDate"
+	// DeploymentStartDateColumnEpochColumn is the epoch column property of the StartDate name
+	DeploymentStartDateColumnEpochColumn = "StartDate.Epoch"
+	// DeploymentStartDateColumnOffsetColumn is the offset column property of the StartDate name
+	DeploymentStartDateColumnOffsetColumn = "StartDate.Offset"
+	// DeploymentStartDateColumnRfc3339Column is the rfc3339 column property of the StartDate name
+	DeploymentStartDateColumnRfc3339Column = "StartDate.Rfc3339"
+	// DeploymentStatusColumn is the status column name
+	DeploymentStatusColumn = "Status"
+	// DeploymentUpdatedAtColumn is the updated_ts column name
+	DeploymentUpdatedAtColumn = "UpdatedAt"
+	// DeploymentURLColumn is the url column name
+	DeploymentURLColumn = "URL"
 )
 
 // DeploymentEndDate represents the object structure for end_date
@@ -308,6 +358,9 @@ type Deployment struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Deployment)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*Deployment)(nil)
+
 func toDeploymentObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Deployment:
@@ -333,6 +386,21 @@ func toDeploymentObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of Deployment
 func (o *Deployment) String() string {
 	return fmt.Sprintf("cicd.Deployment<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *Deployment) GetTopicName() datamodel.TopicNameType {
+	return DeploymentTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *Deployment) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *Deployment) GetTableName() string {
+	return DeploymentTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -367,9 +435,83 @@ func (o *Deployment) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *Deployment) GetTopicKey() string {
+	var i interface{} = o.CustomerID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Deployment) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Deployment")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Deployment) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *Deployment) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Deployment) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Deployment) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Deployment) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = DeploymentModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *Deployment) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "customer_id",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -383,6 +525,22 @@ func (o *Deployment) GetCustomerID() string {
 func (o *Deployment) Clone() datamodel.Model {
 	c := new(Deployment)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Deployment) Anon() datamodel.Model {
+	c := new(Deployment)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -748,4 +906,17 @@ func (o *Deployment) Hash() string {
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Deployment) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

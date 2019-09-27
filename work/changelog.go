@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -16,8 +17,55 @@ import (
 )
 
 const (
+	// ChangelogTopic is the default topic name
+	ChangelogTopic datamodel.TopicNameType = "work_Changelog_topic"
+
+	// ChangelogTable is the default table name
+	ChangelogTable datamodel.ModelNameType = "work_changelog"
+
 	// ChangelogModelName is the model name
 	ChangelogModelName datamodel.ModelNameType = "work.Changelog"
+)
+
+const (
+	// ChangelogCreatedDateColumn is the created_date column name
+	ChangelogCreatedDateColumn = "CreatedDate"
+	// ChangelogCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
+	ChangelogCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
+	// ChangelogCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
+	ChangelogCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
+	// ChangelogCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
+	ChangelogCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
+	// ChangelogCustomerIDColumn is the customer_id column name
+	ChangelogCustomerIDColumn = "CustomerID"
+	// ChangelogFieldColumn is the field column name
+	ChangelogFieldColumn = "Field"
+	// ChangelogFieldTypeColumn is the field_type column name
+	ChangelogFieldTypeColumn = "FieldType"
+	// ChangelogFromColumn is the from column name
+	ChangelogFromColumn = "From"
+	// ChangelogFromStringColumn is the from_string column name
+	ChangelogFromStringColumn = "FromString"
+	// ChangelogIDColumn is the id column name
+	ChangelogIDColumn = "ID"
+	// ChangelogIssueIDColumn is the issue_id column name
+	ChangelogIssueIDColumn = "IssueID"
+	// ChangelogOrdinalColumn is the ordinal column name
+	ChangelogOrdinalColumn = "Ordinal"
+	// ChangelogProjectIDColumn is the project_id column name
+	ChangelogProjectIDColumn = "ProjectID"
+	// ChangelogRefIDColumn is the ref_id column name
+	ChangelogRefIDColumn = "RefID"
+	// ChangelogRefTypeColumn is the ref_type column name
+	ChangelogRefTypeColumn = "RefType"
+	// ChangelogToColumn is the to column name
+	ChangelogToColumn = "To"
+	// ChangelogToStringColumn is the to_string column name
+	ChangelogToStringColumn = "ToString"
+	// ChangelogUpdatedAtColumn is the updated_ts column name
+	ChangelogUpdatedAtColumn = "UpdatedAt"
+	// ChangelogUserIDColumn is the user_id column name
+	ChangelogUserIDColumn = "UserID"
 )
 
 // ChangelogCreatedDate represents the object structure for created_date
@@ -114,19 +162,88 @@ func (o *ChangelogCreatedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// Changelog change log
+// ChangelogField is the enumeration type for field
+type ChangelogField int32
+
+// String returns the string value for Field
+func (v ChangelogField) String() string {
+	switch int32(v) {
+	case 0:
+		return "ASSIGNEE_REF_ID"
+	case 1:
+		return "DUE_DATE"
+	case 2:
+		return "EPIC_ID"
+	case 3:
+		return "IDENTIFIER"
+	case 4:
+		return "PARENT_ID"
+	case 5:
+		return "PRIORITY"
+	case 6:
+		return "PROJECT_ID"
+	case 7:
+		return "REPORTER_REF_ID"
+	case 8:
+		return "RESOLUTION"
+	case 9:
+		return "SPRINT_IDS"
+	case 10:
+		return "STATUS"
+	case 11:
+		return "TAGS"
+	case 12:
+		return "TITLE"
+	case 13:
+		return "TYPE"
+	}
+	return "unset"
+}
+
+const (
+	// FieldAssigneeRefID is the enumeration value for assignee_ref_id
+	ChangelogFieldAssigneeRefID ChangelogField = 0
+	// FieldDueDate is the enumeration value for due_date
+	ChangelogFieldDueDate ChangelogField = 1
+	// FieldEpicID is the enumeration value for epic_id
+	ChangelogFieldEpicID ChangelogField = 2
+	// FieldIdentifier is the enumeration value for identifier
+	ChangelogFieldIdentifier ChangelogField = 3
+	// FieldParentID is the enumeration value for parent_id
+	ChangelogFieldParentID ChangelogField = 4
+	// FieldPriority is the enumeration value for priority
+	ChangelogFieldPriority ChangelogField = 5
+	// FieldProjectID is the enumeration value for project_id
+	ChangelogFieldProjectID ChangelogField = 6
+	// FieldReporterRefID is the enumeration value for reporter_ref_id
+	ChangelogFieldReporterRefID ChangelogField = 7
+	// FieldResolution is the enumeration value for resolution
+	ChangelogFieldResolution ChangelogField = 8
+	// FieldSprintIds is the enumeration value for sprint_ids
+	ChangelogFieldSprintIds ChangelogField = 9
+	// FieldStatus is the enumeration value for status
+	ChangelogFieldStatus ChangelogField = 10
+	// FieldTags is the enumeration value for tags
+	ChangelogFieldTags ChangelogField = 11
+	// FieldTitle is the enumeration value for title
+	ChangelogFieldTitle ChangelogField = 12
+	// FieldType is the enumeration value for type
+	ChangelogFieldType ChangelogField = 13
+)
+
+// Changelog an individual change to an issue
 type Changelog struct {
 	// CreatedDate the date when this change was created
 	CreatedDate ChangelogCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Field name of the field that was changed
-	Field string `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
+	// Field the field that was changed
+	Field ChangelogField `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
 	// FieldType type of the field that was changed
 	FieldType string `json:"field_type" codec:"field_type" bson:"field_type" yaml:"field_type" faker:"-"`
 	// From id of the change from
 	From string `json:"from" codec:"from" bson:"from" yaml:"from" faker:"-"`
-	// FromString name of the change from
+	// FromString human readable representation of the change from, used mostly for debug
 	FromString string `json:"from_string" codec:"from_string" bson:"from_string" yaml:"from_string" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
@@ -142,7 +259,7 @@ type Changelog struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// To id of the change to
 	To string `json:"to" codec:"to" bson:"to" yaml:"to" faker:"-"`
-	// ToString name of the change to
+	// ToString human readable representation name of the change to, used mostly for debug
 	ToString string `json:"to_string" codec:"to_string" bson:"to_string" yaml:"to_string" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
@@ -155,6 +272,9 @@ type Changelog struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Changelog)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*Changelog)(nil)
+
 func toChangelogObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Changelog:
@@ -162,6 +282,9 @@ func toChangelogObject(o interface{}, isoptional bool) interface{} {
 
 	case ChangelogCreatedDate:
 		return v.ToMap()
+
+	case ChangelogField:
+		return v.String()
 
 	default:
 		return o
@@ -171,6 +294,21 @@ func toChangelogObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of Changelog
 func (o *Changelog) String() string {
 	return fmt.Sprintf("work.Changelog<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *Changelog) GetTopicName() datamodel.TopicNameType {
+	return ChangelogTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *Changelog) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *Changelog) GetTableName() string {
+	return ChangelogTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -202,9 +340,83 @@ func (o *Changelog) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *Changelog) GetTopicKey() string {
+	var i interface{} = o.ProjectID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Changelog) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Changelog")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Changelog) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *Changelog) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Changelog) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Changelog) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Changelog) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = ChangelogModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *Changelog) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "project_id",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -218,6 +430,22 @@ func (o *Changelog) GetCustomerID() string {
 func (o *Changelog) Clone() datamodel.Model {
 	c := new(Changelog)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Changelog) Anon() datamodel.Model {
+	c := new(Changelog)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -332,17 +560,72 @@ func (o *Changelog) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["field"].(string); ok {
+	if val, ok := kv["field"].(ChangelogField); ok {
 		o.Field = val
 	} else {
-		if val, ok := kv["field"]; ok {
-			if val == nil {
-				o.Field = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Field = fmt.Sprintf("%v", val)
+		if em, ok := kv["field"].(map[string]interface{}); ok {
+			ev := em["work.field"].(string)
+			switch ev {
+			case "assignee_ref_id", "ASSIGNEE_REF_ID":
+				o.Field = 0
+			case "due_date", "DUE_DATE":
+				o.Field = 1
+			case "epic_id", "EPIC_ID":
+				o.Field = 2
+			case "identifier", "IDENTIFIER":
+				o.Field = 3
+			case "parent_id", "PARENT_ID":
+				o.Field = 4
+			case "priority", "PRIORITY":
+				o.Field = 5
+			case "project_id", "PROJECT_ID":
+				o.Field = 6
+			case "reporter_ref_id", "REPORTER_REF_ID":
+				o.Field = 7
+			case "resolution", "RESOLUTION":
+				o.Field = 8
+			case "sprint_ids", "SPRINT_IDS":
+				o.Field = 9
+			case "status", "STATUS":
+				o.Field = 10
+			case "tags", "TAGS":
+				o.Field = 11
+			case "title", "TITLE":
+				o.Field = 12
+			case "type", "TYPE":
+				o.Field = 13
+			}
+		}
+		if em, ok := kv["field"].(string); ok {
+			switch em {
+			case "assignee_ref_id", "ASSIGNEE_REF_ID":
+				o.Field = 0
+			case "due_date", "DUE_DATE":
+				o.Field = 1
+			case "epic_id", "EPIC_ID":
+				o.Field = 2
+			case "identifier", "IDENTIFIER":
+				o.Field = 3
+			case "parent_id", "PARENT_ID":
+				o.Field = 4
+			case "priority", "PRIORITY":
+				o.Field = 5
+			case "project_id", "PROJECT_ID":
+				o.Field = 6
+			case "reporter_ref_id", "REPORTER_REF_ID":
+				o.Field = 7
+			case "resolution", "RESOLUTION":
+				o.Field = 8
+			case "sprint_ids", "SPRINT_IDS":
+				o.Field = 9
+			case "status", "STATUS":
+				o.Field = 10
+			case "tags", "TAGS":
+				o.Field = 11
+			case "title", "TITLE":
+				o.Field = 12
+			case "type", "TYPE":
+				o.Field = 13
 			}
 		}
 	}
@@ -565,4 +848,17 @@ func (o *Changelog) Hash() string {
 	args = append(args, o.UserID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Changelog) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

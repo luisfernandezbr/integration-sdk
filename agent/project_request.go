@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -21,8 +22,73 @@ import (
 )
 
 const (
+	// ProjectRequestTopic is the default topic name
+	ProjectRequestTopic datamodel.TopicNameType = "agent_ProjectRequest_topic"
+
+	// ProjectRequestTable is the default table name
+	ProjectRequestTable datamodel.ModelNameType = "agent_projectrequest"
+
 	// ProjectRequestModelName is the model name
 	ProjectRequestModelName datamodel.ModelNameType = "agent.ProjectRequest"
+)
+
+const (
+	// ProjectRequestCustomerIDColumn is the customer_id column name
+	ProjectRequestCustomerIDColumn = "CustomerID"
+	// ProjectRequestIDColumn is the id column name
+	ProjectRequestIDColumn = "ID"
+	// ProjectRequestIntegrationColumn is the integration column name
+	ProjectRequestIntegrationColumn = "Integration"
+	// ProjectRequestIntegrationColumnActiveColumn is the active column property of the Integration name
+	ProjectRequestIntegrationColumnActiveColumn = "Integration.Active"
+	// ProjectRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
+	ProjectRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
+	// ProjectRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
+	ProjectRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
+	// ProjectRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
+	ProjectRequestIntegrationColumnErroredColumn = "Integration.Errored"
+	// ProjectRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
+	ProjectRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
+	// ProjectRequestIntegrationColumnIDColumn is the id column property of the Integration name
+	ProjectRequestIntegrationColumnIDColumn = "Integration.ID"
+	// ProjectRequestIntegrationColumnLocationColumn is the location column property of the Integration name
+	ProjectRequestIntegrationColumnLocationColumn = "Integration.Location"
+	// ProjectRequestIntegrationColumnNameColumn is the name column property of the Integration name
+	ProjectRequestIntegrationColumnNameColumn = "Integration.Name"
+	// ProjectRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
+	ProjectRequestIntegrationColumnProgressColumn = "Integration.Progress"
+	// ProjectRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
+	ProjectRequestIntegrationColumnRefIDColumn = "Integration.RefID"
+	// ProjectRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
+	ProjectRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
+	// ProjectRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
+	ProjectRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
+	// ProjectRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
+	ProjectRequestIntegrationColumnValidatedColumn = "Integration.Validated"
+	// ProjectRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
+	ProjectRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
+	// ProjectRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
+	ProjectRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
+	// ProjectRequestLocationColumn is the location column name
+	ProjectRequestLocationColumn = "Location"
+	// ProjectRequestRefIDColumn is the ref_id column name
+	ProjectRequestRefIDColumn = "RefID"
+	// ProjectRequestRefTypeColumn is the ref_type column name
+	ProjectRequestRefTypeColumn = "RefType"
+	// ProjectRequestRequestDateColumn is the request_date column name
+	ProjectRequestRequestDateColumn = "RequestDate"
+	// ProjectRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
+	ProjectRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
+	// ProjectRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
+	ProjectRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
+	// ProjectRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
+	ProjectRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
+	// ProjectRequestSystemTypeColumn is the system_type column name
+	ProjectRequestSystemTypeColumn = "SystemType"
+	// ProjectRequestUpdatedAtColumn is the updated_ts column name
+	ProjectRequestUpdatedAtColumn = "UpdatedAt"
+	// ProjectRequestUUIDColumn is the uuid column name
+	ProjectRequestUUIDColumn = "UUID"
 )
 
 // ProjectRequestIntegrationAuthorization represents the object structure for authorization
@@ -47,6 +113,8 @@ type ProjectRequestIntegrationAuthorization struct {
 	Authorization *string `json:"authorization,omitempty" codec:"authorization,omitempty" bson:"authorization" yaml:"authorization,omitempty" faker:"-"`
 	// Hostname Hostname for instance, if relevant
 	Hostname *string `json:"hostname,omitempty" codec:"hostname,omitempty" bson:"hostname" yaml:"hostname,omitempty" faker:"-"`
+	// APIVersion the api version of the integration
+	APIVersion *string `json:"api_version,omitempty" codec:"api_version,omitempty" bson:"api_version" yaml:"api_version,omitempty" faker:"-"`
 	// Organization Organization for instance, if relevant
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 }
@@ -84,6 +152,8 @@ func (o *ProjectRequestIntegrationAuthorization) ToMap() map[string]interface{} 
 		"authorization": toProjectRequestIntegrationAuthorizationObject(o.Authorization, true),
 		// Hostname Hostname for instance, if relevant
 		"hostname": toProjectRequestIntegrationAuthorizationObject(o.Hostname, true),
+		// APIVersion the api version of the integration
+		"api_version": toProjectRequestIntegrationAuthorizationObject(o.APIVersion, true),
 		// Organization Organization for instance, if relevant
 		"organization": toProjectRequestIntegrationAuthorizationObject(o.Organization, true),
 	}
@@ -280,6 +350,24 @@ func (o *ProjectRequestIntegrationAuthorization) FromMap(kv map[string]interface
 					val = kv["string"]
 				}
 				o.Hostname = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["api_version"].(*string); ok {
+		o.APIVersion = val
+	} else if val, ok := kv["api_version"].(string); ok {
+		o.APIVersion = &val
+	} else {
+		if val, ok := kv["api_version"]; ok {
+			if val == nil {
+				o.APIVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.APIVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1080,6 +1168,9 @@ type ProjectRequest struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*ProjectRequest)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*ProjectRequest)(nil)
+
 func toProjectRequestObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectRequest:
@@ -1099,6 +1190,21 @@ func toProjectRequestObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of ProjectRequest
 func (o *ProjectRequest) String() string {
 	return fmt.Sprintf("agent.ProjectRequest<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *ProjectRequest) GetTopicName() datamodel.TopicNameType {
+	return ProjectRequestTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *ProjectRequest) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *ProjectRequest) GetTableName() string {
+	return ProjectRequestTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -1130,9 +1236,83 @@ func (o *ProjectRequest) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *ProjectRequest) GetTopicKey() string {
+	var i interface{} = o.UUID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *ProjectRequest) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for ProjectRequest")
+}
+
 // GetRefID returns the RefID for the object
 func (o *ProjectRequest) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *ProjectRequest) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *ProjectRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *ProjectRequest) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *ProjectRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = ProjectRequestModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *ProjectRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "uuid",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -1146,6 +1326,22 @@ func (o *ProjectRequest) GetCustomerID() string {
 func (o *ProjectRequest) Clone() datamodel.Model {
 	c := new(ProjectRequest)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *ProjectRequest) Anon() datamodel.Model {
+	c := new(ProjectRequest)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -1287,25 +1483,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1356,4 +1533,17 @@ func (o *ProjectRequest) Hash() string {
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *ProjectRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }

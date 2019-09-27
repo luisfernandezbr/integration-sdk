@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
@@ -17,8 +18,75 @@ import (
 )
 
 const (
+	// EventTopic is the default topic name
+	EventTopic datamodel.TopicNameType = "agent_Event_topic"
+
+	// EventTable is the default table name
+	EventTable datamodel.ModelNameType = "agent_event"
+
 	// EventModelName is the model name
 	EventModelName datamodel.ModelNameType = "agent.Event"
+)
+
+const (
+	// EventArchitectureColumn is the architecture column name
+	EventArchitectureColumn = "Architecture"
+	// EventCustomerIDColumn is the customer_id column name
+	EventCustomerIDColumn = "CustomerID"
+	// EventDataColumn is the data column name
+	EventDataColumn = "Data"
+	// EventDistroColumn is the distro column name
+	EventDistroColumn = "Distro"
+	// EventErrorColumn is the error column name
+	EventErrorColumn = "Error"
+	// EventEventDateColumn is the event_date column name
+	EventEventDateColumn = "EventDate"
+	// EventEventDateColumnEpochColumn is the epoch column property of the EventDate name
+	EventEventDateColumnEpochColumn = "EventDate.Epoch"
+	// EventEventDateColumnOffsetColumn is the offset column property of the EventDate name
+	EventEventDateColumnOffsetColumn = "EventDate.Offset"
+	// EventEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
+	EventEventDateColumnRfc3339Column = "EventDate.Rfc3339"
+	// EventFreeSpaceColumn is the free_space column name
+	EventFreeSpaceColumn = "FreeSpace"
+	// EventGoVersionColumn is the go_version column name
+	EventGoVersionColumn = "GoVersion"
+	// EventHostnameColumn is the hostname column name
+	EventHostnameColumn = "Hostname"
+	// EventIDColumn is the id column name
+	EventIDColumn = "ID"
+	// EventLastExportDateColumn is the last_export_date column name
+	EventLastExportDateColumn = "LastExportDate"
+	// EventLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
+	EventLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
+	// EventLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
+	EventLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
+	// EventLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
+	EventLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
+	// EventMemoryColumn is the memory column name
+	EventMemoryColumn = "Memory"
+	// EventMessageColumn is the message column name
+	EventMessageColumn = "Message"
+	// EventNumCPUColumn is the num_cpu column name
+	EventNumCPUColumn = "NumCPU"
+	// EventOSColumn is the os column name
+	EventOSColumn = "OS"
+	// EventRefIDColumn is the ref_id column name
+	EventRefIDColumn = "RefID"
+	// EventRefTypeColumn is the ref_type column name
+	EventRefTypeColumn = "RefType"
+	// EventSystemIDColumn is the system_id column name
+	EventSystemIDColumn = "SystemID"
+	// EventTypeColumn is the type column name
+	EventTypeColumn = "Type"
+	// EventUpdatedAtColumn is the updated_ts column name
+	EventUpdatedAtColumn = "UpdatedAt"
+	// EventUptimeColumn is the uptime column name
+	EventUptimeColumn = "Uptime"
+	// EventUUIDColumn is the uuid column name
+	EventUUIDColumn = "UUID"
+	// EventVersionColumn is the version column name
+	EventVersionColumn = "Version"
 )
 
 // EventEventDate represents the object structure for event_date
@@ -329,6 +397,9 @@ type Event struct {
 // ensure that this type implements the data model interface
 var _ datamodel.Model = (*Event)(nil)
 
+// ensure that this type implements the streamed data model interface
+var _ datamodel.StreamedModel = (*Event)(nil)
+
 func toEventObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Event:
@@ -351,6 +422,21 @@ func toEventObject(o interface{}, isoptional bool) interface{} {
 // String returns a string representation of Event
 func (o *Event) String() string {
 	return fmt.Sprintf("agent.Event<%s>", o.ID)
+}
+
+// GetTopicName returns the name of the topic if evented
+func (o *Event) GetTopicName() datamodel.TopicNameType {
+	return EventTopic
+}
+
+// GetStreamName returns the name of the stream
+func (o *Event) GetStreamName() string {
+	return ""
+}
+
+// GetTableName returns the name of the table
+func (o *Event) GetTableName() string {
+	return EventTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -388,9 +474,83 @@ func (o *Event) GetID() string {
 	return o.ID
 }
 
+// GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
+func (o *Event) GetTopicKey() string {
+	var i interface{} = o.UUID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
+}
+
+// GetTimestamp returns the timestamp for the model or now if not provided
+func (o *Event) GetTimestamp() time.Time {
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Event")
+}
+
 // GetRefID returns the RefID for the object
 func (o *Event) GetRefID() string {
 	return o.RefID
+}
+
+// IsMaterialized returns true if the model is materialized
+func (o *Event) IsMaterialized() bool {
+	return false
+}
+
+// GetModelMaterializeConfig returns the materialization config if materialized or nil if not
+func (o *Event) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+	return nil
+}
+
+// IsEvented returns true if the model supports eventing and implements ModelEventProvider
+func (o *Event) IsEvented() bool {
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Event) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = EventModelName.String()
+}
+
+// GetTopicConfig returns the topic config object
+func (o *Event) GetTopicConfig() *datamodel.ModelTopicConfig {
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "uuid",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -404,6 +564,22 @@ func (o *Event) GetCustomerID() string {
 func (o *Event) Clone() datamodel.Model {
 	c := new(Event)
 	c.FromMap(o.ToMap())
+	return c
+}
+
+// Anon returns the data structure as anonymous data
+func (o *Event) Anon() datamodel.Model {
+	c := new(Event)
+	if err := faker.FakeData(c); err != nil {
+		panic("couldn't create anon version of object: " + err.Error())
+	}
+	kv := c.ToMap()
+	for k, v := range o.ToMap() {
+		if _, ok := kv[k]; !ok {
+			kv[k] = v
+		}
+	}
+	c.FromMap(kv)
 	return c
 }
 
@@ -945,4 +1121,17 @@ func (o *Event) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// GetEventAPIConfig returns the EventAPIConfig
+func (o *Event) GetEventAPIConfig() datamodel.EventAPIConfig {
+	return datamodel.EventAPIConfig{
+		Publish: datamodel.EventAPIPublish{
+			Public: false,
+		},
+		Subscribe: datamodel.EventAPISubscribe{
+			Public: false,
+			Key:    "",
+		},
+	}
 }
