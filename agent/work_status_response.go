@@ -105,6 +105,8 @@ const (
 	WorkStatusResponseVersionColumn = "Version"
 	// WorkStatusResponseWorkConfigColumn is the work_config column name
 	WorkStatusResponseWorkConfigColumn = "WorkConfig"
+	// WorkStatusResponseWorkConfigColumnAllStatusesColumn is the all_statuses column property of the WorkConfig name
+	WorkStatusResponseWorkConfigColumnAllStatusesColumn = "WorkConfig.AllStatuses"
 	// WorkStatusResponseWorkConfigColumnCustomerIDColumn is the customer_id column property of the WorkConfig name
 	WorkStatusResponseWorkConfigColumnCustomerIDColumn = "WorkConfig.CustomerID"
 	// WorkStatusResponseWorkConfigColumnFieldColumn is the field column property of the WorkConfig name
@@ -1341,6 +1343,8 @@ func (o *WorkStatusResponseWorkConfigTypeRules) FromMap(kv map[string]interface{
 
 // WorkStatusResponseWorkConfig represents the object structure for work_config
 type WorkStatusResponseWorkConfig struct {
+	// AllStatuses all the values of issue statuses on the integration regardless of mapping
+	AllStatuses []string `json:"all_statuses" codec:"all_statuses" bson:"all_statuses" yaml:"all_statuses" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Field The field to operate on
@@ -1406,6 +1410,8 @@ func toWorkStatusResponseWorkConfigObject(o interface{}, isoptional bool) interf
 func (o *WorkStatusResponseWorkConfig) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
+		// AllStatuses all the values of issue statuses on the integration regardless of mapping
+		"all_statuses": toWorkStatusResponseWorkConfigObject(o.AllStatuses, false),
 		// CustomerID the customer id for the model instance
 		"customer_id": toWorkStatusResponseWorkConfigObject(o.CustomerID, false),
 		// Field The field to operate on
@@ -1450,6 +1456,57 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["all_statuses"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for all_statuses field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for all_statuses field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for all_statuses field")
+				}
+			}
+			o.AllStatuses = na
+		}
+	}
+	if o.AllStatuses == nil {
+		o.AllStatuses = make([]string, 0)
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
