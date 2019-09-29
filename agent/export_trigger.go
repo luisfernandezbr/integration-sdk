@@ -204,7 +204,7 @@ func (o *ExportTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 		Key:               "id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		CleanupPolicy:     datamodel.CleanupPolicy("delete"),
 		ReplicationFactor: 3,
 		Retention:         retention,
 		MaxSize:           5242880,
