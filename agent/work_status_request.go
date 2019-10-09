@@ -519,6 +519,8 @@ func (v WorkStatusRequestIntegrationSystemType) String() string {
 		return "SOURCECODE"
 	case 2:
 		return "CODEQUALITY"
+	case 3:
+		return "USER"
 	}
 	return "unset"
 }
@@ -530,6 +532,8 @@ const (
 	WorkStatusRequestIntegrationSystemTypeSourcecode WorkStatusRequestIntegrationSystemType = 1
 	// IntegrationSystemTypeCodequality is the enumeration value for codequality
 	WorkStatusRequestIntegrationSystemTypeCodequality WorkStatusRequestIntegrationSystemType = 2
+	// IntegrationSystemTypeUser is the enumeration value for user
+	WorkStatusRequestIntegrationSystemTypeUser WorkStatusRequestIntegrationSystemType = 3
 )
 
 // WorkStatusRequestIntegrationValidatedDate represents the object structure for validated_date
@@ -964,6 +968,8 @@ func (o *WorkStatusRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
+			case "user", "USER":
+				o.SystemType = 3
 			}
 		}
 		if em, ok := kv["system_type"].(string); ok {
@@ -974,6 +980,8 @@ func (o *WorkStatusRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
+			case "user", "USER":
+				o.SystemType = 3
 			}
 		}
 	}

@@ -519,6 +519,8 @@ func (v UserRequestIntegrationSystemType) String() string {
 		return "SOURCECODE"
 	case 2:
 		return "CODEQUALITY"
+	case 3:
+		return "USER"
 	}
 	return "unset"
 }
@@ -530,6 +532,8 @@ const (
 	UserRequestIntegrationSystemTypeSourcecode UserRequestIntegrationSystemType = 1
 	// IntegrationSystemTypeCodequality is the enumeration value for codequality
 	UserRequestIntegrationSystemTypeCodequality UserRequestIntegrationSystemType = 2
+	// IntegrationSystemTypeUser is the enumeration value for user
+	UserRequestIntegrationSystemTypeUser UserRequestIntegrationSystemType = 3
 )
 
 // UserRequestIntegrationValidatedDate represents the object structure for validated_date
@@ -964,6 +968,8 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
+			case "user", "USER":
+				o.SystemType = 3
 			}
 		}
 		if em, ok := kv["system_type"].(string); ok {
@@ -974,6 +980,8 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
+			case "user", "USER":
+				o.SystemType = 3
 			}
 		}
 	}
@@ -1483,6 +1491,25 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

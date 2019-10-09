@@ -456,7 +456,6 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
 		datamodel.TopicNameType("customer_CostCenter_topic"),
 		datamodel.TopicNameType("customer_Team_topic"),
-		datamodel.TopicNameType("customer_User_topic"),
 	}
 }
 

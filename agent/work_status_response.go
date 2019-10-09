@@ -105,6 +105,8 @@ const (
 	WorkStatusResponseVersionColumn = "Version"
 	// WorkStatusResponseWorkConfigColumn is the work_config column name
 	WorkStatusResponseWorkConfigColumn = "WorkConfig"
+	// WorkStatusResponseWorkConfigColumnAllResolutionsColumn is the all_resolutions column property of the WorkConfig name
+	WorkStatusResponseWorkConfigColumnAllResolutionsColumn = "WorkConfig.AllResolutions"
 	// WorkStatusResponseWorkConfigColumnAllStatusesColumn is the all_statuses column property of the WorkConfig name
 	WorkStatusResponseWorkConfigColumnAllStatusesColumn = "WorkConfig.AllStatuses"
 	// WorkStatusResponseWorkConfigColumnCustomerIDColumn is the customer_id column property of the WorkConfig name
@@ -127,6 +129,8 @@ const (
 	WorkStatusResponseWorkConfigColumnRefIDColumn = "WorkConfig.RefID"
 	// WorkStatusResponseWorkConfigColumnRefTypeColumn is the ref_type column property of the WorkConfig name
 	WorkStatusResponseWorkConfigColumnRefTypeColumn = "WorkConfig.RefType"
+	// WorkStatusResponseWorkConfigColumnResolutionsColumn is the resolutions column property of the WorkConfig name
+	WorkStatusResponseWorkConfigColumnResolutionsColumn = "WorkConfig.Resolutions"
 	// WorkStatusResponseWorkConfigColumnStatusesColumn is the statuses column property of the WorkConfig name
 	WorkStatusResponseWorkConfigColumnStatusesColumn = "WorkConfig.Statuses"
 	// WorkStatusResponseWorkConfigColumnTopLevelIssueColumn is the top_level_issue column property of the WorkConfig name
@@ -477,6 +481,153 @@ const (
 	WorkStatusResponseTypeStop WorkStatusResponseType = 12
 )
 
+// WorkStatusResponseWorkConfigResolutions represents the object structure for resolutions
+type WorkStatusResponseWorkConfigResolutions struct {
+	// WorkDone work completed resolution
+	WorkDone []string `json:"work_done" codec:"work_done" bson:"work_done" yaml:"work_done" faker:"-"`
+	// NoWorkDone resolutions that represent not completed issues
+	NoWorkDone []string `json:"no_work_done" codec:"no_work_done" bson:"no_work_done" yaml:"no_work_done" faker:"-"`
+}
+
+func toWorkStatusResponseWorkConfigResolutionsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *WorkStatusResponseWorkConfigResolutions:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *WorkStatusResponseWorkConfigResolutions) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// WorkDone work completed resolution
+		"work_done": toWorkStatusResponseWorkConfigResolutionsObject(o.WorkDone, false),
+		// NoWorkDone resolutions that represent not completed issues
+		"no_work_done": toWorkStatusResponseWorkConfigResolutionsObject(o.NoWorkDone, false),
+	}
+}
+
+func (o *WorkStatusResponseWorkConfigResolutions) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *WorkStatusResponseWorkConfigResolutions) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["work_done"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for work_done field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for work_done field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for work_done field")
+				}
+			}
+			o.WorkDone = na
+		}
+	}
+	if o.WorkDone == nil {
+		o.WorkDone = make([]string, 0)
+	}
+
+	if val, ok := kv["no_work_done"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for no_work_done field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for no_work_done field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for no_work_done field")
+				}
+			}
+			o.NoWorkDone = na
+		}
+	}
+	if o.NoWorkDone == nil {
+		o.NoWorkDone = make([]string, 0)
+	}
+	o.setDefaults(false)
+}
+
 // WorkStatusResponseWorkConfigStatuses represents the object structure for statuses
 type WorkStatusResponseWorkConfigStatuses struct {
 	// OpenStatus The open status
@@ -491,8 +642,6 @@ type WorkStatusResponseWorkConfigStatuses struct {
 	ReopenedStatus []string `json:"reopened_status" codec:"reopened_status" bson:"reopened_status" yaml:"reopened_status" faker:"-"`
 	// ClosedStatus The closed state names
 	ClosedStatus []string `json:"closed_status" codec:"closed_status" bson:"closed_status" yaml:"closed_status" faker:"-"`
-	// CompletedStatus The completed state names
-	CompletedStatus []string `json:"completed_status" codec:"completed_status" bson:"completed_status" yaml:"completed_status" faker:"-"`
 }
 
 func toWorkStatusResponseWorkConfigStatusesObject(o interface{}, isoptional bool) interface{} {
@@ -520,8 +669,6 @@ func (o *WorkStatusResponseWorkConfigStatuses) ToMap() map[string]interface{} {
 		"reopened_status": toWorkStatusResponseWorkConfigStatusesObject(o.ReopenedStatus, false),
 		// ClosedStatus The closed state names
 		"closed_status": toWorkStatusResponseWorkConfigStatusesObject(o.ClosedStatus, false),
-		// CompletedStatus The completed state names
-		"completed_status": toWorkStatusResponseWorkConfigStatusesObject(o.CompletedStatus, false),
 	}
 }
 
@@ -844,57 +991,6 @@ func (o *WorkStatusResponseWorkConfigStatuses) FromMap(kv map[string]interface{}
 	}
 	if o.ClosedStatus == nil {
 		o.ClosedStatus = make([]string, 0)
-	}
-
-	if val, ok := kv["completed_status"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for completed_status field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for completed_status field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for completed_status field")
-				}
-			}
-			o.CompletedStatus = na
-		}
-	}
-	if o.CompletedStatus == nil {
-		o.CompletedStatus = make([]string, 0)
 	}
 	o.setDefaults(false)
 }
@@ -1343,6 +1439,8 @@ func (o *WorkStatusResponseWorkConfigTypeRules) FromMap(kv map[string]interface{
 
 // WorkStatusResponseWorkConfig represents the object structure for work_config
 type WorkStatusResponseWorkConfig struct {
+	// AllResolutions all the values of issue resolutions on the integration regardless of mapping
+	AllResolutions []string `json:"all_resolutions" codec:"all_resolutions" bson:"all_resolutions" yaml:"all_resolutions" faker:"-"`
 	// AllStatuses all the values of issue statuses on the integration regardless of mapping
 	AllStatuses []string `json:"all_statuses" codec:"all_statuses" bson:"all_statuses" yaml:"all_statuses" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -1365,6 +1463,8 @@ type WorkStatusResponseWorkConfig struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// Resolutions The mapping of resolutions that represent completion for this integration
+	Resolutions WorkStatusResponseWorkConfigResolutions `json:"resolutions" codec:"resolutions" bson:"resolutions" yaml:"resolutions" faker:"-"`
 	// Statuses The mapping of statuses for this integration
 	Statuses WorkStatusResponseWorkConfigStatuses `json:"statuses" codec:"statuses" bson:"statuses" yaml:"statuses" faker:"-"`
 	// TopLevelIssue details about the top level issue
@@ -1389,6 +1489,9 @@ func toWorkStatusResponseWorkConfigObject(o interface{}, isoptional bool) interf
 	case WorkStatusResponseWorkConfigOperator:
 		return v.String()
 
+	case WorkStatusResponseWorkConfigResolutions:
+		return v.ToMap()
+
 	case WorkStatusResponseWorkConfigStatuses:
 		return v.ToMap()
 
@@ -1410,6 +1513,8 @@ func toWorkStatusResponseWorkConfigObject(o interface{}, isoptional bool) interf
 func (o *WorkStatusResponseWorkConfig) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
+		// AllResolutions all the values of issue resolutions on the integration regardless of mapping
+		"all_resolutions": toWorkStatusResponseWorkConfigObject(o.AllResolutions, false),
 		// AllStatuses all the values of issue statuses on the integration regardless of mapping
 		"all_statuses": toWorkStatusResponseWorkConfigObject(o.AllStatuses, false),
 		// CustomerID the customer id for the model instance
@@ -1432,6 +1537,8 @@ func (o *WorkStatusResponseWorkConfig) ToMap() map[string]interface{} {
 		"ref_id": toWorkStatusResponseWorkConfigObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
 		"ref_type": toWorkStatusResponseWorkConfigObject(o.RefType, false),
+		// Resolutions The mapping of resolutions that represent completion for this integration
+		"resolutions": toWorkStatusResponseWorkConfigObject(o.Resolutions, false),
 		// Statuses The mapping of statuses for this integration
 		"statuses": toWorkStatusResponseWorkConfigObject(o.Statuses, false),
 		// TopLevelIssue details about the top level issue
@@ -1456,6 +1563,57 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["all_resolutions"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for all_resolutions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for all_resolutions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for all_resolutions field")
+				}
+			}
+			o.AllResolutions = na
+		}
+	}
+	if o.AllResolutions == nil {
+		o.AllResolutions = make([]string, 0)
 	}
 
 	if val, ok := kv["all_statuses"]; ok {
@@ -1774,6 +1932,20 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 				o.RefType = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["resolutions"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Resolutions.FromMap(kv)
+		} else if sv, ok := val.(WorkStatusResponseWorkConfigResolutions); ok {
+			// struct
+			o.Resolutions = sv
+		} else if sp, ok := val.(*WorkStatusResponseWorkConfigResolutions); ok {
+			// struct pointer
+			o.Resolutions = *sp
+		}
+	} else {
+		o.Resolutions.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["statuses"]; ok {
@@ -2338,6 +2510,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2427,6 +2618,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

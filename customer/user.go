@@ -419,21 +419,12 @@ func (o *User) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *User) IsMaterialized() bool {
-	return true
+	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *User) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
-	idletime, err := time.ParseDuration("1s")
-	if err != nil {
-		panic(err)
-	}
-	return &datamodel.ModelMaterializeConfig{
-		KeyName:   "id",
-		TableName: "customer_user",
-		BatchSize: 5000,
-		IdleTime:  idletime,
-	}
+	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider

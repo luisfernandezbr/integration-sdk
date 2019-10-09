@@ -525,6 +525,8 @@ func (v ExportRequestIntegrationsSystemType) String() string {
 		return "SOURCECODE"
 	case 2:
 		return "CODEQUALITY"
+	case 3:
+		return "USER"
 	}
 	return "unset"
 }
@@ -536,6 +538,8 @@ const (
 	ExportRequestIntegrationsSystemTypeSourcecode ExportRequestIntegrationsSystemType = 1
 	// IntegrationsSystemTypeCodequality is the enumeration value for codequality
 	ExportRequestIntegrationsSystemTypeCodequality ExportRequestIntegrationsSystemType = 2
+	// IntegrationsSystemTypeUser is the enumeration value for user
+	ExportRequestIntegrationsSystemTypeUser ExportRequestIntegrationsSystemType = 3
 )
 
 // ExportRequestIntegrationsValidatedDate represents the object structure for validated_date
@@ -970,6 +974,8 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
+			case "user", "USER":
+				o.SystemType = 3
 			}
 		}
 		if em, ok := kv["system_type"].(string); ok {
@@ -980,6 +986,8 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
+			case "user", "USER":
+				o.SystemType = 3
 			}
 		}
 	}
