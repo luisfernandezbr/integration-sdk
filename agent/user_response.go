@@ -87,6 +87,30 @@ const (
 	UserResponseSuccessColumn = "Success"
 	// UserResponseSystemIDColumn is the system_id column name
 	UserResponseSystemIDColumn = "SystemID"
+	// UserResponseTeamsColumn is the teams column name
+	UserResponseTeamsColumn = "Teams"
+	// UserResponseTeamsColumnActiveColumn is the active column property of the Teams name
+	UserResponseTeamsColumnActiveColumn = "Teams.Active"
+	// UserResponseTeamsColumnChildrenIdsColumn is the children_ids column property of the Teams name
+	UserResponseTeamsColumnChildrenIdsColumn = "Teams.ChildrenIds"
+	// UserResponseTeamsColumnCustomerIDColumn is the customer_id column property of the Teams name
+	UserResponseTeamsColumnCustomerIDColumn = "Teams.CustomerID"
+	// UserResponseTeamsColumnDescriptionColumn is the description column property of the Teams name
+	UserResponseTeamsColumnDescriptionColumn = "Teams.Description"
+	// UserResponseTeamsColumnIDColumn is the id column property of the Teams name
+	UserResponseTeamsColumnIDColumn = "Teams.ID"
+	// UserResponseTeamsColumnLeafColumn is the leaf column property of the Teams name
+	UserResponseTeamsColumnLeafColumn = "Teams.Leaf"
+	// UserResponseTeamsColumnNameColumn is the name column property of the Teams name
+	UserResponseTeamsColumnNameColumn = "Teams.Name"
+	// UserResponseTeamsColumnParentIdsColumn is the parent_ids column property of the Teams name
+	UserResponseTeamsColumnParentIdsColumn = "Teams.ParentIds"
+	// UserResponseTeamsColumnRefIDColumn is the ref_id column property of the Teams name
+	UserResponseTeamsColumnRefIDColumn = "Teams.RefID"
+	// UserResponseTeamsColumnRefTypeColumn is the ref_type column property of the Teams name
+	UserResponseTeamsColumnRefTypeColumn = "Teams.RefType"
+	// UserResponseTeamsColumnTeamCostIDColumn is the team_cost_id column property of the Teams name
+	UserResponseTeamsColumnTeamCostIDColumn = "Teams.TeamCostID"
 	// UserResponseTypeColumn is the type column name
 	UserResponseTypeColumn = "Type"
 	// UserResponseUpdatedAtColumn is the updated_ts column name
@@ -95,28 +119,34 @@ const (
 	UserResponseUptimeColumn = "Uptime"
 	// UserResponseUsersColumn is the users column name
 	UserResponseUsersColumn = "Users"
-	// UserResponseUsersColumnActiveColumn is the active column property of the Users name
-	UserResponseUsersColumnActiveColumn = "Users.Active"
-	// UserResponseUsersColumnAssociatedRefIDColumn is the associated_ref_id column property of the Users name
-	UserResponseUsersColumnAssociatedRefIDColumn = "Users.AssociatedRefID"
 	// UserResponseUsersColumnAvatarURLColumn is the avatar_url column property of the Users name
 	UserResponseUsersColumnAvatarURLColumn = "Users.AvatarURL"
+	// UserResponseUsersColumnCostCenterIDColumn is the cost_center_id column property of the Users name
+	UserResponseUsersColumnCostCenterIDColumn = "Users.CostCenterID"
 	// UserResponseUsersColumnCustomerIDColumn is the customer_id column property of the Users name
 	UserResponseUsersColumnCustomerIDColumn = "Users.CustomerID"
-	// UserResponseUsersColumnEmailsColumn is the emails column property of the Users name
-	UserResponseUsersColumnEmailsColumn = "Users.Emails"
-	// UserResponseUsersColumnGroupsColumn is the groups column property of the Users name
-	UserResponseUsersColumnGroupsColumn = "Users.Groups"
+	// UserResponseUsersColumnEmailColumn is the email column property of the Users name
+	UserResponseUsersColumnEmailColumn = "Users.Email"
+	// UserResponseUsersColumnHiredDateColumn is the hired_date column property of the Users name
+	UserResponseUsersColumnHiredDateColumn = "Users.HiredDate"
 	// UserResponseUsersColumnIDColumn is the id column property of the Users name
 	UserResponseUsersColumnIDColumn = "Users.ID"
+	// UserResponseUsersColumnLocationColumn is the location column property of the Users name
+	UserResponseUsersColumnLocationColumn = "Users.Location"
+	// UserResponseUsersColumnManagerIDColumn is the manager_id column property of the Users name
+	UserResponseUsersColumnManagerIDColumn = "Users.ManagerID"
 	// UserResponseUsersColumnNameColumn is the name column property of the Users name
 	UserResponseUsersColumnNameColumn = "Users.Name"
+	// UserResponseUsersColumnPrimaryTeamIDColumn is the primary_team_id column property of the Users name
+	UserResponseUsersColumnPrimaryTeamIDColumn = "Users.PrimaryTeamID"
 	// UserResponseUsersColumnRefIDColumn is the ref_id column property of the Users name
 	UserResponseUsersColumnRefIDColumn = "Users.RefID"
 	// UserResponseUsersColumnRefTypeColumn is the ref_type column property of the Users name
 	UserResponseUsersColumnRefTypeColumn = "Users.RefType"
-	// UserResponseUsersColumnUsernameColumn is the username column property of the Users name
-	UserResponseUsersColumnUsernameColumn = "Users.Username"
+	// UserResponseUsersColumnTerminatedDateColumn is the terminated_date column property of the Users name
+	UserResponseUsersColumnTerminatedDateColumn = "Users.TerminatedDate"
+	// UserResponseUsersColumnTitleColumn is the title column property of the Users name
+	UserResponseUsersColumnTitleColumn = "Users.Title"
 	// UserResponseUUIDColumn is the uuid column name
 	UserResponseUUIDColumn = "UUID"
 	// UserResponseVersionColumn is the version column name
@@ -311,6 +341,332 @@ func (o *UserResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// UserResponseTeams represents the object structure for teams
+type UserResponseTeams struct {
+	// Active whether the team is tracked in pinpoint
+	Active *bool `json:"active,omitempty" codec:"active,omitempty" bson:"active" yaml:"active,omitempty" faker:"-"`
+	// ChildrenIds the children_ids for this team
+	ChildrenIds []string `json:"children_ids" codec:"children_ids" bson:"children_ids" yaml:"children_ids" faker:"-"`
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Description the description of the team
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Leaf True when team has no children_ids
+	Leaf bool `json:"leaf" codec:"leaf" bson:"leaf" yaml:"leaf" faker:"-"`
+	// Name the name of the team
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"team"`
+	// ParentIds the parent_ids for this team
+	ParentIds []string `json:"parent_ids" codec:"parent_ids" bson:"parent_ids" yaml:"parent_ids" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// TeamCostID the team cost id
+	TeamCostID *string `json:"team_cost_id,omitempty" codec:"team_cost_id,omitempty" bson:"team_cost_id" yaml:"team_cost_id,omitempty" faker:"-"`
+}
+
+func toUserResponseTeamsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *UserResponseTeams:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *UserResponseTeams) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Active whether the team is tracked in pinpoint
+		"active": toUserResponseTeamsObject(o.Active, true),
+		// ChildrenIds the children_ids for this team
+		"children_ids": toUserResponseTeamsObject(o.ChildrenIds, false),
+		// CustomerID the customer id for the model instance
+		"customer_id": toUserResponseTeamsObject(o.CustomerID, false),
+		// Description the description of the team
+		"description": toUserResponseTeamsObject(o.Description, false),
+		// ID the primary key for the model instance
+		"id": toUserResponseTeamsObject(o.ID, false),
+		// Leaf True when team has no children_ids
+		"leaf": toUserResponseTeamsObject(o.Leaf, false),
+		// Name the name of the team
+		"name": toUserResponseTeamsObject(o.Name, false),
+		// ParentIds the parent_ids for this team
+		"parent_ids": toUserResponseTeamsObject(o.ParentIds, false),
+		// RefID the source system id for the model instance
+		"ref_id": toUserResponseTeamsObject(o.RefID, false),
+		// RefType the source system identifier for the model instance
+		"ref_type": toUserResponseTeamsObject(o.RefType, false),
+		// TeamCostID the team cost id
+		"team_cost_id": toUserResponseTeamsObject(o.TeamCostID, true),
+	}
+}
+
+func (o *UserResponseTeams) setDefaults(frommap bool) {
+
+	if o.Active == nil {
+		v := false
+		o.Active = &v
+	}
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserResponseTeams) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = number.BoolPointer(number.ToBoolAny(nil))
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+
+	if val, ok := kv["children_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for children_ids field")
+				}
+			}
+			o.ChildrenIds = na
+		}
+	}
+	if o.ChildrenIds == nil {
+		o.ChildrenIds = make([]string, 0)
+	}
+
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["leaf"].(bool); ok {
+		o.Leaf = val
+	} else {
+		if val, ok := kv["leaf"]; ok {
+			if val == nil {
+				o.Leaf = number.ToBoolAny(nil)
+			} else {
+				o.Leaf = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["parent_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for parent_ids field")
+				}
+			}
+			o.ParentIds = na
+		}
+	}
+	if o.ParentIds == nil {
+		o.ParentIds = make([]string, 0)
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["team_cost_id"].(*string); ok {
+		o.TeamCostID = val
+	} else if val, ok := kv["team_cost_id"].(string); ok {
+		o.TeamCostID = &val
+	} else {
+		if val, ok := kv["team_cost_id"]; ok {
+			if val == nil {
+				o.TeamCostID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.TeamCostID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // UserResponseType is the enumeration type for type
 type UserResponseType int32
 
@@ -376,17 +732,19 @@ const (
 	UserResponseTypeStop UserResponseType = 12
 )
 
-// UserResponseUsersGroups represents the object structure for groups
-type UserResponseUsersGroups struct {
-	// GroupID Group id
-	GroupID string `json:"group_id" codec:"group_id" bson:"group_id" yaml:"group_id" faker:"-"`
-	// Name Group name
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+// UserResponseUsersHiredDate represents the object structure for hired_date
+type UserResponseUsersHiredDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toUserResponseUsersGroupsObject(o interface{}, isoptional bool) interface{} {
+func toUserResponseUsersHiredDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *UserResponseUsersGroups:
+	case *UserResponseUsersHiredDate:
 		return v.ToMap()
 
 	default:
@@ -394,17 +752,19 @@ func toUserResponseUsersGroupsObject(o interface{}, isoptional bool) interface{}
 	}
 }
 
-func (o *UserResponseUsersGroups) ToMap() map[string]interface{} {
+func (o *UserResponseUsersHiredDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// GroupID Group id
-		"group_id": toUserResponseUsersGroupsObject(o.GroupID, false),
-		// Name Group name
-		"name": toUserResponseUsersGroupsObject(o.Name, false),
+		// Epoch the date in epoch format
+		"epoch": toUserResponseUsersHiredDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toUserResponseUsersHiredDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toUserResponseUsersHiredDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *UserResponseUsersGroups) setDefaults(frommap bool) {
+func (o *UserResponseUsersHiredDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -412,39 +772,148 @@ func (o *UserResponseUsersGroups) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *UserResponseUsersGroups) FromMap(kv map[string]interface{}) {
+func (o *UserResponseUsersHiredDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
 
-	if val, ok := kv["group_id"].(string); ok {
-		o.GroupID = val
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
 	} else {
-		if val, ok := kv["group_id"]; ok {
+		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.GroupID = ""
+				o.Epoch = number.ToInt64Any(nil)
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
 				}
-				o.GroupID = fmt.Sprintf("%v", val)
+				o.Epoch = number.ToInt64Any(val)
 			}
 		}
 	}
 
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
 	} else {
-		if val, ok := kv["name"]; ok {
+		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Name = ""
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
 			} else {
 				if m, ok := val.(map[string]interface{}); ok {
 					val = pjson.Stringify(m)
 				}
-				o.Name = fmt.Sprintf("%v", val)
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// UserResponseUsersTerminatedDate represents the object structure for terminated_date
+type UserResponseUsersTerminatedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toUserResponseUsersTerminatedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *UserResponseUsersTerminatedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *UserResponseUsersTerminatedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toUserResponseUsersTerminatedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toUserResponseUsersTerminatedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toUserResponseUsersTerminatedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *UserResponseUsersTerminatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserResponseUsersTerminatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -453,28 +922,34 @@ func (o *UserResponseUsersGroups) FromMap(kv map[string]interface{}) {
 
 // UserResponseUsers represents the object structure for users
 type UserResponseUsers struct {
-	// Active if user is active
-	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
-	// AssociatedRefID the ref id associated for this user in another system
-	AssociatedRefID *string `json:"associated_ref_id,omitempty" codec:"associated_ref_id,omitempty" bson:"associated_ref_id" yaml:"associated_ref_id,omitempty" faker:"-"`
-	// AvatarURL the url to users avatar
+	// AvatarURL the user avatar url
 	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"avatar"`
+	// CostCenterID the id of the cost center
+	CostCenterID *string `json:"cost_center_id,omitempty" codec:"cost_center_id,omitempty" bson:"cost_center_id" yaml:"cost_center_id,omitempty" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Emails the email for the user
-	Emails []string `json:"emails" codec:"emails" bson:"emails" yaml:"emails" faker:"-"`
-	// Groups Group names
-	Groups []UserResponseUsersGroups `json:"groups" codec:"groups" bson:"groups" yaml:"groups" faker:"-"`
+	// Email the email of the user
+	Email string `json:"email" codec:"email" bson:"email" yaml:"email" faker:"email"`
+	// HiredDate when the user was hired in epoch timestamp
+	HiredDate UserResponseUsersHiredDate `json:"hired_date" codec:"hired_date" bson:"hired_date" yaml:"hired_date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Name the name of the user
+	// Location the location of the user
+	Location *string `json:"location,omitempty" codec:"location,omitempty" bson:"location" yaml:"location,omitempty" faker:"location"`
+	// ManagerID the manager user id
+	ManagerID *string `json:"manager_id,omitempty" codec:"manager_id,omitempty" bson:"manager_id" yaml:"manager_id,omitempty" faker:"-"`
+	// Name name of the user
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
+	// PrimaryTeamID the team id of the user's primary team
+	PrimaryTeamID *string `json:"primary_team_id,omitempty" codec:"primary_team_id,omitempty" bson:"primary_team_id" yaml:"primary_team_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// Username the username of the user
-	Username string `json:"username" codec:"username" bson:"username" yaml:"username" faker:"username"`
+	// TerminatedDate when the user was terminated in epoch timestamp
+	TerminatedDate UserResponseUsersTerminatedDate `json:"terminated_date" codec:"terminated_date" bson:"terminated_date" yaml:"terminated_date" faker:"-"`
+	// Title the title of the user
+	Title *string `json:"title,omitempty" codec:"title,omitempty" bson:"title" yaml:"title,omitempty" faker:"jobtitle"`
 }
 
 func toUserResponseUsersObject(o interface{}, isoptional bool) interface{} {
@@ -482,12 +957,11 @@ func toUserResponseUsersObject(o interface{}, isoptional bool) interface{} {
 	case *UserResponseUsers:
 		return v.ToMap()
 
-	case []UserResponseUsersGroups:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
+	case UserResponseUsersHiredDate:
+		return v.ToMap()
+
+	case UserResponseUsersTerminatedDate:
+		return v.ToMap()
 
 	default:
 		return o
@@ -497,28 +971,34 @@ func toUserResponseUsersObject(o interface{}, isoptional bool) interface{} {
 func (o *UserResponseUsers) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// Active if user is active
-		"active": toUserResponseUsersObject(o.Active, false),
-		// AssociatedRefID the ref id associated for this user in another system
-		"associated_ref_id": toUserResponseUsersObject(o.AssociatedRefID, true),
-		// AvatarURL the url to users avatar
+		// AvatarURL the user avatar url
 		"avatar_url": toUserResponseUsersObject(o.AvatarURL, true),
+		// CostCenterID the id of the cost center
+		"cost_center_id": toUserResponseUsersObject(o.CostCenterID, true),
 		// CustomerID the customer id for the model instance
 		"customer_id": toUserResponseUsersObject(o.CustomerID, false),
-		// Emails the email for the user
-		"emails": toUserResponseUsersObject(o.Emails, false),
-		// Groups Group names
-		"groups": toUserResponseUsersObject(o.Groups, false),
+		// Email the email of the user
+		"email": toUserResponseUsersObject(o.Email, false),
+		// HiredDate when the user was hired in epoch timestamp
+		"hired_date": toUserResponseUsersObject(o.HiredDate, false),
 		// ID the primary key for the model instance
 		"id": toUserResponseUsersObject(o.ID, false),
-		// Name the name of the user
+		// Location the location of the user
+		"location": toUserResponseUsersObject(o.Location, true),
+		// ManagerID the manager user id
+		"manager_id": toUserResponseUsersObject(o.ManagerID, true),
+		// Name name of the user
 		"name": toUserResponseUsersObject(o.Name, false),
+		// PrimaryTeamID the team id of the user's primary team
+		"primary_team_id": toUserResponseUsersObject(o.PrimaryTeamID, true),
 		// RefID the source system id for the model instance
 		"ref_id": toUserResponseUsersObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
 		"ref_type": toUserResponseUsersObject(o.RefType, false),
-		// Username the username of the user
-		"username": toUserResponseUsersObject(o.Username, false),
+		// TerminatedDate when the user was terminated in epoch timestamp
+		"terminated_date": toUserResponseUsersObject(o.TerminatedDate, false),
+		// Title the title of the user
+		"title": toUserResponseUsersObject(o.Title, true),
 	}
 }
 
@@ -535,36 +1015,6 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["active"].(bool); ok {
-		o.Active = val
-	} else {
-		if val, ok := kv["active"]; ok {
-			if val == nil {
-				o.Active = number.ToBoolAny(nil)
-			} else {
-				o.Active = number.ToBoolAny(val)
-			}
-		}
-	}
-
-	if val, ok := kv["associated_ref_id"].(*string); ok {
-		o.AssociatedRefID = val
-	} else if val, ok := kv["associated_ref_id"].(string); ok {
-		o.AssociatedRefID = &val
-	} else {
-		if val, ok := kv["associated_ref_id"]; ok {
-			if val == nil {
-				o.AssociatedRefID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.AssociatedRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
 	}
 
 	if val, ok := kv["avatar_url"].(*string); ok {
@@ -585,6 +1035,24 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["cost_center_id"].(*string); ok {
+		o.CostCenterID = val
+	} else if val, ok := kv["cost_center_id"].(string); ok {
+		o.CostCenterID = &val
+	} else {
+		if val, ok := kv["cost_center_id"]; ok {
+			if val == nil {
+				o.CostCenterID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CostCenterID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -600,118 +1068,52 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["emails"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
+	if val, ok := kv["email"].(string); ok {
+		o.Email = val
+	} else {
+		if val, ok := kv["email"]; ok {
+			if val == nil {
+				o.Email = ""
 			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for emails field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for emails field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for emails field")
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
 				}
+				o.Email = fmt.Sprintf("%v", val)
 			}
-			o.Emails = na
 		}
 	}
-	if o.Emails == nil {
-		o.Emails = make([]string, 0)
-	}
 
-	if o == nil {
-
-		o.Groups = make([]UserResponseUsersGroups, 0)
-
-	}
-	if val, ok := kv["groups"]; ok {
-		if sv, ok := val.([]UserResponseUsersGroups); ok {
-			o.Groups = sv
-		} else if sp, ok := val.([]*UserResponseUsersGroups); ok {
-			o.Groups = o.Groups[:0]
-			for _, e := range sp {
-				o.Groups = append(o.Groups, *e)
+	if val, ok := kv["hired_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.HiredDate.FromMap(kv)
+		} else if sv, ok := val.(UserResponseUsersHiredDate); ok {
+			// struct
+			o.HiredDate = sv
+		} else if sp, ok := val.(*UserResponseUsersHiredDate); ok {
+			// struct pointer
+			o.HiredDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.HiredDate.Epoch = dt.Epoch
+			o.HiredDate.Rfc3339 = dt.Rfc3339
+			o.HiredDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
 			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(UserResponseUsersGroups); ok {
-					o.Groups = append(o.Groups, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm UserResponseUsersGroups
-					fm.FromMap(av)
-					o.Groups = append(o.Groups, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					var av UserResponseUsersGroups
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for groups field entry: " + reflect.TypeOf(ae).String())
-					}
-					o.Groups = append(o.Groups, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(UserResponseUsersGroups); ok {
-					o.Groups = append(o.Groups, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm UserResponseUsersGroups
-					fm.FromMap(r)
-					o.Groups = append(o.Groups, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := UserResponseUsersGroups{}
-					fm.FromMap(r)
-					o.Groups = append(o.Groups, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm UserResponseUsersGroups
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.Groups = append(o.Groups, fm)
-						}
-					}
-				}
+			o.HiredDate.Epoch = dt.Epoch
+			o.HiredDate.Rfc3339 = dt.Rfc3339
+			o.HiredDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.HiredDate.Epoch = dt.Epoch
+				o.HiredDate.Rfc3339 = dt.Rfc3339
+				o.HiredDate.Offset = dt.Offset
 			}
 		}
+	} else {
+		o.HiredDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["id"].(string); ok {
@@ -729,6 +1131,42 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["location"].(*string); ok {
+		o.Location = val
+	} else if val, ok := kv["location"].(string); ok {
+		o.Location = &val
+	} else {
+		if val, ok := kv["location"]; ok {
+			if val == nil {
+				o.Location = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Location = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["manager_id"].(*string); ok {
+		o.ManagerID = val
+	} else if val, ok := kv["manager_id"].(string); ok {
+		o.ManagerID = &val
+	} else {
+		if val, ok := kv["manager_id"]; ok {
+			if val == nil {
+				o.ManagerID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ManagerID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -740,6 +1178,24 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["primary_team_id"].(*string); ok {
+		o.PrimaryTeamID = val
+	} else if val, ok := kv["primary_team_id"].(string); ok {
+		o.PrimaryTeamID = &val
+	} else {
+		if val, ok := kv["primary_team_id"]; ok {
+			if val == nil {
+				o.PrimaryTeamID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PrimaryTeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -774,17 +1230,53 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["username"].(string); ok {
-		o.Username = val
+	if val, ok := kv["terminated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.TerminatedDate.FromMap(kv)
+		} else if sv, ok := val.(UserResponseUsersTerminatedDate); ok {
+			// struct
+			o.TerminatedDate = sv
+		} else if sp, ok := val.(*UserResponseUsersTerminatedDate); ok {
+			// struct pointer
+			o.TerminatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.TerminatedDate.Epoch = dt.Epoch
+			o.TerminatedDate.Rfc3339 = dt.Rfc3339
+			o.TerminatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.TerminatedDate.Epoch = dt.Epoch
+			o.TerminatedDate.Rfc3339 = dt.Rfc3339
+			o.TerminatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.TerminatedDate.Epoch = dt.Epoch
+				o.TerminatedDate.Rfc3339 = dt.Rfc3339
+				o.TerminatedDate.Offset = dt.Offset
+			}
+		}
 	} else {
-		if val, ok := kv["username"]; ok {
+		o.TerminatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["title"].(*string); ok {
+		o.Title = val
+	} else if val, ok := kv["title"].(string); ok {
+		o.Title = &val
+	} else {
+		if val, ok := kv["title"]; ok {
 			if val == nil {
-				o.Username = ""
+				o.Title = pstrings.Pointer("")
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				o.Username = fmt.Sprintf("%v", val)
+				o.Title = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -835,6 +1327,8 @@ type UserResponse struct {
 	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	// Teams the exported teams
+	Teams []UserResponseTeams `json:"teams" codec:"teams" bson:"teams" yaml:"teams" faker:"-"`
 	// Type the type of event
 	Type UserResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
@@ -867,6 +1361,13 @@ func toUserResponseObject(o interface{}, isoptional bool) interface{} {
 
 	case UserResponseLastExportDate:
 		return v.ToMap()
+
+	case []UserResponseTeams:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 
 	case UserResponseType:
 		return v.String()
@@ -919,6 +1420,9 @@ func (o *UserResponse) setDefaults(frommap bool) {
 	}
 	if o.Error == nil {
 		o.Error = &emptyString
+	}
+	if o.Teams == nil {
+		o.Teams = make([]UserResponseTeams, 0)
 	}
 	if o.Users == nil {
 		o.Users = make([]UserResponseUsers, 0)
@@ -1104,6 +1608,7 @@ func (o *UserResponse) ToMap() map[string]interface{} {
 		"request_id":       toUserResponseObject(o.RequestID, false),
 		"success":          toUserResponseObject(o.Success, false),
 		"system_id":        toUserResponseObject(o.SystemID, false),
+		"teams":            toUserResponseObject(o.Teams, false),
 		"type":             toUserResponseObject(o.Type, false),
 		"updated_ts":       toUserResponseObject(o.UpdatedAt, false),
 		"uptime":           toUserResponseObject(o.Uptime, false),
@@ -1440,6 +1945,69 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if o == nil {
+
+		o.Teams = make([]UserResponseTeams, 0)
+
+	}
+	if val, ok := kv["teams"]; ok {
+		if sv, ok := val.([]UserResponseTeams); ok {
+			o.Teams = sv
+		} else if sp, ok := val.([]*UserResponseTeams); ok {
+			o.Teams = o.Teams[:0]
+			for _, e := range sp {
+				o.Teams = append(o.Teams, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(UserResponseTeams); ok {
+					o.Teams = append(o.Teams, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm UserResponseTeams
+					fm.FromMap(av)
+					o.Teams = append(o.Teams, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av UserResponseTeams
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for teams field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.Teams = append(o.Teams, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(UserResponseTeams); ok {
+					o.Teams = append(o.Teams, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm UserResponseTeams
+					fm.FromMap(r)
+					o.Teams = append(o.Teams, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := UserResponseTeams{}
+					fm.FromMap(r)
+					o.Teams = append(o.Teams, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm UserResponseTeams
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Teams = append(o.Teams, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if val, ok := kv["type"].(UserResponseType); ok {
 		o.Type = val
 	} else {
@@ -1655,6 +2223,7 @@ func (o *UserResponse) Hash() string {
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
+	args = append(args, o.Teams)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
