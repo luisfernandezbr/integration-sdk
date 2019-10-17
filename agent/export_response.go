@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -15,6 +16,7 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -812,7 +814,7 @@ type ExportResponse struct {
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integrations the integrations that were exported
-	Integrations ExportResponseIntegrations `json:"integrations" codec:"integrations" bson:"integrations" yaml:"integrations" faker:"-"`
+	Integrations []ExportResponseIntegrations `json:"integrations" codec:"integrations" bson:"integrations" yaml:"integrations" faker:"-"`
 	// JobID The job ID
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// LastExportDate the last export date
@@ -874,8 +876,12 @@ func toExportResponseObject(o interface{}, isoptional bool) interface{} {
 	case ExportResponseEventDate:
 		return v.ToMap()
 
-	case ExportResponseIntegrations:
-		return v.ToMap()
+	case []ExportResponseIntegrations:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 
 	case ExportResponseLastExportDate:
 		return v.ToMap()
@@ -930,6 +936,9 @@ func (o *ExportResponse) setDefaults(frommap bool) {
 	}
 	if o.Error == nil {
 		o.Error = &emptyString
+	}
+	if o.Integrations == nil {
+		o.Integrations = make([]ExportResponseIntegrations, 0)
 	}
 	if o.UploadURL == nil {
 		o.UploadURL = &emptyString
@@ -1347,18 +1356,67 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if o == nil {
+
+		o.Integrations = make([]ExportResponseIntegrations, 0)
+
+	}
 	if val, ok := kv["integrations"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.Integrations.FromMap(kv)
-		} else if sv, ok := val.(ExportResponseIntegrations); ok {
-			// struct
+		if sv, ok := val.([]ExportResponseIntegrations); ok {
 			o.Integrations = sv
-		} else if sp, ok := val.(*ExportResponseIntegrations); ok {
-			// struct pointer
-			o.Integrations = *sp
+		} else if sp, ok := val.([]*ExportResponseIntegrations); ok {
+			o.Integrations = o.Integrations[:0]
+			for _, e := range sp {
+				o.Integrations = append(o.Integrations, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ExportResponseIntegrations); ok {
+					o.Integrations = append(o.Integrations, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ExportResponseIntegrations
+					fm.FromMap(av)
+					o.Integrations = append(o.Integrations, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av ExportResponseIntegrations
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for integrations field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.Integrations = append(o.Integrations, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ExportResponseIntegrations); ok {
+					o.Integrations = append(o.Integrations, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ExportResponseIntegrations
+					fm.FromMap(r)
+					o.Integrations = append(o.Integrations, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ExportResponseIntegrations{}
+					fm.FromMap(r)
+					o.Integrations = append(o.Integrations, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ExportResponseIntegrations
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Integrations = append(o.Integrations, fm)
+						}
+					}
+				}
+			}
 		}
-	} else {
-		o.Integrations.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["job_id"].(string); ok {
