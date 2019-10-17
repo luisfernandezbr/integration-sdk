@@ -55,6 +55,8 @@ const (
 	ExportResponseEventDateColumnOffsetColumn = "EventDate.Offset"
 	// ExportResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
 	ExportResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
+	// ExportResponseExportTypeColumn is the export_type column name
+	ExportResponseExportTypeColumn = "ExportType"
 	// ExportResponseFreeSpaceColumn is the free_space column name
 	ExportResponseFreeSpaceColumn = "FreeSpace"
 	// ExportResponseGoVersionColumn is the go_version column name
@@ -63,6 +65,16 @@ const (
 	ExportResponseHostnameColumn = "Hostname"
 	// ExportResponseIDColumn is the id column name
 	ExportResponseIDColumn = "ID"
+	// ExportResponseIntegrationsColumn is the integrations column name
+	ExportResponseIntegrationsColumn = "Integrations"
+	// ExportResponseIntegrationsColumnExportTypeColumn is the export_type column property of the Integrations name
+	ExportResponseIntegrationsColumnExportTypeColumn = "Integrations.ExportType"
+	// ExportResponseIntegrationsColumnIntegrationIDColumn is the integration_id column property of the Integrations name
+	ExportResponseIntegrationsColumnIntegrationIDColumn = "Integrations.IntegrationID"
+	// ExportResponseIntegrationsColumnNameColumn is the name column property of the Integrations name
+	ExportResponseIntegrationsColumnNameColumn = "Integrations.Name"
+	// ExportResponseIntegrationsColumnSystemTypeColumn is the system_type column property of the Integrations name
+	ExportResponseIntegrationsColumnSystemTypeColumn = "Integrations.SystemType"
 	// ExportResponseJobIDColumn is the job_id column name
 	ExportResponseJobIDColumn = "JobID"
 	// ExportResponseLastExportDateColumn is the last_export_date column name
@@ -97,10 +109,14 @@ const (
 	ExportResponseStartDateColumnOffsetColumn = "StartDate.Offset"
 	// ExportResponseStartDateColumnRfc3339Column is the rfc3339 column property of the StartDate name
 	ExportResponseStartDateColumnRfc3339Column = "StartDate.Rfc3339"
+	// ExportResponseStateColumn is the state column name
+	ExportResponseStateColumn = "State"
 	// ExportResponseSuccessColumn is the success column name
 	ExportResponseSuccessColumn = "Success"
 	// ExportResponseSystemIDColumn is the system_id column name
 	ExportResponseSystemIDColumn = "SystemID"
+	// ExportResponseSystemTypeColumn is the system_type column name
+	ExportResponseSystemTypeColumn = "SystemType"
 	// ExportResponseTypeColumn is the type column name
 	ExportResponseTypeColumn = "Type"
 	// ExportResponseUpdatedAtColumn is the updated_ts column name
@@ -303,6 +319,196 @@ func (o *ExportResponseEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// ExportResponseIntegrationsExportType is the enumeration type for export_type
+type ExportResponseIntegrationsExportType int32
+
+// String returns the string value for IntegrationsExportType
+func (v ExportResponseIntegrationsExportType) String() string {
+	switch int32(v) {
+	case 0:
+		return "HISTORICAL"
+	case 1:
+		return "INCREMENTAL"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationsExportTypeHistorical is the enumeration value for historical
+	ExportResponseIntegrationsExportTypeHistorical ExportResponseIntegrationsExportType = 0
+	// IntegrationsExportTypeIncremental is the enumeration value for incremental
+	ExportResponseIntegrationsExportTypeIncremental ExportResponseIntegrationsExportType = 1
+)
+
+// ExportResponseIntegrationsSystemType is the enumeration type for system_type
+type ExportResponseIntegrationsSystemType int32
+
+// String returns the string value for IntegrationsSystemType
+func (v ExportResponseIntegrationsSystemType) String() string {
+	switch int32(v) {
+	case 0:
+		return "WORK"
+	case 1:
+		return "SOURCECODE"
+	case 2:
+		return "CODEQUALITY"
+	case 3:
+		return "USER"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationsSystemTypeWork is the enumeration value for work
+	ExportResponseIntegrationsSystemTypeWork ExportResponseIntegrationsSystemType = 0
+	// IntegrationsSystemTypeSourcecode is the enumeration value for sourcecode
+	ExportResponseIntegrationsSystemTypeSourcecode ExportResponseIntegrationsSystemType = 1
+	// IntegrationsSystemTypeCodequality is the enumeration value for codequality
+	ExportResponseIntegrationsSystemTypeCodequality ExportResponseIntegrationsSystemType = 2
+	// IntegrationsSystemTypeUser is the enumeration value for user
+	ExportResponseIntegrationsSystemTypeUser ExportResponseIntegrationsSystemType = 3
+)
+
+// ExportResponseIntegrations represents the object structure for integrations
+type ExportResponseIntegrations struct {
+	// ExportType the integration export type
+	ExportType ExportResponseIntegrationsExportType `json:"export_type" codec:"export_type" bson:"export_type" yaml:"export_type" faker:"-"`
+	// IntegrationID the id of the integration
+	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// Name the friendly name of the integration
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
+	SystemType ExportResponseIntegrationsSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
+}
+
+func toExportResponseIntegrationsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ExportResponseIntegrations:
+		return v.ToMap()
+
+	case ExportResponseIntegrationsExportType:
+		return v.String()
+
+	case ExportResponseIntegrationsSystemType:
+		return v.String()
+	default:
+		return o
+	}
+}
+
+func (o *ExportResponseIntegrations) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// ExportType the integration export type
+		"export_type": toExportResponseIntegrationsObject(o.ExportType, false),
+		// IntegrationID the id of the integration
+		"integration_id": toExportResponseIntegrationsObject(o.IntegrationID, false),
+		// Name the friendly name of the integration
+		"name": toExportResponseIntegrationsObject(o.Name, false),
+		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
+		"system_type": toExportResponseIntegrationsObject(o.SystemType, false),
+	}
+}
+
+func (o *ExportResponseIntegrations) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportResponseIntegrations) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["export_type"].(ExportResponseIntegrationsExportType); ok {
+		o.ExportType = val
+	} else {
+		if em, ok := kv["export_type"].(map[string]interface{}); ok {
+			ev := em["agent.export_type"].(string)
+			switch ev {
+			case "historical", "HISTORICAL":
+				o.ExportType = 0
+			case "incremental", "INCREMENTAL":
+				o.ExportType = 1
+			}
+		}
+		if em, ok := kv["export_type"].(string); ok {
+			switch em {
+			case "historical", "HISTORICAL":
+				o.ExportType = 0
+			case "incremental", "INCREMENTAL":
+				o.ExportType = 1
+			}
+		}
+	}
+
+	if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = val
+	} else {
+		if val, ok := kv["integration_id"]; ok {
+			if val == nil {
+				o.IntegrationID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["system_type"].(ExportResponseIntegrationsSystemType); ok {
+		o.SystemType = val
+	} else {
+		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+			ev := em["agent.system_type"].(string)
+			switch ev {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			case "codequality", "CODEQUALITY":
+				o.SystemType = 2
+			case "user", "USER":
+				o.SystemType = 3
+			}
+		}
+		if em, ok := kv["system_type"].(string); ok {
+			switch em {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			case "codequality", "CODEQUALITY":
+				o.SystemType = 2
+			case "user", "USER":
+				o.SystemType = 3
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // ExportResponseLastExportDate represents the object structure for last_export_date
 type ExportResponseLastExportDate struct {
 	// Epoch the date in epoch format
@@ -491,6 +697,31 @@ func (o *ExportResponseStartDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// ExportResponseState is the enumeration type for state
+type ExportResponseState int32
+
+// String returns the string value for State
+func (v ExportResponseState) String() string {
+	switch int32(v) {
+	case 0:
+		return "STARTING"
+	case 1:
+		return "PROGRESS"
+	case 2:
+		return "COMPLETED"
+	}
+	return "unset"
+}
+
+const (
+	// StateStarting is the enumeration value for starting
+	ExportResponseStateStarting ExportResponseState = 0
+	// StateProgress is the enumeration value for progress
+	ExportResponseStateProgress ExportResponseState = 1
+	// StateCompleted is the enumeration value for completed
+	ExportResponseStateCompleted ExportResponseState = 2
+)
+
 // ExportResponseType is the enumeration type for type
 type ExportResponseType int32
 
@@ -580,6 +811,8 @@ type ExportResponse struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Integrations the integrations that were exported
+	Integrations ExportResponseIntegrations `json:"integrations" codec:"integrations" bson:"integrations" yaml:"integrations" faker:"-"`
 	// JobID The job ID
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// LastExportDate the last export date
@@ -602,6 +835,8 @@ type ExportResponse struct {
 	Size int64 `json:"size" codec:"size" bson:"size" yaml:"size" faker:"-"`
 	// StartDate the export start date
 	StartDate ExportResponseStartDate `json:"start_date" codec:"start_date" bson:"start_date" yaml:"start_date" faker:"-"`
+	// State the state of the response
+	State ExportResponseState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// Success if the response was successful
 	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
@@ -639,11 +874,17 @@ func toExportResponseObject(o interface{}, isoptional bool) interface{} {
 	case ExportResponseEventDate:
 		return v.ToMap()
 
+	case ExportResponseIntegrations:
+		return v.ToMap()
+
 	case ExportResponseLastExportDate:
 		return v.ToMap()
 
 	case ExportResponseStartDate:
 		return v.ToMap()
+
+	case ExportResponseState:
+		return v.String()
 
 	case ExportResponseType:
 		return v.String()
@@ -864,6 +1105,7 @@ func (o *ExportResponse) ToMap() map[string]interface{} {
 		"go_version":       toExportResponseObject(o.GoVersion, false),
 		"hostname":         toExportResponseObject(o.Hostname, false),
 		"id":               toExportResponseObject(o.ID, false),
+		"integrations":     toExportResponseObject(o.Integrations, false),
 		"job_id":           toExportResponseObject(o.JobID, false),
 		"last_export_date": toExportResponseObject(o.LastExportDate, false),
 		"memory":           toExportResponseObject(o.Memory, false),
@@ -875,6 +1117,7 @@ func (o *ExportResponse) ToMap() map[string]interface{} {
 		"request_id":       toExportResponseObject(o.RequestID, false),
 		"size":             toExportResponseObject(o.Size, false),
 		"start_date":       toExportResponseObject(o.StartDate, false),
+		"state":            toExportResponseObject(o.State, false),
 		"success":          toExportResponseObject(o.Success, false),
 		"system_id":        toExportResponseObject(o.SystemID, false),
 		"type":             toExportResponseObject(o.Type, false),
@@ -1104,6 +1347,20 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["integrations"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Integrations.FromMap(kv)
+		} else if sv, ok := val.(ExportResponseIntegrations); ok {
+			// struct
+			o.Integrations = sv
+		} else if sp, ok := val.(*ExportResponseIntegrations); ok {
+			// struct pointer
+			o.Integrations = *sp
+		}
+	} else {
+		o.Integrations.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["job_id"].(string); ok {
 		o.JobID = val
 	} else {
@@ -1305,6 +1562,32 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		o.StartDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["state"].(ExportResponseState); ok {
+		o.State = val
+	} else {
+		if em, ok := kv["state"].(map[string]interface{}); ok {
+			ev := em["agent.state"].(string)
+			switch ev {
+			case "starting", "STARTING":
+				o.State = 0
+			case "progress", "PROGRESS":
+				o.State = 1
+			case "completed", "COMPLETED":
+				o.State = 2
+			}
+		}
+		if em, ok := kv["state"].(string); ok {
+			switch em {
+			case "starting", "STARTING":
+				o.State = 0
+			case "progress", "PROGRESS":
+				o.State = 1
+			case "completed", "COMPLETED":
+				o.State = 2
+			}
+		}
+	}
+
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
@@ -1492,6 +1775,7 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.Integrations)
 	args = append(args, o.JobID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
@@ -1503,6 +1787,7 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.RequestID)
 	args = append(args, o.Size)
 	args = append(args, o.StartDate)
+	args = append(args, o.State)
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
 	args = append(args, o.Type)
