@@ -123,6 +123,8 @@ const (
 	ExportResponseTypeColumn = "Type"
 	// ExportResponseUpdatedAtColumn is the updated_ts column name
 	ExportResponseUpdatedAtColumn = "UpdatedAt"
+	// ExportResponseUploadPartCountColumn is the upload_part_count column name
+	ExportResponseUploadPartCountColumn = "UploadPartCount"
 	// ExportResponseUploadURLColumn is the upload_url column name
 	ExportResponseUploadURLColumn = "UploadURL"
 	// ExportResponseUptimeColumn is the uptime column name
@@ -847,6 +849,8 @@ type ExportResponse struct {
 	Type ExportResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// UploadPartCount the number of parts that the upload sent to the agent upload server
+	UploadPartCount int64 `json:"upload_part_count" codec:"upload_part_count" bson:"upload_part_count" yaml:"upload_part_count" faker:"-"`
 	// UploadURL the upload URL where the job was placed. will be NULL if not uploaded
 	UploadURL *string `json:"upload_url,omitempty" codec:"upload_url,omitempty" bson:"upload_url" yaml:"upload_url,omitempty" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
@@ -1103,39 +1107,40 @@ func (o *ExportResponse) IsEqual(other *ExportResponse) bool {
 func (o *ExportResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toExportResponseObject(o.Architecture, false),
-		"customer_id":      toExportResponseObject(o.CustomerID, false),
-		"data":             toExportResponseObject(o.Data, true),
-		"distro":           toExportResponseObject(o.Distro, false),
-		"end_date":         toExportResponseObject(o.EndDate, false),
-		"error":            toExportResponseObject(o.Error, true),
-		"event_date":       toExportResponseObject(o.EventDate, false),
-		"free_space":       toExportResponseObject(o.FreeSpace, false),
-		"go_version":       toExportResponseObject(o.GoVersion, false),
-		"hostname":         toExportResponseObject(o.Hostname, false),
-		"id":               toExportResponseObject(o.ID, false),
-		"integrations":     toExportResponseObject(o.Integrations, false),
-		"job_id":           toExportResponseObject(o.JobID, false),
-		"last_export_date": toExportResponseObject(o.LastExportDate, false),
-		"memory":           toExportResponseObject(o.Memory, false),
-		"message":          toExportResponseObject(o.Message, false),
-		"num_cpu":          toExportResponseObject(o.NumCPU, false),
-		"os":               toExportResponseObject(o.OS, false),
-		"ref_id":           toExportResponseObject(o.RefID, false),
-		"ref_type":         toExportResponseObject(o.RefType, false),
-		"request_id":       toExportResponseObject(o.RequestID, false),
-		"size":             toExportResponseObject(o.Size, false),
-		"start_date":       toExportResponseObject(o.StartDate, false),
-		"state":            toExportResponseObject(o.State, false),
-		"success":          toExportResponseObject(o.Success, false),
-		"system_id":        toExportResponseObject(o.SystemID, false),
-		"type":             toExportResponseObject(o.Type, false),
-		"updated_ts":       toExportResponseObject(o.UpdatedAt, false),
-		"upload_url":       toExportResponseObject(o.UploadURL, true),
-		"uptime":           toExportResponseObject(o.Uptime, false),
-		"uuid":             toExportResponseObject(o.UUID, false),
-		"version":          toExportResponseObject(o.Version, false),
-		"hashcode":         toExportResponseObject(o.Hashcode, false),
+		"architecture":      toExportResponseObject(o.Architecture, false),
+		"customer_id":       toExportResponseObject(o.CustomerID, false),
+		"data":              toExportResponseObject(o.Data, true),
+		"distro":            toExportResponseObject(o.Distro, false),
+		"end_date":          toExportResponseObject(o.EndDate, false),
+		"error":             toExportResponseObject(o.Error, true),
+		"event_date":        toExportResponseObject(o.EventDate, false),
+		"free_space":        toExportResponseObject(o.FreeSpace, false),
+		"go_version":        toExportResponseObject(o.GoVersion, false),
+		"hostname":          toExportResponseObject(o.Hostname, false),
+		"id":                toExportResponseObject(o.ID, false),
+		"integrations":      toExportResponseObject(o.Integrations, false),
+		"job_id":            toExportResponseObject(o.JobID, false),
+		"last_export_date":  toExportResponseObject(o.LastExportDate, false),
+		"memory":            toExportResponseObject(o.Memory, false),
+		"message":           toExportResponseObject(o.Message, false),
+		"num_cpu":           toExportResponseObject(o.NumCPU, false),
+		"os":                toExportResponseObject(o.OS, false),
+		"ref_id":            toExportResponseObject(o.RefID, false),
+		"ref_type":          toExportResponseObject(o.RefType, false),
+		"request_id":        toExportResponseObject(o.RequestID, false),
+		"size":              toExportResponseObject(o.Size, false),
+		"start_date":        toExportResponseObject(o.StartDate, false),
+		"state":             toExportResponseObject(o.State, false),
+		"success":           toExportResponseObject(o.Success, false),
+		"system_id":         toExportResponseObject(o.SystemID, false),
+		"type":              toExportResponseObject(o.Type, false),
+		"updated_ts":        toExportResponseObject(o.UpdatedAt, false),
+		"upload_part_count": toExportResponseObject(o.UploadPartCount, false),
+		"upload_url":        toExportResponseObject(o.UploadURL, true),
+		"uptime":            toExportResponseObject(o.Uptime, false),
+		"uuid":              toExportResponseObject(o.UUID, false),
+		"version":           toExportResponseObject(o.Version, false),
+		"hashcode":          toExportResponseObject(o.Hashcode, false),
 	}
 }
 
@@ -1716,6 +1721,21 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["upload_part_count"].(int64); ok {
+		o.UploadPartCount = val
+	} else {
+		if val, ok := kv["upload_part_count"]; ok {
+			if val == nil {
+				o.UploadPartCount = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UploadPartCount = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["upload_url"].(*string); ok {
 		o.UploadURL = val
 	} else if val, ok := kv["upload_url"].(string); ok {
@@ -1812,6 +1832,7 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.SystemID)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.UploadPartCount)
 	args = append(args, o.UploadURL)
 	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
