@@ -58,6 +58,8 @@ const (
 	BranchFirstCommitShaColumn = "FirstCommitSha"
 	// BranchIDColumn is the id column name
 	BranchIDColumn = "ID"
+	// BranchIsPullRequestColumn is the is_pull_request column name
+	BranchIsPullRequestColumn = "IsPullRequest"
 	// BranchMergeCommitIDColumn is the merge_commit_id column name
 	BranchMergeCommitIDColumn = "MergeCommitID"
 	// BranchMergeCommitShaColumn is the merge_commit_sha column name
@@ -66,6 +68,8 @@ const (
 	BranchMergedColumn = "Merged"
 	// BranchNameColumn is the name column name
 	BranchNameColumn = "Name"
+	// BranchPullRequestIDColumn is the pull_request_id column name
+	BranchPullRequestIDColumn = "PullRequestID"
 	// BranchRefIDColumn is the ref_id column name
 	BranchRefIDColumn = "RefID"
 	// BranchRefTypeColumn is the ref_type column name
@@ -106,14 +110,18 @@ type Branch struct {
 	FirstCommitSha string `json:"first_commit_sha" codec:"first_commit_sha" bson:"first_commit_sha" yaml:"first_commit_sha" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IsPullRequest set to true for objects created from pull request shas. when false this is was created from git branch
+	IsPullRequest bool `json:"is_pull_request" codec:"is_pull_request" bson:"is_pull_request" yaml:"is_pull_request" faker:"-"`
 	// MergeCommitID commit id in which the branch was merged
 	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeCommitSha commit sha in which the branch was merged
 	MergeCommitSha string `json:"merge_commit_sha" codec:"merge_commit_sha" bson:"merge_commit_sha" yaml:"merge_commit_sha" faker:"-"`
 	// Merged true if the branch has been merged into the default branch
 	Merged bool `json:"merged" codec:"merged" bson:"merged" yaml:"merged" faker:"-"`
-	// Name name of the branch
+	// Name name of the branch or pr.ref_id when is_pull_request
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// PullRequestID only valid when is_pull_request. pull request that provided sha for this branch
+	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -359,10 +367,12 @@ func (o *Branch) ToMap() map[string]interface{} {
 		"first_commit_id":                toBranchObject(o.FirstCommitID, false),
 		"first_commit_sha":               toBranchObject(o.FirstCommitSha, false),
 		"id":                             toBranchObject(o.ID, false),
+		"is_pull_request":                toBranchObject(o.IsPullRequest, false),
 		"merge_commit_id":                toBranchObject(o.MergeCommitID, false),
 		"merge_commit_sha":               toBranchObject(o.MergeCommitSha, false),
 		"merged":                         toBranchObject(o.Merged, false),
 		"name":                           toBranchObject(o.Name, false),
+		"pull_request_id":                toBranchObject(o.PullRequestID, false),
 		"ref_id":                         toBranchObject(o.RefID, false),
 		"ref_type":                       toBranchObject(o.RefType, false),
 		"repo_id":                        toBranchObject(o.RepoID, false),
@@ -718,6 +728,18 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["is_pull_request"].(bool); ok {
+		o.IsPullRequest = val
+	} else {
+		if val, ok := kv["is_pull_request"]; ok {
+			if val == nil {
+				o.IsPullRequest = number.ToBoolAny(nil)
+			} else {
+				o.IsPullRequest = number.ToBoolAny(val)
+			}
+		}
+	}
+
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -771,6 +793,21 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["pull_request_id"].(string); ok {
+		o.PullRequestID = val
+	} else {
+		if val, ok := kv["pull_request_id"]; ok {
+			if val == nil {
+				o.PullRequestID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.PullRequestID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -868,10 +905,12 @@ func (o *Branch) Hash() string {
 	args = append(args, o.FirstCommitID)
 	args = append(args, o.FirstCommitSha)
 	args = append(args, o.ID)
+	args = append(args, o.IsPullRequest)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeCommitSha)
 	args = append(args, o.Merged)
 	args = append(args, o.Name)
+	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
