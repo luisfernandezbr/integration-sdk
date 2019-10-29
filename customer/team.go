@@ -135,8 +135,8 @@ func (o *Team) GetModelName() datamodel.ModelNameType {
 }
 
 // NewTeamID provides a template for generating an ID field for Team
-func NewTeamID(customerID string) string {
-	return hash.Values(customerID, randomString(64))
+func NewTeamID(Name string, customerID string) string {
+	return hash.Values(Name, customerID)
 }
 
 func (o *Team) setDefaults(frommap bool) {
@@ -155,7 +155,7 @@ func (o *Team) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// set the id from the spec provided in the model
-		o.ID = hash.Values(o.CustomerID, randomString(64))
+		o.ID = hash.Values(o.Name, o.CustomerID)
 	}
 
 	if o.Active == nil {
