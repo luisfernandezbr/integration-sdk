@@ -24,9 +24,6 @@ const (
 	// IssueTopic is the default topic name
 	IssueTopic datamodel.TopicNameType = "work_Issue_topic"
 
-	// IssueTable is the default table name
-	IssueTable datamodel.ModelNameType = "work_issue"
-
 	// IssueModelName is the model name
 	IssueModelName datamodel.ModelNameType = "work.Issue"
 )
@@ -791,7 +788,7 @@ func (o *Issue) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Issue) GetTableName() string {
-	return IssueTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -865,6 +862,11 @@ func (o *Issue) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Issue) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Issue) IsMutable() bool {
 	return false
 }
 

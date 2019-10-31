@@ -21,9 +21,6 @@ const (
 	// EventTopic is the default topic name
 	EventTopic datamodel.TopicNameType = "agent_Event_topic"
 
-	// EventTable is the default table name
-	EventTable datamodel.ModelNameType = "agent_event"
-
 	// EventModelName is the model name
 	EventModelName datamodel.ModelNameType = "agent.Event"
 )
@@ -436,7 +433,7 @@ func (o *Event) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Event) GetTableName() string {
-	return EventTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -508,6 +505,11 @@ func (o *Event) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Event) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Event) IsMutable() bool {
 	return false
 }
 

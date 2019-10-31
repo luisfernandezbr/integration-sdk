@@ -20,9 +20,6 @@ const (
 	// ChangelogTopic is the default topic name
 	ChangelogTopic datamodel.TopicNameType = "work_Changelog_topic"
 
-	// ChangelogTable is the default table name
-	ChangelogTable datamodel.ModelNameType = "work_changelog"
-
 	// ChangelogModelName is the model name
 	ChangelogModelName datamodel.ModelNameType = "work.Changelog"
 )
@@ -308,7 +305,7 @@ func (o *Changelog) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Changelog) GetTableName() string {
-	return ChangelogTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -374,6 +371,11 @@ func (o *Changelog) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Changelog) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Changelog) IsMutable() bool {
 	return false
 }
 

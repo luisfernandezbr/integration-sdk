@@ -21,9 +21,6 @@ const (
 	// LogTopic is the default topic name
 	LogTopic datamodel.TopicNameType = "agent_Log_topic"
 
-	// LogTable is the default table name
-	LogTable datamodel.ModelNameType = "agent_log"
-
 	// LogModelName is the model name
 	LogModelName datamodel.ModelNameType = "agent.Log"
 )
@@ -444,7 +441,7 @@ func (o *Log) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Log) GetTableName() string {
-	return LogTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -516,6 +513,11 @@ func (o *Log) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Log) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Log) IsMutable() bool {
 	return false
 }
 

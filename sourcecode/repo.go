@@ -20,9 +20,6 @@ const (
 	// RepoTopic is the default topic name
 	RepoTopic datamodel.TopicNameType = "sourcecode_Repo_topic"
 
-	// RepoTable is the default table name
-	RepoTable datamodel.ModelNameType = "sourcecode_repo"
-
 	// RepoModelName is the model name
 	RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
 )
@@ -113,7 +110,7 @@ func (o *Repo) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Repo) GetTableName() string {
-	return RepoTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -186,6 +183,11 @@ func (o *Repo) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Repo) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Repo) IsMutable() bool {
 	return false
 }
 

@@ -21,9 +21,6 @@ const (
 	// PingTopic is the default topic name
 	PingTopic datamodel.TopicNameType = "agent_Ping_topic"
 
-	// PingTable is the default table name
-	PingTable datamodel.ModelNameType = "agent_ping"
-
 	// PingModelName is the model name
 	PingModelName datamodel.ModelNameType = "agent.Ping"
 )
@@ -480,7 +477,7 @@ func (o *Ping) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Ping) GetTableName() string {
-	return PingTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -552,6 +549,11 @@ func (o *Ping) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Ping) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Ping) IsMutable() bool {
 	return false
 }
 

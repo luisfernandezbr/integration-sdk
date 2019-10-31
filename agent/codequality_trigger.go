@@ -20,9 +20,6 @@ const (
 	// CodequalityTriggerTopic is the default topic name
 	CodequalityTriggerTopic datamodel.TopicNameType = "agent_CodequalityTrigger_topic"
 
-	// CodequalityTriggerTable is the default table name
-	CodequalityTriggerTable datamodel.ModelNameType = "agent_codequalitytrigger"
-
 	// CodequalityTriggerModelName is the model name
 	CodequalityTriggerModelName datamodel.ModelNameType = "agent.CodequalityTrigger"
 )
@@ -93,7 +90,7 @@ func (o *CodequalityTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *CodequalityTrigger) GetTableName() string {
-	return CodequalityTriggerTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -159,6 +156,11 @@ func (o *CodequalityTrigger) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *CodequalityTrigger) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *CodequalityTrigger) IsMutable() bool {
 	return false
 }
 

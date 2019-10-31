@@ -20,9 +20,6 @@ const (
 	// EnrollRequestTopic is the default topic name
 	EnrollRequestTopic datamodel.TopicNameType = "agent_EnrollRequest_topic"
 
-	// EnrollRequestTable is the default table name
-	EnrollRequestTable datamodel.ModelNameType = "agent_enrollrequest"
-
 	// EnrollRequestModelName is the model name
 	EnrollRequestModelName datamodel.ModelNameType = "agent.EnrollRequest"
 )
@@ -192,7 +189,7 @@ func (o *EnrollRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *EnrollRequest) GetTableName() string {
-	return EnrollRequestTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -250,6 +247,11 @@ func (o *EnrollRequest) GetTimestamp() time.Time {
 
 // IsMaterialized returns true if the model is materialized
 func (o *EnrollRequest) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *EnrollRequest) IsMutable() bool {
 	return false
 }
 

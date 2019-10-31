@@ -21,9 +21,6 @@ const (
 	// StartTopic is the default topic name
 	StartTopic datamodel.TopicNameType = "agent_Start_topic"
 
-	// StartTable is the default table name
-	StartTable datamodel.ModelNameType = "agent_start"
-
 	// StartModelName is the model name
 	StartModelName datamodel.ModelNameType = "agent.Start"
 )
@@ -444,7 +441,7 @@ func (o *Start) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Start) GetTableName() string {
-	return StartTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -516,6 +513,11 @@ func (o *Start) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Start) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Start) IsMutable() bool {
 	return false
 }
 

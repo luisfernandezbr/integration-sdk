@@ -25,9 +25,6 @@ const (
 	// WorkStatusRequestTopic is the default topic name
 	WorkStatusRequestTopic datamodel.TopicNameType = "agent_WorkStatusRequest_topic"
 
-	// WorkStatusRequestTable is the default table name
-	WorkStatusRequestTable datamodel.ModelNameType = "agent_workstatusrequest"
-
 	// WorkStatusRequestModelName is the model name
 	WorkStatusRequestModelName datamodel.ModelNameType = "agent.WorkStatusRequest"
 )
@@ -1212,7 +1209,7 @@ func (o *WorkStatusRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *WorkStatusRequest) GetTableName() string {
-	return WorkStatusRequestTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -1278,6 +1275,11 @@ func (o *WorkStatusRequest) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *WorkStatusRequest) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *WorkStatusRequest) IsMutable() bool {
 	return false
 }
 
@@ -1491,6 +1493,25 @@ func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

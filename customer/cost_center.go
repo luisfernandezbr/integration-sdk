@@ -178,6 +178,11 @@ func (o *CostCenter) IsMaterialized() bool {
 	return false
 }
 
+// IsMutable returns true if the model is mutable
+func (o *CostCenter) IsMutable() bool {
+	return true
+}
+
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *CostCenter) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil

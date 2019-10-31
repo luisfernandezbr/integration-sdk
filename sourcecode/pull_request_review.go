@@ -20,9 +20,6 @@ const (
 	// PullRequestReviewTopic is the default topic name
 	PullRequestReviewTopic datamodel.TopicNameType = "sourcecode_PullRequestReview_topic"
 
-	// PullRequestReviewTable is the default table name
-	PullRequestReviewTable datamodel.ModelNameType = "sourcecode_pullrequestreview"
-
 	// PullRequestReviewModelName is the model name
 	PullRequestReviewModelName datamodel.ModelNameType = "sourcecode.PullRequestReview"
 )
@@ -252,7 +249,7 @@ func (o *PullRequestReview) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestReview) GetTableName() string {
-	return PullRequestReviewTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -319,6 +316,11 @@ func (o *PullRequestReview) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *PullRequestReview) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *PullRequestReview) IsMutable() bool {
 	return false
 }
 

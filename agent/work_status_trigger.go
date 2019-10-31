@@ -20,9 +20,6 @@ const (
 	// WorkStatusTriggerTopic is the default topic name
 	WorkStatusTriggerTopic datamodel.TopicNameType = "agent_WorkStatusTrigger_topic"
 
-	// WorkStatusTriggerTable is the default table name
-	WorkStatusTriggerTable datamodel.ModelNameType = "agent_workstatustrigger"
-
 	// WorkStatusTriggerModelName is the model name
 	WorkStatusTriggerModelName datamodel.ModelNameType = "agent.WorkStatusTrigger"
 )
@@ -93,7 +90,7 @@ func (o *WorkStatusTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *WorkStatusTrigger) GetTableName() string {
-	return WorkStatusTriggerTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -159,6 +156,11 @@ func (o *WorkStatusTrigger) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *WorkStatusTrigger) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *WorkStatusTrigger) IsMutable() bool {
 	return false
 }
 

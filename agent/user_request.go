@@ -25,9 +25,6 @@ const (
 	// UserRequestTopic is the default topic name
 	UserRequestTopic datamodel.TopicNameType = "agent_UserRequest_topic"
 
-	// UserRequestTable is the default table name
-	UserRequestTable datamodel.ModelNameType = "agent_userrequest"
-
 	// UserRequestModelName is the model name
 	UserRequestModelName datamodel.ModelNameType = "agent.UserRequest"
 )
@@ -1212,7 +1209,7 @@ func (o *UserRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *UserRequest) GetTableName() string {
-	return UserRequestTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -1278,6 +1275,11 @@ func (o *UserRequest) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *UserRequest) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *UserRequest) IsMutable() bool {
 	return false
 }
 

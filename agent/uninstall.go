@@ -21,9 +21,6 @@ const (
 	// UninstallTopic is the default topic name
 	UninstallTopic datamodel.TopicNameType = "agent_Uninstall_topic"
 
-	// UninstallTable is the default table name
-	UninstallTable datamodel.ModelNameType = "agent_uninstall"
-
 	// UninstallModelName is the model name
 	UninstallModelName datamodel.ModelNameType = "agent.Uninstall"
 )
@@ -444,7 +441,7 @@ func (o *Uninstall) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Uninstall) GetTableName() string {
-	return UninstallTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -516,6 +513,11 @@ func (o *Uninstall) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Uninstall) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Uninstall) IsMutable() bool {
 	return false
 }
 

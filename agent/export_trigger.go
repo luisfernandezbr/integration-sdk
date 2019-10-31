@@ -21,9 +21,6 @@ const (
 	// ExportTriggerTopic is the default topic name
 	ExportTriggerTopic datamodel.TopicNameType = "agent_ExportTrigger_topic"
 
-	// ExportTriggerTable is the default table name
-	ExportTriggerTable datamodel.ModelNameType = "agent_exporttrigger"
-
 	// ExportTriggerModelName is the model name
 	ExportTriggerModelName datamodel.ModelNameType = "agent.ExportTrigger"
 )
@@ -98,7 +95,7 @@ func (o *ExportTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ExportTrigger) GetTableName() string {
-	return ExportTriggerTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -167,6 +164,11 @@ func (o *ExportTrigger) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *ExportTrigger) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *ExportTrigger) IsMutable() bool {
 	return false
 }
 

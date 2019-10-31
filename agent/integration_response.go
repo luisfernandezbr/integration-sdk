@@ -21,9 +21,6 @@ const (
 	// IntegrationResponseTopic is the default topic name
 	IntegrationResponseTopic datamodel.TopicNameType = "agent_IntegrationResponse_topic"
 
-	// IntegrationResponseTable is the default table name
-	IntegrationResponseTable datamodel.ModelNameType = "agent_integrationresponse"
-
 	// IntegrationResponseModelName is the model name
 	IntegrationResponseModelName datamodel.ModelNameType = "agent.IntegrationResponse"
 )
@@ -448,7 +445,7 @@ func (o *IntegrationResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *IntegrationResponse) GetTableName() string {
-	return IntegrationResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -520,6 +517,11 @@ func (o *IntegrationResponse) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *IntegrationResponse) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *IntegrationResponse) IsMutable() bool {
 	return false
 }
 

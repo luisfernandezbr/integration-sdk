@@ -24,9 +24,6 @@ const (
 	// PullRequestTopic is the default topic name
 	PullRequestTopic datamodel.TopicNameType = "sourcecode_PullRequest_topic"
 
-	// PullRequestTable is the default table name
-	PullRequestTable datamodel.ModelNameType = "sourcecode_pullrequest"
-
 	// PullRequestModelName is the model name
 	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 )
@@ -613,7 +610,7 @@ func (o *PullRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequest) GetTableName() string {
-	return PullRequestTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -686,6 +683,11 @@ func (o *PullRequest) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *PullRequest) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *PullRequest) IsMutable() bool {
 	return false
 }
 

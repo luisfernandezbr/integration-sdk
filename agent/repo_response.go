@@ -23,9 +23,6 @@ const (
 	// RepoResponseTopic is the default topic name
 	RepoResponseTopic datamodel.TopicNameType = "agent_RepoResponse_topic"
 
-	// RepoResponseTable is the default table name
-	RepoResponseTable datamodel.ModelNameType = "agent_reporesponse"
-
 	// RepoResponseModelName is the model name
 	RepoResponseModelName datamodel.ModelNameType = "agent.RepoResponse"
 )
@@ -1123,7 +1120,7 @@ func (o *RepoResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *RepoResponse) GetTableName() string {
-	return RepoResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -1198,6 +1195,11 @@ func (o *RepoResponse) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *RepoResponse) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *RepoResponse) IsMutable() bool {
 	return false
 }
 

@@ -21,9 +21,6 @@ const (
 	// BuildTopic is the default topic name
 	BuildTopic datamodel.TopicNameType = "cicd_Build_topic"
 
-	// BuildTable is the default table name
-	BuildTable datamodel.ModelNameType = "cicd_build"
-
 	// BuildModelName is the model name
 	BuildModelName datamodel.ModelNameType = "cicd.Build"
 )
@@ -396,7 +393,7 @@ func (o *Build) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Build) GetTableName() string {
-	return BuildTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -465,6 +462,11 @@ func (o *Build) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Build) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Build) IsMutable() bool {
 	return false
 }
 

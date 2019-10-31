@@ -212,6 +212,11 @@ func (o *Team) IsMaterialized() bool {
 	return false
 }
 
+// IsMutable returns true if the model is mutable
+func (o *Team) IsMutable() bool {
+	return true
+}
+
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
 func (o *Team) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil

@@ -21,9 +21,6 @@ const (
 	// DeploymentTopic is the default topic name
 	DeploymentTopic datamodel.TopicNameType = "cicd_Deployment_topic"
 
-	// DeploymentTable is the default table name
-	DeploymentTable datamodel.ModelNameType = "cicd_deployment"
-
 	// DeploymentModelName is the model name
 	DeploymentModelName datamodel.ModelNameType = "cicd.Deployment"
 )
@@ -400,7 +397,7 @@ func (o *Deployment) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Deployment) GetTableName() string {
-	return DeploymentTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -469,6 +466,11 @@ func (o *Deployment) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Deployment) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Deployment) IsMutable() bool {
 	return false
 }
 

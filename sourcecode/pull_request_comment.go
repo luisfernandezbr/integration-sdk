@@ -20,9 +20,6 @@ const (
 	// PullRequestCommentTopic is the default topic name
 	PullRequestCommentTopic datamodel.TopicNameType = "sourcecode_PullRequestComment_topic"
 
-	// PullRequestCommentTable is the default table name
-	PullRequestCommentTable datamodel.ModelNameType = "sourcecode_pullrequestcomment"
-
 	// PullRequestCommentModelName is the model name
 	PullRequestCommentModelName datamodel.ModelNameType = "sourcecode.PullRequestComment"
 )
@@ -323,7 +320,7 @@ func (o *PullRequestComment) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestComment) GetTableName() string {
-	return PullRequestCommentTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -390,6 +387,11 @@ func (o *PullRequestComment) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *PullRequestComment) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *PullRequestComment) IsMutable() bool {
 	return false
 }
 

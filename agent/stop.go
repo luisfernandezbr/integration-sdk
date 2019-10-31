@@ -21,9 +21,6 @@ const (
 	// StopTopic is the default topic name
 	StopTopic datamodel.TopicNameType = "agent_Stop_topic"
 
-	// StopTable is the default table name
-	StopTable datamodel.ModelNameType = "agent_stop"
-
 	// StopModelName is the model name
 	StopModelName datamodel.ModelNameType = "agent.Stop"
 )
@@ -444,7 +441,7 @@ func (o *Stop) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Stop) GetTableName() string {
-	return StopTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -516,6 +513,11 @@ func (o *Stop) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Stop) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Stop) IsMutable() bool {
 	return false
 }
 

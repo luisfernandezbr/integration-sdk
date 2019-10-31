@@ -25,9 +25,6 @@ const (
 	// WorkStatusResponseTopic is the default topic name
 	WorkStatusResponseTopic datamodel.TopicNameType = "agent_WorkStatusResponse_topic"
 
-	// WorkStatusResponseTable is the default table name
-	WorkStatusResponseTable datamodel.ModelNameType = "agent_workstatusresponse"
-
 	// WorkStatusResponseModelName is the model name
 	WorkStatusResponseModelName datamodel.ModelNameType = "agent.WorkStatusResponse"
 )
@@ -2196,7 +2193,7 @@ func (o *WorkStatusResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *WorkStatusResponse) GetTableName() string {
-	return WorkStatusResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -2271,6 +2268,11 @@ func (o *WorkStatusResponse) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *WorkStatusResponse) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *WorkStatusResponse) IsMutable() bool {
 	return false
 }
 
@@ -2510,25 +2512,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2618,25 +2601,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

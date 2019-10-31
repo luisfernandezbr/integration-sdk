@@ -23,9 +23,6 @@ const (
 	// ExportResponseTopic is the default topic name
 	ExportResponseTopic datamodel.TopicNameType = "agent_ExportResponse_topic"
 
-	// ExportResponseTable is the default table name
-	ExportResponseTable datamodel.ModelNameType = "agent_exportresponse"
-
 	// ExportResponseModelName is the model name
 	ExportResponseModelName datamodel.ModelNameType = "agent.ExportResponse"
 )
@@ -921,7 +918,7 @@ func (o *ExportResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ExportResponse) GetTableName() string {
-	return ExportResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -999,6 +996,11 @@ func (o *ExportResponse) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *ExportResponse) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *ExportResponse) IsMutable() bool {
 	return false
 }
 

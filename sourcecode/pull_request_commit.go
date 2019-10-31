@@ -20,9 +20,6 @@ const (
 	// PullRequestCommitTopic is the default topic name
 	PullRequestCommitTopic datamodel.TopicNameType = "sourcecode_PullRequestCommit_topic"
 
-	// PullRequestCommitTable is the default table name
-	PullRequestCommitTable datamodel.ModelNameType = "sourcecode_pullrequestcommit"
-
 	// PullRequestCommitModelName is the model name
 	PullRequestCommitModelName datamodel.ModelNameType = "sourcecode.PullRequestCommit"
 )
@@ -236,7 +233,7 @@ func (o *PullRequestCommit) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestCommit) GetTableName() string {
-	return PullRequestCommitTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -302,6 +299,11 @@ func (o *PullRequestCommit) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *PullRequestCommit) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *PullRequestCommit) IsMutable() bool {
 	return false
 }
 

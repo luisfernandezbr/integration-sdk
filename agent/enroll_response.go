@@ -21,9 +21,6 @@ const (
 	// EnrollResponseTopic is the default topic name
 	EnrollResponseTopic datamodel.TopicNameType = "agent_EnrollResponse_topic"
 
-	// EnrollResponseTable is the default table name
-	EnrollResponseTable datamodel.ModelNameType = "agent_enrollresponse"
-
 	// EnrollResponseModelName is the model name
 	EnrollResponseModelName datamodel.ModelNameType = "agent.EnrollResponse"
 )
@@ -448,7 +445,7 @@ func (o *EnrollResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *EnrollResponse) GetTableName() string {
-	return EnrollResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -520,6 +517,11 @@ func (o *EnrollResponse) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *EnrollResponse) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *EnrollResponse) IsMutable() bool {
 	return false
 }
 

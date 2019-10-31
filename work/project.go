@@ -21,9 +21,6 @@ const (
 	// ProjectTopic is the default topic name
 	ProjectTopic datamodel.TopicNameType = "work_Project_topic"
 
-	// ProjectTable is the default table name
-	ProjectTable datamodel.ModelNameType = "work_project"
-
 	// ProjectModelName is the model name
 	ProjectModelName datamodel.ModelNameType = "work.Project"
 )
@@ -114,7 +111,7 @@ func (o *Project) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Project) GetTableName() string {
-	return ProjectTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -186,6 +183,11 @@ func (o *Project) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Project) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Project) IsMutable() bool {
 	return false
 }
 

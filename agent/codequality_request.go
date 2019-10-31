@@ -25,9 +25,6 @@ const (
 	// CodequalityRequestTopic is the default topic name
 	CodequalityRequestTopic datamodel.TopicNameType = "agent_CodequalityRequest_topic"
 
-	// CodequalityRequestTable is the default table name
-	CodequalityRequestTable datamodel.ModelNameType = "agent_codequalityrequest"
-
 	// CodequalityRequestModelName is the model name
 	CodequalityRequestModelName datamodel.ModelNameType = "agent.CodequalityRequest"
 )
@@ -1212,7 +1209,7 @@ func (o *CodequalityRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *CodequalityRequest) GetTableName() string {
-	return CodequalityRequestTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -1278,6 +1275,11 @@ func (o *CodequalityRequest) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *CodequalityRequest) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *CodequalityRequest) IsMutable() bool {
 	return false
 }
 
@@ -1491,6 +1493,25 @@ func (o *CodequalityRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

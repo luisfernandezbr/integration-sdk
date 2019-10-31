@@ -23,9 +23,6 @@ const (
 	// BlameTopic is the default topic name
 	BlameTopic datamodel.TopicNameType = "sourcecode_Blame_topic"
 
-	// BlameTable is the default table name
-	BlameTable datamodel.ModelNameType = "sourcecode_blame"
-
 	// BlameModelName is the model name
 	BlameModelName datamodel.ModelNameType = "sourcecode.Blame"
 )
@@ -452,7 +449,7 @@ func (o *Blame) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Blame) GetTableName() string {
-	return BlameTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -525,6 +522,11 @@ func (o *Blame) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Blame) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Blame) IsMutable() bool {
 	return false
 }
 

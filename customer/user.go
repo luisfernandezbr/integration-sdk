@@ -21,9 +21,6 @@ const (
 	// UserTopic is the default topic name
 	UserTopic datamodel.TopicNameType = "customer_User_topic"
 
-	// UserTable is the default table name
-	UserTable datamodel.ModelNameType = "customer_user"
-
 	// UserModelName is the model name
 	UserModelName datamodel.ModelNameType = "customer.User"
 )
@@ -336,7 +333,7 @@ func (o *User) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *User) GetTableName() string {
-	return UserTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -419,6 +416,11 @@ func (o *User) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *User) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *User) IsMutable() bool {
 	return false
 }
 

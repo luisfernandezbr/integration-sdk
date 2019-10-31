@@ -20,9 +20,6 @@ const (
 	// SprintTopic is the default topic name
 	SprintTopic datamodel.TopicNameType = "work_Sprint_topic"
 
-	// SprintTable is the default table name
-	SprintTable datamodel.ModelNameType = "work_sprint"
-
 	// SprintModelName is the model name
 	SprintModelName datamodel.ModelNameType = "work.Sprint"
 )
@@ -557,7 +554,7 @@ func (o *Sprint) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Sprint) GetTableName() string {
-	return SprintTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -624,6 +621,11 @@ func (o *Sprint) GetRefID() string {
 
 // IsMaterialized returns true if the model is materialized
 func (o *Sprint) IsMaterialized() bool {
+	return false
+}
+
+// IsMutable returns true if the model is mutable
+func (o *Sprint) IsMutable() bool {
 	return false
 }
 
