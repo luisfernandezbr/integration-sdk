@@ -331,6 +331,19 @@ func (o *BlameLines) FromMap(kv map[string]interface{}) {
 // BlameStatus is the enumeration type for status
 type BlameStatus int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v BlameStatus) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ADDED":
+		v = 0
+	case "MODIFIED":
+		v = 1
+	case "REMOVED":
+		v = 2
+	}
+	return nil
+}
+
 // String returns the string value for Status
 func (v BlameStatus) String() string {
 	switch int32(v) {

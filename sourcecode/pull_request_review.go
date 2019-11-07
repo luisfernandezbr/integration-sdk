@@ -152,6 +152,23 @@ func (o *PullRequestReviewCreatedDate) FromMap(kv map[string]interface{}) {
 // PullRequestReviewState is the enumeration type for state
 type PullRequestReviewState int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v PullRequestReviewState) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "APPROVED":
+		v = 0
+	case "COMMENTED":
+		v = 1
+	case "CHANGES_REQUESTED":
+		v = 2
+	case "PENDING":
+		v = 3
+	case "DISMISSED":
+		v = 4
+	}
+	return nil
+}
+
 // String returns the string value for State
 func (v PullRequestReviewState) String() string {
 	switch int32(v) {

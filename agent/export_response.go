@@ -323,6 +323,17 @@ func (o *ExportResponseEventDate) FromMap(kv map[string]interface{}) {
 // ExportResponseIntegrationsExportType is the enumeration type for export_type
 type ExportResponseIntegrationsExportType int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v ExportResponseIntegrationsExportType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "HISTORICAL":
+		v = 0
+	case "INCREMENTAL":
+		v = 1
+	}
+	return nil
+}
+
 // String returns the string value for IntegrationsExportType
 func (v ExportResponseIntegrationsExportType) String() string {
 	switch int32(v) {
@@ -343,6 +354,21 @@ const (
 
 // ExportResponseIntegrationsSystemType is the enumeration type for system_type
 type ExportResponseIntegrationsSystemType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v ExportResponseIntegrationsSystemType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "WORK":
+		v = 0
+	case "SOURCECODE":
+		v = 1
+	case "CODEQUALITY":
+		v = 2
+	case "USER":
+		v = 3
+	}
+	return nil
+}
 
 // String returns the string value for IntegrationsSystemType
 func (v ExportResponseIntegrationsSystemType) String() string {
@@ -701,6 +727,19 @@ func (o *ExportResponseStartDate) FromMap(kv map[string]interface{}) {
 // ExportResponseState is the enumeration type for state
 type ExportResponseState int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v ExportResponseState) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "STARTING":
+		v = 0
+	case "PROGRESS":
+		v = 1
+	case "COMPLETED":
+		v = 2
+	}
+	return nil
+}
+
 // String returns the string value for State
 func (v ExportResponseState) String() string {
 	switch int32(v) {
@@ -725,6 +764,39 @@ const (
 
 // ExportResponseType is the enumeration type for type
 type ExportResponseType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v ExportResponseType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ENROLL":
+		v = 0
+	case "PING":
+		v = 1
+	case "CRASH":
+		v = 2
+	case "LOG":
+		v = 3
+	case "INTEGRATION":
+		v = 4
+	case "EXPORT":
+		v = 5
+	case "PROJECT":
+		v = 6
+	case "REPO":
+		v = 7
+	case "USER":
+		v = 8
+	case "UNINSTALL":
+		v = 9
+	case "UPGRADE":
+		v = 10
+	case "START":
+		v = 11
+	case "STOP":
+		v = 12
+	}
+	return nil
+}
 
 // String returns the string value for Type
 func (v ExportResponseType) String() string {

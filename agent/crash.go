@@ -281,6 +281,39 @@ func (o *CrashLastExportDate) FromMap(kv map[string]interface{}) {
 // CrashType is the enumeration type for type
 type CrashType int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v CrashType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ENROLL":
+		v = 0
+	case "PING":
+		v = 1
+	case "CRASH":
+		v = 2
+	case "LOG":
+		v = 3
+	case "INTEGRATION":
+		v = 4
+	case "EXPORT":
+		v = 5
+	case "PROJECT":
+		v = 6
+	case "REPO":
+		v = 7
+	case "USER":
+		v = 8
+	case "UNINSTALL":
+		v = 9
+	case "UPGRADE":
+		v = 10
+	case "START":
+		v = 11
+	case "STOP":
+		v = 12
+	}
+	return nil
+}
+
 // String returns the string value for Type
 func (v CrashType) String() string {
 	switch int32(v) {

@@ -392,6 +392,17 @@ func (o *WorkStatusRequestIntegrationAuthorization) FromMap(kv map[string]interf
 // WorkStatusRequestIntegrationLocation is the enumeration type for location
 type WorkStatusRequestIntegrationLocation int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusRequestIntegrationLocation) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PRIVATE":
+		v = 0
+	case "CLOUD":
+		v = 1
+	}
+	return nil
+}
+
 // String returns the string value for IntegrationLocation
 func (v WorkStatusRequestIntegrationLocation) String() string {
 	switch int32(v) {
@@ -506,6 +517,21 @@ func (o *WorkStatusRequestIntegrationProgress) FromMap(kv map[string]interface{}
 
 // WorkStatusRequestIntegrationSystemType is the enumeration type for system_type
 type WorkStatusRequestIntegrationSystemType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusRequestIntegrationSystemType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "WORK":
+		v = 0
+	case "SOURCECODE":
+		v = 1
+	case "CODEQUALITY":
+		v = 2
+	case "USER":
+		v = 3
+	}
+	return nil
+}
 
 // String returns the string value for IntegrationSystemType
 func (v WorkStatusRequestIntegrationSystemType) String() string {
@@ -1493,25 +1519,6 @@ func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

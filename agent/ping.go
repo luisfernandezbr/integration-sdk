@@ -283,6 +283,21 @@ func (o *PingLastExportDate) FromMap(kv map[string]interface{}) {
 // PingState is the enumeration type for state
 type PingState int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v PingState) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "IDLE":
+		v = 0
+	case "STARTING":
+		v = 1
+	case "STOPPING":
+		v = 2
+	case "EXPORTING":
+		v = 3
+	}
+	return nil
+}
+
 // String returns the string value for State
 func (v PingState) String() string {
 	switch int32(v) {
@@ -311,6 +326,39 @@ const (
 
 // PingType is the enumeration type for type
 type PingType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v PingType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ENROLL":
+		v = 0
+	case "PING":
+		v = 1
+	case "CRASH":
+		v = 2
+	case "LOG":
+		v = 3
+	case "INTEGRATION":
+		v = 4
+	case "EXPORT":
+		v = 5
+	case "PROJECT":
+		v = 6
+	case "REPO":
+		v = 7
+	case "USER":
+		v = 8
+	case "UNINSTALL":
+		v = 9
+	case "UPGRADE":
+		v = 10
+	case "START":
+		v = 11
+	case "STOP":
+		v = 12
+	}
+	return nil
+}
 
 // String returns the string value for Type
 func (v PingType) String() string {

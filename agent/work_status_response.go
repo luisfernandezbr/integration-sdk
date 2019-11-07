@@ -235,6 +235,21 @@ func (o *WorkStatusResponseEventDate) FromMap(kv map[string]interface{}) {
 // WorkStatusResponseWorkConfigField is the enumeration type for field
 type WorkStatusResponseWorkConfigField int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigField) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PRIORITY":
+		v = 0
+	case "TYPE":
+		v = 1
+	case "LABEL":
+		v = 2
+	case "CUSTOM_FIELD_NAME":
+		v = 3
+	}
+	return nil
+}
+
 // String returns the string value for WorkConfigField
 func (v WorkStatusResponseWorkConfigField) String() string {
 	switch int32(v) {
@@ -263,6 +278,21 @@ const (
 
 // WorkStatusResponseWorkConfigIssueType is the enumeration type for issue_type
 type WorkStatusResponseWorkConfigIssueType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigIssueType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ENHANCEMENT":
+		v = 0
+	case "BUG":
+		v = 1
+	case "FEATURE":
+		v = 2
+	case "OTHER":
+		v = 3
+	}
+	return nil
+}
 
 // String returns the string value for WorkConfigIssueType
 func (v WorkStatusResponseWorkConfigIssueType) String() string {
@@ -387,6 +417,21 @@ func (o *WorkStatusResponseLastExportDate) FromMap(kv map[string]interface{}) {
 // WorkStatusResponseWorkConfigOperator is the enumeration type for operator
 type WorkStatusResponseWorkConfigOperator int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigOperator) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "EQUALS":
+		v = 0
+	case "NOT_EQUALS":
+		v = 1
+	case "EXISTS":
+		v = 2
+	case "NOT_EXISTS":
+		v = 3
+	}
+	return nil
+}
+
 // String returns the string value for WorkConfigOperator
 func (v WorkStatusResponseWorkConfigOperator) String() string {
 	switch int32(v) {
@@ -415,6 +460,39 @@ const (
 
 // WorkStatusResponseType is the enumeration type for type
 type WorkStatusResponseType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusResponseType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ENROLL":
+		v = 0
+	case "PING":
+		v = 1
+	case "CRASH":
+		v = 2
+	case "LOG":
+		v = 3
+	case "INTEGRATION":
+		v = 4
+	case "EXPORT":
+		v = 5
+	case "PROJECT":
+		v = 6
+	case "REPO":
+		v = 7
+	case "USER":
+		v = 8
+	case "UNINSTALL":
+		v = 9
+	case "UPGRADE":
+		v = 10
+	case "START":
+		v = 11
+	case "STOP":
+		v = 12
+	}
+	return nil
+}
 
 // String returns the string value for Type
 func (v WorkStatusResponseType) String() string {
@@ -1070,6 +1148,21 @@ func (o *WorkStatusResponseWorkConfigTopLevelIssue) FromMap(kv map[string]interf
 // WorkStatusResponseWorkConfigTypeRulesPredicatesField is the enumeration type for field
 type WorkStatusResponseWorkConfigTypeRulesPredicatesField int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PRIORITY":
+		v = 0
+	case "TYPE":
+		v = 1
+	case "LABEL":
+		v = 2
+	case "CUSTOM_FIELD_NAME":
+		v = 3
+	}
+	return nil
+}
+
 // String returns the string value for WorkConfigTypeRulesPredicatesField
 func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) String() string {
 	switch int32(v) {
@@ -1098,6 +1191,21 @@ const (
 
 // WorkStatusResponseWorkConfigTypeRulesPredicatesOperator is the enumeration type for operator
 type WorkStatusResponseWorkConfigTypeRulesPredicatesOperator int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "EQUALS":
+		v = 0
+	case "NOT_EQUALS":
+		v = 1
+	case "EXISTS":
+		v = 2
+	case "NOT_EXISTS":
+		v = 3
+	}
+	return nil
+}
 
 // String returns the string value for WorkConfigTypeRulesPredicatesOperator
 func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) String() string {
@@ -1260,6 +1368,21 @@ func (o *WorkStatusResponseWorkConfigTypeRulesPredicates) FromMap(kv map[string]
 
 // WorkStatusResponseWorkConfigTypeRulesIssueType is the enumeration type for issue_type
 type WorkStatusResponseWorkConfigTypeRulesIssueType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesIssueType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ENHANCEMENT":
+		v = 0
+	case "BUG":
+		v = 1
+	case "FEATURE":
+		v = 2
+	case "OTHER":
+		v = 3
+	}
+	return nil
+}
 
 // String returns the string value for WorkConfigTypeRulesIssueType
 func (v WorkStatusResponseWorkConfigTypeRulesIssueType) String() string {

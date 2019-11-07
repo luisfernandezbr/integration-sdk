@@ -163,6 +163,25 @@ func (o *BuildEndDate) FromMap(kv map[string]interface{}) {
 // BuildEnvironment is the enumeration type for environment
 type BuildEnvironment int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v BuildEnvironment) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PRODUCTION":
+		v = 0
+	case "DEVELOPMENT":
+		v = 1
+	case "BETA":
+		v = 2
+	case "STAGING":
+		v = 3
+	case "TEST":
+		v = 4
+	case "OTHER":
+		v = 5
+	}
+	return nil
+}
+
 // String returns the string value for Environment
 func (v BuildEnvironment) String() string {
 	switch int32(v) {
@@ -293,6 +312,19 @@ func (o *BuildStartDate) FromMap(kv map[string]interface{}) {
 
 // BuildStatus is the enumeration type for status
 type BuildStatus int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v BuildStatus) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PASS":
+		v = 0
+	case "FAIL":
+		v = 1
+	case "CANCEL":
+		v = 2
+	}
+	return nil
+}
 
 // String returns the string value for Status
 func (v BuildStatus) String() string {

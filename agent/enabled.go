@@ -281,6 +281,39 @@ func (o *EnabledLastExportDate) FromMap(kv map[string]interface{}) {
 // EnabledType is the enumeration type for type
 type EnabledType int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v EnabledType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ENROLL":
+		v = 0
+	case "PING":
+		v = 1
+	case "CRASH":
+		v = 2
+	case "LOG":
+		v = 3
+	case "INTEGRATION":
+		v = 4
+	case "EXPORT":
+		v = 5
+	case "PROJECT":
+		v = 6
+	case "REPO":
+		v = 7
+	case "USER":
+		v = 8
+	case "UNINSTALL":
+		v = 9
+	case "UPGRADE":
+		v = 10
+	case "START":
+		v = 11
+	case "STOP":
+		v = 12
+	}
+	return nil
+}
+
 // String returns the string value for Type
 func (v EnabledType) String() string {
 	switch int32(v) {
@@ -755,6 +788,25 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -829,6 +881,25 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

@@ -454,6 +454,19 @@ func (o *SprintStartedDate) FromMap(kv map[string]interface{}) {
 // SprintStatus is the enumeration type for status
 type SprintStatus int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v SprintStatus) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ACTIVE":
+		v = 0
+	case "FUTURE":
+		v = 1
+	case "CLOSED":
+		v = 2
+	}
+	return nil
+}
+
 // String returns the string value for Status
 func (v SprintStatus) String() string {
 	switch int32(v) {

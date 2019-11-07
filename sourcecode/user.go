@@ -55,6 +55,19 @@ const (
 // UserType is the enumeration type for type
 type UserType int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v UserType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "HUMAN":
+		v = 0
+	case "BOT":
+		v = 1
+	case "DELETED_SPECIAL_USER":
+		v = 2
+	}
+	return nil
+}
+
 // String returns the string value for Type
 func (v UserType) String() string {
 	switch int32(v) {

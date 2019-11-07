@@ -392,6 +392,17 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 // CodequalityRequestIntegrationLocation is the enumeration type for location
 type CodequalityRequestIntegrationLocation int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v CodequalityRequestIntegrationLocation) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PRIVATE":
+		v = 0
+	case "CLOUD":
+		v = 1
+	}
+	return nil
+}
+
 // String returns the string value for IntegrationLocation
 func (v CodequalityRequestIntegrationLocation) String() string {
 	switch int32(v) {
@@ -506,6 +517,21 @@ func (o *CodequalityRequestIntegrationProgress) FromMap(kv map[string]interface{
 
 // CodequalityRequestIntegrationSystemType is the enumeration type for system_type
 type CodequalityRequestIntegrationSystemType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v CodequalityRequestIntegrationSystemType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "WORK":
+		v = 0
+	case "SOURCECODE":
+		v = 1
+	case "CODEQUALITY":
+		v = 2
+	case "USER":
+		v = 3
+	}
+	return nil
+}
 
 // String returns the string value for IntegrationSystemType
 func (v CodequalityRequestIntegrationSystemType) String() string {

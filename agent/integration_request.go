@@ -392,6 +392,17 @@ func (o *IntegrationRequestIntegrationAuthorization) FromMap(kv map[string]inter
 // IntegrationRequestIntegrationLocation is the enumeration type for location
 type IntegrationRequestIntegrationLocation int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v IntegrationRequestIntegrationLocation) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PRIVATE":
+		v = 0
+	case "CLOUD":
+		v = 1
+	}
+	return nil
+}
+
 // String returns the string value for IntegrationLocation
 func (v IntegrationRequestIntegrationLocation) String() string {
 	switch int32(v) {
@@ -506,6 +517,21 @@ func (o *IntegrationRequestIntegrationProgress) FromMap(kv map[string]interface{
 
 // IntegrationRequestIntegrationSystemType is the enumeration type for system_type
 type IntegrationRequestIntegrationSystemType int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v IntegrationRequestIntegrationSystemType) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "WORK":
+		v = 0
+	case "SOURCECODE":
+		v = 1
+	case "CODEQUALITY":
+		v = 2
+	case "USER":
+		v = 3
+	}
+	return nil
+}
 
 // String returns the string value for IntegrationSystemType
 func (v IntegrationRequestIntegrationSystemType) String() string {

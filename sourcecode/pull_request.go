@@ -386,6 +386,23 @@ func (o *PullRequestMergedDate) FromMap(kv map[string]interface{}) {
 // PullRequestStatus is the enumeration type for status
 type PullRequestStatus int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v PullRequestStatus) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "OPEN":
+		v = 0
+	case "CLOSED":
+		v = 1
+	case "MERGED":
+		v = 2
+	case "SUPERSEDED":
+		v = 3
+	case "LOCKED":
+		v = 4
+	}
+	return nil
+}
+
 // String returns the string value for Status
 func (v PullRequestStatus) String() string {
 	switch int32(v) {

@@ -162,6 +162,41 @@ func (o *ChangelogCreatedDate) FromMap(kv map[string]interface{}) {
 // ChangelogField is the enumeration type for field
 type ChangelogField int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v ChangelogField) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "ASSIGNEE_REF_ID":
+		v = 0
+	case "DUE_DATE":
+		v = 1
+	case "EPIC_ID":
+		v = 2
+	case "IDENTIFIER":
+		v = 3
+	case "PARENT_ID":
+		v = 4
+	case "PRIORITY":
+		v = 5
+	case "PROJECT_ID":
+		v = 6
+	case "REPORTER_REF_ID":
+		v = 7
+	case "RESOLUTION":
+		v = 8
+	case "SPRINT_IDS":
+		v = 9
+	case "STATUS":
+		v = 10
+	case "TAGS":
+		v = 11
+	case "TITLE":
+		v = 12
+	case "TYPE":
+		v = 13
+	}
+	return nil
+}
+
 // String returns the string value for Field
 func (v ChangelogField) String() string {
 	switch int32(v) {

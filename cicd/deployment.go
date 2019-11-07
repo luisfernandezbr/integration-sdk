@@ -165,6 +165,25 @@ func (o *DeploymentEndDate) FromMap(kv map[string]interface{}) {
 // DeploymentEnvironment is the enumeration type for environment
 type DeploymentEnvironment int32
 
+// UnmarshalBSON unmarshals the enum value
+func (v DeploymentEnvironment) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PRODUCTION":
+		v = 0
+	case "DEVELOPMENT":
+		v = 1
+	case "BETA":
+		v = 2
+	case "STAGING":
+		v = 3
+	case "TEST":
+		v = 4
+	case "OTHER":
+		v = 5
+	}
+	return nil
+}
+
 // String returns the string value for Environment
 func (v DeploymentEnvironment) String() string {
 	switch int32(v) {
@@ -295,6 +314,19 @@ func (o *DeploymentStartDate) FromMap(kv map[string]interface{}) {
 
 // DeploymentStatus is the enumeration type for status
 type DeploymentStatus int32
+
+// UnmarshalBSON unmarshals the enum value
+func (v DeploymentStatus) UnmarshalBSON(buf []byte) error {
+	switch string(buf) {
+	case "PASS":
+		v = 0
+	case "FAIL":
+		v = 1
+	case "CANCEL":
+		v = 2
+	}
+	return nil
+}
 
 // String returns the string value for Status
 func (v DeploymentStatus) String() string {
