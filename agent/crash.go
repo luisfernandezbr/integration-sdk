@@ -28,6 +28,16 @@ const (
 const (
 	// CrashArchitectureColumn is the architecture column name
 	CrashArchitectureColumn = "Architecture"
+	// CrashComponentColumn is the component column name
+	CrashComponentColumn = "Component"
+	// CrashCrashDateColumn is the crash_date column name
+	CrashCrashDateColumn = "CrashDate"
+	// CrashCrashDateColumnEpochColumn is the epoch column property of the CrashDate name
+	CrashCrashDateColumnEpochColumn = "CrashDate.Epoch"
+	// CrashCrashDateColumnOffsetColumn is the offset column property of the CrashDate name
+	CrashCrashDateColumnOffsetColumn = "CrashDate.Offset"
+	// CrashCrashDateColumnRfc3339Column is the rfc3339 column property of the CrashDate name
+	CrashCrashDateColumnRfc3339Column = "CrashDate.Rfc3339"
 	// CrashCustomerIDColumn is the customer_id column name
 	CrashCustomerIDColumn = "CustomerID"
 	// CrashDataColumn is the data column name
@@ -89,6 +99,100 @@ const (
 	// CrashVersionColumn is the version column name
 	CrashVersionColumn = "Version"
 )
+
+// CrashCrashDate represents the object structure for crash_date
+type CrashCrashDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toCrashCrashDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *CrashCrashDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *CrashCrashDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toCrashCrashDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toCrashCrashDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toCrashCrashDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *CrashCrashDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CrashCrashDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
 
 // CrashEventDate represents the object structure for event_date
 type CrashEventDate struct {
@@ -380,6 +484,10 @@ const (
 type Crash struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	// Component Component that caused panic. Could be one of integrations, export subcommands or service itself.
+	Component string `json:"component" codec:"component" bson:"component" yaml:"component" faker:"-"`
+	// CrashDate The date when crash happened. We may not be able to send the crash immediately due to network errors.
+	CrashDate CrashCrashDate `json:"crash_date" codec:"crash_date" bson:"crash_date" yaml:"crash_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
@@ -441,6 +549,9 @@ var _ datamodel.StreamedModel = (*Crash)(nil)
 func toCrashObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Crash:
+		return v.ToMap()
+
+	case CrashCrashDate:
 		return v.ToMap()
 
 	case CrashEventDate:
@@ -660,6 +771,8 @@ func (o *Crash) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"architecture":     toCrashObject(o.Architecture, false),
+		"component":        toCrashObject(o.Component, false),
+		"crash_date":       toCrashObject(o.CrashDate, false),
 		"customer_id":      toCrashObject(o.CustomerID, false),
 		"data":             toCrashObject(o.Data, true),
 		"distro":           toCrashObject(o.Distro, false),
@@ -711,6 +824,54 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 				o.Architecture = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["component"].(string); ok {
+		o.Component = val
+	} else {
+		if val, ok := kv["component"]; ok {
+			if val == nil {
+				o.Component = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Component = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["crash_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CrashDate.FromMap(kv)
+		} else if sv, ok := val.(CrashCrashDate); ok {
+			// struct
+			o.CrashDate = sv
+		} else if sp, ok := val.(*CrashCrashDate); ok {
+			// struct pointer
+			o.CrashDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CrashDate.Epoch = dt.Epoch
+			o.CrashDate.Rfc3339 = dt.Rfc3339
+			o.CrashDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CrashDate.Epoch = dt.Epoch
+			o.CrashDate.Rfc3339 = dt.Rfc3339
+			o.CrashDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CrashDate.Epoch = dt.Epoch
+				o.CrashDate.Rfc3339 = dt.Rfc3339
+				o.CrashDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CrashDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
@@ -1131,6 +1292,8 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 func (o *Crash) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
+	args = append(args, o.Component)
+	args = append(args, o.CrashDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
