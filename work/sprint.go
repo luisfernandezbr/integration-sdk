@@ -467,6 +467,19 @@ func (v SprintStatus) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v SprintStatus) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("ACTIVE"), nil
+	case 1:
+		return []byte("FUTURE"), nil
+	case 2:
+		return []byte("CLOSED"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for Status
 func (v SprintStatus) String() string {
 	switch int32(v) {

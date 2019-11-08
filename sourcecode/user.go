@@ -68,6 +68,19 @@ func (v UserType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v UserType) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("HUMAN"), nil
+	case 1:
+		return []byte("BOT"), nil
+	case 2:
+		return []byte("DELETED_SPECIAL_USER"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for Type
 func (v UserType) String() string {
 	switch int32(v) {

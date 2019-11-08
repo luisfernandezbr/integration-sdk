@@ -344,6 +344,19 @@ func (v BlameStatus) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v BlameStatus) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("ADDED"), nil
+	case 1:
+		return []byte("MODIFIED"), nil
+	case 2:
+		return []byte("REMOVED"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for Status
 func (v BlameStatus) String() string {
 	switch int32(v) {

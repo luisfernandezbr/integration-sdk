@@ -169,6 +169,23 @@ func (v PullRequestReviewState) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v PullRequestReviewState) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("APPROVED"), nil
+	case 1:
+		return []byte("COMMENTED"), nil
+	case 2:
+		return []byte("CHANGES_REQUESTED"), nil
+	case 3:
+		return []byte("PENDING"), nil
+	case 4:
+		return []byte("DISMISSED"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for State
 func (v PullRequestReviewState) String() string {
 	switch int32(v) {

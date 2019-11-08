@@ -403,6 +403,17 @@ func (v UserRequestIntegrationLocation) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v UserRequestIntegrationLocation) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("PRIVATE"), nil
+	case 1:
+		return []byte("CLOUD"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for IntegrationLocation
 func (v UserRequestIntegrationLocation) String() string {
 	switch int32(v) {
@@ -531,6 +542,21 @@ func (v UserRequestIntegrationSystemType) UnmarshalBSON(buf []byte) error {
 		v = 3
 	}
 	return nil
+}
+
+// MarshalBSON marshals the enum value
+func (v UserRequestIntegrationSystemType) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("WORK"), nil
+	case 1:
+		return []byte("SOURCECODE"), nil
+	case 2:
+		return []byte("CODEQUALITY"), nil
+	case 3:
+		return []byte("USER"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
 }
 
 // String returns the string value for IntegrationSystemType

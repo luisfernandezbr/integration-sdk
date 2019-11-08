@@ -184,6 +184,25 @@ func (v DeploymentEnvironment) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v DeploymentEnvironment) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("PRODUCTION"), nil
+	case 1:
+		return []byte("DEVELOPMENT"), nil
+	case 2:
+		return []byte("BETA"), nil
+	case 3:
+		return []byte("STAGING"), nil
+	case 4:
+		return []byte("TEST"), nil
+	case 5:
+		return []byte("OTHER"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for Environment
 func (v DeploymentEnvironment) String() string {
 	switch int32(v) {
@@ -326,6 +345,19 @@ func (v DeploymentStatus) UnmarshalBSON(buf []byte) error {
 		v = 2
 	}
 	return nil
+}
+
+// MarshalBSON marshals the enum value
+func (v DeploymentStatus) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("PASS"), nil
+	case 1:
+		return []byte("FAIL"), nil
+	case 2:
+		return []byte("CANCEL"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
 }
 
 // String returns the string value for Status

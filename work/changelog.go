@@ -197,6 +197,41 @@ func (v ChangelogField) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v ChangelogField) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("ASSIGNEE_REF_ID"), nil
+	case 1:
+		return []byte("DUE_DATE"), nil
+	case 2:
+		return []byte("EPIC_ID"), nil
+	case 3:
+		return []byte("IDENTIFIER"), nil
+	case 4:
+		return []byte("PARENT_ID"), nil
+	case 5:
+		return []byte("PRIORITY"), nil
+	case 6:
+		return []byte("PROJECT_ID"), nil
+	case 7:
+		return []byte("REPORTER_REF_ID"), nil
+	case 8:
+		return []byte("RESOLUTION"), nil
+	case 9:
+		return []byte("SPRINT_IDS"), nil
+	case 10:
+		return []byte("STATUS"), nil
+	case 11:
+		return []byte("TAGS"), nil
+	case 12:
+		return []byte("TITLE"), nil
+	case 13:
+		return []byte("TYPE"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for Field
 func (v ChangelogField) String() string {
 	switch int32(v) {

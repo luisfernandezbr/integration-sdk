@@ -250,6 +250,21 @@ func (v WorkStatusResponseWorkConfigField) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v WorkStatusResponseWorkConfigField) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("PRIORITY"), nil
+	case 1:
+		return []byte("TYPE"), nil
+	case 2:
+		return []byte("LABEL"), nil
+	case 3:
+		return []byte("CUSTOM_FIELD_NAME"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for WorkConfigField
 func (v WorkStatusResponseWorkConfigField) String() string {
 	switch int32(v) {
@@ -292,6 +307,21 @@ func (v WorkStatusResponseWorkConfigIssueType) UnmarshalBSON(buf []byte) error {
 		v = 3
 	}
 	return nil
+}
+
+// MarshalBSON marshals the enum value
+func (v WorkStatusResponseWorkConfigIssueType) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("ENHANCEMENT"), nil
+	case 1:
+		return []byte("BUG"), nil
+	case 2:
+		return []byte("FEATURE"), nil
+	case 3:
+		return []byte("OTHER"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
 }
 
 // String returns the string value for WorkConfigIssueType
@@ -432,6 +462,21 @@ func (v WorkStatusResponseWorkConfigOperator) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v WorkStatusResponseWorkConfigOperator) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("EQUALS"), nil
+	case 1:
+		return []byte("NOT_EQUALS"), nil
+	case 2:
+		return []byte("EXISTS"), nil
+	case 3:
+		return []byte("NOT_EXISTS"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for WorkConfigOperator
 func (v WorkStatusResponseWorkConfigOperator) String() string {
 	switch int32(v) {
@@ -492,6 +537,39 @@ func (v WorkStatusResponseType) UnmarshalBSON(buf []byte) error {
 		v = 12
 	}
 	return nil
+}
+
+// MarshalBSON marshals the enum value
+func (v WorkStatusResponseType) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("ENROLL"), nil
+	case 1:
+		return []byte("PING"), nil
+	case 2:
+		return []byte("CRASH"), nil
+	case 3:
+		return []byte("LOG"), nil
+	case 4:
+		return []byte("INTEGRATION"), nil
+	case 5:
+		return []byte("EXPORT"), nil
+	case 6:
+		return []byte("PROJECT"), nil
+	case 7:
+		return []byte("REPO"), nil
+	case 8:
+		return []byte("USER"), nil
+	case 9:
+		return []byte("UNINSTALL"), nil
+	case 10:
+		return []byte("UPGRADE"), nil
+	case 11:
+		return []byte("START"), nil
+	case 12:
+		return []byte("STOP"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
 }
 
 // String returns the string value for Type
@@ -1163,6 +1241,21 @@ func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalBSON(buf 
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("PRIORITY"), nil
+	case 1:
+		return []byte("TYPE"), nil
+	case 2:
+		return []byte("LABEL"), nil
+	case 3:
+		return []byte("CUSTOM_FIELD_NAME"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for WorkConfigTypeRulesPredicatesField
 func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) String() string {
 	switch int32(v) {
@@ -1205,6 +1298,21 @@ func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) UnmarshalBSON(b
 		v = 3
 	}
 	return nil
+}
+
+// MarshalBSON marshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("EQUALS"), nil
+	case 1:
+		return []byte("NOT_EQUALS"), nil
+	case 2:
+		return []byte("EXISTS"), nil
+	case 3:
+		return []byte("NOT_EXISTS"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
 }
 
 // String returns the string value for WorkConfigTypeRulesPredicatesOperator
@@ -1382,6 +1490,21 @@ func (v WorkStatusResponseWorkConfigTypeRulesIssueType) UnmarshalBSON(buf []byte
 		v = 3
 	}
 	return nil
+}
+
+// MarshalBSON marshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesIssueType) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("ENHANCEMENT"), nil
+	case 1:
+		return []byte("BUG"), nil
+	case 2:
+		return []byte("FEATURE"), nil
+	case 3:
+		return []byte("OTHER"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
 }
 
 // String returns the string value for WorkConfigTypeRulesIssueType

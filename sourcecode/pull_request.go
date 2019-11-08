@@ -403,6 +403,23 @@ func (v PullRequestStatus) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v PullRequestStatus) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("OPEN"), nil
+	case 1:
+		return []byte("CLOSED"), nil
+	case 2:
+		return []byte("MERGED"), nil
+	case 3:
+		return []byte("SUPERSEDED"), nil
+	case 4:
+		return []byte("LOCKED"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for Status
 func (v PullRequestStatus) String() string {
 	switch int32(v) {

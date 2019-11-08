@@ -298,6 +298,21 @@ func (v PingState) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
+// MarshalBSON marshals the enum value
+func (v PingState) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("IDLE"), nil
+	case 1:
+		return []byte("STARTING"), nil
+	case 2:
+		return []byte("STOPPING"), nil
+	case 3:
+		return []byte("EXPORTING"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
 // String returns the string value for State
 func (v PingState) String() string {
 	switch int32(v) {
@@ -358,6 +373,39 @@ func (v PingType) UnmarshalBSON(buf []byte) error {
 		v = 12
 	}
 	return nil
+}
+
+// MarshalBSON marshals the enum value
+func (v PingType) MarshalBSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return []byte("ENROLL"), nil
+	case 1:
+		return []byte("PING"), nil
+	case 2:
+		return []byte("CRASH"), nil
+	case 3:
+		return []byte("LOG"), nil
+	case 4:
+		return []byte("INTEGRATION"), nil
+	case 5:
+		return []byte("EXPORT"), nil
+	case 6:
+		return []byte("PROJECT"), nil
+	case 7:
+		return []byte("REPO"), nil
+	case 8:
+		return []byte("USER"), nil
+	case 9:
+		return []byte("UNINSTALL"), nil
+	case 10:
+		return []byte("UPGRADE"), nil
+	case 11:
+		return []byte("START"), nil
+	case 12:
+		return []byte("STOP"), nil
+	}
+	return nil, fmt.Errorf("unexpected enum value")
 }
 
 // String returns the string value for Type
