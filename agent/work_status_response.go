@@ -141,11 +141,11 @@ const (
 // WorkStatusResponseEventDate represents the object structure for event_date
 type WorkStatusResponseEventDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toWorkStatusResponseEventDateObject(o interface{}, isoptional bool) interface{} {
@@ -353,11 +353,11 @@ const (
 // WorkStatusResponseLastExportDate represents the object structure for last_export_date
 type WorkStatusResponseLastExportDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toWorkStatusResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
@@ -637,9 +637,9 @@ const (
 // WorkStatusResponseWorkConfigResolutions represents the object structure for resolutions
 type WorkStatusResponseWorkConfigResolutions struct {
 	// WorkDone work completed resolution
-	WorkDone []string `json:"work_done" codec:"work_done" bson:"work_done" yaml:"work_done" faker:"-"`
+	WorkDone []string `json:"work_done" yaml:"work_done" faker:"-"`
 	// NoWorkDone resolutions that represent not completed issues
-	NoWorkDone []string `json:"no_work_done" codec:"no_work_done" bson:"no_work_done" yaml:"no_work_done" faker:"-"`
+	NoWorkDone []string `json:"no_work_done" yaml:"no_work_done" faker:"-"`
 }
 
 func toWorkStatusResponseWorkConfigResolutionsObject(o interface{}, isoptional bool) interface{} {
@@ -784,17 +784,17 @@ func (o *WorkStatusResponseWorkConfigResolutions) FromMap(kv map[string]interfac
 // WorkStatusResponseWorkConfigStatuses represents the object structure for statuses
 type WorkStatusResponseWorkConfigStatuses struct {
 	// OpenStatus The open status
-	OpenStatus []string `json:"open_status" codec:"open_status" bson:"open_status" yaml:"open_status" faker:"-"`
+	OpenStatus []string `json:"open_status" yaml:"open_status" faker:"-"`
 	// InProgressStatus The in progress state names
-	InProgressStatus []string `json:"in_progress_status" codec:"in_progress_status" bson:"in_progress_status" yaml:"in_progress_status" faker:"-"`
+	InProgressStatus []string `json:"in_progress_status" yaml:"in_progress_status" faker:"-"`
 	// InReviewStatus The in review state names
-	InReviewStatus []string `json:"in_review_status" codec:"in_review_status" bson:"in_review_status" yaml:"in_review_status" faker:"-"`
+	InReviewStatus []string `json:"in_review_status" yaml:"in_review_status" faker:"-"`
 	// ReleasedStatus The released state names
-	ReleasedStatus []string `json:"released_status" codec:"released_status" bson:"released_status" yaml:"released_status" faker:"-"`
+	ReleasedStatus []string `json:"released_status" yaml:"released_status" faker:"-"`
 	// ReopenedStatus The reopened state names
-	ReopenedStatus []string `json:"reopened_status" codec:"reopened_status" bson:"reopened_status" yaml:"reopened_status" faker:"-"`
+	ReopenedStatus []string `json:"reopened_status" yaml:"reopened_status" faker:"-"`
 	// ClosedStatus The closed state names
-	ClosedStatus []string `json:"closed_status" codec:"closed_status" bson:"closed_status" yaml:"closed_status" faker:"-"`
+	ClosedStatus []string `json:"closed_status" yaml:"closed_status" faker:"-"`
 }
 
 func toWorkStatusResponseWorkConfigStatusesObject(o interface{}, isoptional bool) interface{} {
@@ -1151,9 +1151,9 @@ func (o *WorkStatusResponseWorkConfigStatuses) FromMap(kv map[string]interface{}
 // WorkStatusResponseWorkConfigTopLevelIssue represents the object structure for top_level_issue
 type WorkStatusResponseWorkConfigTopLevelIssue struct {
 	// Name name of the top level issue
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 	// Type type of the top level issue
-	Type string `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type string `json:"type" yaml:"type" faker:"-"`
 }
 
 func toWorkStatusResponseWorkConfigTopLevelIssueObject(o interface{}, isoptional bool) interface{} {
@@ -1344,11 +1344,11 @@ const (
 // WorkStatusResponseWorkConfigTypeRulesPredicates represents the object structure for predicates
 type WorkStatusResponseWorkConfigTypeRulesPredicates struct {
 	// Field The field to operate on
-	Field WorkStatusResponseWorkConfigTypeRulesPredicatesField `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
+	Field WorkStatusResponseWorkConfigTypeRulesPredicatesField `json:"field" yaml:"field" faker:"-"`
 	// Operator The operation
-	Operator WorkStatusResponseWorkConfigTypeRulesPredicatesOperator `json:"operator" codec:"operator" bson:"operator" yaml:"operator" faker:"-"`
+	Operator WorkStatusResponseWorkConfigTypeRulesPredicatesOperator `json:"operator" yaml:"operator" faker:"-"`
 	// Value The value of the field
-	Value *string `json:"value,omitempty" codec:"value,omitempty" bson:"value" yaml:"value,omitempty" faker:"-"`
+	Value *string `json:"value,omitempty" yaml:"value,omitempty" faker:"-"`
 }
 
 func toWorkStatusResponseWorkConfigTypeRulesPredicatesObject(o interface{}, isoptional bool) interface{} {
@@ -1536,9 +1536,9 @@ const (
 // WorkStatusResponseWorkConfigTypeRules represents the object structure for type_rules
 type WorkStatusResponseWorkConfigTypeRules struct {
 	// Predicates The predicate of the rule
-	Predicates []WorkStatusResponseWorkConfigTypeRulesPredicates `json:"predicates" codec:"predicates" bson:"predicates" yaml:"predicates" faker:"-"`
+	Predicates []WorkStatusResponseWorkConfigTypeRulesPredicates `json:"predicates" yaml:"predicates" faker:"-"`
 	// IssueType The type to map the issue as if all predicates are true
-	IssueType WorkStatusResponseWorkConfigTypeRulesIssueType `json:"issue_type" codec:"issue_type" bson:"issue_type" yaml:"issue_type" faker:"-"`
+	IssueType WorkStatusResponseWorkConfigTypeRulesIssueType `json:"issue_type" yaml:"issue_type" faker:"-"`
 }
 
 func toWorkStatusResponseWorkConfigTypeRulesObject(o interface{}, isoptional bool) interface{} {
@@ -1683,39 +1683,39 @@ func (o *WorkStatusResponseWorkConfigTypeRules) FromMap(kv map[string]interface{
 // WorkStatusResponseWorkConfig represents the object structure for work_config
 type WorkStatusResponseWorkConfig struct {
 	// AllResolutions all the values of issue resolutions on the integration regardless of mapping
-	AllResolutions []string `json:"all_resolutions" codec:"all_resolutions" bson:"all_resolutions" yaml:"all_resolutions" faker:"-"`
+	AllResolutions []string `json:"all_resolutions" yaml:"all_resolutions" faker:"-"`
 	// AllStatuses all the values of issue statuses on the integration regardless of mapping
-	AllStatuses []string `json:"all_statuses" codec:"all_statuses" bson:"all_statuses" yaml:"all_statuses" faker:"-"`
+	AllStatuses []string `json:"all_statuses" yaml:"all_statuses" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Field The field to operate on
-	Field WorkStatusResponseWorkConfigField `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
+	Field WorkStatusResponseWorkConfigField `json:"field" yaml:"field" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID The ID reference to the integration instance
-	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	IntegrationID string `json:"integration_id" yaml:"integration_id" faker:"-"`
 	// IssueType The type to map the issue as if all predicates are true
-	IssueType WorkStatusResponseWorkConfigIssueType `json:"issue_type" codec:"issue_type" bson:"issue_type" yaml:"issue_type" faker:"-"`
+	IssueType WorkStatusResponseWorkConfigIssueType `json:"issue_type" yaml:"issue_type" faker:"-"`
 	// Labels all the values of labels on the integration
-	Labels []string `json:"labels" codec:"labels" bson:"labels" yaml:"labels" faker:"-"`
+	Labels []string `json:"labels" yaml:"labels" faker:"-"`
 	// Operator The operation
-	Operator WorkStatusResponseWorkConfigOperator `json:"operator" codec:"operator" bson:"operator" yaml:"operator" faker:"-"`
+	Operator WorkStatusResponseWorkConfigOperator `json:"operator" yaml:"operator" faker:"-"`
 	// Priorities all the values for priority on the integration
-	Priorities []string `json:"priorities" codec:"priorities" bson:"priorities" yaml:"priorities" faker:"-"`
+	Priorities []string `json:"priorities" yaml:"priorities" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// Resolutions The mapping of resolutions that represent completion for this integration
-	Resolutions WorkStatusResponseWorkConfigResolutions `json:"resolutions" codec:"resolutions" bson:"resolutions" yaml:"resolutions" faker:"-"`
+	Resolutions WorkStatusResponseWorkConfigResolutions `json:"resolutions" yaml:"resolutions" faker:"-"`
 	// Statuses The mapping of statuses for this integration
-	Statuses WorkStatusResponseWorkConfigStatuses `json:"statuses" codec:"statuses" bson:"statuses" yaml:"statuses" faker:"-"`
+	Statuses WorkStatusResponseWorkConfigStatuses `json:"statuses" yaml:"statuses" faker:"-"`
 	// TopLevelIssue details about the top level issue
-	TopLevelIssue WorkStatusResponseWorkConfigTopLevelIssue `json:"top_level_issue" codec:"top_level_issue" bson:"top_level_issue" yaml:"top_level_issue" faker:"-"`
+	TopLevelIssue WorkStatusResponseWorkConfigTopLevelIssue `json:"top_level_issue" yaml:"top_level_issue" faker:"-"`
 	// TypeRules The rules for mapping issue types for this integration
-	TypeRules []WorkStatusResponseWorkConfigTypeRules `json:"type_rules" codec:"type_rules" bson:"type_rules" yaml:"type_rules" faker:"-"`
+	TypeRules []WorkStatusResponseWorkConfigTypeRules `json:"type_rules" yaml:"type_rules" faker:"-"`
 	// Types all the values for type on the integration
-	Types []string `json:"types" codec:"types" bson:"types" yaml:"types" faker:"-"`
+	Types []string `json:"types" yaml:"types" faker:"-"`
 }
 
 func toWorkStatusResponseWorkConfigObject(o interface{}, isoptional bool) interface{} {
@@ -2338,61 +2338,61 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 // WorkStatusResponse an agent response to an action request for fetching issue statuses
 type WorkStatusResponse struct {
 	// Architecture the architecture of the agent machine
-	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	Architecture string `json:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
-	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
+	Data *string `json:"data,omitempty" yaml:"data,omitempty" faker:"-"`
 	// Distro the agent os distribution
-	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	Distro string `json:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
-	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
+	Error *string `json:"error,omitempty" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate WorkStatusResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate WorkStatusResponseEventDate `json:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
-	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	FreeSpace int64 `json:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
-	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	GoVersion string `json:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
-	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname string `json:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
-	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	IntegrationID string `json:"integration_id" yaml:"integration_id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate WorkStatusResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate WorkStatusResponseLastExportDate `json:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
-	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	Memory int64 `json:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
-	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
-	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	NumCPU int64 `json:"num_cpu" yaml:"num_cpu" faker:"-"`
 	// OS the agent operating system
-	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
+	OS string `json:"os" yaml:"os" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
-	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	RequestID string `json:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
-	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
+	Success bool `json:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
-	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	SystemID string `json:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type WorkStatusResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type WorkStatusResponseType `json:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
-	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
+	Uptime int64 `json:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
-	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
+	Version string `json:"version" yaml:"version" faker:"-"`
 	// WorkConfig The work config structure to use
-	WorkConfig WorkStatusResponseWorkConfig `json:"work_config" codec:"work_config" bson:"work_config" yaml:"work_config" faker:"-"`
+	WorkConfig WorkStatusResponseWorkConfig `json:"work_config" yaml:"work_config" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -2759,25 +2759,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2867,25 +2848,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

@@ -46,11 +46,11 @@ const (
 // EnrollRequestRequestDate represents the object structure for request_date
 type EnrollRequestRequestDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toEnrollRequestRequestDateObject(o interface{}, isoptional bool) interface{} {
@@ -140,17 +140,17 @@ func (o *EnrollRequestRequestDate) FromMap(kv map[string]interface{}) {
 // EnrollRequest an agent request to enroll a new agent machine
 type EnrollRequest struct {
 	// Code The agent enrollment code
-	Code string `json:"code" codec:"code" bson:"code" yaml:"code" faker:"-"`
+	Code string `json:"code" yaml:"code" faker:"-"`
 	// ID the primary key for this model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// RequestDate the date when the request was made
-	RequestDate EnrollRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	RequestDate EnrollRequestRequestDate `json:"request_date" yaml:"request_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

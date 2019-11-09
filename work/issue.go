@@ -118,11 +118,11 @@ const (
 // IssueCreatedDate represents the object structure for created_date
 type IssueCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toIssueCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -212,11 +212,11 @@ func (o *IssueCreatedDate) FromMap(kv map[string]interface{}) {
 // IssueCustomFields represents the object structure for customFields
 type IssueCustomFields struct {
 	// ID the id of the custom field
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the custom field
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 	// Value the value of the custom field
-	Value string `json:"value" codec:"value" bson:"value" yaml:"value" faker:"-"`
+	Value string `json:"value" yaml:"value" faker:"-"`
 }
 
 func toIssueCustomFieldsObject(o interface{}, isoptional bool) interface{} {
@@ -306,11 +306,11 @@ func (o *IssueCustomFields) FromMap(kv map[string]interface{}) {
 // IssueDueDate represents the object structure for due_date
 type IssueDueDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toIssueDueDateObject(o interface{}, isoptional bool) interface{} {
@@ -400,11 +400,11 @@ func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 // IssuePlannedEndDate represents the object structure for planned_end_date
 type IssuePlannedEndDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toIssuePlannedEndDateObject(o interface{}, isoptional bool) interface{} {
@@ -494,11 +494,11 @@ func (o *IssuePlannedEndDate) FromMap(kv map[string]interface{}) {
 // IssuePlannedStartDate represents the object structure for planned_start_date
 type IssuePlannedStartDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toIssuePlannedStartDateObject(o interface{}, isoptional bool) interface{} {
@@ -588,11 +588,11 @@ func (o *IssuePlannedStartDate) FromMap(kv map[string]interface{}) {
 // IssueUpdatedDate represents the object structure for updated_date
 type IssueUpdatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toIssueUpdatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -682,55 +682,55 @@ func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
 // Issue the issue is a specific work item for a project
 type Issue struct {
 	// AssigneeRefID user id of the assignee
-	AssigneeRefID string `json:"assignee_ref_id" codec:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
+	AssigneeRefID string `json:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
 	// CreatedDate the date that the issue was created
-	CreatedDate IssueCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate IssueCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
 	// CreatorRefID user id of the creator
-	CreatorRefID string `json:"creator_ref_id" codec:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
+	CreatorRefID string `json:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
 	// CustomFields list of custom fields and their values
-	CustomFields []IssueCustomFields `json:"customFields" codec:"customFields" bson:"customFields" yaml:"customFields" faker:"-"`
+	CustomFields []IssueCustomFields `json:"customFields" yaml:"customFields" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// DueDate due date of the issue
-	DueDate IssueDueDate `json:"due_date" codec:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
+	DueDate IssueDueDate `json:"due_date" yaml:"due_date" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the issue
-	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
+	Identifier string `json:"identifier" yaml:"identifier" faker:"issue_id"`
 	// ParentID parent issue id, if any
-	ParentID string `json:"parent_id" codec:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
+	ParentID string `json:"parent_id" yaml:"parent_id" faker:"-"`
 	// PlannedEndDate the date that the issue was planned to end
-	PlannedEndDate IssuePlannedEndDate `json:"planned_end_date" codec:"planned_end_date" bson:"planned_end_date" yaml:"planned_end_date" faker:"-"`
+	PlannedEndDate IssuePlannedEndDate `json:"planned_end_date" yaml:"planned_end_date" faker:"-"`
 	// PlannedStartDate the date that the issue was planned to start
-	PlannedStartDate IssuePlannedStartDate `json:"planned_start_date" codec:"planned_start_date" bson:"planned_start_date" yaml:"planned_start_date" faker:"-"`
+	PlannedStartDate IssuePlannedStartDate `json:"planned_start_date" yaml:"planned_start_date" faker:"-"`
 	// Priority priority of the issue
-	Priority string `json:"priority" codec:"priority" bson:"priority" yaml:"priority" faker:"-"`
+	Priority string `json:"priority" yaml:"priority" faker:"-"`
 	// ProjectID unique project id
-	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	ProjectID string `json:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// ReporterRefID user id of the reporter
-	ReporterRefID string `json:"reporter_ref_id" codec:"reporter_ref_id" bson:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
+	ReporterRefID string `json:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
 	// Resolution resolution of the issue
-	Resolution string `json:"resolution" codec:"resolution" bson:"resolution" yaml:"resolution" faker:"-"`
+	Resolution string `json:"resolution" yaml:"resolution" faker:"-"`
 	// Status status of the issue
-	Status string `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
+	Status string `json:"status" yaml:"status" faker:"-"`
 	// Tags tags on the issue
-	Tags []string `json:"tags" codec:"tags" bson:"tags" yaml:"tags" faker:"-"`
+	Tags []string `json:"tags" yaml:"tags" faker:"-"`
 	// Title the issue title
-	Title string `json:"title" codec:"title" bson:"title" yaml:"title" faker:"issue_title"`
+	Title string `json:"title" yaml:"title" faker:"issue_title"`
 	// Type type of issue
-	Type string `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type string `json:"type" yaml:"type" faker:"-"`
 	// UpdatedDate the date that the issue was updated
-	UpdatedDate IssueUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	UpdatedDate IssueUpdatedDate `json:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the issue page
-	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

@@ -91,29 +91,29 @@ const (
 // CodequalityRequestIntegrationAuthorization represents the object structure for authorization
 type CodequalityRequestIntegrationAuthorization struct {
 	// AccessToken Access token
-	AccessToken *string `json:"access_token,omitempty" codec:"access_token,omitempty" bson:"access_token" yaml:"access_token,omitempty" faker:"-"`
+	AccessToken *string `json:"access_token,omitempty" yaml:"access_token,omitempty" faker:"-"`
 	// RefreshToken Refresh token
-	RefreshToken *string `json:"refresh_token,omitempty" codec:"refresh_token,omitempty" bson:"refresh_token" yaml:"refresh_token,omitempty" faker:"-"`
+	RefreshToken *string `json:"refresh_token,omitempty" yaml:"refresh_token,omitempty" faker:"-"`
 	// URL URL of instance if relevant
-	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
+	URL *string `json:"url,omitempty" yaml:"url,omitempty" faker:"-"`
 	// Username Username for instance, if relevant
-	Username *string `json:"username,omitempty" codec:"username,omitempty" bson:"username" yaml:"username,omitempty" faker:"-"`
+	Username *string `json:"username,omitempty" yaml:"username,omitempty" faker:"-"`
 	// Password Password for instance, if relevant
-	Password *string `json:"password,omitempty" codec:"password,omitempty" bson:"password" yaml:"password,omitempty" faker:"-"`
+	Password *string `json:"password,omitempty" yaml:"password,omitempty" faker:"-"`
 	// APIToken API Token for instance, if relevant
-	APIToken *string `json:"api_token,omitempty" codec:"api_token,omitempty" bson:"api_token" yaml:"api_token,omitempty" faker:"-"`
+	APIToken *string `json:"api_token,omitempty" yaml:"api_token,omitempty" faker:"-"`
 	// Collection Collection for instance, if relevant
-	Collection *string `json:"collection,omitempty" codec:"collection,omitempty" bson:"collection" yaml:"collection,omitempty" faker:"-"`
+	Collection *string `json:"collection,omitempty" yaml:"collection,omitempty" faker:"-"`
 	// APIKey API Key for instance, if relevant
-	APIKey *string `json:"api_key,omitempty" codec:"api_key,omitempty" bson:"api_key" yaml:"api_key,omitempty" faker:"-"`
+	APIKey *string `json:"api_key,omitempty" yaml:"api_key,omitempty" faker:"-"`
 	// Authorization the agents encrypted authorization
-	Authorization *string `json:"authorization,omitempty" codec:"authorization,omitempty" bson:"authorization" yaml:"authorization,omitempty" faker:"-"`
+	Authorization *string `json:"authorization,omitempty" yaml:"authorization,omitempty" faker:"-"`
 	// Hostname Hostname for instance, if relevant
-	Hostname *string `json:"hostname,omitempty" codec:"hostname,omitempty" bson:"hostname" yaml:"hostname,omitempty" faker:"-"`
+	Hostname *string `json:"hostname,omitempty" yaml:"hostname,omitempty" faker:"-"`
 	// APIVersion the api version of the integration
-	APIVersion *string `json:"api_version,omitempty" codec:"api_version,omitempty" bson:"api_version" yaml:"api_version,omitempty" faker:"-"`
+	APIVersion *string `json:"api_version,omitempty" yaml:"api_version,omitempty" faker:"-"`
 	// Organization Organization for instance, if relevant
-	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
+	Organization *string `json:"organization,omitempty" yaml:"organization,omitempty" faker:"-"`
 }
 
 func toCodequalityRequestIntegrationAuthorizationObject(o interface{}, isoptional bool) interface{} {
@@ -435,11 +435,11 @@ const (
 // CodequalityRequestIntegrationProgress represents the object structure for progress
 type CodequalityRequestIntegrationProgress struct {
 	// Message Any relevant messaging during processing
-	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" yaml:"message" faker:"-"`
 	// Total The total amount to be processed
-	Total int64 `json:"total" codec:"total" bson:"total" yaml:"total" faker:"-"`
+	Total int64 `json:"total" yaml:"total" faker:"-"`
 	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" codec:"completed" bson:"completed" yaml:"completed" faker:"-"`
+	Completed int64 `json:"completed" yaml:"completed" faker:"-"`
 }
 
 func toCodequalityRequestIntegrationProgressObject(o interface{}, isoptional bool) interface{} {
@@ -588,11 +588,11 @@ const (
 // CodequalityRequestIntegrationValidatedDate represents the object structure for validated_date
 type CodequalityRequestIntegrationValidatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toCodequalityRequestIntegrationValidatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -682,35 +682,35 @@ func (o *CodequalityRequestIntegrationValidatedDate) FromMap(kv map[string]inter
 // CodequalityRequestIntegration represents the object structure for integration
 type CodequalityRequestIntegration struct {
 	// Active If true, the integration is still active
-	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
-	Authorization CodequalityRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	Authorization CodequalityRequestIntegrationAuthorization `json:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Errored If authorization failed by the agent
-	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
+	Errored *bool `json:"errored,omitempty" yaml:"errored,omitempty" faker:"-"`
 	// Exclusions The exclusion list for this integration
-	Exclusions []string `json:"exclusions" codec:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
+	Exclusions []string `json:"exclusions" yaml:"exclusions" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
-	Location CodequalityRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
+	Location CodequalityRequestIntegrationLocation `json:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 	// Progress Agent processing progress
-	Progress CodequalityRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
+	Progress CodequalityRequestIntegrationProgress `json:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
-	SystemType CodequalityRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
+	SystemType CodequalityRequestIntegrationSystemType `json:"system_type" yaml:"system_type" faker:"-"`
 	// Validated If the validation has been run against this instance
-	Validated *bool `json:"validated,omitempty" codec:"validated,omitempty" bson:"validated" yaml:"validated,omitempty" faker:"-"`
+	Validated *bool `json:"validated,omitempty" yaml:"validated,omitempty" faker:"-"`
 	// ValidatedDate Date when validated
-	ValidatedDate CodequalityRequestIntegrationValidatedDate `json:"validated_date" codec:"validated_date" bson:"validated_date" yaml:"validated_date" faker:"-"`
+	ValidatedDate CodequalityRequestIntegrationValidatedDate `json:"validated_date" yaml:"validated_date" faker:"-"`
 	// ValidationMessage The validation message from the agent
-	ValidationMessage *string `json:"validation_message,omitempty" codec:"validation_message,omitempty" bson:"validation_message" yaml:"validation_message,omitempty" faker:"-"`
+	ValidationMessage *string `json:"validation_message,omitempty" yaml:"validation_message,omitempty" faker:"-"`
 }
 
 func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) interface{} {
@@ -1109,11 +1109,11 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 // CodequalityRequestRequestDate represents the object structure for request_date
 type CodequalityRequestRequestDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toCodequalityRequestRequestDateObject(o interface{}, isoptional bool) interface{} {
@@ -1203,23 +1203,23 @@ func (o *CodequalityRequestRequestDate) FromMap(kv map[string]interface{}) {
 // CodequalityRequest an agent action to request adding new codequality entities
 type CodequalityRequest struct {
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to use
-	Integration CodequalityRequestIntegration `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	Integration CodequalityRequestIntegration `json:"integration" yaml:"integration" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestDate the date when the request was made
-	RequestDate CodequalityRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
+	RequestDate CodequalityRequestRequestDate `json:"request_date" yaml:"request_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -1545,25 +1545,6 @@ func (o *CodequalityRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

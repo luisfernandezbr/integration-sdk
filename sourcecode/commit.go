@@ -138,11 +138,11 @@ const (
 // CommitCreatedDate represents the object structure for created_date
 type CommitCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toCommitCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -232,11 +232,11 @@ func (o *CommitCreatedDate) FromMap(kv map[string]interface{}) {
 // CommitFilesCreatedDate represents the object structure for created_date
 type CommitFilesCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toCommitFilesCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -326,51 +326,51 @@ func (o *CommitFilesCreatedDate) FromMap(kv map[string]interface{}) {
 // CommitFiles represents the object structure for files
 type CommitFiles struct {
 	// Additions the number of additions for the commit file
-	Additions int64 `json:"additions" codec:"additions" bson:"additions" yaml:"additions" faker:"-"`
+	Additions int64 `json:"additions" yaml:"additions" faker:"-"`
 	// Binary indicates if the file was detected to be a binary file
-	Binary bool `json:"binary" codec:"binary" bson:"binary" yaml:"binary" faker:"-"`
+	Binary bool `json:"binary" yaml:"binary" faker:"-"`
 	// Blanks the number of blank lines in the file
-	Blanks int64 `json:"blanks" codec:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
+	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
 	// Comments the number of comment lines in the file
-	Comments int64 `json:"comments" codec:"comments" bson:"comments" yaml:"comments" faker:"-"`
+	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
 	// CommitID the unique id for the commit
-	CommitID string `json:"commit_id" codec:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
+	CommitID string `json:"commit_id" yaml:"commit_id" faker:"-"`
 	// Complexity the complexity value for the file change
-	Complexity int64 `json:"complexity" codec:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
+	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
 	// CreatedDate the timestamp in UTC that the commit was created
-	CreatedDate CommitFilesCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate CommitFilesCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
 	// Deletions the number of deletions for the commit file
-	Deletions int64 `json:"deletions" codec:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
+	Deletions int64 `json:"deletions" yaml:"deletions" faker:"-"`
 	// Excluded if the file was excluded from processing
-	Excluded bool `json:"excluded" codec:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	Excluded bool `json:"excluded" yaml:"excluded" faker:"-"`
 	// ExcludedReason if the file was excluded, the reason
-	ExcludedReason string `json:"excluded_reason" codec:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
+	ExcludedReason string `json:"excluded_reason" yaml:"excluded_reason" faker:"-"`
 	// Filename the filename
-	Filename string `json:"filename" codec:"filename" bson:"filename" yaml:"filename" faker:"-"`
+	Filename string `json:"filename" yaml:"filename" faker:"-"`
 	// Language the language that was detected for the file
-	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
+	Language string `json:"language" yaml:"language" faker:"-"`
 	// License the license which was detected for the file
-	License string `json:"license" codec:"license" bson:"license" yaml:"license" faker:"-"`
+	License string `json:"license" yaml:"license" faker:"-"`
 	// LicenseConfidence the license confidence from the detection engine
-	LicenseConfidence float64 `json:"license_confidence" codec:"license_confidence" bson:"license_confidence" yaml:"license_confidence" faker:"-"`
+	LicenseConfidence float64 `json:"license_confidence" yaml:"license_confidence" faker:"-"`
 	// Loc the number of lines in the file
-	Loc int64 `json:"loc" codec:"loc" bson:"loc" yaml:"loc" faker:"-"`
+	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
 	// Ordinal the order value for the file in the change set
-	Ordinal int64 `json:"ordinal" codec:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
+	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
 	// Renamed if the file was renamed
-	Renamed bool `json:"renamed" codec:"renamed" bson:"renamed" yaml:"renamed" faker:"-"`
+	Renamed bool `json:"renamed" yaml:"renamed" faker:"-"`
 	// RenamedFrom the original file name
-	RenamedFrom string `json:"renamed_from" codec:"renamed_from" bson:"renamed_from" yaml:"renamed_from" faker:"-"`
+	RenamedFrom string `json:"renamed_from" yaml:"renamed_from" faker:"-"`
 	// RenamedTo the final file name
-	RenamedTo string `json:"renamed_to" codec:"renamed_to" bson:"renamed_to" yaml:"renamed_to" faker:"-"`
+	RenamedTo string `json:"renamed_to" yaml:"renamed_to" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// Size the size of the file
-	Size int64 `json:"size" codec:"size" bson:"size" yaml:"size" faker:"-"`
+	Size int64 `json:"size" yaml:"size" faker:"-"`
 	// Sloc the number of source lines in the file
-	Sloc int64 `json:"sloc" codec:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
 	// Status the status of the change
-	Status string `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
+	Status string `json:"status" yaml:"status" faker:"-"`
 }
 
 func toCommitFilesObject(o interface{}, isoptional bool) interface{} {
@@ -809,59 +809,59 @@ func (o *CommitFiles) FromMap(kv map[string]interface{}) {
 // Commit the commit is a specific change in a repo
 type Commit struct {
 	// Additions the number of additions for the commit
-	Additions int64 `json:"additions" codec:"additions" bson:"additions" yaml:"additions" faker:"-"`
+	Additions int64 `json:"additions" yaml:"additions" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
-	AuthorRefID string `json:"author_ref_id" codec:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Blanks the number of blank lines in the commit
-	Blanks int64 `json:"blanks" codec:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
+	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
 	// BranchIds the branches that the commit was a part of
-	BranchIds []string `json:"branch_ids" codec:"branch_ids" bson:"branch_ids" yaml:"branch_ids" faker:"-"`
+	BranchIds []string `json:"branch_ids" yaml:"branch_ids" faker:"-"`
 	// Comments the number of comment lines in the commit
-	Comments int64 `json:"comments" codec:"comments" bson:"comments" yaml:"comments" faker:"-"`
+	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
 	// CommitterRefID the committer ref_id in the source system
-	CommitterRefID string `json:"committer_ref_id" codec:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
+	CommitterRefID string `json:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
 	// Complexity the complexity value for the change
-	Complexity int64 `json:"complexity" codec:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
+	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
 	// CreatedDate date when the commit was created
-	CreatedDate CommitCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate CommitCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Deletions the number of deletions for the commit
-	Deletions int64 `json:"deletions" codec:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
+	Deletions int64 `json:"deletions" yaml:"deletions" faker:"-"`
 	// Excluded if the commit was excluded
-	Excluded bool `json:"excluded" codec:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	Excluded bool `json:"excluded" yaml:"excluded" faker:"-"`
 	// Files the files touched by this commit
-	Files []CommitFiles `json:"files" codec:"files" bson:"files" yaml:"files" faker:"-"`
+	Files []CommitFiles `json:"files" yaml:"files" faker:"-"`
 	// FilesChanged the number of files changed for the commit
-	FilesChanged int64 `json:"files_changed" codec:"files_changed" bson:"files_changed" yaml:"files_changed" faker:"-"`
+	FilesChanged int64 `json:"files_changed" yaml:"files_changed" faker:"-"`
 	// GpgSigned if the commit was signed
-	GpgSigned bool `json:"gpg_signed" codec:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
+	GpgSigned bool `json:"gpg_signed" yaml:"gpg_signed" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Loc the number of lines in the commit
-	Loc int64 `json:"loc" codec:"loc" bson:"loc" yaml:"loc" faker:"-"`
+	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
 	// Message the commit message
-	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"commit_message"`
+	Message string `json:"message" yaml:"message" faker:"commit_message"`
 	// Ordinal the order of the commit in the commit stream
-	Ordinal int64 `json:"ordinal" codec:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
+	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// Sha the unique sha for the commit
-	Sha string `json:"sha" codec:"sha" bson:"sha" yaml:"sha" faker:"sha"`
+	Sha string `json:"sha" yaml:"sha" faker:"sha"`
 	// Size the size of all files in the commit
-	Size int64 `json:"size" codec:"size" bson:"size" yaml:"size" faker:"-"`
+	Size int64 `json:"size" yaml:"size" faker:"-"`
 	// Sloc the number of source lines in the commit
-	Sloc int64 `json:"sloc" codec:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the commit detail
-	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

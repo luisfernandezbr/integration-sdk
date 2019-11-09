@@ -54,11 +54,11 @@ const (
 // MetricCreatedDate represents the object structure for created_date
 type MetricCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toMetricCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -148,25 +148,25 @@ func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
 // Metric individual metric details
 type Metric struct {
 	// CreatedDate the date when the metric was created
-	CreatedDate MetricCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate MetricCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the metric name
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 	// ProjectID the project id
-	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	ProjectID string `json:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Value the value of the metric
-	Value string `json:"value" codec:"value" bson:"value" yaml:"value" faker:"-"`
+	Value string `json:"value" yaml:"value" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

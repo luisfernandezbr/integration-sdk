@@ -104,11 +104,11 @@ const (
 // PullRequestClosedDate represents the object structure for closed_date
 type PullRequestClosedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toPullRequestClosedDateObject(o interface{}, isoptional bool) interface{} {
@@ -198,11 +198,11 @@ func (o *PullRequestClosedDate) FromMap(kv map[string]interface{}) {
 // PullRequestCreatedDate represents the object structure for created_date
 type PullRequestCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toPullRequestCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -292,11 +292,11 @@ func (o *PullRequestCreatedDate) FromMap(kv map[string]interface{}) {
 // PullRequestMergedDate represents the object structure for merged_date
 type PullRequestMergedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toPullRequestMergedDateObject(o interface{}, isoptional bool) interface{} {
@@ -453,11 +453,11 @@ const (
 // PullRequestUpdatedDate represents the object structure for updated_date
 type PullRequestUpdatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toPullRequestUpdatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -547,53 +547,53 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 // PullRequest the pull request for a given repo
 type PullRequest struct {
 	// BranchID id for the branch based on branch_name, could be already deleted
-	BranchID string `json:"branch_id" codec:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
+	BranchID string `json:"branch_id" yaml:"branch_id" faker:"-"`
 	// BranchName branch name of the pr, could be  deleted
-	BranchName string `json:"branch_name" codec:"branch_name" bson:"branch_name" yaml:"branch_name" faker:"-"`
+	BranchName string `json:"branch_name" yaml:"branch_name" faker:"-"`
 	// ClosedByRefID the id of user who closed the pull request
-	ClosedByRefID string `json:"closed_by_ref_id" codec:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
+	ClosedByRefID string `json:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
 	// ClosedDate the timestamp in UTC that the pull request was closed
-	ClosedDate PullRequestClosedDate `json:"closed_date" codec:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
+	ClosedDate PullRequestClosedDate `json:"closed_date" yaml:"closed_date" faker:"-"`
 	// CommitIds list of commit ids added in this pr
-	CommitIds []string `json:"commit_ids" codec:"commit_ids" bson:"commit_ids" yaml:"commit_ids" faker:"-"`
+	CommitIds []string `json:"commit_ids" yaml:"commit_ids" faker:"-"`
 	// CommitShas list of commit shas added in this pr
-	CommitShas []string `json:"commit_shas" codec:"commit_shas" bson:"commit_shas" yaml:"commit_shas" faker:"-"`
+	CommitShas []string `json:"commit_shas" yaml:"commit_shas" faker:"-"`
 	// CreatedByRefID the user ref_id in the source system
-	CreatedByRefID string `json:"created_by_ref_id" codec:"created_by_ref_id" bson:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
+	CreatedByRefID string `json:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
 	// CreatedDate the timestamp in UTC that the pull request was created
-	CreatedDate PullRequestCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate PullRequestCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the pull request
-	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
+	Description string `json:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// MergeCommitID the id of the merge commit
-	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
+	MergeCommitID string `json:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeSha the sha of the merge commit
-	MergeSha string `json:"merge_sha" codec:"merge_sha" bson:"merge_sha" yaml:"merge_sha" faker:"-"`
+	MergeSha string `json:"merge_sha" yaml:"merge_sha" faker:"-"`
 	// MergedByRefID the id of user who merged the pull request
-	MergedByRefID string `json:"merged_by_ref_id" codec:"merged_by_ref_id" bson:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
+	MergedByRefID string `json:"merged_by_ref_id" yaml:"merged_by_ref_id" faker:"-"`
 	// MergedDate the timestamp in UTC that the pull request was merged
-	MergedDate PullRequestMergedDate `json:"merged_date" codec:"merged_date" bson:"merged_date" yaml:"merged_date" faker:"-"`
+	MergedDate PullRequestMergedDate `json:"merged_date" yaml:"merged_date" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// Status the status of the pull request
-	Status PullRequestStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
+	Status PullRequestStatus `json:"status" yaml:"status" faker:"-"`
 	// Title the title of the pull request
-	Title string `json:"title" codec:"title" bson:"title" yaml:"title" faker:"commit_message"`
+	Title string `json:"title" yaml:"title" faker:"commit_message"`
 	// UpdatedDate the timestamp in UTC that the pull request was closed
-	UpdatedDate PullRequestUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
+	UpdatedDate PullRequestUpdatedDate `json:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the pull request home page
-	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

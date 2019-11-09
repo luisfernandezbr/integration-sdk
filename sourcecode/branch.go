@@ -82,55 +82,55 @@ const (
 // Branch git branches
 type Branch struct {
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
-	AheadDefaultCount int64 `json:"ahead_default_count" codec:"ahead_default_count" bson:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
+	AheadDefaultCount int64 `json:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
 	// BehindDefaultCount the number of commits that this branch is behind from the default branch
-	BehindDefaultCount int64 `json:"behind_default_count" codec:"behind_default_count" bson:"behind_default_count" yaml:"behind_default_count" faker:"-"`
+	BehindDefaultCount int64 `json:"behind_default_count" yaml:"behind_default_count" faker:"-"`
 	// BranchedFromCommitIds the commit ids from which the branch was created
-	BranchedFromCommitIds []string `json:"branched_from_commit_ids" codec:"branched_from_commit_ids" bson:"branched_from_commit_ids" yaml:"branched_from_commit_ids" faker:"-"`
+	BranchedFromCommitIds []string `json:"branched_from_commit_ids" yaml:"branched_from_commit_ids" faker:"-"`
 	// BranchedFromCommitShas the commit shas from which the branch was created
-	BranchedFromCommitShas []string `json:"branched_from_commit_shas" codec:"branched_from_commit_shas" bson:"branched_from_commit_shas" yaml:"branched_from_commit_shas" faker:"-"`
+	BranchedFromCommitShas []string `json:"branched_from_commit_shas" yaml:"branched_from_commit_shas" faker:"-"`
 	// CommitIds list of commit ids contained on this branch
-	CommitIds []string `json:"commit_ids" codec:"commit_ids" bson:"commit_ids" yaml:"commit_ids" faker:"-"`
+	CommitIds []string `json:"commit_ids" yaml:"commit_ids" faker:"-"`
 	// CommitShas list of commit shas contained on this branch
-	CommitShas []string `json:"commit_shas" codec:"commit_shas" bson:"commit_shas" yaml:"commit_shas" faker:"-"`
+	CommitShas []string `json:"commit_shas" yaml:"commit_shas" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Default true if the branch is the default branch
-	Default bool `json:"default" codec:"default" bson:"default" yaml:"default" faker:"-"`
+	Default bool `json:"default" yaml:"default" faker:"-"`
 	// FirstBranchedFromCommitID the first commit id from which the branch was created
-	FirstBranchedFromCommitID string `json:"first_branched_from_commit_id" codec:"first_branched_from_commit_id" bson:"first_branched_from_commit_id" yaml:"first_branched_from_commit_id" faker:"-"`
+	FirstBranchedFromCommitID string `json:"first_branched_from_commit_id" yaml:"first_branched_from_commit_id" faker:"-"`
 	// FirstBranchedFromCommitSha the first commit sha from which the branch was created
-	FirstBranchedFromCommitSha string `json:"first_branched_from_commit_sha" codec:"first_branched_from_commit_sha" bson:"first_branched_from_commit_sha" yaml:"first_branched_from_commit_sha" faker:"-"`
+	FirstBranchedFromCommitSha string `json:"first_branched_from_commit_sha" yaml:"first_branched_from_commit_sha" faker:"-"`
 	// FirstCommitID the first commit id on the branch
-	FirstCommitID string `json:"first_commit_id" codec:"first_commit_id" bson:"first_commit_id" yaml:"first_commit_id" faker:"-"`
+	FirstCommitID string `json:"first_commit_id" yaml:"first_commit_id" faker:"-"`
 	// FirstCommitSha the first commit sha on the branch
-	FirstCommitSha string `json:"first_commit_sha" codec:"first_commit_sha" bson:"first_commit_sha" yaml:"first_commit_sha" faker:"-"`
+	FirstCommitSha string `json:"first_commit_sha" yaml:"first_commit_sha" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IsPullRequest set to true for objects created from pull request shas. when false this is was created from git branch
-	IsPullRequest bool `json:"is_pull_request" codec:"is_pull_request" bson:"is_pull_request" yaml:"is_pull_request" faker:"-"`
+	IsPullRequest bool `json:"is_pull_request" yaml:"is_pull_request" faker:"-"`
 	// MergeCommitID commit id in which the branch was merged
-	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
+	MergeCommitID string `json:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeCommitSha commit sha in which the branch was merged
-	MergeCommitSha string `json:"merge_commit_sha" codec:"merge_commit_sha" bson:"merge_commit_sha" yaml:"merge_commit_sha" faker:"-"`
+	MergeCommitSha string `json:"merge_commit_sha" yaml:"merge_commit_sha" faker:"-"`
 	// Merged true if the branch has been merged into the default branch
-	Merged bool `json:"merged" codec:"merged" bson:"merged" yaml:"merged" faker:"-"`
+	Merged bool `json:"merged" yaml:"merged" faker:"-"`
 	// Name name of the branch or pr.ref_id when is_pull_request
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" yaml:"name" faker:"-"`
 	// PullRequestID only valid when is_pull_request. pull request that provided sha for this branch
-	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	PullRequestID string `json:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the URL to the source system for this branch
-	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

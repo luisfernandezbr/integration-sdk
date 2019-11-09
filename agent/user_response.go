@@ -153,11 +153,11 @@ const (
 // UserResponseEventDate represents the object structure for event_date
 type UserResponseEventDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toUserResponseEventDateObject(o interface{}, isoptional bool) interface{} {
@@ -247,11 +247,11 @@ func (o *UserResponseEventDate) FromMap(kv map[string]interface{}) {
 // UserResponseLastExportDate represents the object structure for last_export_date
 type UserResponseLastExportDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toUserResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
@@ -341,27 +341,27 @@ func (o *UserResponseLastExportDate) FromMap(kv map[string]interface{}) {
 // UserResponseTeams represents the object structure for teams
 type UserResponseTeams struct {
 	// Active whether the team is tracked in pinpoint
-	Active *bool `json:"active,omitempty" codec:"active,omitempty" bson:"active" yaml:"active,omitempty" faker:"-"`
+	Active *bool `json:"active,omitempty" yaml:"active,omitempty" faker:"-"`
 	// ChildrenIds the children_ids for this team
-	ChildrenIds []string `json:"children_ids" codec:"children_ids" bson:"children_ids" yaml:"children_ids" faker:"-"`
+	ChildrenIds []string `json:"children_ids" yaml:"children_ids" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the team
-	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
+	Description string `json:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Leaf True when team has no children_ids
-	Leaf bool `json:"leaf" codec:"leaf" bson:"leaf" yaml:"leaf" faker:"-"`
+	Leaf bool `json:"leaf" yaml:"leaf" faker:"-"`
 	// Name the name of the team
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"team"`
+	Name string `json:"name" yaml:"name" faker:"team"`
 	// ParentIds the parent_ids for this team
-	ParentIds []string `json:"parent_ids" codec:"parent_ids" bson:"parent_ids" yaml:"parent_ids" faker:"-"`
+	ParentIds []string `json:"parent_ids" yaml:"parent_ids" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// TeamCostID the team cost id
-	TeamCostID *string `json:"team_cost_id,omitempty" codec:"team_cost_id,omitempty" bson:"team_cost_id" yaml:"team_cost_id,omitempty" faker:"-"`
+	TeamCostID *string `json:"team_cost_id,omitempty" yaml:"team_cost_id,omitempty" faker:"-"`
 }
 
 func toUserResponseTeamsObject(o interface{}, isoptional bool) interface{} {
@@ -798,11 +798,11 @@ const (
 // UserResponseUsersHiredDate represents the object structure for hired_date
 type UserResponseUsersHiredDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toUserResponseUsersHiredDateObject(o interface{}, isoptional bool) interface{} {
@@ -892,11 +892,11 @@ func (o *UserResponseUsersHiredDate) FromMap(kv map[string]interface{}) {
 // UserResponseUsersTerminatedDate represents the object structure for terminated_date
 type UserResponseUsersTerminatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toUserResponseUsersTerminatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -986,33 +986,33 @@ func (o *UserResponseUsersTerminatedDate) FromMap(kv map[string]interface{}) {
 // UserResponseUsers represents the object structure for users
 type UserResponseUsers struct {
 	// AvatarURL the user avatar url
-	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"avatar"`
+	AvatarURL *string `json:"avatar_url,omitempty" yaml:"avatar_url,omitempty" faker:"avatar"`
 	// CostCenterID the id of the cost center
-	CostCenterID *string `json:"cost_center_id,omitempty" codec:"cost_center_id,omitempty" bson:"cost_center_id" yaml:"cost_center_id,omitempty" faker:"-"`
+	CostCenterID *string `json:"cost_center_id,omitempty" yaml:"cost_center_id,omitempty" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Email the email of the user
-	Email string `json:"email" codec:"email" bson:"email" yaml:"email" faker:"email"`
+	Email string `json:"email" yaml:"email" faker:"email"`
 	// HiredDate when the user was hired in epoch timestamp
-	HiredDate UserResponseUsersHiredDate `json:"hired_date" codec:"hired_date" bson:"hired_date" yaml:"hired_date" faker:"-"`
+	HiredDate UserResponseUsersHiredDate `json:"hired_date" yaml:"hired_date" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Location the location of the user
-	Location *string `json:"location,omitempty" codec:"location,omitempty" bson:"location" yaml:"location,omitempty" faker:"location"`
+	Location *string `json:"location,omitempty" yaml:"location,omitempty" faker:"location"`
 	// ManagerID the manager user id
-	ManagerID *string `json:"manager_id,omitempty" codec:"manager_id,omitempty" bson:"manager_id" yaml:"manager_id,omitempty" faker:"-"`
+	ManagerID *string `json:"manager_id,omitempty" yaml:"manager_id,omitempty" faker:"-"`
 	// Name name of the user
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
+	Name string `json:"name" yaml:"name" faker:"person"`
 	// PrimaryTeamID the team id of the user's primary team
-	PrimaryTeamID *string `json:"primary_team_id,omitempty" codec:"primary_team_id,omitempty" bson:"primary_team_id" yaml:"primary_team_id,omitempty" faker:"-"`
+	PrimaryTeamID *string `json:"primary_team_id,omitempty" yaml:"primary_team_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// TerminatedDate when the user was terminated in epoch timestamp
-	TerminatedDate UserResponseUsersTerminatedDate `json:"terminated_date" codec:"terminated_date" bson:"terminated_date" yaml:"terminated_date" faker:"-"`
+	TerminatedDate UserResponseUsersTerminatedDate `json:"terminated_date" yaml:"terminated_date" faker:"-"`
 	// Title the title of the user
-	Title *string `json:"title,omitempty" codec:"title,omitempty" bson:"title" yaml:"title,omitempty" faker:"jobtitle"`
+	Title *string `json:"title,omitempty" yaml:"title,omitempty" faker:"jobtitle"`
 }
 
 func toUserResponseUsersObject(o interface{}, isoptional bool) interface{} {
@@ -1349,63 +1349,63 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 // UserResponse an agent response to an action request adding user(s)
 type UserResponse struct {
 	// Architecture the architecture of the agent machine
-	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	Architecture string `json:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
-	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
+	Data *string `json:"data,omitempty" yaml:"data,omitempty" faker:"-"`
 	// Distro the agent os distribution
-	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	Distro string `json:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
-	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
+	Error *string `json:"error,omitempty" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate UserResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate UserResponseEventDate `json:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
-	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	FreeSpace int64 `json:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
-	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	GoVersion string `json:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
-	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname string `json:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
-	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	IntegrationID string `json:"integration_id" yaml:"integration_id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate UserResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate UserResponseLastExportDate `json:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
-	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	Memory int64 `json:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
-	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
-	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	NumCPU int64 `json:"num_cpu" yaml:"num_cpu" faker:"-"`
 	// OS the agent operating system
-	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
+	OS string `json:"os" yaml:"os" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
-	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	RequestID string `json:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
-	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
+	Success bool `json:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
-	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	SystemID string `json:"system_id" yaml:"system_id" faker:"-"`
 	// Teams the exported teams
-	Teams []UserResponseTeams `json:"teams" codec:"teams" bson:"teams" yaml:"teams" faker:"-"`
+	Teams []UserResponseTeams `json:"teams" yaml:"teams" faker:"-"`
 	// Type the type of event
-	Type UserResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type UserResponseType `json:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
-	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
+	Uptime int64 `json:"uptime" yaml:"uptime" faker:"-"`
 	// Users the exported users
-	Users []UserResponseUsers `json:"users" codec:"users" bson:"users" yaml:"users" faker:"-"`
+	Users []UserResponseUsers `json:"users" yaml:"users" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
-	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
+	Version string `json:"version" yaml:"version" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -1788,25 +1788,6 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1896,25 +1877,6 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

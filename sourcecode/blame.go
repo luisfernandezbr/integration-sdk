@@ -95,11 +95,11 @@ const (
 // BlameChangeDate represents the object structure for change_date
 type BlameChangeDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toBlameChangeDateObject(o interface{}, isoptional bool) interface{} {
@@ -189,17 +189,17 @@ func (o *BlameChangeDate) FromMap(kv map[string]interface{}) {
 // BlameLines represents the object structure for lines
 type BlameLines struct {
 	// AuthorRefID the author ref_id of this line when last changed
-	AuthorRefID string `json:"author_ref_id" codec:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// Blank if the line is a blank line
-	Blank bool `json:"blank" codec:"blank" bson:"blank" yaml:"blank" faker:"-"`
+	Blank bool `json:"blank" yaml:"blank" faker:"-"`
 	// Code if the line is sourcecode
-	Code bool `json:"code" codec:"code" bson:"code" yaml:"code" faker:"-"`
+	Code bool `json:"code" yaml:"code" faker:"-"`
 	// Comment if the line is a comment
-	Comment bool `json:"comment" codec:"comment" bson:"comment" yaml:"comment" faker:"-"`
+	Comment bool `json:"comment" yaml:"comment" faker:"-"`
 	// Date the change date in RFC3339 format of this line when last changed
-	Date string `json:"date" codec:"date" bson:"date" yaml:"date" faker:"-"`
+	Date string `json:"date" yaml:"date" faker:"-"`
 	// Sha the sha when this line was last changed
-	Sha string `json:"sha" codec:"sha" bson:"sha" yaml:"sha" faker:"-"`
+	Sha string `json:"sha" yaml:"sha" faker:"-"`
 }
 
 func toBlameLinesObject(o interface{}, isoptional bool) interface{} {
@@ -382,51 +382,51 @@ const (
 // Blame the blame detail for each commit in a repo
 type Blame struct {
 	// Blanks the count of blank lines in the file
-	Blanks int64 `json:"blanks" codec:"blanks" bson:"blanks" yaml:"blanks" faker:"-"`
+	Blanks int64 `json:"blanks" yaml:"blanks" faker:"-"`
 	// ChangeDate the date of the change
-	ChangeDate BlameChangeDate `json:"change_date" codec:"change_date" bson:"change_date" yaml:"change_date" faker:"-"`
+	ChangeDate BlameChangeDate `json:"change_date" yaml:"change_date" faker:"-"`
 	// Comments the count of comment lines in the file based on language rules
-	Comments int64 `json:"comments" codec:"comments" bson:"comments" yaml:"comments" faker:"-"`
+	Comments int64 `json:"comments" yaml:"comments" faker:"-"`
 	// CommitID the commit ID
-	CommitID string `json:"commit_id" codec:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"-"`
+	CommitID string `json:"commit_id" yaml:"commit_id" faker:"-"`
 	// Complexity the cyclomatic complexity for the change
-	Complexity int64 `json:"complexity" codec:"complexity" bson:"complexity" yaml:"complexity" faker:"-"`
+	Complexity int64 `json:"complexity" yaml:"complexity" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Excluded if the result was excluded
-	Excluded bool `json:"excluded" codec:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
+	Excluded bool `json:"excluded" yaml:"excluded" faker:"-"`
 	// ExcludedReason why the result was excluded
-	ExcludedReason string `json:"excluded_reason" codec:"excluded_reason" bson:"excluded_reason" yaml:"excluded_reason" faker:"-"`
+	ExcludedReason string `json:"excluded_reason" yaml:"excluded_reason" faker:"-"`
 	// Filename the filename
-	Filename string `json:"filename" codec:"filename" bson:"filename" yaml:"filename" faker:"-"`
+	Filename string `json:"filename" yaml:"filename" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Language the detected language
-	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
+	Language string `json:"language" yaml:"language" faker:"-"`
 	// License if a license was detected in the file, what was the license SPDX
-	License *string `json:"license,omitempty" codec:"license,omitempty" bson:"license" yaml:"license,omitempty" faker:"-"`
+	License *string `json:"license,omitempty" yaml:"license,omitempty" faker:"-"`
 	// Lines the individual line attributions
-	Lines []BlameLines `json:"lines" codec:"lines" bson:"lines" yaml:"lines" faker:"-"`
+	Lines []BlameLines `json:"lines" yaml:"lines" faker:"-"`
 	// Loc the count of lines in the file
-	Loc int64 `json:"loc" codec:"loc" bson:"loc" yaml:"loc" faker:"-"`
+	Loc int64 `json:"loc" yaml:"loc" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
 	// Sha the commit SHA
-	Sha string `json:"sha" codec:"sha" bson:"sha" yaml:"sha" faker:"-"`
+	Sha string `json:"sha" yaml:"sha" faker:"-"`
 	// Size the size of the file
-	Size int64 `json:"size" codec:"size" bson:"size" yaml:"size" faker:"-"`
+	Size int64 `json:"size" yaml:"size" faker:"-"`
 	// Sloc the count of source lines in the file based on language rules
-	Sloc int64 `json:"sloc" codec:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
+	Sloc int64 `json:"sloc" yaml:"sloc" faker:"-"`
 	// Status the status of the change
-	Status BlameStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
+	Status BlameStatus `json:"status" yaml:"status" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

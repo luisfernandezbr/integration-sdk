@@ -115,11 +115,11 @@ const (
 // RepoResponseEventDate represents the object structure for event_date
 type RepoResponseEventDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toRepoResponseEventDateObject(o interface{}, isoptional bool) interface{} {
@@ -209,11 +209,11 @@ func (o *RepoResponseEventDate) FromMap(kv map[string]interface{}) {
 // RepoResponseLastExportDate represents the object structure for last_export_date
 type RepoResponseLastExportDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toRepoResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
@@ -303,11 +303,11 @@ func (o *RepoResponseLastExportDate) FromMap(kv map[string]interface{}) {
 // RepoResponseReposCreatedDate represents the object structure for created_date
 type RepoResponseReposCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toRepoResponseReposCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -397,11 +397,11 @@ func (o *RepoResponseReposCreatedDate) FromMap(kv map[string]interface{}) {
 // RepoResponseReposLastCommitCreatedDate represents the object structure for created_date
 type RepoResponseReposLastCommitCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toRepoResponseReposLastCommitCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -491,11 +491,11 @@ func (o *RepoResponseReposLastCommitCreatedDate) FromMap(kv map[string]interface
 // RepoResponseReposLastCommitAuthor represents the object structure for author
 type RepoResponseReposLastCommitAuthor struct {
 	// Name the author name
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
+	Name string `json:"name" yaml:"name" faker:"person"`
 	// Email the email of the author
-	Email string `json:"email" codec:"email" bson:"email" yaml:"email" faker:"email"`
+	Email string `json:"email" yaml:"email" faker:"email"`
 	// AvatarURL the avatar_url for the author
-	AvatarURL string `json:"avatar_url" codec:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
+	AvatarURL string `json:"avatar_url" yaml:"avatar_url" faker:"avatar"`
 }
 
 func toRepoResponseReposLastCommitAuthorObject(o interface{}, isoptional bool) interface{} {
@@ -585,17 +585,17 @@ func (o *RepoResponseReposLastCommitAuthor) FromMap(kv map[string]interface{}) {
 // RepoResponseReposLastCommit represents the object structure for last_commit
 type RepoResponseReposLastCommit struct {
 	// CommitID the id of the latest commit
-	CommitID string `json:"commit_id" codec:"commit_id" bson:"commit_id" yaml:"commit_id" faker:"sha"`
+	CommitID string `json:"commit_id" yaml:"commit_id" faker:"sha"`
 	// CommitSha the sha of the latest commit
-	CommitSha string `json:"commit_sha" codec:"commit_sha" bson:"commit_sha" yaml:"commit_sha" faker:"sha"`
+	CommitSha string `json:"commit_sha" yaml:"commit_sha" faker:"sha"`
 	// URL the url of the lastest commit
-	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" yaml:"url" faker:"url"`
 	// Message the commit message of the latest commit
-	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"commit_message"`
+	Message string `json:"message" yaml:"message" faker:"commit_message"`
 	// CreatedDate the timestamp of the latest commit
-	CreatedDate RepoResponseReposLastCommitCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate RepoResponseReposLastCommitCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
 	// Author the author of the latest commit
-	Author RepoResponseReposLastCommitAuthor `json:"author" codec:"author" bson:"author" yaml:"author" faker:"-"`
+	Author RepoResponseReposLastCommitAuthor `json:"author" yaml:"author" faker:"-"`
 }
 
 func toRepoResponseReposLastCommitObject(o interface{}, isoptional bool) interface{} {
@@ -740,21 +740,21 @@ func (o *RepoResponseReposLastCommit) FromMap(kv map[string]interface{}) {
 // RepoResponseRepos represents the object structure for repos
 type RepoResponseRepos struct {
 	// Active the status of the repo determined by an Admin
-	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" yaml:"active" faker:"-"`
 	// CreatedDate the creation date
-	CreatedDate RepoResponseReposCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate RepoResponseReposCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
 	// Description the description of the repository
-	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"sentence"`
+	Description string `json:"description" yaml:"description" faker:"sentence"`
 	// Language the programming language defined for the repository
-	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
+	Language string `json:"language" yaml:"language" faker:"-"`
 	// LastCommit the most recent commit to the repo
-	LastCommit RepoResponseReposLastCommit `json:"last_commit" codec:"last_commit" bson:"last_commit" yaml:"last_commit" faker:"-"`
+	LastCommit RepoResponseReposLastCommit `json:"last_commit" yaml:"last_commit" faker:"-"`
 	// Name the name of the repository
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"repo"`
+	Name string `json:"name" yaml:"name" faker:"repo"`
 	// RefID the repo ID
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the record type
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 }
 
 func toRepoResponseReposObject(o interface{}, isoptional bool) interface{} {
@@ -1080,61 +1080,61 @@ const (
 // RepoResponse an agent response to an action request adding repo(s)
 type RepoResponse struct {
 	// Architecture the architecture of the agent machine
-	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	Architecture string `json:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
-	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
+	Data *string `json:"data,omitempty" yaml:"data,omitempty" faker:"-"`
 	// Distro the agent os distribution
-	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
+	Distro string `json:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
-	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
+	Error *string `json:"error,omitempty" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate RepoResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate RepoResponseEventDate `json:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
-	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
+	FreeSpace int64 `json:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
-	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
+	GoVersion string `json:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
-	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
+	Hostname string `json:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
-	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	IntegrationID string `json:"integration_id" yaml:"integration_id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate RepoResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate RepoResponseLastExportDate `json:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
-	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
+	Memory int64 `json:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
-	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
+	Message string `json:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
-	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	NumCPU int64 `json:"num_cpu" yaml:"num_cpu" faker:"-"`
 	// OS the agent operating system
-	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
+	OS string `json:"os" yaml:"os" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
 	// Repos the repos exported
-	Repos []RepoResponseRepos `json:"repos" codec:"repos" bson:"repos" yaml:"repos" faker:"-"`
+	Repos []RepoResponseRepos `json:"repos" yaml:"repos" faker:"-"`
 	// RequestID the request id that this response is correlated to
-	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	RequestID string `json:"request_id" yaml:"request_id" faker:"-"`
 	// Success if the response was successful
-	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
+	Success bool `json:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
-	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
+	SystemID string `json:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type RepoResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type RepoResponseType `json:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
-	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
+	Uptime int64 `json:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
-	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	UUID string `json:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
-	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
+	Version string `json:"version" yaml:"version" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
@@ -1506,25 +1506,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1614,25 +1595,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
