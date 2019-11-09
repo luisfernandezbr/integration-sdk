@@ -64,33 +64,33 @@ const (
 // Team a team is a grouping of one or more users
 type Team struct {
 	// Active whether the team is tracked in pinpoint
-	Active *bool `json:"active,omitempty" yaml:"active,omitempty" faker:"-"`
+	Active *bool `json:"active,omitempty" codec:"active,omitempty" bson:"active" yaml:"active,omitempty" faker:"-"`
 	// ChildrenIds the children_ids for this team
-	ChildrenIds []string `json:"children_ids" yaml:"children_ids" faker:"-"`
+	ChildrenIds []string `json:"children_ids" codec:"children_ids" bson:"children_ids" yaml:"children_ids" faker:"-"`
 	// CreatedAt the date the record was created in Epoch time
-	CreatedAt int64 `json:"created_ts" yaml:"created_ts" faker:"-"`
+	CreatedAt int64 `json:"created_ts" codec:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the team
-	Description string `json:"description" yaml:"description" faker:"-"`
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Leaf True when team has no children_ids
-	Leaf bool `json:"leaf" yaml:"leaf" faker:"-"`
+	Leaf bool `json:"leaf" codec:"leaf" bson:"leaf" yaml:"leaf" faker:"-"`
 	// Name the name of the team
-	Name string `json:"name" yaml:"name" faker:"team"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"team"`
 	// ParentIds the parent_ids for this team
-	ParentIds []string `json:"parent_ids" yaml:"parent_ids" faker:"-"`
+	ParentIds []string `json:"parent_ids" codec:"parent_ids" bson:"parent_ids" yaml:"parent_ids" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// TeamCostID the team cost id
-	TeamCostID *string `json:"team_cost_id,omitempty" yaml:"team_cost_id,omitempty" faker:"-"`
+	TeamCostID *string `json:"team_cost_id,omitempty" codec:"team_cost_id,omitempty" bson:"team_cost_id" yaml:"team_cost_id,omitempty" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

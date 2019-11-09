@@ -53,29 +53,29 @@ const (
 // Project the project holds work
 type Project struct {
 	// Active the status of the project
-	Active bool `json:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Category the project category
-	Category *string `json:"category,omitempty" yaml:"category,omitempty" faker:"-"`
+	Category *string `json:"category,omitempty" codec:"category,omitempty" bson:"category" yaml:"category,omitempty" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the project
-	Description *string `json:"description,omitempty" yaml:"description,omitempty" faker:"sentence"`
+	Description *string `json:"description,omitempty" codec:"description,omitempty" bson:"description" yaml:"description,omitempty" faker:"sentence"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the project
-	Identifier string `json:"identifier" yaml:"identifier" faker:"abbreviation"`
+	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
 	// Name the name of the project
-	Name string `json:"name" yaml:"name" faker:"project"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"project"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the project home page
-	URL string `json:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

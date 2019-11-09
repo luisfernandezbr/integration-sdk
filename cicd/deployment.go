@@ -73,11 +73,11 @@ const (
 // DeploymentEndDate represents the object structure for end_date
 type DeploymentEndDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toDeploymentEndDateObject(o interface{}, isoptional bool) interface{} {
@@ -267,11 +267,11 @@ const (
 // DeploymentStartDate represents the object structure for start_date
 type DeploymentStartDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toDeploymentStartDateObject(o interface{}, isoptional bool) interface{} {
@@ -431,35 +431,35 @@ const (
 // Deployment an individual deployment
 type Deployment struct {
 	// Automated if the deployment was automated or manual
-	Automated bool `json:"automated" yaml:"automated" faker:"-"`
+	Automated bool `json:"automated" codec:"automated" bson:"automated" yaml:"automated" faker:"-"`
 	// BuildRefID the build id that is associated with the deployment (if any)
-	BuildRefID string `json:"build_ref_id" yaml:"build_ref_id" faker:"-"`
+	BuildRefID string `json:"build_ref_id" codec:"build_ref_id" bson:"build_ref_id" yaml:"build_ref_id" faker:"-"`
 	// CommitSha the commit sha for the commit that triggered the deployment
-	CommitSha string `json:"commit_sha" yaml:"commit_sha" faker:"-"`
+	CommitSha string `json:"commit_sha" codec:"commit_sha" bson:"commit_sha" yaml:"commit_sha" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// EndDate the date when the deployment finished
-	EndDate DeploymentEndDate `json:"end_date" yaml:"end_date" faker:"-"`
+	EndDate DeploymentEndDate `json:"end_date" codec:"end_date" bson:"end_date" yaml:"end_date" faker:"-"`
 	// Environment the environment for the deployment
-	Environment DeploymentEnvironment `json:"environment" yaml:"environment" faker:"-"`
+	Environment DeploymentEnvironment `json:"environment" codec:"environment" bson:"environment" yaml:"environment" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoName the name of the repo
-	RepoName string `json:"repo_name" yaml:"repo_name" faker:"-"`
+	RepoName string `json:"repo_name" codec:"repo_name" bson:"repo_name" yaml:"repo_name" faker:"-"`
 	// StartDate the date when the deployment started
-	StartDate DeploymentStartDate `json:"start_date" yaml:"start_date" faker:"-"`
+	StartDate DeploymentStartDate `json:"start_date" codec:"start_date" bson:"start_date" yaml:"start_date" faker:"-"`
 	// Status the status of the deployment
-	Status DeploymentStatus `json:"status" yaml:"status" faker:"-"`
+	Status DeploymentStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the deployment status page
-	URL *string `json:"url,omitempty" yaml:"url,omitempty" faker:"url"`
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

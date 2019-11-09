@@ -70,11 +70,11 @@ const (
 // ChangelogCreatedDate represents the object structure for created_date
 type ChangelogCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toChangelogCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -344,39 +344,39 @@ const (
 // Changelog an individual change to an issue
 type Changelog struct {
 	// CreatedDate the date when this change was created
-	CreatedDate ChangelogCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate ChangelogCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Field the field that was changed
-	Field ChangelogField `json:"field" yaml:"field" faker:"-"`
+	Field ChangelogField `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
 	// FieldType type of the field that was changed
-	FieldType string `json:"field_type" yaml:"field_type" faker:"-"`
+	FieldType string `json:"field_type" codec:"field_type" bson:"field_type" yaml:"field_type" faker:"-"`
 	// From id of the change from
-	From string `json:"from" yaml:"from" faker:"-"`
+	From string `json:"from" codec:"from" bson:"from" yaml:"from" faker:"-"`
 	// FromString human readable representation of the change from, used mostly for debug
-	FromString string `json:"from_string" yaml:"from_string" faker:"-"`
+	FromString string `json:"from_string" codec:"from_string" bson:"from_string" yaml:"from_string" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IssueID id of the issue
-	IssueID string `json:"issue_id" yaml:"issue_id" faker:"-"`
+	IssueID string `json:"issue_id" codec:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
 	// Ordinal so we can order correctly in queries since dates could be equal
-	Ordinal int64 `json:"ordinal" yaml:"ordinal" faker:"-"`
+	Ordinal int64 `json:"ordinal" codec:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
 	// ProjectID project id of the issue
-	ProjectID string `json:"project_id" yaml:"project_id" faker:"-"`
+	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// To id of the change to
-	To string `json:"to" yaml:"to" faker:"-"`
+	To string `json:"to" codec:"to" bson:"to" yaml:"to" faker:"-"`
 	// ToString human readable representation name of the change to, used mostly for debug
-	ToString string `json:"to_string" yaml:"to_string" faker:"-"`
+	ToString string `json:"to_string" codec:"to_string" bson:"to_string" yaml:"to_string" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UserID id of the user of this change
-	UserID string `json:"user_id" yaml:"user_id" faker:"-"`
+	UserID string `json:"user_id" codec:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

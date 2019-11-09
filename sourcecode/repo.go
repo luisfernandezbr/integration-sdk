@@ -52,29 +52,29 @@ const (
 // Repo the repo holds source code
 type Repo struct {
 	// Active the status of the repo
-	Active bool `json:"active" yaml:"active" faker:"-"`
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DefaultBranch the repo default branch
-	DefaultBranch string `json:"default_branch" yaml:"default_branch" faker:"-"`
+	DefaultBranch string `json:"default_branch" codec:"default_branch" bson:"default_branch" yaml:"default_branch" faker:"-"`
 	// Description brief explanation of the repo
-	Description string `json:"description" yaml:"description" faker:"sentence"`
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"sentence"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Language the programming language the source code is primarily written in
-	Language string `json:"language" yaml:"language" faker:"-"`
+	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// Name the name of the repo
-	Name string `json:"name" yaml:"name" faker:"repo"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"repo"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the repo home page
-	URL string `json:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

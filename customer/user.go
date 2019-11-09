@@ -73,11 +73,11 @@ const (
 // UserHiredDate represents the object structure for hired_date
 type UserHiredDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toUserHiredDateObject(o interface{}, isoptional bool) interface{} {
@@ -167,11 +167,11 @@ func (o *UserHiredDate) FromMap(kv map[string]interface{}) {
 // UserTerminatedDate represents the object structure for terminated_date
 type UserTerminatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toUserTerminatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -261,37 +261,37 @@ func (o *UserTerminatedDate) FromMap(kv map[string]interface{}) {
 // User the customer's user record
 type User struct {
 	// AvatarURL the user avatar url
-	AvatarURL *string `json:"avatar_url,omitempty" yaml:"avatar_url,omitempty" faker:"avatar"`
+	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"avatar"`
 	// CostCenterID the id of the cost center
-	CostCenterID *string `json:"cost_center_id,omitempty" yaml:"cost_center_id,omitempty" faker:"-"`
+	CostCenterID *string `json:"cost_center_id,omitempty" codec:"cost_center_id,omitempty" bson:"cost_center_id" yaml:"cost_center_id,omitempty" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Email the email of the user
-	Email string `json:"email" yaml:"email" faker:"email"`
+	Email string `json:"email" codec:"email" bson:"email" yaml:"email" faker:"email"`
 	// HiredDate when the user was hired in epoch timestamp
-	HiredDate UserHiredDate `json:"hired_date" yaml:"hired_date" faker:"-"`
+	HiredDate UserHiredDate `json:"hired_date" codec:"hired_date" bson:"hired_date" yaml:"hired_date" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Location the location of the user
-	Location *string `json:"location,omitempty" yaml:"location,omitempty" faker:"location"`
+	Location *string `json:"location,omitempty" codec:"location,omitempty" bson:"location" yaml:"location,omitempty" faker:"location"`
 	// ManagerID the manager user id
-	ManagerID *string `json:"manager_id,omitempty" yaml:"manager_id,omitempty" faker:"-"`
+	ManagerID *string `json:"manager_id,omitempty" codec:"manager_id,omitempty" bson:"manager_id" yaml:"manager_id,omitempty" faker:"-"`
 	// Name name of the user
-	Name string `json:"name" yaml:"name" faker:"person"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
 	// PrimaryTeamID the team id of the user's primary team
-	PrimaryTeamID *string `json:"primary_team_id,omitempty" yaml:"primary_team_id,omitempty" faker:"-"`
+	PrimaryTeamID *string `json:"primary_team_id,omitempty" codec:"primary_team_id,omitempty" bson:"primary_team_id" yaml:"primary_team_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// TerminatedDate when the user was terminated in epoch timestamp
-	TerminatedDate UserTerminatedDate `json:"terminated_date" yaml:"terminated_date" faker:"-"`
+	TerminatedDate UserTerminatedDate `json:"terminated_date" codec:"terminated_date" bson:"terminated_date" yaml:"terminated_date" faker:"-"`
 	// Title the title of the user
-	Title *string `json:"title,omitempty" yaml:"title,omitempty" faker:"jobtitle"`
+	Title *string `json:"title,omitempty" codec:"title,omitempty" bson:"title" yaml:"title,omitempty" faker:"jobtitle"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

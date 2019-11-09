@@ -60,11 +60,11 @@ const (
 // PullRequestReviewCreatedDate represents the object structure for created_date
 type PullRequestReviewCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toPullRequestReviewCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -244,29 +244,29 @@ const (
 // PullRequestReview the review for a given pull request
 type PullRequestReview struct {
 	// CreatedDate the timestamp in UTC that the review was created
-	CreatedDate PullRequestReviewCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate PullRequestReviewCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// PullRequestID the pull request this review is associated with
-	PullRequestID string `json:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// State the state of the review
-	State PullRequestReviewState `json:"state" yaml:"state" faker:"-"`
+	State PullRequestReviewState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the URL to the source system for this review
-	URL string `json:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// UserRefID the user ref_id in the source system
-	UserRefID string `json:"user_ref_id" yaml:"user_ref_id" faker:"-"`
+	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

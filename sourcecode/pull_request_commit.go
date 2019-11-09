@@ -68,11 +68,11 @@ const (
 // PullRequestCommitCreatedDate represents the object structure for created_date
 type PullRequestCommitCreatedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toPullRequestCommitCreatedDateObject(o interface{}, isoptional bool) interface{} {
@@ -162,39 +162,39 @@ func (o *PullRequestCommitCreatedDate) FromMap(kv map[string]interface{}) {
 // PullRequestCommit the pull request commit is a specific change in a repo that was extracted from a pull request
 type PullRequestCommit struct {
 	// Additions the number of additions for the commit
-	Additions int64 `json:"additions" yaml:"additions" faker:"-"`
+	Additions int64 `json:"additions" codec:"additions" bson:"additions" yaml:"additions" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
-	AuthorRefID string `json:"author_ref_id" yaml:"author_ref_id" faker:"-"`
+	AuthorRefID string `json:"author_ref_id" codec:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// BranchID the branch that the commit was a part of
-	BranchID string `json:"branch_id" yaml:"branch_id" faker:"-"`
+	BranchID string `json:"branch_id" codec:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
 	// CommitterRefID the committer ref_id in the source system
-	CommitterRefID string `json:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
+	CommitterRefID string `json:"committer_ref_id" codec:"committer_ref_id" bson:"committer_ref_id" yaml:"committer_ref_id" faker:"-"`
 	// CreatedDate date when the commit was created
-	CreatedDate PullRequestCommitCreatedDate `json:"created_date" yaml:"created_date" faker:"-"`
+	CreatedDate PullRequestCommitCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Deletions the number of deletions for the commit
-	Deletions int64 `json:"deletions" yaml:"deletions" faker:"-"`
+	Deletions int64 `json:"deletions" codec:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Message the commit message
-	Message string `json:"message" yaml:"message" faker:"commit_message"`
+	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"commit_message"`
 	// PullRequestID the pull request this commit was taken from
-	PullRequestID string `json:"pull_request_id" yaml:"pull_request_id" faker:"-"`
+	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
-	RepoID string `json:"repo_id" yaml:"repo_id" faker:"-"`
+	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
 	// Sha the unique sha for the commit
-	Sha string `json:"sha" yaml:"sha" faker:"sha"`
+	Sha string `json:"sha" codec:"sha" bson:"sha" yaml:"sha" faker:"sha"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the commit detail
-	URL string `json:"url" yaml:"url" faker:"url"`
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

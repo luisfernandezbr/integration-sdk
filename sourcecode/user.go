@@ -127,31 +127,31 @@ const (
 // User the source code user
 type User struct {
 	// AssociatedRefID the ref id associated for this user in another system
-	AssociatedRefID *string `json:"associated_ref_id,omitempty" yaml:"associated_ref_id,omitempty" faker:"-"`
+	AssociatedRefID *string `json:"associated_ref_id,omitempty" codec:"associated_ref_id,omitempty" bson:"associated_ref_id" yaml:"associated_ref_id,omitempty" faker:"-"`
 	// AvatarURL the url to users avatar
-	AvatarURL *string `json:"avatar_url,omitempty" yaml:"avatar_url,omitempty" faker:"avatar"`
+	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"avatar"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Email the email for the user
-	Email *string `json:"email,omitempty" yaml:"email,omitempty" faker:"email"`
+	Email *string `json:"email,omitempty" codec:"email,omitempty" bson:"email" yaml:"email,omitempty" faker:"email"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Member if the user is a member of organization
-	Member bool `json:"member" yaml:"member" faker:"-"`
+	Member bool `json:"member" codec:"member" bson:"member" yaml:"member" faker:"-"`
 	// Name the name of the user
-	Name string `json:"name" yaml:"name" faker:"person"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Type type of the user
-	Type UserType `json:"type" yaml:"type" faker:"-"`
+	Type UserType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Username username of the user
-	Username *string `json:"username,omitempty" yaml:"username,omitempty" faker:"username"`
+	Username *string `json:"username,omitempty" codec:"username,omitempty" bson:"username" yaml:"username,omitempty" faker:"username"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface

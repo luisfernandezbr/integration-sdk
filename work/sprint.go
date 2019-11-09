@@ -80,11 +80,11 @@ const (
 // SprintCompletedDate represents the object structure for completed_date
 type SprintCompletedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toSprintCompletedDateObject(o interface{}, isoptional bool) interface{} {
@@ -174,11 +174,11 @@ func (o *SprintCompletedDate) FromMap(kv map[string]interface{}) {
 // SprintEndedDate represents the object structure for ended_date
 type SprintEndedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toSprintEndedDateObject(o interface{}, isoptional bool) interface{} {
@@ -268,11 +268,11 @@ func (o *SprintEndedDate) FromMap(kv map[string]interface{}) {
 // SprintFetchedDate represents the object structure for fetched_date
 type SprintFetchedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toSprintFetchedDateObject(o interface{}, isoptional bool) interface{} {
@@ -362,11 +362,11 @@ func (o *SprintFetchedDate) FromMap(kv map[string]interface{}) {
 // SprintStartedDate represents the object structure for started_date
 type SprintStartedDate struct {
 	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" yaml:"epoch" faker:"-"`
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" yaml:"offset" faker:"-"`
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
 	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" yaml:"rfc3339" faker:"-"`
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
 func toSprintStartedDateObject(o interface{}, isoptional bool) interface{} {
@@ -526,31 +526,31 @@ const (
 // Sprint sprint details
 type Sprint struct {
 	// CompletedDate the date that the sprint was completed
-	CompletedDate SprintCompletedDate `json:"completed_date" yaml:"completed_date" faker:"-"`
+	CompletedDate SprintCompletedDate `json:"completed_date" codec:"completed_date" bson:"completed_date" yaml:"completed_date" faker:"-"`
 	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" yaml:"customer_id" faker:"-"`
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// EndedDate the date that the sprint was ended
-	EndedDate SprintEndedDate `json:"ended_date" yaml:"ended_date" faker:"-"`
+	EndedDate SprintEndedDate `json:"ended_date" codec:"ended_date" bson:"ended_date" yaml:"ended_date" faker:"-"`
 	// FetchedDate date in when the api was called
-	FetchedDate SprintFetchedDate `json:"fetched_date" yaml:"fetched_date" faker:"-"`
+	FetchedDate SprintFetchedDate `json:"fetched_date" codec:"fetched_date" bson:"fetched_date" yaml:"fetched_date" faker:"-"`
 	// Goal the goal for the sprint
-	Goal string `json:"goal" yaml:"goal" faker:"-"`
+	Goal string `json:"goal" codec:"goal" bson:"goal" yaml:"goal" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the field
-	Name string `json:"name" yaml:"name" faker:"-"`
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
-	RefID string `json:"ref_id" yaml:"ref_id" faker:"-"`
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
-	RefType string `json:"ref_type" yaml:"ref_type" faker:"-"`
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// StartedDate the date that the sprint was started
-	StartedDate SprintStartedDate `json:"started_date" yaml:"started_date" faker:"-"`
+	StartedDate SprintStartedDate `json:"started_date" codec:"started_date" bson:"started_date" yaml:"started_date" faker:"-"`
 	// Status status of the sprint
-	Status SprintStatus `json:"status" yaml:"status" faker:"-"`
+	Status SprintStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" yaml:"updated_ts" faker:"-"`
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
-	Hashcode string `json:"hashcode" yaml:"hashcode" faker:"-"`
+	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
 
 // ensure that this type implements the data model interface
