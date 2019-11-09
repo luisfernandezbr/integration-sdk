@@ -15,6 +15,8 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -280,6 +282,13 @@ func (o *StartLastExportDate) FromMap(kv map[string]interface{}) {
 
 // StartType is the enumeration type for type
 type StartType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *StartType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = StartType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v StartType) UnmarshalJSON(buf []byte) error {

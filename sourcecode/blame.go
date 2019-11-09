@@ -16,7 +16,8 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -330,6 +331,13 @@ func (o *BlameLines) FromMap(kv map[string]interface{}) {
 
 // BlameStatus is the enumeration type for status
 type BlameStatus int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *BlameStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = BlameStatus(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v BlameStatus) UnmarshalJSON(buf []byte) error {

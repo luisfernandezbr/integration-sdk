@@ -18,7 +18,8 @@ import (
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -666,6 +667,13 @@ func (o *UserResponseTeams) FromMap(kv map[string]interface{}) {
 
 // UserResponseType is the enumeration type for type
 type UserResponseType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *UserResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = UserResponseType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v UserResponseType) UnmarshalJSON(buf []byte) error {

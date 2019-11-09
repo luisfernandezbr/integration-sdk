@@ -16,7 +16,8 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -323,6 +324,13 @@ func (o *ExportResponseEventDate) FromMap(kv map[string]interface{}) {
 // ExportResponseIntegrationsExportType is the enumeration type for export_type
 type ExportResponseIntegrationsExportType int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *ExportResponseIntegrationsExportType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = ExportResponseIntegrationsExportType(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v ExportResponseIntegrationsExportType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -365,6 +373,13 @@ const (
 
 // ExportResponseIntegrationsSystemType is the enumeration type for system_type
 type ExportResponseIntegrationsSystemType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ExportResponseIntegrationsSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = ExportResponseIntegrationsSystemType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v ExportResponseIntegrationsSystemType) UnmarshalJSON(buf []byte) error {
@@ -753,6 +768,13 @@ func (o *ExportResponseStartDate) FromMap(kv map[string]interface{}) {
 // ExportResponseState is the enumeration type for state
 type ExportResponseState int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *ExportResponseState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = ExportResponseState(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v ExportResponseState) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -803,6 +825,13 @@ const (
 
 // ExportResponseType is the enumeration type for type
 type ExportResponseType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ExportResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = ExportResponseType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v ExportResponseType) UnmarshalJSON(buf []byte) error {
@@ -1425,6 +1454,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1577,6 +1625,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

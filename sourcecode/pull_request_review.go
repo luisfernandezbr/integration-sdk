@@ -14,6 +14,8 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -151,6 +153,13 @@ func (o *PullRequestReviewCreatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequestReviewState is the enumeration type for state
 type PullRequestReviewState int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *PullRequestReviewState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = PullRequestReviewState(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v PullRequestReviewState) UnmarshalJSON(buf []byte) error {

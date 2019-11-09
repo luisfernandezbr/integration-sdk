@@ -14,6 +14,8 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -453,6 +455,13 @@ func (o *SprintStartedDate) FromMap(kv map[string]interface{}) {
 
 // SprintStatus is the enumeration type for status
 type SprintStatus int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *SprintStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = SprintStatus(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v SprintStatus) UnmarshalJSON(buf []byte) error {

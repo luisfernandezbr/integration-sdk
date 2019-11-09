@@ -18,7 +18,6 @@ import (
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (

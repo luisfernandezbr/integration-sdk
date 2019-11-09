@@ -15,6 +15,8 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -164,6 +166,13 @@ func (o *DeploymentEndDate) FromMap(kv map[string]interface{}) {
 
 // DeploymentEnvironment is the enumeration type for environment
 type DeploymentEnvironment int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *DeploymentEnvironment) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = DeploymentEnvironment(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v DeploymentEnvironment) UnmarshalJSON(buf []byte) error {
@@ -333,6 +342,13 @@ func (o *DeploymentStartDate) FromMap(kv map[string]interface{}) {
 
 // DeploymentStatus is the enumeration type for status
 type DeploymentStatus int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *DeploymentStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = DeploymentStatus(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v DeploymentStatus) UnmarshalJSON(buf []byte) error {

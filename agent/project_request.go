@@ -18,7 +18,8 @@ import (
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -392,6 +393,13 @@ func (o *ProjectRequestIntegrationAuthorization) FromMap(kv map[string]interface
 // ProjectRequestIntegrationLocation is the enumeration type for location
 type ProjectRequestIntegrationLocation int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *ProjectRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = ProjectRequestIntegrationLocation(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v ProjectRequestIntegrationLocation) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -528,6 +536,13 @@ func (o *ProjectRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
 
 // ProjectRequestIntegrationSystemType is the enumeration type for system_type
 type ProjectRequestIntegrationSystemType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ProjectRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = ProjectRequestIntegrationSystemType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v ProjectRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error {
@@ -1545,25 +1560,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

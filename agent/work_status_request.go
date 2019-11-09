@@ -18,7 +18,8 @@ import (
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -392,6 +393,13 @@ func (o *WorkStatusRequestIntegrationAuthorization) FromMap(kv map[string]interf
 // WorkStatusRequestIntegrationLocation is the enumeration type for location
 type WorkStatusRequestIntegrationLocation int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusRequestIntegrationLocation(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusRequestIntegrationLocation) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -528,6 +536,13 @@ func (o *WorkStatusRequestIntegrationProgress) FromMap(kv map[string]interface{}
 
 // WorkStatusRequestIntegrationSystemType is the enumeration type for system_type
 type WorkStatusRequestIntegrationSystemType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusRequestIntegrationSystemType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error {

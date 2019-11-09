@@ -18,7 +18,8 @@ import (
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -392,6 +393,13 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 // CodequalityRequestIntegrationLocation is the enumeration type for location
 type CodequalityRequestIntegrationLocation int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *CodequalityRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = CodequalityRequestIntegrationLocation(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v CodequalityRequestIntegrationLocation) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -528,6 +536,13 @@ func (o *CodequalityRequestIntegrationProgress) FromMap(kv map[string]interface{
 
 // CodequalityRequestIntegrationSystemType is the enumeration type for system_type
 type CodequalityRequestIntegrationSystemType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *CodequalityRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = CodequalityRequestIntegrationSystemType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v CodequalityRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error {

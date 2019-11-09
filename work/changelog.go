@@ -14,6 +14,8 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -161,6 +163,13 @@ func (o *ChangelogCreatedDate) FromMap(kv map[string]interface{}) {
 
 // ChangelogField is the enumeration type for field
 type ChangelogField int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ChangelogField) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = ChangelogField(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v ChangelogField) UnmarshalJSON(buf []byte) error {

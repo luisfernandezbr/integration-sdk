@@ -18,7 +18,8 @@ import (
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -392,6 +393,13 @@ func (o *RepoRequestIntegrationAuthorization) FromMap(kv map[string]interface{})
 // RepoRequestIntegrationLocation is the enumeration type for location
 type RepoRequestIntegrationLocation int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *RepoRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = RepoRequestIntegrationLocation(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v RepoRequestIntegrationLocation) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -528,6 +536,13 @@ func (o *RepoRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
 
 // RepoRequestIntegrationSystemType is the enumeration type for system_type
 type RepoRequestIntegrationSystemType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *RepoRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = RepoRequestIntegrationSystemType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v RepoRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error {
@@ -1545,6 +1560,25 @@ func (o *RepoRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

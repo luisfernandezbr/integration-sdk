@@ -18,7 +18,8 @@ import (
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -235,6 +236,13 @@ func (o *WorkStatusResponseEventDate) FromMap(kv map[string]interface{}) {
 // WorkStatusResponseWorkConfigField is the enumeration type for field
 type WorkStatusResponseWorkConfigField int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusResponseWorkConfigField) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusResponseWorkConfigField(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusResponseWorkConfigField) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -293,6 +301,13 @@ const (
 
 // WorkStatusResponseWorkConfigIssueType is the enumeration type for issue_type
 type WorkStatusResponseWorkConfigIssueType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusResponseWorkConfigIssueType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusResponseWorkConfigIssueType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusResponseWorkConfigIssueType) UnmarshalJSON(buf []byte) error {
@@ -447,6 +462,13 @@ func (o *WorkStatusResponseLastExportDate) FromMap(kv map[string]interface{}) {
 // WorkStatusResponseWorkConfigOperator is the enumeration type for operator
 type WorkStatusResponseWorkConfigOperator int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusResponseWorkConfigOperator) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusResponseWorkConfigOperator(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusResponseWorkConfigOperator) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -505,6 +527,13 @@ const (
 
 // WorkStatusResponseType is the enumeration type for type
 type WorkStatusResponseType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusResponseType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusResponseType) UnmarshalJSON(buf []byte) error {
@@ -1226,6 +1255,13 @@ func (o *WorkStatusResponseWorkConfigTopLevelIssue) FromMap(kv map[string]interf
 // WorkStatusResponseWorkConfigTypeRulesPredicatesField is the enumeration type for field
 type WorkStatusResponseWorkConfigTypeRulesPredicatesField int32
 
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(val.Int32())
+	return nil
+}
+
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
@@ -1284,6 +1320,13 @@ const (
 
 // WorkStatusResponseWorkConfigTypeRulesPredicatesOperator is the enumeration type for operator
 type WorkStatusResponseWorkConfigTypeRulesPredicatesOperator int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusResponseWorkConfigTypeRulesPredicatesOperator(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) UnmarshalJSON(buf []byte) error {
@@ -1476,6 +1519,13 @@ func (o *WorkStatusResponseWorkConfigTypeRulesPredicates) FromMap(kv map[string]
 
 // WorkStatusResponseWorkConfigTypeRulesIssueType is the enumeration type for issue_type
 type WorkStatusResponseWorkConfigTypeRulesIssueType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *WorkStatusResponseWorkConfigTypeRulesIssueType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	*v = WorkStatusResponseWorkConfigTypeRulesIssueType(val.Int32())
+	return nil
+}
 
 // UnmarshalJSON unmarshals the enum value
 func (v WorkStatusResponseWorkConfigTypeRulesIssueType) UnmarshalJSON(buf []byte) error {
@@ -2759,6 +2809,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2848,6 +2917,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

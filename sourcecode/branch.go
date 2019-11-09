@@ -17,7 +17,6 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
