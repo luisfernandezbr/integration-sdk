@@ -282,7 +282,39 @@ type EventType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *EventType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = EventType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = EventType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = EventType(0)
+		case "PING":
+			*v = EventType(1)
+		case "CRASH":
+			*v = EventType(2)
+		case "LOG":
+			*v = EventType(3)
+		case "INTEGRATION":
+			*v = EventType(4)
+		case "EXPORT":
+			*v = EventType(5)
+		case "PROJECT":
+			*v = EventType(6)
+		case "REPO":
+			*v = EventType(7)
+		case "USER":
+			*v = EventType(8)
+		case "UNINSTALL":
+			*v = EventType(9)
+		case "UPGRADE":
+			*v = EventType(10)
+		case "START":
+			*v = EventType(11)
+		case "STOP":
+			*v = EventType(12)
+		}
+	}
 	return nil
 }
 

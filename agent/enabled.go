@@ -286,7 +286,39 @@ type EnabledType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *EnabledType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = EnabledType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = EnabledType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = EnabledType(0)
+		case "PING":
+			*v = EnabledType(1)
+		case "CRASH":
+			*v = EnabledType(2)
+		case "LOG":
+			*v = EnabledType(3)
+		case "INTEGRATION":
+			*v = EnabledType(4)
+		case "EXPORT":
+			*v = EnabledType(5)
+		case "PROJECT":
+			*v = EnabledType(6)
+		case "REPO":
+			*v = EnabledType(7)
+		case "USER":
+			*v = EnabledType(8)
+		case "UNINSTALL":
+			*v = EnabledType(9)
+		case "UPGRADE":
+			*v = EnabledType(10)
+		case "START":
+			*v = EnabledType(11)
+		case "STOP":
+			*v = EnabledType(12)
+		}
+	}
 	return nil
 }
 

@@ -390,7 +390,39 @@ type CrashType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *CrashType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = CrashType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = CrashType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = CrashType(0)
+		case "PING":
+			*v = CrashType(1)
+		case "CRASH":
+			*v = CrashType(2)
+		case "LOG":
+			*v = CrashType(3)
+		case "INTEGRATION":
+			*v = CrashType(4)
+		case "EXPORT":
+			*v = CrashType(5)
+		case "PROJECT":
+			*v = CrashType(6)
+		case "REPO":
+			*v = CrashType(7)
+		case "USER":
+			*v = CrashType(8)
+		case "UNINSTALL":
+			*v = CrashType(9)
+		case "UPGRADE":
+			*v = CrashType(10)
+		case "START":
+			*v = CrashType(11)
+		case "STOP":
+			*v = CrashType(12)
+		}
+	}
 	return nil
 }
 

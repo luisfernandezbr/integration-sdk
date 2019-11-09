@@ -290,7 +290,39 @@ type UpgradeType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *UpgradeType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = UpgradeType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = UpgradeType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = UpgradeType(0)
+		case "PING":
+			*v = UpgradeType(1)
+		case "CRASH":
+			*v = UpgradeType(2)
+		case "LOG":
+			*v = UpgradeType(3)
+		case "INTEGRATION":
+			*v = UpgradeType(4)
+		case "EXPORT":
+			*v = UpgradeType(5)
+		case "PROJECT":
+			*v = UpgradeType(6)
+		case "REPO":
+			*v = UpgradeType(7)
+		case "USER":
+			*v = UpgradeType(8)
+		case "UNINSTALL":
+			*v = UpgradeType(9)
+		case "UPGRADE":
+			*v = UpgradeType(10)
+		case "START":
+			*v = UpgradeType(11)
+		case "STOP":
+			*v = UpgradeType(12)
+		}
+	}
 	return nil
 }
 

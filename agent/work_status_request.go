@@ -397,7 +397,17 @@ type WorkStatusRequestIntegrationLocation int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusRequestIntegrationLocation(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusRequestIntegrationLocation(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRIVATE":
+			*v = WorkStatusRequestIntegrationLocation(0)
+		case "CLOUD":
+			*v = WorkStatusRequestIntegrationLocation(1)
+		}
+	}
 	return nil
 }
 
@@ -541,7 +551,21 @@ type WorkStatusRequestIntegrationSystemType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusRequestIntegrationSystemType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusRequestIntegrationSystemType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "WORK":
+			*v = WorkStatusRequestIntegrationSystemType(0)
+		case "SOURCECODE":
+			*v = WorkStatusRequestIntegrationSystemType(1)
+		case "CODEQUALITY":
+			*v = WorkStatusRequestIntegrationSystemType(2)
+		case "USER":
+			*v = WorkStatusRequestIntegrationSystemType(3)
+		}
+	}
 	return nil
 }
 
@@ -1561,25 +1585,6 @@ func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

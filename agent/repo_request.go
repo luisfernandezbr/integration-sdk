@@ -397,7 +397,17 @@ type RepoRequestIntegrationLocation int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *RepoRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = RepoRequestIntegrationLocation(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = RepoRequestIntegrationLocation(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRIVATE":
+			*v = RepoRequestIntegrationLocation(0)
+		case "CLOUD":
+			*v = RepoRequestIntegrationLocation(1)
+		}
+	}
 	return nil
 }
 
@@ -541,7 +551,21 @@ type RepoRequestIntegrationSystemType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *RepoRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = RepoRequestIntegrationSystemType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = RepoRequestIntegrationSystemType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "WORK":
+			*v = RepoRequestIntegrationSystemType(0)
+		case "SOURCECODE":
+			*v = RepoRequestIntegrationSystemType(1)
+		case "CODEQUALITY":
+			*v = RepoRequestIntegrationSystemType(2)
+		case "USER":
+			*v = RepoRequestIntegrationSystemType(3)
+		}
+	}
 	return nil
 }
 

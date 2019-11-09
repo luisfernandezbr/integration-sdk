@@ -391,7 +391,23 @@ type PullRequestStatus int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *PullRequestStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = PullRequestStatus(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = PullRequestStatus(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "OPEN":
+			*v = PullRequestStatus(0)
+		case "CLOSED":
+			*v = PullRequestStatus(1)
+		case "MERGED":
+			*v = PullRequestStatus(2)
+		case "SUPERSEDED":
+			*v = PullRequestStatus(3)
+		case "LOCKED":
+			*v = PullRequestStatus(4)
+		}
+	}
 	return nil
 }
 

@@ -336,7 +336,19 @@ type BlameStatus int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *BlameStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = BlameStatus(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = BlameStatus(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ADDED":
+			*v = BlameStatus(0)
+		case "MODIFIED":
+			*v = BlameStatus(1)
+		case "REMOVED":
+			*v = BlameStatus(2)
+		}
+	}
 	return nil
 }
 

@@ -849,7 +849,39 @@ type ProjectResponseType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *ProjectResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = ProjectResponseType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = ProjectResponseType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = ProjectResponseType(0)
+		case "PING":
+			*v = ProjectResponseType(1)
+		case "CRASH":
+			*v = ProjectResponseType(2)
+		case "LOG":
+			*v = ProjectResponseType(3)
+		case "INTEGRATION":
+			*v = ProjectResponseType(4)
+		case "EXPORT":
+			*v = ProjectResponseType(5)
+		case "PROJECT":
+			*v = ProjectResponseType(6)
+		case "REPO":
+			*v = ProjectResponseType(7)
+		case "USER":
+			*v = ProjectResponseType(8)
+		case "UNINSTALL":
+			*v = ProjectResponseType(9)
+		case "UPGRADE":
+			*v = ProjectResponseType(10)
+		case "START":
+			*v = ProjectResponseType(11)
+		case "STOP":
+			*v = ProjectResponseType(12)
+		}
+	}
 	return nil
 }
 
@@ -1410,25 +1442,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1518,25 +1531,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

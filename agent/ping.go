@@ -288,7 +288,21 @@ type PingState int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *PingState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = PingState(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = PingState(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "IDLE":
+			*v = PingState(0)
+		case "STARTING":
+			*v = PingState(1)
+		case "STOPPING":
+			*v = PingState(2)
+		case "EXPORTING":
+			*v = PingState(3)
+		}
+	}
 	return nil
 }
 
@@ -354,7 +368,39 @@ type PingType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *PingType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = PingType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = PingType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = PingType(0)
+		case "PING":
+			*v = PingType(1)
+		case "CRASH":
+			*v = PingType(2)
+		case "LOG":
+			*v = PingType(3)
+		case "INTEGRATION":
+			*v = PingType(4)
+		case "EXPORT":
+			*v = PingType(5)
+		case "PROJECT":
+			*v = PingType(6)
+		case "REPO":
+			*v = PingType(7)
+		case "USER":
+			*v = PingType(8)
+		case "UNINSTALL":
+			*v = PingType(9)
+		case "UPGRADE":
+			*v = PingType(10)
+		case "START":
+			*v = PingType(11)
+		case "STOP":
+			*v = PingType(12)
+		}
+	}
 	return nil
 }
 
@@ -906,6 +952,25 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -980,6 +1045,25 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

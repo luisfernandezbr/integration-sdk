@@ -288,7 +288,39 @@ type EnrollResponseType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *EnrollResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = EnrollResponseType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = EnrollResponseType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = EnrollResponseType(0)
+		case "PING":
+			*v = EnrollResponseType(1)
+		case "CRASH":
+			*v = EnrollResponseType(2)
+		case "LOG":
+			*v = EnrollResponseType(3)
+		case "INTEGRATION":
+			*v = EnrollResponseType(4)
+		case "EXPORT":
+			*v = EnrollResponseType(5)
+		case "PROJECT":
+			*v = EnrollResponseType(6)
+		case "REPO":
+			*v = EnrollResponseType(7)
+		case "USER":
+			*v = EnrollResponseType(8)
+		case "UNINSTALL":
+			*v = EnrollResponseType(9)
+		case "UPGRADE":
+			*v = EnrollResponseType(10)
+		case "START":
+			*v = EnrollResponseType(11)
+		case "STOP":
+			*v = EnrollResponseType(12)
+		}
+	}
 	return nil
 }
 
@@ -851,25 +883,6 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnrollResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -944,25 +957,6 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnrollResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

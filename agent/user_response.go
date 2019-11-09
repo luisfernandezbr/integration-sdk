@@ -672,7 +672,39 @@ type UserResponseType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *UserResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = UserResponseType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = UserResponseType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = UserResponseType(0)
+		case "PING":
+			*v = UserResponseType(1)
+		case "CRASH":
+			*v = UserResponseType(2)
+		case "LOG":
+			*v = UserResponseType(3)
+		case "INTEGRATION":
+			*v = UserResponseType(4)
+		case "EXPORT":
+			*v = UserResponseType(5)
+		case "PROJECT":
+			*v = UserResponseType(6)
+		case "REPO":
+			*v = UserResponseType(7)
+		case "USER":
+			*v = UserResponseType(8)
+		case "UNINSTALL":
+			*v = UserResponseType(9)
+		case "UPGRADE":
+			*v = UserResponseType(10)
+		case "START":
+			*v = UserResponseType(11)
+		case "STOP":
+			*v = UserResponseType(12)
+		}
+	}
 	return nil
 }
 

@@ -286,7 +286,39 @@ type StartType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *StartType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = StartType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = StartType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = StartType(0)
+		case "PING":
+			*v = StartType(1)
+		case "CRASH":
+			*v = StartType(2)
+		case "LOG":
+			*v = StartType(3)
+		case "INTEGRATION":
+			*v = StartType(4)
+		case "EXPORT":
+			*v = StartType(5)
+		case "PROJECT":
+			*v = StartType(6)
+		case "REPO":
+			*v = StartType(7)
+		case "USER":
+			*v = StartType(8)
+		case "UNINSTALL":
+			*v = StartType(9)
+		case "UPGRADE":
+			*v = StartType(10)
+		case "START":
+			*v = StartType(11)
+		case "STOP":
+			*v = StartType(12)
+		}
+	}
 	return nil
 }
 

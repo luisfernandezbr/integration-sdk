@@ -397,7 +397,17 @@ type ProjectRequestIntegrationLocation int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *ProjectRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = ProjectRequestIntegrationLocation(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = ProjectRequestIntegrationLocation(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRIVATE":
+			*v = ProjectRequestIntegrationLocation(0)
+		case "CLOUD":
+			*v = ProjectRequestIntegrationLocation(1)
+		}
+	}
 	return nil
 }
 
@@ -541,7 +551,21 @@ type ProjectRequestIntegrationSystemType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *ProjectRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = ProjectRequestIntegrationSystemType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = ProjectRequestIntegrationSystemType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "WORK":
+			*v = ProjectRequestIntegrationSystemType(0)
+		case "SOURCECODE":
+			*v = ProjectRequestIntegrationSystemType(1)
+		case "CODEQUALITY":
+			*v = ProjectRequestIntegrationSystemType(2)
+		case "USER":
+			*v = ProjectRequestIntegrationSystemType(3)
+		}
+	}
 	return nil
 }
 

@@ -286,7 +286,39 @@ type UninstallType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *UninstallType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = UninstallType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = UninstallType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = UninstallType(0)
+		case "PING":
+			*v = UninstallType(1)
+		case "CRASH":
+			*v = UninstallType(2)
+		case "LOG":
+			*v = UninstallType(3)
+		case "INTEGRATION":
+			*v = UninstallType(4)
+		case "EXPORT":
+			*v = UninstallType(5)
+		case "PROJECT":
+			*v = UninstallType(6)
+		case "REPO":
+			*v = UninstallType(7)
+		case "USER":
+			*v = UninstallType(8)
+		case "UNINSTALL":
+			*v = UninstallType(9)
+		case "UPGRADE":
+			*v = UninstallType(10)
+		case "START":
+			*v = UninstallType(11)
+		case "STOP":
+			*v = UninstallType(12)
+		}
+	}
 	return nil
 }
 

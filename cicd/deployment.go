@@ -170,7 +170,25 @@ type DeploymentEnvironment int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *DeploymentEnvironment) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = DeploymentEnvironment(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = DeploymentEnvironment(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRODUCTION":
+			*v = DeploymentEnvironment(0)
+		case "DEVELOPMENT":
+			*v = DeploymentEnvironment(1)
+		case "BETA":
+			*v = DeploymentEnvironment(2)
+		case "STAGING":
+			*v = DeploymentEnvironment(3)
+		case "TEST":
+			*v = DeploymentEnvironment(4)
+		case "OTHER":
+			*v = DeploymentEnvironment(5)
+		}
+	}
 	return nil
 }
 
@@ -346,7 +364,19 @@ type DeploymentStatus int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *DeploymentStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = DeploymentStatus(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = DeploymentStatus(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PASS":
+			*v = DeploymentStatus(0)
+		case "FAIL":
+			*v = DeploymentStatus(1)
+		case "CANCEL":
+			*v = DeploymentStatus(2)
+		}
+	}
 	return nil
 }
 

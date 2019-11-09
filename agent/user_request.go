@@ -397,7 +397,17 @@ type UserRequestIntegrationLocation int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *UserRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = UserRequestIntegrationLocation(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = UserRequestIntegrationLocation(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRIVATE":
+			*v = UserRequestIntegrationLocation(0)
+		case "CLOUD":
+			*v = UserRequestIntegrationLocation(1)
+		}
+	}
 	return nil
 }
 
@@ -541,7 +551,21 @@ type UserRequestIntegrationSystemType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *UserRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = UserRequestIntegrationSystemType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = UserRequestIntegrationSystemType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "WORK":
+			*v = UserRequestIntegrationSystemType(0)
+		case "SOURCECODE":
+			*v = UserRequestIntegrationSystemType(1)
+		case "CODEQUALITY":
+			*v = UserRequestIntegrationSystemType(2)
+		case "USER":
+			*v = UserRequestIntegrationSystemType(3)
+		}
+	}
 	return nil
 }
 
@@ -1561,6 +1585,25 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

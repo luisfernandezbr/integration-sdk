@@ -288,7 +288,39 @@ type IntegrationResponseType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *IntegrationResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = IntegrationResponseType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = IntegrationResponseType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = IntegrationResponseType(0)
+		case "PING":
+			*v = IntegrationResponseType(1)
+		case "CRASH":
+			*v = IntegrationResponseType(2)
+		case "LOG":
+			*v = IntegrationResponseType(3)
+		case "INTEGRATION":
+			*v = IntegrationResponseType(4)
+		case "EXPORT":
+			*v = IntegrationResponseType(5)
+		case "PROJECT":
+			*v = IntegrationResponseType(6)
+		case "REPO":
+			*v = IntegrationResponseType(7)
+		case "USER":
+			*v = IntegrationResponseType(8)
+		case "UNINSTALL":
+			*v = IntegrationResponseType(9)
+		case "UPGRADE":
+			*v = IntegrationResponseType(10)
+		case "START":
+			*v = IntegrationResponseType(11)
+		case "STOP":
+			*v = IntegrationResponseType(12)
+		}
+	}
 	return nil
 }
 
@@ -851,6 +883,25 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -925,6 +976,25 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

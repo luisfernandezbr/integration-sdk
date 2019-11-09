@@ -157,7 +157,23 @@ type PullRequestReviewState int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *PullRequestReviewState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = PullRequestReviewState(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = PullRequestReviewState(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "APPROVED":
+			*v = PullRequestReviewState(0)
+		case "COMMENTED":
+			*v = PullRequestReviewState(1)
+		case "CHANGES_REQUESTED":
+			*v = PullRequestReviewState(2)
+		case "PENDING":
+			*v = PullRequestReviewState(3)
+		case "DISMISSED":
+			*v = PullRequestReviewState(4)
+		}
+	}
 	return nil
 }
 

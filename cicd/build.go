@@ -168,7 +168,25 @@ type BuildEnvironment int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *BuildEnvironment) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = BuildEnvironment(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = BuildEnvironment(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRODUCTION":
+			*v = BuildEnvironment(0)
+		case "DEVELOPMENT":
+			*v = BuildEnvironment(1)
+		case "BETA":
+			*v = BuildEnvironment(2)
+		case "STAGING":
+			*v = BuildEnvironment(3)
+		case "TEST":
+			*v = BuildEnvironment(4)
+		case "OTHER":
+			*v = BuildEnvironment(5)
+		}
+	}
 	return nil
 }
 
@@ -344,7 +362,19 @@ type BuildStatus int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *BuildStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = BuildStatus(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = BuildStatus(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PASS":
+			*v = BuildStatus(0)
+		case "FAIL":
+			*v = BuildStatus(1)
+		case "CANCEL":
+			*v = BuildStatus(2)
+		}
+	}
 	return nil
 }
 

@@ -60,7 +60,19 @@ type UserType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *UserType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = UserType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = UserType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "HUMAN":
+			*v = UserType(0)
+		case "BOT":
+			*v = UserType(1)
+		case "DELETED_SPECIAL_USER":
+			*v = UserType(2)
+		}
+	}
 	return nil
 }
 

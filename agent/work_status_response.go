@@ -240,7 +240,21 @@ type WorkStatusResponseWorkConfigField int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusResponseWorkConfigField) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusResponseWorkConfigField(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusResponseWorkConfigField(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRIORITY":
+			*v = WorkStatusResponseWorkConfigField(0)
+		case "TYPE":
+			*v = WorkStatusResponseWorkConfigField(1)
+		case "LABEL":
+			*v = WorkStatusResponseWorkConfigField(2)
+		case "CUSTOM_FIELD_NAME":
+			*v = WorkStatusResponseWorkConfigField(3)
+		}
+	}
 	return nil
 }
 
@@ -306,7 +320,21 @@ type WorkStatusResponseWorkConfigIssueType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusResponseWorkConfigIssueType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusResponseWorkConfigIssueType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusResponseWorkConfigIssueType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENHANCEMENT":
+			*v = WorkStatusResponseWorkConfigIssueType(0)
+		case "BUG":
+			*v = WorkStatusResponseWorkConfigIssueType(1)
+		case "FEATURE":
+			*v = WorkStatusResponseWorkConfigIssueType(2)
+		case "OTHER":
+			*v = WorkStatusResponseWorkConfigIssueType(3)
+		}
+	}
 	return nil
 }
 
@@ -466,7 +494,21 @@ type WorkStatusResponseWorkConfigOperator int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusResponseWorkConfigOperator) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusResponseWorkConfigOperator(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusResponseWorkConfigOperator(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "EQUALS":
+			*v = WorkStatusResponseWorkConfigOperator(0)
+		case "NOT_EQUALS":
+			*v = WorkStatusResponseWorkConfigOperator(1)
+		case "EXISTS":
+			*v = WorkStatusResponseWorkConfigOperator(2)
+		case "NOT_EXISTS":
+			*v = WorkStatusResponseWorkConfigOperator(3)
+		}
+	}
 	return nil
 }
 
@@ -532,7 +574,39 @@ type WorkStatusResponseType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusResponseType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusResponseType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = WorkStatusResponseType(0)
+		case "PING":
+			*v = WorkStatusResponseType(1)
+		case "CRASH":
+			*v = WorkStatusResponseType(2)
+		case "LOG":
+			*v = WorkStatusResponseType(3)
+		case "INTEGRATION":
+			*v = WorkStatusResponseType(4)
+		case "EXPORT":
+			*v = WorkStatusResponseType(5)
+		case "PROJECT":
+			*v = WorkStatusResponseType(6)
+		case "REPO":
+			*v = WorkStatusResponseType(7)
+		case "USER":
+			*v = WorkStatusResponseType(8)
+		case "UNINSTALL":
+			*v = WorkStatusResponseType(9)
+		case "UPGRADE":
+			*v = WorkStatusResponseType(10)
+		case "START":
+			*v = WorkStatusResponseType(11)
+		case "STOP":
+			*v = WorkStatusResponseType(12)
+		}
+	}
 	return nil
 }
 
@@ -1259,7 +1333,21 @@ type WorkStatusResponseWorkConfigTypeRulesPredicatesField int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRIORITY":
+			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(0)
+		case "TYPE":
+			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(1)
+		case "LABEL":
+			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(2)
+		case "CUSTOM_FIELD_NAME":
+			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(3)
+		}
+	}
 	return nil
 }
 
@@ -1325,7 +1413,21 @@ type WorkStatusResponseWorkConfigTypeRulesPredicatesOperator int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusResponseWorkConfigTypeRulesPredicatesOperator(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusResponseWorkConfigTypeRulesPredicatesOperator(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "EQUALS":
+			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesOperator(0)
+		case "NOT_EQUALS":
+			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesOperator(1)
+		case "EXISTS":
+			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesOperator(2)
+		case "NOT_EXISTS":
+			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesOperator(3)
+		}
+	}
 	return nil
 }
 
@@ -1524,7 +1626,21 @@ type WorkStatusResponseWorkConfigTypeRulesIssueType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *WorkStatusResponseWorkConfigTypeRulesIssueType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = WorkStatusResponseWorkConfigTypeRulesIssueType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = WorkStatusResponseWorkConfigTypeRulesIssueType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENHANCEMENT":
+			*v = WorkStatusResponseWorkConfigTypeRulesIssueType(0)
+		case "BUG":
+			*v = WorkStatusResponseWorkConfigTypeRulesIssueType(1)
+		case "FEATURE":
+			*v = WorkStatusResponseWorkConfigTypeRulesIssueType(2)
+		case "OTHER":
+			*v = WorkStatusResponseWorkConfigTypeRulesIssueType(3)
+		}
+	}
 	return nil
 }
 
@@ -2810,6 +2926,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2899,6 +3034,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

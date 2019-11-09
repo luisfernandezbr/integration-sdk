@@ -328,7 +328,17 @@ type ExportResponseIntegrationsExportType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportResponseIntegrationsExportType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = ExportResponseIntegrationsExportType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = ExportResponseIntegrationsExportType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "HISTORICAL":
+			*v = ExportResponseIntegrationsExportType(0)
+		case "INCREMENTAL":
+			*v = ExportResponseIntegrationsExportType(1)
+		}
+	}
 	return nil
 }
 
@@ -378,7 +388,21 @@ type ExportResponseIntegrationsSystemType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportResponseIntegrationsSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = ExportResponseIntegrationsSystemType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = ExportResponseIntegrationsSystemType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "WORK":
+			*v = ExportResponseIntegrationsSystemType(0)
+		case "SOURCECODE":
+			*v = ExportResponseIntegrationsSystemType(1)
+		case "CODEQUALITY":
+			*v = ExportResponseIntegrationsSystemType(2)
+		case "USER":
+			*v = ExportResponseIntegrationsSystemType(3)
+		}
+	}
 	return nil
 }
 
@@ -772,7 +796,19 @@ type ExportResponseState int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportResponseState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = ExportResponseState(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = ExportResponseState(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "STARTING":
+			*v = ExportResponseState(0)
+		case "PROGRESS":
+			*v = ExportResponseState(1)
+		case "COMPLETED":
+			*v = ExportResponseState(2)
+		}
+	}
 	return nil
 }
 
@@ -830,7 +866,39 @@ type ExportResponseType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = ExportResponseType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = ExportResponseType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = ExportResponseType(0)
+		case "PING":
+			*v = ExportResponseType(1)
+		case "CRASH":
+			*v = ExportResponseType(2)
+		case "LOG":
+			*v = ExportResponseType(3)
+		case "INTEGRATION":
+			*v = ExportResponseType(4)
+		case "EXPORT":
+			*v = ExportResponseType(5)
+		case "PROJECT":
+			*v = ExportResponseType(6)
+		case "REPO":
+			*v = ExportResponseType(7)
+		case "USER":
+			*v = ExportResponseType(8)
+		case "UNINSTALL":
+			*v = ExportResponseType(9)
+		case "UPGRADE":
+			*v = ExportResponseType(10)
+		case "START":
+			*v = ExportResponseType(11)
+		case "STOP":
+			*v = ExportResponseType(12)
+		}
+	}
 	return nil
 }
 
@@ -1455,25 +1523,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1626,25 +1675,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

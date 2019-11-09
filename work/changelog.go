@@ -167,7 +167,41 @@ type ChangelogField int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *ChangelogField) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = ChangelogField(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = ChangelogField(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ASSIGNEE_REF_ID":
+			*v = ChangelogField(0)
+		case "DUE_DATE":
+			*v = ChangelogField(1)
+		case "EPIC_ID":
+			*v = ChangelogField(2)
+		case "IDENTIFIER":
+			*v = ChangelogField(3)
+		case "PARENT_ID":
+			*v = ChangelogField(4)
+		case "PRIORITY":
+			*v = ChangelogField(5)
+		case "PROJECT_ID":
+			*v = ChangelogField(6)
+		case "REPORTER_REF_ID":
+			*v = ChangelogField(7)
+		case "RESOLUTION":
+			*v = ChangelogField(8)
+		case "SPRINT_IDS":
+			*v = ChangelogField(9)
+		case "STATUS":
+			*v = ChangelogField(10)
+		case "TAGS":
+			*v = ChangelogField(11)
+		case "TITLE":
+			*v = ChangelogField(12)
+		case "TYPE":
+			*v = ChangelogField(13)
+		}
+	}
 	return nil
 }
 

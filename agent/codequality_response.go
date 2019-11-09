@@ -455,7 +455,39 @@ type CodequalityResponseType int32
 // UnmarshalBSONValue for unmarshaling value
 func (v *CodequalityResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
-	*v = CodequalityResponseType(val.Int32())
+	switch t {
+	case bsontype.Int32:
+		*v = CodequalityResponseType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ENROLL":
+			*v = CodequalityResponseType(0)
+		case "PING":
+			*v = CodequalityResponseType(1)
+		case "CRASH":
+			*v = CodequalityResponseType(2)
+		case "LOG":
+			*v = CodequalityResponseType(3)
+		case "INTEGRATION":
+			*v = CodequalityResponseType(4)
+		case "EXPORT":
+			*v = CodequalityResponseType(5)
+		case "PROJECT":
+			*v = CodequalityResponseType(6)
+		case "REPO":
+			*v = CodequalityResponseType(7)
+		case "USER":
+			*v = CodequalityResponseType(8)
+		case "UNINSTALL":
+			*v = CodequalityResponseType(9)
+		case "UPGRADE":
+			*v = CodequalityResponseType(10)
+		case "START":
+			*v = CodequalityResponseType(11)
+		case "STOP":
+			*v = CodequalityResponseType(12)
+		}
+	}
 	return nil
 }
 
