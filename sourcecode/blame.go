@@ -331,8 +331,8 @@ func (o *BlameLines) FromMap(kv map[string]interface{}) {
 // BlameStatus is the enumeration type for status
 type BlameStatus int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v BlameStatus) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v BlameStatus) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ADDED":
 		v = 0
@@ -344,15 +344,15 @@ func (v BlameStatus) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v BlameStatus) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v BlameStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ADDED"), nil
+		return json.Marshal("ADDED")
 	case 1:
-		return []byte("MODIFIED"), nil
+		return json.Marshal("MODIFIED")
 	case 2:
-		return []byte("REMOVED"), nil
+		return json.Marshal("REMOVED")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -681,9 +681,10 @@ func (o *Blame) ToMap() map[string]interface{} {
 		"sha":             toBlameObject(o.Sha, false),
 		"size":            toBlameObject(o.Size, false),
 		"sloc":            toBlameObject(o.Sloc, false),
-		"status":          toBlameObject(o.Status, false),
-		"updated_ts":      toBlameObject(o.UpdatedAt, false),
-		"hashcode":        toBlameObject(o.Hashcode, false),
+
+		"status":     o.Status.String(),
+		"updated_ts": toBlameObject(o.UpdatedAt, false),
+		"hashcode":   toBlameObject(o.Hashcode, false),
 	}
 }
 

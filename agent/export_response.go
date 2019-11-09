@@ -323,8 +323,8 @@ func (o *ExportResponseEventDate) FromMap(kv map[string]interface{}) {
 // ExportResponseIntegrationsExportType is the enumeration type for export_type
 type ExportResponseIntegrationsExportType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v ExportResponseIntegrationsExportType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v ExportResponseIntegrationsExportType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "HISTORICAL":
 		v = 0
@@ -334,13 +334,13 @@ func (v ExportResponseIntegrationsExportType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v ExportResponseIntegrationsExportType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v ExportResponseIntegrationsExportType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("HISTORICAL"), nil
+		return json.Marshal("HISTORICAL")
 	case 1:
-		return []byte("INCREMENTAL"), nil
+		return json.Marshal("INCREMENTAL")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -366,8 +366,8 @@ const (
 // ExportResponseIntegrationsSystemType is the enumeration type for system_type
 type ExportResponseIntegrationsSystemType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v ExportResponseIntegrationsSystemType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v ExportResponseIntegrationsSystemType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "WORK":
 		v = 0
@@ -381,17 +381,17 @@ func (v ExportResponseIntegrationsSystemType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v ExportResponseIntegrationsSystemType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v ExportResponseIntegrationsSystemType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("WORK"), nil
+		return json.Marshal("WORK")
 	case 1:
-		return []byte("SOURCECODE"), nil
+		return json.Marshal("SOURCECODE")
 	case 2:
-		return []byte("CODEQUALITY"), nil
+		return json.Marshal("CODEQUALITY")
 	case 3:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -753,8 +753,8 @@ func (o *ExportResponseStartDate) FromMap(kv map[string]interface{}) {
 // ExportResponseState is the enumeration type for state
 type ExportResponseState int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v ExportResponseState) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v ExportResponseState) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "STARTING":
 		v = 0
@@ -766,15 +766,15 @@ func (v ExportResponseState) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v ExportResponseState) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v ExportResponseState) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("STARTING"), nil
+		return json.Marshal("STARTING")
 	case 1:
-		return []byte("PROGRESS"), nil
+		return json.Marshal("PROGRESS")
 	case 2:
-		return []byte("COMPLETED"), nil
+		return json.Marshal("COMPLETED")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -804,8 +804,8 @@ const (
 // ExportResponseType is the enumeration type for type
 type ExportResponseType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v ExportResponseType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v ExportResponseType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -837,35 +837,35 @@ func (v ExportResponseType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v ExportResponseType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v ExportResponseType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ENROLL"), nil
+		return json.Marshal("ENROLL")
 	case 1:
-		return []byte("PING"), nil
+		return json.Marshal("PING")
 	case 2:
-		return []byte("CRASH"), nil
+		return json.Marshal("CRASH")
 	case 3:
-		return []byte("LOG"), nil
+		return json.Marshal("LOG")
 	case 4:
-		return []byte("INTEGRATION"), nil
+		return json.Marshal("INTEGRATION")
 	case 5:
-		return []byte("EXPORT"), nil
+		return json.Marshal("EXPORT")
 	case 6:
-		return []byte("PROJECT"), nil
+		return json.Marshal("PROJECT")
 	case 7:
-		return []byte("REPO"), nil
+		return json.Marshal("REPO")
 	case 8:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	case 9:
-		return []byte("UNINSTALL"), nil
+		return json.Marshal("UNINSTALL")
 	case 10:
-		return []byte("UPGRADE"), nil
+		return json.Marshal("UPGRADE")
 	case 11:
-		return []byte("START"), nil
+		return json.Marshal("START")
 	case 12:
-		return []byte("STOP"), nil
+		return json.Marshal("STOP")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -1253,33 +1253,35 @@ func (o *ExportResponse) IsEqual(other *ExportResponse) bool {
 func (o *ExportResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":      toExportResponseObject(o.Architecture, false),
-		"customer_id":       toExportResponseObject(o.CustomerID, false),
-		"data":              toExportResponseObject(o.Data, true),
-		"distro":            toExportResponseObject(o.Distro, false),
-		"end_date":          toExportResponseObject(o.EndDate, false),
-		"error":             toExportResponseObject(o.Error, true),
-		"event_date":        toExportResponseObject(o.EventDate, false),
-		"free_space":        toExportResponseObject(o.FreeSpace, false),
-		"go_version":        toExportResponseObject(o.GoVersion, false),
-		"hostname":          toExportResponseObject(o.Hostname, false),
-		"id":                toExportResponseObject(o.ID, false),
-		"integrations":      toExportResponseObject(o.Integrations, false),
-		"job_id":            toExportResponseObject(o.JobID, false),
-		"last_export_date":  toExportResponseObject(o.LastExportDate, false),
-		"memory":            toExportResponseObject(o.Memory, false),
-		"message":           toExportResponseObject(o.Message, false),
-		"num_cpu":           toExportResponseObject(o.NumCPU, false),
-		"os":                toExportResponseObject(o.OS, false),
-		"ref_id":            toExportResponseObject(o.RefID, false),
-		"ref_type":          toExportResponseObject(o.RefType, false),
-		"request_id":        toExportResponseObject(o.RequestID, false),
-		"size":              toExportResponseObject(o.Size, false),
-		"start_date":        toExportResponseObject(o.StartDate, false),
-		"state":             toExportResponseObject(o.State, false),
-		"success":           toExportResponseObject(o.Success, false),
-		"system_id":         toExportResponseObject(o.SystemID, false),
-		"type":              toExportResponseObject(o.Type, false),
+		"architecture":     toExportResponseObject(o.Architecture, false),
+		"customer_id":      toExportResponseObject(o.CustomerID, false),
+		"data":             toExportResponseObject(o.Data, true),
+		"distro":           toExportResponseObject(o.Distro, false),
+		"end_date":         toExportResponseObject(o.EndDate, false),
+		"error":            toExportResponseObject(o.Error, true),
+		"event_date":       toExportResponseObject(o.EventDate, false),
+		"free_space":       toExportResponseObject(o.FreeSpace, false),
+		"go_version":       toExportResponseObject(o.GoVersion, false),
+		"hostname":         toExportResponseObject(o.Hostname, false),
+		"id":               toExportResponseObject(o.ID, false),
+		"integrations":     toExportResponseObject(o.Integrations, false),
+		"job_id":           toExportResponseObject(o.JobID, false),
+		"last_export_date": toExportResponseObject(o.LastExportDate, false),
+		"memory":           toExportResponseObject(o.Memory, false),
+		"message":          toExportResponseObject(o.Message, false),
+		"num_cpu":          toExportResponseObject(o.NumCPU, false),
+		"os":               toExportResponseObject(o.OS, false),
+		"ref_id":           toExportResponseObject(o.RefID, false),
+		"ref_type":         toExportResponseObject(o.RefType, false),
+		"request_id":       toExportResponseObject(o.RequestID, false),
+		"size":             toExportResponseObject(o.Size, false),
+		"start_date":       toExportResponseObject(o.StartDate, false),
+
+		"state":     o.State.String(),
+		"success":   toExportResponseObject(o.Success, false),
+		"system_id": toExportResponseObject(o.SystemID, false),
+
+		"type":              o.Type.String(),
 		"updated_ts":        toExportResponseObject(o.UpdatedAt, false),
 		"upload_part_count": toExportResponseObject(o.UploadPartCount, false),
 		"upload_url":        toExportResponseObject(o.UploadURL, true),
@@ -1423,6 +1425,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1575,6 +1596,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

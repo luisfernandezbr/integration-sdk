@@ -283,8 +283,8 @@ func (o *PingLastExportDate) FromMap(kv map[string]interface{}) {
 // PingState is the enumeration type for state
 type PingState int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v PingState) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v PingState) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "IDLE":
 		v = 0
@@ -298,17 +298,17 @@ func (v PingState) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v PingState) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v PingState) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("IDLE"), nil
+		return json.Marshal("IDLE")
 	case 1:
-		return []byte("STARTING"), nil
+		return json.Marshal("STARTING")
 	case 2:
-		return []byte("STOPPING"), nil
+		return json.Marshal("STOPPING")
 	case 3:
-		return []byte("EXPORTING"), nil
+		return json.Marshal("EXPORTING")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -342,8 +342,8 @@ const (
 // PingType is the enumeration type for type
 type PingType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v PingType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v PingType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -375,35 +375,35 @@ func (v PingType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v PingType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v PingType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ENROLL"), nil
+		return json.Marshal("ENROLL")
 	case 1:
-		return []byte("PING"), nil
+		return json.Marshal("PING")
 	case 2:
-		return []byte("CRASH"), nil
+		return json.Marshal("CRASH")
 	case 3:
-		return []byte("LOG"), nil
+		return json.Marshal("LOG")
 	case 4:
-		return []byte("INTEGRATION"), nil
+		return json.Marshal("INTEGRATION")
 	case 5:
-		return []byte("EXPORT"), nil
+		return json.Marshal("EXPORT")
 	case 6:
-		return []byte("PROJECT"), nil
+		return json.Marshal("PROJECT")
 	case 7:
-		return []byte("REPO"), nil
+		return json.Marshal("REPO")
 	case 8:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	case 9:
-		return []byte("UNINSTALL"), nil
+		return json.Marshal("UNINSTALL")
 	case 10:
-		return []byte("UPGRADE"), nil
+		return json.Marshal("UPGRADE")
 	case 11:
-		return []byte("START"), nil
+		return json.Marshal("START")
 	case 12:
-		return []byte("STOP"), nil
+		return json.Marshal("STOP")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -776,15 +776,17 @@ func (o *Ping) ToMap() map[string]interface{} {
 		"ref_id":           toPingObject(o.RefID, false),
 		"ref_type":         toPingObject(o.RefType, false),
 		"request_id":       toPingObject(o.RequestID, false),
-		"state":            toPingObject(o.State, false),
-		"success":          toPingObject(o.Success, false),
-		"system_id":        toPingObject(o.SystemID, false),
-		"type":             toPingObject(o.Type, false),
-		"updated_ts":       toPingObject(o.UpdatedAt, false),
-		"uptime":           toPingObject(o.Uptime, false),
-		"uuid":             toPingObject(o.UUID, false),
-		"version":          toPingObject(o.Version, false),
-		"hashcode":         toPingObject(o.Hashcode, false),
+
+		"state":     o.State.String(),
+		"success":   toPingObject(o.Success, false),
+		"system_id": toPingObject(o.SystemID, false),
+
+		"type":       o.Type.String(),
+		"updated_ts": toPingObject(o.UpdatedAt, false),
+		"uptime":     toPingObject(o.Uptime, false),
+		"uuid":       toPingObject(o.UUID, false),
+		"version":    toPingObject(o.Version, false),
+		"hashcode":   toPingObject(o.Hashcode, false),
 	}
 }
 
@@ -888,6 +890,25 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -962,6 +983,25 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

@@ -285,8 +285,8 @@ func (o *UpgradeLastExportDate) FromMap(kv map[string]interface{}) {
 // UpgradeType is the enumeration type for type
 type UpgradeType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v UpgradeType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v UpgradeType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -318,35 +318,35 @@ func (v UpgradeType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v UpgradeType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v UpgradeType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ENROLL"), nil
+		return json.Marshal("ENROLL")
 	case 1:
-		return []byte("PING"), nil
+		return json.Marshal("PING")
 	case 2:
-		return []byte("CRASH"), nil
+		return json.Marshal("CRASH")
 	case 3:
-		return []byte("LOG"), nil
+		return json.Marshal("LOG")
 	case 4:
-		return []byte("INTEGRATION"), nil
+		return json.Marshal("INTEGRATION")
 	case 5:
-		return []byte("EXPORT"), nil
+		return json.Marshal("EXPORT")
 	case 6:
-		return []byte("PROJECT"), nil
+		return json.Marshal("PROJECT")
 	case 7:
-		return []byte("REPO"), nil
+		return json.Marshal("REPO")
 	case 8:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	case 9:
-		return []byte("UNINSTALL"), nil
+		return json.Marshal("UNINSTALL")
 	case 10:
-		return []byte("UPGRADE"), nil
+		return json.Marshal("UPGRADE")
 	case 11:
-		return []byte("START"), nil
+		return json.Marshal("START")
 	case 12:
-		return []byte("STOP"), nil
+		return json.Marshal("STOP")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -722,12 +722,13 @@ func (o *Upgrade) ToMap() map[string]interface{} {
 		"success":          toUpgradeObject(o.Success, false),
 		"system_id":        toUpgradeObject(o.SystemID, false),
 		"to_version":       toUpgradeObject(o.ToVersion, false),
-		"type":             toUpgradeObject(o.Type, false),
-		"updated_ts":       toUpgradeObject(o.UpdatedAt, false),
-		"uptime":           toUpgradeObject(o.Uptime, false),
-		"uuid":             toUpgradeObject(o.UUID, false),
-		"version":          toUpgradeObject(o.Version, false),
-		"hashcode":         toUpgradeObject(o.Hashcode, false),
+
+		"type":       o.Type.String(),
+		"updated_ts": toUpgradeObject(o.UpdatedAt, false),
+		"uptime":     toUpgradeObject(o.Uptime, false),
+		"uuid":       toUpgradeObject(o.UUID, false),
+		"version":    toUpgradeObject(o.Version, false),
+		"hashcode":   toUpgradeObject(o.Hashcode, false),
 	}
 }
 
@@ -831,6 +832,25 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpgradeEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -920,6 +940,25 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpgradeLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

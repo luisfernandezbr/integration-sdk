@@ -386,8 +386,8 @@ func (o *PullRequestMergedDate) FromMap(kv map[string]interface{}) {
 // PullRequestStatus is the enumeration type for status
 type PullRequestStatus int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v PullRequestStatus) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v PullRequestStatus) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "OPEN":
 		v = 0
@@ -403,19 +403,19 @@ func (v PullRequestStatus) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v PullRequestStatus) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v PullRequestStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("OPEN"), nil
+		return json.Marshal("OPEN")
 	case 1:
-		return []byte("CLOSED"), nil
+		return json.Marshal("CLOSED")
 	case 2:
-		return []byte("MERGED"), nil
+		return json.Marshal("MERGED")
 	case 3:
-		return []byte("SUPERSEDED"), nil
+		return json.Marshal("SUPERSEDED")
 	case 4:
-		return []byte("LOCKED"), nil
+		return json.Marshal("LOCKED")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -848,12 +848,13 @@ func (o *PullRequest) ToMap() map[string]interface{} {
 		"ref_id":            toPullRequestObject(o.RefID, false),
 		"ref_type":          toPullRequestObject(o.RefType, false),
 		"repo_id":           toPullRequestObject(o.RepoID, false),
-		"status":            toPullRequestObject(o.Status, false),
-		"title":             toPullRequestObject(o.Title, false),
-		"updated_date":      toPullRequestObject(o.UpdatedDate, false),
-		"updated_ts":        toPullRequestObject(o.UpdatedAt, false),
-		"url":               toPullRequestObject(o.URL, false),
-		"hashcode":          toPullRequestObject(o.Hashcode, false),
+
+		"status":       o.Status.String(),
+		"title":        toPullRequestObject(o.Title, false),
+		"updated_date": toPullRequestObject(o.UpdatedDate, false),
+		"updated_ts":   toPullRequestObject(o.UpdatedAt, false),
+		"url":          toPullRequestObject(o.URL, false),
+		"hashcode":     toPullRequestObject(o.Hashcode, false),
 	}
 }
 

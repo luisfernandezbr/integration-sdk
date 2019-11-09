@@ -392,8 +392,8 @@ func (o *IntegrationRequestIntegrationAuthorization) FromMap(kv map[string]inter
 // IntegrationRequestIntegrationLocation is the enumeration type for location
 type IntegrationRequestIntegrationLocation int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v IntegrationRequestIntegrationLocation) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v IntegrationRequestIntegrationLocation) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "PRIVATE":
 		v = 0
@@ -403,13 +403,13 @@ func (v IntegrationRequestIntegrationLocation) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v IntegrationRequestIntegrationLocation) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v IntegrationRequestIntegrationLocation) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("PRIVATE"), nil
+		return json.Marshal("PRIVATE")
 	case 1:
-		return []byte("CLOUD"), nil
+		return json.Marshal("CLOUD")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -529,8 +529,8 @@ func (o *IntegrationRequestIntegrationProgress) FromMap(kv map[string]interface{
 // IntegrationRequestIntegrationSystemType is the enumeration type for system_type
 type IntegrationRequestIntegrationSystemType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v IntegrationRequestIntegrationSystemType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v IntegrationRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "WORK":
 		v = 0
@@ -544,17 +544,17 @@ func (v IntegrationRequestIntegrationSystemType) UnmarshalBSON(buf []byte) error
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v IntegrationRequestIntegrationSystemType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v IntegrationRequestIntegrationSystemType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("WORK"), nil
+		return json.Marshal("WORK")
 	case 1:
-		return []byte("SOURCECODE"), nil
+		return json.Marshal("SOURCECODE")
 	case 2:
-		return []byte("CODEQUALITY"), nil
+		return json.Marshal("CODEQUALITY")
 	case 3:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -1545,6 +1545,25 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

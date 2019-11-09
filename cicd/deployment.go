@@ -165,8 +165,8 @@ func (o *DeploymentEndDate) FromMap(kv map[string]interface{}) {
 // DeploymentEnvironment is the enumeration type for environment
 type DeploymentEnvironment int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v DeploymentEnvironment) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v DeploymentEnvironment) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "PRODUCTION":
 		v = 0
@@ -184,21 +184,21 @@ func (v DeploymentEnvironment) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v DeploymentEnvironment) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v DeploymentEnvironment) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("PRODUCTION"), nil
+		return json.Marshal("PRODUCTION")
 	case 1:
-		return []byte("DEVELOPMENT"), nil
+		return json.Marshal("DEVELOPMENT")
 	case 2:
-		return []byte("BETA"), nil
+		return json.Marshal("BETA")
 	case 3:
-		return []byte("STAGING"), nil
+		return json.Marshal("STAGING")
 	case 4:
-		return []byte("TEST"), nil
+		return json.Marshal("TEST")
 	case 5:
-		return []byte("OTHER"), nil
+		return json.Marshal("OTHER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -334,8 +334,8 @@ func (o *DeploymentStartDate) FromMap(kv map[string]interface{}) {
 // DeploymentStatus is the enumeration type for status
 type DeploymentStatus int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v DeploymentStatus) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v DeploymentStatus) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "PASS":
 		v = 0
@@ -347,15 +347,15 @@ func (v DeploymentStatus) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v DeploymentStatus) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v DeploymentStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("PASS"), nil
+		return json.Marshal("PASS")
 	case 1:
-		return []byte("FAIL"), nil
+		return json.Marshal("FAIL")
 	case 2:
-		return []byte("CANCEL"), nil
+		return json.Marshal("CANCEL")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -648,16 +648,18 @@ func (o *Deployment) ToMap() map[string]interface{} {
 		"commit_sha":   toDeploymentObject(o.CommitSha, false),
 		"customer_id":  toDeploymentObject(o.CustomerID, false),
 		"end_date":     toDeploymentObject(o.EndDate, false),
-		"environment":  toDeploymentObject(o.Environment, false),
-		"id":           toDeploymentObject(o.ID, false),
-		"ref_id":       toDeploymentObject(o.RefID, false),
-		"ref_type":     toDeploymentObject(o.RefType, false),
-		"repo_name":    toDeploymentObject(o.RepoName, false),
-		"start_date":   toDeploymentObject(o.StartDate, false),
-		"status":       toDeploymentObject(o.Status, false),
-		"updated_ts":   toDeploymentObject(o.UpdatedAt, false),
-		"url":          toDeploymentObject(o.URL, true),
-		"hashcode":     toDeploymentObject(o.Hashcode, false),
+
+		"environment": o.Environment.String(),
+		"id":          toDeploymentObject(o.ID, false),
+		"ref_id":      toDeploymentObject(o.RefID, false),
+		"ref_type":    toDeploymentObject(o.RefType, false),
+		"repo_name":   toDeploymentObject(o.RepoName, false),
+		"start_date":  toDeploymentObject(o.StartDate, false),
+
+		"status":     o.Status.String(),
+		"updated_ts": toDeploymentObject(o.UpdatedAt, false),
+		"url":        toDeploymentObject(o.URL, true),
+		"hashcode":   toDeploymentObject(o.Hashcode, false),
 	}
 }
 

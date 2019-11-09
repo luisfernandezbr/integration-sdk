@@ -281,8 +281,8 @@ func (o *EnabledLastExportDate) FromMap(kv map[string]interface{}) {
 // EnabledType is the enumeration type for type
 type EnabledType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v EnabledType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v EnabledType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -314,35 +314,35 @@ func (v EnabledType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v EnabledType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v EnabledType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ENROLL"), nil
+		return json.Marshal("ENROLL")
 	case 1:
-		return []byte("PING"), nil
+		return json.Marshal("PING")
 	case 2:
-		return []byte("CRASH"), nil
+		return json.Marshal("CRASH")
 	case 3:
-		return []byte("LOG"), nil
+		return json.Marshal("LOG")
 	case 4:
-		return []byte("INTEGRATION"), nil
+		return json.Marshal("INTEGRATION")
 	case 5:
-		return []byte("EXPORT"), nil
+		return json.Marshal("EXPORT")
 	case 6:
-		return []byte("PROJECT"), nil
+		return json.Marshal("PROJECT")
 	case 7:
-		return []byte("REPO"), nil
+		return json.Marshal("REPO")
 	case 8:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	case 9:
-		return []byte("UNINSTALL"), nil
+		return json.Marshal("UNINSTALL")
 	case 10:
-		return []byte("UPGRADE"), nil
+		return json.Marshal("UPGRADE")
 	case 11:
-		return []byte("START"), nil
+		return json.Marshal("START")
 	case 12:
-		return []byte("STOP"), nil
+		return json.Marshal("STOP")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -712,12 +712,13 @@ func (o *Enabled) ToMap() map[string]interface{} {
 		"request_id":       toEnabledObject(o.RequestID, false),
 		"success":          toEnabledObject(o.Success, false),
 		"system_id":        toEnabledObject(o.SystemID, false),
-		"type":             toEnabledObject(o.Type, false),
-		"updated_ts":       toEnabledObject(o.UpdatedAt, false),
-		"uptime":           toEnabledObject(o.Uptime, false),
-		"uuid":             toEnabledObject(o.UUID, false),
-		"version":          toEnabledObject(o.Version, false),
-		"hashcode":         toEnabledObject(o.Hashcode, false),
+
+		"type":       o.Type.String(),
+		"updated_ts": toEnabledObject(o.UpdatedAt, false),
+		"uptime":     toEnabledObject(o.Uptime, false),
+		"uuid":       toEnabledObject(o.UUID, false),
+		"version":    toEnabledObject(o.Version, false),
+		"hashcode":   toEnabledObject(o.Hashcode, false),
 	}
 }
 

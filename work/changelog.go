@@ -162,8 +162,8 @@ func (o *ChangelogCreatedDate) FromMap(kv map[string]interface{}) {
 // ChangelogField is the enumeration type for field
 type ChangelogField int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v ChangelogField) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v ChangelogField) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ASSIGNEE_REF_ID":
 		v = 0
@@ -197,37 +197,37 @@ func (v ChangelogField) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v ChangelogField) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v ChangelogField) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ASSIGNEE_REF_ID"), nil
+		return json.Marshal("ASSIGNEE_REF_ID")
 	case 1:
-		return []byte("DUE_DATE"), nil
+		return json.Marshal("DUE_DATE")
 	case 2:
-		return []byte("EPIC_ID"), nil
+		return json.Marshal("EPIC_ID")
 	case 3:
-		return []byte("IDENTIFIER"), nil
+		return json.Marshal("IDENTIFIER")
 	case 4:
-		return []byte("PARENT_ID"), nil
+		return json.Marshal("PARENT_ID")
 	case 5:
-		return []byte("PRIORITY"), nil
+		return json.Marshal("PRIORITY")
 	case 6:
-		return []byte("PROJECT_ID"), nil
+		return json.Marshal("PROJECT_ID")
 	case 7:
-		return []byte("REPORTER_REF_ID"), nil
+		return json.Marshal("REPORTER_REF_ID")
 	case 8:
-		return []byte("RESOLUTION"), nil
+		return json.Marshal("RESOLUTION")
 	case 9:
-		return []byte("SPRINT_IDS"), nil
+		return json.Marshal("SPRINT_IDS")
 	case 10:
-		return []byte("STATUS"), nil
+		return json.Marshal("STATUS")
 	case 11:
-		return []byte("TAGS"), nil
+		return json.Marshal("TAGS")
 	case 12:
-		return []byte("TITLE"), nil
+		return json.Marshal("TITLE")
 	case 13:
-		return []byte("TYPE"), nil
+		return json.Marshal("TYPE")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -556,21 +556,22 @@ func (o *Changelog) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"created_date": toChangelogObject(o.CreatedDate, false),
 		"customer_id":  toChangelogObject(o.CustomerID, false),
-		"field":        toChangelogObject(o.Field, false),
-		"field_type":   toChangelogObject(o.FieldType, false),
-		"from":         toChangelogObject(o.From, false),
-		"from_string":  toChangelogObject(o.FromString, false),
-		"id":           toChangelogObject(o.ID, false),
-		"issue_id":     toChangelogObject(o.IssueID, false),
-		"ordinal":      toChangelogObject(o.Ordinal, false),
-		"project_id":   toChangelogObject(o.ProjectID, false),
-		"ref_id":       toChangelogObject(o.RefID, false),
-		"ref_type":     toChangelogObject(o.RefType, false),
-		"to":           toChangelogObject(o.To, false),
-		"to_string":    toChangelogObject(o.ToString, false),
-		"updated_ts":   toChangelogObject(o.UpdatedAt, false),
-		"user_id":      toChangelogObject(o.UserID, false),
-		"hashcode":     toChangelogObject(o.Hashcode, false),
+
+		"field":       o.Field.String(),
+		"field_type":  toChangelogObject(o.FieldType, false),
+		"from":        toChangelogObject(o.From, false),
+		"from_string": toChangelogObject(o.FromString, false),
+		"id":          toChangelogObject(o.ID, false),
+		"issue_id":    toChangelogObject(o.IssueID, false),
+		"ordinal":     toChangelogObject(o.Ordinal, false),
+		"project_id":  toChangelogObject(o.ProjectID, false),
+		"ref_id":      toChangelogObject(o.RefID, false),
+		"ref_type":    toChangelogObject(o.RefType, false),
+		"to":          toChangelogObject(o.To, false),
+		"to_string":   toChangelogObject(o.ToString, false),
+		"updated_ts":  toChangelogObject(o.UpdatedAt, false),
+		"user_id":     toChangelogObject(o.UserID, false),
+		"hashcode":    toChangelogObject(o.Hashcode, false),
 	}
 }
 

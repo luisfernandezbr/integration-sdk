@@ -454,8 +454,8 @@ func (o *SprintStartedDate) FromMap(kv map[string]interface{}) {
 // SprintStatus is the enumeration type for status
 type SprintStatus int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v SprintStatus) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v SprintStatus) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ACTIVE":
 		v = 0
@@ -467,15 +467,15 @@ func (v SprintStatus) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v SprintStatus) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v SprintStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ACTIVE"), nil
+		return json.Marshal("ACTIVE")
 	case 1:
-		return []byte("FUTURE"), nil
+		return json.Marshal("FUTURE")
 	case 2:
-		return []byte("CLOSED"), nil
+		return json.Marshal("CLOSED")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -770,9 +770,10 @@ func (o *Sprint) ToMap() map[string]interface{} {
 		"ref_id":         toSprintObject(o.RefID, false),
 		"ref_type":       toSprintObject(o.RefType, false),
 		"started_date":   toSprintObject(o.StartedDate, false),
-		"status":         toSprintObject(o.Status, false),
-		"updated_ts":     toSprintObject(o.UpdatedAt, false),
-		"hashcode":       toSprintObject(o.Hashcode, false),
+
+		"status":     o.Status.String(),
+		"updated_ts": toSprintObject(o.UpdatedAt, false),
+		"hashcode":   toSprintObject(o.Hashcode, false),
 	}
 }
 

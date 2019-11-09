@@ -235,8 +235,8 @@ func (o *WorkStatusResponseEventDate) FromMap(kv map[string]interface{}) {
 // WorkStatusResponseWorkConfigField is the enumeration type for field
 type WorkStatusResponseWorkConfigField int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v WorkStatusResponseWorkConfigField) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigField) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "PRIORITY":
 		v = 0
@@ -250,17 +250,17 @@ func (v WorkStatusResponseWorkConfigField) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v WorkStatusResponseWorkConfigField) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v WorkStatusResponseWorkConfigField) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("PRIORITY"), nil
+		return json.Marshal("PRIORITY")
 	case 1:
-		return []byte("TYPE"), nil
+		return json.Marshal("TYPE")
 	case 2:
-		return []byte("LABEL"), nil
+		return json.Marshal("LABEL")
 	case 3:
-		return []byte("CUSTOM_FIELD_NAME"), nil
+		return json.Marshal("CUSTOM_FIELD_NAME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -294,8 +294,8 @@ const (
 // WorkStatusResponseWorkConfigIssueType is the enumeration type for issue_type
 type WorkStatusResponseWorkConfigIssueType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v WorkStatusResponseWorkConfigIssueType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigIssueType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENHANCEMENT":
 		v = 0
@@ -309,17 +309,17 @@ func (v WorkStatusResponseWorkConfigIssueType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v WorkStatusResponseWorkConfigIssueType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v WorkStatusResponseWorkConfigIssueType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ENHANCEMENT"), nil
+		return json.Marshal("ENHANCEMENT")
 	case 1:
-		return []byte("BUG"), nil
+		return json.Marshal("BUG")
 	case 2:
-		return []byte("FEATURE"), nil
+		return json.Marshal("FEATURE")
 	case 3:
-		return []byte("OTHER"), nil
+		return json.Marshal("OTHER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -447,8 +447,8 @@ func (o *WorkStatusResponseLastExportDate) FromMap(kv map[string]interface{}) {
 // WorkStatusResponseWorkConfigOperator is the enumeration type for operator
 type WorkStatusResponseWorkConfigOperator int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v WorkStatusResponseWorkConfigOperator) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigOperator) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "EQUALS":
 		v = 0
@@ -462,17 +462,17 @@ func (v WorkStatusResponseWorkConfigOperator) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v WorkStatusResponseWorkConfigOperator) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v WorkStatusResponseWorkConfigOperator) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("EQUALS"), nil
+		return json.Marshal("EQUALS")
 	case 1:
-		return []byte("NOT_EQUALS"), nil
+		return json.Marshal("NOT_EQUALS")
 	case 2:
-		return []byte("EXISTS"), nil
+		return json.Marshal("EXISTS")
 	case 3:
-		return []byte("NOT_EXISTS"), nil
+		return json.Marshal("NOT_EXISTS")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -506,8 +506,8 @@ const (
 // WorkStatusResponseType is the enumeration type for type
 type WorkStatusResponseType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v WorkStatusResponseType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v WorkStatusResponseType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -539,35 +539,35 @@ func (v WorkStatusResponseType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v WorkStatusResponseType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v WorkStatusResponseType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ENROLL"), nil
+		return json.Marshal("ENROLL")
 	case 1:
-		return []byte("PING"), nil
+		return json.Marshal("PING")
 	case 2:
-		return []byte("CRASH"), nil
+		return json.Marshal("CRASH")
 	case 3:
-		return []byte("LOG"), nil
+		return json.Marshal("LOG")
 	case 4:
-		return []byte("INTEGRATION"), nil
+		return json.Marshal("INTEGRATION")
 	case 5:
-		return []byte("EXPORT"), nil
+		return json.Marshal("EXPORT")
 	case 6:
-		return []byte("PROJECT"), nil
+		return json.Marshal("PROJECT")
 	case 7:
-		return []byte("REPO"), nil
+		return json.Marshal("REPO")
 	case 8:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	case 9:
-		return []byte("UNINSTALL"), nil
+		return json.Marshal("UNINSTALL")
 	case 10:
-		return []byte("UPGRADE"), nil
+		return json.Marshal("UPGRADE")
 	case 11:
-		return []byte("START"), nil
+		return json.Marshal("START")
 	case 12:
-		return []byte("STOP"), nil
+		return json.Marshal("STOP")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -1226,8 +1226,8 @@ func (o *WorkStatusResponseWorkConfigTopLevelIssue) FromMap(kv map[string]interf
 // WorkStatusResponseWorkConfigTypeRulesPredicatesField is the enumeration type for field
 type WorkStatusResponseWorkConfigTypeRulesPredicatesField int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "PRIORITY":
 		v = 0
@@ -1241,17 +1241,17 @@ func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalBSON(buf 
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("PRIORITY"), nil
+		return json.Marshal("PRIORITY")
 	case 1:
-		return []byte("TYPE"), nil
+		return json.Marshal("TYPE")
 	case 2:
-		return []byte("LABEL"), nil
+		return json.Marshal("LABEL")
 	case 3:
-		return []byte("CUSTOM_FIELD_NAME"), nil
+		return json.Marshal("CUSTOM_FIELD_NAME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -1285,8 +1285,8 @@ const (
 // WorkStatusResponseWorkConfigTypeRulesPredicatesOperator is the enumeration type for operator
 type WorkStatusResponseWorkConfigTypeRulesPredicatesOperator int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "EQUALS":
 		v = 0
@@ -1300,17 +1300,17 @@ func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) UnmarshalBSON(b
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesPredicatesOperator) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("EQUALS"), nil
+		return json.Marshal("EQUALS")
 	case 1:
-		return []byte("NOT_EQUALS"), nil
+		return json.Marshal("NOT_EQUALS")
 	case 2:
-		return []byte("EXISTS"), nil
+		return json.Marshal("EXISTS")
 	case 3:
-		return []byte("NOT_EXISTS"), nil
+		return json.Marshal("NOT_EXISTS")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -1477,8 +1477,8 @@ func (o *WorkStatusResponseWorkConfigTypeRulesPredicates) FromMap(kv map[string]
 // WorkStatusResponseWorkConfigTypeRulesIssueType is the enumeration type for issue_type
 type WorkStatusResponseWorkConfigTypeRulesIssueType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v WorkStatusResponseWorkConfigTypeRulesIssueType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesIssueType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENHANCEMENT":
 		v = 0
@@ -1492,17 +1492,17 @@ func (v WorkStatusResponseWorkConfigTypeRulesIssueType) UnmarshalBSON(buf []byte
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v WorkStatusResponseWorkConfigTypeRulesIssueType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v WorkStatusResponseWorkConfigTypeRulesIssueType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ENHANCEMENT"), nil
+		return json.Marshal("ENHANCEMENT")
 	case 1:
-		return []byte("BUG"), nil
+		return json.Marshal("BUG")
 	case 2:
-		return []byte("FEATURE"), nil
+		return json.Marshal("FEATURE")
 	case 3:
-		return []byte("OTHER"), nil
+		return json.Marshal("OTHER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -2648,13 +2648,14 @@ func (o *WorkStatusResponse) ToMap() map[string]interface{} {
 		"request_id":       toWorkStatusResponseObject(o.RequestID, false),
 		"success":          toWorkStatusResponseObject(o.Success, false),
 		"system_id":        toWorkStatusResponseObject(o.SystemID, false),
-		"type":             toWorkStatusResponseObject(o.Type, false),
-		"updated_ts":       toWorkStatusResponseObject(o.UpdatedAt, false),
-		"uptime":           toWorkStatusResponseObject(o.Uptime, false),
-		"uuid":             toWorkStatusResponseObject(o.UUID, false),
-		"version":          toWorkStatusResponseObject(o.Version, false),
-		"work_config":      toWorkStatusResponseObject(o.WorkConfig, false),
-		"hashcode":         toWorkStatusResponseObject(o.Hashcode, false),
+
+		"type":        o.Type.String(),
+		"updated_ts":  toWorkStatusResponseObject(o.UpdatedAt, false),
+		"uptime":      toWorkStatusResponseObject(o.Uptime, false),
+		"uuid":        toWorkStatusResponseObject(o.UUID, false),
+		"version":     toWorkStatusResponseObject(o.Version, false),
+		"work_config": toWorkStatusResponseObject(o.WorkConfig, false),
+		"hashcode":    toWorkStatusResponseObject(o.Hashcode, false),
 	}
 }
 
@@ -2758,6 +2759,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2847,6 +2867,25 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

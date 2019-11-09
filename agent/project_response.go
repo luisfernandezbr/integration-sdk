@@ -844,8 +844,8 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 // ProjectResponseType is the enumeration type for type
 type ProjectResponseType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v ProjectResponseType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v ProjectResponseType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -877,35 +877,35 @@ func (v ProjectResponseType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v ProjectResponseType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v ProjectResponseType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("ENROLL"), nil
+		return json.Marshal("ENROLL")
 	case 1:
-		return []byte("PING"), nil
+		return json.Marshal("PING")
 	case 2:
-		return []byte("CRASH"), nil
+		return json.Marshal("CRASH")
 	case 3:
-		return []byte("LOG"), nil
+		return json.Marshal("LOG")
 	case 4:
-		return []byte("INTEGRATION"), nil
+		return json.Marshal("INTEGRATION")
 	case 5:
-		return []byte("EXPORT"), nil
+		return json.Marshal("EXPORT")
 	case 6:
-		return []byte("PROJECT"), nil
+		return json.Marshal("PROJECT")
 	case 7:
-		return []byte("REPO"), nil
+		return json.Marshal("REPO")
 	case 8:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	case 9:
-		return []byte("UNINSTALL"), nil
+		return json.Marshal("UNINSTALL")
 	case 10:
-		return []byte("UPGRADE"), nil
+		return json.Marshal("UPGRADE")
 	case 11:
-		return []byte("START"), nil
+		return json.Marshal("START")
 	case 12:
-		return []byte("STOP"), nil
+		return json.Marshal("STOP")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -1291,12 +1291,13 @@ func (o *ProjectResponse) ToMap() map[string]interface{} {
 		"request_id":       toProjectResponseObject(o.RequestID, false),
 		"success":          toProjectResponseObject(o.Success, false),
 		"system_id":        toProjectResponseObject(o.SystemID, false),
-		"type":             toProjectResponseObject(o.Type, false),
-		"updated_ts":       toProjectResponseObject(o.UpdatedAt, false),
-		"uptime":           toProjectResponseObject(o.Uptime, false),
-		"uuid":             toProjectResponseObject(o.UUID, false),
-		"version":          toProjectResponseObject(o.Version, false),
-		"hashcode":         toProjectResponseObject(o.Hashcode, false),
+
+		"type":       o.Type.String(),
+		"updated_ts": toProjectResponseObject(o.UpdatedAt, false),
+		"uptime":     toProjectResponseObject(o.Uptime, false),
+		"uuid":       toProjectResponseObject(o.UUID, false),
+		"version":    toProjectResponseObject(o.Version, false),
+		"hashcode":   toProjectResponseObject(o.Hashcode, false),
 	}
 }
 

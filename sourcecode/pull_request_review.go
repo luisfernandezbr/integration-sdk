@@ -152,8 +152,8 @@ func (o *PullRequestReviewCreatedDate) FromMap(kv map[string]interface{}) {
 // PullRequestReviewState is the enumeration type for state
 type PullRequestReviewState int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v PullRequestReviewState) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v PullRequestReviewState) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "APPROVED":
 		v = 0
@@ -169,19 +169,19 @@ func (v PullRequestReviewState) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v PullRequestReviewState) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v PullRequestReviewState) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("APPROVED"), nil
+		return json.Marshal("APPROVED")
 	case 1:
-		return []byte("COMMENTED"), nil
+		return json.Marshal("COMMENTED")
 	case 2:
-		return []byte("CHANGES_REQUESTED"), nil
+		return json.Marshal("CHANGES_REQUESTED")
 	case 3:
-		return []byte("PENDING"), nil
+		return json.Marshal("PENDING")
 	case 4:
-		return []byte("DISMISSED"), nil
+		return json.Marshal("DISMISSED")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -470,11 +470,12 @@ func (o *PullRequestReview) ToMap() map[string]interface{} {
 		"ref_id":          toPullRequestReviewObject(o.RefID, false),
 		"ref_type":        toPullRequestReviewObject(o.RefType, false),
 		"repo_id":         toPullRequestReviewObject(o.RepoID, false),
-		"state":           toPullRequestReviewObject(o.State, false),
-		"updated_ts":      toPullRequestReviewObject(o.UpdatedAt, false),
-		"url":             toPullRequestReviewObject(o.URL, false),
-		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, false),
-		"hashcode":        toPullRequestReviewObject(o.Hashcode, false),
+
+		"state":       o.State.String(),
+		"updated_ts":  toPullRequestReviewObject(o.UpdatedAt, false),
+		"url":         toPullRequestReviewObject(o.URL, false),
+		"user_ref_id": toPullRequestReviewObject(o.UserRefID, false),
+		"hashcode":    toPullRequestReviewObject(o.Hashcode, false),
 	}
 }
 

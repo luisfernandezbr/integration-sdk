@@ -400,8 +400,8 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 // ExportRequestIntegrationsLocation is the enumeration type for location
 type ExportRequestIntegrationsLocation int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v ExportRequestIntegrationsLocation) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v ExportRequestIntegrationsLocation) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "PRIVATE":
 		v = 0
@@ -411,13 +411,13 @@ func (v ExportRequestIntegrationsLocation) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v ExportRequestIntegrationsLocation) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v ExportRequestIntegrationsLocation) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("PRIVATE"), nil
+		return json.Marshal("PRIVATE")
 	case 1:
-		return []byte("CLOUD"), nil
+		return json.Marshal("CLOUD")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -537,8 +537,8 @@ func (o *ExportRequestIntegrationsProgress) FromMap(kv map[string]interface{}) {
 // ExportRequestIntegrationsSystemType is the enumeration type for system_type
 type ExportRequestIntegrationsSystemType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v ExportRequestIntegrationsSystemType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v ExportRequestIntegrationsSystemType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "WORK":
 		v = 0
@@ -552,17 +552,17 @@ func (v ExportRequestIntegrationsSystemType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v ExportRequestIntegrationsSystemType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v ExportRequestIntegrationsSystemType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("WORK"), nil
+		return json.Marshal("WORK")
 	case 1:
-		return []byte("SOURCECODE"), nil
+		return json.Marshal("SOURCECODE")
 	case 2:
-		return []byte("CODEQUALITY"), nil
+		return json.Marshal("CODEQUALITY")
 	case 3:
-		return []byte("USER"), nil
+		return json.Marshal("USER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }

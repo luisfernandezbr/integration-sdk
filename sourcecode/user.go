@@ -55,8 +55,8 @@ const (
 // UserType is the enumeration type for type
 type UserType int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v UserType) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v UserType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "HUMAN":
 		v = 0
@@ -68,15 +68,15 @@ func (v UserType) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v UserType) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v UserType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("HUMAN"), nil
+		return json.Marshal("HUMAN")
 	case 1:
-		return []byte("BOT"), nil
+		return json.Marshal("BOT")
 	case 2:
-		return []byte("DELETED_SPECIAL_USER"), nil
+		return json.Marshal("DELETED_SPECIAL_USER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -369,10 +369,11 @@ func (o *User) ToMap() map[string]interface{} {
 		"name":              toUserObject(o.Name, false),
 		"ref_id":            toUserObject(o.RefID, false),
 		"ref_type":          toUserObject(o.RefType, false),
-		"type":              toUserObject(o.Type, false),
-		"updated_ts":        toUserObject(o.UpdatedAt, false),
-		"username":          toUserObject(o.Username, true),
-		"hashcode":          toUserObject(o.Hashcode, false),
+
+		"type":       o.Type.String(),
+		"updated_ts": toUserObject(o.UpdatedAt, false),
+		"username":   toUserObject(o.Username, true),
+		"hashcode":   toUserObject(o.Hashcode, false),
 	}
 }
 

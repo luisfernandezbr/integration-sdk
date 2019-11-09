@@ -163,8 +163,8 @@ func (o *BuildEndDate) FromMap(kv map[string]interface{}) {
 // BuildEnvironment is the enumeration type for environment
 type BuildEnvironment int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v BuildEnvironment) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v BuildEnvironment) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "PRODUCTION":
 		v = 0
@@ -182,21 +182,21 @@ func (v BuildEnvironment) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v BuildEnvironment) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v BuildEnvironment) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("PRODUCTION"), nil
+		return json.Marshal("PRODUCTION")
 	case 1:
-		return []byte("DEVELOPMENT"), nil
+		return json.Marshal("DEVELOPMENT")
 	case 2:
-		return []byte("BETA"), nil
+		return json.Marshal("BETA")
 	case 3:
-		return []byte("STAGING"), nil
+		return json.Marshal("STAGING")
 	case 4:
-		return []byte("TEST"), nil
+		return json.Marshal("TEST")
 	case 5:
-		return []byte("OTHER"), nil
+		return json.Marshal("OTHER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -332,8 +332,8 @@ func (o *BuildStartDate) FromMap(kv map[string]interface{}) {
 // BuildStatus is the enumeration type for status
 type BuildStatus int32
 
-// UnmarshalBSON unmarshals the enum value
-func (v BuildStatus) UnmarshalBSON(buf []byte) error {
+// UnmarshalJSON unmarshals the enum value
+func (v BuildStatus) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "PASS":
 		v = 0
@@ -345,15 +345,15 @@ func (v BuildStatus) UnmarshalBSON(buf []byte) error {
 	return nil
 }
 
-// MarshalBSON marshals the enum value
-func (v BuildStatus) MarshalBSON() ([]byte, error) {
+// MarshalJSON marshals the enum value
+func (v BuildStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return []byte("PASS"), nil
+		return json.Marshal("PASS")
 	case 1:
-		return []byte("FAIL"), nil
+		return json.Marshal("FAIL")
 	case 2:
-		return []byte("CANCEL"), nil
+		return json.Marshal("CANCEL")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -643,16 +643,18 @@ func (o *Build) ToMap() map[string]interface{} {
 		"commit_sha":  toBuildObject(o.CommitSha, false),
 		"customer_id": toBuildObject(o.CustomerID, false),
 		"end_date":    toBuildObject(o.EndDate, false),
-		"environment": toBuildObject(o.Environment, false),
+
+		"environment": o.Environment.String(),
 		"id":          toBuildObject(o.ID, false),
 		"ref_id":      toBuildObject(o.RefID, false),
 		"ref_type":    toBuildObject(o.RefType, false),
 		"repo_name":   toBuildObject(o.RepoName, false),
 		"start_date":  toBuildObject(o.StartDate, false),
-		"status":      toBuildObject(o.Status, false),
-		"updated_ts":  toBuildObject(o.UpdatedAt, false),
-		"url":         toBuildObject(o.URL, true),
-		"hashcode":    toBuildObject(o.Hashcode, false),
+
+		"status":     o.Status.String(),
+		"updated_ts": toBuildObject(o.UpdatedAt, false),
+		"url":        toBuildObject(o.URL, true),
+		"hashcode":   toBuildObject(o.Hashcode, false),
 	}
 }
 
