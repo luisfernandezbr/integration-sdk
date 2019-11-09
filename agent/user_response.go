@@ -351,7 +351,7 @@ type UserResponseTeams struct {
 	// Description the description of the team
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// Leaf True when team has no children_ids
 	Leaf bool `json:"leaf" codec:"leaf" bson:"leaf" yaml:"leaf" faker:"-"`
 	// Name the name of the team
@@ -1037,7 +1037,7 @@ type UserResponseUsers struct {
 	// HiredDate when the user was hired in epoch timestamp
 	HiredDate UserResponseUsersHiredDate `json:"hired_date" codec:"hired_date" bson:"hired_date" yaml:"hired_date" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// Location the location of the user
 	Location *string `json:"location,omitempty" codec:"location,omitempty" bson:"location" yaml:"location,omitempty" faker:"location"`
 	// ManagerID the manager user id
@@ -1196,25 +1196,6 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseUsersHiredDate); ok {
 			// struct pointer
 			o.HiredDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.HiredDate.Epoch = dt.Epoch
-			o.HiredDate.Rfc3339 = dt.Rfc3339
-			o.HiredDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.HiredDate.Epoch = dt.Epoch
-			o.HiredDate.Rfc3339 = dt.Rfc3339
-			o.HiredDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.HiredDate.Epoch = dt.Epoch
-				o.HiredDate.Rfc3339 = dt.Rfc3339
-				o.HiredDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.HiredDate.FromMap(map[string]interface{}{})
@@ -1343,25 +1324,6 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseUsersTerminatedDate); ok {
 			// struct pointer
 			o.TerminatedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.TerminatedDate.Epoch = dt.Epoch
-			o.TerminatedDate.Rfc3339 = dt.Rfc3339
-			o.TerminatedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.TerminatedDate.Epoch = dt.Epoch
-			o.TerminatedDate.Rfc3339 = dt.Rfc3339
-			o.TerminatedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.TerminatedDate.Epoch = dt.Epoch
-				o.TerminatedDate.Rfc3339 = dt.Rfc3339
-				o.TerminatedDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.TerminatedDate.FromMap(map[string]interface{}{})

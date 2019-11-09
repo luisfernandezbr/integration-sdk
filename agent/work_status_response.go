@@ -1858,7 +1858,7 @@ type WorkStatusResponseWorkConfig struct {
 	// Field The field to operate on
 	Field WorkStatusResponseWorkConfigField `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// IntegrationID The ID reference to the integration instance
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// IssueType The type to map the issue as if all predicates are true

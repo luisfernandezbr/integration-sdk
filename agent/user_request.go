@@ -732,7 +732,7 @@ type UserRequestIntegration struct {
 	// Exclusions The exclusion list for this integration
 	Exclusions []string `json:"exclusions" codec:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
 	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
 	Location UserRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration

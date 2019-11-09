@@ -212,7 +212,7 @@ func (o *IssueCreatedDate) FromMap(kv map[string]interface{}) {
 // IssueCustomFields represents the object structure for customFields
 type IssueCustomFields struct {
 	// ID the id of the custom field
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// Name the name of the custom field
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// Value the value of the custom field
