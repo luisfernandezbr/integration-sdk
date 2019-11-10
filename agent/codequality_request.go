@@ -27,6 +27,9 @@ const (
 	// CodequalityRequestTopic is the default topic name
 	CodequalityRequestTopic datamodel.TopicNameType = "agent_CodequalityRequest_topic"
 
+	// CodequalityRequestTable is the default table name
+	CodequalityRequestTable datamodel.ModelNameType = "agent_codequalityrequest"
+
 	// CodequalityRequestModelName is the model name
 	CodequalityRequestModelName datamodel.ModelNameType = "agent.CodequalityRequest"
 )
@@ -1301,7 +1304,7 @@ func (o *CodequalityRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *CodequalityRequest) GetTableName() string {
-	return ""
+	return CodequalityRequestTable.String()
 }
 
 // GetModelName returns the name of the model

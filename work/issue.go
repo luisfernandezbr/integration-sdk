@@ -24,6 +24,9 @@ const (
 	// IssueTopic is the default topic name
 	IssueTopic datamodel.TopicNameType = "work_Issue_topic"
 
+	// IssueTable is the default table name
+	IssueTable datamodel.ModelNameType = "work_issue"
+
 	// IssueModelName is the model name
 	IssueModelName datamodel.ModelNameType = "work.Issue"
 )
@@ -788,7 +791,7 @@ func (o *Issue) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Issue) GetTableName() string {
-	return ""
+	return IssueTable.String()
 }
 
 // GetModelName returns the name of the model

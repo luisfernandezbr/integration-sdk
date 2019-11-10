@@ -22,6 +22,9 @@ const (
 	// SprintTopic is the default topic name
 	SprintTopic datamodel.TopicNameType = "work_Sprint_topic"
 
+	// SprintTable is the default table name
+	SprintTable datamodel.ModelNameType = "work_sprint"
+
 	// SprintModelName is the model name
 	SprintModelName datamodel.ModelNameType = "work.Sprint"
 )
@@ -601,7 +604,7 @@ func (o *Sprint) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Sprint) GetTableName() string {
-	return ""
+	return SprintTable.String()
 }
 
 // GetModelName returns the name of the model

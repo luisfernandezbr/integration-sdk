@@ -20,6 +20,9 @@ const (
 	// CustomFieldTopic is the default topic name
 	CustomFieldTopic datamodel.TopicNameType = "work_CustomField_topic"
 
+	// CustomFieldTable is the default table name
+	CustomFieldTable datamodel.ModelNameType = "work_customfield"
+
 	// CustomFieldModelName is the model name
 	CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
 )
@@ -94,7 +97,7 @@ func (o *CustomField) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *CustomField) GetTableName() string {
-	return ""
+	return CustomFieldTable.String()
 }
 
 // GetModelName returns the name of the model

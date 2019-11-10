@@ -23,6 +23,9 @@ const (
 	// IntegrationResponseTopic is the default topic name
 	IntegrationResponseTopic datamodel.TopicNameType = "agent_IntegrationResponse_topic"
 
+	// IntegrationResponseTable is the default table name
+	IntegrationResponseTable datamodel.ModelNameType = "agent_integrationresponse"
+
 	// IntegrationResponseModelName is the model name
 	IntegrationResponseModelName datamodel.ModelNameType = "agent.IntegrationResponse"
 )
@@ -552,7 +555,7 @@ func (o *IntegrationResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *IntegrationResponse) GetTableName() string {
-	return ""
+	return IntegrationResponseTable.String()
 }
 
 // GetModelName returns the name of the model

@@ -25,6 +25,9 @@ const (
 	// RepoResponseTopic is the default topic name
 	RepoResponseTopic datamodel.TopicNameType = "agent_RepoResponse_topic"
 
+	// RepoResponseTable is the default table name
+	RepoResponseTable datamodel.ModelNameType = "agent_reporesponse"
+
 	// RepoResponseModelName is the model name
 	RepoResponseModelName datamodel.ModelNameType = "agent.RepoResponse"
 )
@@ -1227,7 +1230,7 @@ func (o *RepoResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *RepoResponse) GetTableName() string {
-	return ""
+	return RepoResponseTable.String()
 }
 
 // GetModelName returns the name of the model

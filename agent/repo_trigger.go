@@ -20,6 +20,9 @@ const (
 	// RepoTriggerTopic is the default topic name
 	RepoTriggerTopic datamodel.TopicNameType = "agent_RepoTrigger_topic"
 
+	// RepoTriggerTable is the default table name
+	RepoTriggerTable datamodel.ModelNameType = "agent_repotrigger"
+
 	// RepoTriggerModelName is the model name
 	RepoTriggerModelName datamodel.ModelNameType = "agent.RepoTrigger"
 )
@@ -90,7 +93,7 @@ func (o *RepoTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *RepoTrigger) GetTableName() string {
-	return ""
+	return RepoTriggerTable.String()
 }
 
 // GetModelName returns the name of the model

@@ -24,6 +24,9 @@ const (
 	// BranchTopic is the default topic name
 	BranchTopic datamodel.TopicNameType = "sourcecode_Branch_topic"
 
+	// BranchTable is the default table name
+	BranchTable datamodel.ModelNameType = "sourcecode_branch"
+
 	// BranchModelName is the model name
 	BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
 )
@@ -166,7 +169,7 @@ func (o *Branch) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Branch) GetTableName() string {
-	return ""
+	return BranchTable.String()
 }
 
 // GetModelName returns the name of the model

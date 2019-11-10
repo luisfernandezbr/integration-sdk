@@ -27,6 +27,9 @@ const (
 	// ProjectRequestTopic is the default topic name
 	ProjectRequestTopic datamodel.TopicNameType = "agent_ProjectRequest_topic"
 
+	// ProjectRequestTable is the default table name
+	ProjectRequestTable datamodel.ModelNameType = "agent_projectrequest"
+
 	// ProjectRequestModelName is the model name
 	ProjectRequestModelName datamodel.ModelNameType = "agent.ProjectRequest"
 )
@@ -1301,7 +1304,7 @@ func (o *ProjectRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ProjectRequest) GetTableName() string {
-	return ""
+	return ProjectRequestTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -1585,6 +1588,25 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

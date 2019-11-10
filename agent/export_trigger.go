@@ -21,6 +21,9 @@ const (
 	// ExportTriggerTopic is the default topic name
 	ExportTriggerTopic datamodel.TopicNameType = "agent_ExportTrigger_topic"
 
+	// ExportTriggerTable is the default table name
+	ExportTriggerTable datamodel.ModelNameType = "agent_exporttrigger"
+
 	// ExportTriggerModelName is the model name
 	ExportTriggerModelName datamodel.ModelNameType = "agent.ExportTrigger"
 )
@@ -95,7 +98,7 @@ func (o *ExportTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ExportTrigger) GetTableName() string {
-	return ""
+	return ExportTriggerTable.String()
 }
 
 // GetModelName returns the name of the model

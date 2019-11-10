@@ -23,6 +23,9 @@ const (
 	// EventTopic is the default topic name
 	EventTopic datamodel.TopicNameType = "agent_Event_topic"
 
+	// EventTable is the default table name
+	EventTable datamodel.ModelNameType = "agent_event"
+
 	// EventModelName is the model name
 	EventModelName datamodel.ModelNameType = "agent.Event"
 )
@@ -540,7 +543,7 @@ func (o *Event) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Event) GetTableName() string {
-	return ""
+	return EventTable.String()
 }
 
 // GetModelName returns the name of the model

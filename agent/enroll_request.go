@@ -20,6 +20,9 @@ const (
 	// EnrollRequestTopic is the default topic name
 	EnrollRequestTopic datamodel.TopicNameType = "agent_EnrollRequest_topic"
 
+	// EnrollRequestTable is the default table name
+	EnrollRequestTable datamodel.ModelNameType = "agent_enrollrequest"
+
 	// EnrollRequestModelName is the model name
 	EnrollRequestModelName datamodel.ModelNameType = "agent.EnrollRequest"
 )
@@ -189,7 +192,7 @@ func (o *EnrollRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *EnrollRequest) GetTableName() string {
-	return ""
+	return EnrollRequestTable.String()
 }
 
 // GetModelName returns the name of the model

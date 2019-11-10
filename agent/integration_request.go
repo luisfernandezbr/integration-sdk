@@ -27,6 +27,9 @@ const (
 	// IntegrationRequestTopic is the default topic name
 	IntegrationRequestTopic datamodel.TopicNameType = "agent_IntegrationRequest_topic"
 
+	// IntegrationRequestTable is the default table name
+	IntegrationRequestTable datamodel.ModelNameType = "agent_integrationrequest"
+
 	// IntegrationRequestModelName is the model name
 	IntegrationRequestModelName datamodel.ModelNameType = "agent.IntegrationRequest"
 )
@@ -1301,7 +1304,7 @@ func (o *IntegrationRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *IntegrationRequest) GetTableName() string {
-	return ""
+	return IntegrationRequestTable.String()
 }
 
 // GetModelName returns the name of the model
@@ -1585,6 +1588,25 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

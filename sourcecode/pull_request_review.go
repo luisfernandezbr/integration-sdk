@@ -22,6 +22,9 @@ const (
 	// PullRequestReviewTopic is the default topic name
 	PullRequestReviewTopic datamodel.TopicNameType = "sourcecode_PullRequestReview_topic"
 
+	// PullRequestReviewTable is the default table name
+	PullRequestReviewTable datamodel.ModelNameType = "sourcecode_pullrequestreview"
+
 	// PullRequestReviewModelName is the model name
 	PullRequestReviewModelName datamodel.ModelNameType = "sourcecode.PullRequestReview"
 )
@@ -308,7 +311,7 @@ func (o *PullRequestReview) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestReview) GetTableName() string {
-	return ""
+	return PullRequestReviewTable.String()
 }
 
 // GetModelName returns the name of the model

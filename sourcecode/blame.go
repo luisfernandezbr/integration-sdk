@@ -25,6 +25,9 @@ const (
 	// BlameTopic is the default topic name
 	BlameTopic datamodel.TopicNameType = "sourcecode_Blame_topic"
 
+	// BlameTable is the default table name
+	BlameTable datamodel.ModelNameType = "sourcecode_blame"
+
 	// BlameModelName is the model name
 	BlameModelName datamodel.ModelNameType = "sourcecode.Blame"
 )
@@ -496,7 +499,7 @@ func (o *Blame) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Blame) GetTableName() string {
-	return ""
+	return BlameTable.String()
 }
 
 // GetModelName returns the name of the model

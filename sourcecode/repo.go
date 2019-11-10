@@ -20,6 +20,9 @@ const (
 	// RepoTopic is the default topic name
 	RepoTopic datamodel.TopicNameType = "sourcecode_Repo_topic"
 
+	// RepoTable is the default table name
+	RepoTable datamodel.ModelNameType = "sourcecode_repo"
+
 	// RepoModelName is the model name
 	RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
 )
@@ -110,7 +113,7 @@ func (o *Repo) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Repo) GetTableName() string {
-	return ""
+	return RepoTable.String()
 }
 
 // GetModelName returns the name of the model

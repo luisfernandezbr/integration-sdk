@@ -20,6 +20,9 @@ const (
 	// UserTriggerTopic is the default topic name
 	UserTriggerTopic datamodel.TopicNameType = "agent_UserTrigger_topic"
 
+	// UserTriggerTable is the default table name
+	UserTriggerTable datamodel.ModelNameType = "agent_usertrigger"
+
 	// UserTriggerModelName is the model name
 	UserTriggerModelName datamodel.ModelNameType = "agent.UserTrigger"
 )
@@ -90,7 +93,7 @@ func (o *UserTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *UserTrigger) GetTableName() string {
-	return ""
+	return UserTriggerTable.String()
 }
 
 // GetModelName returns the name of the model

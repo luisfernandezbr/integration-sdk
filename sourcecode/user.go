@@ -23,6 +23,9 @@ const (
 	// UserTopic is the default topic name
 	UserTopic datamodel.TopicNameType = "sourcecode_User_topic"
 
+	// UserTable is the default table name
+	UserTable datamodel.ModelNameType = "sourcecode_user"
+
 	// UserModelName is the model name
 	UserModelName datamodel.ModelNameType = "sourcecode.User"
 )
@@ -190,7 +193,7 @@ func (o *User) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *User) GetTableName() string {
-	return ""
+	return UserTable.String()
 }
 
 // GetModelName returns the name of the model

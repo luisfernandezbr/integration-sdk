@@ -23,6 +23,9 @@ const (
 	// DeploymentTopic is the default topic name
 	DeploymentTopic datamodel.TopicNameType = "cicd_Deployment_topic"
 
+	// DeploymentTable is the default table name
+	DeploymentTable datamodel.ModelNameType = "cicd_deployment"
+
 	// DeploymentModelName is the model name
 	DeploymentModelName datamodel.ModelNameType = "cicd.Deployment"
 )
@@ -507,7 +510,7 @@ func (o *Deployment) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Deployment) GetTableName() string {
-	return ""
+	return DeploymentTable.String()
 }
 
 // GetModelName returns the name of the model

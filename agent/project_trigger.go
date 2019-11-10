@@ -20,6 +20,9 @@ const (
 	// ProjectTriggerTopic is the default topic name
 	ProjectTriggerTopic datamodel.TopicNameType = "agent_ProjectTrigger_topic"
 
+	// ProjectTriggerTable is the default table name
+	ProjectTriggerTable datamodel.ModelNameType = "agent_projecttrigger"
+
 	// ProjectTriggerModelName is the model name
 	ProjectTriggerModelName datamodel.ModelNameType = "agent.ProjectTrigger"
 )
@@ -90,7 +93,7 @@ func (o *ProjectTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ProjectTrigger) GetTableName() string {
-	return ""
+	return ProjectTriggerTable.String()
 }
 
 // GetModelName returns the name of the model

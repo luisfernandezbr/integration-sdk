@@ -20,6 +20,9 @@ const (
 	// PullRequestCommentTopic is the default topic name
 	PullRequestCommentTopic datamodel.TopicNameType = "sourcecode_PullRequestComment_topic"
 
+	// PullRequestCommentTable is the default table name
+	PullRequestCommentTable datamodel.ModelNameType = "sourcecode_pullrequestcomment"
+
 	// PullRequestCommentModelName is the model name
 	PullRequestCommentModelName datamodel.ModelNameType = "sourcecode.PullRequestComment"
 )
@@ -320,7 +323,7 @@ func (o *PullRequestComment) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestComment) GetTableName() string {
-	return ""
+	return PullRequestCommentTable.String()
 }
 
 // GetModelName returns the name of the model

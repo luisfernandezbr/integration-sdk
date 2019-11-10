@@ -27,6 +27,9 @@ const (
 	// WorkStatusRequestTopic is the default topic name
 	WorkStatusRequestTopic datamodel.TopicNameType = "agent_WorkStatusRequest_topic"
 
+	// WorkStatusRequestTable is the default table name
+	WorkStatusRequestTable datamodel.ModelNameType = "agent_workstatusrequest"
+
 	// WorkStatusRequestModelName is the model name
 	WorkStatusRequestModelName datamodel.ModelNameType = "agent.WorkStatusRequest"
 )
@@ -1301,7 +1304,7 @@ func (o *WorkStatusRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *WorkStatusRequest) GetTableName() string {
-	return ""
+	return WorkStatusRequestTable.String()
 }
 
 // GetModelName returns the name of the model

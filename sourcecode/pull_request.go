@@ -26,6 +26,9 @@ const (
 	// PullRequestTopic is the default topic name
 	PullRequestTopic datamodel.TopicNameType = "sourcecode_PullRequest_topic"
 
+	// PullRequestTable is the default table name
+	PullRequestTable datamodel.ModelNameType = "sourcecode_pullrequest"
+
 	// PullRequestModelName is the model name
 	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 )
@@ -669,7 +672,7 @@ func (o *PullRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequest) GetTableName() string {
-	return ""
+	return PullRequestTable.String()
 }
 
 // GetModelName returns the name of the model

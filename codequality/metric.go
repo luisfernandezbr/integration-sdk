@@ -20,6 +20,9 @@ const (
 	// MetricTopic is the default topic name
 	MetricTopic datamodel.TopicNameType = "codequality_Metric_topic"
 
+	// MetricTable is the default table name
+	MetricTable datamodel.ModelNameType = "codequality_metric"
+
 	// MetricModelName is the model name
 	MetricModelName datamodel.ModelNameType = "codequality.Metric"
 )
@@ -205,7 +208,7 @@ func (o *Metric) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Metric) GetTableName() string {
-	return ""
+	return MetricTable.String()
 }
 
 // GetModelName returns the name of the model

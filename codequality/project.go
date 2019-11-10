@@ -20,6 +20,9 @@ const (
 	// ProjectTopic is the default topic name
 	ProjectTopic datamodel.TopicNameType = "codequality_Project_topic"
 
+	// ProjectTable is the default table name
+	ProjectTable datamodel.ModelNameType = "codequality_project"
+
 	// ProjectModelName is the model name
 	ProjectModelName datamodel.ModelNameType = "codequality.Project"
 )
@@ -94,7 +97,7 @@ func (o *Project) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Project) GetTableName() string {
-	return ""
+	return ProjectTable.String()
 }
 
 // GetModelName returns the name of the model

@@ -23,6 +23,9 @@ const (
 	// BuildTopic is the default topic name
 	BuildTopic datamodel.TopicNameType = "cicd_Build_topic"
 
+	// BuildTable is the default table name
+	BuildTable datamodel.ModelNameType = "cicd_build"
+
 	// BuildModelName is the model name
 	BuildModelName datamodel.ModelNameType = "cicd.Build"
 )
@@ -503,7 +506,7 @@ func (o *Build) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Build) GetTableName() string {
-	return ""
+	return BuildTable.String()
 }
 
 // GetModelName returns the name of the model

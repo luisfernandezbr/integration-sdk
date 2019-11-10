@@ -23,6 +23,9 @@ const (
 	// UpgradeTopic is the default topic name
 	UpgradeTopic datamodel.TopicNameType = "agent_Upgrade_topic"
 
+	// UpgradeTable is the default table name
+	UpgradeTable datamodel.ModelNameType = "agent_upgrade"
+
 	// UpgradeModelName is the model name
 	UpgradeModelName datamodel.ModelNameType = "agent.Upgrade"
 )
@@ -556,7 +559,7 @@ func (o *Upgrade) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Upgrade) GetTableName() string {
-	return ""
+	return UpgradeTable.String()
 }
 
 // GetModelName returns the name of the model

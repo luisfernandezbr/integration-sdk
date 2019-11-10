@@ -24,6 +24,9 @@ const (
 	// CommitTopic is the default topic name
 	CommitTopic datamodel.TopicNameType = "sourcecode_Commit_topic"
 
+	// CommitTable is the default table name
+	CommitTable datamodel.ModelNameType = "sourcecode_commit"
+
 	// CommitModelName is the model name
 	CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
 )
@@ -907,7 +910,7 @@ func (o *Commit) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Commit) GetTableName() string {
-	return ""
+	return CommitTable.String()
 }
 
 // GetModelName returns the name of the model

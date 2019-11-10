@@ -27,6 +27,9 @@ const (
 	// ExportRequestTopic is the default topic name
 	ExportRequestTopic datamodel.TopicNameType = "agent_ExportRequest_topic"
 
+	// ExportRequestTable is the default table name
+	ExportRequestTable datamodel.ModelNameType = "agent_exportrequest"
+
 	// ExportRequestModelName is the model name
 	ExportRequestModelName datamodel.ModelNameType = "agent.ExportRequest"
 )
@@ -1321,7 +1324,7 @@ func (o *ExportRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ExportRequest) GetTableName() string {
-	return ""
+	return ExportRequestTable.String()
 }
 
 // GetModelName returns the name of the model

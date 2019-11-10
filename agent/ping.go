@@ -23,6 +23,9 @@ const (
 	// PingTopic is the default topic name
 	PingTopic datamodel.TopicNameType = "agent_Ping_topic"
 
+	// PingTable is the default table name
+	PingTable datamodel.ModelNameType = "agent_ping"
+
 	// PingModelName is the model name
 	PingModelName datamodel.ModelNameType = "agent.Ping"
 )
@@ -635,7 +638,7 @@ func (o *Ping) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Ping) GetTableName() string {
-	return ""
+	return PingTable.String()
 }
 
 // GetModelName returns the name of the model

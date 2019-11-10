@@ -22,6 +22,9 @@ const (
 	// ChangelogTopic is the default topic name
 	ChangelogTopic datamodel.TopicNameType = "work_Changelog_topic"
 
+	// ChangelogTable is the default table name
+	ChangelogTable datamodel.ModelNameType = "work_changelog"
+
 	// ChangelogModelName is the model name
 	ChangelogModelName datamodel.ModelNameType = "work.Changelog"
 )
@@ -418,7 +421,7 @@ func (o *Changelog) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Changelog) GetTableName() string {
-	return ""
+	return ChangelogTable.String()
 }
 
 // GetModelName returns the name of the model
