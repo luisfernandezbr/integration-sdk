@@ -351,22 +351,22 @@ func NewUserID(customerID string, Email string) string {
 
 func (o *User) setDefaults(frommap bool) {
 	if o.AvatarURL == nil {
-		o.AvatarURL = &emptyString
+		o.AvatarURL = pstrings.Pointer("")
 	}
 	if o.CostCenterID == nil {
-		o.CostCenterID = &emptyString
+		o.CostCenterID = pstrings.Pointer("")
 	}
 	if o.Location == nil {
-		o.Location = &emptyString
+		o.Location = pstrings.Pointer("")
 	}
 	if o.ManagerID == nil {
-		o.ManagerID = &emptyString
+		o.ManagerID = pstrings.Pointer("")
 	}
 	if o.PrimaryTeamID == nil {
-		o.PrimaryTeamID = &emptyString
+		o.PrimaryTeamID = pstrings.Pointer("")
 	}
 	if o.Title == nil {
-		o.Title = &emptyString
+		o.Title = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {

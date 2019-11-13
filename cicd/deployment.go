@@ -525,7 +525,7 @@ func NewDeploymentID(customerID string, refType string, refID string) string {
 
 func (o *Deployment) setDefaults(frommap bool) {
 	if o.URL == nil {
-		o.URL = &emptyString
+		o.URL = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {

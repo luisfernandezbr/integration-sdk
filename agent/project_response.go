@@ -1140,10 +1140,10 @@ func NewProjectResponseID(customerID string, refType string, refID string) strin
 
 func (o *ProjectResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
-		o.Data = &emptyString
+		o.Data = pstrings.Pointer("")
 	}
 	if o.Error == nil {
-		o.Error = &emptyString
+		o.Error = pstrings.Pointer("")
 	}
 	if o.Projects == nil {
 		o.Projects = make([]ProjectResponseProjects, 0)

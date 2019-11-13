@@ -129,10 +129,10 @@ func NewProjectID(customerID string, refType string, refID string) string {
 
 func (o *Project) setDefaults(frommap bool) {
 	if o.Category == nil {
-		o.Category = &emptyString
+		o.Category = pstrings.Pointer("")
 	}
 	if o.Description == nil {
-		o.Description = &emptyString
+		o.Description = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {

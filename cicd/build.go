@@ -521,7 +521,7 @@ func NewBuildID(customerID string, refType string, refID string) string {
 
 func (o *Build) setDefaults(frommap bool) {
 	if o.URL == nil {
-		o.URL = &emptyString
+		o.URL = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {

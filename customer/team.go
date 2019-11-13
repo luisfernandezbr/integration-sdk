@@ -16,6 +16,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pnumber "github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -141,7 +142,7 @@ func NewTeamID(Name string, customerID string) string {
 
 func (o *Team) setDefaults(frommap bool) {
 	if o.Active == nil {
-		o.Active = &emptyBool
+		o.Active = pnumber.BoolPointer(false)
 	}
 	if o.ChildrenIds == nil {
 		o.ChildrenIds = make([]string, 0)
@@ -150,7 +151,7 @@ func (o *Team) setDefaults(frommap bool) {
 		o.ParentIds = make([]string, 0)
 	}
 	if o.TeamCostID == nil {
-		o.TeamCostID = &emptyString
+		o.TeamCostID = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {

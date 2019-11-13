@@ -125,13 +125,13 @@ func NewUserID(customerID string, refType string, refID string) string {
 
 func (o *User) setDefaults(frommap bool) {
 	if o.AssociatedRefID == nil {
-		o.AssociatedRefID = &emptyString
+		o.AssociatedRefID = pstrings.Pointer("")
 	}
 	if o.AvatarURL == nil {
-		o.AvatarURL = &emptyString
+		o.AvatarURL = pstrings.Pointer("")
 	}
 	if o.Email == nil {
-		o.Email = &emptyString
+		o.Email = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {

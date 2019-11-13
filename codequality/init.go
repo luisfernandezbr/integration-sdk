@@ -24,8 +24,3 @@ func randomString(len int) string {
 	}
 	return string(bytes)
 }
-
-var emptyString string
-var emptyInt int64
-var emptyBool bool
-var emptyFloat float64

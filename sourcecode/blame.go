@@ -514,7 +514,7 @@ func NewBlameID(customerID string, refID string, refType string, RepoID string, 
 
 func (o *Blame) setDefaults(frommap bool) {
 	if o.License == nil {
-		o.License = &emptyString
+		o.License = pstrings.Pointer("")
 	}
 	if o.Lines == nil {
 		o.Lines = make([]BlameLines, 0)

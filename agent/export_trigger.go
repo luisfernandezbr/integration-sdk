@@ -113,7 +113,7 @@ func NewExportTriggerID(customerID string, refType string, refID string) string 
 
 func (o *ExportTrigger) setDefaults(frommap bool) {
 	if o.UUID == nil {
-		o.UUID = &emptyString
+		o.UUID = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {

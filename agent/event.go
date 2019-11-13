@@ -558,10 +558,10 @@ func NewEventID(customerID string, refType string, refID string) string {
 
 func (o *Event) setDefaults(frommap bool) {
 	if o.Data == nil {
-		o.Data = &emptyString
+		o.Data = pstrings.Pointer("")
 	}
 	if o.Error == nil {
-		o.Error = &emptyString
+		o.Error = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {
