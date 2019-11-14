@@ -1204,8 +1204,6 @@ type ExportRequest struct {
 	RequestDate ExportRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
-	// UploadHeaders Any upload headers to include in the HTTP upload
-	UploadHeaders []string `json:"upload_headers" codec:"upload_headers" bson:"upload_headers" yaml:"upload_headers" faker:"-"`
 	// UploadURL The one time upload URL to use for uploading a job to the Pinpoint cloud
 	UploadURL *string `json:"upload_url,omitempty" codec:"upload_url,omitempty" bson:"upload_url" yaml:"upload_url,omitempty" faker:"-"`
 	// UUID the agent unique identifier
@@ -1273,9 +1271,6 @@ func NewExportRequestID(customerID string, refType string, refID string) string 
 func (o *ExportRequest) setDefaults(frommap bool) {
 	if o.Integrations == nil {
 		o.Integrations = make([]ExportRequestIntegrations, 0)
-	}
-	if o.UploadHeaders == nil {
-		o.UploadHeaders = make([]string, 0)
 	}
 	if o.UploadURL == nil {
 		o.UploadURL = pstrings.Pointer("")
@@ -1454,7 +1449,6 @@ func (o *ExportRequest) ToMap() map[string]interface{} {
 		"reprocess_historical": toExportRequestObject(o.ReprocessHistorical, false),
 		"request_date":         toExportRequestObject(o.RequestDate, false),
 		"updated_ts":           toExportRequestObject(o.UpdatedAt, false),
-		"upload_headers":       toExportRequestObject(o.UploadHeaders, false),
 		"upload_url":           toExportRequestObject(o.UploadURL, true),
 		"uuid":                 toExportRequestObject(o.UUID, false),
 		"hashcode":             toExportRequestObject(o.Hashcode, false),
@@ -1650,57 +1644,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["upload_headers"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for upload_headers field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for upload_headers field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for upload_headers field")
-				}
-			}
-			o.UploadHeaders = na
-		}
-	}
-	if o.UploadHeaders == nil {
-		o.UploadHeaders = make([]string, 0)
-	}
-
 	if val, ok := kv["upload_url"].(*string); ok {
 		o.UploadURL = val
 	} else if val, ok := kv["upload_url"].(string); ok {
@@ -1748,7 +1691,6 @@ func (o *ExportRequest) Hash() string {
 	args = append(args, o.ReprocessHistorical)
 	args = append(args, o.RequestDate)
 	args = append(args, o.UpdatedAt)
-	args = append(args, o.UploadHeaders)
 	args = append(args, o.UploadURL)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
