@@ -30,81 +30,6 @@ const (
 	CrashModelName datamodel.ModelNameType = "agent.Crash"
 )
 
-const (
-	// CrashArchitectureColumn is the architecture column name
-	CrashArchitectureColumn = "Architecture"
-	// CrashComponentColumn is the component column name
-	CrashComponentColumn = "Component"
-	// CrashCrashDateColumn is the crash_date column name
-	CrashCrashDateColumn = "CrashDate"
-	// CrashCrashDateColumnEpochColumn is the epoch column property of the CrashDate name
-	CrashCrashDateColumnEpochColumn = "CrashDate.Epoch"
-	// CrashCrashDateColumnOffsetColumn is the offset column property of the CrashDate name
-	CrashCrashDateColumnOffsetColumn = "CrashDate.Offset"
-	// CrashCrashDateColumnRfc3339Column is the rfc3339 column property of the CrashDate name
-	CrashCrashDateColumnRfc3339Column = "CrashDate.Rfc3339"
-	// CrashCustomerIDColumn is the customer_id column name
-	CrashCustomerIDColumn = "CustomerID"
-	// CrashDataColumn is the data column name
-	CrashDataColumn = "Data"
-	// CrashDistroColumn is the distro column name
-	CrashDistroColumn = "Distro"
-	// CrashErrorColumn is the error column name
-	CrashErrorColumn = "Error"
-	// CrashEventDateColumn is the event_date column name
-	CrashEventDateColumn = "EventDate"
-	// CrashEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	CrashEventDateColumnEpochColumn = "EventDate.Epoch"
-	// CrashEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	CrashEventDateColumnOffsetColumn = "EventDate.Offset"
-	// CrashEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	CrashEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// CrashFreeSpaceColumn is the free_space column name
-	CrashFreeSpaceColumn = "FreeSpace"
-	// CrashGoVersionColumn is the go_version column name
-	CrashGoVersionColumn = "GoVersion"
-	// CrashHostnameColumn is the hostname column name
-	CrashHostnameColumn = "Hostname"
-	// CrashIDColumn is the id column name
-	CrashIDColumn = "ID"
-	// CrashLastExportDateColumn is the last_export_date column name
-	CrashLastExportDateColumn = "LastExportDate"
-	// CrashLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	CrashLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// CrashLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	CrashLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// CrashLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	CrashLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// CrashMemoryColumn is the memory column name
-	CrashMemoryColumn = "Memory"
-	// CrashMessageColumn is the message column name
-	CrashMessageColumn = "Message"
-	// CrashNumCPUColumn is the num_cpu column name
-	CrashNumCPUColumn = "NumCPU"
-	// CrashOSColumn is the os column name
-	CrashOSColumn = "OS"
-	// CrashRefIDColumn is the ref_id column name
-	CrashRefIDColumn = "RefID"
-	// CrashRefTypeColumn is the ref_type column name
-	CrashRefTypeColumn = "RefType"
-	// CrashRequestIDColumn is the request_id column name
-	CrashRequestIDColumn = "RequestID"
-	// CrashSuccessColumn is the success column name
-	CrashSuccessColumn = "Success"
-	// CrashSystemIDColumn is the system_id column name
-	CrashSystemIDColumn = "SystemID"
-	// CrashTypeColumn is the type column name
-	CrashTypeColumn = "Type"
-	// CrashUpdatedAtColumn is the updated_ts column name
-	CrashUpdatedAtColumn = "UpdatedAt"
-	// CrashUptimeColumn is the uptime column name
-	CrashUptimeColumn = "Uptime"
-	// CrashUUIDColumn is the uuid column name
-	CrashUUIDColumn = "UUID"
-	// CrashVersionColumn is the version column name
-	CrashVersionColumn = "Version"
-)
-
 // CrashCrashDate represents the object structure for crash_date
 type CrashCrashDate struct {
 	// Epoch the date in epoch format
@@ -1027,25 +952,6 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CrashEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1120,25 +1026,6 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CrashLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

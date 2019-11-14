@@ -27,33 +27,6 @@ const (
 	MetricModelName datamodel.ModelNameType = "codequality.Metric"
 )
 
-const (
-	// MetricCreatedDateColumn is the created_date column name
-	MetricCreatedDateColumn = "CreatedDate"
-	// MetricCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	MetricCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
-	// MetricCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	MetricCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
-	// MetricCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	MetricCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
-	// MetricCustomerIDColumn is the customer_id column name
-	MetricCustomerIDColumn = "CustomerID"
-	// MetricIDColumn is the id column name
-	MetricIDColumn = "ID"
-	// MetricNameColumn is the name column name
-	MetricNameColumn = "Name"
-	// MetricProjectIDColumn is the project_id column name
-	MetricProjectIDColumn = "ProjectID"
-	// MetricRefIDColumn is the ref_id column name
-	MetricRefIDColumn = "RefID"
-	// MetricRefTypeColumn is the ref_type column name
-	MetricRefTypeColumn = "RefType"
-	// MetricUpdatedAtColumn is the updated_ts column name
-	MetricUpdatedAtColumn = "UpdatedAt"
-	// MetricValueColumn is the value column name
-	MetricValueColumn = "Value"
-)
-
 // MetricCreatedDate represents the object structure for created_date
 type MetricCreatedDate struct {
 	// Epoch the date in epoch format

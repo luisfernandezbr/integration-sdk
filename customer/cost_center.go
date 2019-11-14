@@ -27,29 +27,6 @@ const (
 	CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
 )
 
-const (
-	// CostCenterActiveColumn is the active column name
-	CostCenterActiveColumn = "Active"
-	// CostCenterCostColumn is the cost column name
-	CostCenterCostColumn = "Cost"
-	// CostCenterCreatedAtColumn is the created_ts column name
-	CostCenterCreatedAtColumn = "CreatedAt"
-	// CostCenterCustomerIDColumn is the customer_id column name
-	CostCenterCustomerIDColumn = "CustomerID"
-	// CostCenterDescriptionColumn is the description column name
-	CostCenterDescriptionColumn = "Description"
-	// CostCenterIDColumn is the id column name
-	CostCenterIDColumn = "ID"
-	// CostCenterNameColumn is the name column name
-	CostCenterNameColumn = "Name"
-	// CostCenterRefIDColumn is the ref_id column name
-	CostCenterRefIDColumn = "RefID"
-	// CostCenterRefTypeColumn is the ref_type column name
-	CostCenterRefTypeColumn = "RefType"
-	// CostCenterUpdatedAtColumn is the updated_ts column name
-	CostCenterUpdatedAtColumn = "UpdatedAt"
-)
-
 // CostCenter a cost center represents information about users and their cost
 type CostCenter struct {
 	// Active whether the cost center is tracked in pinpoint

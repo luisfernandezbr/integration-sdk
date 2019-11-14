@@ -27,47 +27,6 @@ const (
 	PullRequestCommitModelName datamodel.ModelNameType = "sourcecode.PullRequestCommit"
 )
 
-const (
-	// PullRequestCommitAdditionsColumn is the additions column name
-	PullRequestCommitAdditionsColumn = "Additions"
-	// PullRequestCommitAuthorRefIDColumn is the author_ref_id column name
-	PullRequestCommitAuthorRefIDColumn = "AuthorRefID"
-	// PullRequestCommitBranchIDColumn is the branch_id column name
-	PullRequestCommitBranchIDColumn = "BranchID"
-	// PullRequestCommitCommitterRefIDColumn is the committer_ref_id column name
-	PullRequestCommitCommitterRefIDColumn = "CommitterRefID"
-	// PullRequestCommitCreatedDateColumn is the created_date column name
-	PullRequestCommitCreatedDateColumn = "CreatedDate"
-	// PullRequestCommitCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	PullRequestCommitCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
-	// PullRequestCommitCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	PullRequestCommitCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
-	// PullRequestCommitCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	PullRequestCommitCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
-	// PullRequestCommitCustomerIDColumn is the customer_id column name
-	PullRequestCommitCustomerIDColumn = "CustomerID"
-	// PullRequestCommitDeletionsColumn is the deletions column name
-	PullRequestCommitDeletionsColumn = "Deletions"
-	// PullRequestCommitIDColumn is the id column name
-	PullRequestCommitIDColumn = "ID"
-	// PullRequestCommitMessageColumn is the message column name
-	PullRequestCommitMessageColumn = "Message"
-	// PullRequestCommitPullRequestIDColumn is the pull_request_id column name
-	PullRequestCommitPullRequestIDColumn = "PullRequestID"
-	// PullRequestCommitRefIDColumn is the ref_id column name
-	PullRequestCommitRefIDColumn = "RefID"
-	// PullRequestCommitRefTypeColumn is the ref_type column name
-	PullRequestCommitRefTypeColumn = "RefType"
-	// PullRequestCommitRepoIDColumn is the repo_id column name
-	PullRequestCommitRepoIDColumn = "RepoID"
-	// PullRequestCommitShaColumn is the sha column name
-	PullRequestCommitShaColumn = "Sha"
-	// PullRequestCommitUpdatedAtColumn is the updated_ts column name
-	PullRequestCommitUpdatedAtColumn = "UpdatedAt"
-	// PullRequestCommitURLColumn is the url column name
-	PullRequestCommitURLColumn = "URL"
-)
-
 // PullRequestCommitCreatedDate represents the object structure for created_date
 type PullRequestCommitCreatedDate struct {
 	// Epoch the date in epoch format

@@ -28,51 +28,6 @@ const (
 	UserModelName datamodel.ModelNameType = "customer.User"
 )
 
-const (
-	// UserAvatarURLColumn is the avatar_url column name
-	UserAvatarURLColumn = "AvatarURL"
-	// UserCostCenterIDColumn is the cost_center_id column name
-	UserCostCenterIDColumn = "CostCenterID"
-	// UserCustomerIDColumn is the customer_id column name
-	UserCustomerIDColumn = "CustomerID"
-	// UserEmailColumn is the email column name
-	UserEmailColumn = "Email"
-	// UserHiredDateColumn is the hired_date column name
-	UserHiredDateColumn = "HiredDate"
-	// UserHiredDateColumnEpochColumn is the epoch column property of the HiredDate name
-	UserHiredDateColumnEpochColumn = "HiredDate.Epoch"
-	// UserHiredDateColumnOffsetColumn is the offset column property of the HiredDate name
-	UserHiredDateColumnOffsetColumn = "HiredDate.Offset"
-	// UserHiredDateColumnRfc3339Column is the rfc3339 column property of the HiredDate name
-	UserHiredDateColumnRfc3339Column = "HiredDate.Rfc3339"
-	// UserIDColumn is the id column name
-	UserIDColumn = "ID"
-	// UserLocationColumn is the location column name
-	UserLocationColumn = "Location"
-	// UserManagerIDColumn is the manager_id column name
-	UserManagerIDColumn = "ManagerID"
-	// UserNameColumn is the name column name
-	UserNameColumn = "Name"
-	// UserPrimaryTeamIDColumn is the primary_team_id column name
-	UserPrimaryTeamIDColumn = "PrimaryTeamID"
-	// UserRefIDColumn is the ref_id column name
-	UserRefIDColumn = "RefID"
-	// UserRefTypeColumn is the ref_type column name
-	UserRefTypeColumn = "RefType"
-	// UserTerminatedDateColumn is the terminated_date column name
-	UserTerminatedDateColumn = "TerminatedDate"
-	// UserTerminatedDateColumnEpochColumn is the epoch column property of the TerminatedDate name
-	UserTerminatedDateColumnEpochColumn = "TerminatedDate.Epoch"
-	// UserTerminatedDateColumnOffsetColumn is the offset column property of the TerminatedDate name
-	UserTerminatedDateColumnOffsetColumn = "TerminatedDate.Offset"
-	// UserTerminatedDateColumnRfc3339Column is the rfc3339 column property of the TerminatedDate name
-	UserTerminatedDateColumnRfc3339Column = "TerminatedDate.Rfc3339"
-	// UserTitleColumn is the title column name
-	UserTitleColumn = "Title"
-	// UserUpdatedAtColumn is the updated_ts column name
-	UserUpdatedAtColumn = "UpdatedAt"
-)
-
 // UserHiredDate represents the object structure for hired_date
 type UserHiredDate struct {
 	// Epoch the date in epoch format

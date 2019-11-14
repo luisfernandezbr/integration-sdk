@@ -27,21 +27,6 @@ const (
 	RepoTriggerModelName datamodel.ModelNameType = "agent.RepoTrigger"
 )
 
-const (
-	// RepoTriggerCustomerIDColumn is the customer_id column name
-	RepoTriggerCustomerIDColumn = "CustomerID"
-	// RepoTriggerIDColumn is the id column name
-	RepoTriggerIDColumn = "ID"
-	// RepoTriggerIntegrationIDColumn is the integration_id column name
-	RepoTriggerIntegrationIDColumn = "IntegrationID"
-	// RepoTriggerRefIDColumn is the ref_id column name
-	RepoTriggerRefIDColumn = "RefID"
-	// RepoTriggerRefTypeColumn is the ref_type column name
-	RepoTriggerRefTypeColumn = "RefType"
-	// RepoTriggerUpdatedAtColumn is the updated_ts column name
-	RepoTriggerUpdatedAtColumn = "UpdatedAt"
-)
-
 // RepoTrigger used to trigger an agent.RepoRequest
 type RepoTrigger struct {
 	// CustomerID the customer id for the model instance

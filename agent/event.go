@@ -30,67 +30,6 @@ const (
 	EventModelName datamodel.ModelNameType = "agent.Event"
 )
 
-const (
-	// EventArchitectureColumn is the architecture column name
-	EventArchitectureColumn = "Architecture"
-	// EventCustomerIDColumn is the customer_id column name
-	EventCustomerIDColumn = "CustomerID"
-	// EventDataColumn is the data column name
-	EventDataColumn = "Data"
-	// EventDistroColumn is the distro column name
-	EventDistroColumn = "Distro"
-	// EventErrorColumn is the error column name
-	EventErrorColumn = "Error"
-	// EventEventDateColumn is the event_date column name
-	EventEventDateColumn = "EventDate"
-	// EventEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	EventEventDateColumnEpochColumn = "EventDate.Epoch"
-	// EventEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	EventEventDateColumnOffsetColumn = "EventDate.Offset"
-	// EventEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	EventEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// EventFreeSpaceColumn is the free_space column name
-	EventFreeSpaceColumn = "FreeSpace"
-	// EventGoVersionColumn is the go_version column name
-	EventGoVersionColumn = "GoVersion"
-	// EventHostnameColumn is the hostname column name
-	EventHostnameColumn = "Hostname"
-	// EventIDColumn is the id column name
-	EventIDColumn = "ID"
-	// EventLastExportDateColumn is the last_export_date column name
-	EventLastExportDateColumn = "LastExportDate"
-	// EventLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	EventLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// EventLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	EventLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// EventLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	EventLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// EventMemoryColumn is the memory column name
-	EventMemoryColumn = "Memory"
-	// EventMessageColumn is the message column name
-	EventMessageColumn = "Message"
-	// EventNumCPUColumn is the num_cpu column name
-	EventNumCPUColumn = "NumCPU"
-	// EventOSColumn is the os column name
-	EventOSColumn = "OS"
-	// EventRefIDColumn is the ref_id column name
-	EventRefIDColumn = "RefID"
-	// EventRefTypeColumn is the ref_type column name
-	EventRefTypeColumn = "RefType"
-	// EventSystemIDColumn is the system_id column name
-	EventSystemIDColumn = "SystemID"
-	// EventTypeColumn is the type column name
-	EventTypeColumn = "Type"
-	// EventUpdatedAtColumn is the updated_ts column name
-	EventUpdatedAtColumn = "UpdatedAt"
-	// EventUptimeColumn is the uptime column name
-	EventUptimeColumn = "Uptime"
-	// EventUUIDColumn is the uuid column name
-	EventUUIDColumn = "UUID"
-	// EventVersionColumn is the version column name
-	EventVersionColumn = "Version"
-)
-
 // EventEventDate represents the object structure for event_date
 type EventEventDate struct {
 	// Epoch the date in epoch format

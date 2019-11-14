@@ -30,49 +30,6 @@ const (
 	DeploymentModelName datamodel.ModelNameType = "cicd.Deployment"
 )
 
-const (
-	// DeploymentAutomatedColumn is the automated column name
-	DeploymentAutomatedColumn = "Automated"
-	// DeploymentBuildRefIDColumn is the build_ref_id column name
-	DeploymentBuildRefIDColumn = "BuildRefID"
-	// DeploymentCommitShaColumn is the commit_sha column name
-	DeploymentCommitShaColumn = "CommitSha"
-	// DeploymentCustomerIDColumn is the customer_id column name
-	DeploymentCustomerIDColumn = "CustomerID"
-	// DeploymentEndDateColumn is the end_date column name
-	DeploymentEndDateColumn = "EndDate"
-	// DeploymentEndDateColumnEpochColumn is the epoch column property of the EndDate name
-	DeploymentEndDateColumnEpochColumn = "EndDate.Epoch"
-	// DeploymentEndDateColumnOffsetColumn is the offset column property of the EndDate name
-	DeploymentEndDateColumnOffsetColumn = "EndDate.Offset"
-	// DeploymentEndDateColumnRfc3339Column is the rfc3339 column property of the EndDate name
-	DeploymentEndDateColumnRfc3339Column = "EndDate.Rfc3339"
-	// DeploymentEnvironmentColumn is the environment column name
-	DeploymentEnvironmentColumn = "Environment"
-	// DeploymentIDColumn is the id column name
-	DeploymentIDColumn = "ID"
-	// DeploymentRefIDColumn is the ref_id column name
-	DeploymentRefIDColumn = "RefID"
-	// DeploymentRefTypeColumn is the ref_type column name
-	DeploymentRefTypeColumn = "RefType"
-	// DeploymentRepoNameColumn is the repo_name column name
-	DeploymentRepoNameColumn = "RepoName"
-	// DeploymentStartDateColumn is the start_date column name
-	DeploymentStartDateColumn = "StartDate"
-	// DeploymentStartDateColumnEpochColumn is the epoch column property of the StartDate name
-	DeploymentStartDateColumnEpochColumn = "StartDate.Epoch"
-	// DeploymentStartDateColumnOffsetColumn is the offset column property of the StartDate name
-	DeploymentStartDateColumnOffsetColumn = "StartDate.Offset"
-	// DeploymentStartDateColumnRfc3339Column is the rfc3339 column property of the StartDate name
-	DeploymentStartDateColumnRfc3339Column = "StartDate.Rfc3339"
-	// DeploymentStatusColumn is the status column name
-	DeploymentStatusColumn = "Status"
-	// DeploymentUpdatedAtColumn is the updated_ts column name
-	DeploymentUpdatedAtColumn = "UpdatedAt"
-	// DeploymentURLColumn is the url column name
-	DeploymentURLColumn = "URL"
-)
-
 // DeploymentEndDate represents the object structure for end_date
 type DeploymentEndDate struct {
 	// Epoch the date in epoch format

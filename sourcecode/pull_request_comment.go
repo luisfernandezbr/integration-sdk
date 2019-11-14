@@ -27,45 +27,6 @@ const (
 	PullRequestCommentModelName datamodel.ModelNameType = "sourcecode.PullRequestComment"
 )
 
-const (
-	// PullRequestCommentBodyColumn is the body column name
-	PullRequestCommentBodyColumn = "Body"
-	// PullRequestCommentCreatedDateColumn is the created_date column name
-	PullRequestCommentCreatedDateColumn = "CreatedDate"
-	// PullRequestCommentCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	PullRequestCommentCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
-	// PullRequestCommentCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	PullRequestCommentCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
-	// PullRequestCommentCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	PullRequestCommentCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
-	// PullRequestCommentCustomerIDColumn is the customer_id column name
-	PullRequestCommentCustomerIDColumn = "CustomerID"
-	// PullRequestCommentIDColumn is the id column name
-	PullRequestCommentIDColumn = "ID"
-	// PullRequestCommentPullRequestIDColumn is the pull_request_id column name
-	PullRequestCommentPullRequestIDColumn = "PullRequestID"
-	// PullRequestCommentRefIDColumn is the ref_id column name
-	PullRequestCommentRefIDColumn = "RefID"
-	// PullRequestCommentRefTypeColumn is the ref_type column name
-	PullRequestCommentRefTypeColumn = "RefType"
-	// PullRequestCommentRepoIDColumn is the repo_id column name
-	PullRequestCommentRepoIDColumn = "RepoID"
-	// PullRequestCommentUpdatedDateColumn is the updated_date column name
-	PullRequestCommentUpdatedDateColumn = "UpdatedDate"
-	// PullRequestCommentUpdatedDateColumnEpochColumn is the epoch column property of the UpdatedDate name
-	PullRequestCommentUpdatedDateColumnEpochColumn = "UpdatedDate.Epoch"
-	// PullRequestCommentUpdatedDateColumnOffsetColumn is the offset column property of the UpdatedDate name
-	PullRequestCommentUpdatedDateColumnOffsetColumn = "UpdatedDate.Offset"
-	// PullRequestCommentUpdatedDateColumnRfc3339Column is the rfc3339 column property of the UpdatedDate name
-	PullRequestCommentUpdatedDateColumnRfc3339Column = "UpdatedDate.Rfc3339"
-	// PullRequestCommentUpdatedAtColumn is the updated_ts column name
-	PullRequestCommentUpdatedAtColumn = "UpdatedAt"
-	// PullRequestCommentURLColumn is the url column name
-	PullRequestCommentURLColumn = "URL"
-	// PullRequestCommentUserRefIDColumn is the user_ref_id column name
-	PullRequestCommentUserRefIDColumn = "UserRefID"
-)
-
 // PullRequestCommentCreatedDate represents the object structure for created_date
 type PullRequestCommentCreatedDate struct {
 	// Epoch the date in epoch format

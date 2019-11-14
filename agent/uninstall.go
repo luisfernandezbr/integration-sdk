@@ -30,71 +30,6 @@ const (
 	UninstallModelName datamodel.ModelNameType = "agent.Uninstall"
 )
 
-const (
-	// UninstallArchitectureColumn is the architecture column name
-	UninstallArchitectureColumn = "Architecture"
-	// UninstallCustomerIDColumn is the customer_id column name
-	UninstallCustomerIDColumn = "CustomerID"
-	// UninstallDataColumn is the data column name
-	UninstallDataColumn = "Data"
-	// UninstallDistroColumn is the distro column name
-	UninstallDistroColumn = "Distro"
-	// UninstallErrorColumn is the error column name
-	UninstallErrorColumn = "Error"
-	// UninstallEventDateColumn is the event_date column name
-	UninstallEventDateColumn = "EventDate"
-	// UninstallEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	UninstallEventDateColumnEpochColumn = "EventDate.Epoch"
-	// UninstallEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	UninstallEventDateColumnOffsetColumn = "EventDate.Offset"
-	// UninstallEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	UninstallEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// UninstallFreeSpaceColumn is the free_space column name
-	UninstallFreeSpaceColumn = "FreeSpace"
-	// UninstallGoVersionColumn is the go_version column name
-	UninstallGoVersionColumn = "GoVersion"
-	// UninstallHostnameColumn is the hostname column name
-	UninstallHostnameColumn = "Hostname"
-	// UninstallIDColumn is the id column name
-	UninstallIDColumn = "ID"
-	// UninstallLastExportDateColumn is the last_export_date column name
-	UninstallLastExportDateColumn = "LastExportDate"
-	// UninstallLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	UninstallLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// UninstallLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	UninstallLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// UninstallLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	UninstallLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// UninstallMemoryColumn is the memory column name
-	UninstallMemoryColumn = "Memory"
-	// UninstallMessageColumn is the message column name
-	UninstallMessageColumn = "Message"
-	// UninstallNumCPUColumn is the num_cpu column name
-	UninstallNumCPUColumn = "NumCPU"
-	// UninstallOSColumn is the os column name
-	UninstallOSColumn = "OS"
-	// UninstallRefIDColumn is the ref_id column name
-	UninstallRefIDColumn = "RefID"
-	// UninstallRefTypeColumn is the ref_type column name
-	UninstallRefTypeColumn = "RefType"
-	// UninstallRequestIDColumn is the request_id column name
-	UninstallRequestIDColumn = "RequestID"
-	// UninstallSuccessColumn is the success column name
-	UninstallSuccessColumn = "Success"
-	// UninstallSystemIDColumn is the system_id column name
-	UninstallSystemIDColumn = "SystemID"
-	// UninstallTypeColumn is the type column name
-	UninstallTypeColumn = "Type"
-	// UninstallUpdatedAtColumn is the updated_ts column name
-	UninstallUpdatedAtColumn = "UpdatedAt"
-	// UninstallUptimeColumn is the uptime column name
-	UninstallUptimeColumn = "Uptime"
-	// UninstallUUIDColumn is the uuid column name
-	UninstallUUIDColumn = "UUID"
-	// UninstallVersionColumn is the version column name
-	UninstallVersionColumn = "Version"
-)
-
 // UninstallEventDate represents the object structure for event_date
 type UninstallEventDate struct {
 	// Epoch the date in epoch format
@@ -866,25 +801,6 @@ func (o *Uninstall) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UninstallEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -959,25 +875,6 @@ func (o *Uninstall) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UninstallLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

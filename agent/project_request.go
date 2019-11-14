@@ -34,65 +34,6 @@ const (
 	ProjectRequestModelName datamodel.ModelNameType = "agent.ProjectRequest"
 )
 
-const (
-	// ProjectRequestCustomerIDColumn is the customer_id column name
-	ProjectRequestCustomerIDColumn = "CustomerID"
-	// ProjectRequestIDColumn is the id column name
-	ProjectRequestIDColumn = "ID"
-	// ProjectRequestIntegrationColumn is the integration column name
-	ProjectRequestIntegrationColumn = "Integration"
-	// ProjectRequestIntegrationColumnActiveColumn is the active column property of the Integration name
-	ProjectRequestIntegrationColumnActiveColumn = "Integration.Active"
-	// ProjectRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
-	ProjectRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
-	// ProjectRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
-	ProjectRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
-	// ProjectRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
-	ProjectRequestIntegrationColumnErroredColumn = "Integration.Errored"
-	// ProjectRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
-	ProjectRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
-	// ProjectRequestIntegrationColumnIDColumn is the id column property of the Integration name
-	ProjectRequestIntegrationColumnIDColumn = "Integration.ID"
-	// ProjectRequestIntegrationColumnLocationColumn is the location column property of the Integration name
-	ProjectRequestIntegrationColumnLocationColumn = "Integration.Location"
-	// ProjectRequestIntegrationColumnNameColumn is the name column property of the Integration name
-	ProjectRequestIntegrationColumnNameColumn = "Integration.Name"
-	// ProjectRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
-	ProjectRequestIntegrationColumnProgressColumn = "Integration.Progress"
-	// ProjectRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
-	ProjectRequestIntegrationColumnRefIDColumn = "Integration.RefID"
-	// ProjectRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
-	ProjectRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
-	// ProjectRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
-	ProjectRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
-	// ProjectRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
-	ProjectRequestIntegrationColumnValidatedColumn = "Integration.Validated"
-	// ProjectRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
-	ProjectRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
-	// ProjectRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
-	ProjectRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
-	// ProjectRequestLocationColumn is the location column name
-	ProjectRequestLocationColumn = "Location"
-	// ProjectRequestRefIDColumn is the ref_id column name
-	ProjectRequestRefIDColumn = "RefID"
-	// ProjectRequestRefTypeColumn is the ref_type column name
-	ProjectRequestRefTypeColumn = "RefType"
-	// ProjectRequestRequestDateColumn is the request_date column name
-	ProjectRequestRequestDateColumn = "RequestDate"
-	// ProjectRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	ProjectRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
-	// ProjectRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	ProjectRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
-	// ProjectRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	ProjectRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
-	// ProjectRequestSystemTypeColumn is the system_type column name
-	ProjectRequestSystemTypeColumn = "SystemType"
-	// ProjectRequestUpdatedAtColumn is the updated_ts column name
-	ProjectRequestUpdatedAtColumn = "UpdatedAt"
-	// ProjectRequestUUIDColumn is the uuid column name
-	ProjectRequestUUIDColumn = "UUID"
-)
-
 // ProjectRequestIntegrationAuthorization represents the object structure for authorization
 type ProjectRequestIntegrationAuthorization struct {
 	// AccessToken Access token

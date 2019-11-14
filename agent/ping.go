@@ -30,73 +30,6 @@ const (
 	PingModelName datamodel.ModelNameType = "agent.Ping"
 )
 
-const (
-	// PingArchitectureColumn is the architecture column name
-	PingArchitectureColumn = "Architecture"
-	// PingCustomerIDColumn is the customer_id column name
-	PingCustomerIDColumn = "CustomerID"
-	// PingDataColumn is the data column name
-	PingDataColumn = "Data"
-	// PingDistroColumn is the distro column name
-	PingDistroColumn = "Distro"
-	// PingErrorColumn is the error column name
-	PingErrorColumn = "Error"
-	// PingEventDateColumn is the event_date column name
-	PingEventDateColumn = "EventDate"
-	// PingEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	PingEventDateColumnEpochColumn = "EventDate.Epoch"
-	// PingEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	PingEventDateColumnOffsetColumn = "EventDate.Offset"
-	// PingEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	PingEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// PingFreeSpaceColumn is the free_space column name
-	PingFreeSpaceColumn = "FreeSpace"
-	// PingGoVersionColumn is the go_version column name
-	PingGoVersionColumn = "GoVersion"
-	// PingHostnameColumn is the hostname column name
-	PingHostnameColumn = "Hostname"
-	// PingIDColumn is the id column name
-	PingIDColumn = "ID"
-	// PingLastExportDateColumn is the last_export_date column name
-	PingLastExportDateColumn = "LastExportDate"
-	// PingLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	PingLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// PingLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	PingLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// PingLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	PingLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// PingMemoryColumn is the memory column name
-	PingMemoryColumn = "Memory"
-	// PingMessageColumn is the message column name
-	PingMessageColumn = "Message"
-	// PingNumCPUColumn is the num_cpu column name
-	PingNumCPUColumn = "NumCPU"
-	// PingOSColumn is the os column name
-	PingOSColumn = "OS"
-	// PingRefIDColumn is the ref_id column name
-	PingRefIDColumn = "RefID"
-	// PingRefTypeColumn is the ref_type column name
-	PingRefTypeColumn = "RefType"
-	// PingRequestIDColumn is the request_id column name
-	PingRequestIDColumn = "RequestID"
-	// PingStateColumn is the state column name
-	PingStateColumn = "State"
-	// PingSuccessColumn is the success column name
-	PingSuccessColumn = "Success"
-	// PingSystemIDColumn is the system_id column name
-	PingSystemIDColumn = "SystemID"
-	// PingTypeColumn is the type column name
-	PingTypeColumn = "Type"
-	// PingUpdatedAtColumn is the updated_ts column name
-	PingUpdatedAtColumn = "UpdatedAt"
-	// PingUptimeColumn is the uptime column name
-	PingUptimeColumn = "Uptime"
-	// PingUUIDColumn is the uuid column name
-	PingUUIDColumn = "UUID"
-	// PingVersionColumn is the version column name
-	PingVersionColumn = "Version"
-)
-
 // PingEventDate represents the object structure for event_date
 type PingEventDate struct {
 	// Epoch the date in epoch format
@@ -955,25 +888,6 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1048,25 +962,6 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

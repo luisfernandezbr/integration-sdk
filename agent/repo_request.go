@@ -34,65 +34,6 @@ const (
 	RepoRequestModelName datamodel.ModelNameType = "agent.RepoRequest"
 )
 
-const (
-	// RepoRequestCustomerIDColumn is the customer_id column name
-	RepoRequestCustomerIDColumn = "CustomerID"
-	// RepoRequestIDColumn is the id column name
-	RepoRequestIDColumn = "ID"
-	// RepoRequestIntegrationColumn is the integration column name
-	RepoRequestIntegrationColumn = "Integration"
-	// RepoRequestIntegrationColumnActiveColumn is the active column property of the Integration name
-	RepoRequestIntegrationColumnActiveColumn = "Integration.Active"
-	// RepoRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
-	RepoRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
-	// RepoRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
-	RepoRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
-	// RepoRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
-	RepoRequestIntegrationColumnErroredColumn = "Integration.Errored"
-	// RepoRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
-	RepoRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
-	// RepoRequestIntegrationColumnIDColumn is the id column property of the Integration name
-	RepoRequestIntegrationColumnIDColumn = "Integration.ID"
-	// RepoRequestIntegrationColumnLocationColumn is the location column property of the Integration name
-	RepoRequestIntegrationColumnLocationColumn = "Integration.Location"
-	// RepoRequestIntegrationColumnNameColumn is the name column property of the Integration name
-	RepoRequestIntegrationColumnNameColumn = "Integration.Name"
-	// RepoRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
-	RepoRequestIntegrationColumnProgressColumn = "Integration.Progress"
-	// RepoRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
-	RepoRequestIntegrationColumnRefIDColumn = "Integration.RefID"
-	// RepoRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
-	RepoRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
-	// RepoRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
-	RepoRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
-	// RepoRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
-	RepoRequestIntegrationColumnValidatedColumn = "Integration.Validated"
-	// RepoRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
-	RepoRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
-	// RepoRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
-	RepoRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
-	// RepoRequestLocationColumn is the location column name
-	RepoRequestLocationColumn = "Location"
-	// RepoRequestRefIDColumn is the ref_id column name
-	RepoRequestRefIDColumn = "RefID"
-	// RepoRequestRefTypeColumn is the ref_type column name
-	RepoRequestRefTypeColumn = "RefType"
-	// RepoRequestRequestDateColumn is the request_date column name
-	RepoRequestRequestDateColumn = "RequestDate"
-	// RepoRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	RepoRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
-	// RepoRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	RepoRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
-	// RepoRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	RepoRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
-	// RepoRequestSystemTypeColumn is the system_type column name
-	RepoRequestSystemTypeColumn = "SystemType"
-	// RepoRequestUpdatedAtColumn is the updated_ts column name
-	RepoRequestUpdatedAtColumn = "UpdatedAt"
-	// RepoRequestUUIDColumn is the uuid column name
-	RepoRequestUUIDColumn = "UUID"
-)
-
 // RepoRequestIntegrationAuthorization represents the object structure for authorization
 type RepoRequestIntegrationAuthorization struct {
 	// AccessToken Access token
@@ -1588,25 +1529,6 @@ func (o *RepoRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

@@ -32,87 +32,6 @@ const (
 	CodequalityResponseModelName datamodel.ModelNameType = "agent.CodequalityResponse"
 )
 
-const (
-	// CodequalityResponseArchitectureColumn is the architecture column name
-	CodequalityResponseArchitectureColumn = "Architecture"
-	// CodequalityResponseCustomerIDColumn is the customer_id column name
-	CodequalityResponseCustomerIDColumn = "CustomerID"
-	// CodequalityResponseDataColumn is the data column name
-	CodequalityResponseDataColumn = "Data"
-	// CodequalityResponseDistroColumn is the distro column name
-	CodequalityResponseDistroColumn = "Distro"
-	// CodequalityResponseErrorColumn is the error column name
-	CodequalityResponseErrorColumn = "Error"
-	// CodequalityResponseEventDateColumn is the event_date column name
-	CodequalityResponseEventDateColumn = "EventDate"
-	// CodequalityResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	CodequalityResponseEventDateColumnEpochColumn = "EventDate.Epoch"
-	// CodequalityResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	CodequalityResponseEventDateColumnOffsetColumn = "EventDate.Offset"
-	// CodequalityResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	CodequalityResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// CodequalityResponseFreeSpaceColumn is the free_space column name
-	CodequalityResponseFreeSpaceColumn = "FreeSpace"
-	// CodequalityResponseGoVersionColumn is the go_version column name
-	CodequalityResponseGoVersionColumn = "GoVersion"
-	// CodequalityResponseHostnameColumn is the hostname column name
-	CodequalityResponseHostnameColumn = "Hostname"
-	// CodequalityResponseIDColumn is the id column name
-	CodequalityResponseIDColumn = "ID"
-	// CodequalityResponseIntegrationIDColumn is the integration_id column name
-	CodequalityResponseIntegrationIDColumn = "IntegrationID"
-	// CodequalityResponseLastExportDateColumn is the last_export_date column name
-	CodequalityResponseLastExportDateColumn = "LastExportDate"
-	// CodequalityResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	CodequalityResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// CodequalityResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	CodequalityResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// CodequalityResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	CodequalityResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// CodequalityResponseMemoryColumn is the memory column name
-	CodequalityResponseMemoryColumn = "Memory"
-	// CodequalityResponseMessageColumn is the message column name
-	CodequalityResponseMessageColumn = "Message"
-	// CodequalityResponseNumCPUColumn is the num_cpu column name
-	CodequalityResponseNumCPUColumn = "NumCPU"
-	// CodequalityResponseOSColumn is the os column name
-	CodequalityResponseOSColumn = "OS"
-	// CodequalityResponseProjectsColumn is the projects column name
-	CodequalityResponseProjectsColumn = "Projects"
-	// CodequalityResponseProjectsColumnCustomerIDColumn is the customer_id column property of the Projects name
-	CodequalityResponseProjectsColumnCustomerIDColumn = "Projects.CustomerID"
-	// CodequalityResponseProjectsColumnIDColumn is the id column property of the Projects name
-	CodequalityResponseProjectsColumnIDColumn = "Projects.ID"
-	// CodequalityResponseProjectsColumnIdentifierColumn is the identifier column property of the Projects name
-	CodequalityResponseProjectsColumnIdentifierColumn = "Projects.Identifier"
-	// CodequalityResponseProjectsColumnNameColumn is the name column property of the Projects name
-	CodequalityResponseProjectsColumnNameColumn = "Projects.Name"
-	// CodequalityResponseProjectsColumnRefIDColumn is the ref_id column property of the Projects name
-	CodequalityResponseProjectsColumnRefIDColumn = "Projects.RefID"
-	// CodequalityResponseProjectsColumnRefTypeColumn is the ref_type column property of the Projects name
-	CodequalityResponseProjectsColumnRefTypeColumn = "Projects.RefType"
-	// CodequalityResponseRefIDColumn is the ref_id column name
-	CodequalityResponseRefIDColumn = "RefID"
-	// CodequalityResponseRefTypeColumn is the ref_type column name
-	CodequalityResponseRefTypeColumn = "RefType"
-	// CodequalityResponseRequestIDColumn is the request_id column name
-	CodequalityResponseRequestIDColumn = "RequestID"
-	// CodequalityResponseSuccessColumn is the success column name
-	CodequalityResponseSuccessColumn = "Success"
-	// CodequalityResponseSystemIDColumn is the system_id column name
-	CodequalityResponseSystemIDColumn = "SystemID"
-	// CodequalityResponseTypeColumn is the type column name
-	CodequalityResponseTypeColumn = "Type"
-	// CodequalityResponseUpdatedAtColumn is the updated_ts column name
-	CodequalityResponseUpdatedAtColumn = "UpdatedAt"
-	// CodequalityResponseUptimeColumn is the uptime column name
-	CodequalityResponseUptimeColumn = "Uptime"
-	// CodequalityResponseUUIDColumn is the uuid column name
-	CodequalityResponseUUIDColumn = "UUID"
-	// CodequalityResponseVersionColumn is the version column name
-	CodequalityResponseVersionColumn = "Version"
-)
-
 // CodequalityResponseEventDate represents the object structure for event_date
 type CodequalityResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -1051,25 +970,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1159,25 +1059,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CodequalityResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

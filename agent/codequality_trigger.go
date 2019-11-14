@@ -27,21 +27,6 @@ const (
 	CodequalityTriggerModelName datamodel.ModelNameType = "agent.CodequalityTrigger"
 )
 
-const (
-	// CodequalityTriggerCustomerIDColumn is the customer_id column name
-	CodequalityTriggerCustomerIDColumn = "CustomerID"
-	// CodequalityTriggerIDColumn is the id column name
-	CodequalityTriggerIDColumn = "ID"
-	// CodequalityTriggerIntegrationIDColumn is the integration_id column name
-	CodequalityTriggerIntegrationIDColumn = "IntegrationID"
-	// CodequalityTriggerRefIDColumn is the ref_id column name
-	CodequalityTriggerRefIDColumn = "RefID"
-	// CodequalityTriggerRefTypeColumn is the ref_type column name
-	CodequalityTriggerRefTypeColumn = "RefType"
-	// CodequalityTriggerUpdatedAtColumn is the updated_ts column name
-	CodequalityTriggerUpdatedAtColumn = "UpdatedAt"
-)
-
 // CodequalityTrigger used to trigger an agent.CodequalityRequest
 type CodequalityTrigger struct {
 	// CustomerID the customer id for the model instance

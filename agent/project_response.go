@@ -32,95 +32,6 @@ const (
 	ProjectResponseModelName datamodel.ModelNameType = "agent.ProjectResponse"
 )
 
-const (
-	// ProjectResponseArchitectureColumn is the architecture column name
-	ProjectResponseArchitectureColumn = "Architecture"
-	// ProjectResponseCustomerIDColumn is the customer_id column name
-	ProjectResponseCustomerIDColumn = "CustomerID"
-	// ProjectResponseDataColumn is the data column name
-	ProjectResponseDataColumn = "Data"
-	// ProjectResponseDistroColumn is the distro column name
-	ProjectResponseDistroColumn = "Distro"
-	// ProjectResponseErrorColumn is the error column name
-	ProjectResponseErrorColumn = "Error"
-	// ProjectResponseEventDateColumn is the event_date column name
-	ProjectResponseEventDateColumn = "EventDate"
-	// ProjectResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	ProjectResponseEventDateColumnEpochColumn = "EventDate.Epoch"
-	// ProjectResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	ProjectResponseEventDateColumnOffsetColumn = "EventDate.Offset"
-	// ProjectResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	ProjectResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// ProjectResponseFreeSpaceColumn is the free_space column name
-	ProjectResponseFreeSpaceColumn = "FreeSpace"
-	// ProjectResponseGoVersionColumn is the go_version column name
-	ProjectResponseGoVersionColumn = "GoVersion"
-	// ProjectResponseHostnameColumn is the hostname column name
-	ProjectResponseHostnameColumn = "Hostname"
-	// ProjectResponseIDColumn is the id column name
-	ProjectResponseIDColumn = "ID"
-	// ProjectResponseIntegrationIDColumn is the integration_id column name
-	ProjectResponseIntegrationIDColumn = "IntegrationID"
-	// ProjectResponseLastExportDateColumn is the last_export_date column name
-	ProjectResponseLastExportDateColumn = "LastExportDate"
-	// ProjectResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	ProjectResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// ProjectResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	ProjectResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// ProjectResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	ProjectResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// ProjectResponseMemoryColumn is the memory column name
-	ProjectResponseMemoryColumn = "Memory"
-	// ProjectResponseMessageColumn is the message column name
-	ProjectResponseMessageColumn = "Message"
-	// ProjectResponseNumCPUColumn is the num_cpu column name
-	ProjectResponseNumCPUColumn = "NumCPU"
-	// ProjectResponseOSColumn is the os column name
-	ProjectResponseOSColumn = "OS"
-	// ProjectResponseProjectsColumn is the projects column name
-	ProjectResponseProjectsColumn = "Projects"
-	// ProjectResponseProjectsColumnActiveColumn is the active column property of the Projects name
-	ProjectResponseProjectsColumnActiveColumn = "Projects.Active"
-	// ProjectResponseProjectsColumnCategoryColumn is the category column property of the Projects name
-	ProjectResponseProjectsColumnCategoryColumn = "Projects.Category"
-	// ProjectResponseProjectsColumnDescriptionColumn is the description column property of the Projects name
-	ProjectResponseProjectsColumnDescriptionColumn = "Projects.Description"
-	// ProjectResponseProjectsColumnIdentifierColumn is the identifier column property of the Projects name
-	ProjectResponseProjectsColumnIdentifierColumn = "Projects.Identifier"
-	// ProjectResponseProjectsColumnLastIssueColumn is the last_issue column property of the Projects name
-	ProjectResponseProjectsColumnLastIssueColumn = "Projects.LastIssue"
-	// ProjectResponseProjectsColumnNameColumn is the name column property of the Projects name
-	ProjectResponseProjectsColumnNameColumn = "Projects.Name"
-	// ProjectResponseProjectsColumnRefIDColumn is the ref_id column property of the Projects name
-	ProjectResponseProjectsColumnRefIDColumn = "Projects.RefID"
-	// ProjectResponseProjectsColumnRefTypeColumn is the ref_type column property of the Projects name
-	ProjectResponseProjectsColumnRefTypeColumn = "Projects.RefType"
-	// ProjectResponseProjectsColumnTotalIssuesColumn is the total_issues column property of the Projects name
-	ProjectResponseProjectsColumnTotalIssuesColumn = "Projects.TotalIssues"
-	// ProjectResponseProjectsColumnURLColumn is the url column property of the Projects name
-	ProjectResponseProjectsColumnURLColumn = "Projects.URL"
-	// ProjectResponseRefIDColumn is the ref_id column name
-	ProjectResponseRefIDColumn = "RefID"
-	// ProjectResponseRefTypeColumn is the ref_type column name
-	ProjectResponseRefTypeColumn = "RefType"
-	// ProjectResponseRequestIDColumn is the request_id column name
-	ProjectResponseRequestIDColumn = "RequestID"
-	// ProjectResponseSuccessColumn is the success column name
-	ProjectResponseSuccessColumn = "Success"
-	// ProjectResponseSystemIDColumn is the system_id column name
-	ProjectResponseSystemIDColumn = "SystemID"
-	// ProjectResponseTypeColumn is the type column name
-	ProjectResponseTypeColumn = "Type"
-	// ProjectResponseUpdatedAtColumn is the updated_ts column name
-	ProjectResponseUpdatedAtColumn = "UpdatedAt"
-	// ProjectResponseUptimeColumn is the uptime column name
-	ProjectResponseUptimeColumn = "Uptime"
-	// ProjectResponseUUIDColumn is the uuid column name
-	ProjectResponseUUIDColumn = "UUID"
-	// ProjectResponseVersionColumn is the version column name
-	ProjectResponseVersionColumn = "Version"
-)
-
 // ProjectResponseEventDate represents the object structure for event_date
 type ProjectResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -1445,25 +1356,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1553,25 +1445,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

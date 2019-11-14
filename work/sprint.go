@@ -29,57 +29,6 @@ const (
 	SprintModelName datamodel.ModelNameType = "work.Sprint"
 )
 
-const (
-	// SprintCompletedDateColumn is the completed_date column name
-	SprintCompletedDateColumn = "CompletedDate"
-	// SprintCompletedDateColumnEpochColumn is the epoch column property of the CompletedDate name
-	SprintCompletedDateColumnEpochColumn = "CompletedDate.Epoch"
-	// SprintCompletedDateColumnOffsetColumn is the offset column property of the CompletedDate name
-	SprintCompletedDateColumnOffsetColumn = "CompletedDate.Offset"
-	// SprintCompletedDateColumnRfc3339Column is the rfc3339 column property of the CompletedDate name
-	SprintCompletedDateColumnRfc3339Column = "CompletedDate.Rfc3339"
-	// SprintCustomerIDColumn is the customer_id column name
-	SprintCustomerIDColumn = "CustomerID"
-	// SprintEndedDateColumn is the ended_date column name
-	SprintEndedDateColumn = "EndedDate"
-	// SprintEndedDateColumnEpochColumn is the epoch column property of the EndedDate name
-	SprintEndedDateColumnEpochColumn = "EndedDate.Epoch"
-	// SprintEndedDateColumnOffsetColumn is the offset column property of the EndedDate name
-	SprintEndedDateColumnOffsetColumn = "EndedDate.Offset"
-	// SprintEndedDateColumnRfc3339Column is the rfc3339 column property of the EndedDate name
-	SprintEndedDateColumnRfc3339Column = "EndedDate.Rfc3339"
-	// SprintFetchedDateColumn is the fetched_date column name
-	SprintFetchedDateColumn = "FetchedDate"
-	// SprintFetchedDateColumnEpochColumn is the epoch column property of the FetchedDate name
-	SprintFetchedDateColumnEpochColumn = "FetchedDate.Epoch"
-	// SprintFetchedDateColumnOffsetColumn is the offset column property of the FetchedDate name
-	SprintFetchedDateColumnOffsetColumn = "FetchedDate.Offset"
-	// SprintFetchedDateColumnRfc3339Column is the rfc3339 column property of the FetchedDate name
-	SprintFetchedDateColumnRfc3339Column = "FetchedDate.Rfc3339"
-	// SprintGoalColumn is the goal column name
-	SprintGoalColumn = "Goal"
-	// SprintIDColumn is the id column name
-	SprintIDColumn = "ID"
-	// SprintNameColumn is the name column name
-	SprintNameColumn = "Name"
-	// SprintRefIDColumn is the ref_id column name
-	SprintRefIDColumn = "RefID"
-	// SprintRefTypeColumn is the ref_type column name
-	SprintRefTypeColumn = "RefType"
-	// SprintStartedDateColumn is the started_date column name
-	SprintStartedDateColumn = "StartedDate"
-	// SprintStartedDateColumnEpochColumn is the epoch column property of the StartedDate name
-	SprintStartedDateColumnEpochColumn = "StartedDate.Epoch"
-	// SprintStartedDateColumnOffsetColumn is the offset column property of the StartedDate name
-	SprintStartedDateColumnOffsetColumn = "StartedDate.Offset"
-	// SprintStartedDateColumnRfc3339Column is the rfc3339 column property of the StartedDate name
-	SprintStartedDateColumnRfc3339Column = "StartedDate.Rfc3339"
-	// SprintStatusColumn is the status column name
-	SprintStatusColumn = "Status"
-	// SprintUpdatedAtColumn is the updated_ts column name
-	SprintUpdatedAtColumn = "UpdatedAt"
-)
-
 // SprintCompletedDate represents the object structure for completed_date
 type SprintCompletedDate struct {
 	// Epoch the date in epoch format

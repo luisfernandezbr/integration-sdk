@@ -30,33 +30,6 @@ const (
 	UserModelName datamodel.ModelNameType = "sourcecode.User"
 )
 
-const (
-	// UserAssociatedRefIDColumn is the associated_ref_id column name
-	UserAssociatedRefIDColumn = "AssociatedRefID"
-	// UserAvatarURLColumn is the avatar_url column name
-	UserAvatarURLColumn = "AvatarURL"
-	// UserCustomerIDColumn is the customer_id column name
-	UserCustomerIDColumn = "CustomerID"
-	// UserEmailColumn is the email column name
-	UserEmailColumn = "Email"
-	// UserIDColumn is the id column name
-	UserIDColumn = "ID"
-	// UserMemberColumn is the member column name
-	UserMemberColumn = "Member"
-	// UserNameColumn is the name column name
-	UserNameColumn = "Name"
-	// UserRefIDColumn is the ref_id column name
-	UserRefIDColumn = "RefID"
-	// UserRefTypeColumn is the ref_type column name
-	UserRefTypeColumn = "RefType"
-	// UserTypeColumn is the type column name
-	UserTypeColumn = "Type"
-	// UserUpdatedAtColumn is the updated_ts column name
-	UserUpdatedAtColumn = "UpdatedAt"
-	// UserUsernameColumn is the username column name
-	UserUsernameColumn = "Username"
-)
-
 // UserType is the enumeration type for type
 type UserType int32
 

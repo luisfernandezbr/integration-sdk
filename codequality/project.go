@@ -27,23 +27,6 @@ const (
 	ProjectModelName datamodel.ModelNameType = "codequality.Project"
 )
 
-const (
-	// ProjectCustomerIDColumn is the customer_id column name
-	ProjectCustomerIDColumn = "CustomerID"
-	// ProjectIDColumn is the id column name
-	ProjectIDColumn = "ID"
-	// ProjectIdentifierColumn is the identifier column name
-	ProjectIdentifierColumn = "Identifier"
-	// ProjectNameColumn is the name column name
-	ProjectNameColumn = "Name"
-	// ProjectRefIDColumn is the ref_id column name
-	ProjectRefIDColumn = "RefID"
-	// ProjectRefTypeColumn is the ref_type column name
-	ProjectRefTypeColumn = "RefType"
-	// ProjectUpdatedAtColumn is the updated_ts column name
-	ProjectUpdatedAtColumn = "UpdatedAt"
-)
-
 // Project project information
 type Project struct {
 	// CustomerID the customer id for the model instance

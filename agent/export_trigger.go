@@ -28,23 +28,6 @@ const (
 	ExportTriggerModelName datamodel.ModelNameType = "agent.ExportTrigger"
 )
 
-const (
-	// ExportTriggerCustomerIDColumn is the customer_id column name
-	ExportTriggerCustomerIDColumn = "CustomerID"
-	// ExportTriggerIDColumn is the id column name
-	ExportTriggerIDColumn = "ID"
-	// ExportTriggerRefIDColumn is the ref_id column name
-	ExportTriggerRefIDColumn = "RefID"
-	// ExportTriggerRefTypeColumn is the ref_type column name
-	ExportTriggerRefTypeColumn = "RefType"
-	// ExportTriggerReprocessHistoricalColumn is the reprocess_historical column name
-	ExportTriggerReprocessHistoricalColumn = "ReprocessHistorical"
-	// ExportTriggerUpdatedAtColumn is the updated_ts column name
-	ExportTriggerUpdatedAtColumn = "UpdatedAt"
-	// ExportTriggerUUIDColumn is the uuid column name
-	ExportTriggerUUIDColumn = "UUID"
-)
-
 // ExportTrigger used to trigger an agent.ExportRequest
 type ExportTrigger struct {
 	// CustomerID the customer id for the model instance

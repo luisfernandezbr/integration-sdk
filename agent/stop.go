@@ -30,71 +30,6 @@ const (
 	StopModelName datamodel.ModelNameType = "agent.Stop"
 )
 
-const (
-	// StopArchitectureColumn is the architecture column name
-	StopArchitectureColumn = "Architecture"
-	// StopCustomerIDColumn is the customer_id column name
-	StopCustomerIDColumn = "CustomerID"
-	// StopDataColumn is the data column name
-	StopDataColumn = "Data"
-	// StopDistroColumn is the distro column name
-	StopDistroColumn = "Distro"
-	// StopErrorColumn is the error column name
-	StopErrorColumn = "Error"
-	// StopEventDateColumn is the event_date column name
-	StopEventDateColumn = "EventDate"
-	// StopEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	StopEventDateColumnEpochColumn = "EventDate.Epoch"
-	// StopEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	StopEventDateColumnOffsetColumn = "EventDate.Offset"
-	// StopEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	StopEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// StopFreeSpaceColumn is the free_space column name
-	StopFreeSpaceColumn = "FreeSpace"
-	// StopGoVersionColumn is the go_version column name
-	StopGoVersionColumn = "GoVersion"
-	// StopHostnameColumn is the hostname column name
-	StopHostnameColumn = "Hostname"
-	// StopIDColumn is the id column name
-	StopIDColumn = "ID"
-	// StopLastExportDateColumn is the last_export_date column name
-	StopLastExportDateColumn = "LastExportDate"
-	// StopLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	StopLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// StopLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	StopLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// StopLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	StopLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// StopMemoryColumn is the memory column name
-	StopMemoryColumn = "Memory"
-	// StopMessageColumn is the message column name
-	StopMessageColumn = "Message"
-	// StopNumCPUColumn is the num_cpu column name
-	StopNumCPUColumn = "NumCPU"
-	// StopOSColumn is the os column name
-	StopOSColumn = "OS"
-	// StopRefIDColumn is the ref_id column name
-	StopRefIDColumn = "RefID"
-	// StopRefTypeColumn is the ref_type column name
-	StopRefTypeColumn = "RefType"
-	// StopRequestIDColumn is the request_id column name
-	StopRequestIDColumn = "RequestID"
-	// StopSuccessColumn is the success column name
-	StopSuccessColumn = "Success"
-	// StopSystemIDColumn is the system_id column name
-	StopSystemIDColumn = "SystemID"
-	// StopTypeColumn is the type column name
-	StopTypeColumn = "Type"
-	// StopUpdatedAtColumn is the updated_ts column name
-	StopUpdatedAtColumn = "UpdatedAt"
-	// StopUptimeColumn is the uptime column name
-	StopUptimeColumn = "Uptime"
-	// StopUUIDColumn is the uuid column name
-	StopUUIDColumn = "UUID"
-	// StopVersionColumn is the version column name
-	StopVersionColumn = "Version"
-)
-
 // StopEventDate represents the object structure for event_date
 type StopEventDate struct {
 	// Epoch the date in epoch format
@@ -866,25 +801,6 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -959,25 +875,6 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

@@ -30,47 +30,6 @@ const (
 	BuildModelName datamodel.ModelNameType = "cicd.Build"
 )
 
-const (
-	// BuildAutomatedColumn is the automated column name
-	BuildAutomatedColumn = "Automated"
-	// BuildCommitShaColumn is the commit_sha column name
-	BuildCommitShaColumn = "CommitSha"
-	// BuildCustomerIDColumn is the customer_id column name
-	BuildCustomerIDColumn = "CustomerID"
-	// BuildEndDateColumn is the end_date column name
-	BuildEndDateColumn = "EndDate"
-	// BuildEndDateColumnEpochColumn is the epoch column property of the EndDate name
-	BuildEndDateColumnEpochColumn = "EndDate.Epoch"
-	// BuildEndDateColumnOffsetColumn is the offset column property of the EndDate name
-	BuildEndDateColumnOffsetColumn = "EndDate.Offset"
-	// BuildEndDateColumnRfc3339Column is the rfc3339 column property of the EndDate name
-	BuildEndDateColumnRfc3339Column = "EndDate.Rfc3339"
-	// BuildEnvironmentColumn is the environment column name
-	BuildEnvironmentColumn = "Environment"
-	// BuildIDColumn is the id column name
-	BuildIDColumn = "ID"
-	// BuildRefIDColumn is the ref_id column name
-	BuildRefIDColumn = "RefID"
-	// BuildRefTypeColumn is the ref_type column name
-	BuildRefTypeColumn = "RefType"
-	// BuildRepoNameColumn is the repo_name column name
-	BuildRepoNameColumn = "RepoName"
-	// BuildStartDateColumn is the start_date column name
-	BuildStartDateColumn = "StartDate"
-	// BuildStartDateColumnEpochColumn is the epoch column property of the StartDate name
-	BuildStartDateColumnEpochColumn = "StartDate.Epoch"
-	// BuildStartDateColumnOffsetColumn is the offset column property of the StartDate name
-	BuildStartDateColumnOffsetColumn = "StartDate.Offset"
-	// BuildStartDateColumnRfc3339Column is the rfc3339 column property of the StartDate name
-	BuildStartDateColumnRfc3339Column = "StartDate.Rfc3339"
-	// BuildStatusColumn is the status column name
-	BuildStatusColumn = "Status"
-	// BuildUpdatedAtColumn is the updated_ts column name
-	BuildUpdatedAtColumn = "UpdatedAt"
-	// BuildURLColumn is the url column name
-	BuildURLColumn = "URL"
-)
-
 // BuildEndDate represents the object structure for end_date
 type BuildEndDate struct {
 	// Epoch the date in epoch format

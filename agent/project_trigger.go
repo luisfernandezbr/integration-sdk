@@ -27,21 +27,6 @@ const (
 	ProjectTriggerModelName datamodel.ModelNameType = "agent.ProjectTrigger"
 )
 
-const (
-	// ProjectTriggerCustomerIDColumn is the customer_id column name
-	ProjectTriggerCustomerIDColumn = "CustomerID"
-	// ProjectTriggerIDColumn is the id column name
-	ProjectTriggerIDColumn = "ID"
-	// ProjectTriggerIntegrationIDColumn is the integration_id column name
-	ProjectTriggerIntegrationIDColumn = "IntegrationID"
-	// ProjectTriggerRefIDColumn is the ref_id column name
-	ProjectTriggerRefIDColumn = "RefID"
-	// ProjectTriggerRefTypeColumn is the ref_type column name
-	ProjectTriggerRefTypeColumn = "RefType"
-	// ProjectTriggerUpdatedAtColumn is the updated_ts column name
-	ProjectTriggerUpdatedAtColumn = "UpdatedAt"
-)
-
 // ProjectTrigger used to trigger an agent.ProjectRequest
 type ProjectTrigger struct {
 	// CustomerID the customer id for the model instance

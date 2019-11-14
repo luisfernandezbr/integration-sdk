@@ -28,31 +28,6 @@ const (
 	ProjectModelName datamodel.ModelNameType = "work.Project"
 )
 
-const (
-	// ProjectActiveColumn is the active column name
-	ProjectActiveColumn = "Active"
-	// ProjectCategoryColumn is the category column name
-	ProjectCategoryColumn = "Category"
-	// ProjectCustomerIDColumn is the customer_id column name
-	ProjectCustomerIDColumn = "CustomerID"
-	// ProjectDescriptionColumn is the description column name
-	ProjectDescriptionColumn = "Description"
-	// ProjectIDColumn is the id column name
-	ProjectIDColumn = "ID"
-	// ProjectIdentifierColumn is the identifier column name
-	ProjectIdentifierColumn = "Identifier"
-	// ProjectNameColumn is the name column name
-	ProjectNameColumn = "Name"
-	// ProjectRefIDColumn is the ref_id column name
-	ProjectRefIDColumn = "RefID"
-	// ProjectRefTypeColumn is the ref_type column name
-	ProjectRefTypeColumn = "RefType"
-	// ProjectUpdatedAtColumn is the updated_ts column name
-	ProjectUpdatedAtColumn = "UpdatedAt"
-	// ProjectURLColumn is the url column name
-	ProjectURLColumn = "URL"
-)
-
 // Project the project holds work
 type Project struct {
 	// Active the status of the project

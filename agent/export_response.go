@@ -32,111 +32,6 @@ const (
 	ExportResponseModelName datamodel.ModelNameType = "agent.ExportResponse"
 )
 
-const (
-	// ExportResponseArchitectureColumn is the architecture column name
-	ExportResponseArchitectureColumn = "Architecture"
-	// ExportResponseCustomerIDColumn is the customer_id column name
-	ExportResponseCustomerIDColumn = "CustomerID"
-	// ExportResponseDataColumn is the data column name
-	ExportResponseDataColumn = "Data"
-	// ExportResponseDistroColumn is the distro column name
-	ExportResponseDistroColumn = "Distro"
-	// ExportResponseEndDateColumn is the end_date column name
-	ExportResponseEndDateColumn = "EndDate"
-	// ExportResponseEndDateColumnEpochColumn is the epoch column property of the EndDate name
-	ExportResponseEndDateColumnEpochColumn = "EndDate.Epoch"
-	// ExportResponseEndDateColumnOffsetColumn is the offset column property of the EndDate name
-	ExportResponseEndDateColumnOffsetColumn = "EndDate.Offset"
-	// ExportResponseEndDateColumnRfc3339Column is the rfc3339 column property of the EndDate name
-	ExportResponseEndDateColumnRfc3339Column = "EndDate.Rfc3339"
-	// ExportResponseErrorColumn is the error column name
-	ExportResponseErrorColumn = "Error"
-	// ExportResponseEventDateColumn is the event_date column name
-	ExportResponseEventDateColumn = "EventDate"
-	// ExportResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	ExportResponseEventDateColumnEpochColumn = "EventDate.Epoch"
-	// ExportResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	ExportResponseEventDateColumnOffsetColumn = "EventDate.Offset"
-	// ExportResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	ExportResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// ExportResponseExportTypeColumn is the export_type column name
-	ExportResponseExportTypeColumn = "ExportType"
-	// ExportResponseFreeSpaceColumn is the free_space column name
-	ExportResponseFreeSpaceColumn = "FreeSpace"
-	// ExportResponseGoVersionColumn is the go_version column name
-	ExportResponseGoVersionColumn = "GoVersion"
-	// ExportResponseHostnameColumn is the hostname column name
-	ExportResponseHostnameColumn = "Hostname"
-	// ExportResponseIDColumn is the id column name
-	ExportResponseIDColumn = "ID"
-	// ExportResponseIntegrationsColumn is the integrations column name
-	ExportResponseIntegrationsColumn = "Integrations"
-	// ExportResponseIntegrationsColumnExportTypeColumn is the export_type column property of the Integrations name
-	ExportResponseIntegrationsColumnExportTypeColumn = "Integrations.ExportType"
-	// ExportResponseIntegrationsColumnIntegrationIDColumn is the integration_id column property of the Integrations name
-	ExportResponseIntegrationsColumnIntegrationIDColumn = "Integrations.IntegrationID"
-	// ExportResponseIntegrationsColumnNameColumn is the name column property of the Integrations name
-	ExportResponseIntegrationsColumnNameColumn = "Integrations.Name"
-	// ExportResponseIntegrationsColumnSystemTypeColumn is the system_type column property of the Integrations name
-	ExportResponseIntegrationsColumnSystemTypeColumn = "Integrations.SystemType"
-	// ExportResponseJobIDColumn is the job_id column name
-	ExportResponseJobIDColumn = "JobID"
-	// ExportResponseLastExportDateColumn is the last_export_date column name
-	ExportResponseLastExportDateColumn = "LastExportDate"
-	// ExportResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	ExportResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// ExportResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	ExportResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// ExportResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	ExportResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// ExportResponseMemoryColumn is the memory column name
-	ExportResponseMemoryColumn = "Memory"
-	// ExportResponseMessageColumn is the message column name
-	ExportResponseMessageColumn = "Message"
-	// ExportResponseNumCPUColumn is the num_cpu column name
-	ExportResponseNumCPUColumn = "NumCPU"
-	// ExportResponseOSColumn is the os column name
-	ExportResponseOSColumn = "OS"
-	// ExportResponseRefIDColumn is the ref_id column name
-	ExportResponseRefIDColumn = "RefID"
-	// ExportResponseRefTypeColumn is the ref_type column name
-	ExportResponseRefTypeColumn = "RefType"
-	// ExportResponseRequestIDColumn is the request_id column name
-	ExportResponseRequestIDColumn = "RequestID"
-	// ExportResponseSizeColumn is the size column name
-	ExportResponseSizeColumn = "Size"
-	// ExportResponseStartDateColumn is the start_date column name
-	ExportResponseStartDateColumn = "StartDate"
-	// ExportResponseStartDateColumnEpochColumn is the epoch column property of the StartDate name
-	ExportResponseStartDateColumnEpochColumn = "StartDate.Epoch"
-	// ExportResponseStartDateColumnOffsetColumn is the offset column property of the StartDate name
-	ExportResponseStartDateColumnOffsetColumn = "StartDate.Offset"
-	// ExportResponseStartDateColumnRfc3339Column is the rfc3339 column property of the StartDate name
-	ExportResponseStartDateColumnRfc3339Column = "StartDate.Rfc3339"
-	// ExportResponseStateColumn is the state column name
-	ExportResponseStateColumn = "State"
-	// ExportResponseSuccessColumn is the success column name
-	ExportResponseSuccessColumn = "Success"
-	// ExportResponseSystemIDColumn is the system_id column name
-	ExportResponseSystemIDColumn = "SystemID"
-	// ExportResponseSystemTypeColumn is the system_type column name
-	ExportResponseSystemTypeColumn = "SystemType"
-	// ExportResponseTypeColumn is the type column name
-	ExportResponseTypeColumn = "Type"
-	// ExportResponseUpdatedAtColumn is the updated_ts column name
-	ExportResponseUpdatedAtColumn = "UpdatedAt"
-	// ExportResponseUploadPartCountColumn is the upload_part_count column name
-	ExportResponseUploadPartCountColumn = "UploadPartCount"
-	// ExportResponseUploadURLColumn is the upload_url column name
-	ExportResponseUploadURLColumn = "UploadURL"
-	// ExportResponseUptimeColumn is the uptime column name
-	ExportResponseUptimeColumn = "Uptime"
-	// ExportResponseUUIDColumn is the uuid column name
-	ExportResponseUUIDColumn = "UUID"
-	// ExportResponseVersionColumn is the version column name
-	ExportResponseVersionColumn = "Version"
-)
-
 // ExportResponseEndDate represents the object structure for end_date
 type ExportResponseEndDate struct {
 	// Epoch the date in epoch format
@@ -1526,6 +1421,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1678,6 +1592,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

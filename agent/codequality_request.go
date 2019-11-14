@@ -34,65 +34,6 @@ const (
 	CodequalityRequestModelName datamodel.ModelNameType = "agent.CodequalityRequest"
 )
 
-const (
-	// CodequalityRequestCustomerIDColumn is the customer_id column name
-	CodequalityRequestCustomerIDColumn = "CustomerID"
-	// CodequalityRequestIDColumn is the id column name
-	CodequalityRequestIDColumn = "ID"
-	// CodequalityRequestIntegrationColumn is the integration column name
-	CodequalityRequestIntegrationColumn = "Integration"
-	// CodequalityRequestIntegrationColumnActiveColumn is the active column property of the Integration name
-	CodequalityRequestIntegrationColumnActiveColumn = "Integration.Active"
-	// CodequalityRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
-	CodequalityRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
-	// CodequalityRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
-	CodequalityRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
-	// CodequalityRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
-	CodequalityRequestIntegrationColumnErroredColumn = "Integration.Errored"
-	// CodequalityRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
-	CodequalityRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
-	// CodequalityRequestIntegrationColumnIDColumn is the id column property of the Integration name
-	CodequalityRequestIntegrationColumnIDColumn = "Integration.ID"
-	// CodequalityRequestIntegrationColumnLocationColumn is the location column property of the Integration name
-	CodequalityRequestIntegrationColumnLocationColumn = "Integration.Location"
-	// CodequalityRequestIntegrationColumnNameColumn is the name column property of the Integration name
-	CodequalityRequestIntegrationColumnNameColumn = "Integration.Name"
-	// CodequalityRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
-	CodequalityRequestIntegrationColumnProgressColumn = "Integration.Progress"
-	// CodequalityRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
-	CodequalityRequestIntegrationColumnRefIDColumn = "Integration.RefID"
-	// CodequalityRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
-	CodequalityRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
-	// CodequalityRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
-	CodequalityRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
-	// CodequalityRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
-	CodequalityRequestIntegrationColumnValidatedColumn = "Integration.Validated"
-	// CodequalityRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
-	CodequalityRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
-	// CodequalityRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
-	CodequalityRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
-	// CodequalityRequestLocationColumn is the location column name
-	CodequalityRequestLocationColumn = "Location"
-	// CodequalityRequestRefIDColumn is the ref_id column name
-	CodequalityRequestRefIDColumn = "RefID"
-	// CodequalityRequestRefTypeColumn is the ref_type column name
-	CodequalityRequestRefTypeColumn = "RefType"
-	// CodequalityRequestRequestDateColumn is the request_date column name
-	CodequalityRequestRequestDateColumn = "RequestDate"
-	// CodequalityRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	CodequalityRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
-	// CodequalityRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	CodequalityRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
-	// CodequalityRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	CodequalityRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
-	// CodequalityRequestSystemTypeColumn is the system_type column name
-	CodequalityRequestSystemTypeColumn = "SystemType"
-	// CodequalityRequestUpdatedAtColumn is the updated_ts column name
-	CodequalityRequestUpdatedAtColumn = "UpdatedAt"
-	// CodequalityRequestUUIDColumn is the uuid column name
-	CodequalityRequestUUIDColumn = "UUID"
-)
-
 // CodequalityRequestIntegrationAuthorization represents the object structure for authorization
 type CodequalityRequestIntegrationAuthorization struct {
 	// AccessToken Access token

@@ -34,127 +34,6 @@ const (
 	UserResponseModelName datamodel.ModelNameType = "agent.UserResponse"
 )
 
-const (
-	// UserResponseArchitectureColumn is the architecture column name
-	UserResponseArchitectureColumn = "Architecture"
-	// UserResponseCustomerIDColumn is the customer_id column name
-	UserResponseCustomerIDColumn = "CustomerID"
-	// UserResponseDataColumn is the data column name
-	UserResponseDataColumn = "Data"
-	// UserResponseDistroColumn is the distro column name
-	UserResponseDistroColumn = "Distro"
-	// UserResponseErrorColumn is the error column name
-	UserResponseErrorColumn = "Error"
-	// UserResponseEventDateColumn is the event_date column name
-	UserResponseEventDateColumn = "EventDate"
-	// UserResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	UserResponseEventDateColumnEpochColumn = "EventDate.Epoch"
-	// UserResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	UserResponseEventDateColumnOffsetColumn = "EventDate.Offset"
-	// UserResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	UserResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// UserResponseFreeSpaceColumn is the free_space column name
-	UserResponseFreeSpaceColumn = "FreeSpace"
-	// UserResponseGoVersionColumn is the go_version column name
-	UserResponseGoVersionColumn = "GoVersion"
-	// UserResponseHostnameColumn is the hostname column name
-	UserResponseHostnameColumn = "Hostname"
-	// UserResponseIDColumn is the id column name
-	UserResponseIDColumn = "ID"
-	// UserResponseIntegrationIDColumn is the integration_id column name
-	UserResponseIntegrationIDColumn = "IntegrationID"
-	// UserResponseLastExportDateColumn is the last_export_date column name
-	UserResponseLastExportDateColumn = "LastExportDate"
-	// UserResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	UserResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// UserResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	UserResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// UserResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	UserResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// UserResponseMemoryColumn is the memory column name
-	UserResponseMemoryColumn = "Memory"
-	// UserResponseMessageColumn is the message column name
-	UserResponseMessageColumn = "Message"
-	// UserResponseNumCPUColumn is the num_cpu column name
-	UserResponseNumCPUColumn = "NumCPU"
-	// UserResponseOSColumn is the os column name
-	UserResponseOSColumn = "OS"
-	// UserResponseRefIDColumn is the ref_id column name
-	UserResponseRefIDColumn = "RefID"
-	// UserResponseRefTypeColumn is the ref_type column name
-	UserResponseRefTypeColumn = "RefType"
-	// UserResponseRequestIDColumn is the request_id column name
-	UserResponseRequestIDColumn = "RequestID"
-	// UserResponseSuccessColumn is the success column name
-	UserResponseSuccessColumn = "Success"
-	// UserResponseSystemIDColumn is the system_id column name
-	UserResponseSystemIDColumn = "SystemID"
-	// UserResponseTeamsColumn is the teams column name
-	UserResponseTeamsColumn = "Teams"
-	// UserResponseTeamsColumnActiveColumn is the active column property of the Teams name
-	UserResponseTeamsColumnActiveColumn = "Teams.Active"
-	// UserResponseTeamsColumnChildrenIdsColumn is the children_ids column property of the Teams name
-	UserResponseTeamsColumnChildrenIdsColumn = "Teams.ChildrenIds"
-	// UserResponseTeamsColumnCustomerIDColumn is the customer_id column property of the Teams name
-	UserResponseTeamsColumnCustomerIDColumn = "Teams.CustomerID"
-	// UserResponseTeamsColumnDescriptionColumn is the description column property of the Teams name
-	UserResponseTeamsColumnDescriptionColumn = "Teams.Description"
-	// UserResponseTeamsColumnIDColumn is the id column property of the Teams name
-	UserResponseTeamsColumnIDColumn = "Teams.ID"
-	// UserResponseTeamsColumnLeafColumn is the leaf column property of the Teams name
-	UserResponseTeamsColumnLeafColumn = "Teams.Leaf"
-	// UserResponseTeamsColumnNameColumn is the name column property of the Teams name
-	UserResponseTeamsColumnNameColumn = "Teams.Name"
-	// UserResponseTeamsColumnParentIdsColumn is the parent_ids column property of the Teams name
-	UserResponseTeamsColumnParentIdsColumn = "Teams.ParentIds"
-	// UserResponseTeamsColumnRefIDColumn is the ref_id column property of the Teams name
-	UserResponseTeamsColumnRefIDColumn = "Teams.RefID"
-	// UserResponseTeamsColumnRefTypeColumn is the ref_type column property of the Teams name
-	UserResponseTeamsColumnRefTypeColumn = "Teams.RefType"
-	// UserResponseTeamsColumnTeamCostIDColumn is the team_cost_id column property of the Teams name
-	UserResponseTeamsColumnTeamCostIDColumn = "Teams.TeamCostID"
-	// UserResponseTypeColumn is the type column name
-	UserResponseTypeColumn = "Type"
-	// UserResponseUpdatedAtColumn is the updated_ts column name
-	UserResponseUpdatedAtColumn = "UpdatedAt"
-	// UserResponseUptimeColumn is the uptime column name
-	UserResponseUptimeColumn = "Uptime"
-	// UserResponseUsersColumn is the users column name
-	UserResponseUsersColumn = "Users"
-	// UserResponseUsersColumnAvatarURLColumn is the avatar_url column property of the Users name
-	UserResponseUsersColumnAvatarURLColumn = "Users.AvatarURL"
-	// UserResponseUsersColumnCostCenterIDColumn is the cost_center_id column property of the Users name
-	UserResponseUsersColumnCostCenterIDColumn = "Users.CostCenterID"
-	// UserResponseUsersColumnCustomerIDColumn is the customer_id column property of the Users name
-	UserResponseUsersColumnCustomerIDColumn = "Users.CustomerID"
-	// UserResponseUsersColumnEmailColumn is the email column property of the Users name
-	UserResponseUsersColumnEmailColumn = "Users.Email"
-	// UserResponseUsersColumnHiredDateColumn is the hired_date column property of the Users name
-	UserResponseUsersColumnHiredDateColumn = "Users.HiredDate"
-	// UserResponseUsersColumnIDColumn is the id column property of the Users name
-	UserResponseUsersColumnIDColumn = "Users.ID"
-	// UserResponseUsersColumnLocationColumn is the location column property of the Users name
-	UserResponseUsersColumnLocationColumn = "Users.Location"
-	// UserResponseUsersColumnManagerIDColumn is the manager_id column property of the Users name
-	UserResponseUsersColumnManagerIDColumn = "Users.ManagerID"
-	// UserResponseUsersColumnNameColumn is the name column property of the Users name
-	UserResponseUsersColumnNameColumn = "Users.Name"
-	// UserResponseUsersColumnPrimaryTeamIDColumn is the primary_team_id column property of the Users name
-	UserResponseUsersColumnPrimaryTeamIDColumn = "Users.PrimaryTeamID"
-	// UserResponseUsersColumnRefIDColumn is the ref_id column property of the Users name
-	UserResponseUsersColumnRefIDColumn = "Users.RefID"
-	// UserResponseUsersColumnRefTypeColumn is the ref_type column property of the Users name
-	UserResponseUsersColumnRefTypeColumn = "Users.RefType"
-	// UserResponseUsersColumnTerminatedDateColumn is the terminated_date column property of the Users name
-	UserResponseUsersColumnTerminatedDateColumn = "Users.TerminatedDate"
-	// UserResponseUsersColumnTitleColumn is the title column property of the Users name
-	UserResponseUsersColumnTitleColumn = "Users.Title"
-	// UserResponseUUIDColumn is the uuid column name
-	UserResponseUUIDColumn = "UUID"
-	// UserResponseVersionColumn is the version column name
-	UserResponseVersionColumn = "Version"
-)
-
 // UserResponseEventDate represents the object structure for event_date
 type UserResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -1832,6 +1711,25 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1921,6 +1819,25 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

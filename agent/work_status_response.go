@@ -34,115 +34,6 @@ const (
 	WorkStatusResponseModelName datamodel.ModelNameType = "agent.WorkStatusResponse"
 )
 
-const (
-	// WorkStatusResponseArchitectureColumn is the architecture column name
-	WorkStatusResponseArchitectureColumn = "Architecture"
-	// WorkStatusResponseCustomerIDColumn is the customer_id column name
-	WorkStatusResponseCustomerIDColumn = "CustomerID"
-	// WorkStatusResponseDataColumn is the data column name
-	WorkStatusResponseDataColumn = "Data"
-	// WorkStatusResponseDistroColumn is the distro column name
-	WorkStatusResponseDistroColumn = "Distro"
-	// WorkStatusResponseErrorColumn is the error column name
-	WorkStatusResponseErrorColumn = "Error"
-	// WorkStatusResponseEventDateColumn is the event_date column name
-	WorkStatusResponseEventDateColumn = "EventDate"
-	// WorkStatusResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	WorkStatusResponseEventDateColumnEpochColumn = "EventDate.Epoch"
-	// WorkStatusResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	WorkStatusResponseEventDateColumnOffsetColumn = "EventDate.Offset"
-	// WorkStatusResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	WorkStatusResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// WorkStatusResponseFieldColumn is the field column name
-	WorkStatusResponseFieldColumn = "Field"
-	// WorkStatusResponseFreeSpaceColumn is the free_space column name
-	WorkStatusResponseFreeSpaceColumn = "FreeSpace"
-	// WorkStatusResponseGoVersionColumn is the go_version column name
-	WorkStatusResponseGoVersionColumn = "GoVersion"
-	// WorkStatusResponseHostnameColumn is the hostname column name
-	WorkStatusResponseHostnameColumn = "Hostname"
-	// WorkStatusResponseIDColumn is the id column name
-	WorkStatusResponseIDColumn = "ID"
-	// WorkStatusResponseIntegrationIDColumn is the integration_id column name
-	WorkStatusResponseIntegrationIDColumn = "IntegrationID"
-	// WorkStatusResponseIssueTypeColumn is the issue_type column name
-	WorkStatusResponseIssueTypeColumn = "IssueType"
-	// WorkStatusResponseLastExportDateColumn is the last_export_date column name
-	WorkStatusResponseLastExportDateColumn = "LastExportDate"
-	// WorkStatusResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	WorkStatusResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// WorkStatusResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	WorkStatusResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// WorkStatusResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	WorkStatusResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// WorkStatusResponseMemoryColumn is the memory column name
-	WorkStatusResponseMemoryColumn = "Memory"
-	// WorkStatusResponseMessageColumn is the message column name
-	WorkStatusResponseMessageColumn = "Message"
-	// WorkStatusResponseNumCPUColumn is the num_cpu column name
-	WorkStatusResponseNumCPUColumn = "NumCPU"
-	// WorkStatusResponseOperatorColumn is the operator column name
-	WorkStatusResponseOperatorColumn = "Operator"
-	// WorkStatusResponseOSColumn is the os column name
-	WorkStatusResponseOSColumn = "OS"
-	// WorkStatusResponseRefIDColumn is the ref_id column name
-	WorkStatusResponseRefIDColumn = "RefID"
-	// WorkStatusResponseRefTypeColumn is the ref_type column name
-	WorkStatusResponseRefTypeColumn = "RefType"
-	// WorkStatusResponseRequestIDColumn is the request_id column name
-	WorkStatusResponseRequestIDColumn = "RequestID"
-	// WorkStatusResponseSuccessColumn is the success column name
-	WorkStatusResponseSuccessColumn = "Success"
-	// WorkStatusResponseSystemIDColumn is the system_id column name
-	WorkStatusResponseSystemIDColumn = "SystemID"
-	// WorkStatusResponseTypeColumn is the type column name
-	WorkStatusResponseTypeColumn = "Type"
-	// WorkStatusResponseUpdatedAtColumn is the updated_ts column name
-	WorkStatusResponseUpdatedAtColumn = "UpdatedAt"
-	// WorkStatusResponseUptimeColumn is the uptime column name
-	WorkStatusResponseUptimeColumn = "Uptime"
-	// WorkStatusResponseUUIDColumn is the uuid column name
-	WorkStatusResponseUUIDColumn = "UUID"
-	// WorkStatusResponseVersionColumn is the version column name
-	WorkStatusResponseVersionColumn = "Version"
-	// WorkStatusResponseWorkConfigColumn is the work_config column name
-	WorkStatusResponseWorkConfigColumn = "WorkConfig"
-	// WorkStatusResponseWorkConfigColumnAllResolutionsColumn is the all_resolutions column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnAllResolutionsColumn = "WorkConfig.AllResolutions"
-	// WorkStatusResponseWorkConfigColumnAllStatusesColumn is the all_statuses column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnAllStatusesColumn = "WorkConfig.AllStatuses"
-	// WorkStatusResponseWorkConfigColumnCustomerIDColumn is the customer_id column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnCustomerIDColumn = "WorkConfig.CustomerID"
-	// WorkStatusResponseWorkConfigColumnFieldColumn is the field column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnFieldColumn = "WorkConfig.Field"
-	// WorkStatusResponseWorkConfigColumnIDColumn is the id column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnIDColumn = "WorkConfig.ID"
-	// WorkStatusResponseWorkConfigColumnIntegrationIDColumn is the integration_id column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnIntegrationIDColumn = "WorkConfig.IntegrationID"
-	// WorkStatusResponseWorkConfigColumnIssueTypeColumn is the issue_type column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnIssueTypeColumn = "WorkConfig.IssueType"
-	// WorkStatusResponseWorkConfigColumnLabelsColumn is the labels column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnLabelsColumn = "WorkConfig.Labels"
-	// WorkStatusResponseWorkConfigColumnOperatorColumn is the operator column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnOperatorColumn = "WorkConfig.Operator"
-	// WorkStatusResponseWorkConfigColumnPrioritiesColumn is the priorities column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnPrioritiesColumn = "WorkConfig.Priorities"
-	// WorkStatusResponseWorkConfigColumnRefIDColumn is the ref_id column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnRefIDColumn = "WorkConfig.RefID"
-	// WorkStatusResponseWorkConfigColumnRefTypeColumn is the ref_type column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnRefTypeColumn = "WorkConfig.RefType"
-	// WorkStatusResponseWorkConfigColumnResolutionsColumn is the resolutions column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnResolutionsColumn = "WorkConfig.Resolutions"
-	// WorkStatusResponseWorkConfigColumnStatusesColumn is the statuses column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnStatusesColumn = "WorkConfig.Statuses"
-	// WorkStatusResponseWorkConfigColumnTopLevelIssueColumn is the top_level_issue column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnTopLevelIssueColumn = "WorkConfig.TopLevelIssue"
-	// WorkStatusResponseWorkConfigColumnTypeRulesColumn is the type_rules column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnTypeRulesColumn = "WorkConfig.TypeRules"
-	// WorkStatusResponseWorkConfigColumnTypesColumn is the types column property of the WorkConfig name
-	WorkStatusResponseWorkConfigColumnTypesColumn = "WorkConfig.Types"
-)
-
 // WorkStatusResponseEventDate represents the object structure for event_date
 type WorkStatusResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -2929,25 +2820,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -3037,25 +2909,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

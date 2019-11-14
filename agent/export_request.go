@@ -34,73 +34,6 @@ const (
 	ExportRequestModelName datamodel.ModelNameType = "agent.ExportRequest"
 )
 
-const (
-	// ExportRequestCustomerIDColumn is the customer_id column name
-	ExportRequestCustomerIDColumn = "CustomerID"
-	// ExportRequestIDColumn is the id column name
-	ExportRequestIDColumn = "ID"
-	// ExportRequestIntegrationsColumn is the integrations column name
-	ExportRequestIntegrationsColumn = "Integrations"
-	// ExportRequestIntegrationsColumnActiveColumn is the active column property of the Integrations name
-	ExportRequestIntegrationsColumnActiveColumn = "Integrations.Active"
-	// ExportRequestIntegrationsColumnAuthorizationColumn is the authorization column property of the Integrations name
-	ExportRequestIntegrationsColumnAuthorizationColumn = "Integrations.Authorization"
-	// ExportRequestIntegrationsColumnCustomerIDColumn is the customer_id column property of the Integrations name
-	ExportRequestIntegrationsColumnCustomerIDColumn = "Integrations.CustomerID"
-	// ExportRequestIntegrationsColumnErroredColumn is the errored column property of the Integrations name
-	ExportRequestIntegrationsColumnErroredColumn = "Integrations.Errored"
-	// ExportRequestIntegrationsColumnExclusionsColumn is the exclusions column property of the Integrations name
-	ExportRequestIntegrationsColumnExclusionsColumn = "Integrations.Exclusions"
-	// ExportRequestIntegrationsColumnIDColumn is the id column property of the Integrations name
-	ExportRequestIntegrationsColumnIDColumn = "Integrations.ID"
-	// ExportRequestIntegrationsColumnLocationColumn is the location column property of the Integrations name
-	ExportRequestIntegrationsColumnLocationColumn = "Integrations.Location"
-	// ExportRequestIntegrationsColumnNameColumn is the name column property of the Integrations name
-	ExportRequestIntegrationsColumnNameColumn = "Integrations.Name"
-	// ExportRequestIntegrationsColumnProgressColumn is the progress column property of the Integrations name
-	ExportRequestIntegrationsColumnProgressColumn = "Integrations.Progress"
-	// ExportRequestIntegrationsColumnRefIDColumn is the ref_id column property of the Integrations name
-	ExportRequestIntegrationsColumnRefIDColumn = "Integrations.RefID"
-	// ExportRequestIntegrationsColumnRefTypeColumn is the ref_type column property of the Integrations name
-	ExportRequestIntegrationsColumnRefTypeColumn = "Integrations.RefType"
-	// ExportRequestIntegrationsColumnSystemTypeColumn is the system_type column property of the Integrations name
-	ExportRequestIntegrationsColumnSystemTypeColumn = "Integrations.SystemType"
-	// ExportRequestIntegrationsColumnValidatedColumn is the validated column property of the Integrations name
-	ExportRequestIntegrationsColumnValidatedColumn = "Integrations.Validated"
-	// ExportRequestIntegrationsColumnValidatedDateColumn is the validated_date column property of the Integrations name
-	ExportRequestIntegrationsColumnValidatedDateColumn = "Integrations.ValidatedDate"
-	// ExportRequestIntegrationsColumnValidationMessageColumn is the validation_message column property of the Integrations name
-	ExportRequestIntegrationsColumnValidationMessageColumn = "Integrations.ValidationMessage"
-	// ExportRequestJobIDColumn is the job_id column name
-	ExportRequestJobIDColumn = "JobID"
-	// ExportRequestLocationColumn is the location column name
-	ExportRequestLocationColumn = "Location"
-	// ExportRequestRefIDColumn is the ref_id column name
-	ExportRequestRefIDColumn = "RefID"
-	// ExportRequestRefTypeColumn is the ref_type column name
-	ExportRequestRefTypeColumn = "RefType"
-	// ExportRequestReprocessHistoricalColumn is the reprocess_historical column name
-	ExportRequestReprocessHistoricalColumn = "ReprocessHistorical"
-	// ExportRequestRequestDateColumn is the request_date column name
-	ExportRequestRequestDateColumn = "RequestDate"
-	// ExportRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	ExportRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
-	// ExportRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	ExportRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
-	// ExportRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	ExportRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
-	// ExportRequestSystemTypeColumn is the system_type column name
-	ExportRequestSystemTypeColumn = "SystemType"
-	// ExportRequestUpdatedAtColumn is the updated_ts column name
-	ExportRequestUpdatedAtColumn = "UpdatedAt"
-	// ExportRequestUploadHeadersColumn is the upload_headers column name
-	ExportRequestUploadHeadersColumn = "UploadHeaders"
-	// ExportRequestUploadURLColumn is the upload_url column name
-	ExportRequestUploadURLColumn = "UploadURL"
-	// ExportRequestUUIDColumn is the uuid column name
-	ExportRequestUUIDColumn = "UUID"
-)
-
 // ExportRequestIntegrationsAuthorization represents the object structure for authorization
 type ExportRequestIntegrationsAuthorization struct {
 	// AccessToken Access token
@@ -1697,25 +1630,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

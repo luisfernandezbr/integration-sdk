@@ -27,23 +27,6 @@ const (
 	CustomFieldModelName datamodel.ModelNameType = "work.CustomField"
 )
 
-const (
-	// CustomFieldCustomerIDColumn is the customer_id column name
-	CustomFieldCustomerIDColumn = "CustomerID"
-	// CustomFieldIDColumn is the id column name
-	CustomFieldIDColumn = "ID"
-	// CustomFieldKeyColumn is the key column name
-	CustomFieldKeyColumn = "Key"
-	// CustomFieldNameColumn is the name column name
-	CustomFieldNameColumn = "Name"
-	// CustomFieldRefIDColumn is the ref_id column name
-	CustomFieldRefIDColumn = "RefID"
-	// CustomFieldRefTypeColumn is the ref_type column name
-	CustomFieldRefTypeColumn = "RefType"
-	// CustomFieldUpdatedAtColumn is the updated_ts column name
-	CustomFieldUpdatedAtColumn = "UpdatedAt"
-)
-
 // CustomField user defined fields
 type CustomField struct {
 	// CustomerID the customer id for the model instance

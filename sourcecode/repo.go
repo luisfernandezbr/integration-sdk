@@ -27,31 +27,6 @@ const (
 	RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
 )
 
-const (
-	// RepoActiveColumn is the active column name
-	RepoActiveColumn = "Active"
-	// RepoCustomerIDColumn is the customer_id column name
-	RepoCustomerIDColumn = "CustomerID"
-	// RepoDefaultBranchColumn is the default_branch column name
-	RepoDefaultBranchColumn = "DefaultBranch"
-	// RepoDescriptionColumn is the description column name
-	RepoDescriptionColumn = "Description"
-	// RepoIDColumn is the id column name
-	RepoIDColumn = "ID"
-	// RepoLanguageColumn is the language column name
-	RepoLanguageColumn = "Language"
-	// RepoNameColumn is the name column name
-	RepoNameColumn = "Name"
-	// RepoRefIDColumn is the ref_id column name
-	RepoRefIDColumn = "RefID"
-	// RepoRefTypeColumn is the ref_type column name
-	RepoRefTypeColumn = "RefType"
-	// RepoUpdatedAtColumn is the updated_ts column name
-	RepoUpdatedAtColumn = "UpdatedAt"
-	// RepoURLColumn is the url column name
-	RepoURLColumn = "URL"
-)
-
 // Repo the repo holds source code
 type Repo struct {
 	// Active the status of the repo

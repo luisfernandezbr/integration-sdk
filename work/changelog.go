@@ -29,47 +29,6 @@ const (
 	ChangelogModelName datamodel.ModelNameType = "work.Changelog"
 )
 
-const (
-	// ChangelogCreatedDateColumn is the created_date column name
-	ChangelogCreatedDateColumn = "CreatedDate"
-	// ChangelogCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	ChangelogCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
-	// ChangelogCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	ChangelogCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
-	// ChangelogCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	ChangelogCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
-	// ChangelogCustomerIDColumn is the customer_id column name
-	ChangelogCustomerIDColumn = "CustomerID"
-	// ChangelogFieldColumn is the field column name
-	ChangelogFieldColumn = "Field"
-	// ChangelogFieldTypeColumn is the field_type column name
-	ChangelogFieldTypeColumn = "FieldType"
-	// ChangelogFromColumn is the from column name
-	ChangelogFromColumn = "From"
-	// ChangelogFromStringColumn is the from_string column name
-	ChangelogFromStringColumn = "FromString"
-	// ChangelogIDColumn is the id column name
-	ChangelogIDColumn = "ID"
-	// ChangelogIssueIDColumn is the issue_id column name
-	ChangelogIssueIDColumn = "IssueID"
-	// ChangelogOrdinalColumn is the ordinal column name
-	ChangelogOrdinalColumn = "Ordinal"
-	// ChangelogProjectIDColumn is the project_id column name
-	ChangelogProjectIDColumn = "ProjectID"
-	// ChangelogRefIDColumn is the ref_id column name
-	ChangelogRefIDColumn = "RefID"
-	// ChangelogRefTypeColumn is the ref_type column name
-	ChangelogRefTypeColumn = "RefType"
-	// ChangelogToColumn is the to column name
-	ChangelogToColumn = "To"
-	// ChangelogToStringColumn is the to_string column name
-	ChangelogToStringColumn = "ToString"
-	// ChangelogUpdatedAtColumn is the updated_ts column name
-	ChangelogUpdatedAtColumn = "UpdatedAt"
-	// ChangelogUserIDColumn is the user_id column name
-	ChangelogUserIDColumn = "UserID"
-)
-
 // ChangelogCreatedDate represents the object structure for created_date
 type ChangelogCreatedDate struct {
 	// Epoch the date in epoch format

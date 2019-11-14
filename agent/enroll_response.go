@@ -30,73 +30,6 @@ const (
 	EnrollResponseModelName datamodel.ModelNameType = "agent.EnrollResponse"
 )
 
-const (
-	// EnrollResponseApikeyColumn is the apikey column name
-	EnrollResponseApikeyColumn = "Apikey"
-	// EnrollResponseArchitectureColumn is the architecture column name
-	EnrollResponseArchitectureColumn = "Architecture"
-	// EnrollResponseCustomerIDColumn is the customer_id column name
-	EnrollResponseCustomerIDColumn = "CustomerID"
-	// EnrollResponseDataColumn is the data column name
-	EnrollResponseDataColumn = "Data"
-	// EnrollResponseDistroColumn is the distro column name
-	EnrollResponseDistroColumn = "Distro"
-	// EnrollResponseErrorColumn is the error column name
-	EnrollResponseErrorColumn = "Error"
-	// EnrollResponseEventDateColumn is the event_date column name
-	EnrollResponseEventDateColumn = "EventDate"
-	// EnrollResponseEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	EnrollResponseEventDateColumnEpochColumn = "EventDate.Epoch"
-	// EnrollResponseEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	EnrollResponseEventDateColumnOffsetColumn = "EventDate.Offset"
-	// EnrollResponseEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	EnrollResponseEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// EnrollResponseFreeSpaceColumn is the free_space column name
-	EnrollResponseFreeSpaceColumn = "FreeSpace"
-	// EnrollResponseGoVersionColumn is the go_version column name
-	EnrollResponseGoVersionColumn = "GoVersion"
-	// EnrollResponseHostnameColumn is the hostname column name
-	EnrollResponseHostnameColumn = "Hostname"
-	// EnrollResponseIDColumn is the id column name
-	EnrollResponseIDColumn = "ID"
-	// EnrollResponseLastExportDateColumn is the last_export_date column name
-	EnrollResponseLastExportDateColumn = "LastExportDate"
-	// EnrollResponseLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	EnrollResponseLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// EnrollResponseLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	EnrollResponseLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// EnrollResponseLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	EnrollResponseLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// EnrollResponseMemoryColumn is the memory column name
-	EnrollResponseMemoryColumn = "Memory"
-	// EnrollResponseMessageColumn is the message column name
-	EnrollResponseMessageColumn = "Message"
-	// EnrollResponseNumCPUColumn is the num_cpu column name
-	EnrollResponseNumCPUColumn = "NumCPU"
-	// EnrollResponseOSColumn is the os column name
-	EnrollResponseOSColumn = "OS"
-	// EnrollResponseRefIDColumn is the ref_id column name
-	EnrollResponseRefIDColumn = "RefID"
-	// EnrollResponseRefTypeColumn is the ref_type column name
-	EnrollResponseRefTypeColumn = "RefType"
-	// EnrollResponseRequestIDColumn is the request_id column name
-	EnrollResponseRequestIDColumn = "RequestID"
-	// EnrollResponseSuccessColumn is the success column name
-	EnrollResponseSuccessColumn = "Success"
-	// EnrollResponseSystemIDColumn is the system_id column name
-	EnrollResponseSystemIDColumn = "SystemID"
-	// EnrollResponseTypeColumn is the type column name
-	EnrollResponseTypeColumn = "Type"
-	// EnrollResponseUpdatedAtColumn is the updated_ts column name
-	EnrollResponseUpdatedAtColumn = "UpdatedAt"
-	// EnrollResponseUptimeColumn is the uptime column name
-	EnrollResponseUptimeColumn = "Uptime"
-	// EnrollResponseUUIDColumn is the uuid column name
-	EnrollResponseUUIDColumn = "UUID"
-	// EnrollResponseVersionColumn is the version column name
-	EnrollResponseVersionColumn = "Version"
-)
-
 // EnrollResponseEventDate represents the object structure for event_date
 type EnrollResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -886,6 +819,25 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnrollResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -960,6 +912,25 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnrollResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

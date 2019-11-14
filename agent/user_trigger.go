@@ -27,21 +27,6 @@ const (
 	UserTriggerModelName datamodel.ModelNameType = "agent.UserTrigger"
 )
 
-const (
-	// UserTriggerCustomerIDColumn is the customer_id column name
-	UserTriggerCustomerIDColumn = "CustomerID"
-	// UserTriggerIDColumn is the id column name
-	UserTriggerIDColumn = "ID"
-	// UserTriggerIntegrationIDColumn is the integration_id column name
-	UserTriggerIntegrationIDColumn = "IntegrationID"
-	// UserTriggerRefIDColumn is the ref_id column name
-	UserTriggerRefIDColumn = "RefID"
-	// UserTriggerRefTypeColumn is the ref_type column name
-	UserTriggerRefTypeColumn = "RefType"
-	// UserTriggerUpdatedAtColumn is the updated_ts column name
-	UserTriggerUpdatedAtColumn = "UpdatedAt"
-)
-
 // UserTrigger used to trigger an agent.UserRequest
 type UserTrigger struct {
 	// CustomerID the customer id for the model instance

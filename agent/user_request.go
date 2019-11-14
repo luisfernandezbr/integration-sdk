@@ -34,65 +34,6 @@ const (
 	UserRequestModelName datamodel.ModelNameType = "agent.UserRequest"
 )
 
-const (
-	// UserRequestCustomerIDColumn is the customer_id column name
-	UserRequestCustomerIDColumn = "CustomerID"
-	// UserRequestIDColumn is the id column name
-	UserRequestIDColumn = "ID"
-	// UserRequestIntegrationColumn is the integration column name
-	UserRequestIntegrationColumn = "Integration"
-	// UserRequestIntegrationColumnActiveColumn is the active column property of the Integration name
-	UserRequestIntegrationColumnActiveColumn = "Integration.Active"
-	// UserRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
-	UserRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
-	// UserRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
-	UserRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
-	// UserRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
-	UserRequestIntegrationColumnErroredColumn = "Integration.Errored"
-	// UserRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
-	UserRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
-	// UserRequestIntegrationColumnIDColumn is the id column property of the Integration name
-	UserRequestIntegrationColumnIDColumn = "Integration.ID"
-	// UserRequestIntegrationColumnLocationColumn is the location column property of the Integration name
-	UserRequestIntegrationColumnLocationColumn = "Integration.Location"
-	// UserRequestIntegrationColumnNameColumn is the name column property of the Integration name
-	UserRequestIntegrationColumnNameColumn = "Integration.Name"
-	// UserRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
-	UserRequestIntegrationColumnProgressColumn = "Integration.Progress"
-	// UserRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
-	UserRequestIntegrationColumnRefIDColumn = "Integration.RefID"
-	// UserRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
-	UserRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
-	// UserRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
-	UserRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
-	// UserRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
-	UserRequestIntegrationColumnValidatedColumn = "Integration.Validated"
-	// UserRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
-	UserRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
-	// UserRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
-	UserRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
-	// UserRequestLocationColumn is the location column name
-	UserRequestLocationColumn = "Location"
-	// UserRequestRefIDColumn is the ref_id column name
-	UserRequestRefIDColumn = "RefID"
-	// UserRequestRefTypeColumn is the ref_type column name
-	UserRequestRefTypeColumn = "RefType"
-	// UserRequestRequestDateColumn is the request_date column name
-	UserRequestRequestDateColumn = "RequestDate"
-	// UserRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	UserRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
-	// UserRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	UserRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
-	// UserRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	UserRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
-	// UserRequestSystemTypeColumn is the system_type column name
-	UserRequestSystemTypeColumn = "SystemType"
-	// UserRequestUpdatedAtColumn is the updated_ts column name
-	UserRequestUpdatedAtColumn = "UpdatedAt"
-	// UserRequestUUIDColumn is the uuid column name
-	UserRequestUUIDColumn = "UUID"
-)
-
 // UserRequestIntegrationAuthorization represents the object structure for authorization
 type UserRequestIntegrationAuthorization struct {
 	// AccessToken Access token

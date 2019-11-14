@@ -27,21 +27,6 @@ const (
 	WorkStatusTriggerModelName datamodel.ModelNameType = "agent.WorkStatusTrigger"
 )
 
-const (
-	// WorkStatusTriggerCustomerIDColumn is the customer_id column name
-	WorkStatusTriggerCustomerIDColumn = "CustomerID"
-	// WorkStatusTriggerIDColumn is the id column name
-	WorkStatusTriggerIDColumn = "ID"
-	// WorkStatusTriggerIntegrationIDColumn is the integration_id column name
-	WorkStatusTriggerIntegrationIDColumn = "IntegrationID"
-	// WorkStatusTriggerRefIDColumn is the ref_id column name
-	WorkStatusTriggerRefIDColumn = "RefID"
-	// WorkStatusTriggerRefTypeColumn is the ref_type column name
-	WorkStatusTriggerRefTypeColumn = "RefType"
-	// WorkStatusTriggerUpdatedAtColumn is the updated_ts column name
-	WorkStatusTriggerUpdatedAtColumn = "UpdatedAt"
-)
-
 // WorkStatusTrigger used to trigger an agent.WorkStatusRequest
 type WorkStatusTrigger struct {
 	// CustomerID the customer id for the model instance

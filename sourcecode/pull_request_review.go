@@ -29,37 +29,6 @@ const (
 	PullRequestReviewModelName datamodel.ModelNameType = "sourcecode.PullRequestReview"
 )
 
-const (
-	// PullRequestReviewCreatedDateColumn is the created_date column name
-	PullRequestReviewCreatedDateColumn = "CreatedDate"
-	// PullRequestReviewCreatedDateColumnEpochColumn is the epoch column property of the CreatedDate name
-	PullRequestReviewCreatedDateColumnEpochColumn = "CreatedDate.Epoch"
-	// PullRequestReviewCreatedDateColumnOffsetColumn is the offset column property of the CreatedDate name
-	PullRequestReviewCreatedDateColumnOffsetColumn = "CreatedDate.Offset"
-	// PullRequestReviewCreatedDateColumnRfc3339Column is the rfc3339 column property of the CreatedDate name
-	PullRequestReviewCreatedDateColumnRfc3339Column = "CreatedDate.Rfc3339"
-	// PullRequestReviewCustomerIDColumn is the customer_id column name
-	PullRequestReviewCustomerIDColumn = "CustomerID"
-	// PullRequestReviewIDColumn is the id column name
-	PullRequestReviewIDColumn = "ID"
-	// PullRequestReviewPullRequestIDColumn is the pull_request_id column name
-	PullRequestReviewPullRequestIDColumn = "PullRequestID"
-	// PullRequestReviewRefIDColumn is the ref_id column name
-	PullRequestReviewRefIDColumn = "RefID"
-	// PullRequestReviewRefTypeColumn is the ref_type column name
-	PullRequestReviewRefTypeColumn = "RefType"
-	// PullRequestReviewRepoIDColumn is the repo_id column name
-	PullRequestReviewRepoIDColumn = "RepoID"
-	// PullRequestReviewStateColumn is the state column name
-	PullRequestReviewStateColumn = "State"
-	// PullRequestReviewUpdatedAtColumn is the updated_ts column name
-	PullRequestReviewUpdatedAtColumn = "UpdatedAt"
-	// PullRequestReviewURLColumn is the url column name
-	PullRequestReviewURLColumn = "URL"
-	// PullRequestReviewUserRefIDColumn is the user_ref_id column name
-	PullRequestReviewUserRefIDColumn = "UserRefID"
-)
-
 // PullRequestReviewCreatedDate represents the object structure for created_date
 type PullRequestReviewCreatedDate struct {
 	// Epoch the date in epoch format

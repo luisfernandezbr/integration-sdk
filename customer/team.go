@@ -33,35 +33,6 @@ const (
 	TeamModelName datamodel.ModelNameType = "customer.Team"
 )
 
-const (
-	// TeamActiveColumn is the active column name
-	TeamActiveColumn = "Active"
-	// TeamChildrenIdsColumn is the children_ids column name
-	TeamChildrenIdsColumn = "ChildrenIds"
-	// TeamCreatedAtColumn is the created_ts column name
-	TeamCreatedAtColumn = "CreatedAt"
-	// TeamCustomerIDColumn is the customer_id column name
-	TeamCustomerIDColumn = "CustomerID"
-	// TeamDescriptionColumn is the description column name
-	TeamDescriptionColumn = "Description"
-	// TeamIDColumn is the id column name
-	TeamIDColumn = "ID"
-	// TeamLeafColumn is the leaf column name
-	TeamLeafColumn = "Leaf"
-	// TeamNameColumn is the name column name
-	TeamNameColumn = "Name"
-	// TeamParentIdsColumn is the parent_ids column name
-	TeamParentIdsColumn = "ParentIds"
-	// TeamRefIDColumn is the ref_id column name
-	TeamRefIDColumn = "RefID"
-	// TeamRefTypeColumn is the ref_type column name
-	TeamRefTypeColumn = "RefType"
-	// TeamTeamCostIDColumn is the team_cost_id column name
-	TeamTeamCostIDColumn = "TeamCostID"
-	// TeamUpdatedAtColumn is the updated_ts column name
-	TeamUpdatedAtColumn = "UpdatedAt"
-)
-
 // Team a team is a grouping of one or more users
 type Team struct {
 	// Active whether the team is tracked in pinpoint

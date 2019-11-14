@@ -31,57 +31,6 @@ const (
 	BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
 )
 
-const (
-	// BranchAheadDefaultCountColumn is the ahead_default_count column name
-	BranchAheadDefaultCountColumn = "AheadDefaultCount"
-	// BranchBehindDefaultCountColumn is the behind_default_count column name
-	BranchBehindDefaultCountColumn = "BehindDefaultCount"
-	// BranchBranchedFromCommitIdsColumn is the branched_from_commit_ids column name
-	BranchBranchedFromCommitIdsColumn = "BranchedFromCommitIds"
-	// BranchBranchedFromCommitShasColumn is the branched_from_commit_shas column name
-	BranchBranchedFromCommitShasColumn = "BranchedFromCommitShas"
-	// BranchCommitIdsColumn is the commit_ids column name
-	BranchCommitIdsColumn = "CommitIds"
-	// BranchCommitShasColumn is the commit_shas column name
-	BranchCommitShasColumn = "CommitShas"
-	// BranchCustomerIDColumn is the customer_id column name
-	BranchCustomerIDColumn = "CustomerID"
-	// BranchDefaultColumn is the default column name
-	BranchDefaultColumn = "Default"
-	// BranchFirstBranchedFromCommitIDColumn is the first_branched_from_commit_id column name
-	BranchFirstBranchedFromCommitIDColumn = "FirstBranchedFromCommitID"
-	// BranchFirstBranchedFromCommitShaColumn is the first_branched_from_commit_sha column name
-	BranchFirstBranchedFromCommitShaColumn = "FirstBranchedFromCommitSha"
-	// BranchFirstCommitIDColumn is the first_commit_id column name
-	BranchFirstCommitIDColumn = "FirstCommitID"
-	// BranchFirstCommitShaColumn is the first_commit_sha column name
-	BranchFirstCommitShaColumn = "FirstCommitSha"
-	// BranchIDColumn is the id column name
-	BranchIDColumn = "ID"
-	// BranchIsPullRequestColumn is the is_pull_request column name
-	BranchIsPullRequestColumn = "IsPullRequest"
-	// BranchMergeCommitIDColumn is the merge_commit_id column name
-	BranchMergeCommitIDColumn = "MergeCommitID"
-	// BranchMergeCommitShaColumn is the merge_commit_sha column name
-	BranchMergeCommitShaColumn = "MergeCommitSha"
-	// BranchMergedColumn is the merged column name
-	BranchMergedColumn = "Merged"
-	// BranchNameColumn is the name column name
-	BranchNameColumn = "Name"
-	// BranchPullRequestIDColumn is the pull_request_id column name
-	BranchPullRequestIDColumn = "PullRequestID"
-	// BranchRefIDColumn is the ref_id column name
-	BranchRefIDColumn = "RefID"
-	// BranchRefTypeColumn is the ref_type column name
-	BranchRefTypeColumn = "RefType"
-	// BranchRepoIDColumn is the repo_id column name
-	BranchRepoIDColumn = "RepoID"
-	// BranchUpdatedAtColumn is the updated_ts column name
-	BranchUpdatedAtColumn = "UpdatedAt"
-	// BranchURLColumn is the url column name
-	BranchURLColumn = "URL"
-)
-
 // Branch git branches
 type Branch struct {
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch

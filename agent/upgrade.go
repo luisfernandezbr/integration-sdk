@@ -30,75 +30,6 @@ const (
 	UpgradeModelName datamodel.ModelNameType = "agent.Upgrade"
 )
 
-const (
-	// UpgradeArchitectureColumn is the architecture column name
-	UpgradeArchitectureColumn = "Architecture"
-	// UpgradeCustomerIDColumn is the customer_id column name
-	UpgradeCustomerIDColumn = "CustomerID"
-	// UpgradeDataColumn is the data column name
-	UpgradeDataColumn = "Data"
-	// UpgradeDistroColumn is the distro column name
-	UpgradeDistroColumn = "Distro"
-	// UpgradeErrorColumn is the error column name
-	UpgradeErrorColumn = "Error"
-	// UpgradeEventDateColumn is the event_date column name
-	UpgradeEventDateColumn = "EventDate"
-	// UpgradeEventDateColumnEpochColumn is the epoch column property of the EventDate name
-	UpgradeEventDateColumnEpochColumn = "EventDate.Epoch"
-	// UpgradeEventDateColumnOffsetColumn is the offset column property of the EventDate name
-	UpgradeEventDateColumnOffsetColumn = "EventDate.Offset"
-	// UpgradeEventDateColumnRfc3339Column is the rfc3339 column property of the EventDate name
-	UpgradeEventDateColumnRfc3339Column = "EventDate.Rfc3339"
-	// UpgradeFreeSpaceColumn is the free_space column name
-	UpgradeFreeSpaceColumn = "FreeSpace"
-	// UpgradeFromVersionColumn is the from_version column name
-	UpgradeFromVersionColumn = "FromVersion"
-	// UpgradeGoVersionColumn is the go_version column name
-	UpgradeGoVersionColumn = "GoVersion"
-	// UpgradeHostnameColumn is the hostname column name
-	UpgradeHostnameColumn = "Hostname"
-	// UpgradeIDColumn is the id column name
-	UpgradeIDColumn = "ID"
-	// UpgradeLastExportDateColumn is the last_export_date column name
-	UpgradeLastExportDateColumn = "LastExportDate"
-	// UpgradeLastExportDateColumnEpochColumn is the epoch column property of the LastExportDate name
-	UpgradeLastExportDateColumnEpochColumn = "LastExportDate.Epoch"
-	// UpgradeLastExportDateColumnOffsetColumn is the offset column property of the LastExportDate name
-	UpgradeLastExportDateColumnOffsetColumn = "LastExportDate.Offset"
-	// UpgradeLastExportDateColumnRfc3339Column is the rfc3339 column property of the LastExportDate name
-	UpgradeLastExportDateColumnRfc3339Column = "LastExportDate.Rfc3339"
-	// UpgradeMemoryColumn is the memory column name
-	UpgradeMemoryColumn = "Memory"
-	// UpgradeMessageColumn is the message column name
-	UpgradeMessageColumn = "Message"
-	// UpgradeNumCPUColumn is the num_cpu column name
-	UpgradeNumCPUColumn = "NumCPU"
-	// UpgradeOSColumn is the os column name
-	UpgradeOSColumn = "OS"
-	// UpgradeRefIDColumn is the ref_id column name
-	UpgradeRefIDColumn = "RefID"
-	// UpgradeRefTypeColumn is the ref_type column name
-	UpgradeRefTypeColumn = "RefType"
-	// UpgradeRequestIDColumn is the request_id column name
-	UpgradeRequestIDColumn = "RequestID"
-	// UpgradeSuccessColumn is the success column name
-	UpgradeSuccessColumn = "Success"
-	// UpgradeSystemIDColumn is the system_id column name
-	UpgradeSystemIDColumn = "SystemID"
-	// UpgradeToVersionColumn is the to_version column name
-	UpgradeToVersionColumn = "ToVersion"
-	// UpgradeTypeColumn is the type column name
-	UpgradeTypeColumn = "Type"
-	// UpgradeUpdatedAtColumn is the updated_ts column name
-	UpgradeUpdatedAtColumn = "UpdatedAt"
-	// UpgradeUptimeColumn is the uptime column name
-	UpgradeUptimeColumn = "Uptime"
-	// UpgradeUUIDColumn is the uuid column name
-	UpgradeUUIDColumn = "UUID"
-	// UpgradeVersionColumn is the version column name
-	UpgradeVersionColumn = "Version"
-)
-
 // UpgradeEventDate represents the object structure for event_date
 type UpgradeEventDate struct {
 	// Epoch the date in epoch format
@@ -876,6 +807,25 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpgradeEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -965,6 +915,25 @@ func (o *Upgrade) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpgradeLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

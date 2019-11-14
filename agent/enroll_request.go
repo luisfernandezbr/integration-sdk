@@ -27,25 +27,6 @@ const (
 	EnrollRequestModelName datamodel.ModelNameType = "agent.EnrollRequest"
 )
 
-const (
-	// EnrollRequestCodeColumn is the code column name
-	EnrollRequestCodeColumn = "Code"
-	// EnrollRequestIDColumn is the id column name
-	EnrollRequestIDColumn = "ID"
-	// EnrollRequestRequestDateColumn is the request_date column name
-	EnrollRequestRequestDateColumn = "RequestDate"
-	// EnrollRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	EnrollRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
-	// EnrollRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	EnrollRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
-	// EnrollRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	EnrollRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
-	// EnrollRequestUpdatedAtColumn is the updated_ts column name
-	EnrollRequestUpdatedAtColumn = "UpdatedAt"
-	// EnrollRequestUUIDColumn is the uuid column name
-	EnrollRequestUUIDColumn = "UUID"
-)
-
 // EnrollRequestRequestDate represents the object structure for request_date
 type EnrollRequestRequestDate struct {
 	// Epoch the date in epoch format

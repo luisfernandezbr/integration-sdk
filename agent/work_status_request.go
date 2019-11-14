@@ -34,65 +34,6 @@ const (
 	WorkStatusRequestModelName datamodel.ModelNameType = "agent.WorkStatusRequest"
 )
 
-const (
-	// WorkStatusRequestCustomerIDColumn is the customer_id column name
-	WorkStatusRequestCustomerIDColumn = "CustomerID"
-	// WorkStatusRequestIDColumn is the id column name
-	WorkStatusRequestIDColumn = "ID"
-	// WorkStatusRequestIntegrationColumn is the integration column name
-	WorkStatusRequestIntegrationColumn = "Integration"
-	// WorkStatusRequestIntegrationColumnActiveColumn is the active column property of the Integration name
-	WorkStatusRequestIntegrationColumnActiveColumn = "Integration.Active"
-	// WorkStatusRequestIntegrationColumnAuthorizationColumn is the authorization column property of the Integration name
-	WorkStatusRequestIntegrationColumnAuthorizationColumn = "Integration.Authorization"
-	// WorkStatusRequestIntegrationColumnCustomerIDColumn is the customer_id column property of the Integration name
-	WorkStatusRequestIntegrationColumnCustomerIDColumn = "Integration.CustomerID"
-	// WorkStatusRequestIntegrationColumnErroredColumn is the errored column property of the Integration name
-	WorkStatusRequestIntegrationColumnErroredColumn = "Integration.Errored"
-	// WorkStatusRequestIntegrationColumnExclusionsColumn is the exclusions column property of the Integration name
-	WorkStatusRequestIntegrationColumnExclusionsColumn = "Integration.Exclusions"
-	// WorkStatusRequestIntegrationColumnIDColumn is the id column property of the Integration name
-	WorkStatusRequestIntegrationColumnIDColumn = "Integration.ID"
-	// WorkStatusRequestIntegrationColumnLocationColumn is the location column property of the Integration name
-	WorkStatusRequestIntegrationColumnLocationColumn = "Integration.Location"
-	// WorkStatusRequestIntegrationColumnNameColumn is the name column property of the Integration name
-	WorkStatusRequestIntegrationColumnNameColumn = "Integration.Name"
-	// WorkStatusRequestIntegrationColumnProgressColumn is the progress column property of the Integration name
-	WorkStatusRequestIntegrationColumnProgressColumn = "Integration.Progress"
-	// WorkStatusRequestIntegrationColumnRefIDColumn is the ref_id column property of the Integration name
-	WorkStatusRequestIntegrationColumnRefIDColumn = "Integration.RefID"
-	// WorkStatusRequestIntegrationColumnRefTypeColumn is the ref_type column property of the Integration name
-	WorkStatusRequestIntegrationColumnRefTypeColumn = "Integration.RefType"
-	// WorkStatusRequestIntegrationColumnSystemTypeColumn is the system_type column property of the Integration name
-	WorkStatusRequestIntegrationColumnSystemTypeColumn = "Integration.SystemType"
-	// WorkStatusRequestIntegrationColumnValidatedColumn is the validated column property of the Integration name
-	WorkStatusRequestIntegrationColumnValidatedColumn = "Integration.Validated"
-	// WorkStatusRequestIntegrationColumnValidatedDateColumn is the validated_date column property of the Integration name
-	WorkStatusRequestIntegrationColumnValidatedDateColumn = "Integration.ValidatedDate"
-	// WorkStatusRequestIntegrationColumnValidationMessageColumn is the validation_message column property of the Integration name
-	WorkStatusRequestIntegrationColumnValidationMessageColumn = "Integration.ValidationMessage"
-	// WorkStatusRequestLocationColumn is the location column name
-	WorkStatusRequestLocationColumn = "Location"
-	// WorkStatusRequestRefIDColumn is the ref_id column name
-	WorkStatusRequestRefIDColumn = "RefID"
-	// WorkStatusRequestRefTypeColumn is the ref_type column name
-	WorkStatusRequestRefTypeColumn = "RefType"
-	// WorkStatusRequestRequestDateColumn is the request_date column name
-	WorkStatusRequestRequestDateColumn = "RequestDate"
-	// WorkStatusRequestRequestDateColumnEpochColumn is the epoch column property of the RequestDate name
-	WorkStatusRequestRequestDateColumnEpochColumn = "RequestDate.Epoch"
-	// WorkStatusRequestRequestDateColumnOffsetColumn is the offset column property of the RequestDate name
-	WorkStatusRequestRequestDateColumnOffsetColumn = "RequestDate.Offset"
-	// WorkStatusRequestRequestDateColumnRfc3339Column is the rfc3339 column property of the RequestDate name
-	WorkStatusRequestRequestDateColumnRfc3339Column = "RequestDate.Rfc3339"
-	// WorkStatusRequestSystemTypeColumn is the system_type column name
-	WorkStatusRequestSystemTypeColumn = "SystemType"
-	// WorkStatusRequestUpdatedAtColumn is the updated_ts column name
-	WorkStatusRequestUpdatedAtColumn = "UpdatedAt"
-	// WorkStatusRequestUUIDColumn is the uuid column name
-	WorkStatusRequestUUIDColumn = "UUID"
-)
-
 // WorkStatusRequestIntegrationAuthorization represents the object structure for authorization
 type WorkStatusRequestIntegrationAuthorization struct {
 	// AccessToken Access token
@@ -1588,25 +1529,6 @@ func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
