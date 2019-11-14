@@ -244,8 +244,6 @@ type UserResponseTeams struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// TeamCostID the team cost id
-	TeamCostID *string `json:"team_cost_id,omitempty" codec:"team_cost_id,omitempty" bson:"team_cost_id" yaml:"team_cost_id,omitempty" faker:"-"`
 }
 
 func toUserResponseTeamsObject(o interface{}, isoptional bool) interface{} {
@@ -281,8 +279,6 @@ func (o *UserResponseTeams) ToMap() map[string]interface{} {
 		"ref_id": toUserResponseTeamsObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
 		"ref_type": toUserResponseTeamsObject(o.RefType, false),
-		// TeamCostID the team cost id
-		"team_cost_id": toUserResponseTeamsObject(o.TeamCostID, true),
 	}
 }
 
@@ -524,24 +520,6 @@ func (o *UserResponseTeams) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.RefType = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["team_cost_id"].(*string); ok {
-		o.TeamCostID = val
-	} else if val, ok := kv["team_cost_id"].(string); ok {
-		o.TeamCostID = &val
-	} else {
-		if val, ok := kv["team_cost_id"]; ok {
-			if val == nil {
-				o.TeamCostID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.TeamCostID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}

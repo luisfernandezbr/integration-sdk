@@ -18,7 +18,6 @@ import (
 	"github.com/pinpt/go-common/number"
 	pnumber "github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
-	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -57,8 +56,6 @@ type Team struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// TeamCostID the team cost id
-	TeamCostID *string `json:"team_cost_id,omitempty" codec:"team_cost_id,omitempty" bson:"team_cost_id" yaml:"team_cost_id,omitempty" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -120,9 +117,6 @@ func (o *Team) setDefaults(frommap bool) {
 	}
 	if o.ParentIds == nil {
 		o.ParentIds = make([]string, 0)
-	}
-	if o.TeamCostID == nil {
-		o.TeamCostID = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {
@@ -305,7 +299,6 @@ func (o *Team) ToMap() map[string]interface{} {
 		"parent_ids":   toTeamObject(o.ParentIds, false),
 		"ref_id":       toTeamObject(o.RefID, false),
 		"ref_type":     toTeamObject(o.RefType, false),
-		"team_cost_id": toTeamObject(o.TeamCostID, true),
 		"updated_ts":   toTeamObject(o.UpdatedAt, false),
 		"hashcode":     toTeamObject(o.Hashcode, false),
 	}
@@ -558,24 +551,6 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["team_cost_id"].(*string); ok {
-		o.TeamCostID = val
-	} else if val, ok := kv["team_cost_id"].(string); ok {
-		o.TeamCostID = &val
-	} else {
-		if val, ok := kv["team_cost_id"]; ok {
-			if val == nil {
-				o.TeamCostID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.TeamCostID = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -607,7 +582,6 @@ func (o *Team) Hash() string {
 	args = append(args, o.ParentIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.TeamCostID)
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
