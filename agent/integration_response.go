@@ -255,6 +255,10 @@ func (v *IntegrationResponseType) UnmarshalBSONValue(t bsontype.Type, data []byt
 			*v = IntegrationResponseType(11)
 		case "STOP":
 			*v = IntegrationResponseType(12)
+		case "PAUSE":
+			*v = IntegrationResponseType(13)
+		case "RESUME":
+			*v = IntegrationResponseType(14)
 		}
 	}
 	return nil
@@ -289,6 +293,10 @@ func (v IntegrationResponseType) UnmarshalJSON(buf []byte) error {
 		v = 11
 	case "STOP":
 		v = 12
+	case "PAUSE":
+		v = 13
+	case "RESUME":
+		v = 14
 	}
 	return nil
 }
@@ -322,6 +330,10 @@ func (v IntegrationResponseType) MarshalJSON() ([]byte, error) {
 		return json.Marshal("START")
 	case 12:
 		return json.Marshal("STOP")
+	case 13:
+		return json.Marshal("PAUSE")
+	case 14:
+		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -355,6 +367,10 @@ func (v IntegrationResponseType) String() string {
 		return "START"
 	case 12:
 		return "STOP"
+	case 13:
+		return "PAUSE"
+	case 14:
+		return "RESUME"
 	}
 	return "unset"
 }
@@ -386,6 +402,10 @@ const (
 	IntegrationResponseTypeStart IntegrationResponseType = 11
 	// TypeStop is the enumeration value for stop
 	IntegrationResponseTypeStop IntegrationResponseType = 12
+	// TypePause is the enumeration value for pause
+	IntegrationResponseTypePause IntegrationResponseType = 13
+	// TypeResume is the enumeration value for resume
+	IntegrationResponseTypeResume IntegrationResponseType = 14
 )
 
 // IntegrationResponse an agent response to an action request adding an integration
@@ -819,6 +839,25 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -893,6 +932,25 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1062,6 +1120,10 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1092,6 +1154,10 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 	}

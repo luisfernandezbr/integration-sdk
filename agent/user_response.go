@@ -563,6 +563,10 @@ func (v *UserResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) erro
 			*v = UserResponseType(11)
 		case "STOP":
 			*v = UserResponseType(12)
+		case "PAUSE":
+			*v = UserResponseType(13)
+		case "RESUME":
+			*v = UserResponseType(14)
 		}
 	}
 	return nil
@@ -597,6 +601,10 @@ func (v UserResponseType) UnmarshalJSON(buf []byte) error {
 		v = 11
 	case "STOP":
 		v = 12
+	case "PAUSE":
+		v = 13
+	case "RESUME":
+		v = 14
 	}
 	return nil
 }
@@ -630,6 +638,10 @@ func (v UserResponseType) MarshalJSON() ([]byte, error) {
 		return json.Marshal("START")
 	case 12:
 		return json.Marshal("STOP")
+	case 13:
+		return json.Marshal("PAUSE")
+	case 14:
+		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -663,6 +675,10 @@ func (v UserResponseType) String() string {
 		return "START"
 	case 12:
 		return "STOP"
+	case 13:
+		return "PAUSE"
+	case 14:
+		return "RESUME"
 	}
 	return "unset"
 }
@@ -694,6 +710,10 @@ const (
 	UserResponseTypeStart UserResponseType = 11
 	// TypeStop is the enumeration value for stop
 	UserResponseTypeStop UserResponseType = 12
+	// TypePause is the enumeration value for pause
+	UserResponseTypePause UserResponseType = 13
+	// TypeResume is the enumeration value for resume
+	UserResponseTypeResume UserResponseType = 14
 )
 
 // UserResponseUsersHiredDate represents the object structure for hired_date
@@ -2048,6 +2068,10 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -2078,6 +2102,10 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 	}

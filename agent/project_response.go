@@ -794,6 +794,10 @@ func (v *ProjectResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) e
 			*v = ProjectResponseType(11)
 		case "STOP":
 			*v = ProjectResponseType(12)
+		case "PAUSE":
+			*v = ProjectResponseType(13)
+		case "RESUME":
+			*v = ProjectResponseType(14)
 		}
 	}
 	return nil
@@ -828,6 +832,10 @@ func (v ProjectResponseType) UnmarshalJSON(buf []byte) error {
 		v = 11
 	case "STOP":
 		v = 12
+	case "PAUSE":
+		v = 13
+	case "RESUME":
+		v = 14
 	}
 	return nil
 }
@@ -861,6 +869,10 @@ func (v ProjectResponseType) MarshalJSON() ([]byte, error) {
 		return json.Marshal("START")
 	case 12:
 		return json.Marshal("STOP")
+	case 13:
+		return json.Marshal("PAUSE")
+	case 14:
+		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -894,6 +906,10 @@ func (v ProjectResponseType) String() string {
 		return "START"
 	case 12:
 		return "STOP"
+	case 13:
+		return "PAUSE"
+	case 14:
+		return "RESUME"
 	}
 	return "unset"
 }
@@ -925,6 +941,10 @@ const (
 	ProjectResponseTypeStart ProjectResponseType = 11
 	// TypeStop is the enumeration value for stop
 	ProjectResponseTypeStop ProjectResponseType = 12
+	// TypePause is the enumeration value for pause
+	ProjectResponseTypePause ProjectResponseType = 13
+	// TypeResume is the enumeration value for resume
+	ProjectResponseTypeResume ProjectResponseType = 14
 )
 
 // ProjectResponse an agent response to an action request adding project(s)
@@ -1715,6 +1735,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1745,6 +1769,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 	}

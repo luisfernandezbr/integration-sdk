@@ -72,6 +72,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.Log)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.Pause":
+		o := new(dm_agent.Pause)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Ping":
 		o := new(dm_agent.Ping)
 		o.FromMap(map[string]interface{}{})
@@ -98,6 +102,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "agent.RepoTrigger":
 		o := new(dm_agent.RepoTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Resume":
+		o := new(dm_agent.Resume)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent.Start":
@@ -287,6 +295,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.Log)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent_Pause_topic":
+		o := new(dm_agent.Pause)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_Ping_topic":
 		o := new(dm_agent.Ping)
 		o.FromMap(map[string]interface{}{})
@@ -313,6 +325,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		return o
 	case "agent_RepoTrigger_topic":
 		o := new(dm_agent.RepoTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_Resume_topic":
+		o := new(dm_agent.Resume)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent_Start_topic":
@@ -465,6 +481,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_IntegrationRequest_topic"),
 		datamodel.TopicNameType("agent_IntegrationResponse_topic"),
 		datamodel.TopicNameType("agent_Log_topic"),
+		datamodel.TopicNameType("agent_Pause_topic"),
 		datamodel.TopicNameType("agent_Ping_topic"),
 		datamodel.TopicNameType("agent_ProjectRequest_topic"),
 		datamodel.TopicNameType("agent_ProjectResponse_topic"),
@@ -472,6 +489,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_RepoRequest_topic"),
 		datamodel.TopicNameType("agent_RepoResponse_topic"),
 		datamodel.TopicNameType("agent_RepoTrigger_topic"),
+		datamodel.TopicNameType("agent_Resume_topic"),
 		datamodel.TopicNameType("agent_Start_topic"),
 		datamodel.TopicNameType("agent_Stop_topic"),
 		datamodel.TopicNameType("agent_Uninstall_topic"),
@@ -523,6 +541,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.IntegrationRequest"),
 		datamodel.ModelNameType("agent.IntegrationResponse"),
 		datamodel.ModelNameType("agent.Log"),
+		datamodel.ModelNameType("agent.Pause"),
 		datamodel.ModelNameType("agent.Ping"),
 		datamodel.ModelNameType("agent.ProjectRequest"),
 		datamodel.ModelNameType("agent.ProjectResponse"),
@@ -530,6 +549,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.RepoRequest"),
 		datamodel.ModelNameType("agent.RepoResponse"),
 		datamodel.ModelNameType("agent.RepoTrigger"),
+		datamodel.ModelNameType("agent.Resume"),
 		datamodel.ModelNameType("agent.Start"),
 		datamodel.ModelNameType("agent.Stop"),
 		datamodel.ModelNameType("agent.Uninstall"),

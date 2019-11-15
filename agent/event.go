@@ -255,6 +255,10 @@ func (v *EventType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 			*v = EventType(11)
 		case "STOP":
 			*v = EventType(12)
+		case "PAUSE":
+			*v = EventType(13)
+		case "RESUME":
+			*v = EventType(14)
 		}
 	}
 	return nil
@@ -289,6 +293,10 @@ func (v EventType) UnmarshalJSON(buf []byte) error {
 		v = 11
 	case "STOP":
 		v = 12
+	case "PAUSE":
+		v = 13
+	case "RESUME":
+		v = 14
 	}
 	return nil
 }
@@ -322,6 +330,10 @@ func (v EventType) MarshalJSON() ([]byte, error) {
 		return json.Marshal("START")
 	case 12:
 		return json.Marshal("STOP")
+	case 13:
+		return json.Marshal("PAUSE")
+	case 14:
+		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -355,6 +367,10 @@ func (v EventType) String() string {
 		return "START"
 	case 12:
 		return "STOP"
+	case 13:
+		return "PAUSE"
+	case 14:
+		return "RESUME"
 	}
 	return "unset"
 }
@@ -386,6 +402,10 @@ const (
 	EventTypeStart EventType = 11
 	// TypeStop is the enumeration value for stop
 	EventTypeStop EventType = 12
+	// TypePause is the enumeration value for pause
+	EventTypePause EventType = 13
+	// TypeResume is the enumeration value for resume
+	EventTypeResume EventType = 14
 )
 
 // Event event data sent from the agent
@@ -531,7 +551,7 @@ func (o *Event) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Event) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
+	var dt interface{} = o.EventDate
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -543,6 +563,8 @@ func (o *Event) GetTimestamp() time.Time {
 		return tv.UTC()
 	case time.Time:
 		return v.UTC()
+	case EventEventDate:
+		return datetime.DateFromEpoch(v.Epoch)
 	}
 	panic("not sure how to handle the date time format for Event")
 }
@@ -594,7 +616,7 @@ func (o *Event) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "uuid",
-		Timestamp:         "updated_ts",
+		Timestamp:         "event_date",
 		NumPartitions:     8,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
@@ -1049,6 +1071,10 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1079,6 +1105,10 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 	}

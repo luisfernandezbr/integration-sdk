@@ -335,6 +335,10 @@ func (v *PingType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 			*v = PingType(11)
 		case "STOP":
 			*v = PingType(12)
+		case "PAUSE":
+			*v = PingType(13)
+		case "RESUME":
+			*v = PingType(14)
 		}
 	}
 	return nil
@@ -369,6 +373,10 @@ func (v PingType) UnmarshalJSON(buf []byte) error {
 		v = 11
 	case "STOP":
 		v = 12
+	case "PAUSE":
+		v = 13
+	case "RESUME":
+		v = 14
 	}
 	return nil
 }
@@ -402,6 +410,10 @@ func (v PingType) MarshalJSON() ([]byte, error) {
 		return json.Marshal("START")
 	case 12:
 		return json.Marshal("STOP")
+	case 13:
+		return json.Marshal("PAUSE")
+	case 14:
+		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -435,6 +447,10 @@ func (v PingType) String() string {
 		return "START"
 	case 12:
 		return "STOP"
+	case 13:
+		return "PAUSE"
+	case 14:
+		return "RESUME"
 	}
 	return "unset"
 }
@@ -466,6 +482,10 @@ const (
 	PingTypeStart PingType = 11
 	// TypeStop is the enumeration value for stop
 	PingTypeStop PingType = 12
+	// TypePause is the enumeration value for pause
+	PingTypePause PingType = 13
+	// TypeResume is the enumeration value for resume
+	PingTypeResume PingType = 14
 )
 
 // Ping an agent event for recording a ping
@@ -1199,6 +1219,10 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1229,6 +1253,10 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 	}

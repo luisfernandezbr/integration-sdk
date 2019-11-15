@@ -255,6 +255,10 @@ func (v *StartType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 			*v = StartType(11)
 		case "STOP":
 			*v = StartType(12)
+		case "PAUSE":
+			*v = StartType(13)
+		case "RESUME":
+			*v = StartType(14)
 		}
 	}
 	return nil
@@ -289,6 +293,10 @@ func (v StartType) UnmarshalJSON(buf []byte) error {
 		v = 11
 	case "STOP":
 		v = 12
+	case "PAUSE":
+		v = 13
+	case "RESUME":
+		v = 14
 	}
 	return nil
 }
@@ -322,6 +330,10 @@ func (v StartType) MarshalJSON() ([]byte, error) {
 		return json.Marshal("START")
 	case 12:
 		return json.Marshal("STOP")
+	case 13:
+		return json.Marshal("PAUSE")
+	case 14:
+		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -355,6 +367,10 @@ func (v StartType) String() string {
 		return "START"
 	case 12:
 		return "STOP"
+	case 13:
+		return "PAUSE"
+	case 14:
+		return "RESUME"
 	}
 	return "unset"
 }
@@ -386,6 +402,10 @@ const (
 	StartTypeStart StartType = 11
 	// TypeStop is the enumeration value for stop
 	StartTypeStop StartType = 12
+	// TypePause is the enumeration value for pause
+	StartTypePause StartType = 13
+	// TypeResume is the enumeration value for resume
+	StartTypeResume StartType = 14
 )
 
 // Start an agent event which is sent on start
@@ -1082,6 +1102,10 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1112,6 +1136,10 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 	}

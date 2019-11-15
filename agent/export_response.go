@@ -795,6 +795,10 @@ func (v *ExportResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) er
 			*v = ExportResponseType(11)
 		case "STOP":
 			*v = ExportResponseType(12)
+		case "PAUSE":
+			*v = ExportResponseType(13)
+		case "RESUME":
+			*v = ExportResponseType(14)
 		}
 	}
 	return nil
@@ -829,6 +833,10 @@ func (v ExportResponseType) UnmarshalJSON(buf []byte) error {
 		v = 11
 	case "STOP":
 		v = 12
+	case "PAUSE":
+		v = 13
+	case "RESUME":
+		v = 14
 	}
 	return nil
 }
@@ -862,6 +870,10 @@ func (v ExportResponseType) MarshalJSON() ([]byte, error) {
 		return json.Marshal("START")
 	case 12:
 		return json.Marshal("STOP")
+	case 13:
+		return json.Marshal("PAUSE")
+	case 14:
+		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -895,6 +907,10 @@ func (v ExportResponseType) String() string {
 		return "START"
 	case 12:
 		return "STOP"
+	case 13:
+		return "PAUSE"
+	case 14:
+		return "RESUME"
 	}
 	return "unset"
 }
@@ -926,6 +942,10 @@ const (
 	ExportResponseTypeStart ExportResponseType = 11
 	// TypeStop is the enumeration value for stop
 	ExportResponseTypeStop ExportResponseType = 12
+	// TypePause is the enumeration value for pause
+	ExportResponseTypePause ExportResponseType = 13
+	// TypeResume is the enumeration value for resume
+	ExportResponseTypeResume ExportResponseType = 14
 )
 
 // ExportResponse an agent response to an action request for export
@@ -1854,6 +1874,10 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1884,6 +1908,10 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 	}

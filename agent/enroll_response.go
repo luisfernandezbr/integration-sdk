@@ -255,6 +255,10 @@ func (v *EnrollResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) er
 			*v = EnrollResponseType(11)
 		case "STOP":
 			*v = EnrollResponseType(12)
+		case "PAUSE":
+			*v = EnrollResponseType(13)
+		case "RESUME":
+			*v = EnrollResponseType(14)
 		}
 	}
 	return nil
@@ -289,6 +293,10 @@ func (v EnrollResponseType) UnmarshalJSON(buf []byte) error {
 		v = 11
 	case "STOP":
 		v = 12
+	case "PAUSE":
+		v = 13
+	case "RESUME":
+		v = 14
 	}
 	return nil
 }
@@ -322,6 +330,10 @@ func (v EnrollResponseType) MarshalJSON() ([]byte, error) {
 		return json.Marshal("START")
 	case 12:
 		return json.Marshal("STOP")
+	case 13:
+		return json.Marshal("PAUSE")
+	case 14:
+		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -355,6 +367,10 @@ func (v EnrollResponseType) String() string {
 		return "START"
 	case 12:
 		return "STOP"
+	case 13:
+		return "PAUSE"
+	case 14:
+		return "RESUME"
 	}
 	return "unset"
 }
@@ -386,6 +402,10 @@ const (
 	EnrollResponseTypeStart EnrollResponseType = 11
 	// TypeStop is the enumeration value for stop
 	EnrollResponseTypeStop EnrollResponseType = 12
+	// TypePause is the enumeration value for pause
+	EnrollResponseTypePause EnrollResponseType = 13
+	// TypeResume is the enumeration value for resume
+	EnrollResponseTypeResume EnrollResponseType = 14
 )
 
 // EnrollResponse an agent response to an the enroll action
@@ -1100,6 +1120,10 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1130,6 +1154,10 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 11
 			case "stop", "STOP":
 				o.Type = 12
+			case "pause", "PAUSE":
+				o.Type = 13
+			case "resume", "RESUME":
+				o.Type = 14
 			}
 		}
 	}
