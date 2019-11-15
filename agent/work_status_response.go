@@ -145,8 +145,6 @@ func (v *WorkStatusResponseWorkConfigField) UnmarshalBSONValue(t bsontype.Type, 
 			*v = WorkStatusResponseWorkConfigField(1)
 		case "LABEL":
 			*v = WorkStatusResponseWorkConfigField(2)
-		case "CUSTOM_FIELD_NAME":
-			*v = WorkStatusResponseWorkConfigField(3)
 		}
 	}
 	return nil
@@ -161,8 +159,6 @@ func (v WorkStatusResponseWorkConfigField) UnmarshalJSON(buf []byte) error {
 		v = 1
 	case "LABEL":
 		v = 2
-	case "CUSTOM_FIELD_NAME":
-		v = 3
 	}
 	return nil
 }
@@ -176,8 +172,6 @@ func (v WorkStatusResponseWorkConfigField) MarshalJSON() ([]byte, error) {
 		return json.Marshal("TYPE")
 	case 2:
 		return json.Marshal("LABEL")
-	case 3:
-		return json.Marshal("CUSTOM_FIELD_NAME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -191,8 +185,6 @@ func (v WorkStatusResponseWorkConfigField) String() string {
 		return "TYPE"
 	case 2:
 		return "LABEL"
-	case 3:
-		return "CUSTOM_FIELD_NAME"
 	}
 	return "unset"
 }
@@ -204,8 +196,6 @@ const (
 	WorkStatusResponseWorkConfigFieldType WorkStatusResponseWorkConfigField = 1
 	// WorkConfigFieldLabel is the enumeration value for label
 	WorkStatusResponseWorkConfigFieldLabel WorkStatusResponseWorkConfigField = 2
-	// WorkConfigFieldCustomFieldName is the enumeration value for custom_field_name
-	WorkStatusResponseWorkConfigFieldCustomFieldName WorkStatusResponseWorkConfigField = 3
 )
 
 // WorkStatusResponseWorkConfigIssueType is the enumeration type for issue_type
@@ -1238,8 +1228,6 @@ func (v *WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalBSONValu
 			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(1)
 		case "LABEL":
 			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(2)
-		case "CUSTOM_FIELD_NAME":
-			*v = WorkStatusResponseWorkConfigTypeRulesPredicatesField(3)
 		}
 	}
 	return nil
@@ -1254,8 +1242,6 @@ func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) UnmarshalJSON(buf 
 		v = 1
 	case "LABEL":
 		v = 2
-	case "CUSTOM_FIELD_NAME":
-		v = 3
 	}
 	return nil
 }
@@ -1269,8 +1255,6 @@ func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) MarshalJSON() ([]b
 		return json.Marshal("TYPE")
 	case 2:
 		return json.Marshal("LABEL")
-	case 3:
-		return json.Marshal("CUSTOM_FIELD_NAME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -1284,8 +1268,6 @@ func (v WorkStatusResponseWorkConfigTypeRulesPredicatesField) String() string {
 		return "TYPE"
 	case 2:
 		return "LABEL"
-	case 3:
-		return "CUSTOM_FIELD_NAME"
 	}
 	return "unset"
 }
@@ -1297,8 +1279,6 @@ const (
 	WorkStatusResponseWorkConfigTypeRulesPredicatesFieldType WorkStatusResponseWorkConfigTypeRulesPredicatesField = 1
 	// WorkConfigTypeRulesPredicatesFieldLabel is the enumeration value for label
 	WorkStatusResponseWorkConfigTypeRulesPredicatesFieldLabel WorkStatusResponseWorkConfigTypeRulesPredicatesField = 2
-	// WorkConfigTypeRulesPredicatesFieldCustomFieldName is the enumeration value for custom_field_name
-	WorkStatusResponseWorkConfigTypeRulesPredicatesFieldCustomFieldName WorkStatusResponseWorkConfigTypeRulesPredicatesField = 3
 )
 
 // WorkStatusResponseWorkConfigTypeRulesPredicatesOperator is the enumeration type for operator
@@ -1446,8 +1426,6 @@ func (o *WorkStatusResponseWorkConfigTypeRulesPredicates) FromMap(kv map[string]
 				o.Field = 1
 			case "label", "LABEL":
 				o.Field = 2
-			case "custom_field_name", "CUSTOM_FIELD_NAME":
-				o.Field = 3
 			}
 		}
 		if em, ok := kv["field"].(string); ok {
@@ -1458,8 +1436,6 @@ func (o *WorkStatusResponseWorkConfigTypeRulesPredicates) FromMap(kv map[string]
 				o.Field = 1
 			case "label", "LABEL":
 				o.Field = 2
-			case "custom_field_name", "CUSTOM_FIELD_NAME":
-				o.Field = 3
 			}
 		}
 	}
@@ -1998,8 +1974,6 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 				o.Field = 1
 			case "label", "LABEL":
 				o.Field = 2
-			case "custom_field_name", "CUSTOM_FIELD_NAME":
-				o.Field = 3
 			}
 		}
 		if em, ok := kv["field"].(string); ok {
@@ -2010,8 +1984,6 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 				o.Field = 1
 			case "label", "LABEL":
 				o.Field = 2
-			case "custom_field_name", "CUSTOM_FIELD_NAME":
-				o.Field = 3
 			}
 		}
 	}

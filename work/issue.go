@@ -17,6 +17,8 @@ import (
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -30,6 +32,567 @@ const (
 	// IssueModelName is the model name
 	IssueModelName datamodel.ModelNameType = "work.Issue"
 )
+
+// IssueChangeLogCreatedDate represents the object structure for created_date
+type IssueChangeLogCreatedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toIssueChangeLogCreatedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssueChangeLogCreatedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *IssueChangeLogCreatedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toIssueChangeLogCreatedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toIssueChangeLogCreatedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toIssueChangeLogCreatedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *IssueChangeLogCreatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueChangeLogCreatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// IssueChangeLogField is the enumeration type for field
+type IssueChangeLogField int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *IssueChangeLogField) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = IssueChangeLogField(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ASSIGNEE_REF_ID":
+			*v = IssueChangeLogField(0)
+		case "DUE_DATE":
+			*v = IssueChangeLogField(1)
+		case "EPIC_ID":
+			*v = IssueChangeLogField(2)
+		case "IDENTIFIER":
+			*v = IssueChangeLogField(3)
+		case "PARENT_ID":
+			*v = IssueChangeLogField(4)
+		case "PRIORITY":
+			*v = IssueChangeLogField(5)
+		case "PROJECT_ID":
+			*v = IssueChangeLogField(6)
+		case "REPORTER_REF_ID":
+			*v = IssueChangeLogField(7)
+		case "RESOLUTION":
+			*v = IssueChangeLogField(8)
+		case "SPRINT_IDS":
+			*v = IssueChangeLogField(9)
+		case "STATUS":
+			*v = IssueChangeLogField(10)
+		case "TAGS":
+			*v = IssueChangeLogField(11)
+		case "TITLE":
+			*v = IssueChangeLogField(12)
+		case "TYPE":
+			*v = IssueChangeLogField(13)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v IssueChangeLogField) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "ASSIGNEE_REF_ID":
+		v = 0
+	case "DUE_DATE":
+		v = 1
+	case "EPIC_ID":
+		v = 2
+	case "IDENTIFIER":
+		v = 3
+	case "PARENT_ID":
+		v = 4
+	case "PRIORITY":
+		v = 5
+	case "PROJECT_ID":
+		v = 6
+	case "REPORTER_REF_ID":
+		v = 7
+	case "RESOLUTION":
+		v = 8
+	case "SPRINT_IDS":
+		v = 9
+	case "STATUS":
+		v = 10
+	case "TAGS":
+		v = 11
+	case "TITLE":
+		v = 12
+	case "TYPE":
+		v = 13
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v IssueChangeLogField) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("ASSIGNEE_REF_ID")
+	case 1:
+		return json.Marshal("DUE_DATE")
+	case 2:
+		return json.Marshal("EPIC_ID")
+	case 3:
+		return json.Marshal("IDENTIFIER")
+	case 4:
+		return json.Marshal("PARENT_ID")
+	case 5:
+		return json.Marshal("PRIORITY")
+	case 6:
+		return json.Marshal("PROJECT_ID")
+	case 7:
+		return json.Marshal("REPORTER_REF_ID")
+	case 8:
+		return json.Marshal("RESOLUTION")
+	case 9:
+		return json.Marshal("SPRINT_IDS")
+	case 10:
+		return json.Marshal("STATUS")
+	case 11:
+		return json.Marshal("TAGS")
+	case 12:
+		return json.Marshal("TITLE")
+	case 13:
+		return json.Marshal("TYPE")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for ChangeLogField
+func (v IssueChangeLogField) String() string {
+	switch int32(v) {
+	case 0:
+		return "ASSIGNEE_REF_ID"
+	case 1:
+		return "DUE_DATE"
+	case 2:
+		return "EPIC_ID"
+	case 3:
+		return "IDENTIFIER"
+	case 4:
+		return "PARENT_ID"
+	case 5:
+		return "PRIORITY"
+	case 6:
+		return "PROJECT_ID"
+	case 7:
+		return "REPORTER_REF_ID"
+	case 8:
+		return "RESOLUTION"
+	case 9:
+		return "SPRINT_IDS"
+	case 10:
+		return "STATUS"
+	case 11:
+		return "TAGS"
+	case 12:
+		return "TITLE"
+	case 13:
+		return "TYPE"
+	}
+	return "unset"
+}
+
+const (
+	// ChangeLogFieldAssigneeRefID is the enumeration value for assignee_ref_id
+	IssueChangeLogFieldAssigneeRefID IssueChangeLogField = 0
+	// ChangeLogFieldDueDate is the enumeration value for due_date
+	IssueChangeLogFieldDueDate IssueChangeLogField = 1
+	// ChangeLogFieldEpicID is the enumeration value for epic_id
+	IssueChangeLogFieldEpicID IssueChangeLogField = 2
+	// ChangeLogFieldIdentifier is the enumeration value for identifier
+	IssueChangeLogFieldIdentifier IssueChangeLogField = 3
+	// ChangeLogFieldParentID is the enumeration value for parent_id
+	IssueChangeLogFieldParentID IssueChangeLogField = 4
+	// ChangeLogFieldPriority is the enumeration value for priority
+	IssueChangeLogFieldPriority IssueChangeLogField = 5
+	// ChangeLogFieldProjectID is the enumeration value for project_id
+	IssueChangeLogFieldProjectID IssueChangeLogField = 6
+	// ChangeLogFieldReporterRefID is the enumeration value for reporter_ref_id
+	IssueChangeLogFieldReporterRefID IssueChangeLogField = 7
+	// ChangeLogFieldResolution is the enumeration value for resolution
+	IssueChangeLogFieldResolution IssueChangeLogField = 8
+	// ChangeLogFieldSprintIds is the enumeration value for sprint_ids
+	IssueChangeLogFieldSprintIds IssueChangeLogField = 9
+	// ChangeLogFieldStatus is the enumeration value for status
+	IssueChangeLogFieldStatus IssueChangeLogField = 10
+	// ChangeLogFieldTags is the enumeration value for tags
+	IssueChangeLogFieldTags IssueChangeLogField = 11
+	// ChangeLogFieldTitle is the enumeration value for title
+	IssueChangeLogFieldTitle IssueChangeLogField = 12
+	// ChangeLogFieldType is the enumeration value for type
+	IssueChangeLogFieldType IssueChangeLogField = 13
+)
+
+// IssueChangeLog represents the object structure for change_log
+type IssueChangeLog struct {
+	// CreatedDate the date when this change was created
+	CreatedDate IssueChangeLogCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	// Field the field that was changed
+	Field IssueChangeLogField `json:"field" codec:"field" bson:"field" yaml:"field" faker:"-"`
+	// From id of the change from
+	From string `json:"from" codec:"from" bson:"from" yaml:"from" faker:"-"`
+	// FromString human readable representation of the change from, used mostly for debug
+	FromString string `json:"from_string" codec:"from_string" bson:"from_string" yaml:"from_string" faker:"-"`
+	// Ordinal so we can order correctly in queries since dates could be equal
+	Ordinal int64 `json:"ordinal" codec:"ordinal" bson:"ordinal" yaml:"ordinal" faker:"-"`
+	// RefID id of the changelog in the source system, for debug purposes
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// To id of the change to
+	To string `json:"to" codec:"to" bson:"to" yaml:"to" faker:"-"`
+	// ToString human readable representation name of the change to, used mostly for debug
+	ToString string `json:"to_string" codec:"to_string" bson:"to_string" yaml:"to_string" faker:"-"`
+	// UserID id of the user of this change
+	UserID string `json:"user_id" codec:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
+}
+
+func toIssueChangeLogObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssueChangeLog:
+		return v.ToMap()
+
+	case IssueChangeLogCreatedDate:
+		return v.ToMap()
+
+	case IssueChangeLogField:
+		return v.String()
+
+	default:
+		return o
+	}
+}
+
+func (o *IssueChangeLog) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// CreatedDate the date when this change was created
+		"created_date": toIssueChangeLogObject(o.CreatedDate, false),
+		// Field the field that was changed
+		"field": toIssueChangeLogObject(o.Field, false),
+		// From id of the change from
+		"from": toIssueChangeLogObject(o.From, false),
+		// FromString human readable representation of the change from, used mostly for debug
+		"from_string": toIssueChangeLogObject(o.FromString, false),
+		// Ordinal so we can order correctly in queries since dates could be equal
+		"ordinal": toIssueChangeLogObject(o.Ordinal, false),
+		// RefID id of the changelog in the source system, for debug purposes
+		"ref_id": toIssueChangeLogObject(o.RefID, false),
+		// To id of the change to
+		"to": toIssueChangeLogObject(o.To, false),
+		// ToString human readable representation name of the change to, used mostly for debug
+		"to_string": toIssueChangeLogObject(o.ToString, false),
+		// UserID id of the user of this change
+		"user_id": toIssueChangeLogObject(o.UserID, false),
+	}
+}
+
+func (o *IssueChangeLog) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueChangeLog) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(IssueChangeLogCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*IssueChangeLogCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["field"].(IssueChangeLogField); ok {
+		o.Field = val
+	} else {
+		if em, ok := kv["field"].(map[string]interface{}); ok {
+			ev := em["work.field"].(string)
+			switch ev {
+			case "assignee_ref_id", "ASSIGNEE_REF_ID":
+				o.Field = 0
+			case "due_date", "DUE_DATE":
+				o.Field = 1
+			case "epic_id", "EPIC_ID":
+				o.Field = 2
+			case "identifier", "IDENTIFIER":
+				o.Field = 3
+			case "parent_id", "PARENT_ID":
+				o.Field = 4
+			case "priority", "PRIORITY":
+				o.Field = 5
+			case "project_id", "PROJECT_ID":
+				o.Field = 6
+			case "reporter_ref_id", "REPORTER_REF_ID":
+				o.Field = 7
+			case "resolution", "RESOLUTION":
+				o.Field = 8
+			case "sprint_ids", "SPRINT_IDS":
+				o.Field = 9
+			case "status", "STATUS":
+				o.Field = 10
+			case "tags", "TAGS":
+				o.Field = 11
+			case "title", "TITLE":
+				o.Field = 12
+			case "type", "TYPE":
+				o.Field = 13
+			}
+		}
+		if em, ok := kv["field"].(string); ok {
+			switch em {
+			case "assignee_ref_id", "ASSIGNEE_REF_ID":
+				o.Field = 0
+			case "due_date", "DUE_DATE":
+				o.Field = 1
+			case "epic_id", "EPIC_ID":
+				o.Field = 2
+			case "identifier", "IDENTIFIER":
+				o.Field = 3
+			case "parent_id", "PARENT_ID":
+				o.Field = 4
+			case "priority", "PRIORITY":
+				o.Field = 5
+			case "project_id", "PROJECT_ID":
+				o.Field = 6
+			case "reporter_ref_id", "REPORTER_REF_ID":
+				o.Field = 7
+			case "resolution", "RESOLUTION":
+				o.Field = 8
+			case "sprint_ids", "SPRINT_IDS":
+				o.Field = 9
+			case "status", "STATUS":
+				o.Field = 10
+			case "tags", "TAGS":
+				o.Field = 11
+			case "title", "TITLE":
+				o.Field = 12
+			case "type", "TYPE":
+				o.Field = 13
+			}
+		}
+	}
+
+	if val, ok := kv["from"].(string); ok {
+		o.From = val
+	} else {
+		if val, ok := kv["from"]; ok {
+			if val == nil {
+				o.From = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.From = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["from_string"].(string); ok {
+		o.FromString = val
+	} else {
+		if val, ok := kv["from_string"]; ok {
+			if val == nil {
+				o.FromString = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.FromString = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ordinal"].(int64); ok {
+		o.Ordinal = val
+	} else {
+		if val, ok := kv["ordinal"]; ok {
+			if val == nil {
+				o.Ordinal = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Ordinal = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["to"].(string); ok {
+		o.To = val
+	} else {
+		if val, ok := kv["to"]; ok {
+			if val == nil {
+				o.To = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.To = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["to_string"].(string); ok {
+		o.ToString = val
+	} else {
+		if val, ok := kv["to_string"]; ok {
+			if val == nil {
+				o.ToString = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.ToString = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["user_id"].(string); ok {
+		o.UserID = val
+	} else {
+		if val, ok := kv["user_id"]; ok {
+			if val == nil {
+				o.UserID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.UserID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
 
 // IssueCreatedDate represents the object structure for created_date
 type IssueCreatedDate struct {
@@ -119,100 +682,6 @@ func (o *IssueCreatedDate) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// IssueCustomFields represents the object structure for customFields
-type IssueCustomFields struct {
-	// ID the id of the custom field
-	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
-	// Name the name of the custom field
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
-	// Value the value of the custom field
-	Value string `json:"value" codec:"value" bson:"value" yaml:"value" faker:"-"`
-}
-
-func toIssueCustomFieldsObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *IssueCustomFields:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *IssueCustomFields) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// ID the id of the custom field
-		"id": toIssueCustomFieldsObject(o.ID, false),
-		// Name the name of the custom field
-		"name": toIssueCustomFieldsObject(o.Name, false),
-		// Value the value of the custom field
-		"value": toIssueCustomFieldsObject(o.Value, false),
-	}
-}
-
-func (o *IssueCustomFields) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *IssueCustomFields) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Name = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["value"].(string); ok {
-		o.Value = val
-	} else {
-		if val, ok := kv["value"]; ok {
-			if val == nil {
-				o.Value = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Value = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -599,12 +1068,12 @@ func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
 type Issue struct {
 	// AssigneeRefID user id of the assignee
 	AssigneeRefID string `json:"assignee_ref_id" codec:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
+	// ChangeLog the change history of this issue
+	ChangeLog []IssueChangeLog `json:"change_log" codec:"change_log" bson:"change_log" yaml:"change_log" faker:"-"`
 	// CreatedDate the date that the issue was created
 	CreatedDate IssueCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CreatorRefID user id of the creator
 	CreatorRefID string `json:"creator_ref_id" codec:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
-	// CustomFields list of custom fields and their values
-	CustomFields []IssueCustomFields `json:"customFields" codec:"customFields" bson:"customFields" yaml:"customFields" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DueDate due date of the issue
@@ -660,15 +1129,15 @@ func toIssueObject(o interface{}, isoptional bool) interface{} {
 	case *Issue:
 		return v.ToMap()
 
-	case IssueCreatedDate:
-		return v.ToMap()
-
-	case []IssueCustomFields:
+	case []IssueChangeLog:
 		arr := make([]interface{}, 0)
 		for _, i := range v {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
+
+	case IssueCreatedDate:
+		return v.ToMap()
 
 	case IssueDueDate:
 		return v.ToMap()
@@ -718,8 +1187,8 @@ func NewIssueID(customerID string, refType string, refID string) string {
 }
 
 func (o *Issue) setDefaults(frommap bool) {
-	if o.CustomFields == nil {
-		o.CustomFields = make([]IssueCustomFields, 0)
+	if o.ChangeLog == nil {
+		o.ChangeLog = make([]IssueChangeLog, 0)
 	}
 	if o.Tags == nil {
 		o.Tags = make([]string, 0)
@@ -892,9 +1361,9 @@ func (o *Issue) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"assignee_ref_id":    toIssueObject(o.AssigneeRefID, false),
+		"change_log":         toIssueObject(o.ChangeLog, false),
 		"created_date":       toIssueObject(o.CreatedDate, false),
 		"creator_ref_id":     toIssueObject(o.CreatorRefID, false),
-		"customFields":       toIssueObject(o.CustomFields, false),
 		"customer_id":        toIssueObject(o.CustomerID, false),
 		"due_date":           toIssueObject(o.DueDate, false),
 		"id":                 toIssueObject(o.ID, false),
@@ -944,6 +1413,69 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if o == nil {
+
+		o.ChangeLog = make([]IssueChangeLog, 0)
+
+	}
+	if val, ok := kv["change_log"]; ok {
+		if sv, ok := val.([]IssueChangeLog); ok {
+			o.ChangeLog = sv
+		} else if sp, ok := val.([]*IssueChangeLog); ok {
+			o.ChangeLog = o.ChangeLog[:0]
+			for _, e := range sp {
+				o.ChangeLog = append(o.ChangeLog, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IssueChangeLog); ok {
+					o.ChangeLog = append(o.ChangeLog, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IssueChangeLog
+					fm.FromMap(av)
+					o.ChangeLog = append(o.ChangeLog, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av IssueChangeLog
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for change_log field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.ChangeLog = append(o.ChangeLog, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IssueChangeLog); ok {
+					o.ChangeLog = append(o.ChangeLog, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IssueChangeLog
+					fm.FromMap(r)
+					o.ChangeLog = append(o.ChangeLog, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IssueChangeLog{}
+					fm.FromMap(r)
+					o.ChangeLog = append(o.ChangeLog, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IssueChangeLog
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.ChangeLog = append(o.ChangeLog, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if val, ok := kv["created_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.CreatedDate.FromMap(kv)
@@ -988,69 +1520,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.CreatorRefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if o == nil {
-
-		o.CustomFields = make([]IssueCustomFields, 0)
-
-	}
-	if val, ok := kv["customFields"]; ok {
-		if sv, ok := val.([]IssueCustomFields); ok {
-			o.CustomFields = sv
-		} else if sp, ok := val.([]*IssueCustomFields); ok {
-			o.CustomFields = o.CustomFields[:0]
-			for _, e := range sp {
-				o.CustomFields = append(o.CustomFields, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(IssueCustomFields); ok {
-					o.CustomFields = append(o.CustomFields, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm IssueCustomFields
-					fm.FromMap(av)
-					o.CustomFields = append(o.CustomFields, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					var av IssueCustomFields
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for customFields field entry: " + reflect.TypeOf(ae).String())
-					}
-					o.CustomFields = append(o.CustomFields, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(IssueCustomFields); ok {
-					o.CustomFields = append(o.CustomFields, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm IssueCustomFields
-					fm.FromMap(r)
-					o.CustomFields = append(o.CustomFields, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := IssueCustomFields{}
-					fm.FromMap(r)
-					o.CustomFields = append(o.CustomFields, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm IssueCustomFields
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.CustomFields = append(o.CustomFields, fm)
-						}
-					}
-				}
 			}
 		}
 	}
@@ -1469,9 +1938,9 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 func (o *Issue) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.AssigneeRefID)
+	args = append(args, o.ChangeLog)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CreatorRefID)
-	args = append(args, o.CustomFields)
 	args = append(args, o.CustomerID)
 	args = append(args, o.DueDate)
 	args = append(args, o.ID)
