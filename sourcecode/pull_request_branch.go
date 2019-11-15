@@ -21,18 +21,18 @@ import (
 )
 
 const (
-	// BranchTopic is the default topic name
-	BranchTopic datamodel.TopicNameType = "sourcecode_Branch_topic"
+	// PullRequestBranchTopic is the default topic name
+	PullRequestBranchTopic datamodel.TopicNameType = "sourcecode_PullRequestBranch_topic"
 
-	// BranchTable is the default table name
-	BranchTable datamodel.ModelNameType = "sourcecode_branch"
+	// PullRequestBranchTable is the default table name
+	PullRequestBranchTable datamodel.ModelNameType = "sourcecode_pullrequestbranch"
 
-	// BranchModelName is the model name
-	BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
+	// PullRequestBranchModelName is the model name
+	PullRequestBranchModelName datamodel.ModelNameType = "sourcecode.PullRequestBranch"
 )
 
-// Branch git branches
-type Branch struct {
+// PullRequestBranch the pull request branch is a branch in a repo that was extracted from a pull request instead of from git
+type PullRequestBranch struct {
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
 	AheadDefaultCount int64 `json:"ahead_default_count" codec:"ahead_default_count" bson:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
 	// BehindDefaultCount the number of commits that this branch is behind from the default branch
@@ -49,10 +49,6 @@ type Branch struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Default true if the branch is the default branch
 	Default bool `json:"default" codec:"default" bson:"default" yaml:"default" faker:"-"`
-	// FirstCommitID the first commit id on the branch
-	FirstCommitID string `json:"first_commit_id" codec:"first_commit_id" bson:"first_commit_id" yaml:"first_commit_id" faker:"-"`
-	// FirstCommitSha the first commit sha on the branch
-	FirstCommitSha string `json:"first_commit_sha" codec:"first_commit_sha" bson:"first_commit_sha" yaml:"first_commit_sha" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// MergeCommitID commit id in which the branch was merged
@@ -63,6 +59,8 @@ type Branch struct {
 	Merged bool `json:"merged" codec:"merged" bson:"merged" yaml:"merged" faker:"-"`
 	// Name name of the branch
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// PullRequestID pull request that provided sha for this branch
+	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -78,14 +76,14 @@ type Branch struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Branch)(nil)
+var _ datamodel.Model = (*PullRequestBranch)(nil)
 
 // ensure that this type implements the streamed data model interface
-var _ datamodel.StreamedModel = (*Branch)(nil)
+var _ datamodel.StreamedModel = (*PullRequestBranch)(nil)
 
-func toBranchObject(o interface{}, isoptional bool) interface{} {
+func toPullRequestBranchObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *Branch:
+	case *PullRequestBranch:
 		return v.ToMap()
 
 	default:
@@ -93,37 +91,37 @@ func toBranchObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-// String returns a string representation of Branch
-func (o *Branch) String() string {
-	return fmt.Sprintf("sourcecode.Branch<%s>", o.ID)
+// String returns a string representation of PullRequestBranch
+func (o *PullRequestBranch) String() string {
+	return fmt.Sprintf("sourcecode.PullRequestBranch<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Branch) GetTopicName() datamodel.TopicNameType {
-	return BranchTopic
+func (o *PullRequestBranch) GetTopicName() datamodel.TopicNameType {
+	return PullRequestBranchTopic
 }
 
 // GetStreamName returns the name of the stream
-func (o *Branch) GetStreamName() string {
+func (o *PullRequestBranch) GetStreamName() string {
 	return ""
 }
 
 // GetTableName returns the name of the table
-func (o *Branch) GetTableName() string {
-	return BranchTable.String()
+func (o *PullRequestBranch) GetTableName() string {
+	return PullRequestBranchTable.String()
 }
 
 // GetModelName returns the name of the model
-func (o *Branch) GetModelName() datamodel.ModelNameType {
-	return BranchModelName
+func (o *PullRequestBranch) GetModelName() datamodel.ModelNameType {
+	return PullRequestBranchModelName
 }
 
-// NewBranchID provides a template for generating an ID field for Branch
-func NewBranchID(refType string, RepoID string, customerID string, Name string, FirstCommitID string) string {
-	return hash.Values(refType, RepoID, customerID, Name, FirstCommitID)
+// NewPullRequestBranchID provides a template for generating an ID field for PullRequestBranch
+func NewPullRequestBranchID(customerID string, refID string, refType string, RepoID string) string {
+	return hash.Values(customerID, refID, refType, RepoID)
 }
 
-func (o *Branch) setDefaults(frommap bool) {
+func (o *PullRequestBranch) setDefaults(frommap bool) {
 	if o.BranchedFromCommitIds == nil {
 		o.BranchedFromCommitIds = make([]string, 0)
 	}
@@ -138,7 +136,7 @@ func (o *Branch) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		o.ID = hash.Values(o.RefType, o.RepoID, o.CustomerID, o.Name, o.FirstCommitID)
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID)
 	}
 
 	if frommap {
@@ -149,12 +147,12 @@ func (o *Branch) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *Branch) GetID() string {
+func (o *PullRequestBranch) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Branch) GetTopicKey() string {
+func (o *PullRequestBranch) GetTopicKey() string {
 	var i interface{} = o.RepoID
 	if s, ok := i.(string); ok {
 		return s
@@ -163,7 +161,7 @@ func (o *Branch) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Branch) GetTimestamp() time.Time {
+func (o *PullRequestBranch) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -177,42 +175,42 @@ func (o *Branch) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for Branch")
+	panic("not sure how to handle the date time format for PullRequestBranch")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Branch) GetRefID() string {
+func (o *PullRequestBranch) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Branch) IsMaterialized() bool {
+func (o *PullRequestBranch) IsMaterialized() bool {
 	return false
 }
 
 // IsMutable returns true if the model is mutable
-func (o *Branch) IsMutable() bool {
+func (o *PullRequestBranch) IsMutable() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Branch) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *PullRequestBranch) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Branch) IsEvented() bool {
+func (o *PullRequestBranch) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Branch) SetEventHeaders(kv map[string]string) {
+func (o *PullRequestBranch) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = BranchModelName.String()
+	kv["model"] = PullRequestBranchModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *PullRequestBranch) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("87360h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
@@ -238,22 +236,22 @@ func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetCustomerID will return the customer_id
-func (o *Branch) GetCustomerID() string {
+func (o *PullRequestBranch) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Branch
-func (o *Branch) Clone() datamodel.Model {
-	c := new(Branch)
+// Clone returns an exact copy of PullRequestBranch
+func (o *PullRequestBranch) Clone() datamodel.Model {
+	c := new(PullRequestBranch)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Branch) Anon() datamodel.Model {
-	c := new(Branch)
+func (o *PullRequestBranch) Anon() datamodel.Model {
+	c := new(PullRequestBranch)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -268,12 +266,12 @@ func (o *Branch) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Branch) MarshalJSON() ([]byte, error) {
+func (o *PullRequestBranch) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Branch) UnmarshalJSON(data []byte) error {
+func (o *PullRequestBranch) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -286,46 +284,45 @@ func (o *Branch) UnmarshalJSON(data []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Branch) Stringify() string {
+func (o *PullRequestBranch) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Branch objects are equal
-func (o *Branch) IsEqual(other *Branch) bool {
+// IsEqual returns true if the two PullRequestBranch objects are equal
+func (o *PullRequestBranch) IsEqual(other *PullRequestBranch) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Branch) ToMap() map[string]interface{} {
+func (o *PullRequestBranch) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"ahead_default_count":       toBranchObject(o.AheadDefaultCount, false),
-		"behind_default_count":      toBranchObject(o.BehindDefaultCount, false),
-		"branched_from_commit_ids":  toBranchObject(o.BranchedFromCommitIds, false),
-		"branched_from_commit_shas": toBranchObject(o.BranchedFromCommitShas, false),
-		"commit_ids":                toBranchObject(o.CommitIds, false),
-		"commit_shas":               toBranchObject(o.CommitShas, false),
-		"customer_id":               toBranchObject(o.CustomerID, false),
-		"default":                   toBranchObject(o.Default, false),
-		"first_commit_id":           toBranchObject(o.FirstCommitID, false),
-		"first_commit_sha":          toBranchObject(o.FirstCommitSha, false),
-		"id":                        toBranchObject(o.ID, false),
-		"merge_commit_id":           toBranchObject(o.MergeCommitID, false),
-		"merge_commit_sha":          toBranchObject(o.MergeCommitSha, false),
-		"merged":                    toBranchObject(o.Merged, false),
-		"name":                      toBranchObject(o.Name, false),
-		"ref_id":                    toBranchObject(o.RefID, false),
-		"ref_type":                  toBranchObject(o.RefType, false),
-		"repo_id":                   toBranchObject(o.RepoID, false),
-		"updated_ts":                toBranchObject(o.UpdatedAt, false),
-		"url":                       toBranchObject(o.URL, false),
-		"hashcode":                  toBranchObject(o.Hashcode, false),
+		"ahead_default_count":       toPullRequestBranchObject(o.AheadDefaultCount, false),
+		"behind_default_count":      toPullRequestBranchObject(o.BehindDefaultCount, false),
+		"branched_from_commit_ids":  toPullRequestBranchObject(o.BranchedFromCommitIds, false),
+		"branched_from_commit_shas": toPullRequestBranchObject(o.BranchedFromCommitShas, false),
+		"commit_ids":                toPullRequestBranchObject(o.CommitIds, false),
+		"commit_shas":               toPullRequestBranchObject(o.CommitShas, false),
+		"customer_id":               toPullRequestBranchObject(o.CustomerID, false),
+		"default":                   toPullRequestBranchObject(o.Default, false),
+		"id":                        toPullRequestBranchObject(o.ID, false),
+		"merge_commit_id":           toPullRequestBranchObject(o.MergeCommitID, false),
+		"merge_commit_sha":          toPullRequestBranchObject(o.MergeCommitSha, false),
+		"merged":                    toPullRequestBranchObject(o.Merged, false),
+		"name":                      toPullRequestBranchObject(o.Name, false),
+		"pull_request_id":           toPullRequestBranchObject(o.PullRequestID, false),
+		"ref_id":                    toPullRequestBranchObject(o.RefID, false),
+		"ref_type":                  toPullRequestBranchObject(o.RefType, false),
+		"repo_id":                   toPullRequestBranchObject(o.RepoID, false),
+		"updated_ts":                toPullRequestBranchObject(o.UpdatedAt, false),
+		"url":                       toPullRequestBranchObject(o.URL, false),
+		"hashcode":                  toPullRequestBranchObject(o.Hashcode, false),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Branch) FromMap(kv map[string]interface{}) {
+func (o *PullRequestBranch) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -595,36 +592,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["first_commit_id"].(string); ok {
-		o.FirstCommitID = val
-	} else {
-		if val, ok := kv["first_commit_id"]; ok {
-			if val == nil {
-				o.FirstCommitID = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.FirstCommitID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["first_commit_sha"].(string); ok {
-		o.FirstCommitSha = val
-	} else {
-		if val, ok := kv["first_commit_sha"]; ok {
-			if val == nil {
-				o.FirstCommitSha = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.FirstCommitSha = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -693,6 +660,21 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["pull_request_id"].(string); ok {
+		o.PullRequestID = val
+	} else {
+		if val, ok := kv["pull_request_id"]; ok {
+			if val == nil {
+				o.PullRequestID = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.PullRequestID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -775,7 +757,7 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Branch) Hash() string {
+func (o *PullRequestBranch) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.AheadDefaultCount)
 	args = append(args, o.BehindDefaultCount)
@@ -785,13 +767,12 @@ func (o *Branch) Hash() string {
 	args = append(args, o.CommitShas)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Default)
-	args = append(args, o.FirstCommitID)
-	args = append(args, o.FirstCommitSha)
 	args = append(args, o.ID)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeCommitSha)
 	args = append(args, o.Merged)
 	args = append(args, o.Name)
+	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
@@ -802,7 +783,7 @@ func (o *Branch) Hash() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Branch) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *PullRequestBranch) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,

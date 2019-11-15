@@ -192,6 +192,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_sourcecode.PullRequest)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "sourcecode.PullRequestBranch":
+		o := new(dm_sourcecode.PullRequestBranch)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.PullRequestComment":
 		o := new(dm_sourcecode.PullRequestComment)
 		o.FromMap(map[string]interface{}{})
@@ -415,6 +419,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_sourcecode.PullRequest)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "sourcecode_PullRequestBranch_topic":
+		o := new(dm_sourcecode.PullRequestBranch)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_PullRequestComment_topic":
 		o := new(dm_sourcecode.PullRequestComment)
 		o.FromMap(map[string]interface{}{})
@@ -510,6 +518,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("sourcecode_Blame_topic"),
 		datamodel.TopicNameType("sourcecode_Branch_topic"),
 		datamodel.TopicNameType("sourcecode_Commit_topic"),
+		datamodel.TopicNameType("sourcecode_PullRequestBranch_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequestCommit_topic"),
 		datamodel.TopicNameType("sourcecode_PullRequestReview_topic"),
@@ -571,6 +580,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("sourcecode.Branch"),
 		datamodel.ModelNameType("sourcecode.Commit"),
 		datamodel.ModelNameType("sourcecode.PullRequest"),
+		datamodel.ModelNameType("sourcecode.PullRequestBranch"),
 		datamodel.ModelNameType("sourcecode.PullRequestComment"),
 		datamodel.ModelNameType("sourcecode.PullRequestCommit"),
 		datamodel.ModelNameType("sourcecode.PullRequestReview"),
