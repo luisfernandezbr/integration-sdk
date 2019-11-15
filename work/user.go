@@ -87,7 +87,7 @@ func (o *User) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *User) GetTableName() string {
-	return UserTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

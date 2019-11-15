@@ -506,7 +506,7 @@ func (o *Start) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Start) GetTableName() string {
-	return StartTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

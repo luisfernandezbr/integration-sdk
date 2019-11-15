@@ -506,7 +506,7 @@ func (o *Log) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Log) GetTableName() string {
-	return LogTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

@@ -1173,7 +1173,7 @@ func (o *Issue) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Issue) GetTableName() string {
-	return IssueTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

@@ -506,7 +506,7 @@ func (o *Uninstall) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Uninstall) GetTableName() string {
-	return UninstallTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

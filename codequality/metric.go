@@ -181,7 +181,7 @@ func (o *Metric) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Metric) GetTableName() string {
-	return MetricTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

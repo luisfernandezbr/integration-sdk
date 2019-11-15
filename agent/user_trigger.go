@@ -78,7 +78,7 @@ func (o *UserTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *UserTrigger) GetTableName() string {
-	return UserTriggerTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

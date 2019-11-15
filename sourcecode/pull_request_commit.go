@@ -195,7 +195,7 @@ func (o *PullRequestCommit) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestCommit) GetTableName() string {
-	return PullRequestCommitTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

@@ -508,7 +508,7 @@ func (o *EnrollResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *EnrollResponse) GetTableName() string {
-	return EnrollResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

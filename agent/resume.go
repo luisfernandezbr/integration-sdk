@@ -510,7 +510,7 @@ func (o *Resume) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Resume) GetTableName() string {
-	return ResumeTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

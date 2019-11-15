@@ -502,7 +502,7 @@ func (o *Event) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Event) GetTableName() string {
-	return EventTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

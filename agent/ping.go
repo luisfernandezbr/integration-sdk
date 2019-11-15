@@ -591,7 +591,7 @@ func (o *Ping) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Ping) GetTableName() string {
-	return PingTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

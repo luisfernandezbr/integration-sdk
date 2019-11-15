@@ -2492,7 +2492,7 @@ func (o *WorkStatusResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *WorkStatusResponse) GetTableName() string {
-	return WorkStatusResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

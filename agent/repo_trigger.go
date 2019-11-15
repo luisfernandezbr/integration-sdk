@@ -78,7 +78,7 @@ func (o *RepoTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *RepoTrigger) GetTableName() string {
-	return RepoTriggerTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

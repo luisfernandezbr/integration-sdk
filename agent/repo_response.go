@@ -1165,7 +1165,7 @@ func (o *RepoResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *RepoResponse) GetTableName() string {
-	return RepoResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

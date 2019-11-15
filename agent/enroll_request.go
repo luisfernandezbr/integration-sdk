@@ -173,7 +173,7 @@ func (o *EnrollRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *EnrollRequest) GetTableName() string {
-	return EnrollRequestTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

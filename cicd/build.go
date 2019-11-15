@@ -465,7 +465,7 @@ func (o *Build) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Build) GetTableName() string {
-	return BuildTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

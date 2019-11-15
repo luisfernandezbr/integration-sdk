@@ -80,7 +80,7 @@ func (o *CustomField) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *CustomField) GetTableName() string {
-	return CustomFieldTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

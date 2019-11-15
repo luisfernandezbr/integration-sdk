@@ -434,7 +434,7 @@ func (o *Blame) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Blame) GetTableName() string {
-	return BlameTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

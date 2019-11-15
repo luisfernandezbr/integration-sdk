@@ -1056,7 +1056,7 @@ func (o *ProjectResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ProjectResponse) GetTableName() string {
-	return ProjectResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -1376,6 +1376,25 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1465,6 +1484,25 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

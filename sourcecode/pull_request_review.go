@@ -280,7 +280,7 @@ func (o *PullRequestReview) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestReview) GetTableName() string {
-	return PullRequestReviewTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

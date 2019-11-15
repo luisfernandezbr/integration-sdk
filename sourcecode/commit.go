@@ -803,7 +803,7 @@ func (o *Commit) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Commit) GetTableName() string {
-	return CommitTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

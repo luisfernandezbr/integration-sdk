@@ -78,7 +78,7 @@ func (o *CodequalityTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *CodequalityTrigger) GetTableName() string {
-	return CodequalityTriggerTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

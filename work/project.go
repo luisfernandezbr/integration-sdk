@@ -89,7 +89,7 @@ func (o *Project) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Project) GetTableName() string {
-	return ProjectTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

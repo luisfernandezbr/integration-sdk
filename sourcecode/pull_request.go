@@ -599,7 +599,7 @@ func (o *PullRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequest) GetTableName() string {
-	return PullRequestTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

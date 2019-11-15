@@ -284,7 +284,7 @@ func (o *PullRequestComment) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestComment) GetTableName() string {
-	return PullRequestCommentTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

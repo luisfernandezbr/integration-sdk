@@ -78,7 +78,7 @@ func (o *ProjectTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ProjectTrigger) GetTableName() string {
-	return ProjectTriggerTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

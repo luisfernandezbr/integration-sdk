@@ -1078,7 +1078,7 @@ func (o *ExportResponse) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ExportResponse) GetTableName() string {
-	return ExportResponseTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

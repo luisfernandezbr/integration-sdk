@@ -81,7 +81,7 @@ func (o *ExportTrigger) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ExportTrigger) GetTableName() string {
-	return ExportTriggerTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

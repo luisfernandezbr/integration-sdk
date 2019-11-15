@@ -108,7 +108,7 @@ func (o *PullRequestBranch) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *PullRequestBranch) GetTableName() string {
-	return PullRequestBranchTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

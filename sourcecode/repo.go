@@ -88,7 +88,7 @@ func (o *Repo) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Repo) GetTableName() string {
-	return RepoTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

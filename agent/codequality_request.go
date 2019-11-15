@@ -1245,7 +1245,7 @@ func (o *CodequalityRequest) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *CodequalityRequest) GetTableName() string {
-	return CodequalityRequestTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

@@ -467,7 +467,7 @@ func (o *Deployment) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Deployment) GetTableName() string {
-	return DeploymentTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

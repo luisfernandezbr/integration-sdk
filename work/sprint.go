@@ -553,7 +553,7 @@ func (o *Sprint) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Sprint) GetTableName() string {
-	return SprintTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model

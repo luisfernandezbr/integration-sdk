@@ -110,7 +110,7 @@ func (o *Branch) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *Branch) GetTableName() string {
-	return BranchTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
