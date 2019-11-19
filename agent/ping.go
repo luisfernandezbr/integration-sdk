@@ -502,6 +502,8 @@ type Ping struct {
 	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
 	EventDate PingEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	// Exporting flag to specify if export is in progress
+	Exporting bool `json:"exporting" codec:"exporting" bson:"exporting" yaml:"exporting" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -518,6 +520,8 @@ type Ping struct {
 	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
 	// NumCPU the number of CPU the agent is running
 	NumCPU int64 `json:"num_cpu" codec:"num_cpu" bson:"num_cpu" yaml:"num_cpu" faker:"-"`
+	// Onboarding flag to specify if onboarding events are in progress. could be multiple at once
+	Onboarding bool `json:"onboarding" codec:"onboarding" bson:"onboarding" yaml:"onboarding" faker:"-"`
 	// OS the agent operating system
 	OS string `json:"os" codec:"os" bson:"os" yaml:"os" faker:"-"`
 	// RefID the source system id for the model instance
@@ -782,6 +786,7 @@ func (o *Ping) ToMap() map[string]interface{} {
 		"distro":           toPingObject(o.Distro, false),
 		"error":            toPingObject(o.Error, true),
 		"event_date":       toPingObject(o.EventDate, false),
+		"exporting":        toPingObject(o.Exporting, false),
 		"free_space":       toPingObject(o.FreeSpace, false),
 		"go_version":       toPingObject(o.GoVersion, false),
 		"hostname":         toPingObject(o.Hostname, false),
@@ -790,6 +795,7 @@ func (o *Ping) ToMap() map[string]interface{} {
 		"memory":           toPingObject(o.Memory, false),
 		"message":          toPingObject(o.Message, false),
 		"num_cpu":          toPingObject(o.NumCPU, false),
+		"onboarding":       toPingObject(o.Onboarding, false),
 		"os":               toPingObject(o.OS, false),
 		"ref_id":           toPingObject(o.RefID, false),
 		"ref_type":         toPingObject(o.RefType, false),
@@ -932,6 +938,18 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		o.EventDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["exporting"].(bool); ok {
+		o.Exporting = val
+	} else {
+		if val, ok := kv["exporting"]; ok {
+			if val == nil {
+				o.Exporting = number.ToBoolAny(nil)
+			} else {
+				o.Exporting = number.ToBoolAny(val)
+			}
+		}
+	}
+
 	if val, ok := kv["free_space"].(int64); ok {
 		o.FreeSpace = val
 	} else {
@@ -1066,6 +1084,18 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 					val = datetime.TimeToEpoch(tv)
 				}
 				o.NumCPU = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["onboarding"].(bool); ok {
+		o.Onboarding = val
+	} else {
+		if val, ok := kv["onboarding"]; ok {
+			if val == nil {
+				o.Onboarding = number.ToBoolAny(nil)
+			} else {
+				o.Onboarding = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -1332,6 +1362,7 @@ func (o *Ping) Hash() string {
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
 	args = append(args, o.EventDate)
+	args = append(args, o.Exporting)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
@@ -1340,6 +1371,7 @@ func (o *Ping) Hash() string {
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
 	args = append(args, o.NumCPU)
+	args = append(args, o.Onboarding)
 	args = append(args, o.OS)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
