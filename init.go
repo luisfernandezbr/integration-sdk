@@ -120,8 +120,16 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.Uninstall)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "agent.Upgrade":
-		o := new(dm_agent.Upgrade)
+	case "agent.UpdateRequest":
+		o := new(dm_agent.UpdateRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.UpdateResponse":
+		o := new(dm_agent.UpdateResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.UpdateTrigger":
+		o := new(dm_agent.UpdateTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent.UserRequest":
@@ -347,8 +355,16 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.Uninstall)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "agent_Upgrade_topic":
-		o := new(dm_agent.Upgrade)
+	case "agent_UpdateRequest_topic":
+		o := new(dm_agent.UpdateRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_UpdateResponse_topic":
+		o := new(dm_agent.UpdateResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_UpdateTrigger_topic":
+		o := new(dm_agent.UpdateTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent_UserRequest_topic":
@@ -501,7 +517,9 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_Start_topic"),
 		datamodel.TopicNameType("agent_Stop_topic"),
 		datamodel.TopicNameType("agent_Uninstall_topic"),
-		datamodel.TopicNameType("agent_Upgrade_topic"),
+		datamodel.TopicNameType("agent_UpdateRequest_topic"),
+		datamodel.TopicNameType("agent_UpdateResponse_topic"),
+		datamodel.TopicNameType("agent_UpdateTrigger_topic"),
 		datamodel.TopicNameType("agent_UserRequest_topic"),
 		datamodel.TopicNameType("agent_UserResponse_topic"),
 		datamodel.TopicNameType("agent_UserTrigger_topic"),
@@ -562,7 +580,9 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.Start"),
 		datamodel.ModelNameType("agent.Stop"),
 		datamodel.ModelNameType("agent.Uninstall"),
-		datamodel.ModelNameType("agent.Upgrade"),
+		datamodel.ModelNameType("agent.UpdateRequest"),
+		datamodel.ModelNameType("agent.UpdateResponse"),
+		datamodel.ModelNameType("agent.UpdateTrigger"),
 		datamodel.ModelNameType("agent.UserRequest"),
 		datamodel.ModelNameType("agent.UserResponse"),
 		datamodel.ModelNameType("agent.UserTrigger"),
