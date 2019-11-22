@@ -217,100 +217,6 @@ func (o *SprintEndedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// SprintFetchedDate represents the object structure for fetched_date
-type SprintFetchedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toSprintFetchedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *SprintFetchedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *SprintFetchedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toSprintFetchedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toSprintFetchedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toSprintFetchedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *SprintFetchedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *SprintFetchedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // SprintStartedDate represents the object structure for started_date
 type SprintStartedDate struct {
 	// Epoch the date in epoch format
@@ -483,8 +389,6 @@ type Sprint struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// EndedDate the date that the sprint was ended
 	EndedDate SprintEndedDate `json:"ended_date" codec:"ended_date" bson:"ended_date" yaml:"ended_date" faker:"-"`
-	// FetchedDate date in when the api was called
-	FetchedDate SprintFetchedDate `json:"fetched_date" codec:"fetched_date" bson:"fetched_date" yaml:"fetched_date" faker:"-"`
 	// Goal the goal for the sprint
 	Goal string `json:"goal" codec:"goal" bson:"goal" yaml:"goal" faker:"-"`
 	// ID the primary key for the model instance
@@ -520,9 +424,6 @@ func toSprintObject(o interface{}, isoptional bool) interface{} {
 		return v.ToMap()
 
 	case SprintEndedDate:
-		return v.ToMap()
-
-	case SprintFetchedDate:
 		return v.ToMap()
 
 	case SprintStartedDate:
@@ -736,7 +637,6 @@ func (o *Sprint) ToMap() map[string]interface{} {
 		"completed_date": toSprintObject(o.CompletedDate, false),
 		"customer_id":    toSprintObject(o.CustomerID, false),
 		"ended_date":     toSprintObject(o.EndedDate, false),
-		"fetched_date":   toSprintObject(o.FetchedDate, false),
 		"goal":           toSprintObject(o.Goal, false),
 		"id":             toSprintObject(o.ID, false),
 		"name":           toSprintObject(o.Name, false),
@@ -839,39 +739,6 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.EndedDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["fetched_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.FetchedDate.FromMap(kv)
-		} else if sv, ok := val.(SprintFetchedDate); ok {
-			// struct
-			o.FetchedDate = sv
-		} else if sp, ok := val.(*SprintFetchedDate); ok {
-			// struct pointer
-			o.FetchedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.FetchedDate.Epoch = dt.Epoch
-			o.FetchedDate.Rfc3339 = dt.Rfc3339
-			o.FetchedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.FetchedDate.Epoch = dt.Epoch
-			o.FetchedDate.Rfc3339 = dt.Rfc3339
-			o.FetchedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.FetchedDate.Epoch = dt.Epoch
-				o.FetchedDate.Rfc3339 = dt.Rfc3339
-				o.FetchedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.FetchedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["goal"].(string); ok {
@@ -1031,7 +898,6 @@ func (o *Sprint) Hash() string {
 	args = append(args, o.CompletedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.EndedDate)
-	args = append(args, o.FetchedDate)
 	args = append(args, o.Goal)
 	args = append(args, o.ID)
 	args = append(args, o.Name)
