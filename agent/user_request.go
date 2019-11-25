@@ -395,6 +395,194 @@ const (
 	UserRequestIntegrationLocationCloud UserRequestIntegrationLocation = 1
 )
 
+// UserRequestIntegrationOnboardCompletedDate represents the object structure for onboard_completed_date
+type UserRequestIntegrationOnboardCompletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toUserRequestIntegrationOnboardCompletedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *UserRequestIntegrationOnboardCompletedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *UserRequestIntegrationOnboardCompletedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toUserRequestIntegrationOnboardCompletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toUserRequestIntegrationOnboardCompletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toUserRequestIntegrationOnboardCompletedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *UserRequestIntegrationOnboardCompletedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserRequestIntegrationOnboardCompletedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// UserRequestIntegrationOnboardRequestedDate represents the object structure for onboard_requested_date
+type UserRequestIntegrationOnboardRequestedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toUserRequestIntegrationOnboardRequestedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *UserRequestIntegrationOnboardRequestedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *UserRequestIntegrationOnboardRequestedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toUserRequestIntegrationOnboardRequestedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toUserRequestIntegrationOnboardRequestedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toUserRequestIntegrationOnboardRequestedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *UserRequestIntegrationOnboardRequestedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserRequestIntegrationOnboardRequestedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // UserRequestIntegrationProgress represents the object structure for progress
 type UserRequestIntegrationProgress struct {
 	// Message Any relevant messaging during processing
@@ -681,6 +869,12 @@ type UserRequestIntegration struct {
 	Location UserRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// OnboardCompletedDate when the last request for integration metadata was finished
+	OnboardCompletedDate UserRequestIntegrationOnboardCompletedDate `json:"onboard_completed_date" codec:"onboard_completed_date" bson:"onboard_completed_date" yaml:"onboard_completed_date" faker:"-"`
+	// OnboardRequestedDate when the last request for integration metadata was made
+	OnboardRequestedDate UserRequestIntegrationOnboardRequestedDate `json:"onboard_requested_date" codec:"onboard_requested_date" bson:"onboard_requested_date" yaml:"onboard_requested_date" faker:"-"`
+	// Onboarding true if the agent is fetching metadata for the integration
+	Onboarding bool `json:"onboarding" codec:"onboarding" bson:"onboarding" yaml:"onboarding" faker:"-"`
 	// Progress Agent processing progress
 	Progress UserRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
@@ -707,6 +901,12 @@ func toUserRequestIntegrationObject(o interface{}, isoptional bool) interface{} 
 
 	case UserRequestIntegrationLocation:
 		return v.String()
+
+	case UserRequestIntegrationOnboardCompletedDate:
+		return v.ToMap()
+
+	case UserRequestIntegrationOnboardRequestedDate:
+		return v.ToMap()
 
 	case UserRequestIntegrationProgress:
 		return v.ToMap()
@@ -741,6 +941,12 @@ func (o *UserRequestIntegration) ToMap() map[string]interface{} {
 		"location": toUserRequestIntegrationObject(o.Location, false),
 		// Name The user friendly name of the integration
 		"name": toUserRequestIntegrationObject(o.Name, false),
+		// OnboardCompletedDate when the last request for integration metadata was finished
+		"onboard_completed_date": toUserRequestIntegrationObject(o.OnboardCompletedDate, false),
+		// OnboardRequestedDate when the last request for integration metadata was made
+		"onboard_requested_date": toUserRequestIntegrationObject(o.OnboardRequestedDate, false),
+		// Onboarding true if the agent is fetching metadata for the integration
+		"onboarding": toUserRequestIntegrationObject(o.Onboarding, false),
 		// Progress Agent processing progress
 		"progress": toUserRequestIntegrationObject(o.Progress, false),
 		// RefID the source system id for the model instance
@@ -941,6 +1147,84 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["onboard_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.OnboardCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(UserRequestIntegrationOnboardCompletedDate); ok {
+			// struct
+			o.OnboardCompletedDate = sv
+		} else if sp, ok := val.(*UserRequestIntegrationOnboardCompletedDate); ok {
+			// struct pointer
+			o.OnboardCompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.OnboardCompletedDate.Epoch = dt.Epoch
+			o.OnboardCompletedDate.Rfc3339 = dt.Rfc3339
+			o.OnboardCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.OnboardCompletedDate.Epoch = dt.Epoch
+			o.OnboardCompletedDate.Rfc3339 = dt.Rfc3339
+			o.OnboardCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.OnboardCompletedDate.Epoch = dt.Epoch
+				o.OnboardCompletedDate.Rfc3339 = dt.Rfc3339
+				o.OnboardCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.OnboardCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["onboard_requested_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.OnboardRequestedDate.FromMap(kv)
+		} else if sv, ok := val.(UserRequestIntegrationOnboardRequestedDate); ok {
+			// struct
+			o.OnboardRequestedDate = sv
+		} else if sp, ok := val.(*UserRequestIntegrationOnboardRequestedDate); ok {
+			// struct pointer
+			o.OnboardRequestedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.OnboardRequestedDate.Epoch = dt.Epoch
+			o.OnboardRequestedDate.Rfc3339 = dt.Rfc3339
+			o.OnboardRequestedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.OnboardRequestedDate.Epoch = dt.Epoch
+			o.OnboardRequestedDate.Rfc3339 = dt.Rfc3339
+			o.OnboardRequestedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.OnboardRequestedDate.Epoch = dt.Epoch
+				o.OnboardRequestedDate.Rfc3339 = dt.Rfc3339
+				o.OnboardRequestedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.OnboardRequestedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["onboarding"].(bool); ok {
+		o.Onboarding = val
+	} else {
+		if val, ok := kv["onboarding"]; ok {
+			if val == nil {
+				o.Onboarding = number.ToBoolAny(nil)
+			} else {
+				o.Onboarding = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -1529,25 +1813,6 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
