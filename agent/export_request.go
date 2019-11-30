@@ -1579,7 +1579,7 @@ func (o *ExportRequest) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *ExportRequest) GetTopicKey() string {
-	var i interface{} = o.UUID
+	var i interface{} = o.JobID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -1637,12 +1637,12 @@ func (o *ExportRequest) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *ExportRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
+	retention, err := time.ParseDuration("5m0s")
 	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+		panic("Invalid topic retention duration provided: 5m0s. " + err.Error())
 	}
 
-	ttl, err := time.ParseDuration("0s")
+	ttl, err := time.ParseDuration("5m0s")
 	if err != nil {
 		ttl = 0
 	}
@@ -1650,10 +1650,10 @@ func (o *ExportRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 		ttl = retention // they should be the same if not set
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
+		Key:               "job_id",
 		Timestamp:         "updated_ts",
 		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		CleanupPolicy:     datamodel.CleanupPolicy("delete"),
 		ReplicationFactor: 3,
 		Retention:         retention,
 		MaxSize:           5242880,
@@ -1908,25 +1908,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
