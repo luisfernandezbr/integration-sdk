@@ -48,6 +48,8 @@ type User struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// URL the url to the user's page
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
 	// Username the username of the user
 	Username string `json:"username" codec:"username" bson:"username" yaml:"username" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -109,6 +111,9 @@ func (o *User) setDefaults(frommap bool) {
 	}
 	if o.Email == nil {
 		o.Email = pstrings.Pointer("")
+	}
+	if o.URL == nil {
+		o.URL = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {
@@ -284,6 +289,7 @@ func (o *User) ToMap() map[string]interface{} {
 		"ref_id":            toUserObject(o.RefID, false),
 		"ref_type":          toUserObject(o.RefType, false),
 		"updated_ts":        toUserObject(o.UpdatedAt, false),
+		"url":               toUserObject(o.URL, true),
 		"username":          toUserObject(o.Username, false),
 		"hashcode":          toUserObject(o.Hashcode, false),
 	}
@@ -443,6 +449,24 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
 	if val, ok := kv["username"].(string); ok {
 		o.Username = val
 	} else {
@@ -472,6 +496,7 @@ func (o *User) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.URL)
 	args = append(args, o.Username)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
