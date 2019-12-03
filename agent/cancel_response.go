@@ -20,18 +20,18 @@ import (
 )
 
 const (
-	// UpdateResponseTopic is the default topic name
-	UpdateResponseTopic datamodel.TopicNameType = "agent_UpdateResponse_topic"
+	// CancelResponseTopic is the default topic name
+	CancelResponseTopic datamodel.TopicNameType = "agent_CancelResponse_topic"
 
-	// UpdateResponseTable is the default table name
-	UpdateResponseTable datamodel.ModelNameType = "agent_updateresponse"
+	// CancelResponseTable is the default table name
+	CancelResponseTable datamodel.ModelNameType = "agent_cancelresponse"
 
-	// UpdateResponseModelName is the model name
-	UpdateResponseModelName datamodel.ModelNameType = "agent.UpdateResponse"
+	// CancelResponseModelName is the model name
+	CancelResponseModelName datamodel.ModelNameType = "agent.CancelResponse"
 )
 
-// UpdateResponseEventDate represents the object structure for event_date
-type UpdateResponseEventDate struct {
+// CancelResponseCancelDate represents the object structure for cancel_date
+type CancelResponseCancelDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -40,9 +40,9 @@ type UpdateResponseEventDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toUpdateResponseEventDateObject(o interface{}, isoptional bool) interface{} {
+func toCancelResponseCancelDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *UpdateResponseEventDate:
+	case *CancelResponseCancelDate:
 		return v.ToMap()
 
 	default:
@@ -50,19 +50,19 @@ func toUpdateResponseEventDateObject(o interface{}, isoptional bool) interface{}
 	}
 }
 
-func (o *UpdateResponseEventDate) ToMap() map[string]interface{} {
+func (o *CancelResponseCancelDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toUpdateResponseEventDateObject(o.Epoch, false),
+		"epoch": toCancelResponseCancelDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toUpdateResponseEventDateObject(o.Offset, false),
+		"offset": toCancelResponseCancelDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toUpdateResponseEventDateObject(o.Rfc3339, false),
+		"rfc3339": toCancelResponseCancelDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *UpdateResponseEventDate) setDefaults(frommap bool) {
+func (o *CancelResponseCancelDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -70,7 +70,7 @@ func (o *UpdateResponseEventDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *UpdateResponseEventDate) FromMap(kv map[string]interface{}) {
+func (o *CancelResponseCancelDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -124,8 +124,8 @@ func (o *UpdateResponseEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// UpdateResponseLastExportDate represents the object structure for last_export_date
-type UpdateResponseLastExportDate struct {
+// CancelResponseEventDate represents the object structure for event_date
+type CancelResponseEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -134,9 +134,9 @@ type UpdateResponseLastExportDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toUpdateResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
+func toCancelResponseEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *UpdateResponseLastExportDate:
+	case *CancelResponseEventDate:
 		return v.ToMap()
 
 	default:
@@ -144,19 +144,19 @@ func toUpdateResponseLastExportDateObject(o interface{}, isoptional bool) interf
 	}
 }
 
-func (o *UpdateResponseLastExportDate) ToMap() map[string]interface{} {
+func (o *CancelResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toUpdateResponseLastExportDateObject(o.Epoch, false),
+		"epoch": toCancelResponseEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toUpdateResponseLastExportDateObject(o.Offset, false),
+		"offset": toCancelResponseEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toUpdateResponseLastExportDateObject(o.Rfc3339, false),
+		"rfc3339": toCancelResponseEventDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *UpdateResponseLastExportDate) setDefaults(frommap bool) {
+func (o *CancelResponseEventDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -164,7 +164,7 @@ func (o *UpdateResponseLastExportDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *UpdateResponseLastExportDate) FromMap(kv map[string]interface{}) {
+func (o *CancelResponseEventDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -218,54 +218,148 @@ func (o *UpdateResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// UpdateResponseType is the enumeration type for type
-type UpdateResponseType int32
+// CancelResponseLastExportDate represents the object structure for last_export_date
+type CancelResponseLastExportDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toCancelResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *CancelResponseLastExportDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *CancelResponseLastExportDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toCancelResponseLastExportDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toCancelResponseLastExportDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toCancelResponseLastExportDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *CancelResponseLastExportDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CancelResponseLastExportDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// CancelResponseType is the enumeration type for type
+type CancelResponseType int32
 
 // UnmarshalBSONValue for unmarshaling value
-func (v *UpdateResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+func (v *CancelResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
 	switch t {
 	case bsontype.Int32:
-		*v = UpdateResponseType(val.Int32())
+		*v = CancelResponseType(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
 		case "ENROLL":
-			*v = UpdateResponseType(0)
+			*v = CancelResponseType(0)
 		case "PING":
-			*v = UpdateResponseType(1)
+			*v = CancelResponseType(1)
 		case "CRASH":
-			*v = UpdateResponseType(2)
+			*v = CancelResponseType(2)
 		case "LOG":
-			*v = UpdateResponseType(3)
+			*v = CancelResponseType(3)
 		case "INTEGRATION":
-			*v = UpdateResponseType(4)
+			*v = CancelResponseType(4)
 		case "EXPORT":
-			*v = UpdateResponseType(5)
+			*v = CancelResponseType(5)
 		case "PROJECT":
-			*v = UpdateResponseType(6)
+			*v = CancelResponseType(6)
 		case "REPO":
-			*v = UpdateResponseType(7)
+			*v = CancelResponseType(7)
 		case "USER":
-			*v = UpdateResponseType(8)
+			*v = CancelResponseType(8)
 		case "UNINSTALL":
-			*v = UpdateResponseType(9)
+			*v = CancelResponseType(9)
 		case "UPGRADE":
-			*v = UpdateResponseType(10)
+			*v = CancelResponseType(10)
 		case "START":
-			*v = UpdateResponseType(11)
+			*v = CancelResponseType(11)
 		case "STOP":
-			*v = UpdateResponseType(12)
+			*v = CancelResponseType(12)
 		case "PAUSE":
-			*v = UpdateResponseType(13)
+			*v = CancelResponseType(13)
 		case "RESUME":
-			*v = UpdateResponseType(14)
+			*v = CancelResponseType(14)
 		}
 	}
 	return nil
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v UpdateResponseType) UnmarshalJSON(buf []byte) error {
+func (v CancelResponseType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -302,7 +396,7 @@ func (v UpdateResponseType) UnmarshalJSON(buf []byte) error {
 }
 
 // MarshalJSON marshals the enum value
-func (v UpdateResponseType) MarshalJSON() ([]byte, error) {
+func (v CancelResponseType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
 		return json.Marshal("ENROLL")
@@ -339,7 +433,7 @@ func (v UpdateResponseType) MarshalJSON() ([]byte, error) {
 }
 
 // String returns the string value for Type
-func (v UpdateResponseType) String() string {
+func (v CancelResponseType) String() string {
 	switch int32(v) {
 	case 0:
 		return "ENROLL"
@@ -377,41 +471,43 @@ func (v UpdateResponseType) String() string {
 
 const (
 	// TypeEnroll is the enumeration value for enroll
-	UpdateResponseTypeEnroll UpdateResponseType = 0
+	CancelResponseTypeEnroll CancelResponseType = 0
 	// TypePing is the enumeration value for ping
-	UpdateResponseTypePing UpdateResponseType = 1
+	CancelResponseTypePing CancelResponseType = 1
 	// TypeCrash is the enumeration value for crash
-	UpdateResponseTypeCrash UpdateResponseType = 2
+	CancelResponseTypeCrash CancelResponseType = 2
 	// TypeLog is the enumeration value for log
-	UpdateResponseTypeLog UpdateResponseType = 3
+	CancelResponseTypeLog CancelResponseType = 3
 	// TypeIntegration is the enumeration value for integration
-	UpdateResponseTypeIntegration UpdateResponseType = 4
+	CancelResponseTypeIntegration CancelResponseType = 4
 	// TypeExport is the enumeration value for export
-	UpdateResponseTypeExport UpdateResponseType = 5
+	CancelResponseTypeExport CancelResponseType = 5
 	// TypeProject is the enumeration value for project
-	UpdateResponseTypeProject UpdateResponseType = 6
+	CancelResponseTypeProject CancelResponseType = 6
 	// TypeRepo is the enumeration value for repo
-	UpdateResponseTypeRepo UpdateResponseType = 7
+	CancelResponseTypeRepo CancelResponseType = 7
 	// TypeUser is the enumeration value for user
-	UpdateResponseTypeUser UpdateResponseType = 8
+	CancelResponseTypeUser CancelResponseType = 8
 	// TypeUninstall is the enumeration value for uninstall
-	UpdateResponseTypeUninstall UpdateResponseType = 9
+	CancelResponseTypeUninstall CancelResponseType = 9
 	// TypeUpgrade is the enumeration value for upgrade
-	UpdateResponseTypeUpgrade UpdateResponseType = 10
+	CancelResponseTypeUpgrade CancelResponseType = 10
 	// TypeStart is the enumeration value for start
-	UpdateResponseTypeStart UpdateResponseType = 11
+	CancelResponseTypeStart CancelResponseType = 11
 	// TypeStop is the enumeration value for stop
-	UpdateResponseTypeStop UpdateResponseType = 12
+	CancelResponseTypeStop CancelResponseType = 12
 	// TypePause is the enumeration value for pause
-	UpdateResponseTypePause UpdateResponseType = 13
+	CancelResponseTypePause CancelResponseType = 13
 	// TypeResume is the enumeration value for resume
-	UpdateResponseTypeResume UpdateResponseType = 14
+	CancelResponseTypeResume CancelResponseType = 14
 )
 
-// UpdateResponse an agent event to indicate that agent was updated
-type UpdateResponse struct {
+// CancelResponse an agent response to an action request for cancel
+type CancelResponse struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	// CancelDate the cancel date
+	CancelDate CancelResponseCancelDate `json:"cancel_date" codec:"cancel_date" bson:"cancel_date" yaml:"cancel_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
@@ -421,11 +517,9 @@ type UpdateResponse struct {
 	// Error an error message related to this event
 	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate UpdateResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate CancelResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
-	// FromVersion agent version we had
-	FromVersion string `json:"from_version" codec:"from_version" bson:"from_version" yaml:"from_version" faker:"-"`
 	// GoVersion the go version that the agent build was built with
 	GoVersion string `json:"go_version" codec:"go_version" bson:"go_version" yaml:"go_version" faker:"-"`
 	// Hostname the agent hostname
@@ -433,7 +527,7 @@ type UpdateResponse struct {
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate UpdateResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate CancelResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -452,10 +546,8 @@ type UpdateResponse struct {
 	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
-	// ToVersion agent version that was installed
-	ToVersion string `json:"to_version" codec:"to_version" bson:"to_version" yaml:"to_version" faker:"-"`
 	// Type the type of event
-	Type UpdateResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type CancelResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
@@ -469,23 +561,26 @@ type UpdateResponse struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*UpdateResponse)(nil)
+var _ datamodel.Model = (*CancelResponse)(nil)
 
 // ensure that this type implements the streamed data model interface
-var _ datamodel.StreamedModel = (*UpdateResponse)(nil)
+var _ datamodel.StreamedModel = (*CancelResponse)(nil)
 
-func toUpdateResponseObject(o interface{}, isoptional bool) interface{} {
+func toCancelResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *UpdateResponse:
+	case *CancelResponse:
 		return v.ToMap()
 
-	case UpdateResponseEventDate:
+	case CancelResponseCancelDate:
 		return v.ToMap()
 
-	case UpdateResponseLastExportDate:
+	case CancelResponseEventDate:
 		return v.ToMap()
 
-	case UpdateResponseType:
+	case CancelResponseLastExportDate:
+		return v.ToMap()
+
+	case CancelResponseType:
 		return v.String()
 
 	default:
@@ -493,37 +588,37 @@ func toUpdateResponseObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-// String returns a string representation of UpdateResponse
-func (o *UpdateResponse) String() string {
-	return fmt.Sprintf("agent.UpdateResponse<%s>", o.ID)
+// String returns a string representation of CancelResponse
+func (o *CancelResponse) String() string {
+	return fmt.Sprintf("agent.CancelResponse<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *UpdateResponse) GetTopicName() datamodel.TopicNameType {
-	return UpdateResponseTopic
+func (o *CancelResponse) GetTopicName() datamodel.TopicNameType {
+	return CancelResponseTopic
 }
 
 // GetStreamName returns the name of the stream
-func (o *UpdateResponse) GetStreamName() string {
+func (o *CancelResponse) GetStreamName() string {
 	return ""
 }
 
 // GetTableName returns the name of the table
-func (o *UpdateResponse) GetTableName() string {
+func (o *CancelResponse) GetTableName() string {
 	return ""
 }
 
 // GetModelName returns the name of the model
-func (o *UpdateResponse) GetModelName() datamodel.ModelNameType {
-	return UpdateResponseModelName
+func (o *CancelResponse) GetModelName() datamodel.ModelNameType {
+	return CancelResponseModelName
 }
 
-// NewUpdateResponseID provides a template for generating an ID field for UpdateResponse
-func NewUpdateResponseID(customerID string, refType string, refID string) string {
-	return hash.Values("UpdateResponse", customerID, refType, refID)
+// NewCancelResponseID provides a template for generating an ID field for CancelResponse
+func NewCancelResponseID(customerID string, refType string, refID string) string {
+	return hash.Values("CancelResponse", customerID, refType, refID)
 }
 
-func (o *UpdateResponse) setDefaults(frommap bool) {
+func (o *CancelResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = pstrings.Pointer("")
 	}
@@ -533,7 +628,7 @@ func (o *UpdateResponse) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("UpdateResponse", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("CancelResponse", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -544,12 +639,12 @@ func (o *UpdateResponse) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *UpdateResponse) GetID() string {
+func (o *CancelResponse) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *UpdateResponse) GetTopicKey() string {
+func (o *CancelResponse) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -558,7 +653,7 @@ func (o *UpdateResponse) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *UpdateResponse) GetTimestamp() time.Time {
+func (o *CancelResponse) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -572,42 +667,42 @@ func (o *UpdateResponse) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for UpdateResponse")
+	panic("not sure how to handle the date time format for CancelResponse")
 }
 
 // GetRefID returns the RefID for the object
-func (o *UpdateResponse) GetRefID() string {
+func (o *CancelResponse) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *UpdateResponse) IsMaterialized() bool {
+func (o *CancelResponse) IsMaterialized() bool {
 	return false
 }
 
 // IsMutable returns true if the model is mutable
-func (o *UpdateResponse) IsMutable() bool {
+func (o *CancelResponse) IsMutable() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *UpdateResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *CancelResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *UpdateResponse) IsEvented() bool {
+func (o *CancelResponse) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *UpdateResponse) SetEventHeaders(kv map[string]string) {
+func (o *CancelResponse) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = UpdateResponseModelName.String()
+	kv["model"] = CancelResponseModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *UpdateResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *CancelResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("87360h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
@@ -633,22 +728,22 @@ func (o *UpdateResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetCustomerID will return the customer_id
-func (o *UpdateResponse) GetCustomerID() string {
+func (o *CancelResponse) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of UpdateResponse
-func (o *UpdateResponse) Clone() datamodel.Model {
-	c := new(UpdateResponse)
+// Clone returns an exact copy of CancelResponse
+func (o *CancelResponse) Clone() datamodel.Model {
+	c := new(CancelResponse)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *UpdateResponse) Anon() datamodel.Model {
-	c := new(UpdateResponse)
+func (o *CancelResponse) Anon() datamodel.Model {
+	c := new(CancelResponse)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -663,12 +758,12 @@ func (o *UpdateResponse) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *UpdateResponse) MarshalJSON() ([]byte, error) {
+func (o *CancelResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *UpdateResponse) UnmarshalJSON(data []byte) error {
+func (o *CancelResponse) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -681,54 +776,53 @@ func (o *UpdateResponse) UnmarshalJSON(data []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *UpdateResponse) Stringify() string {
+func (o *CancelResponse) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two UpdateResponse objects are equal
-func (o *UpdateResponse) IsEqual(other *UpdateResponse) bool {
+// IsEqual returns true if the two CancelResponse objects are equal
+func (o *CancelResponse) IsEqual(other *CancelResponse) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *UpdateResponse) ToMap() map[string]interface{} {
+func (o *CancelResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toUpdateResponseObject(o.Architecture, false),
-		"customer_id":      toUpdateResponseObject(o.CustomerID, false),
-		"data":             toUpdateResponseObject(o.Data, true),
-		"distro":           toUpdateResponseObject(o.Distro, false),
-		"error":            toUpdateResponseObject(o.Error, true),
-		"event_date":       toUpdateResponseObject(o.EventDate, false),
-		"free_space":       toUpdateResponseObject(o.FreeSpace, false),
-		"from_version":     toUpdateResponseObject(o.FromVersion, false),
-		"go_version":       toUpdateResponseObject(o.GoVersion, false),
-		"hostname":         toUpdateResponseObject(o.Hostname, false),
-		"id":               toUpdateResponseObject(o.ID, false),
-		"last_export_date": toUpdateResponseObject(o.LastExportDate, false),
-		"memory":           toUpdateResponseObject(o.Memory, false),
-		"message":          toUpdateResponseObject(o.Message, false),
-		"num_cpu":          toUpdateResponseObject(o.NumCPU, false),
-		"os":               toUpdateResponseObject(o.OS, false),
-		"ref_id":           toUpdateResponseObject(o.RefID, false),
-		"ref_type":         toUpdateResponseObject(o.RefType, false),
-		"request_id":       toUpdateResponseObject(o.RequestID, false),
-		"success":          toUpdateResponseObject(o.Success, false),
-		"system_id":        toUpdateResponseObject(o.SystemID, false),
-		"to_version":       toUpdateResponseObject(o.ToVersion, false),
+		"architecture":     toCancelResponseObject(o.Architecture, false),
+		"cancel_date":      toCancelResponseObject(o.CancelDate, false),
+		"customer_id":      toCancelResponseObject(o.CustomerID, false),
+		"data":             toCancelResponseObject(o.Data, true),
+		"distro":           toCancelResponseObject(o.Distro, false),
+		"error":            toCancelResponseObject(o.Error, true),
+		"event_date":       toCancelResponseObject(o.EventDate, false),
+		"free_space":       toCancelResponseObject(o.FreeSpace, false),
+		"go_version":       toCancelResponseObject(o.GoVersion, false),
+		"hostname":         toCancelResponseObject(o.Hostname, false),
+		"id":               toCancelResponseObject(o.ID, false),
+		"last_export_date": toCancelResponseObject(o.LastExportDate, false),
+		"memory":           toCancelResponseObject(o.Memory, false),
+		"message":          toCancelResponseObject(o.Message, false),
+		"num_cpu":          toCancelResponseObject(o.NumCPU, false),
+		"os":               toCancelResponseObject(o.OS, false),
+		"ref_id":           toCancelResponseObject(o.RefID, false),
+		"ref_type":         toCancelResponseObject(o.RefType, false),
+		"request_id":       toCancelResponseObject(o.RequestID, false),
+		"success":          toCancelResponseObject(o.Success, false),
+		"system_id":        toCancelResponseObject(o.SystemID, false),
 
 		"type":       o.Type.String(),
-		"updated_ts": toUpdateResponseObject(o.UpdatedAt, false),
-		"uptime":     toUpdateResponseObject(o.Uptime, false),
-		"uuid":       toUpdateResponseObject(o.UUID, false),
-		"version":    toUpdateResponseObject(o.Version, false),
-		"hashcode":   toUpdateResponseObject(o.Hashcode, false),
+		"updated_ts": toCancelResponseObject(o.UpdatedAt, false),
+		"uptime":     toCancelResponseObject(o.Uptime, false),
+		"uuid":       toCancelResponseObject(o.UUID, false),
+		"version":    toCancelResponseObject(o.Version, false),
+		"hashcode":   toCancelResponseObject(o.Hashcode, false),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
+func (o *CancelResponse) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -750,6 +844,39 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 				o.Architecture = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["cancel_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CancelDate.FromMap(kv)
+		} else if sv, ok := val.(CancelResponseCancelDate); ok {
+			// struct
+			o.CancelDate = sv
+		} else if sp, ok := val.(*CancelResponseCancelDate); ok {
+			// struct pointer
+			o.CancelDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CancelDate.Epoch = dt.Epoch
+			o.CancelDate.Rfc3339 = dt.Rfc3339
+			o.CancelDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CancelDate.Epoch = dt.Epoch
+			o.CancelDate.Rfc3339 = dt.Rfc3339
+			o.CancelDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CancelDate.Epoch = dt.Epoch
+				o.CancelDate.Rfc3339 = dt.Rfc3339
+				o.CancelDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CancelDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
@@ -821,10 +948,10 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["event_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.EventDate.FromMap(kv)
-		} else if sv, ok := val.(UpdateResponseEventDate); ok {
+		} else if sv, ok := val.(CancelResponseEventDate); ok {
 			// struct
 			o.EventDate = sv
-		} else if sp, ok := val.(*UpdateResponseEventDate); ok {
+		} else if sp, ok := val.(*CancelResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
 		}
@@ -843,21 +970,6 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 					val = datetime.TimeToEpoch(tv)
 				}
 				o.FreeSpace = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["from_version"].(string); ok {
-		o.FromVersion = val
-	} else {
-		if val, ok := kv["from_version"]; ok {
-			if val == nil {
-				o.FromVersion = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.FromVersion = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -910,10 +1022,10 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.LastExportDate.FromMap(kv)
-		} else if sv, ok := val.(UpdateResponseLastExportDate); ok {
+		} else if sv, ok := val.(CancelResponseLastExportDate); ok {
 			// struct
 			o.LastExportDate = sv
-		} else if sp, ok := val.(*UpdateResponseLastExportDate); ok {
+		} else if sp, ok := val.(*CancelResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
 		}
@@ -1053,22 +1165,7 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["to_version"].(string); ok {
-		o.ToVersion = val
-	} else {
-		if val, ok := kv["to_version"]; ok {
-			if val == nil {
-				o.ToVersion = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.ToVersion = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["type"].(UpdateResponseType); ok {
+	if val, ok := kv["type"].(CancelResponseType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -1205,16 +1302,16 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *UpdateResponse) Hash() string {
+func (o *CancelResponse) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
+	args = append(args, o.CancelDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
 	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
-	args = append(args, o.FromVersion)
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
@@ -1228,7 +1325,6 @@ func (o *UpdateResponse) Hash() string {
 	args = append(args, o.RequestID)
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
-	args = append(args, o.ToVersion)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
@@ -1239,7 +1335,7 @@ func (o *UpdateResponse) Hash() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *UpdateResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *CancelResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,

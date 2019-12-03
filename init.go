@@ -16,6 +16,14 @@ import (
 // New returns a new instanceof from a ModelNameType
 func New(name datamodel.ModelNameType) datamodel.Model {
 	switch name {
+	case "agent.CancelRequest":
+		o := new(dm_agent.CancelRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.CancelResponse":
+		o := new(dm_agent.CancelResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.CodequalityRequest":
 		o := new(dm_agent.CodequalityRequest)
 		o.FromMap(map[string]interface{}{})
@@ -251,6 +259,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
+	case "agent_CancelRequest_topic":
+		o := new(dm_agent.CancelRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_CancelResponse_topic":
+		o := new(dm_agent.CancelResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_CodequalityRequest_topic":
 		o := new(dm_agent.CodequalityRequest)
 		o.FromMap(map[string]interface{}{})
@@ -491,6 +507,8 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
+		datamodel.TopicNameType("agent_CancelRequest_topic"),
+		datamodel.TopicNameType("agent_CancelResponse_topic"),
 		datamodel.TopicNameType("agent_CodequalityRequest_topic"),
 		datamodel.TopicNameType("agent_CodequalityResponse_topic"),
 		datamodel.TopicNameType("agent_CodequalityTrigger_topic"),
@@ -554,6 +572,8 @@ func GetTopics() []datamodel.TopicNameType {
 // GetModelNames returns an array of model names that are configured
 func GetModelNames() []datamodel.ModelNameType {
 	return []datamodel.ModelNameType{
+		datamodel.ModelNameType("agent.CancelRequest"),
+		datamodel.ModelNameType("agent.CancelResponse"),
 		datamodel.ModelNameType("agent.CodequalityRequest"),
 		datamodel.ModelNameType("agent.CodequalityResponse"),
 		datamodel.ModelNameType("agent.CodequalityTrigger"),
