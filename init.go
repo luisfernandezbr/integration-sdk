@@ -20,6 +20,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.CancelRequest)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.CancelRequestTrigger":
+		o := new(dm_agent.CancelRequestTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.CancelResponse":
 		o := new(dm_agent.CancelResponse)
 		o.FromMap(map[string]interface{}{})
@@ -261,6 +265,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
 	case "agent_CancelRequest_topic":
 		o := new(dm_agent.CancelRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_CancelRequestTrigger_topic":
+		o := new(dm_agent.CancelRequestTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent_CancelResponse_topic":
@@ -507,6 +515,7 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
+		datamodel.TopicNameType("agent_CancelRequestTrigger_topic"),
 		datamodel.TopicNameType("agent_CancelRequest_topic"),
 		datamodel.TopicNameType("agent_CancelResponse_topic"),
 		datamodel.TopicNameType("agent_CodequalityRequest_topic"),
@@ -573,6 +582,7 @@ func GetTopics() []datamodel.TopicNameType {
 func GetModelNames() []datamodel.ModelNameType {
 	return []datamodel.ModelNameType{
 		datamodel.ModelNameType("agent.CancelRequest"),
+		datamodel.ModelNameType("agent.CancelRequestTrigger"),
 		datamodel.ModelNameType("agent.CancelResponse"),
 		datamodel.ModelNameType("agent.CodequalityRequest"),
 		datamodel.ModelNameType("agent.CodequalityResponse"),
