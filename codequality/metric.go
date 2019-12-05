@@ -14,6 +14,9 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -121,8 +124,92 @@ func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// MetricStatus is the enumeration type for status
+type MetricStatus int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *MetricStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = MetricStatus(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "UNSUPPORTED":
+			*v = MetricStatus(0)
+		case "NOT_ANALYSED":
+			*v = MetricStatus(1)
+		case "ANALYZING":
+			*v = MetricStatus(2)
+		case "ANALYSED":
+			*v = MetricStatus(3)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v MetricStatus) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "UNSUPPORTED":
+		v = 0
+	case "NOT_ANALYSED":
+		v = 1
+	case "ANALYZING":
+		v = 2
+	case "ANALYSED":
+		v = 3
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v MetricStatus) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("UNSUPPORTED")
+	case 1:
+		return json.Marshal("NOT_ANALYSED")
+	case 2:
+		return json.Marshal("ANALYZING")
+	case 3:
+		return json.Marshal("ANALYSED")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for Status
+func (v MetricStatus) String() string {
+	switch int32(v) {
+	case 0:
+		return "UNSUPPORTED"
+	case 1:
+		return "NOT_ANALYSED"
+	case 2:
+		return "ANALYZING"
+	case 3:
+		return "ANALYSED"
+	}
+	return "unset"
+}
+
+const (
+	// StatusUnsupported is the enumeration value for unsupported
+	MetricStatusUnsupported MetricStatus = 0
+	// StatusNotAnalysed is the enumeration value for not_analysed
+	MetricStatusNotAnalysed MetricStatus = 1
+	// StatusAnalyzing is the enumeration value for analyzing
+	MetricStatusAnalyzing MetricStatus = 2
+	// StatusAnalysed is the enumeration value for analysed
+	MetricStatusAnalysed MetricStatus = 3
+)
+
 // Metric individual metric details
 type Metric struct {
+	// Branch branch name
+	Branch *string `json:"branch,omitempty" codec:"branch,omitempty" bson:"branch" yaml:"branch,omitempty" faker:"-"`
+	// CommitID the commit id
+	CommitID *string `json:"commit_id,omitempty" codec:"commit_id,omitempty" bson:"commit_id" yaml:"commit_id,omitempty" faker:"-"`
 	// CreatedDate the date when the metric was created
 	CreatedDate MetricCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -137,6 +224,8 @@ type Metric struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// Status status of the analysis for this commit
+	Status MetricStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Value the value of the metric
@@ -158,6 +247,9 @@ func toMetricObject(o interface{}, isoptional bool) interface{} {
 
 	case MetricCreatedDate:
 		return v.ToMap()
+
+	case MetricStatus:
+		return v.String()
 
 	default:
 		return o
@@ -195,6 +287,12 @@ func NewMetricID(customerID string, refType string, refID string) string {
 }
 
 func (o *Metric) setDefaults(frommap bool) {
+	if o.Branch == nil {
+		o.Branch = pstrings.Pointer("")
+	}
+	if o.CommitID == nil {
+		o.CommitID = pstrings.Pointer("")
+	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -360,6 +458,8 @@ func (o *Metric) IsEqual(other *Metric) bool {
 func (o *Metric) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"branch":       toMetricObject(o.Branch, true),
+		"commit_id":    toMetricObject(o.CommitID, true),
 		"created_date": toMetricObject(o.CreatedDate, false),
 		"customer_id":  toMetricObject(o.CustomerID, false),
 		"id":           toMetricObject(o.ID, false),
@@ -367,9 +467,11 @@ func (o *Metric) ToMap() map[string]interface{} {
 		"project_id":   toMetricObject(o.ProjectID, false),
 		"ref_id":       toMetricObject(o.RefID, false),
 		"ref_type":     toMetricObject(o.RefType, false),
-		"updated_ts":   toMetricObject(o.UpdatedAt, false),
-		"value":        toMetricObject(o.Value, false),
-		"hashcode":     toMetricObject(o.Hashcode, false),
+
+		"status":     o.Status.String(),
+		"updated_ts": toMetricObject(o.UpdatedAt, false),
+		"value":      toMetricObject(o.Value, false),
+		"hashcode":   toMetricObject(o.Hashcode, false),
 	}
 }
 
@@ -381,6 +483,42 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["branch"].(*string); ok {
+		o.Branch = val
+	} else if val, ok := kv["branch"].(string); ok {
+		o.Branch = &val
+	} else {
+		if val, ok := kv["branch"]; ok {
+			if val == nil {
+				o.Branch = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Branch = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["commit_id"].(*string); ok {
+		o.CommitID = val
+	} else if val, ok := kv["commit_id"].(string); ok {
+		o.CommitID = &val
+	} else {
+		if val, ok := kv["commit_id"]; ok {
+			if val == nil {
+				o.CommitID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CommitID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
 	}
 
 	if val, ok := kv["created_date"]; ok {
@@ -506,6 +644,36 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["status"].(MetricStatus); ok {
+		o.Status = val
+	} else {
+		if em, ok := kv["status"].(map[string]interface{}); ok {
+			ev := em["codequality.status"].(string)
+			switch ev {
+			case "unsupported", "UNSUPPORTED":
+				o.Status = 0
+			case "not_analysed", "NOT_ANALYSED":
+				o.Status = 1
+			case "analyzing", "ANALYZING":
+				o.Status = 2
+			case "analysed", "ANALYSED":
+				o.Status = 3
+			}
+		}
+		if em, ok := kv["status"].(string); ok {
+			switch em {
+			case "unsupported", "UNSUPPORTED":
+				o.Status = 0
+			case "not_analysed", "NOT_ANALYSED":
+				o.Status = 1
+			case "analyzing", "ANALYZING":
+				o.Status = 2
+			case "analysed", "ANALYSED":
+				o.Status = 3
+			}
+		}
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -541,6 +709,8 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Metric) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Branch)
+	args = append(args, o.CommitID)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
@@ -548,6 +718,7 @@ func (o *Metric) Hash() string {
 	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.Status)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Value)
 	o.Hashcode = hash.Values(args...)
