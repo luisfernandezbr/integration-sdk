@@ -503,15 +503,15 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 type PullRequest struct {
 	// BranchID id for the branch based on branch_name, could be already deleted
 	BranchID string `json:"branch_id" codec:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
-	// BranchName branch name of the pr, could be  deleted
+	// BranchName branch name of the pull request
 	BranchName string `json:"branch_name" codec:"branch_name" bson:"branch_name" yaml:"branch_name" faker:"-"`
 	// ClosedByRefID the id of user who closed the pull request
 	ClosedByRefID string `json:"closed_by_ref_id" codec:"closed_by_ref_id" bson:"closed_by_ref_id" yaml:"closed_by_ref_id" faker:"-"`
 	// ClosedDate the timestamp in UTC that the pull request was closed
 	ClosedDate PullRequestClosedDate `json:"closed_date" codec:"closed_date" bson:"closed_date" yaml:"closed_date" faker:"-"`
-	// CommitIds list of commit ids added in this pr
+	// CommitIds list of commit ids added in this pull request
 	CommitIds []string `json:"commit_ids" codec:"commit_ids" bson:"commit_ids" yaml:"commit_ids" faker:"-"`
-	// CommitShas list of commit shas added in this pr
+	// CommitShas list of commit shas added in this pull request
 	CommitShas []string `json:"commit_shas" codec:"commit_shas" bson:"commit_shas" yaml:"commit_shas" faker:"-"`
 	// CreatedByRefID the user ref_id in the source system
 	CreatedByRefID string `json:"created_by_ref_id" codec:"created_by_ref_id" bson:"created_by_ref_id" yaml:"created_by_ref_id" faker:"-"`
@@ -523,6 +523,8 @@ type PullRequest struct {
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Identifier a human friendly identifier when displaying this pull request
+	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// MergeCommitID the id of the merge commit
 	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeSha the sha of the merge commit
@@ -796,6 +798,7 @@ func (o *PullRequest) ToMap() map[string]interface{} {
 		"customer_id":       toPullRequestObject(o.CustomerID, false),
 		"description":       toPullRequestObject(o.Description, false),
 		"id":                toPullRequestObject(o.ID, false),
+		"identifier":        toPullRequestObject(o.Identifier, false),
 		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, false),
 		"merge_sha":         toPullRequestObject(o.MergeSha, false),
 		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, false),
@@ -1096,6 +1099,21 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
+	} else {
+		if val, ok := kv["identifier"]; ok {
+			if val == nil {
+				o.Identifier = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Identifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -1347,6 +1365,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
+	args = append(args, o.Identifier)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeSha)
 	args = append(args, o.MergedByRefID)
