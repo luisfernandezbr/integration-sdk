@@ -1076,6 +1076,25 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseUsersHiredDate); ok {
 			// struct pointer
 			o.HiredDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.HiredDate.Epoch = dt.Epoch
+			o.HiredDate.Rfc3339 = dt.Rfc3339
+			o.HiredDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.HiredDate.Epoch = dt.Epoch
+			o.HiredDate.Rfc3339 = dt.Rfc3339
+			o.HiredDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.HiredDate.Epoch = dt.Epoch
+				o.HiredDate.Rfc3339 = dt.Rfc3339
+				o.HiredDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.HiredDate.FromMap(map[string]interface{}{})
@@ -1204,6 +1223,25 @@ func (o *UserResponseUsers) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseUsersTerminatedDate); ok {
 			// struct pointer
 			o.TerminatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.TerminatedDate.Epoch = dt.Epoch
+			o.TerminatedDate.Rfc3339 = dt.Rfc3339
+			o.TerminatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.TerminatedDate.Epoch = dt.Epoch
+			o.TerminatedDate.Rfc3339 = dt.Rfc3339
+			o.TerminatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.TerminatedDate.Epoch = dt.Epoch
+				o.TerminatedDate.Rfc3339 = dt.Rfc3339
+				o.TerminatedDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.TerminatedDate.FromMap(map[string]interface{}{})
@@ -1671,6 +1709,25 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1760,6 +1817,25 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
