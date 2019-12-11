@@ -730,8 +730,6 @@ type Commit struct {
 	Files []CommitFiles `json:"files" codec:"files" bson:"files" yaml:"files" faker:"-"`
 	// FilesChanged the number of files changed for the commit
 	FilesChanged int64 `json:"files_changed" codec:"files_changed" bson:"files_changed" yaml:"files_changed" faker:"-"`
-	// GpgSigned if the commit was signed
-	GpgSigned bool `json:"gpg_signed" codec:"gpg_signed" bson:"gpg_signed" yaml:"gpg_signed" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Loc the number of lines in the commit
@@ -1001,7 +999,6 @@ func (o *Commit) ToMap() map[string]interface{} {
 		"excluded":         toCommitObject(o.Excluded, false),
 		"files":            toCommitObject(o.Files, false),
 		"files_changed":    toCommitObject(o.FilesChanged, false),
-		"gpg_signed":       toCommitObject(o.GpgSigned, false),
 		"id":               toCommitObject(o.ID, false),
 		"loc":              toCommitObject(o.Loc, false),
 		"message":          toCommitObject(o.Message, false),
@@ -1322,18 +1319,6 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["gpg_signed"].(bool); ok {
-		o.GpgSigned = val
-	} else {
-		if val, ok := kv["gpg_signed"]; ok {
-			if val == nil {
-				o.GpgSigned = number.ToBoolAny(nil)
-			} else {
-				o.GpgSigned = number.ToBoolAny(val)
-			}
-		}
-	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1532,7 +1517,6 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Excluded)
 	args = append(args, o.Files)
 	args = append(args, o.FilesChanged)
-	args = append(args, o.GpgSigned)
 	args = append(args, o.ID)
 	args = append(args, o.Loc)
 	args = append(args, o.Message)
