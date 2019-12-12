@@ -42,6 +42,8 @@ type UpdateTrigger struct {
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID UUID of the agent to update
 	UUID *string `json:"uuid,omitempty" codec:"uuid,omitempty" bson:"uuid" yaml:"uuid,omitempty" faker:"-"`
+	// Version
+	Version *string `json:"version,omitempty" codec:"version,omitempty" bson:"version" yaml:"version,omitempty" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -95,6 +97,9 @@ func NewUpdateTriggerID(customerID string, refType string, refID string) string 
 func (o *UpdateTrigger) setDefaults(frommap bool) {
 	if o.UUID == nil {
 		o.UUID = pstrings.Pointer("")
+	}
+	if o.Version == nil {
+		o.Version = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {
@@ -267,6 +272,7 @@ func (o *UpdateTrigger) ToMap() map[string]interface{} {
 		"ref_type":    toUpdateTriggerObject(o.RefType, false),
 		"updated_ts":  toUpdateTriggerObject(o.UpdatedAt, false),
 		"uuid":        toUpdateTriggerObject(o.UUID, true),
+		"version":     toUpdateTriggerObject(o.Version, true),
 		"hashcode":    toUpdateTriggerObject(o.Hashcode, false),
 	}
 }
@@ -373,6 +379,24 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["version"].(*string); ok {
+		o.Version = val
+	} else if val, ok := kv["version"].(string); ok {
+		o.Version = &val
+	} else {
+		if val, ok := kv["version"]; ok {
+			if val == nil {
+				o.Version = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Version = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -385,6 +409,7 @@ func (o *UpdateTrigger) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
+	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
