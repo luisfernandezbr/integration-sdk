@@ -314,6 +314,66 @@ func (o *RepoResponseReposCreatedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// RepoResponseReposError is the enumeration type for error
+type RepoResponseReposError int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *RepoResponseReposError) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = RepoResponseReposError(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "NONE":
+			*v = RepoResponseReposError(0)
+		case "PERMISSIONS":
+			*v = RepoResponseReposError(1)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v RepoResponseReposError) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "NONE":
+		v = 0
+	case "PERMISSIONS":
+		v = 1
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v RepoResponseReposError) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("NONE")
+	case 1:
+		return json.Marshal("PERMISSIONS")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for ReposError
+func (v RepoResponseReposError) String() string {
+	switch int32(v) {
+	case 0:
+		return "NONE"
+	case 1:
+		return "PERMISSIONS"
+	}
+	return "unset"
+}
+
+const (
+	// ReposErrorNONE is the enumeration value for NONE
+	RepoResponseReposErrorNONE RepoResponseReposError = 0
+	// ReposErrorPERMISSIONS is the enumeration value for PERMISSIONS
+	RepoResponseReposErrorPERMISSIONS RepoResponseReposError = 1
+)
+
 // RepoResponseReposLastCommitCreatedDate represents the object structure for created_date
 type RepoResponseReposLastCommitCreatedDate struct {
 	// Epoch the date in epoch format
@@ -665,6 +725,8 @@ type RepoResponseRepos struct {
 	CreatedDate RepoResponseReposCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// Description the description of the repository
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"sentence"`
+	// Error reason why the repo is being set to inactive
+	Error RepoResponseReposError `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
 	// Language the programming language defined for the repository
 	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// LastCommit the most recent commit to the repo
@@ -685,6 +747,9 @@ func toRepoResponseReposObject(o interface{}, isoptional bool) interface{} {
 	case RepoResponseReposCreatedDate:
 		return v.ToMap()
 
+	case RepoResponseReposError:
+		return v.String()
+
 	case RepoResponseReposLastCommit:
 		return v.ToMap()
 
@@ -702,6 +767,8 @@ func (o *RepoResponseRepos) ToMap() map[string]interface{} {
 		"created_date": toRepoResponseReposObject(o.CreatedDate, false),
 		// Description the description of the repository
 		"description": toRepoResponseReposObject(o.Description, false),
+		// Error reason why the repo is being set to inactive
+		"error": toRepoResponseReposObject(o.Error, false),
 		// Language the programming language defined for the repository
 		"language": toRepoResponseReposObject(o.Language, false),
 		// LastCommit the most recent commit to the repo
@@ -786,6 +853,28 @@ func (o *RepoResponseRepos) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["error"].(RepoResponseReposError); ok {
+		o.Error = val
+	} else {
+		if em, ok := kv["error"].(map[string]interface{}); ok {
+			ev := em["agent.error"].(string)
+			switch ev {
+			case "none", "NONE":
+				o.Error = 0
+			case "permissions", "PERMISSIONS":
+				o.Error = 1
+			}
+		}
+		if em, ok := kv["error"].(string); ok {
+			switch em {
+			case "none", "NONE":
+				o.Error = 0
+			case "permissions", "PERMISSIONS":
+				o.Error = 1
 			}
 		}
 	}

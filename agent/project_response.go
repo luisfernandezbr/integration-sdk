@@ -220,6 +220,66 @@ func (o *ProjectResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// ProjectResponseProjectsError is the enumeration type for error
+type ProjectResponseProjectsError int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ProjectResponseProjectsError) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = ProjectResponseProjectsError(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "NONE":
+			*v = ProjectResponseProjectsError(0)
+		case "PERMISSIONS":
+			*v = ProjectResponseProjectsError(1)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v ProjectResponseProjectsError) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "NONE":
+		v = 0
+	case "PERMISSIONS":
+		v = 1
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v ProjectResponseProjectsError) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("NONE")
+	case 1:
+		return json.Marshal("PERMISSIONS")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for ProjectsError
+func (v ProjectResponseProjectsError) String() string {
+	switch int32(v) {
+	case 0:
+		return "NONE"
+	case 1:
+		return "PERMISSIONS"
+	}
+	return "unset"
+}
+
+const (
+	// ProjectsErrorNONE is the enumeration value for NONE
+	ProjectResponseProjectsErrorNONE ProjectResponseProjectsError = 0
+	// ProjectsErrorPERMISSIONS is the enumeration value for PERMISSIONS
+	ProjectResponseProjectsErrorPERMISSIONS ProjectResponseProjectsError = 1
+)
+
 // ProjectResponseProjectsLastIssueCreatedDate represents the object structure for created_date
 type ProjectResponseProjectsLastIssueCreatedDate struct {
 	// Epoch the date in epoch format
@@ -533,6 +593,8 @@ type ProjectResponseProjects struct {
 	Category *string `json:"category,omitempty" codec:"category,omitempty" bson:"category" yaml:"category,omitempty" faker:"-"`
 	// Description the description of the project
 	Description *string `json:"description,omitempty" codec:"description,omitempty" bson:"description" yaml:"description,omitempty" faker:"-"`
+	// Error reason why the project is being set to inactive
+	Error ProjectResponseProjectsError `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
 	// Identifier the common identifier for the project
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// LastIssue last issue for this project
@@ -554,6 +616,9 @@ func toProjectResponseProjectsObject(o interface{}, isoptional bool) interface{}
 	case *ProjectResponseProjects:
 		return v.ToMap()
 
+	case ProjectResponseProjectsError:
+		return v.String()
+
 	case ProjectResponseProjectsLastIssue:
 		return v.ToMap()
 
@@ -571,6 +636,8 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 		"category": toProjectResponseProjectsObject(o.Category, true),
 		// Description the description of the project
 		"description": toProjectResponseProjectsObject(o.Description, true),
+		// Error reason why the project is being set to inactive
+		"error": toProjectResponseProjectsObject(o.Error, false),
 		// Identifier the common identifier for the project
 		"identifier": toProjectResponseProjectsObject(o.Identifier, false),
 		// LastIssue last issue for this project
@@ -647,6 +714,28 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["error"].(ProjectResponseProjectsError); ok {
+		o.Error = val
+	} else {
+		if em, ok := kv["error"].(map[string]interface{}); ok {
+			ev := em["agent.error"].(string)
+			switch ev {
+			case "none", "NONE":
+				o.Error = 0
+			case "permissions", "PERMISSIONS":
+				o.Error = 1
+			}
+		}
+		if em, ok := kv["error"].(string); ok {
+			switch em {
+			case "none", "NONE":
+				o.Error = 0
+			case "permissions", "PERMISSIONS":
+				o.Error = 1
 			}
 		}
 	}
@@ -1376,6 +1465,25 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1465,6 +1573,25 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
