@@ -139,10 +139,8 @@ func (v *MetricStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 			*v = MetricStatus(0)
 		case "NOT_ANALYSED":
 			*v = MetricStatus(1)
-		case "ANALYZING":
-			*v = MetricStatus(2)
 		case "ANALYSED":
-			*v = MetricStatus(3)
+			*v = MetricStatus(2)
 		}
 	}
 	return nil
@@ -155,10 +153,8 @@ func (v MetricStatus) UnmarshalJSON(buf []byte) error {
 		v = 0
 	case "NOT_ANALYSED":
 		v = 1
-	case "ANALYZING":
-		v = 2
 	case "ANALYSED":
-		v = 3
+		v = 2
 	}
 	return nil
 }
@@ -171,8 +167,6 @@ func (v MetricStatus) MarshalJSON() ([]byte, error) {
 	case 1:
 		return json.Marshal("NOT_ANALYSED")
 	case 2:
-		return json.Marshal("ANALYZING")
-	case 3:
 		return json.Marshal("ANALYSED")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -186,8 +180,6 @@ func (v MetricStatus) String() string {
 	case 1:
 		return "NOT_ANALYSED"
 	case 2:
-		return "ANALYZING"
-	case 3:
 		return "ANALYSED"
 	}
 	return "unset"
@@ -198,10 +190,8 @@ const (
 	MetricStatusUnsupported MetricStatus = 0
 	// StatusNotAnalysed is the enumeration value for not_analysed
 	MetricStatusNotAnalysed MetricStatus = 1
-	// StatusAnalyzing is the enumeration value for analyzing
-	MetricStatusAnalyzing MetricStatus = 2
 	// StatusAnalysed is the enumeration value for analysed
-	MetricStatusAnalysed MetricStatus = 3
+	MetricStatusAnalysed MetricStatus = 2
 )
 
 // Metric individual metric details
@@ -210,6 +200,8 @@ type Metric struct {
 	Branch *string `json:"branch,omitempty" codec:"branch,omitempty" bson:"branch" yaml:"branch,omitempty" faker:"-"`
 	// CommitID the commit id
 	CommitID *string `json:"commit_id,omitempty" codec:"commit_id,omitempty" bson:"commit_id" yaml:"commit_id,omitempty" faker:"-"`
+	// CommitSha commit sha
+	CommitSha *string `json:"commit_sha,omitempty" codec:"commit_sha,omitempty" bson:"commit_sha" yaml:"commit_sha,omitempty" faker:"-"`
 	// CreatedDate the date when the metric was created
 	CreatedDate MetricCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -220,10 +212,16 @@ type Metric struct {
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// ProjectID the project id
 	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	// PullRequestID the pull request this commit is associated with
+	PullRequestID *string `json:"pull_request_id,omitempty" codec:"pull_request_id,omitempty" bson:"pull_request_id" yaml:"pull_request_id,omitempty" faker:"-"`
+	// PullRequestRefID the original pull request id this commit is associated with
+	PullRequestRefID *string `json:"pull_request_ref_id,omitempty" codec:"pull_request_ref_id,omitempty" bson:"pull_request_ref_id" yaml:"pull_request_ref_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RepoID repo id
+	RepoID *string `json:"repo_id,omitempty" codec:"repo_id,omitempty" bson:"repo_id" yaml:"repo_id,omitempty" faker:"-"`
 	// Status status of the analysis for this commit
 	Status MetricStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
@@ -292,6 +290,18 @@ func (o *Metric) setDefaults(frommap bool) {
 	}
 	if o.CommitID == nil {
 		o.CommitID = pstrings.Pointer("")
+	}
+	if o.CommitSha == nil {
+		o.CommitSha = pstrings.Pointer("")
+	}
+	if o.PullRequestID == nil {
+		o.PullRequestID = pstrings.Pointer("")
+	}
+	if o.PullRequestRefID == nil {
+		o.PullRequestRefID = pstrings.Pointer("")
+	}
+	if o.RepoID == nil {
+		o.RepoID = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {
@@ -458,15 +468,19 @@ func (o *Metric) IsEqual(other *Metric) bool {
 func (o *Metric) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"branch":       toMetricObject(o.Branch, true),
-		"commit_id":    toMetricObject(o.CommitID, true),
-		"created_date": toMetricObject(o.CreatedDate, false),
-		"customer_id":  toMetricObject(o.CustomerID, false),
-		"id":           toMetricObject(o.ID, false),
-		"name":         toMetricObject(o.Name, false),
-		"project_id":   toMetricObject(o.ProjectID, false),
-		"ref_id":       toMetricObject(o.RefID, false),
-		"ref_type":     toMetricObject(o.RefType, false),
+		"branch":              toMetricObject(o.Branch, true),
+		"commit_id":           toMetricObject(o.CommitID, true),
+		"commit_sha":          toMetricObject(o.CommitSha, true),
+		"created_date":        toMetricObject(o.CreatedDate, false),
+		"customer_id":         toMetricObject(o.CustomerID, false),
+		"id":                  toMetricObject(o.ID, false),
+		"name":                toMetricObject(o.Name, false),
+		"project_id":          toMetricObject(o.ProjectID, false),
+		"pull_request_id":     toMetricObject(o.PullRequestID, true),
+		"pull_request_ref_id": toMetricObject(o.PullRequestRefID, true),
+		"ref_id":              toMetricObject(o.RefID, false),
+		"ref_type":            toMetricObject(o.RefType, false),
+		"repo_id":             toMetricObject(o.RepoID, true),
 
 		"status":     o.Status.String(),
 		"updated_ts": toMetricObject(o.UpdatedAt, false),
@@ -517,6 +531,24 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.CommitID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["commit_sha"].(*string); ok {
+		o.CommitSha = val
+	} else if val, ok := kv["commit_sha"].(string); ok {
+		o.CommitSha = &val
+	} else {
+		if val, ok := kv["commit_sha"]; ok {
+			if val == nil {
+				o.CommitSha = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CommitSha = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -614,6 +646,42 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["pull_request_id"].(*string); ok {
+		o.PullRequestID = val
+	} else if val, ok := kv["pull_request_id"].(string); ok {
+		o.PullRequestID = &val
+	} else {
+		if val, ok := kv["pull_request_id"]; ok {
+			if val == nil {
+				o.PullRequestID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PullRequestID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["pull_request_ref_id"].(*string); ok {
+		o.PullRequestRefID = val
+	} else if val, ok := kv["pull_request_ref_id"].(string); ok {
+		o.PullRequestRefID = &val
+	} else {
+		if val, ok := kv["pull_request_ref_id"]; ok {
+			if val == nil {
+				o.PullRequestRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PullRequestRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -644,6 +712,24 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["repo_id"].(*string); ok {
+		o.RepoID = val
+	} else if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = &val
+	} else {
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RepoID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
 	if val, ok := kv["status"].(MetricStatus); ok {
 		o.Status = val
 	} else {
@@ -654,10 +740,8 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 				o.Status = 0
 			case "not_analysed", "NOT_ANALYSED":
 				o.Status = 1
-			case "analyzing", "ANALYZING":
-				o.Status = 2
 			case "analysed", "ANALYSED":
-				o.Status = 3
+				o.Status = 2
 			}
 		}
 		if em, ok := kv["status"].(string); ok {
@@ -666,10 +750,8 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 				o.Status = 0
 			case "not_analysed", "NOT_ANALYSED":
 				o.Status = 1
-			case "analyzing", "ANALYZING":
-				o.Status = 2
 			case "analysed", "ANALYSED":
-				o.Status = 3
+				o.Status = 2
 			}
 		}
 	}
@@ -711,13 +793,17 @@ func (o *Metric) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Branch)
 	args = append(args, o.CommitID)
+	args = append(args, o.CommitSha)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Name)
 	args = append(args, o.ProjectID)
+	args = append(args, o.PullRequestID)
+	args = append(args, o.PullRequestRefID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RepoID)
 	args = append(args, o.Status)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Value)
