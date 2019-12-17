@@ -448,6 +448,8 @@ type IntegrationResponse struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequestID the request id that this response is correlated to
 	RequestID string `json:"request_id" codec:"request_id" bson:"request_id" yaml:"request_id" faker:"-"`
+	// ServerVersion the server version for this integration
+	ServerVersion *string `json:"server_version,omitempty" codec:"server_version,omitempty" bson:"server_version" yaml:"server_version,omitempty" faker:"-"`
 	// Success if the response was successful
 	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
 	// SystemID system unique device ID
@@ -527,6 +529,9 @@ func (o *IntegrationResponse) setDefaults(frommap bool) {
 	}
 	if o.Error == nil {
 		o.Error = pstrings.Pointer("")
+	}
+	if o.ServerVersion == nil {
+		o.ServerVersion = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {
@@ -712,6 +717,7 @@ func (o *IntegrationResponse) ToMap() map[string]interface{} {
 		"ref_id":           toIntegrationResponseObject(o.RefID, false),
 		"ref_type":         toIntegrationResponseObject(o.RefType, false),
 		"request_id":       toIntegrationResponseObject(o.RequestID, false),
+		"server_version":   toIntegrationResponseObject(o.ServerVersion, true),
 		"success":          toIntegrationResponseObject(o.Success, false),
 		"system_id":        toIntegrationResponseObject(o.SystemID, false),
 
@@ -839,6 +845,25 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -913,6 +938,25 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1019,6 +1063,24 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.RequestID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["server_version"].(*string); ok {
+		o.ServerVersion = val
+	} else if val, ok := kv["server_version"].(string); ok {
+		o.ServerVersion = &val
+	} else {
+		if val, ok := kv["server_version"]; ok {
+			if val == nil {
+				o.ServerVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ServerVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1208,6 +1270,7 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestID)
+	args = append(args, o.ServerVersion)
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
 	args = append(args, o.Type)
