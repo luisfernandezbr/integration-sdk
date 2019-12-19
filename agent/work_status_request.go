@@ -875,6 +875,8 @@ type WorkStatusRequestIntegration struct {
 	OnboardRequestedDate WorkStatusRequestIntegrationOnboardRequestedDate `json:"onboard_requested_date" codec:"onboard_requested_date" bson:"onboard_requested_date" yaml:"onboard_requested_date" faker:"-"`
 	// Onboarding true if the agent is fetching metadata for the integration
 	Onboarding bool `json:"onboarding" codec:"onboarding" bson:"onboarding" yaml:"onboarding" faker:"-"`
+	// Organization The origanization authorized. Used for azure integrations
+	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 	// Progress Agent processing progress
 	Progress WorkStatusRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
@@ -947,6 +949,8 @@ func (o *WorkStatusRequestIntegration) ToMap() map[string]interface{} {
 		"onboard_requested_date": toWorkStatusRequestIntegrationObject(o.OnboardRequestedDate, false),
 		// Onboarding true if the agent is fetching metadata for the integration
 		"onboarding": toWorkStatusRequestIntegrationObject(o.Onboarding, false),
+		// Organization The origanization authorized. Used for azure integrations
+		"organization": toWorkStatusRequestIntegrationObject(o.Organization, true),
 		// Progress Agent processing progress
 		"progress": toWorkStatusRequestIntegrationObject(o.Progress, false),
 		// RefID the source system id for the model instance
@@ -1225,6 +1229,24 @@ func (o *WorkStatusRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.Onboarding = number.ToBoolAny(nil)
 			} else {
 				o.Onboarding = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["organization"].(*string); ok {
+		o.Organization = val
+	} else if val, ok := kv["organization"].(string); ok {
+		o.Organization = &val
+	} else {
+		if val, ok := kv["organization"]; ok {
+			if val == nil {
+				o.Organization = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Organization = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1813,25 +1835,6 @@ func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

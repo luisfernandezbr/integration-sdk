@@ -875,6 +875,8 @@ type UserRequestIntegration struct {
 	OnboardRequestedDate UserRequestIntegrationOnboardRequestedDate `json:"onboard_requested_date" codec:"onboard_requested_date" bson:"onboard_requested_date" yaml:"onboard_requested_date" faker:"-"`
 	// Onboarding true if the agent is fetching metadata for the integration
 	Onboarding bool `json:"onboarding" codec:"onboarding" bson:"onboarding" yaml:"onboarding" faker:"-"`
+	// Organization The origanization authorized. Used for azure integrations
+	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 	// Progress Agent processing progress
 	Progress UserRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
@@ -947,6 +949,8 @@ func (o *UserRequestIntegration) ToMap() map[string]interface{} {
 		"onboard_requested_date": toUserRequestIntegrationObject(o.OnboardRequestedDate, false),
 		// Onboarding true if the agent is fetching metadata for the integration
 		"onboarding": toUserRequestIntegrationObject(o.Onboarding, false),
+		// Organization The origanization authorized. Used for azure integrations
+		"organization": toUserRequestIntegrationObject(o.Organization, true),
 		// Progress Agent processing progress
 		"progress": toUserRequestIntegrationObject(o.Progress, false),
 		// RefID the source system id for the model instance
@@ -1225,6 +1229,24 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.Onboarding = number.ToBoolAny(nil)
 			} else {
 				o.Onboarding = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["organization"].(*string); ok {
+		o.Organization = val
+	} else if val, ok := kv["organization"].(string); ok {
+		o.Organization = &val
+	} else {
+		if val, ok := kv["organization"]; ok {
+			if val == nil {
+				o.Organization = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Organization = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
