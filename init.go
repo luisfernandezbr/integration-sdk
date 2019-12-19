@@ -132,6 +132,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.Uninstall)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.UninstallRequest":
+		o := new(dm_agent.UninstallRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.UninstallResponse":
+		o := new(dm_agent.UninstallResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.UpdateRequest":
 		o := new(dm_agent.UpdateRequest)
 		o.FromMap(map[string]interface{}{})
@@ -379,6 +387,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.Uninstall)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent_UninstallRequest_topic":
+		o := new(dm_agent.UninstallRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_UninstallResponse_topic":
+		o := new(dm_agent.UninstallResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_UpdateRequest_topic":
 		o := new(dm_agent.UpdateRequest)
 		o.FromMap(map[string]interface{}{})
@@ -543,6 +559,8 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_Resume_topic"),
 		datamodel.TopicNameType("agent_Start_topic"),
 		datamodel.TopicNameType("agent_Stop_topic"),
+		datamodel.TopicNameType("agent_UninstallRequest_topic"),
+		datamodel.TopicNameType("agent_UninstallResponse_topic"),
 		datamodel.TopicNameType("agent_Uninstall_topic"),
 		datamodel.TopicNameType("agent_UpdateRequest_topic"),
 		datamodel.TopicNameType("agent_UpdateResponse_topic"),
@@ -610,6 +628,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.Start"),
 		datamodel.ModelNameType("agent.Stop"),
 		datamodel.ModelNameType("agent.Uninstall"),
+		datamodel.ModelNameType("agent.UninstallRequest"),
+		datamodel.ModelNameType("agent.UninstallResponse"),
 		datamodel.ModelNameType("agent.UpdateRequest"),
 		datamodel.ModelNameType("agent.UpdateResponse"),
 		datamodel.ModelNameType("agent.UpdateTrigger"),

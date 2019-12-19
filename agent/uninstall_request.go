@@ -20,18 +20,18 @@ import (
 )
 
 const (
-	// CrashTopic is the default topic name
-	CrashTopic datamodel.TopicNameType = "agent_Crash_topic"
+	// UninstallRequestTopic is the default topic name
+	UninstallRequestTopic datamodel.TopicNameType = "agent_UninstallRequest_topic"
 
-	// CrashTable is the default table name
-	CrashTable datamodel.ModelNameType = "agent_crash"
+	// UninstallRequestTable is the default table name
+	UninstallRequestTable datamodel.ModelNameType = "agent_uninstallrequest"
 
-	// CrashModelName is the model name
-	CrashModelName datamodel.ModelNameType = "agent.Crash"
+	// UninstallRequestModelName is the model name
+	UninstallRequestModelName datamodel.ModelNameType = "agent.UninstallRequest"
 )
 
-// CrashCrashDate represents the object structure for crash_date
-type CrashCrashDate struct {
+// UninstallRequestEventDate represents the object structure for event_date
+type UninstallRequestEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -40,9 +40,9 @@ type CrashCrashDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toCrashCrashDateObject(o interface{}, isoptional bool) interface{} {
+func toUninstallRequestEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CrashCrashDate:
+	case *UninstallRequestEventDate:
 		return v.ToMap()
 
 	default:
@@ -50,19 +50,19 @@ func toCrashCrashDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-func (o *CrashCrashDate) ToMap() map[string]interface{} {
+func (o *UninstallRequestEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toCrashCrashDateObject(o.Epoch, false),
+		"epoch": toUninstallRequestEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toCrashCrashDateObject(o.Offset, false),
+		"offset": toUninstallRequestEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCrashCrashDateObject(o.Rfc3339, false),
+		"rfc3339": toUninstallRequestEventDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *CrashCrashDate) setDefaults(frommap bool) {
+func (o *UninstallRequestEventDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -70,7 +70,7 @@ func (o *CrashCrashDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CrashCrashDate) FromMap(kv map[string]interface{}) {
+func (o *UninstallRequestEventDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -124,8 +124,8 @@ func (o *CrashCrashDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// CrashEventDate represents the object structure for event_date
-type CrashEventDate struct {
+// UninstallRequestLastExportDate represents the object structure for last_export_date
+type UninstallRequestLastExportDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -134,9 +134,9 @@ type CrashEventDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toCrashEventDateObject(o interface{}, isoptional bool) interface{} {
+func toUninstallRequestLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *CrashEventDate:
+	case *UninstallRequestLastExportDate:
 		return v.ToMap()
 
 	default:
@@ -144,19 +144,19 @@ func toCrashEventDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-func (o *CrashEventDate) ToMap() map[string]interface{} {
+func (o *UninstallRequestLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toCrashEventDateObject(o.Epoch, false),
+		"epoch": toUninstallRequestLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toCrashEventDateObject(o.Offset, false),
+		"offset": toUninstallRequestLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCrashEventDateObject(o.Rfc3339, false),
+		"rfc3339": toUninstallRequestLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *CrashEventDate) setDefaults(frommap bool) {
+func (o *UninstallRequestLastExportDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -164,7 +164,7 @@ func (o *CrashEventDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *CrashEventDate) FromMap(kv map[string]interface{}) {
+func (o *UninstallRequestLastExportDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -218,148 +218,54 @@ func (o *CrashEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// CrashLastExportDate represents the object structure for last_export_date
-type CrashLastExportDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toCrashLastExportDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *CrashLastExportDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *CrashLastExportDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toCrashLastExportDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toCrashLastExportDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toCrashLastExportDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *CrashLastExportDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *CrashLastExportDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// CrashType is the enumeration type for type
-type CrashType int32
+// UninstallRequestType is the enumeration type for type
+type UninstallRequestType int32
 
 // UnmarshalBSONValue for unmarshaling value
-func (v *CrashType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+func (v *UninstallRequestType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
 	switch t {
 	case bsontype.Int32:
-		*v = CrashType(val.Int32())
+		*v = UninstallRequestType(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
 		case "ENROLL":
-			*v = CrashType(0)
+			*v = UninstallRequestType(0)
 		case "PING":
-			*v = CrashType(1)
+			*v = UninstallRequestType(1)
 		case "CRASH":
-			*v = CrashType(2)
+			*v = UninstallRequestType(2)
 		case "LOG":
-			*v = CrashType(3)
+			*v = UninstallRequestType(3)
 		case "INTEGRATION":
-			*v = CrashType(4)
+			*v = UninstallRequestType(4)
 		case "EXPORT":
-			*v = CrashType(5)
+			*v = UninstallRequestType(5)
 		case "PROJECT":
-			*v = CrashType(6)
+			*v = UninstallRequestType(6)
 		case "REPO":
-			*v = CrashType(7)
+			*v = UninstallRequestType(7)
 		case "USER":
-			*v = CrashType(8)
+			*v = UninstallRequestType(8)
 		case "UNINSTALL":
-			*v = CrashType(9)
+			*v = UninstallRequestType(9)
 		case "UPGRADE":
-			*v = CrashType(10)
+			*v = UninstallRequestType(10)
 		case "START":
-			*v = CrashType(11)
+			*v = UninstallRequestType(11)
 		case "STOP":
-			*v = CrashType(12)
+			*v = UninstallRequestType(12)
 		case "PAUSE":
-			*v = CrashType(13)
+			*v = UninstallRequestType(13)
 		case "RESUME":
-			*v = CrashType(14)
+			*v = UninstallRequestType(14)
 		}
 	}
 	return nil
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v CrashType) UnmarshalJSON(buf []byte) error {
+func (v UninstallRequestType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -396,7 +302,7 @@ func (v CrashType) UnmarshalJSON(buf []byte) error {
 }
 
 // MarshalJSON marshals the enum value
-func (v CrashType) MarshalJSON() ([]byte, error) {
+func (v UninstallRequestType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
 		return json.Marshal("ENROLL")
@@ -433,7 +339,7 @@ func (v CrashType) MarshalJSON() ([]byte, error) {
 }
 
 // String returns the string value for Type
-func (v CrashType) String() string {
+func (v UninstallRequestType) String() string {
 	switch int32(v) {
 	case 0:
 		return "ENROLL"
@@ -471,45 +377,41 @@ func (v CrashType) String() string {
 
 const (
 	// TypeEnroll is the enumeration value for enroll
-	CrashTypeEnroll CrashType = 0
+	UninstallRequestTypeEnroll UninstallRequestType = 0
 	// TypePing is the enumeration value for ping
-	CrashTypePing CrashType = 1
+	UninstallRequestTypePing UninstallRequestType = 1
 	// TypeCrash is the enumeration value for crash
-	CrashTypeCrash CrashType = 2
+	UninstallRequestTypeCrash UninstallRequestType = 2
 	// TypeLog is the enumeration value for log
-	CrashTypeLog CrashType = 3
+	UninstallRequestTypeLog UninstallRequestType = 3
 	// TypeIntegration is the enumeration value for integration
-	CrashTypeIntegration CrashType = 4
+	UninstallRequestTypeIntegration UninstallRequestType = 4
 	// TypeExport is the enumeration value for export
-	CrashTypeExport CrashType = 5
+	UninstallRequestTypeExport UninstallRequestType = 5
 	// TypeProject is the enumeration value for project
-	CrashTypeProject CrashType = 6
+	UninstallRequestTypeProject UninstallRequestType = 6
 	// TypeRepo is the enumeration value for repo
-	CrashTypeRepo CrashType = 7
+	UninstallRequestTypeRepo UninstallRequestType = 7
 	// TypeUser is the enumeration value for user
-	CrashTypeUser CrashType = 8
+	UninstallRequestTypeUser UninstallRequestType = 8
 	// TypeUninstall is the enumeration value for uninstall
-	CrashTypeUninstall CrashType = 9
+	UninstallRequestTypeUninstall UninstallRequestType = 9
 	// TypeUpgrade is the enumeration value for upgrade
-	CrashTypeUpgrade CrashType = 10
+	UninstallRequestTypeUpgrade UninstallRequestType = 10
 	// TypeStart is the enumeration value for start
-	CrashTypeStart CrashType = 11
+	UninstallRequestTypeStart UninstallRequestType = 11
 	// TypeStop is the enumeration value for stop
-	CrashTypeStop CrashType = 12
+	UninstallRequestTypeStop UninstallRequestType = 12
 	// TypePause is the enumeration value for pause
-	CrashTypePause CrashType = 13
+	UninstallRequestTypePause UninstallRequestType = 13
 	// TypeResume is the enumeration value for resume
-	CrashTypeResume CrashType = 14
+	UninstallRequestTypeResume UninstallRequestType = 14
 )
 
-// Crash an agent event to indicate that the agent crashed
-type Crash struct {
+// UninstallRequest an event to request agent to uninstall itself
+type UninstallRequest struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
-	// Component Component that caused panic. Could be one of integrations, export subcommands or service itself.
-	Component string `json:"component" codec:"component" bson:"component" yaml:"component" faker:"-"`
-	// CrashDate The date when crash happened. We may not be able to send the crash immediately due to network errors.
-	CrashDate CrashCrashDate `json:"crash_date" codec:"crash_date" bson:"crash_date" yaml:"crash_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
@@ -519,7 +421,7 @@ type Crash struct {
 	// Error an error message related to this event
 	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate CrashEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate UninstallRequestEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -529,7 +431,7 @@ type Crash struct {
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate CrashLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate UninstallRequestLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -549,7 +451,7 @@ type Crash struct {
 	// SystemID system unique device ID
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type CrashType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type UninstallRequestType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
@@ -563,26 +465,23 @@ type Crash struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Crash)(nil)
+var _ datamodel.Model = (*UninstallRequest)(nil)
 
 // ensure that this type implements the streamed data model interface
-var _ datamodel.StreamedModel = (*Crash)(nil)
+var _ datamodel.StreamedModel = (*UninstallRequest)(nil)
 
-func toCrashObject(o interface{}, isoptional bool) interface{} {
+func toUninstallRequestObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *Crash:
+	case *UninstallRequest:
 		return v.ToMap()
 
-	case CrashCrashDate:
+	case UninstallRequestEventDate:
 		return v.ToMap()
 
-	case CrashEventDate:
+	case UninstallRequestLastExportDate:
 		return v.ToMap()
 
-	case CrashLastExportDate:
-		return v.ToMap()
-
-	case CrashType:
+	case UninstallRequestType:
 		return v.String()
 
 	default:
@@ -590,37 +489,37 @@ func toCrashObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-// String returns a string representation of Crash
-func (o *Crash) String() string {
-	return fmt.Sprintf("agent.Crash<%s>", o.ID)
+// String returns a string representation of UninstallRequest
+func (o *UninstallRequest) String() string {
+	return fmt.Sprintf("agent.UninstallRequest<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Crash) GetTopicName() datamodel.TopicNameType {
-	return CrashTopic
+func (o *UninstallRequest) GetTopicName() datamodel.TopicNameType {
+	return UninstallRequestTopic
 }
 
 // GetStreamName returns the name of the stream
-func (o *Crash) GetStreamName() string {
+func (o *UninstallRequest) GetStreamName() string {
 	return ""
 }
 
 // GetTableName returns the name of the table
-func (o *Crash) GetTableName() string {
+func (o *UninstallRequest) GetTableName() string {
 	return ""
 }
 
 // GetModelName returns the name of the model
-func (o *Crash) GetModelName() datamodel.ModelNameType {
-	return CrashModelName
+func (o *UninstallRequest) GetModelName() datamodel.ModelNameType {
+	return UninstallRequestModelName
 }
 
-// NewCrashID provides a template for generating an ID field for Crash
-func NewCrashID(customerID string, refType string, refID string) string {
-	return hash.Values("Crash", customerID, refType, refID)
+// NewUninstallRequestID provides a template for generating an ID field for UninstallRequest
+func NewUninstallRequestID(customerID string, refType string, refID string) string {
+	return hash.Values("UninstallRequest", customerID, refType, refID)
 }
 
-func (o *Crash) setDefaults(frommap bool) {
+func (o *UninstallRequest) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = pstrings.Pointer("")
 	}
@@ -630,7 +529,7 @@ func (o *Crash) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Crash", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("UninstallRequest", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -641,12 +540,12 @@ func (o *Crash) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *Crash) GetID() string {
+func (o *UninstallRequest) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Crash) GetTopicKey() string {
+func (o *UninstallRequest) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -655,7 +554,7 @@ func (o *Crash) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Crash) GetTimestamp() time.Time {
+func (o *UninstallRequest) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -669,42 +568,42 @@ func (o *Crash) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for Crash")
+	panic("not sure how to handle the date time format for UninstallRequest")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Crash) GetRefID() string {
+func (o *UninstallRequest) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Crash) IsMaterialized() bool {
+func (o *UninstallRequest) IsMaterialized() bool {
 	return false
 }
 
 // IsMutable returns true if the model is mutable
-func (o *Crash) IsMutable() bool {
+func (o *UninstallRequest) IsMutable() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Crash) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *UninstallRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Crash) IsEvented() bool {
+func (o *UninstallRequest) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Crash) SetEventHeaders(kv map[string]string) {
+func (o *UninstallRequest) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = CrashModelName.String()
+	kv["model"] = UninstallRequestModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Crash) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *UninstallRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("87360h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
@@ -730,22 +629,22 @@ func (o *Crash) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetCustomerID will return the customer_id
-func (o *Crash) GetCustomerID() string {
+func (o *UninstallRequest) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Crash
-func (o *Crash) Clone() datamodel.Model {
-	c := new(Crash)
+// Clone returns an exact copy of UninstallRequest
+func (o *UninstallRequest) Clone() datamodel.Model {
+	c := new(UninstallRequest)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Crash) Anon() datamodel.Model {
-	c := new(Crash)
+func (o *UninstallRequest) Anon() datamodel.Model {
+	c := new(UninstallRequest)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -760,12 +659,12 @@ func (o *Crash) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Crash) MarshalJSON() ([]byte, error) {
+func (o *UninstallRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Crash) UnmarshalJSON(data []byte) error {
+func (o *UninstallRequest) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -778,54 +677,52 @@ func (o *Crash) UnmarshalJSON(data []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Crash) Stringify() string {
+func (o *UninstallRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Crash objects are equal
-func (o *Crash) IsEqual(other *Crash) bool {
+// IsEqual returns true if the two UninstallRequest objects are equal
+func (o *UninstallRequest) IsEqual(other *UninstallRequest) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Crash) ToMap() map[string]interface{} {
+func (o *UninstallRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toCrashObject(o.Architecture, false),
-		"component":        toCrashObject(o.Component, false),
-		"crash_date":       toCrashObject(o.CrashDate, false),
-		"customer_id":      toCrashObject(o.CustomerID, false),
-		"data":             toCrashObject(o.Data, true),
-		"distro":           toCrashObject(o.Distro, false),
-		"error":            toCrashObject(o.Error, true),
-		"event_date":       toCrashObject(o.EventDate, false),
-		"free_space":       toCrashObject(o.FreeSpace, false),
-		"go_version":       toCrashObject(o.GoVersion, false),
-		"hostname":         toCrashObject(o.Hostname, false),
-		"id":               toCrashObject(o.ID, false),
-		"last_export_date": toCrashObject(o.LastExportDate, false),
-		"memory":           toCrashObject(o.Memory, false),
-		"message":          toCrashObject(o.Message, false),
-		"num_cpu":          toCrashObject(o.NumCPU, false),
-		"os":               toCrashObject(o.OS, false),
-		"ref_id":           toCrashObject(o.RefID, false),
-		"ref_type":         toCrashObject(o.RefType, false),
-		"request_id":       toCrashObject(o.RequestID, false),
-		"success":          toCrashObject(o.Success, false),
-		"system_id":        toCrashObject(o.SystemID, false),
+		"architecture":     toUninstallRequestObject(o.Architecture, false),
+		"customer_id":      toUninstallRequestObject(o.CustomerID, false),
+		"data":             toUninstallRequestObject(o.Data, true),
+		"distro":           toUninstallRequestObject(o.Distro, false),
+		"error":            toUninstallRequestObject(o.Error, true),
+		"event_date":       toUninstallRequestObject(o.EventDate, false),
+		"free_space":       toUninstallRequestObject(o.FreeSpace, false),
+		"go_version":       toUninstallRequestObject(o.GoVersion, false),
+		"hostname":         toUninstallRequestObject(o.Hostname, false),
+		"id":               toUninstallRequestObject(o.ID, false),
+		"last_export_date": toUninstallRequestObject(o.LastExportDate, false),
+		"memory":           toUninstallRequestObject(o.Memory, false),
+		"message":          toUninstallRequestObject(o.Message, false),
+		"num_cpu":          toUninstallRequestObject(o.NumCPU, false),
+		"os":               toUninstallRequestObject(o.OS, false),
+		"ref_id":           toUninstallRequestObject(o.RefID, false),
+		"ref_type":         toUninstallRequestObject(o.RefType, false),
+		"request_id":       toUninstallRequestObject(o.RequestID, false),
+		"success":          toUninstallRequestObject(o.Success, false),
+		"system_id":        toUninstallRequestObject(o.SystemID, false),
 
 		"type":       o.Type.String(),
-		"updated_ts": toCrashObject(o.UpdatedAt, false),
-		"uptime":     toCrashObject(o.Uptime, false),
-		"uuid":       toCrashObject(o.UUID, false),
-		"version":    toCrashObject(o.Version, false),
-		"hashcode":   toCrashObject(o.Hashcode, false),
+		"updated_ts": toUninstallRequestObject(o.UpdatedAt, false),
+		"uptime":     toUninstallRequestObject(o.Uptime, false),
+		"uuid":       toUninstallRequestObject(o.UUID, false),
+		"version":    toUninstallRequestObject(o.Version, false),
+		"hashcode":   toUninstallRequestObject(o.Hashcode, false),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Crash) FromMap(kv map[string]interface{}) {
+func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -847,54 +744,6 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 				o.Architecture = fmt.Sprintf("%v", val)
 			}
 		}
-	}
-
-	if val, ok := kv["component"].(string); ok {
-		o.Component = val
-	} else {
-		if val, ok := kv["component"]; ok {
-			if val == nil {
-				o.Component = ""
-			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
-				}
-				o.Component = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["crash_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.CrashDate.FromMap(kv)
-		} else if sv, ok := val.(CrashCrashDate); ok {
-			// struct
-			o.CrashDate = sv
-		} else if sp, ok := val.(*CrashCrashDate); ok {
-			// struct pointer
-			o.CrashDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.CrashDate.Epoch = dt.Epoch
-			o.CrashDate.Rfc3339 = dt.Rfc3339
-			o.CrashDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.CrashDate.Epoch = dt.Epoch
-			o.CrashDate.Rfc3339 = dt.Rfc3339
-			o.CrashDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.CrashDate.Epoch = dt.Epoch
-				o.CrashDate.Rfc3339 = dt.Rfc3339
-				o.CrashDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.CrashDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
@@ -966,31 +815,12 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["event_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.EventDate.FromMap(kv)
-		} else if sv, ok := val.(CrashEventDate); ok {
+		} else if sv, ok := val.(UninstallRequestEventDate); ok {
 			// struct
 			o.EventDate = sv
-		} else if sp, ok := val.(*CrashEventDate); ok {
+		} else if sp, ok := val.(*UninstallRequestEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1059,31 +889,12 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.LastExportDate.FromMap(kv)
-		} else if sv, ok := val.(CrashLastExportDate); ok {
+		} else if sv, ok := val.(UninstallRequestLastExportDate); ok {
 			// struct
 			o.LastExportDate = sv
-		} else if sp, ok := val.(*CrashLastExportDate); ok {
+		} else if sp, ok := val.(*UninstallRequestLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1221,7 +1032,7 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["type"].(CrashType); ok {
+	if val, ok := kv["type"].(UninstallRequestType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -1358,11 +1169,9 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Crash) Hash() string {
+func (o *UninstallRequest) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
-	args = append(args, o.Component)
-	args = append(args, o.CrashDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
@@ -1392,7 +1201,7 @@ func (o *Crash) Hash() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Crash) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *UninstallRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
