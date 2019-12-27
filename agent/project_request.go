@@ -48,8 +48,8 @@ type ProjectRequestIntegrationAuthorization struct {
 	Password *string `json:"password,omitempty" codec:"password,omitempty" bson:"password" yaml:"password,omitempty" faker:"-"`
 	// APIToken API Token for instance, if relevant
 	APIToken *string `json:"api_token,omitempty" codec:"api_token,omitempty" bson:"api_token" yaml:"api_token,omitempty" faker:"-"`
-	// Collection Collection for instance, if relevant
-	Collection *string `json:"collection,omitempty" codec:"collection,omitempty" bson:"collection" yaml:"collection,omitempty" faker:"-"`
+	// CollectionName Collection name for instance, if relevant
+	CollectionName *string `json:"collection_name,omitempty" codec:"collection_name,omitempty" bson:"collection_name" yaml:"collection_name,omitempty" faker:"-"`
 	// APIKey API Key for instance, if relevant
 	APIKey *string `json:"api_key,omitempty" codec:"api_key,omitempty" bson:"api_key" yaml:"api_key,omitempty" faker:"-"`
 	// Authorization the agents encrypted authorization
@@ -87,8 +87,8 @@ func (o *ProjectRequestIntegrationAuthorization) ToMap() map[string]interface{} 
 		"password": toProjectRequestIntegrationAuthorizationObject(o.Password, true),
 		// APIToken API Token for instance, if relevant
 		"api_token": toProjectRequestIntegrationAuthorizationObject(o.APIToken, true),
-		// Collection Collection for instance, if relevant
-		"collection": toProjectRequestIntegrationAuthorizationObject(o.Collection, true),
+		// CollectionName Collection name for instance, if relevant
+		"collection_name": toProjectRequestIntegrationAuthorizationObject(o.CollectionName, true),
 		// APIKey API Key for instance, if relevant
 		"api_key": toProjectRequestIntegrationAuthorizationObject(o.APIKey, true),
 		// Authorization the agents encrypted authorization
@@ -225,20 +225,20 @@ func (o *ProjectRequestIntegrationAuthorization) FromMap(kv map[string]interface
 		}
 	}
 
-	if val, ok := kv["collection"].(*string); ok {
-		o.Collection = val
-	} else if val, ok := kv["collection"].(string); ok {
-		o.Collection = &val
+	if val, ok := kv["collection_name"].(*string); ok {
+		o.CollectionName = val
+	} else if val, ok := kv["collection_name"].(string); ok {
+		o.CollectionName = &val
 	} else {
-		if val, ok := kv["collection"]; ok {
+		if val, ok := kv["collection_name"]; ok {
 			if val == nil {
-				o.Collection = pstrings.Pointer("")
+				o.CollectionName = pstrings.Pointer("")
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
-				o.Collection = pstrings.Pointer(fmt.Sprintf("%v", val))
+				o.CollectionName = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1835,25 +1835,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
