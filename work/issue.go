@@ -16,6 +16,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pnumber "github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
@@ -1076,6 +1077,8 @@ type Issue struct {
 	CreatorRefID string `json:"creator_ref_id" codec:"creator_ref_id" bson:"creator_ref_id" yaml:"creator_ref_id" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Description the issue description
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// DueDate due date of the issue
 	DueDate IssueDueDate `json:"due_date" codec:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
 	// ID the primary key for the model instance
@@ -1104,6 +1107,8 @@ type Issue struct {
 	Resolution string `json:"resolution" codec:"resolution" bson:"resolution" yaml:"resolution" faker:"-"`
 	// Status status of the issue
 	Status string `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
+	// StoryPoints the story points estimation for the issue
+	StoryPoints *float64 `json:"story_points,omitempty" codec:"story_points,omitempty" bson:"story_points" yaml:"story_points,omitempty" faker:"-"`
 	// Tags tags on the issue
 	Tags []string `json:"tags" codec:"tags" bson:"tags" yaml:"tags" faker:"-"`
 	// Title the issue title
@@ -1194,6 +1199,9 @@ func (o *Issue) setDefaults(frommap bool) {
 	}
 	if o.PullRequestIds == nil {
 		o.PullRequestIds = make([]string, 0)
+	}
+	if o.StoryPoints == nil {
+		o.StoryPoints = pnumber.Float64Pointer(0)
 	}
 	if o.Tags == nil {
 		o.Tags = make([]string, 0)
@@ -1370,6 +1378,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"created_date":       toIssueObject(o.CreatedDate, false),
 		"creator_ref_id":     toIssueObject(o.CreatorRefID, false),
 		"customer_id":        toIssueObject(o.CustomerID, false),
+		"description":        toIssueObject(o.Description, false),
 		"due_date":           toIssueObject(o.DueDate, false),
 		"id":                 toIssueObject(o.ID, false),
 		"identifier":         toIssueObject(o.Identifier, false),
@@ -1384,6 +1393,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"reporter_ref_id":    toIssueObject(o.ReporterRefID, false),
 		"resolution":         toIssueObject(o.Resolution, false),
 		"status":             toIssueObject(o.Status, false),
+		"story_points":       toIssueObject(o.StoryPoints, true),
 		"tags":               toIssueObject(o.Tags, false),
 		"title":              toIssueObject(o.Title, false),
 		"type":               toIssueObject(o.Type, false),
@@ -1541,6 +1551,21 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = ""
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					val = pjson.Stringify(m)
+				}
+				o.Description = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1845,6 +1870,24 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["story_points"].(*float64); ok {
+		o.StoryPoints = val
+	} else if val, ok := kv["story_points"].(float64); ok {
+		o.StoryPoints = &val
+	} else {
+		if val, ok := kv["story_points"]; ok {
+			if val == nil {
+				o.StoryPoints = number.Float64Pointer(number.ToFloat64Any(nil))
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["float64"]
+				}
+				o.StoryPoints = number.Float64Pointer(number.ToFloat64Any(val))
+			}
+		}
+	}
+
 	if val, ok := kv["tags"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -1999,6 +2042,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CreatorRefID)
 	args = append(args, o.CustomerID)
+	args = append(args, o.Description)
 	args = append(args, o.DueDate)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
@@ -2013,6 +2057,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.ReporterRefID)
 	args = append(args, o.Resolution)
 	args = append(args, o.Status)
+	args = append(args, o.StoryPoints)
 	args = append(args, o.Tags)
 	args = append(args, o.Title)
 	args = append(args, o.Type)
