@@ -883,6 +883,8 @@ type ProjectRequestIntegration struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// ServerVersion the server version for this integration
+	ServerVersion *string `json:"server_version,omitempty" codec:"server_version,omitempty" bson:"server_version" yaml:"server_version,omitempty" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 	SystemType ProjectRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
@@ -959,6 +961,8 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"ref_id": toProjectRequestIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
 		"ref_type": toProjectRequestIntegrationObject(o.RefType, false),
+		// ServerVersion the server version for this integration
+		"server_version": toProjectRequestIntegrationObject(o.ServerVersion, true),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 		"system_type": toProjectRequestIntegrationObject(o.SystemType, false),
 		// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
@@ -1295,6 +1299,24 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["server_version"].(*string); ok {
+		o.ServerVersion = val
+	} else if val, ok := kv["server_version"].(string); ok {
+		o.ServerVersion = &val
+	} else {
+		if val, ok := kv["server_version"]; ok {
+			if val == nil {
+				o.ServerVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ServerVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1857,6 +1879,25 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

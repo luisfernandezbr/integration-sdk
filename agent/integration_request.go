@@ -883,6 +883,8 @@ type IntegrationRequestIntegration struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// ServerVersion the server version for this integration
+	ServerVersion *string `json:"server_version,omitempty" codec:"server_version,omitempty" bson:"server_version" yaml:"server_version,omitempty" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 	SystemType IntegrationRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
@@ -959,6 +961,8 @@ func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 		"ref_id": toIntegrationRequestIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
 		"ref_type": toIntegrationRequestIntegrationObject(o.RefType, false),
+		// ServerVersion the server version for this integration
+		"server_version": toIntegrationRequestIntegrationObject(o.ServerVersion, true),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 		"system_type": toIntegrationRequestIntegrationObject(o.SystemType, false),
 		// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
@@ -1295,6 +1299,24 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = pjson.Stringify(m)
 				}
 				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["server_version"].(*string); ok {
+		o.ServerVersion = val
+	} else if val, ok := kv["server_version"].(string); ok {
+		o.ServerVersion = &val
+	} else {
+		if val, ok := kv["server_version"]; ok {
+			if val == nil {
+				o.ServerVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ServerVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
