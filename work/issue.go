@@ -1105,6 +1105,8 @@ type Issue struct {
 	ReporterRefID string `json:"reporter_ref_id" codec:"reporter_ref_id" bson:"reporter_ref_id" yaml:"reporter_ref_id" faker:"-"`
 	// Resolution resolution of the issue
 	Resolution string `json:"resolution" codec:"resolution" bson:"resolution" yaml:"resolution" faker:"-"`
+	// SprintIds an array of the sprint ids that this issue is currently a member of
+	SprintIds []string `json:"sprint_ids" codec:"sprint_ids" bson:"sprint_ids" yaml:"sprint_ids" faker:"-"`
 	// Status status of the issue
 	Status string `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// StoryPoints the story points estimation for the issue
@@ -1199,6 +1201,9 @@ func (o *Issue) setDefaults(frommap bool) {
 	}
 	if o.PullRequestIds == nil {
 		o.PullRequestIds = make([]string, 0)
+	}
+	if o.SprintIds == nil {
+		o.SprintIds = make([]string, 0)
 	}
 	if o.StoryPoints == nil {
 		o.StoryPoints = pnumber.Float64Pointer(0)
@@ -1392,6 +1397,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"ref_type":           toIssueObject(o.RefType, false),
 		"reporter_ref_id":    toIssueObject(o.ReporterRefID, false),
 		"resolution":         toIssueObject(o.Resolution, false),
+		"sprint_ids":         toIssueObject(o.SprintIds, false),
 		"status":             toIssueObject(o.Status, false),
 		"story_points":       toIssueObject(o.StoryPoints, true),
 		"tags":               toIssueObject(o.Tags, false),
@@ -1855,6 +1861,57 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["sprint_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for sprint_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for sprint_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for sprint_ids field")
+				}
+			}
+			o.SprintIds = na
+		}
+	}
+	if o.SprintIds == nil {
+		o.SprintIds = make([]string, 0)
+	}
+
 	if val, ok := kv["status"].(string); ok {
 		o.Status = val
 	} else {
@@ -2056,6 +2113,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.ReporterRefID)
 	args = append(args, o.Resolution)
+	args = append(args, o.SprintIds)
 	args = append(args, o.Status)
 	args = append(args, o.StoryPoints)
 	args = append(args, o.Tags)

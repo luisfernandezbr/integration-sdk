@@ -885,6 +885,8 @@ type UserRequestIntegration struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 	SystemType UserRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
+	// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
+	TeamID *string `json:"team_id,omitempty" codec:"team_id,omitempty" bson:"team_id" yaml:"team_id,omitempty" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated,omitempty" codec:"validated,omitempty" bson:"validated" yaml:"validated,omitempty" faker:"-"`
 	// ValidatedDate Date when validated
@@ -959,6 +961,8 @@ func (o *UserRequestIntegration) ToMap() map[string]interface{} {
 		"ref_type": toUserRequestIntegrationObject(o.RefType, false),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 		"system_type": toUserRequestIntegrationObject(o.SystemType, false),
+		// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
+		"team_id": toUserRequestIntegrationObject(o.TeamID, true),
 		// Validated If the validation has been run against this instance
 		"validated": toUserRequestIntegrationObject(o.Validated, true),
 		// ValidatedDate Date when validated
@@ -1321,6 +1325,24 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 2
 			case "user", "USER":
 				o.SystemType = 3
+			}
+		}
+	}
+
+	if val, ok := kv["team_id"].(*string); ok {
+		o.TeamID = val
+	} else if val, ok := kv["team_id"].(string); ok {
+		o.TeamID = &val
+	} else {
+		if val, ok := kv["team_id"]; ok {
+			if val == nil {
+				o.TeamID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.TeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1835,25 +1857,6 @@ func (o *UserRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
