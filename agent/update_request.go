@@ -14,6 +14,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -111,8 +112,13 @@ func (o *UpdateRequestRequestDate) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Rfc3339 = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Rfc3339 = fmt.Sprintf("%v", val)
 			}
@@ -387,8 +393,13 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.CustomerID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
 			}
@@ -402,8 +413,13 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.ID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
 			}
@@ -417,8 +433,13 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefID = fmt.Sprintf("%v", val)
 			}
@@ -432,8 +453,13 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefType = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefType = fmt.Sprintf("%v", val)
 			}
@@ -449,6 +475,25 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpdateRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -461,8 +506,13 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.ToVersion = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.ToVersion = fmt.Sprintf("%v", val)
 			}
@@ -491,8 +541,13 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.UUID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.UUID = fmt.Sprintf("%v", val)
 			}

@@ -118,8 +118,13 @@ func (o *WorkStatusResponseEventDate) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Rfc3339 = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Rfc3339 = fmt.Sprintf("%v", val)
 			}
@@ -362,8 +367,13 @@ func (o *WorkStatusResponseLastExportDate) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Rfc3339 = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Rfc3339 = fmt.Sprintf("%v", val)
 			}
@@ -1206,8 +1216,13 @@ func (o *WorkStatusResponseWorkConfigTopLevelIssue) FromMap(kv map[string]interf
 			if val == nil {
 				o.Name = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Name = fmt.Sprintf("%v", val)
 			}
@@ -1221,8 +1236,13 @@ func (o *WorkStatusResponseWorkConfigTopLevelIssue) FromMap(kv map[string]interf
 			if val == nil {
 				o.Type = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Type = fmt.Sprintf("%v", val)
 			}
@@ -1974,8 +1994,13 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.CustomerID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
 			}
@@ -2015,8 +2040,13 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.ID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
 			}
@@ -2030,8 +2060,13 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.IntegrationID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.IntegrationID = fmt.Sprintf("%v", val)
 			}
@@ -2207,8 +2242,13 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefID = fmt.Sprintf("%v", val)
 			}
@@ -2222,8 +2262,13 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefType = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefType = fmt.Sprintf("%v", val)
 			}
@@ -2729,8 +2774,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Architecture = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Architecture = fmt.Sprintf("%v", val)
 			}
@@ -2744,8 +2794,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.CustomerID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
 			}
@@ -2777,8 +2832,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Distro = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Distro = fmt.Sprintf("%v", val)
 			}
@@ -2812,25 +2872,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2858,8 +2899,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.GoVersion = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.GoVersion = fmt.Sprintf("%v", val)
 			}
@@ -2873,8 +2919,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Hostname = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Hostname = fmt.Sprintf("%v", val)
 			}
@@ -2888,8 +2939,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.ID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
 			}
@@ -2903,8 +2959,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.IntegrationID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.IntegrationID = fmt.Sprintf("%v", val)
 			}
@@ -2920,25 +2981,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -2966,8 +3008,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Message = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Message = fmt.Sprintf("%v", val)
 			}
@@ -2996,8 +3043,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.OS = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.OS = fmt.Sprintf("%v", val)
 			}
@@ -3011,8 +3063,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefID = fmt.Sprintf("%v", val)
 			}
@@ -3026,8 +3083,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefType = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefType = fmt.Sprintf("%v", val)
 			}
@@ -3041,8 +3103,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RequestID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RequestID = fmt.Sprintf("%v", val)
 			}
@@ -3068,8 +3135,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.SystemID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.SystemID = fmt.Sprintf("%v", val)
 			}
@@ -3187,8 +3259,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.UUID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.UUID = fmt.Sprintf("%v", val)
 			}
@@ -3202,8 +3279,13 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Version = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Version = fmt.Sprintf("%v", val)
 			}

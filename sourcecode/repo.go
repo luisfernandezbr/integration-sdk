@@ -14,6 +14,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
@@ -318,8 +319,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.CustomerID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
 			}
@@ -333,8 +339,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.DefaultBranch = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.DefaultBranch = fmt.Sprintf("%v", val)
 			}
@@ -348,8 +359,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Description = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Description = fmt.Sprintf("%v", val)
 			}
@@ -363,8 +379,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.ID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
 			}
@@ -378,8 +399,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Language = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Language = fmt.Sprintf("%v", val)
 			}
@@ -393,8 +419,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Name = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Name = fmt.Sprintf("%v", val)
 			}
@@ -408,8 +439,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefID = fmt.Sprintf("%v", val)
 			}
@@ -423,8 +459,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefType = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefType = fmt.Sprintf("%v", val)
 			}
@@ -453,8 +494,13 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.URL = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.URL = fmt.Sprintf("%v", val)
 			}

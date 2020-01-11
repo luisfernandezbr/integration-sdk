@@ -14,6 +14,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
@@ -113,8 +114,13 @@ func (o *PullRequestReviewCreatedDate) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.Rfc3339 = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.Rfc3339 = fmt.Sprintf("%v", val)
 			}
@@ -526,8 +532,13 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.CustomerID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
 			}
@@ -541,8 +552,13 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.ID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
 			}
@@ -556,8 +572,13 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.PullRequestID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.PullRequestID = fmt.Sprintf("%v", val)
 			}
@@ -571,8 +592,13 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefID = fmt.Sprintf("%v", val)
 			}
@@ -586,8 +612,13 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RefType = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RefType = fmt.Sprintf("%v", val)
 			}
@@ -601,8 +632,13 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.RepoID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.RepoID = fmt.Sprintf("%v", val)
 			}
@@ -665,8 +701,13 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.URL = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.URL = fmt.Sprintf("%v", val)
 			}
@@ -680,8 +721,13 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 			if val == nil {
 				o.UserRefID = ""
 			} else {
-				if m, ok := val.(map[string]interface{}); ok {
-					val = pjson.Stringify(m)
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
 				o.UserRefID = fmt.Sprintf("%v", val)
 			}
