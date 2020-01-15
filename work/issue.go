@@ -829,6 +829,285 @@ func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// IssueLinkedIssuesType is the enumeration type for type
+type IssueLinkedIssuesType int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *IssueLinkedIssuesType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = IssueLinkedIssuesType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "BLOCKS":
+			*v = IssueLinkedIssuesType(0)
+		case "CLONES":
+			*v = IssueLinkedIssuesType(1)
+		case "DUPLICATES":
+			*v = IssueLinkedIssuesType(2)
+		case "CAUSES":
+			*v = IssueLinkedIssuesType(3)
+		case "RELATES":
+			*v = IssueLinkedIssuesType(4)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v IssueLinkedIssuesType) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "BLOCKS":
+		v = 0
+	case "CLONES":
+		v = 1
+	case "DUPLICATES":
+		v = 2
+	case "CAUSES":
+		v = 3
+	case "RELATES":
+		v = 4
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v IssueLinkedIssuesType) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("BLOCKS")
+	case 1:
+		return json.Marshal("CLONES")
+	case 2:
+		return json.Marshal("DUPLICATES")
+	case 3:
+		return json.Marshal("CAUSES")
+	case 4:
+		return json.Marshal("RELATES")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for LinkedIssuesType
+func (v IssueLinkedIssuesType) String() string {
+	switch int32(v) {
+	case 0:
+		return "BLOCKS"
+	case 1:
+		return "CLONES"
+	case 2:
+		return "DUPLICATES"
+	case 3:
+		return "CAUSES"
+	case 4:
+		return "RELATES"
+	}
+	return "unset"
+}
+
+const (
+	// LinkedIssuesTypeBlocks is the enumeration value for blocks
+	IssueLinkedIssuesTypeBlocks IssueLinkedIssuesType = 0
+	// LinkedIssuesTypeClones is the enumeration value for clones
+	IssueLinkedIssuesTypeClones IssueLinkedIssuesType = 1
+	// LinkedIssuesTypeDuplicates is the enumeration value for duplicates
+	IssueLinkedIssuesTypeDuplicates IssueLinkedIssuesType = 2
+	// LinkedIssuesTypeCauses is the enumeration value for causes
+	IssueLinkedIssuesTypeCauses IssueLinkedIssuesType = 3
+	// LinkedIssuesTypeRelates is the enumeration value for relates
+	IssueLinkedIssuesTypeRelates IssueLinkedIssuesType = 4
+)
+
+// IssueLinkedIssues represents the object structure for linked_issues
+type IssueLinkedIssues struct {
+	// IssueID id of the linked issue (our id)
+	IssueID string `json:"issue_id" codec:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
+	// IssueIdentifier the common identifier for the linked issue (for example EXM-1 instead of 1000 for jira)
+	IssueIdentifier string `json:"issue_identifier" codec:"issue_identifier" bson:"issue_identifier" yaml:"issue_identifier" faker:"-"`
+	// IssueRefID id of the linked issue in source system
+	IssueRefID string `json:"issue_ref_id" codec:"issue_ref_id" bson:"issue_ref_id" yaml:"issue_ref_id" faker:"-"`
+	// RefID id of the link itself in the source system
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// ReverseDirection true for inbound links from other issues, for example when true and type is blocks, the parent issue is blocked by linked issue, instead of parent issue blocking linked issue
+	ReverseDirection bool `json:"reverse_direction" codec:"reverse_direction" bson:"reverse_direction" yaml:"reverse_direction" faker:"-"`
+	// Type link type
+	Type IssueLinkedIssuesType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+}
+
+func toIssueLinkedIssuesObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssueLinkedIssues:
+		return v.ToMap()
+
+	case IssueLinkedIssuesType:
+		return v.String()
+	default:
+		return o
+	}
+}
+
+func (o *IssueLinkedIssues) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// IssueID id of the linked issue (our id)
+		"issue_id": toIssueLinkedIssuesObject(o.IssueID, false),
+		// IssueIdentifier the common identifier for the linked issue (for example EXM-1 instead of 1000 for jira)
+		"issue_identifier": toIssueLinkedIssuesObject(o.IssueIdentifier, false),
+		// IssueRefID id of the linked issue in source system
+		"issue_ref_id": toIssueLinkedIssuesObject(o.IssueRefID, false),
+		// RefID id of the link itself in the source system
+		"ref_id": toIssueLinkedIssuesObject(o.RefID, false),
+		// ReverseDirection true for inbound links from other issues, for example when true and type is blocks, the parent issue is blocked by linked issue, instead of parent issue blocking linked issue
+		"reverse_direction": toIssueLinkedIssuesObject(o.ReverseDirection, false),
+		// Type link type
+		"type": toIssueLinkedIssuesObject(o.Type, false),
+	}
+}
+
+func (o *IssueLinkedIssues) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueLinkedIssues) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["issue_id"].(string); ok {
+		o.IssueID = val
+	} else {
+		if val, ok := kv["issue_id"]; ok {
+			if val == nil {
+				o.IssueID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IssueID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["issue_identifier"].(string); ok {
+		o.IssueIdentifier = val
+	} else {
+		if val, ok := kv["issue_identifier"]; ok {
+			if val == nil {
+				o.IssueIdentifier = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IssueIdentifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["issue_ref_id"].(string); ok {
+		o.IssueRefID = val
+	} else {
+		if val, ok := kv["issue_ref_id"]; ok {
+			if val == nil {
+				o.IssueRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IssueRefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["reverse_direction"].(bool); ok {
+		o.ReverseDirection = val
+	} else {
+		if val, ok := kv["reverse_direction"]; ok {
+			if val == nil {
+				o.ReverseDirection = number.ToBoolAny(nil)
+			} else {
+				o.ReverseDirection = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["type"].(IssueLinkedIssuesType); ok {
+		o.Type = val
+	} else {
+		if em, ok := kv["type"].(map[string]interface{}); ok {
+			ev := em["work.type"].(string)
+			switch ev {
+			case "blocks", "BLOCKS":
+				o.Type = 0
+			case "clones", "CLONES":
+				o.Type = 1
+			case "duplicates", "DUPLICATES":
+				o.Type = 2
+			case "causes", "CAUSES":
+				o.Type = 3
+			case "relates", "RELATES":
+				o.Type = 4
+			}
+		}
+		if em, ok := kv["type"].(string); ok {
+			switch em {
+			case "blocks", "BLOCKS":
+				o.Type = 0
+			case "clones", "CLONES":
+				o.Type = 1
+			case "duplicates", "DUPLICATES":
+				o.Type = 2
+			case "causes", "CAUSES":
+				o.Type = 3
+			case "relates", "RELATES":
+				o.Type = 4
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // IssuePlannedEndDate represents the object structure for planned_end_date
 type IssuePlannedEndDate struct {
 	// Epoch the date in epoch format
@@ -1144,8 +1423,10 @@ type Issue struct {
 	DueDate IssueDueDate `json:"due_date" codec:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Identifier the common identifier for the issue
+	// Identifier the common identifier for the issue (for example EXM-1 instead of 1000 for jira)
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
+	// LinkedIssues links between issues
+	LinkedIssues []IssueLinkedIssues `json:"linked_issues" codec:"linked_issues" bson:"linked_issues" yaml:"linked_issues" faker:"-"`
 	// ParentID parent issue id, if any
 	ParentID string `json:"parent_id" codec:"parent_id" bson:"parent_id" yaml:"parent_id" faker:"-"`
 	// PlannedEndDate the date that the issue was planned to end
@@ -1212,6 +1493,13 @@ func toIssueObject(o interface{}, isoptional bool) interface{} {
 	case IssueDueDate:
 		return v.ToMap()
 
+	case []IssueLinkedIssues:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	case IssuePlannedEndDate:
 		return v.ToMap()
 
@@ -1259,6 +1547,9 @@ func NewIssueID(customerID string, refType string, refID string) string {
 func (o *Issue) setDefaults(frommap bool) {
 	if o.ChangeLog == nil {
 		o.ChangeLog = make([]IssueChangeLog, 0)
+	}
+	if o.LinkedIssues == nil {
+		o.LinkedIssues = make([]IssueLinkedIssues, 0)
 	}
 	if o.PullRequestIds == nil {
 		o.PullRequestIds = make([]string, 0)
@@ -1448,6 +1739,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"due_date":           toIssueObject(o.DueDate, false),
 		"id":                 toIssueObject(o.ID, false),
 		"identifier":         toIssueObject(o.Identifier, false),
+		"linked_issues":      toIssueObject(o.LinkedIssues, false),
 		"parent_id":          toIssueObject(o.ParentID, false),
 		"planned_end_date":   toIssueObject(o.PlannedEndDate, false),
 		"planned_start_date": toIssueObject(o.PlannedStartDate, false),
@@ -1726,6 +2018,69 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Identifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.LinkedIssues = make([]IssueLinkedIssues, 0)
+
+	}
+	if val, ok := kv["linked_issues"]; ok {
+		if sv, ok := val.([]IssueLinkedIssues); ok {
+			o.LinkedIssues = sv
+		} else if sp, ok := val.([]*IssueLinkedIssues); ok {
+			o.LinkedIssues = o.LinkedIssues[:0]
+			for _, e := range sp {
+				o.LinkedIssues = append(o.LinkedIssues, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IssueLinkedIssues); ok {
+					o.LinkedIssues = append(o.LinkedIssues, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IssueLinkedIssues
+					fm.FromMap(av)
+					o.LinkedIssues = append(o.LinkedIssues, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av IssueLinkedIssues
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for linked_issues field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.LinkedIssues = append(o.LinkedIssues, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IssueLinkedIssues); ok {
+					o.LinkedIssues = append(o.LinkedIssues, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IssueLinkedIssues
+					fm.FromMap(r)
+					o.LinkedIssues = append(o.LinkedIssues, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IssueLinkedIssues{}
+					fm.FromMap(r)
+					o.LinkedIssues = append(o.LinkedIssues, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IssueLinkedIssues
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.LinkedIssues = append(o.LinkedIssues, fm)
+						}
+					}
+				}
 			}
 		}
 	}
@@ -2249,6 +2604,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.DueDate)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.LinkedIssues)
 	args = append(args, o.ParentID)
 	args = append(args, o.PlannedEndDate)
 	args = append(args, o.PlannedStartDate)
