@@ -244,10 +244,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work.CustomField":
-		o := new(dm_work.CustomField)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "work.Issue":
 		o := new(dm_work.Issue)
 		o.FromMap(map[string]interface{}{})
@@ -499,10 +495,6 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_CustomField_topic":
-		o := new(dm_work.CustomField)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "work_Issue_topic":
 		o := new(dm_work.Issue)
 		o.FromMap(map[string]interface{}{})
@@ -588,7 +580,6 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("sourcecode_PullRequest_topic"),
 		datamodel.TopicNameType("sourcecode_Repo_topic"),
 		datamodel.TopicNameType("sourcecode_User_topic"),
-		datamodel.TopicNameType("work_CustomField_topic"),
 		datamodel.TopicNameType("work_Issue_topic"),
 		datamodel.TopicNameType("work_Project_topic"),
 		datamodel.TopicNameType("work_Sprint_topic"),
@@ -656,7 +647,6 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("sourcecode.PullRequestReview"),
 		datamodel.ModelNameType("sourcecode.Repo"),
 		datamodel.ModelNameType("sourcecode.User"),
-		datamodel.ModelNameType("work.CustomField"),
 		datamodel.ModelNameType("work.Issue"),
 		datamodel.ModelNameType("work.Project"),
 		datamodel.ModelNameType("work.Sprint"),
