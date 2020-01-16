@@ -829,34 +829,34 @@ func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// IssueLinkedIssuesType is the enumeration type for type
-type IssueLinkedIssuesType int32
+// IssueLinkedIssuesLinkType is the enumeration type for link_type
+type IssueLinkedIssuesLinkType int32
 
 // UnmarshalBSONValue for unmarshaling value
-func (v *IssueLinkedIssuesType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+func (v *IssueLinkedIssuesLinkType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
 	switch t {
 	case bsontype.Int32:
-		*v = IssueLinkedIssuesType(val.Int32())
+		*v = IssueLinkedIssuesLinkType(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
 		case "BLOCKS":
-			*v = IssueLinkedIssuesType(0)
+			*v = IssueLinkedIssuesLinkType(0)
 		case "CLONES":
-			*v = IssueLinkedIssuesType(1)
+			*v = IssueLinkedIssuesLinkType(1)
 		case "DUPLICATES":
-			*v = IssueLinkedIssuesType(2)
+			*v = IssueLinkedIssuesLinkType(2)
 		case "CAUSES":
-			*v = IssueLinkedIssuesType(3)
+			*v = IssueLinkedIssuesLinkType(3)
 		case "RELATES":
-			*v = IssueLinkedIssuesType(4)
+			*v = IssueLinkedIssuesLinkType(4)
 		}
 	}
 	return nil
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v IssueLinkedIssuesType) UnmarshalJSON(buf []byte) error {
+func (v IssueLinkedIssuesLinkType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "BLOCKS":
 		v = 0
@@ -873,7 +873,7 @@ func (v IssueLinkedIssuesType) UnmarshalJSON(buf []byte) error {
 }
 
 // MarshalJSON marshals the enum value
-func (v IssueLinkedIssuesType) MarshalJSON() ([]byte, error) {
+func (v IssueLinkedIssuesLinkType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
 		return json.Marshal("BLOCKS")
@@ -889,8 +889,8 @@ func (v IssueLinkedIssuesType) MarshalJSON() ([]byte, error) {
 	return nil, fmt.Errorf("unexpected enum value")
 }
 
-// String returns the string value for LinkedIssuesType
-func (v IssueLinkedIssuesType) String() string {
+// String returns the string value for LinkedIssuesLinkType
+func (v IssueLinkedIssuesLinkType) String() string {
 	switch int32(v) {
 	case 0:
 		return "BLOCKS"
@@ -907,16 +907,16 @@ func (v IssueLinkedIssuesType) String() string {
 }
 
 const (
-	// LinkedIssuesTypeBlocks is the enumeration value for blocks
-	IssueLinkedIssuesTypeBlocks IssueLinkedIssuesType = 0
-	// LinkedIssuesTypeClones is the enumeration value for clones
-	IssueLinkedIssuesTypeClones IssueLinkedIssuesType = 1
-	// LinkedIssuesTypeDuplicates is the enumeration value for duplicates
-	IssueLinkedIssuesTypeDuplicates IssueLinkedIssuesType = 2
-	// LinkedIssuesTypeCauses is the enumeration value for causes
-	IssueLinkedIssuesTypeCauses IssueLinkedIssuesType = 3
-	// LinkedIssuesTypeRelates is the enumeration value for relates
-	IssueLinkedIssuesTypeRelates IssueLinkedIssuesType = 4
+	// LinkedIssuesLinkTypeBlocks is the enumeration value for blocks
+	IssueLinkedIssuesLinkTypeBlocks IssueLinkedIssuesLinkType = 0
+	// LinkedIssuesLinkTypeClones is the enumeration value for clones
+	IssueLinkedIssuesLinkTypeClones IssueLinkedIssuesLinkType = 1
+	// LinkedIssuesLinkTypeDuplicates is the enumeration value for duplicates
+	IssueLinkedIssuesLinkTypeDuplicates IssueLinkedIssuesLinkType = 2
+	// LinkedIssuesLinkTypeCauses is the enumeration value for causes
+	IssueLinkedIssuesLinkTypeCauses IssueLinkedIssuesLinkType = 3
+	// LinkedIssuesLinkTypeRelates is the enumeration value for relates
+	IssueLinkedIssuesLinkTypeRelates IssueLinkedIssuesLinkType = 4
 )
 
 // IssueLinkedIssues represents the object structure for linked_issues
@@ -927,12 +927,12 @@ type IssueLinkedIssues struct {
 	IssueIdentifier string `json:"issue_identifier" codec:"issue_identifier" bson:"issue_identifier" yaml:"issue_identifier" faker:"-"`
 	// IssueRefID id of the linked issue in source system
 	IssueRefID string `json:"issue_ref_id" codec:"issue_ref_id" bson:"issue_ref_id" yaml:"issue_ref_id" faker:"-"`
+	// LinkType link type
+	LinkType IssueLinkedIssuesLinkType `json:"link_type" codec:"link_type" bson:"link_type" yaml:"link_type" faker:"-"`
 	// RefID id of the link itself in the source system
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// ReverseDirection true for inbound links from other issues, for example when true and type is blocks, the parent issue is blocked by linked issue, instead of parent issue blocking linked issue
 	ReverseDirection bool `json:"reverse_direction" codec:"reverse_direction" bson:"reverse_direction" yaml:"reverse_direction" faker:"-"`
-	// Type link type
-	Type IssueLinkedIssuesType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 }
 
 func toIssueLinkedIssuesObject(o interface{}, isoptional bool) interface{} {
@@ -940,8 +940,9 @@ func toIssueLinkedIssuesObject(o interface{}, isoptional bool) interface{} {
 	case *IssueLinkedIssues:
 		return v.ToMap()
 
-	case IssueLinkedIssuesType:
+	case IssueLinkedIssuesLinkType:
 		return v.String()
+
 	default:
 		return o
 	}
@@ -956,12 +957,12 @@ func (o *IssueLinkedIssues) ToMap() map[string]interface{} {
 		"issue_identifier": toIssueLinkedIssuesObject(o.IssueIdentifier, false),
 		// IssueRefID id of the linked issue in source system
 		"issue_ref_id": toIssueLinkedIssuesObject(o.IssueRefID, false),
+		// LinkType link type
+		"link_type": toIssueLinkedIssuesObject(o.LinkType, false),
 		// RefID id of the link itself in the source system
 		"ref_id": toIssueLinkedIssuesObject(o.RefID, false),
 		// ReverseDirection true for inbound links from other issues, for example when true and type is blocks, the parent issue is blocked by linked issue, instead of parent issue blocking linked issue
 		"reverse_direction": toIssueLinkedIssuesObject(o.ReverseDirection, false),
-		// Type link type
-		"type": toIssueLinkedIssuesObject(o.Type, false),
 	}
 }
 
@@ -1040,6 +1041,40 @@ func (o *IssueLinkedIssues) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["link_type"].(IssueLinkedIssuesLinkType); ok {
+		o.LinkType = val
+	} else {
+		if em, ok := kv["link_type"].(map[string]interface{}); ok {
+			ev := em["work.link_type"].(string)
+			switch ev {
+			case "blocks", "BLOCKS":
+				o.LinkType = 0
+			case "clones", "CLONES":
+				o.LinkType = 1
+			case "duplicates", "DUPLICATES":
+				o.LinkType = 2
+			case "causes", "CAUSES":
+				o.LinkType = 3
+			case "relates", "RELATES":
+				o.LinkType = 4
+			}
+		}
+		if em, ok := kv["link_type"].(string); ok {
+			switch em {
+			case "blocks", "BLOCKS":
+				o.LinkType = 0
+			case "clones", "CLONES":
+				o.LinkType = 1
+			case "duplicates", "DUPLICATES":
+				o.LinkType = 2
+			case "causes", "CAUSES":
+				o.LinkType = 3
+			case "relates", "RELATES":
+				o.LinkType = 4
+			}
+		}
+	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1068,40 +1103,6 @@ func (o *IssueLinkedIssues) FromMap(kv map[string]interface{}) {
 				o.ReverseDirection = number.ToBoolAny(nil)
 			} else {
 				o.ReverseDirection = number.ToBoolAny(val)
-			}
-		}
-	}
-
-	if val, ok := kv["type"].(IssueLinkedIssuesType); ok {
-		o.Type = val
-	} else {
-		if em, ok := kv["type"].(map[string]interface{}); ok {
-			ev := em["work.type"].(string)
-			switch ev {
-			case "blocks", "BLOCKS":
-				o.Type = 0
-			case "clones", "CLONES":
-				o.Type = 1
-			case "duplicates", "DUPLICATES":
-				o.Type = 2
-			case "causes", "CAUSES":
-				o.Type = 3
-			case "relates", "RELATES":
-				o.Type = 4
-			}
-		}
-		if em, ok := kv["type"].(string); ok {
-			switch em {
-			case "blocks", "BLOCKS":
-				o.Type = 0
-			case "clones", "CLONES":
-				o.Type = 1
-			case "duplicates", "DUPLICATES":
-				o.Type = 2
-			case "causes", "CAUSES":
-				o.Type = 3
-			case "relates", "RELATES":
-				o.Type = 4
 			}
 		}
 	}
