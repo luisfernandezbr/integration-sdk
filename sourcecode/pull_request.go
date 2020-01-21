@@ -34,105 +34,6 @@ const (
 	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 )
 
-// PullRequestApprovedDate represents the object structure for approved_date
-type PullRequestApprovedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toPullRequestApprovedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *PullRequestApprovedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *PullRequestApprovedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toPullRequestApprovedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toPullRequestApprovedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toPullRequestApprovedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *PullRequestApprovedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *PullRequestApprovedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // PullRequestClosedDate represents the object structure for closed_date
 type PullRequestClosedDate struct {
 	// Epoch the date in epoch format
@@ -621,12 +522,6 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
-	// Approved if the pull request was approved
-	Approved bool `json:"approved" codec:"approved" bson:"approved" yaml:"approved" faker:"-"`
-	// ApprovedByRefID the user(s) that have approved the pull request in the source system
-	ApprovedByRefID []string `json:"approved_by_ref_id" codec:"approved_by_ref_id" bson:"approved_by_ref_id" yaml:"approved_by_ref_id" faker:"-"`
-	// ApprovedDate if the pull request was approved, this will be the first date it was approved
-	ApprovedDate PullRequestApprovedDate `json:"approved_date" codec:"approved_date" bson:"approved_date" yaml:"approved_date" faker:"-"`
 	// BranchID id for the branch based on branch_name, could be already deleted
 	BranchID string `json:"branch_id" codec:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
 	// BranchName branch name of the pull request
@@ -690,9 +585,6 @@ func toPullRequestObject(o interface{}, isoptional bool) interface{} {
 	case *PullRequest:
 		return v.ToMap()
 
-	case PullRequestApprovedDate:
-		return v.ToMap()
-
 	case PullRequestClosedDate:
 		return v.ToMap()
 
@@ -744,9 +636,6 @@ func NewPullRequestID(customerID string, refID string, refType string, RepoID st
 }
 
 func (o *PullRequest) setDefaults(frommap bool) {
-	if o.ApprovedByRefID == nil {
-		o.ApprovedByRefID = make([]string, 0)
-	}
 	if o.CommitIds == nil {
 		o.CommitIds = make([]string, 0)
 	}
@@ -919,28 +808,25 @@ func (o *PullRequest) IsEqual(other *PullRequest) bool {
 func (o *PullRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"approved":           toPullRequestObject(o.Approved, false),
-		"approved_by_ref_id": toPullRequestObject(o.ApprovedByRefID, false),
-		"approved_date":      toPullRequestObject(o.ApprovedDate, false),
-		"branch_id":          toPullRequestObject(o.BranchID, false),
-		"branch_name":        toPullRequestObject(o.BranchName, false),
-		"closed_by_ref_id":   toPullRequestObject(o.ClosedByRefID, false),
-		"closed_date":        toPullRequestObject(o.ClosedDate, false),
-		"commit_ids":         toPullRequestObject(o.CommitIds, false),
-		"commit_shas":        toPullRequestObject(o.CommitShas, false),
-		"created_by_ref_id":  toPullRequestObject(o.CreatedByRefID, false),
-		"created_date":       toPullRequestObject(o.CreatedDate, false),
-		"customer_id":        toPullRequestObject(o.CustomerID, false),
-		"description":        toPullRequestObject(o.Description, false),
-		"id":                 toPullRequestObject(o.ID, false),
-		"identifier":         toPullRequestObject(o.Identifier, false),
-		"merge_commit_id":    toPullRequestObject(o.MergeCommitID, false),
-		"merge_sha":          toPullRequestObject(o.MergeSha, false),
-		"merged_by_ref_id":   toPullRequestObject(o.MergedByRefID, false),
-		"merged_date":        toPullRequestObject(o.MergedDate, false),
-		"ref_id":             toPullRequestObject(o.RefID, false),
-		"ref_type":           toPullRequestObject(o.RefType, false),
-		"repo_id":            toPullRequestObject(o.RepoID, false),
+		"branch_id":         toPullRequestObject(o.BranchID, false),
+		"branch_name":       toPullRequestObject(o.BranchName, false),
+		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, false),
+		"closed_date":       toPullRequestObject(o.ClosedDate, false),
+		"commit_ids":        toPullRequestObject(o.CommitIds, false),
+		"commit_shas":       toPullRequestObject(o.CommitShas, false),
+		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, false),
+		"created_date":      toPullRequestObject(o.CreatedDate, false),
+		"customer_id":       toPullRequestObject(o.CustomerID, false),
+		"description":       toPullRequestObject(o.Description, false),
+		"id":                toPullRequestObject(o.ID, false),
+		"identifier":        toPullRequestObject(o.Identifier, false),
+		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, false),
+		"merge_sha":         toPullRequestObject(o.MergeSha, false),
+		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, false),
+		"merged_date":       toPullRequestObject(o.MergedDate, false),
+		"ref_id":            toPullRequestObject(o.RefID, false),
+		"ref_type":          toPullRequestObject(o.RefType, false),
+		"repo_id":           toPullRequestObject(o.RepoID, false),
 
 		"status":       o.Status.String(),
 		"title":        toPullRequestObject(o.Title, false),
@@ -959,102 +845,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["approved"].(bool); ok {
-		o.Approved = val
-	} else {
-		if val, ok := kv["approved"]; ok {
-			if val == nil {
-				o.Approved = number.ToBoolAny(nil)
-			} else {
-				o.Approved = number.ToBoolAny(val)
-			}
-		}
-	}
-
-	if val, ok := kv["approved_by_ref_id"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for approved_by_ref_id field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for approved_by_ref_id field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for approved_by_ref_id field")
-				}
-			}
-			o.ApprovedByRefID = na
-		}
-	}
-	if o.ApprovedByRefID == nil {
-		o.ApprovedByRefID = make([]string, 0)
-	}
-
-	if val, ok := kv["approved_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.ApprovedDate.FromMap(kv)
-		} else if sv, ok := val.(PullRequestApprovedDate); ok {
-			// struct
-			o.ApprovedDate = sv
-		} else if sp, ok := val.(*PullRequestApprovedDate); ok {
-			// struct pointer
-			o.ApprovedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.ApprovedDate.Epoch = dt.Epoch
-			o.ApprovedDate.Rfc3339 = dt.Rfc3339
-			o.ApprovedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.ApprovedDate.Epoch = dt.Epoch
-			o.ApprovedDate.Rfc3339 = dt.Rfc3339
-			o.ApprovedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.ApprovedDate.Epoch = dt.Epoch
-				o.ApprovedDate.Rfc3339 = dt.Rfc3339
-				o.ApprovedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.ApprovedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["branch_id"].(string); ok {
@@ -1665,9 +1455,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequest) Hash() string {
 	args := make([]interface{}, 0)
-	args = append(args, o.Approved)
-	args = append(args, o.ApprovedByRefID)
-	args = append(args, o.ApprovedDate)
 	args = append(args, o.BranchID)
 	args = append(args, o.BranchName)
 	args = append(args, o.ClosedByRefID)
