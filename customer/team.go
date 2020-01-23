@@ -43,6 +43,8 @@ type Team struct {
 	CreatedAt int64 `json:"created_ts" codec:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Deleted delete flag for a team. true === deleted
+	Deleted bool `json:"deleted" codec:"deleted" bson:"deleted" yaml:"deleted" faker:"-"`
 	// Description the description of the team
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
@@ -293,6 +295,7 @@ func (o *Team) ToMap() map[string]interface{} {
 		"children_ids": toTeamObject(o.ChildrenIds, false),
 		"created_ts":   toTeamObject(o.CreatedAt, false),
 		"customer_id":  toTeamObject(o.CustomerID, false),
+		"deleted":      toTeamObject(o.Deleted, false),
 		"description":  toTeamObject(o.Description, false),
 		"id":           toTeamObject(o.ID, false),
 		"leaf":         toTeamObject(o.Leaf, false),
@@ -415,6 +418,18 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["deleted"].(bool); ok {
+		o.Deleted = val
+	} else {
+		if val, ok := kv["deleted"]; ok {
+			if val == nil {
+				o.Deleted = number.ToBoolAny(nil)
+			} else {
+				o.Deleted = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -606,6 +621,7 @@ func (o *Team) Hash() string {
 	args = append(args, o.ChildrenIds)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
+	args = append(args, o.Deleted)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
 	args = append(args, o.Leaf)
