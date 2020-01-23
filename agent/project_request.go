@@ -885,6 +885,8 @@ type ProjectRequestIntegration struct {
 	Exclusions []string `json:"exclusions" codec:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
+	// Inclusions The inclusion list for this integration
+	Inclusions []string `json:"inclusions" codec:"inclusions" bson:"inclusions" yaml:"inclusions" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
 	Location ProjectRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
@@ -963,6 +965,8 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"exclusions": toProjectRequestIntegrationObject(o.Exclusions, false),
 		// ID the primary key for the model instance
 		"id": toProjectRequestIntegrationObject(o.ID, false),
+		// Inclusions The inclusion list for this integration
+		"inclusions": toProjectRequestIntegrationObject(o.Inclusions, false),
 		// Location The location of this integration (on-premise / private or cloud)
 		"location": toProjectRequestIntegrationObject(o.Location, false),
 		// Name The user friendly name of the integration
@@ -1154,6 +1158,57 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["inclusions"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for inclusions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for inclusions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for inclusions field")
+				}
+			}
+			o.Inclusions = na
+		}
+	}
+	if o.Inclusions == nil {
+		o.Inclusions = make([]string, 0)
 	}
 
 	if val, ok := kv["location"].(ProjectRequestIntegrationLocation); ok {
@@ -1949,25 +2004,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
