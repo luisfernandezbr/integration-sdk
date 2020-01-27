@@ -16,7 +16,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pnumber "github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -36,7 +35,7 @@ const (
 // Team a team is a grouping of one or more users
 type Team struct {
 	// Active whether the team is tracked in pinpoint
-	Active *bool `json:"active,omitempty" codec:"active,omitempty" bson:"active" yaml:"active,omitempty" faker:"-"`
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// ChildrenIds the children_ids for this team
 	ChildrenIds []string `json:"children_ids" codec:"children_ids" bson:"children_ids" yaml:"children_ids" faker:"-"`
 	// CreatedAt the date the record was created in Epoch time
@@ -112,9 +111,6 @@ func NewTeamID(Name string, customerID string) string {
 }
 
 func (o *Team) setDefaults(frommap bool) {
-	if o.Active == nil {
-		o.Active = pnumber.BoolPointer(false)
-	}
 	if o.ChildrenIds == nil {
 		o.ChildrenIds = make([]string, 0)
 	}
@@ -125,11 +121,6 @@ func (o *Team) setDefaults(frommap bool) {
 	if o.ID == "" {
 		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.Name, o.CustomerID)
-	}
-
-	if o.Active == nil {
-		v := false
-		o.Active = &v
 	}
 
 	if frommap {
@@ -291,7 +282,7 @@ func (o *Team) IsEqual(other *Team) bool {
 func (o *Team) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":       toTeamObject(o.Active, true),
+		"active":       toTeamObject(o.Active, false),
 		"children_ids": toTeamObject(o.ChildrenIds, false),
 		"created_ts":   toTeamObject(o.CreatedAt, false),
 		"customer_id":  toTeamObject(o.CustomerID, false),
@@ -318,20 +309,14 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 		kv["id"] = id
 	}
 
-	if val, ok := kv["active"].(*bool); ok {
+	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
-	} else if val, ok := kv["active"].(bool); ok {
-		o.Active = &val
 	} else {
 		if val, ok := kv["active"]; ok {
 			if val == nil {
-				o.Active = number.BoolPointer(number.ToBoolAny(nil))
+				o.Active = number.ToBoolAny(nil)
 			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["bool"]
-				}
-				o.Active = number.BoolPointer(number.ToBoolAny(val))
+				o.Active = number.ToBoolAny(val)
 			}
 		}
 	}
