@@ -290,25 +290,19 @@ const (
 	ExportResponseIntegrationsExportTypeIncremental ExportResponseIntegrationsExportType = 1
 )
 
-// ExportResponseIntegrationsProjectErrors represents the object structure for project_errors
-type ExportResponseIntegrationsProjectErrors struct {
-	// ID project/repo id
+// ExportResponseIntegrationsEntityErrors represents the object structure for entity_errors
+type ExportResponseIntegrationsEntityErrors struct {
+	// ID entity id
 	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
-	// RefID project/repo ref_id
+	// RefID entity ref_id
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// ReadableID project/repo unique name or readable id
-	ReadableID string `json:"readable_id" codec:"readable_id" bson:"readable_id" yaml:"readable_id" faker:"-"`
-	// Error if set integration failed when trying to export this project/repo
+	// Error error message if set integration failed when trying to export
 	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
-	// HasGitRepo if true, ripsrc processing was called for this repo
-	HasGitRepo bool `json:"has_git_repo" codec:"has_git_repo" bson:"has_git_repo" yaml:"has_git_repo" faker:"-"`
-	// GitError if true, ripsrc failed on this repo
-	GitError string `json:"git_error" codec:"git_error" bson:"git_error" yaml:"git_error" faker:"-"`
 }
 
-func toExportResponseIntegrationsProjectErrorsObject(o interface{}, isoptional bool) interface{} {
+func toExportResponseIntegrationsEntityErrorsObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *ExportResponseIntegrationsProjectErrors:
+	case *ExportResponseIntegrationsEntityErrors:
 		return v.ToMap()
 
 	default:
@@ -316,25 +310,19 @@ func toExportResponseIntegrationsProjectErrorsObject(o interface{}, isoptional b
 	}
 }
 
-func (o *ExportResponseIntegrationsProjectErrors) ToMap() map[string]interface{} {
+func (o *ExportResponseIntegrationsEntityErrors) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// ID project/repo id
-		"id": toExportResponseIntegrationsProjectErrorsObject(o.ID, false),
-		// RefID project/repo ref_id
-		"ref_id": toExportResponseIntegrationsProjectErrorsObject(o.RefID, false),
-		// ReadableID project/repo unique name or readable id
-		"readable_id": toExportResponseIntegrationsProjectErrorsObject(o.ReadableID, false),
-		// Error if set integration failed when trying to export this project/repo
-		"error": toExportResponseIntegrationsProjectErrorsObject(o.Error, false),
-		// HasGitRepo if true, ripsrc processing was called for this repo
-		"has_git_repo": toExportResponseIntegrationsProjectErrorsObject(o.HasGitRepo, false),
-		// GitError if true, ripsrc failed on this repo
-		"git_error": toExportResponseIntegrationsProjectErrorsObject(o.GitError, false),
+		// ID entity id
+		"id": toExportResponseIntegrationsEntityErrorsObject(o.ID, false),
+		// RefID entity ref_id
+		"ref_id": toExportResponseIntegrationsEntityErrorsObject(o.RefID, false),
+		// Error error message if set integration failed when trying to export
+		"error": toExportResponseIntegrationsEntityErrorsObject(o.Error, false),
 	}
 }
 
-func (o *ExportResponseIntegrationsProjectErrors) setDefaults(frommap bool) {
+func (o *ExportResponseIntegrationsEntityErrors) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -342,7 +330,7 @@ func (o *ExportResponseIntegrationsProjectErrors) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *ExportResponseIntegrationsProjectErrors) FromMap(kv map[string]interface{}) {
+func (o *ExportResponseIntegrationsEntityErrors) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -389,26 +377,6 @@ func (o *ExportResponseIntegrationsProjectErrors) FromMap(kv map[string]interfac
 		}
 	}
 
-	if val, ok := kv["readable_id"].(string); ok {
-		o.ReadableID = val
-	} else {
-		if val, ok := kv["readable_id"]; ok {
-			if val == nil {
-				o.ReadableID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ReadableID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
 	if val, ok := kv["error"].(string); ok {
 		o.Error = val
 	} else {
@@ -425,38 +393,6 @@ func (o *ExportResponseIntegrationsProjectErrors) FromMap(kv map[string]interfac
 					val = v
 				}
 				o.Error = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["has_git_repo"].(bool); ok {
-		o.HasGitRepo = val
-	} else {
-		if val, ok := kv["has_git_repo"]; ok {
-			if val == nil {
-				o.HasGitRepo = number.ToBoolAny(nil)
-			} else {
-				o.HasGitRepo = number.ToBoolAny(val)
-			}
-		}
-	}
-
-	if val, ok := kv["git_error"].(string); ok {
-		o.GitError = val
-	} else {
-		if val, ok := kv["git_error"]; ok {
-			if val == nil {
-				o.GitError = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.GitError = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -545,6 +481,8 @@ const (
 
 // ExportResponseIntegrations represents the object structure for integrations
 type ExportResponseIntegrations struct {
+	// EntityErrors export status and error per entity in the integration
+	EntityErrors []ExportResponseIntegrationsEntityErrors `json:"entity_errors" codec:"entity_errors" bson:"entity_errors" yaml:"entity_errors" faker:"-"`
 	// Error if set integration failed with this error
 	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
 	// ExportType the integration export type
@@ -553,8 +491,6 @@ type ExportResponseIntegrations struct {
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// Name the friendly name of the integration
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
-	// ProjectErrors export status and error per project
-	ProjectErrors []ExportResponseIntegrationsProjectErrors `json:"project_errors" codec:"project_errors" bson:"project_errors" yaml:"project_errors" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 	SystemType ExportResponseIntegrationsSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 }
@@ -564,15 +500,15 @@ func toExportResponseIntegrationsObject(o interface{}, isoptional bool) interfac
 	case *ExportResponseIntegrations:
 		return v.ToMap()
 
-	case ExportResponseIntegrationsExportType:
-		return v.String()
-
-	case []ExportResponseIntegrationsProjectErrors:
+	case []ExportResponseIntegrationsEntityErrors:
 		arr := make([]interface{}, 0)
 		for _, i := range v {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
+
+	case ExportResponseIntegrationsExportType:
+		return v.String()
 
 	case ExportResponseIntegrationsSystemType:
 		return v.String()
@@ -584,6 +520,8 @@ func toExportResponseIntegrationsObject(o interface{}, isoptional bool) interfac
 func (o *ExportResponseIntegrations) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
+		// EntityErrors export status and error per entity in the integration
+		"entity_errors": toExportResponseIntegrationsObject(o.EntityErrors, false),
 		// Error if set integration failed with this error
 		"error": toExportResponseIntegrationsObject(o.Error, false),
 		// ExportType the integration export type
@@ -592,8 +530,6 @@ func (o *ExportResponseIntegrations) ToMap() map[string]interface{} {
 		"integration_id": toExportResponseIntegrationsObject(o.IntegrationID, false),
 		// Name the friendly name of the integration
 		"name": toExportResponseIntegrationsObject(o.Name, false),
-		// ProjectErrors export status and error per project
-		"project_errors": toExportResponseIntegrationsObject(o.ProjectErrors, false),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 		"system_type": toExportResponseIntegrationsObject(o.SystemType, false),
 	}
@@ -612,6 +548,69 @@ func (o *ExportResponseIntegrations) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if o == nil {
+
+		o.EntityErrors = make([]ExportResponseIntegrationsEntityErrors, 0)
+
+	}
+	if val, ok := kv["entity_errors"]; ok {
+		if sv, ok := val.([]ExportResponseIntegrationsEntityErrors); ok {
+			o.EntityErrors = sv
+		} else if sp, ok := val.([]*ExportResponseIntegrationsEntityErrors); ok {
+			o.EntityErrors = o.EntityErrors[:0]
+			for _, e := range sp {
+				o.EntityErrors = append(o.EntityErrors, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ExportResponseIntegrationsEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ExportResponseIntegrationsEntityErrors
+					fm.FromMap(av)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av ExportResponseIntegrationsEntityErrors
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for entity_errors field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.EntityErrors = append(o.EntityErrors, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ExportResponseIntegrationsEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ExportResponseIntegrationsEntityErrors
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ExportResponseIntegrationsEntityErrors{}
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ExportResponseIntegrationsEntityErrors
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.EntityErrors = append(o.EntityErrors, fm)
+						}
+					}
+				}
+			}
+		}
 	}
 
 	if val, ok := kv["error"].(string); ok {
@@ -692,69 +691,6 @@ func (o *ExportResponseIntegrations) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Name = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if o == nil {
-
-		o.ProjectErrors = make([]ExportResponseIntegrationsProjectErrors, 0)
-
-	}
-	if val, ok := kv["project_errors"]; ok {
-		if sv, ok := val.([]ExportResponseIntegrationsProjectErrors); ok {
-			o.ProjectErrors = sv
-		} else if sp, ok := val.([]*ExportResponseIntegrationsProjectErrors); ok {
-			o.ProjectErrors = o.ProjectErrors[:0]
-			for _, e := range sp {
-				o.ProjectErrors = append(o.ProjectErrors, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(ExportResponseIntegrationsProjectErrors); ok {
-					o.ProjectErrors = append(o.ProjectErrors, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm ExportResponseIntegrationsProjectErrors
-					fm.FromMap(av)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					var av ExportResponseIntegrationsProjectErrors
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for project_errors field entry: " + reflect.TypeOf(ae).String())
-					}
-					o.ProjectErrors = append(o.ProjectErrors, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(ExportResponseIntegrationsProjectErrors); ok {
-					o.ProjectErrors = append(o.ProjectErrors, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm ExportResponseIntegrationsProjectErrors
-					fm.FromMap(r)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := ExportResponseIntegrationsProjectErrors{}
-					fm.FromMap(r)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm ExportResponseIntegrationsProjectErrors
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.ProjectErrors = append(o.ProjectErrors, fm)
-						}
-					}
-				}
 			}
 		}
 	}
@@ -1757,6 +1693,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1929,6 +1884,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

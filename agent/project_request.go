@@ -335,6 +335,115 @@ func (o *ProjectRequestIntegrationAuthorization) FromMap(kv map[string]interface
 	o.setDefaults(false)
 }
 
+// ProjectRequestIntegrationEntityErrors represents the object structure for entity_errors
+type ProjectRequestIntegrationEntityErrors struct {
+	// ID entity id
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
+	// RefID entity ref_id
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// Error error message if set integration failed when trying to export
+	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
+}
+
+func toProjectRequestIntegrationEntityErrorsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationEntityErrors:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *ProjectRequestIntegrationEntityErrors) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// ID entity id
+		"id": toProjectRequestIntegrationEntityErrorsObject(o.ID, false),
+		// RefID entity ref_id
+		"ref_id": toProjectRequestIntegrationEntityErrorsObject(o.RefID, false),
+		// Error error message if set integration failed when trying to export
+		"error": toProjectRequestIntegrationEntityErrorsObject(o.Error, false),
+	}
+}
+
+func (o *ProjectRequestIntegrationEntityErrors) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationEntityErrors) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["error"].(string); ok {
+		o.Error = val
+	} else {
+		if val, ok := kv["error"]; ok {
+			if val == nil {
+				o.Error = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Error = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // ProjectRequestIntegrationLocation is the enumeration type for location
 type ProjectRequestIntegrationLocation int32
 
@@ -692,179 +801,6 @@ func (o *ProjectRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// ProjectRequestIntegrationProjectErrors represents the object structure for project_errors
-type ProjectRequestIntegrationProjectErrors struct {
-	// ID project/repo id
-	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
-	// RefID project/repo ref_id
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// ReadableID project/repo unique name or readable id
-	ReadableID string `json:"readable_id" codec:"readable_id" bson:"readable_id" yaml:"readable_id" faker:"-"`
-	// Error if set integration failed when trying to export this project/repo
-	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
-	// HasGitRepo if true, ripsrc processing was called for this repo
-	HasGitRepo bool `json:"has_git_repo" codec:"has_git_repo" bson:"has_git_repo" yaml:"has_git_repo" faker:"-"`
-	// GitError if true, ripsrc failed on this repo
-	GitError string `json:"git_error" codec:"git_error" bson:"git_error" yaml:"git_error" faker:"-"`
-}
-
-func toProjectRequestIntegrationProjectErrorsObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ProjectRequestIntegrationProjectErrors:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *ProjectRequestIntegrationProjectErrors) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// ID project/repo id
-		"id": toProjectRequestIntegrationProjectErrorsObject(o.ID, false),
-		// RefID project/repo ref_id
-		"ref_id": toProjectRequestIntegrationProjectErrorsObject(o.RefID, false),
-		// ReadableID project/repo unique name or readable id
-		"readable_id": toProjectRequestIntegrationProjectErrorsObject(o.ReadableID, false),
-		// Error if set integration failed when trying to export this project/repo
-		"error": toProjectRequestIntegrationProjectErrorsObject(o.Error, false),
-		// HasGitRepo if true, ripsrc processing was called for this repo
-		"has_git_repo": toProjectRequestIntegrationProjectErrorsObject(o.HasGitRepo, false),
-		// GitError if true, ripsrc failed on this repo
-		"git_error": toProjectRequestIntegrationProjectErrorsObject(o.GitError, false),
-	}
-}
-
-func (o *ProjectRequestIntegrationProjectErrors) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ProjectRequestIntegrationProjectErrors) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	} else {
-		if val, ok := kv["ref_id"]; ok {
-			if val == nil {
-				o.RefID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.RefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["readable_id"].(string); ok {
-		o.ReadableID = val
-	} else {
-		if val, ok := kv["readable_id"]; ok {
-			if val == nil {
-				o.ReadableID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ReadableID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["error"].(string); ok {
-		o.Error = val
-	} else {
-		if val, ok := kv["error"]; ok {
-			if val == nil {
-				o.Error = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Error = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["has_git_repo"].(bool); ok {
-		o.HasGitRepo = val
-	} else {
-		if val, ok := kv["has_git_repo"]; ok {
-			if val == nil {
-				o.HasGitRepo = number.ToBoolAny(nil)
-			} else {
-				o.HasGitRepo = number.ToBoolAny(val)
-			}
-		}
-	}
-
-	if val, ok := kv["git_error"].(string); ok {
-		o.GitError = val
-	} else {
-		if val, ok := kv["git_error"]; ok {
-			if val == nil {
-				o.GitError = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.GitError = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // ProjectRequestIntegrationSystemType is the enumeration type for system_type
 type ProjectRequestIntegrationSystemType int32
 
@@ -1052,6 +988,8 @@ type ProjectRequestIntegration struct {
 	Authorization ProjectRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// EntityErrors export status and error per entity in the integration
+	EntityErrors []ProjectRequestIntegrationEntityErrors `json:"entity_errors" codec:"entity_errors" bson:"entity_errors" yaml:"entity_errors" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent
@@ -1076,8 +1014,6 @@ type ProjectRequestIntegration struct {
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 	// Progress Agent processing progress
 	Progress ProjectRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
-	// ProjectErrors export status and error per project
-	ProjectErrors []ProjectRequestIntegrationProjectErrors `json:"project_errors" codec:"project_errors" bson:"project_errors" yaml:"project_errors" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -1104,6 +1040,13 @@ func toProjectRequestIntegrationObject(o interface{}, isoptional bool) interface
 	case ProjectRequestIntegrationAuthorization:
 		return v.ToMap()
 
+	case []ProjectRequestIntegrationEntityErrors:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	case ProjectRequestIntegrationLocation:
 		return v.String()
 
@@ -1115,13 +1058,6 @@ func toProjectRequestIntegrationObject(o interface{}, isoptional bool) interface
 
 	case ProjectRequestIntegrationProgress:
 		return v.ToMap()
-
-	case []ProjectRequestIntegrationProjectErrors:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 
 	case ProjectRequestIntegrationSystemType:
 		return v.String()
@@ -1143,6 +1079,8 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"authorization": toProjectRequestIntegrationObject(o.Authorization, false),
 		// CustomerID the customer id for the model instance
 		"customer_id": toProjectRequestIntegrationObject(o.CustomerID, false),
+		// EntityErrors export status and error per entity in the integration
+		"entity_errors": toProjectRequestIntegrationObject(o.EntityErrors, false),
 		// ErrorMessage The error message from an export run
 		"error_message": toProjectRequestIntegrationObject(o.ErrorMessage, true),
 		// Errored If authorization failed by the agent
@@ -1167,8 +1105,6 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"organization": toProjectRequestIntegrationObject(o.Organization, true),
 		// Progress Agent processing progress
 		"progress": toProjectRequestIntegrationObject(o.Progress, false),
-		// ProjectErrors export status and error per project
-		"project_errors": toProjectRequestIntegrationObject(o.ProjectErrors, false),
 		// RefID the source system id for the model instance
 		"ref_id": toProjectRequestIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
@@ -1255,6 +1191,69 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.EntityErrors = make([]ProjectRequestIntegrationEntityErrors, 0)
+
+	}
+	if val, ok := kv["entity_errors"]; ok {
+		if sv, ok := val.([]ProjectRequestIntegrationEntityErrors); ok {
+			o.EntityErrors = sv
+		} else if sp, ok := val.([]*ProjectRequestIntegrationEntityErrors); ok {
+			o.EntityErrors = o.EntityErrors[:0]
+			for _, e := range sp {
+				o.EntityErrors = append(o.EntityErrors, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectRequestIntegrationEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectRequestIntegrationEntityErrors
+					fm.FromMap(av)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av ProjectRequestIntegrationEntityErrors
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for entity_errors field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.EntityErrors = append(o.EntityErrors, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectRequestIntegrationEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectRequestIntegrationEntityErrors
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectRequestIntegrationEntityErrors{}
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectRequestIntegrationEntityErrors
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.EntityErrors = append(o.EntityErrors, fm)
+						}
+					}
+				}
 			}
 		}
 	}
@@ -1567,69 +1566,6 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.Progress.FromMap(map[string]interface{}{})
-	}
-
-	if o == nil {
-
-		o.ProjectErrors = make([]ProjectRequestIntegrationProjectErrors, 0)
-
-	}
-	if val, ok := kv["project_errors"]; ok {
-		if sv, ok := val.([]ProjectRequestIntegrationProjectErrors); ok {
-			o.ProjectErrors = sv
-		} else if sp, ok := val.([]*ProjectRequestIntegrationProjectErrors); ok {
-			o.ProjectErrors = o.ProjectErrors[:0]
-			for _, e := range sp {
-				o.ProjectErrors = append(o.ProjectErrors, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(ProjectRequestIntegrationProjectErrors); ok {
-					o.ProjectErrors = append(o.ProjectErrors, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm ProjectRequestIntegrationProjectErrors
-					fm.FromMap(av)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					var av ProjectRequestIntegrationProjectErrors
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for project_errors field entry: " + reflect.TypeOf(ae).String())
-					}
-					o.ProjectErrors = append(o.ProjectErrors, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(ProjectRequestIntegrationProjectErrors); ok {
-					o.ProjectErrors = append(o.ProjectErrors, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm ProjectRequestIntegrationProjectErrors
-					fm.FromMap(r)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := ProjectRequestIntegrationProjectErrors{}
-					fm.FromMap(r)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm ProjectRequestIntegrationProjectErrors
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.ProjectErrors = append(o.ProjectErrors, fm)
-						}
-					}
-				}
-			}
-		}
 	}
 
 	if val, ok := kv["ref_id"].(string); ok {
@@ -1983,8 +1919,8 @@ func NewProjectRequestID(customerID string, refType string, refID string) string
 }
 
 func (o *ProjectRequest) setDefaults(frommap bool) {
-	if o.Integration.ProjectErrors == nil {
-		o.Integration.ProjectErrors = make([]ProjectRequestIntegrationProjectErrors, 0)
+	if o.Integration.EntityErrors == nil {
+		o.Integration.EntityErrors = make([]ProjectRequestIntegrationEntityErrors, 0)
 	}
 
 	if o.ID == "" {
@@ -2276,6 +2212,25 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

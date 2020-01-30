@@ -335,6 +335,115 @@ func (o *CodequalityRequestIntegrationAuthorization) FromMap(kv map[string]inter
 	o.setDefaults(false)
 }
 
+// CodequalityRequestIntegrationEntityErrors represents the object structure for entity_errors
+type CodequalityRequestIntegrationEntityErrors struct {
+	// ID entity id
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
+	// RefID entity ref_id
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// Error error message if set integration failed when trying to export
+	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
+}
+
+func toCodequalityRequestIntegrationEntityErrorsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *CodequalityRequestIntegrationEntityErrors:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *CodequalityRequestIntegrationEntityErrors) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// ID entity id
+		"id": toCodequalityRequestIntegrationEntityErrorsObject(o.ID, false),
+		// RefID entity ref_id
+		"ref_id": toCodequalityRequestIntegrationEntityErrorsObject(o.RefID, false),
+		// Error error message if set integration failed when trying to export
+		"error": toCodequalityRequestIntegrationEntityErrorsObject(o.Error, false),
+	}
+}
+
+func (o *CodequalityRequestIntegrationEntityErrors) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CodequalityRequestIntegrationEntityErrors) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["error"].(string); ok {
+		o.Error = val
+	} else {
+		if val, ok := kv["error"]; ok {
+			if val == nil {
+				o.Error = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Error = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // CodequalityRequestIntegrationLocation is the enumeration type for location
 type CodequalityRequestIntegrationLocation int32
 
@@ -692,179 +801,6 @@ func (o *CodequalityRequestIntegrationProgress) FromMap(kv map[string]interface{
 	o.setDefaults(false)
 }
 
-// CodequalityRequestIntegrationProjectErrors represents the object structure for project_errors
-type CodequalityRequestIntegrationProjectErrors struct {
-	// ID project/repo id
-	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
-	// RefID project/repo ref_id
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// ReadableID project/repo unique name or readable id
-	ReadableID string `json:"readable_id" codec:"readable_id" bson:"readable_id" yaml:"readable_id" faker:"-"`
-	// Error if set integration failed when trying to export this project/repo
-	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
-	// HasGitRepo if true, ripsrc processing was called for this repo
-	HasGitRepo bool `json:"has_git_repo" codec:"has_git_repo" bson:"has_git_repo" yaml:"has_git_repo" faker:"-"`
-	// GitError if true, ripsrc failed on this repo
-	GitError string `json:"git_error" codec:"git_error" bson:"git_error" yaml:"git_error" faker:"-"`
-}
-
-func toCodequalityRequestIntegrationProjectErrorsObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *CodequalityRequestIntegrationProjectErrors:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *CodequalityRequestIntegrationProjectErrors) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// ID project/repo id
-		"id": toCodequalityRequestIntegrationProjectErrorsObject(o.ID, false),
-		// RefID project/repo ref_id
-		"ref_id": toCodequalityRequestIntegrationProjectErrorsObject(o.RefID, false),
-		// ReadableID project/repo unique name or readable id
-		"readable_id": toCodequalityRequestIntegrationProjectErrorsObject(o.ReadableID, false),
-		// Error if set integration failed when trying to export this project/repo
-		"error": toCodequalityRequestIntegrationProjectErrorsObject(o.Error, false),
-		// HasGitRepo if true, ripsrc processing was called for this repo
-		"has_git_repo": toCodequalityRequestIntegrationProjectErrorsObject(o.HasGitRepo, false),
-		// GitError if true, ripsrc failed on this repo
-		"git_error": toCodequalityRequestIntegrationProjectErrorsObject(o.GitError, false),
-	}
-}
-
-func (o *CodequalityRequestIntegrationProjectErrors) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *CodequalityRequestIntegrationProjectErrors) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	} else {
-		if val, ok := kv["ref_id"]; ok {
-			if val == nil {
-				o.RefID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.RefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["readable_id"].(string); ok {
-		o.ReadableID = val
-	} else {
-		if val, ok := kv["readable_id"]; ok {
-			if val == nil {
-				o.ReadableID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ReadableID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["error"].(string); ok {
-		o.Error = val
-	} else {
-		if val, ok := kv["error"]; ok {
-			if val == nil {
-				o.Error = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Error = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["has_git_repo"].(bool); ok {
-		o.HasGitRepo = val
-	} else {
-		if val, ok := kv["has_git_repo"]; ok {
-			if val == nil {
-				o.HasGitRepo = number.ToBoolAny(nil)
-			} else {
-				o.HasGitRepo = number.ToBoolAny(val)
-			}
-		}
-	}
-
-	if val, ok := kv["git_error"].(string); ok {
-		o.GitError = val
-	} else {
-		if val, ok := kv["git_error"]; ok {
-			if val == nil {
-				o.GitError = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.GitError = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // CodequalityRequestIntegrationSystemType is the enumeration type for system_type
 type CodequalityRequestIntegrationSystemType int32
 
@@ -1052,6 +988,8 @@ type CodequalityRequestIntegration struct {
 	Authorization CodequalityRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// EntityErrors export status and error per entity in the integration
+	EntityErrors []CodequalityRequestIntegrationEntityErrors `json:"entity_errors" codec:"entity_errors" bson:"entity_errors" yaml:"entity_errors" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent
@@ -1076,8 +1014,6 @@ type CodequalityRequestIntegration struct {
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 	// Progress Agent processing progress
 	Progress CodequalityRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
-	// ProjectErrors export status and error per project
-	ProjectErrors []CodequalityRequestIntegrationProjectErrors `json:"project_errors" codec:"project_errors" bson:"project_errors" yaml:"project_errors" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -1104,6 +1040,13 @@ func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) inter
 	case CodequalityRequestIntegrationAuthorization:
 		return v.ToMap()
 
+	case []CodequalityRequestIntegrationEntityErrors:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	case CodequalityRequestIntegrationLocation:
 		return v.String()
 
@@ -1115,13 +1058,6 @@ func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) inter
 
 	case CodequalityRequestIntegrationProgress:
 		return v.ToMap()
-
-	case []CodequalityRequestIntegrationProjectErrors:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 
 	case CodequalityRequestIntegrationSystemType:
 		return v.String()
@@ -1143,6 +1079,8 @@ func (o *CodequalityRequestIntegration) ToMap() map[string]interface{} {
 		"authorization": toCodequalityRequestIntegrationObject(o.Authorization, false),
 		// CustomerID the customer id for the model instance
 		"customer_id": toCodequalityRequestIntegrationObject(o.CustomerID, false),
+		// EntityErrors export status and error per entity in the integration
+		"entity_errors": toCodequalityRequestIntegrationObject(o.EntityErrors, false),
 		// ErrorMessage The error message from an export run
 		"error_message": toCodequalityRequestIntegrationObject(o.ErrorMessage, true),
 		// Errored If authorization failed by the agent
@@ -1167,8 +1105,6 @@ func (o *CodequalityRequestIntegration) ToMap() map[string]interface{} {
 		"organization": toCodequalityRequestIntegrationObject(o.Organization, true),
 		// Progress Agent processing progress
 		"progress": toCodequalityRequestIntegrationObject(o.Progress, false),
-		// ProjectErrors export status and error per project
-		"project_errors": toCodequalityRequestIntegrationObject(o.ProjectErrors, false),
 		// RefID the source system id for the model instance
 		"ref_id": toCodequalityRequestIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
@@ -1255,6 +1191,69 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.EntityErrors = make([]CodequalityRequestIntegrationEntityErrors, 0)
+
+	}
+	if val, ok := kv["entity_errors"]; ok {
+		if sv, ok := val.([]CodequalityRequestIntegrationEntityErrors); ok {
+			o.EntityErrors = sv
+		} else if sp, ok := val.([]*CodequalityRequestIntegrationEntityErrors); ok {
+			o.EntityErrors = o.EntityErrors[:0]
+			for _, e := range sp {
+				o.EntityErrors = append(o.EntityErrors, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(CodequalityRequestIntegrationEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm CodequalityRequestIntegrationEntityErrors
+					fm.FromMap(av)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av CodequalityRequestIntegrationEntityErrors
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for entity_errors field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.EntityErrors = append(o.EntityErrors, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(CodequalityRequestIntegrationEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm CodequalityRequestIntegrationEntityErrors
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := CodequalityRequestIntegrationEntityErrors{}
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm CodequalityRequestIntegrationEntityErrors
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.EntityErrors = append(o.EntityErrors, fm)
+						}
+					}
+				}
 			}
 		}
 	}
@@ -1567,69 +1566,6 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.Progress.FromMap(map[string]interface{}{})
-	}
-
-	if o == nil {
-
-		o.ProjectErrors = make([]CodequalityRequestIntegrationProjectErrors, 0)
-
-	}
-	if val, ok := kv["project_errors"]; ok {
-		if sv, ok := val.([]CodequalityRequestIntegrationProjectErrors); ok {
-			o.ProjectErrors = sv
-		} else if sp, ok := val.([]*CodequalityRequestIntegrationProjectErrors); ok {
-			o.ProjectErrors = o.ProjectErrors[:0]
-			for _, e := range sp {
-				o.ProjectErrors = append(o.ProjectErrors, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(CodequalityRequestIntegrationProjectErrors); ok {
-					o.ProjectErrors = append(o.ProjectErrors, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm CodequalityRequestIntegrationProjectErrors
-					fm.FromMap(av)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					var av CodequalityRequestIntegrationProjectErrors
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for project_errors field entry: " + reflect.TypeOf(ae).String())
-					}
-					o.ProjectErrors = append(o.ProjectErrors, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(CodequalityRequestIntegrationProjectErrors); ok {
-					o.ProjectErrors = append(o.ProjectErrors, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm CodequalityRequestIntegrationProjectErrors
-					fm.FromMap(r)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := CodequalityRequestIntegrationProjectErrors{}
-					fm.FromMap(r)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm CodequalityRequestIntegrationProjectErrors
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.ProjectErrors = append(o.ProjectErrors, fm)
-						}
-					}
-				}
-			}
-		}
 	}
 
 	if val, ok := kv["ref_id"].(string); ok {
@@ -1983,8 +1919,8 @@ func NewCodequalityRequestID(customerID string, refType string, refID string) st
 }
 
 func (o *CodequalityRequest) setDefaults(frommap bool) {
-	if o.Integration.ProjectErrors == nil {
-		o.Integration.ProjectErrors = make([]CodequalityRequestIntegrationProjectErrors, 0)
+	if o.Integration.EntityErrors == nil {
+		o.Integration.EntityErrors = make([]CodequalityRequestIntegrationEntityErrors, 0)
 	}
 
 	if o.ID == "" {

@@ -335,6 +335,115 @@ func (o *ExportRequestIntegrationsAuthorization) FromMap(kv map[string]interface
 	o.setDefaults(false)
 }
 
+// ExportRequestIntegrationsEntityErrors represents the object structure for entity_errors
+type ExportRequestIntegrationsEntityErrors struct {
+	// ID entity id
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
+	// RefID entity ref_id
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// Error error message if set integration failed when trying to export
+	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
+}
+
+func toExportRequestIntegrationsEntityErrorsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ExportRequestIntegrationsEntityErrors:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *ExportRequestIntegrationsEntityErrors) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// ID entity id
+		"id": toExportRequestIntegrationsEntityErrorsObject(o.ID, false),
+		// RefID entity ref_id
+		"ref_id": toExportRequestIntegrationsEntityErrorsObject(o.RefID, false),
+		// Error error message if set integration failed when trying to export
+		"error": toExportRequestIntegrationsEntityErrorsObject(o.Error, false),
+	}
+}
+
+func (o *ExportRequestIntegrationsEntityErrors) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportRequestIntegrationsEntityErrors) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["error"].(string); ok {
+		o.Error = val
+	} else {
+		if val, ok := kv["error"]; ok {
+			if val == nil {
+				o.Error = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Error = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // ExportRequestIntegrationsLocation is the enumeration type for location
 type ExportRequestIntegrationsLocation int32
 
@@ -692,179 +801,6 @@ func (o *ExportRequestIntegrationsProgress) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// ExportRequestIntegrationsProjectErrors represents the object structure for project_errors
-type ExportRequestIntegrationsProjectErrors struct {
-	// ID project/repo id
-	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
-	// RefID project/repo ref_id
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// ReadableID project/repo unique name or readable id
-	ReadableID string `json:"readable_id" codec:"readable_id" bson:"readable_id" yaml:"readable_id" faker:"-"`
-	// Error if set integration failed when trying to export this project/repo
-	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
-	// HasGitRepo if true, ripsrc processing was called for this repo
-	HasGitRepo bool `json:"has_git_repo" codec:"has_git_repo" bson:"has_git_repo" yaml:"has_git_repo" faker:"-"`
-	// GitError if true, ripsrc failed on this repo
-	GitError string `json:"git_error" codec:"git_error" bson:"git_error" yaml:"git_error" faker:"-"`
-}
-
-func toExportRequestIntegrationsProjectErrorsObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ExportRequestIntegrationsProjectErrors:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *ExportRequestIntegrationsProjectErrors) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// ID project/repo id
-		"id": toExportRequestIntegrationsProjectErrorsObject(o.ID, false),
-		// RefID project/repo ref_id
-		"ref_id": toExportRequestIntegrationsProjectErrorsObject(o.RefID, false),
-		// ReadableID project/repo unique name or readable id
-		"readable_id": toExportRequestIntegrationsProjectErrorsObject(o.ReadableID, false),
-		// Error if set integration failed when trying to export this project/repo
-		"error": toExportRequestIntegrationsProjectErrorsObject(o.Error, false),
-		// HasGitRepo if true, ripsrc processing was called for this repo
-		"has_git_repo": toExportRequestIntegrationsProjectErrorsObject(o.HasGitRepo, false),
-		// GitError if true, ripsrc failed on this repo
-		"git_error": toExportRequestIntegrationsProjectErrorsObject(o.GitError, false),
-	}
-}
-
-func (o *ExportRequestIntegrationsProjectErrors) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ExportRequestIntegrationsProjectErrors) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	} else {
-		if val, ok := kv["ref_id"]; ok {
-			if val == nil {
-				o.RefID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.RefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["readable_id"].(string); ok {
-		o.ReadableID = val
-	} else {
-		if val, ok := kv["readable_id"]; ok {
-			if val == nil {
-				o.ReadableID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ReadableID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["error"].(string); ok {
-		o.Error = val
-	} else {
-		if val, ok := kv["error"]; ok {
-			if val == nil {
-				o.Error = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Error = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["has_git_repo"].(bool); ok {
-		o.HasGitRepo = val
-	} else {
-		if val, ok := kv["has_git_repo"]; ok {
-			if val == nil {
-				o.HasGitRepo = number.ToBoolAny(nil)
-			} else {
-				o.HasGitRepo = number.ToBoolAny(val)
-			}
-		}
-	}
-
-	if val, ok := kv["git_error"].(string); ok {
-		o.GitError = val
-	} else {
-		if val, ok := kv["git_error"]; ok {
-			if val == nil {
-				o.GitError = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.GitError = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // ExportRequestIntegrationsSystemType is the enumeration type for system_type
 type ExportRequestIntegrationsSystemType int32
 
@@ -1052,6 +988,8 @@ type ExportRequestIntegrations struct {
 	Authorization ExportRequestIntegrationsAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// EntityErrors export status and error per entity in the integration
+	EntityErrors []ExportRequestIntegrationsEntityErrors `json:"entity_errors" codec:"entity_errors" bson:"entity_errors" yaml:"entity_errors" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent
@@ -1076,8 +1014,6 @@ type ExportRequestIntegrations struct {
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 	// Progress Agent processing progress
 	Progress ExportRequestIntegrationsProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
-	// ProjectErrors export status and error per project
-	ProjectErrors []ExportRequestIntegrationsProjectErrors `json:"project_errors" codec:"project_errors" bson:"project_errors" yaml:"project_errors" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -1104,6 +1040,13 @@ func toExportRequestIntegrationsObject(o interface{}, isoptional bool) interface
 	case ExportRequestIntegrationsAuthorization:
 		return v.ToMap()
 
+	case []ExportRequestIntegrationsEntityErrors:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	case ExportRequestIntegrationsLocation:
 		return v.String()
 
@@ -1115,13 +1058,6 @@ func toExportRequestIntegrationsObject(o interface{}, isoptional bool) interface
 
 	case ExportRequestIntegrationsProgress:
 		return v.ToMap()
-
-	case []ExportRequestIntegrationsProjectErrors:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 
 	case ExportRequestIntegrationsSystemType:
 		return v.String()
@@ -1143,6 +1079,8 @@ func (o *ExportRequestIntegrations) ToMap() map[string]interface{} {
 		"authorization": toExportRequestIntegrationsObject(o.Authorization, false),
 		// CustomerID the customer id for the model instance
 		"customer_id": toExportRequestIntegrationsObject(o.CustomerID, false),
+		// EntityErrors export status and error per entity in the integration
+		"entity_errors": toExportRequestIntegrationsObject(o.EntityErrors, false),
 		// ErrorMessage The error message from an export run
 		"error_message": toExportRequestIntegrationsObject(o.ErrorMessage, true),
 		// Errored If authorization failed by the agent
@@ -1167,8 +1105,6 @@ func (o *ExportRequestIntegrations) ToMap() map[string]interface{} {
 		"organization": toExportRequestIntegrationsObject(o.Organization, true),
 		// Progress Agent processing progress
 		"progress": toExportRequestIntegrationsObject(o.Progress, false),
-		// ProjectErrors export status and error per project
-		"project_errors": toExportRequestIntegrationsObject(o.ProjectErrors, false),
 		// RefID the source system id for the model instance
 		"ref_id": toExportRequestIntegrationsObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
@@ -1255,6 +1191,69 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.EntityErrors = make([]ExportRequestIntegrationsEntityErrors, 0)
+
+	}
+	if val, ok := kv["entity_errors"]; ok {
+		if sv, ok := val.([]ExportRequestIntegrationsEntityErrors); ok {
+			o.EntityErrors = sv
+		} else if sp, ok := val.([]*ExportRequestIntegrationsEntityErrors); ok {
+			o.EntityErrors = o.EntityErrors[:0]
+			for _, e := range sp {
+				o.EntityErrors = append(o.EntityErrors, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ExportRequestIntegrationsEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ExportRequestIntegrationsEntityErrors
+					fm.FromMap(av)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av ExportRequestIntegrationsEntityErrors
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for entity_errors field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.EntityErrors = append(o.EntityErrors, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ExportRequestIntegrationsEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ExportRequestIntegrationsEntityErrors
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ExportRequestIntegrationsEntityErrors{}
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ExportRequestIntegrationsEntityErrors
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.EntityErrors = append(o.EntityErrors, fm)
+						}
+					}
+				}
 			}
 		}
 	}
@@ -1567,69 +1566,6 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.Progress.FromMap(map[string]interface{}{})
-	}
-
-	if o == nil {
-
-		o.ProjectErrors = make([]ExportRequestIntegrationsProjectErrors, 0)
-
-	}
-	if val, ok := kv["project_errors"]; ok {
-		if sv, ok := val.([]ExportRequestIntegrationsProjectErrors); ok {
-			o.ProjectErrors = sv
-		} else if sp, ok := val.([]*ExportRequestIntegrationsProjectErrors); ok {
-			o.ProjectErrors = o.ProjectErrors[:0]
-			for _, e := range sp {
-				o.ProjectErrors = append(o.ProjectErrors, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(ExportRequestIntegrationsProjectErrors); ok {
-					o.ProjectErrors = append(o.ProjectErrors, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm ExportRequestIntegrationsProjectErrors
-					fm.FromMap(av)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					var av ExportRequestIntegrationsProjectErrors
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for project_errors field entry: " + reflect.TypeOf(ae).String())
-					}
-					o.ProjectErrors = append(o.ProjectErrors, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(ExportRequestIntegrationsProjectErrors); ok {
-					o.ProjectErrors = append(o.ProjectErrors, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm ExportRequestIntegrationsProjectErrors
-					fm.FromMap(r)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := ExportRequestIntegrationsProjectErrors{}
-					fm.FromMap(r)
-					o.ProjectErrors = append(o.ProjectErrors, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm ExportRequestIntegrationsProjectErrors
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.ProjectErrors = append(o.ProjectErrors, fm)
-						}
-					}
-				}
-			}
-		}
 	}
 
 	if val, ok := kv["ref_id"].(string); ok {
