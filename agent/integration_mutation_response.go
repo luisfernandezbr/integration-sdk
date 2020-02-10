@@ -1,6 +1,6 @@
 // DO NOT EDIT -- generated code
 
-// Package agent - the agent communicates with pinpoint cloud to send integration data
+// Package agent -
 package agent
 
 import (
@@ -20,18 +20,18 @@ import (
 )
 
 const (
-	// StartTopic is the default topic name
-	StartTopic datamodel.TopicNameType = "agent_Start_topic"
+	// IntegrationMutationResponseTopic is the default topic name
+	IntegrationMutationResponseTopic datamodel.TopicNameType = "agent_IntegrationMutationResponse_topic"
 
-	// StartTable is the default table name
-	StartTable datamodel.ModelNameType = "agent_start"
+	// IntegrationMutationResponseTable is the default table name
+	IntegrationMutationResponseTable datamodel.ModelNameType = "agent_integrationmutationresponse"
 
-	// StartModelName is the model name
-	StartModelName datamodel.ModelNameType = "agent.Start"
+	// IntegrationMutationResponseModelName is the model name
+	IntegrationMutationResponseModelName datamodel.ModelNameType = "agent.IntegrationMutationResponse"
 )
 
-// StartEventDate represents the object structure for event_date
-type StartEventDate struct {
+// IntegrationMutationResponseEventDate represents the object structure for event_date
+type IntegrationMutationResponseEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -40,9 +40,9 @@ type StartEventDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toStartEventDateObject(o interface{}, isoptional bool) interface{} {
+func toIntegrationMutationResponseEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *StartEventDate:
+	case *IntegrationMutationResponseEventDate:
 		return v.ToMap()
 
 	default:
@@ -50,19 +50,19 @@ func toStartEventDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-func (o *StartEventDate) ToMap() map[string]interface{} {
+func (o *IntegrationMutationResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toStartEventDateObject(o.Epoch, false),
+		"epoch": toIntegrationMutationResponseEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toStartEventDateObject(o.Offset, false),
+		"offset": toIntegrationMutationResponseEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toStartEventDateObject(o.Rfc3339, false),
+		"rfc3339": toIntegrationMutationResponseEventDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *StartEventDate) setDefaults(frommap bool) {
+func (o *IntegrationMutationResponseEventDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -70,7 +70,7 @@ func (o *StartEventDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *StartEventDate) FromMap(kv map[string]interface{}) {
+func (o *IntegrationMutationResponseEventDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -129,8 +129,8 @@ func (o *StartEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// StartLastExportDate represents the object structure for last_export_date
-type StartLastExportDate struct {
+// IntegrationMutationResponseLastExportDate represents the object structure for last_export_date
+type IntegrationMutationResponseLastExportDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -139,9 +139,9 @@ type StartLastExportDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toStartLastExportDateObject(o interface{}, isoptional bool) interface{} {
+func toIntegrationMutationResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *StartLastExportDate:
+	case *IntegrationMutationResponseLastExportDate:
 		return v.ToMap()
 
 	default:
@@ -149,19 +149,19 @@ func toStartLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-func (o *StartLastExportDate) ToMap() map[string]interface{} {
+func (o *IntegrationMutationResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toStartLastExportDateObject(o.Epoch, false),
+		"epoch": toIntegrationMutationResponseLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toStartLastExportDateObject(o.Offset, false),
+		"offset": toIntegrationMutationResponseLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toStartLastExportDateObject(o.Rfc3339, false),
+		"rfc3339": toIntegrationMutationResponseLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *StartLastExportDate) setDefaults(frommap bool) {
+func (o *IntegrationMutationResponseLastExportDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -169,7 +169,7 @@ func (o *StartLastExportDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *StartLastExportDate) FromMap(kv map[string]interface{}) {
+func (o *IntegrationMutationResponseLastExportDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -228,54 +228,54 @@ func (o *StartLastExportDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// StartType is the enumeration type for type
-type StartType int32
+// IntegrationMutationResponseType is the enumeration type for type
+type IntegrationMutationResponseType int32
 
 // UnmarshalBSONValue for unmarshaling value
-func (v *StartType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+func (v *IntegrationMutationResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
 	switch t {
 	case bsontype.Int32:
-		*v = StartType(val.Int32())
+		*v = IntegrationMutationResponseType(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
 		case "ENROLL":
-			*v = StartType(0)
+			*v = IntegrationMutationResponseType(0)
 		case "PING":
-			*v = StartType(1)
+			*v = IntegrationMutationResponseType(1)
 		case "CRASH":
-			*v = StartType(2)
+			*v = IntegrationMutationResponseType(2)
 		case "LOG":
-			*v = StartType(3)
+			*v = IntegrationMutationResponseType(3)
 		case "INTEGRATION":
-			*v = StartType(4)
+			*v = IntegrationMutationResponseType(4)
 		case "EXPORT":
-			*v = StartType(5)
+			*v = IntegrationMutationResponseType(5)
 		case "PROJECT":
-			*v = StartType(6)
+			*v = IntegrationMutationResponseType(6)
 		case "REPO":
-			*v = StartType(7)
+			*v = IntegrationMutationResponseType(7)
 		case "USER":
-			*v = StartType(8)
+			*v = IntegrationMutationResponseType(8)
 		case "UNINSTALL":
-			*v = StartType(9)
+			*v = IntegrationMutationResponseType(9)
 		case "UPGRADE":
-			*v = StartType(10)
+			*v = IntegrationMutationResponseType(10)
 		case "START":
-			*v = StartType(11)
+			*v = IntegrationMutationResponseType(11)
 		case "STOP":
-			*v = StartType(12)
+			*v = IntegrationMutationResponseType(12)
 		case "PAUSE":
-			*v = StartType(13)
+			*v = IntegrationMutationResponseType(13)
 		case "RESUME":
-			*v = StartType(14)
+			*v = IntegrationMutationResponseType(14)
 		}
 	}
 	return nil
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v StartType) UnmarshalJSON(buf []byte) error {
+func (v IntegrationMutationResponseType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -312,7 +312,7 @@ func (v StartType) UnmarshalJSON(buf []byte) error {
 }
 
 // MarshalJSON marshals the enum value
-func (v StartType) MarshalJSON() ([]byte, error) {
+func (v IntegrationMutationResponseType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
 		return json.Marshal("ENROLL")
@@ -349,7 +349,7 @@ func (v StartType) MarshalJSON() ([]byte, error) {
 }
 
 // String returns the string value for Type
-func (v StartType) String() string {
+func (v IntegrationMutationResponseType) String() string {
 	switch int32(v) {
 	case 0:
 		return "ENROLL"
@@ -387,39 +387,39 @@ func (v StartType) String() string {
 
 const (
 	// TypeEnroll is the enumeration value for enroll
-	StartTypeEnroll StartType = 0
+	IntegrationMutationResponseTypeEnroll IntegrationMutationResponseType = 0
 	// TypePing is the enumeration value for ping
-	StartTypePing StartType = 1
+	IntegrationMutationResponseTypePing IntegrationMutationResponseType = 1
 	// TypeCrash is the enumeration value for crash
-	StartTypeCrash StartType = 2
+	IntegrationMutationResponseTypeCrash IntegrationMutationResponseType = 2
 	// TypeLog is the enumeration value for log
-	StartTypeLog StartType = 3
+	IntegrationMutationResponseTypeLog IntegrationMutationResponseType = 3
 	// TypeIntegration is the enumeration value for integration
-	StartTypeIntegration StartType = 4
+	IntegrationMutationResponseTypeIntegration IntegrationMutationResponseType = 4
 	// TypeExport is the enumeration value for export
-	StartTypeExport StartType = 5
+	IntegrationMutationResponseTypeExport IntegrationMutationResponseType = 5
 	// TypeProject is the enumeration value for project
-	StartTypeProject StartType = 6
+	IntegrationMutationResponseTypeProject IntegrationMutationResponseType = 6
 	// TypeRepo is the enumeration value for repo
-	StartTypeRepo StartType = 7
+	IntegrationMutationResponseTypeRepo IntegrationMutationResponseType = 7
 	// TypeUser is the enumeration value for user
-	StartTypeUser StartType = 8
+	IntegrationMutationResponseTypeUser IntegrationMutationResponseType = 8
 	// TypeUninstall is the enumeration value for uninstall
-	StartTypeUninstall StartType = 9
+	IntegrationMutationResponseTypeUninstall IntegrationMutationResponseType = 9
 	// TypeUpgrade is the enumeration value for upgrade
-	StartTypeUpgrade StartType = 10
+	IntegrationMutationResponseTypeUpgrade IntegrationMutationResponseType = 10
 	// TypeStart is the enumeration value for start
-	StartTypeStart StartType = 11
+	IntegrationMutationResponseTypeStart IntegrationMutationResponseType = 11
 	// TypeStop is the enumeration value for stop
-	StartTypeStop StartType = 12
+	IntegrationMutationResponseTypeStop IntegrationMutationResponseType = 12
 	// TypePause is the enumeration value for pause
-	StartTypePause StartType = 13
+	IntegrationMutationResponseTypePause IntegrationMutationResponseType = 13
 	// TypeResume is the enumeration value for resume
-	StartTypeResume StartType = 14
+	IntegrationMutationResponseTypeResume IntegrationMutationResponseType = 14
 )
 
-// Start an agent event which is sent on start
-type Start struct {
+// IntegrationMutationResponse response for mutation request going from agent back to agent service
+type IntegrationMutationResponse struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -431,7 +431,7 @@ type Start struct {
 	// Error an error message related to this event
 	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate StartEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate IntegrationMutationResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -440,8 +440,10 @@ type Start struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// JobID The job ID
+	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate StartLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate IntegrationMutationResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -461,7 +463,9 @@ type Start struct {
 	// SystemID system unique device ID
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type StartType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type IntegrationMutationResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	// UpdatedObjects Updated objects as JSON map[type][]object
+	UpdatedObjects string `json:"updated_objects" codec:"updated_objects" bson:"updated_objects" yaml:"updated_objects" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
@@ -475,23 +479,23 @@ type Start struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Start)(nil)
+var _ datamodel.Model = (*IntegrationMutationResponse)(nil)
 
 // ensure that this type implements the streamed data model interface
-var _ datamodel.StreamedModel = (*Start)(nil)
+var _ datamodel.StreamedModel = (*IntegrationMutationResponse)(nil)
 
-func toStartObject(o interface{}, isoptional bool) interface{} {
+func toIntegrationMutationResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *Start:
+	case *IntegrationMutationResponse:
 		return v.ToMap()
 
-	case StartEventDate:
+	case IntegrationMutationResponseEventDate:
 		return v.ToMap()
 
-	case StartLastExportDate:
+	case IntegrationMutationResponseLastExportDate:
 		return v.ToMap()
 
-	case StartType:
+	case IntegrationMutationResponseType:
 		return v.String()
 
 	default:
@@ -499,37 +503,37 @@ func toStartObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-// String returns a string representation of Start
-func (o *Start) String() string {
-	return fmt.Sprintf("agent.Start<%s>", o.ID)
+// String returns a string representation of IntegrationMutationResponse
+func (o *IntegrationMutationResponse) String() string {
+	return fmt.Sprintf("agent.IntegrationMutationResponse<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Start) GetTopicName() datamodel.TopicNameType {
-	return StartTopic
+func (o *IntegrationMutationResponse) GetTopicName() datamodel.TopicNameType {
+	return IntegrationMutationResponseTopic
 }
 
 // GetStreamName returns the name of the stream
-func (o *Start) GetStreamName() string {
+func (o *IntegrationMutationResponse) GetStreamName() string {
 	return ""
 }
 
 // GetTableName returns the name of the table
-func (o *Start) GetTableName() string {
+func (o *IntegrationMutationResponse) GetTableName() string {
 	return ""
 }
 
 // GetModelName returns the name of the model
-func (o *Start) GetModelName() datamodel.ModelNameType {
-	return StartModelName
+func (o *IntegrationMutationResponse) GetModelName() datamodel.ModelNameType {
+	return IntegrationMutationResponseModelName
 }
 
-// NewStartID provides a template for generating an ID field for Start
-func NewStartID(customerID string, refType string, refID string) string {
-	return hash.Values("Start", customerID, refType, refID)
+// NewIntegrationMutationResponseID provides a template for generating an ID field for IntegrationMutationResponse
+func NewIntegrationMutationResponseID(customerID string, refType string, refID string) string {
+	return hash.Values("IntegrationMutationResponse", customerID, refType, refID)
 }
 
-func (o *Start) setDefaults(frommap bool) {
+func (o *IntegrationMutationResponse) setDefaults(frommap bool) {
 	if o.Data == nil {
 		o.Data = pstrings.Pointer("")
 	}
@@ -539,7 +543,7 @@ func (o *Start) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Start", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("IntegrationMutationResponse", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -550,12 +554,12 @@ func (o *Start) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *Start) GetID() string {
+func (o *IntegrationMutationResponse) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Start) GetTopicKey() string {
+func (o *IntegrationMutationResponse) GetTopicKey() string {
 	var i interface{} = o.UUID
 	if s, ok := i.(string); ok {
 		return s
@@ -564,7 +568,7 @@ func (o *Start) GetTopicKey() string {
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Start) GetTimestamp() time.Time {
+func (o *IntegrationMutationResponse) GetTimestamp() time.Time {
 	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
@@ -578,42 +582,42 @@ func (o *Start) GetTimestamp() time.Time {
 	case time.Time:
 		return v.UTC()
 	}
-	panic("not sure how to handle the date time format for Start")
+	panic("not sure how to handle the date time format for IntegrationMutationResponse")
 }
 
 // GetRefID returns the RefID for the object
-func (o *Start) GetRefID() string {
+func (o *IntegrationMutationResponse) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Start) IsMaterialized() bool {
+func (o *IntegrationMutationResponse) IsMaterialized() bool {
 	return false
 }
 
 // IsMutable returns true if the model is mutable
-func (o *Start) IsMutable() bool {
+func (o *IntegrationMutationResponse) IsMutable() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Start) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *IntegrationMutationResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Start) IsEvented() bool {
+func (o *IntegrationMutationResponse) IsEvented() bool {
 	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
-func (o *Start) SetEventHeaders(kv map[string]string) {
+func (o *IntegrationMutationResponse) SetEventHeaders(kv map[string]string) {
 	kv["customer_id"] = o.CustomerID
-	kv["model"] = StartModelName.String()
+	kv["model"] = IntegrationMutationResponseModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Start) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *IntegrationMutationResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	retention, err := time.ParseDuration("87360h0m0s")
 	if err != nil {
 		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
@@ -639,22 +643,22 @@ func (o *Start) GetTopicConfig() *datamodel.ModelTopicConfig {
 }
 
 // GetCustomerID will return the customer_id
-func (o *Start) GetCustomerID() string {
+func (o *IntegrationMutationResponse) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Start
-func (o *Start) Clone() datamodel.Model {
-	c := new(Start)
+// Clone returns an exact copy of IntegrationMutationResponse
+func (o *IntegrationMutationResponse) Clone() datamodel.Model {
+	c := new(IntegrationMutationResponse)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Start) Anon() datamodel.Model {
-	c := new(Start)
+func (o *IntegrationMutationResponse) Anon() datamodel.Model {
+	c := new(IntegrationMutationResponse)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -669,12 +673,12 @@ func (o *Start) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Start) MarshalJSON() ([]byte, error) {
+func (o *IntegrationMutationResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Start) UnmarshalJSON(data []byte) error {
+func (o *IntegrationMutationResponse) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -687,52 +691,54 @@ func (o *Start) UnmarshalJSON(data []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Start) Stringify() string {
+func (o *IntegrationMutationResponse) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
-// IsEqual returns true if the two Start objects are equal
-func (o *Start) IsEqual(other *Start) bool {
+// IsEqual returns true if the two IntegrationMutationResponse objects are equal
+func (o *IntegrationMutationResponse) IsEqual(other *IntegrationMutationResponse) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Start) ToMap() map[string]interface{} {
+func (o *IntegrationMutationResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toStartObject(o.Architecture, false),
-		"customer_id":      toStartObject(o.CustomerID, false),
-		"data":             toStartObject(o.Data, true),
-		"distro":           toStartObject(o.Distro, false),
-		"error":            toStartObject(o.Error, true),
-		"event_date":       toStartObject(o.EventDate, false),
-		"free_space":       toStartObject(o.FreeSpace, false),
-		"go_version":       toStartObject(o.GoVersion, false),
-		"hostname":         toStartObject(o.Hostname, false),
-		"id":               toStartObject(o.ID, false),
-		"last_export_date": toStartObject(o.LastExportDate, false),
-		"memory":           toStartObject(o.Memory, false),
-		"message":          toStartObject(o.Message, false),
-		"num_cpu":          toStartObject(o.NumCPU, false),
-		"os":               toStartObject(o.OS, false),
-		"ref_id":           toStartObject(o.RefID, false),
-		"ref_type":         toStartObject(o.RefType, false),
-		"request_id":       toStartObject(o.RequestID, false),
-		"success":          toStartObject(o.Success, false),
-		"system_id":        toStartObject(o.SystemID, false),
+		"architecture":     toIntegrationMutationResponseObject(o.Architecture, false),
+		"customer_id":      toIntegrationMutationResponseObject(o.CustomerID, false),
+		"data":             toIntegrationMutationResponseObject(o.Data, true),
+		"distro":           toIntegrationMutationResponseObject(o.Distro, false),
+		"error":            toIntegrationMutationResponseObject(o.Error, true),
+		"event_date":       toIntegrationMutationResponseObject(o.EventDate, false),
+		"free_space":       toIntegrationMutationResponseObject(o.FreeSpace, false),
+		"go_version":       toIntegrationMutationResponseObject(o.GoVersion, false),
+		"hostname":         toIntegrationMutationResponseObject(o.Hostname, false),
+		"id":               toIntegrationMutationResponseObject(o.ID, false),
+		"job_id":           toIntegrationMutationResponseObject(o.JobID, false),
+		"last_export_date": toIntegrationMutationResponseObject(o.LastExportDate, false),
+		"memory":           toIntegrationMutationResponseObject(o.Memory, false),
+		"message":          toIntegrationMutationResponseObject(o.Message, false),
+		"num_cpu":          toIntegrationMutationResponseObject(o.NumCPU, false),
+		"os":               toIntegrationMutationResponseObject(o.OS, false),
+		"ref_id":           toIntegrationMutationResponseObject(o.RefID, false),
+		"ref_type":         toIntegrationMutationResponseObject(o.RefType, false),
+		"request_id":       toIntegrationMutationResponseObject(o.RequestID, false),
+		"success":          toIntegrationMutationResponseObject(o.Success, false),
+		"system_id":        toIntegrationMutationResponseObject(o.SystemID, false),
 
-		"type":       o.Type.String(),
-		"updated_ts": toStartObject(o.UpdatedAt, false),
-		"uptime":     toStartObject(o.Uptime, false),
-		"uuid":       toStartObject(o.UUID, false),
-		"version":    toStartObject(o.Version, false),
-		"hashcode":   toStartObject(o.Hashcode, false),
+		"type":            o.Type.String(),
+		"updated_objects": toIntegrationMutationResponseObject(o.UpdatedObjects, false),
+		"updated_ts":      toIntegrationMutationResponseObject(o.UpdatedAt, false),
+		"uptime":          toIntegrationMutationResponseObject(o.Uptime, false),
+		"uuid":            toIntegrationMutationResponseObject(o.UUID, false),
+		"version":         toIntegrationMutationResponseObject(o.Version, false),
+		"hashcode":        toIntegrationMutationResponseObject(o.Hashcode, false),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Start) FromMap(kv map[string]interface{}) {
+func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -840,10 +846,10 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["event_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.EventDate.FromMap(kv)
-		} else if sv, ok := val.(StartEventDate); ok {
+		} else if sv, ok := val.(IntegrationMutationResponseEventDate); ok {
 			// struct
 			o.EventDate = sv
-		} else if sp, ok := val.(*StartEventDate); ok {
+		} else if sp, ok := val.(*IntegrationMutationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
 		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
@@ -945,13 +951,33 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["job_id"].(string); ok {
+		o.JobID = val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.JobID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.LastExportDate.FromMap(kv)
-		} else if sv, ok := val.(StartLastExportDate); ok {
+		} else if sv, ok := val.(IntegrationMutationResponseLastExportDate); ok {
 			// struct
 			o.LastExportDate = sv
-		} else if sp, ok := val.(*StartLastExportDate); ok {
+		} else if sp, ok := val.(*IntegrationMutationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
 		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
@@ -1140,7 +1166,7 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["type"].(StartType); ok {
+	if val, ok := kv["type"].(IntegrationMutationResponseType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -1210,6 +1236,26 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 				o.Type = 13
 			case "resume", "RESUME":
 				o.Type = 14
+			}
+		}
+	}
+
+	if val, ok := kv["updated_objects"].(string); ok {
+		o.UpdatedObjects = val
+	} else {
+		if val, ok := kv["updated_objects"]; ok {
+			if val == nil {
+				o.UpdatedObjects = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.UpdatedObjects = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1287,7 +1333,7 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Start) Hash() string {
+func (o *IntegrationMutationResponse) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
@@ -1299,6 +1345,7 @@ func (o *Start) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.JobID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
@@ -1310,6 +1357,7 @@ func (o *Start) Hash() string {
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
 	args = append(args, o.Type)
+	args = append(args, o.UpdatedObjects)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
@@ -1319,7 +1367,7 @@ func (o *Start) Hash() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Start) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *IntegrationMutationResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,

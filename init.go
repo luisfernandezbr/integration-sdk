@@ -72,6 +72,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.ExportTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.IntegrationMutationRequest":
+		o := new(dm_agent.IntegrationMutationRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.IntegrationMutationResponse":
+		o := new(dm_agent.IntegrationMutationResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.IntegrationRequest":
 		o := new(dm_agent.IntegrationRequest)
 		o.FromMap(map[string]interface{}{})
@@ -162,6 +170,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "agent.UserTrigger":
 		o := new(dm_agent.UserTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.WebappIntegrationMutationRequest":
+		o := new(dm_agent.WebappIntegrationMutationRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.WebappIntegrationMutationResponse":
+		o := new(dm_agent.WebappIntegrationMutationResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent.WorkStatusRequest":
@@ -323,6 +339,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_agent.ExportTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent_IntegrationMutationRequest_topic":
+		o := new(dm_agent.IntegrationMutationRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_IntegrationMutationResponse_topic":
+		o := new(dm_agent.IntegrationMutationResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent_IntegrationRequest_topic":
 		o := new(dm_agent.IntegrationRequest)
 		o.FromMap(map[string]interface{}{})
@@ -413,6 +437,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		return o
 	case "agent_UserTrigger_topic":
 		o := new(dm_agent.UserTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_WebappIntegrationMutationRequest_topic":
+		o := new(dm_agent.WebappIntegrationMutationRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent_WebappIntegrationMutationResponse_topic":
+		o := new(dm_agent.WebappIntegrationMutationResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent_WorkStatusRequest_topic":
@@ -537,6 +569,8 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("agent_ExportRequest_topic"),
 		datamodel.TopicNameType("agent_ExportResponse_topic"),
 		datamodel.TopicNameType("agent_ExportTrigger_topic"),
+		datamodel.TopicNameType("agent_IntegrationMutationRequest_topic"),
+		datamodel.TopicNameType("agent_IntegrationMutationResponse_topic"),
 		datamodel.TopicNameType("agent_IntegrationRequest_topic"),
 		datamodel.TopicNameType("agent_IntegrationResponse_topic"),
 		datamodel.TopicNameType("agent_Log_topic"),
@@ -604,6 +638,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.ExportRequest"),
 		datamodel.ModelNameType("agent.ExportResponse"),
 		datamodel.ModelNameType("agent.ExportTrigger"),
+		datamodel.ModelNameType("agent.IntegrationMutationRequest"),
+		datamodel.ModelNameType("agent.IntegrationMutationResponse"),
 		datamodel.ModelNameType("agent.IntegrationRequest"),
 		datamodel.ModelNameType("agent.IntegrationResponse"),
 		datamodel.ModelNameType("agent.Log"),
@@ -627,6 +663,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.UserRequest"),
 		datamodel.ModelNameType("agent.UserResponse"),
 		datamodel.ModelNameType("agent.UserTrigger"),
+		datamodel.ModelNameType("agent.WebappIntegrationMutationRequest"),
+		datamodel.ModelNameType("agent.WebappIntegrationMutationResponse"),
 		datamodel.ModelNameType("agent.WorkStatusRequest"),
 		datamodel.ModelNameType("agent.WorkStatusResponse"),
 		datamodel.ModelNameType("agent.WorkStatusTrigger"),
