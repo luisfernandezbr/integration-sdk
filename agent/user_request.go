@@ -444,6 +444,105 @@ func (o *UserRequestIntegrationEntityErrors) FromMap(kv map[string]interface{}) 
 	o.setDefaults(false)
 }
 
+// UserRequestIntegrationLastProcessedDate represents the object structure for last_processed_date
+type UserRequestIntegrationLastProcessedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toUserRequestIntegrationLastProcessedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *UserRequestIntegrationLastProcessedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *UserRequestIntegrationLastProcessedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toUserRequestIntegrationLastProcessedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toUserRequestIntegrationLastProcessedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toUserRequestIntegrationLastProcessedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *UserRequestIntegrationLastProcessedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserRequestIntegrationLastProcessedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // UserRequestIntegrationLocation is the enumeration type for location
 type UserRequestIntegrationLocation int32
 
@@ -1000,6 +1099,8 @@ type UserRequestIntegration struct {
 	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// Inclusions The inclusion list for this integration
 	Inclusions []string `json:"inclusions" codec:"inclusions" bson:"inclusions" yaml:"inclusions" faker:"-"`
+	// LastProcessedDate Date when last processed
+	LastProcessedDate UserRequestIntegrationLastProcessedDate `json:"last_processed_date" codec:"last_processed_date" bson:"last_processed_date" yaml:"last_processed_date" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
 	Location UserRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
@@ -1012,6 +1113,8 @@ type UserRequestIntegration struct {
 	Onboarding bool `json:"onboarding" codec:"onboarding" bson:"onboarding" yaml:"onboarding" faker:"-"`
 	// Organization The origanization authorized. Used for azure integrations
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
+	// Processed If the integration has been processed at least once
+	Processed *bool `json:"processed,omitempty" codec:"processed,omitempty" bson:"processed" yaml:"processed,omitempty" faker:"-"`
 	// Progress Agent processing progress
 	Progress UserRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
@@ -1046,6 +1149,9 @@ func toUserRequestIntegrationObject(o interface{}, isoptional bool) interface{} 
 			arr = append(arr, i.ToMap())
 		}
 		return arr
+
+	case UserRequestIntegrationLastProcessedDate:
+		return v.ToMap()
 
 	case UserRequestIntegrationLocation:
 		return v.String()
@@ -1091,6 +1197,8 @@ func (o *UserRequestIntegration) ToMap() map[string]interface{} {
 		"id": toUserRequestIntegrationObject(o.ID, false),
 		// Inclusions The inclusion list for this integration
 		"inclusions": toUserRequestIntegrationObject(o.Inclusions, false),
+		// LastProcessedDate Date when last processed
+		"last_processed_date": toUserRequestIntegrationObject(o.LastProcessedDate, false),
 		// Location The location of this integration (on-premise / private or cloud)
 		"location": toUserRequestIntegrationObject(o.Location, false),
 		// Name The user friendly name of the integration
@@ -1103,6 +1211,8 @@ func (o *UserRequestIntegration) ToMap() map[string]interface{} {
 		"onboarding": toUserRequestIntegrationObject(o.Onboarding, false),
 		// Organization The origanization authorized. Used for azure integrations
 		"organization": toUserRequestIntegrationObject(o.Organization, true),
+		// Processed If the integration has been processed at least once
+		"processed": toUserRequestIntegrationObject(o.Processed, true),
 		// Progress Agent processing progress
 		"progress": toUserRequestIntegrationObject(o.Progress, false),
 		// RefID the source system id for the model instance
@@ -1129,6 +1239,11 @@ func (o *UserRequestIntegration) setDefaults(frommap bool) {
 	if o.Errored == nil {
 		var v bool
 		o.Errored = &v
+	}
+
+	if o.Processed == nil {
+		var v bool
+		o.Processed = &v
 	}
 
 	if o.Validated == nil {
@@ -1416,6 +1531,39 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.Inclusions = make([]string, 0)
 	}
 
+	if val, ok := kv["last_processed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastProcessedDate.FromMap(kv)
+		} else if sv, ok := val.(UserRequestIntegrationLastProcessedDate); ok {
+			// struct
+			o.LastProcessedDate = sv
+		} else if sp, ok := val.(*UserRequestIntegrationLastProcessedDate); ok {
+			// struct pointer
+			o.LastProcessedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastProcessedDate.Epoch = dt.Epoch
+			o.LastProcessedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastProcessedDate.Epoch = dt.Epoch
+			o.LastProcessedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastProcessedDate.Epoch = dt.Epoch
+				o.LastProcessedDate.Rfc3339 = dt.Rfc3339
+				o.LastProcessedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastProcessedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["location"].(UserRequestIntegrationLocation); ok {
 		o.Location = val
 	} else {
@@ -1550,6 +1698,24 @@ func (o *UserRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.Organization = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["processed"].(*bool); ok {
+		o.Processed = val
+	} else if val, ok := kv["processed"].(bool); ok {
+		o.Processed = &val
+	} else {
+		if val, ok := kv["processed"]; ok {
+			if val == nil {
+				o.Processed = number.BoolPointer(number.ToBoolAny(nil))
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Processed = number.BoolPointer(number.ToBoolAny(val))
 			}
 		}
 	}
