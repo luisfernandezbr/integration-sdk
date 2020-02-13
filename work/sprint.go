@@ -6,6 +6,8 @@ package work
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -14,9 +16,11 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -409,6 +413,8 @@ type Sprint struct {
 	Goal string `json:"goal" codec:"goal" bson:"goal" yaml:"goal" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationIds the integration IDs for this model object
+	IntegrationIds []string `json:"integration_ids" codec:"integration_ids" bson:"integration_ids" yaml:"integration_ids" faker:"-"`
 	// Name the name of the field
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
@@ -484,6 +490,9 @@ func NewSprintID(customerID string, refID string, refType string) string {
 }
 
 func (o *Sprint) setDefaults(frommap bool) {
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
+	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
@@ -650,15 +659,16 @@ func (o *Sprint) IsEqual(other *Sprint) bool {
 func (o *Sprint) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"completed_date": toSprintObject(o.CompletedDate, false),
-		"customer_id":    toSprintObject(o.CustomerID, false),
-		"ended_date":     toSprintObject(o.EndedDate, false),
-		"goal":           toSprintObject(o.Goal, false),
-		"id":             toSprintObject(o.ID, false),
-		"name":           toSprintObject(o.Name, false),
-		"ref_id":         toSprintObject(o.RefID, false),
-		"ref_type":       toSprintObject(o.RefType, false),
-		"started_date":   toSprintObject(o.StartedDate, false),
+		"completed_date":  toSprintObject(o.CompletedDate, false),
+		"customer_id":     toSprintObject(o.CustomerID, false),
+		"ended_date":      toSprintObject(o.EndedDate, false),
+		"goal":            toSprintObject(o.Goal, false),
+		"id":              toSprintObject(o.ID, false),
+		"integration_ids": toSprintObject(o.IntegrationIds, false),
+		"name":            toSprintObject(o.Name, false),
+		"ref_id":          toSprintObject(o.RefID, false),
+		"ref_type":        toSprintObject(o.RefType, false),
+		"started_date":    toSprintObject(o.StartedDate, false),
 
 		"status":     o.Status.String(),
 		"updated_ts": toSprintObject(o.UpdatedAt, false),
@@ -800,6 +810,57 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["integration_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for integration_ids field")
+				}
+			}
+			o.IntegrationIds = na
+		}
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
 	}
 
 	if val, ok := kv["name"].(string); ok {
@@ -946,6 +1007,7 @@ func (o *Sprint) Hash() string {
 	args = append(args, o.EndedDate)
 	args = append(args, o.Goal)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationIds)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

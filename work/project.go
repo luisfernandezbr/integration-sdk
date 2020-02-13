@@ -6,6 +6,8 @@ package work
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -14,7 +16,9 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -42,6 +46,8 @@ type Project struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the project
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
+	// IntegrationIds the integration IDs for this model object
+	IntegrationIds []string `json:"integration_ids" codec:"integration_ids" bson:"integration_ids" yaml:"integration_ids" faker:"-"`
 	// Name the name of the project
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"project"`
 	// RefID the source system id for the model instance
@@ -108,6 +114,9 @@ func (o *Project) setDefaults(frommap bool) {
 	}
 	if o.Description == nil {
 		o.Description = pstrings.Pointer("")
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
 	}
 
 	if o.ID == "" {
@@ -274,18 +283,19 @@ func (o *Project) IsEqual(other *Project) bool {
 func (o *Project) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":      toProjectObject(o.Active, false),
-		"category":    toProjectObject(o.Category, true),
-		"customer_id": toProjectObject(o.CustomerID, false),
-		"description": toProjectObject(o.Description, true),
-		"id":          toProjectObject(o.ID, false),
-		"identifier":  toProjectObject(o.Identifier, false),
-		"name":        toProjectObject(o.Name, false),
-		"ref_id":      toProjectObject(o.RefID, false),
-		"ref_type":    toProjectObject(o.RefType, false),
-		"updated_ts":  toProjectObject(o.UpdatedAt, false),
-		"url":         toProjectObject(o.URL, false),
-		"hashcode":    toProjectObject(o.Hashcode, false),
+		"active":          toProjectObject(o.Active, false),
+		"category":        toProjectObject(o.Category, true),
+		"customer_id":     toProjectObject(o.CustomerID, false),
+		"description":     toProjectObject(o.Description, true),
+		"id":              toProjectObject(o.ID, false),
+		"identifier":      toProjectObject(o.Identifier, false),
+		"integration_ids": toProjectObject(o.IntegrationIds, false),
+		"name":            toProjectObject(o.Name, false),
+		"ref_id":          toProjectObject(o.RefID, false),
+		"ref_type":        toProjectObject(o.RefType, false),
+		"updated_ts":      toProjectObject(o.UpdatedAt, false),
+		"url":             toProjectObject(o.URL, false),
+		"hashcode":        toProjectObject(o.Hashcode, false),
 	}
 }
 
@@ -407,6 +417,57 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["integration_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for integration_ids field")
+				}
+			}
+			o.IntegrationIds = na
+		}
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
+	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -513,6 +574,7 @@ func (o *Project) Hash() string {
 	args = append(args, o.Description)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.IntegrationIds)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

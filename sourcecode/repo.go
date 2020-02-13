@@ -6,6 +6,8 @@ package sourcecode
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -14,7 +16,9 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -40,6 +44,8 @@ type Repo struct {
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"sentence"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationIds the integration IDs for this model object
+	IntegrationIds []string `json:"integration_ids" codec:"integration_ids" bson:"integration_ids" yaml:"integration_ids" faker:"-"`
 	// Language the programming language the source code is primarily written in
 	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// Name the name of the repo
@@ -103,6 +109,9 @@ func NewRepoID(customerID string, refType string, refID string) string {
 }
 
 func (o *Repo) setDefaults(frommap bool) {
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
+	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -275,18 +284,19 @@ func (o *Repo) IsEqual(other *Repo) bool {
 func (o *Repo) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":         toRepoObject(o.Active, false),
-		"customer_id":    toRepoObject(o.CustomerID, false),
-		"default_branch": toRepoObject(o.DefaultBranch, false),
-		"description":    toRepoObject(o.Description, false),
-		"id":             toRepoObject(o.ID, false),
-		"language":       toRepoObject(o.Language, false),
-		"name":           toRepoObject(o.Name, false),
-		"ref_id":         toRepoObject(o.RefID, false),
-		"ref_type":       toRepoObject(o.RefType, false),
-		"updated_ts":     toRepoObject(o.UpdatedAt, false),
-		"url":            toRepoObject(o.URL, false),
-		"hashcode":       toRepoObject(o.Hashcode, false),
+		"active":          toRepoObject(o.Active, false),
+		"customer_id":     toRepoObject(o.CustomerID, false),
+		"default_branch":  toRepoObject(o.DefaultBranch, false),
+		"description":     toRepoObject(o.Description, false),
+		"id":              toRepoObject(o.ID, false),
+		"integration_ids": toRepoObject(o.IntegrationIds, false),
+		"language":        toRepoObject(o.Language, false),
+		"name":            toRepoObject(o.Name, false),
+		"ref_id":          toRepoObject(o.RefID, false),
+		"ref_type":        toRepoObject(o.RefType, false),
+		"updated_ts":      toRepoObject(o.UpdatedAt, false),
+		"url":             toRepoObject(o.URL, false),
+		"hashcode":        toRepoObject(o.Hashcode, false),
 	}
 }
 
@@ -390,6 +400,57 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["integration_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for integration_ids field")
+				}
+			}
+			o.IntegrationIds = na
+		}
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
 	}
 
 	if val, ok := kv["language"].(string); ok {
@@ -517,6 +578,7 @@ func (o *Repo) Hash() string {
 	args = append(args, o.DefaultBranch)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationIds)
 	args = append(args, o.Language)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)

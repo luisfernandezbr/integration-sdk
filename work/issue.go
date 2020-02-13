@@ -1426,6 +1426,8 @@ type Issue struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the issue (for example EXM-1 instead of 1000 for jira)
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
+	// IntegrationIds the integration IDs for this model object
+	IntegrationIds []string `json:"integration_ids" codec:"integration_ids" bson:"integration_ids" yaml:"integration_ids" faker:"-"`
 	// LinkedIssues links between issues
 	LinkedIssues []IssueLinkedIssues `json:"linked_issues" codec:"linked_issues" bson:"linked_issues" yaml:"linked_issues" faker:"-"`
 	// ParentID parent issue id, if any
@@ -1548,6 +1550,9 @@ func NewIssueID(customerID string, refType string, refID string) string {
 func (o *Issue) setDefaults(frommap bool) {
 	if o.ChangeLog == nil {
 		o.ChangeLog = make([]IssueChangeLog, 0)
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
 	}
 	if o.LinkedIssues == nil {
 		o.LinkedIssues = make([]IssueLinkedIssues, 0)
@@ -1740,6 +1745,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"due_date":           toIssueObject(o.DueDate, false),
 		"id":                 toIssueObject(o.ID, false),
 		"identifier":         toIssueObject(o.Identifier, false),
+		"integration_ids":    toIssueObject(o.IntegrationIds, false),
 		"linked_issues":      toIssueObject(o.LinkedIssues, false),
 		"parent_id":          toIssueObject(o.ParentID, false),
 		"planned_end_date":   toIssueObject(o.PlannedEndDate, false),
@@ -2021,6 +2027,57 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 				o.Identifier = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["integration_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for integration_ids field")
+				}
+			}
+			o.IntegrationIds = na
+		}
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
 	}
 
 	if o == nil {
@@ -2605,6 +2662,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.DueDate)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.IntegrationIds)
 	args = append(args, o.LinkedIssues)
 	args = append(args, o.ParentID)
 	args = append(args, o.PlannedEndDate)

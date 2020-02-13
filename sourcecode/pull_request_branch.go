@@ -52,6 +52,8 @@ type PullRequestBranch struct {
 	Default bool `json:"default" codec:"default" bson:"default" yaml:"default" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationIds the integration IDs for this model object
+	IntegrationIds []string `json:"integration_ids" codec:"integration_ids" bson:"integration_ids" yaml:"integration_ids" faker:"-"`
 	// MergeCommitID commit id in which the branch was merged
 	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeCommitSha commit sha in which the branch was merged
@@ -134,6 +136,9 @@ func (o *PullRequestBranch) setDefaults(frommap bool) {
 	}
 	if o.CommitShas == nil {
 		o.CommitShas = make([]string, 0)
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
 	}
 
 	if o.ID == "" {
@@ -308,6 +313,7 @@ func (o *PullRequestBranch) ToMap() map[string]interface{} {
 		"customer_id":               toPullRequestBranchObject(o.CustomerID, false),
 		"default":                   toPullRequestBranchObject(o.Default, false),
 		"id":                        toPullRequestBranchObject(o.ID, false),
+		"integration_ids":           toPullRequestBranchObject(o.IntegrationIds, false),
 		"merge_commit_id":           toPullRequestBranchObject(o.MergeCommitID, false),
 		"merge_commit_sha":          toPullRequestBranchObject(o.MergeCommitSha, false),
 		"merged":                    toPullRequestBranchObject(o.Merged, false),
@@ -618,6 +624,57 @@ func (o *PullRequestBranch) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["integration_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for integration_ids field")
+				}
+			}
+			o.IntegrationIds = na
+		}
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
+	}
+
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -819,6 +876,7 @@ func (o *PullRequestBranch) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Default)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationIds)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeCommitSha)
 	args = append(args, o.Merged)

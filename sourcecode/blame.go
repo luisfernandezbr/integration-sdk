@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -15,6 +16,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
@@ -380,6 +382,8 @@ type Blame struct {
 	Filename string `json:"filename" codec:"filename" bson:"filename" yaml:"filename" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationIds the integration IDs for this model object
+	IntegrationIds []string `json:"integration_ids" codec:"integration_ids" bson:"integration_ids" yaml:"integration_ids" faker:"-"`
 	// Language the detected language
 	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// License if a license was detected in the file, what was the license SPDX
@@ -468,6 +472,9 @@ func NewBlameID(customerID string, refID string, refType string, RepoID string, 
 }
 
 func (o *Blame) setDefaults(frommap bool) {
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
+	}
 	if o.License == nil {
 		o.License = pstrings.Pointer("")
 	}
@@ -650,6 +657,7 @@ func (o *Blame) ToMap() map[string]interface{} {
 		"excluded_reason": toBlameObject(o.ExcludedReason, false),
 		"filename":        toBlameObject(o.Filename, false),
 		"id":              toBlameObject(o.ID, false),
+		"integration_ids": toBlameObject(o.IntegrationIds, false),
 		"language":        toBlameObject(o.Language, false),
 		"license":         toBlameObject(o.License, true),
 		"lines":           toBlameObject(o.Lines, false),
@@ -865,6 +873,57 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
+	}
+
+	if val, ok := kv["integration_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for integration_ids field")
+				}
+			}
+			o.IntegrationIds = na
+		}
+	}
+	if o.IntegrationIds == nil {
+		o.IntegrationIds = make([]string, 0)
 	}
 
 	if val, ok := kv["language"].(string); ok {
@@ -1149,6 +1208,7 @@ func (o *Blame) Hash() string {
 	args = append(args, o.ExcludedReason)
 	args = append(args, o.Filename)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationIds)
 	args = append(args, o.Language)
 	args = append(args, o.License)
 	args = append(args, o.Lines)
