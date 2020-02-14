@@ -6,8 +6,6 @@ package sourcecode
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -16,9 +14,7 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -149,8 +145,6 @@ type PullRequestCommit struct {
 	Deletions int64 `json:"deletions" codec:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// IntegrationIds the integration IDs for this model object
-	IntegrationIds []string `json:"integration_ids" codec:"integration_ids" bson:"integration_ids" yaml:"integration_ids" faker:"-"`
 	// Message the commit message
 	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"commit_message"`
 	// PullRequestID the pull request this commit was taken from
@@ -221,9 +215,6 @@ func NewPullRequestCommitID(customerID string, refID string, refType string, Rep
 }
 
 func (o *PullRequestCommit) setDefaults(frommap bool) {
-	if o.IntegrationIds == nil {
-		o.IntegrationIds = make([]string, 0)
-	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID)
@@ -397,7 +388,6 @@ func (o *PullRequestCommit) ToMap() map[string]interface{} {
 		"customer_id":      toPullRequestCommitObject(o.CustomerID, false),
 		"deletions":        toPullRequestCommitObject(o.Deletions, false),
 		"id":               toPullRequestCommitObject(o.ID, false),
-		"integration_ids":  toPullRequestCommitObject(o.IntegrationIds, false),
 		"message":          toPullRequestCommitObject(o.Message, false),
 		"pull_request_id":  toPullRequestCommitObject(o.PullRequestID, false),
 		"ref_id":           toPullRequestCommitObject(o.RefID, false),
@@ -583,57 +573,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["integration_ids"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for integration_ids field")
-				}
-			}
-			o.IntegrationIds = na
-		}
-	}
-	if o.IntegrationIds == nil {
-		o.IntegrationIds = make([]string, 0)
-	}
-
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -802,7 +741,6 @@ func (o *PullRequestCommit) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Deletions)
 	args = append(args, o.ID)
-	args = append(args, o.IntegrationIds)
 	args = append(args, o.Message)
 	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)

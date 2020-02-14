@@ -232,6 +232,105 @@ func (o *UserResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// UserResponseTeamsDeletedDate represents the object structure for deleted_date
+type UserResponseTeamsDeletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toUserResponseTeamsDeletedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *UserResponseTeamsDeletedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *UserResponseTeamsDeletedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toUserResponseTeamsDeletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toUserResponseTeamsDeletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toUserResponseTeamsDeletedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *UserResponseTeamsDeletedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserResponseTeamsDeletedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // UserResponseTeams represents the object structure for teams
 type UserResponseTeams struct {
 	// Active whether the team is tracked in pinpoint
@@ -242,6 +341,8 @@ type UserResponseTeams struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Deleted delete flag for a team. true === deleted
 	Deleted bool `json:"deleted" codec:"deleted" bson:"deleted" yaml:"deleted" faker:"-"`
+	// DeletedDate when the user profile was soft deleted
+	DeletedDate UserResponseTeamsDeletedDate `json:"deleted_date" codec:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
 	// Description the description of the team
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
@@ -263,6 +364,9 @@ func toUserResponseTeamsObject(o interface{}, isoptional bool) interface{} {
 	case *UserResponseTeams:
 		return v.ToMap()
 
+	case UserResponseTeamsDeletedDate:
+		return v.ToMap()
+
 	default:
 		return o
 	}
@@ -279,6 +383,8 @@ func (o *UserResponseTeams) ToMap() map[string]interface{} {
 		"customer_id": toUserResponseTeamsObject(o.CustomerID, false),
 		// Deleted delete flag for a team. true === deleted
 		"deleted": toUserResponseTeamsObject(o.Deleted, false),
+		// DeletedDate when the user profile was soft deleted
+		"deleted_date": toUserResponseTeamsObject(o.DeletedDate, false),
 		// Description the description of the team
 		"description": toUserResponseTeamsObject(o.Description, false),
 		// ID the primary key for the model instance
@@ -404,6 +510,20 @@ func (o *UserResponseTeams) FromMap(kv map[string]interface{}) {
 				o.Deleted = number.ToBoolAny(val)
 			}
 		}
+	}
+
+	if val, ok := kv["deleted_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.DeletedDate.FromMap(kv)
+		} else if sv, ok := val.(UserResponseTeamsDeletedDate); ok {
+			// struct
+			o.DeletedDate = sv
+		} else if sp, ok := val.(*UserResponseTeamsDeletedDate); ok {
+			// struct pointer
+			o.DeletedDate = *sp
+		}
+	} else {
+		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["description"].(string); ok {
@@ -1771,25 +1891,6 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1899,25 +2000,6 @@ func (o *UserResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UserResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

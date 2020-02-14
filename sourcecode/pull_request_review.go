@@ -6,8 +6,6 @@ package sourcecode
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
-	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -16,11 +14,9 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -231,8 +227,6 @@ type PullRequestReview struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// IntegrationIds the integration IDs for this model object
-	IntegrationIds []string `json:"integration_ids" codec:"integration_ids" bson:"integration_ids" yaml:"integration_ids" faker:"-"`
 	// PullRequestID the pull request this review is associated with
 	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
@@ -306,9 +300,6 @@ func NewPullRequestReviewID(customerID string, refID string, refType string, Rep
 }
 
 func (o *PullRequestReview) setDefaults(frommap bool) {
-	if o.IntegrationIds == nil {
-		o.IntegrationIds = make([]string, 0)
-	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID)
@@ -478,7 +469,6 @@ func (o *PullRequestReview) ToMap() map[string]interface{} {
 		"created_date":    toPullRequestReviewObject(o.CreatedDate, false),
 		"customer_id":     toPullRequestReviewObject(o.CustomerID, false),
 		"id":              toPullRequestReviewObject(o.ID, false),
-		"integration_ids": toPullRequestReviewObject(o.IntegrationIds, false),
 		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, false),
 		"ref_id":          toPullRequestReviewObject(o.RefID, false),
 		"ref_type":        toPullRequestReviewObject(o.RefType, false),
@@ -573,57 +563,6 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
-	}
-
-	if val, ok := kv["integration_ids"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for integration_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for integration_ids field")
-				}
-			}
-			o.IntegrationIds = na
-		}
-	}
-	if o.IntegrationIds == nil {
-		o.IntegrationIds = make([]string, 0)
 	}
 
 	if val, ok := kv["pull_request_id"].(string); ok {
@@ -803,7 +742,6 @@ func (o *PullRequestReview) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
-	args = append(args, o.IntegrationIds)
 	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

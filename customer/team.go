@@ -32,6 +32,105 @@ const (
 	TeamModelName datamodel.ModelNameType = "customer.Team"
 )
 
+// TeamDeletedDate represents the object structure for deleted_date
+type TeamDeletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toTeamDeletedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *TeamDeletedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *TeamDeletedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toTeamDeletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toTeamDeletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toTeamDeletedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *TeamDeletedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *TeamDeletedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // Team a team is a grouping of one or more users
 type Team struct {
 	// Active whether the team is tracked in pinpoint
@@ -44,6 +143,8 @@ type Team struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Deleted delete flag for a team. true === deleted
 	Deleted bool `json:"deleted" codec:"deleted" bson:"deleted" yaml:"deleted" faker:"-"`
+	// DeletedDate when the user profile was soft deleted
+	DeletedDate TeamDeletedDate `json:"deleted_date" codec:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
 	// Description the description of the team
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
@@ -73,6 +174,9 @@ var _ datamodel.StreamedModel = (*Team)(nil)
 func toTeamObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Team:
+		return v.ToMap()
+
+	case TeamDeletedDate:
 		return v.ToMap()
 
 	default:
@@ -287,6 +391,7 @@ func (o *Team) ToMap() map[string]interface{} {
 		"created_ts":   toTeamObject(o.CreatedAt, false),
 		"customer_id":  toTeamObject(o.CustomerID, false),
 		"deleted":      toTeamObject(o.Deleted, false),
+		"deleted_date": toTeamObject(o.DeletedDate, false),
 		"description":  toTeamObject(o.Description, false),
 		"id":           toTeamObject(o.ID, false),
 		"leaf":         toTeamObject(o.Leaf, false),
@@ -417,6 +522,39 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 				o.Deleted = number.ToBoolAny(val)
 			}
 		}
+	}
+
+	if val, ok := kv["deleted_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.DeletedDate.FromMap(kv)
+		} else if sv, ok := val.(TeamDeletedDate); ok {
+			// struct
+			o.DeletedDate = sv
+		} else if sp, ok := val.(*TeamDeletedDate); ok {
+			// struct pointer
+			o.DeletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.DeletedDate.Epoch = dt.Epoch
+				o.DeletedDate.Rfc3339 = dt.Rfc3339
+				o.DeletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["description"].(string); ok {
@@ -607,6 +745,7 @@ func (o *Team) Hash() string {
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Deleted)
+	args = append(args, o.DeletedDate)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
 	args = append(args, o.Leaf)
