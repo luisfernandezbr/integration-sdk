@@ -267,10 +267,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
-	case "agent_exportresponse_topic":
-		o := new(dm_agent.ExportResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "sourcecode_repo_topic":
 		o := new(dm_sourcecode.Repo)
 		o.FromMap(map[string]interface{}{})
@@ -303,7 +299,6 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured to be evented
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
-		datamodel.TopicNameType("agent_exportresponse_topic"),
 		datamodel.TopicNameType("sourcecode_repo_topic"),
 		datamodel.TopicNameType("sourcecode_user_topic"),
 		datamodel.TopicNameType("work_project_topic"),

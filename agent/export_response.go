@@ -22,8 +22,6 @@ import (
 )
 
 const (
-	// ExportResponseTopic is the default topic name
-	ExportResponseTopic datamodel.TopicNameType = "agent_exportresponse_topic"
 
 	// ExportResponseTable is the default table name
 	ExportResponseTable datamodel.ModelNameType = "agent_exportresponse"
@@ -1241,8 +1239,6 @@ type ExportResponse struct {
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type ExportResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UploadPartCount the number of parts that the upload sent to the agent upload server
 	UploadPartCount int64 `json:"upload_part_count" codec:"upload_part_count" bson:"upload_part_count" yaml:"upload_part_count" faker:"-"`
 	// UploadURL the upload URL where the job was placed. will be NULL if not uploaded
@@ -1305,7 +1301,7 @@ func (o *ExportResponse) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *ExportResponse) GetTopicName() datamodel.TopicNameType {
-	return ExportResponseTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -1361,29 +1357,12 @@ func (o *ExportResponse) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *ExportResponse) GetTopicKey() string {
-	var i interface{} = o.CustomerID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for ExportResponse")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -1408,39 +1387,12 @@ func (o *ExportResponse) GetModelMaterializeConfig() *datamodel.ModelMaterialize
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *ExportResponse) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *ExportResponse) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = ExportResponseModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *ExportResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "customer_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     128,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -1535,7 +1487,6 @@ func (o *ExportResponse) ToMap() map[string]interface{} {
 		"system_id": toExportResponseObject(o.SystemID, false),
 
 		"type":              o.Type.String(),
-		"updated_ts":        toExportResponseObject(o.UpdatedAt, false),
 		"upload_part_count": toExportResponseObject(o.UploadPartCount, false),
 		"upload_url":        toExportResponseObject(o.UploadURL, true),
 		"uptime":            toExportResponseObject(o.Uptime, false),
@@ -2218,21 +2169,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["upload_part_count"].(int64); ok {
 		o.UploadPartCount = val
 	} else {
@@ -2353,7 +2289,6 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
 	args = append(args, o.Type)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.UploadPartCount)
 	args = append(args, o.UploadURL)
 	args = append(args, o.Uptime)
