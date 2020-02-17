@@ -20,8 +20,6 @@ import (
 )
 
 const (
-	// IntegrationMutationRequestTopic is the default topic name
-	IntegrationMutationRequestTopic datamodel.TopicNameType = "agent_IntegrationMutationRequest_topic"
 
 	// IntegrationMutationRequestTable is the default table name
 	IntegrationMutationRequestTable datamodel.ModelNameType = "agent_integrationmutationrequest"
@@ -406,8 +404,6 @@ type IntegrationMutationRequest struct {
 	RequestDate IntegrationMutationRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// SystemType The system type of the integration
 	SystemType IntegrationMutationRequestSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -449,7 +445,7 @@ func (o *IntegrationMutationRequest) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *IntegrationMutationRequest) GetTopicName() datamodel.TopicNameType {
-	return IntegrationMutationRequestTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -493,29 +489,12 @@ func (o *IntegrationMutationRequest) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *IntegrationMutationRequest) GetTopicKey() string {
-	var i interface{} = o.JobID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *IntegrationMutationRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for IntegrationMutationRequest")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -540,39 +519,12 @@ func (o *IntegrationMutationRequest) GetModelMaterializeConfig() *datamodel.Mode
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *IntegrationMutationRequest) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *IntegrationMutationRequest) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = IntegrationMutationRequestModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *IntegrationMutationRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("5m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 5m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("5m0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "job_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("delete"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -651,7 +603,6 @@ func (o *IntegrationMutationRequest) ToMap() map[string]interface{} {
 		"request_date":     toIntegrationMutationRequestObject(o.RequestDate, false),
 
 		"system_type": o.SystemType.String(),
-		"updated_ts":  toIntegrationMutationRequestObject(o.UpdatedAt, false),
 		"uuid":        toIntegrationMutationRequestObject(o.UUID, false),
 		"hashcode":    toIntegrationMutationRequestObject(o.Hashcode, false),
 	}
@@ -864,6 +815,25 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -895,21 +865,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.SystemType = 2
 			case "user", "USER":
 				o.SystemType = 3
-			}
-		}
-	}
-
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
 			}
 		}
 	}
@@ -950,7 +905,6 @@ func (o *IntegrationMutationRequest) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)
 	args = append(args, o.SystemType)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

@@ -10,18 +10,14 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
-	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
-	// CancelRequestTriggerTopic is the default topic name
-	CancelRequestTriggerTopic datamodel.TopicNameType = "agent_CancelRequestTrigger_topic"
 
 	// CancelRequestTriggerTable is the default table name
 	CancelRequestTriggerTable datamodel.ModelNameType = "agent_cancelrequesttrigger"
@@ -112,8 +108,6 @@ type CancelRequestTrigger struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID The agent UUID
 	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -146,7 +140,7 @@ func (o *CancelRequestTrigger) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *CancelRequestTrigger) GetTopicName() datamodel.TopicNameType {
-	return CancelRequestTriggerTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -190,29 +184,12 @@ func (o *CancelRequestTrigger) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *CancelRequestTrigger) GetTopicKey() string {
-	var i interface{} = o.ID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *CancelRequestTrigger) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for CancelRequestTrigger")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -237,39 +214,12 @@ func (o *CancelRequestTrigger) GetModelMaterializeConfig() *datamodel.ModelMater
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *CancelRequestTrigger) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *CancelRequestTrigger) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = CancelRequestTriggerModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *CancelRequestTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("24h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("delete"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -341,7 +291,6 @@ func (o *CancelRequestTrigger) ToMap() map[string]interface{} {
 		"id":          toCancelRequestTriggerObject(o.ID, false),
 		"ref_id":      toCancelRequestTriggerObject(o.RefID, false),
 		"ref_type":    toCancelRequestTriggerObject(o.RefType, false),
-		"updated_ts":  toCancelRequestTriggerObject(o.UpdatedAt, false),
 		"uuid":        toCancelRequestTriggerObject(o.UUID, false),
 		"hashcode":    toCancelRequestTriggerObject(o.Hashcode, false),
 	}
@@ -463,21 +412,6 @@ func (o *CancelRequestTrigger) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -508,7 +442,6 @@ func (o *CancelRequestTrigger) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

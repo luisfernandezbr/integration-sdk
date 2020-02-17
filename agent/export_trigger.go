@@ -10,7 +10,6 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
-	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -18,8 +17,6 @@ import (
 )
 
 const (
-	// ExportTriggerTopic is the default topic name
-	ExportTriggerTopic datamodel.TopicNameType = "agent_ExportTrigger_topic"
 
 	// ExportTriggerTable is the default table name
 	ExportTriggerTable datamodel.ModelNameType = "agent_exporttrigger"
@@ -40,8 +37,6 @@ type ExportTrigger struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// ReprocessHistorical This field is to differentiate between historical and incrementals
 	ReprocessHistorical bool `json:"reprocess_historical" codec:"reprocess_historical" bson:"reprocess_historical" yaml:"reprocess_historical" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID This UUID of the agent to trigger
 	UUID *string `json:"uuid,omitempty" codec:"uuid,omitempty" bson:"uuid" yaml:"uuid,omitempty" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -71,7 +66,7 @@ func (o *ExportTrigger) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *ExportTrigger) GetTopicName() datamodel.TopicNameType {
-	return ExportTriggerTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -118,29 +113,12 @@ func (o *ExportTrigger) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *ExportTrigger) GetTopicKey() string {
-	var i interface{} = o.ID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *ExportTrigger) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for ExportTrigger")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -165,39 +143,12 @@ func (o *ExportTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeC
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *ExportTrigger) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *ExportTrigger) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = ExportTriggerModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *ExportTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("24h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("delete"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -268,7 +219,6 @@ func (o *ExportTrigger) ToMap() map[string]interface{} {
 		"ref_id":               toExportTriggerObject(o.RefID, false),
 		"ref_type":             toExportTriggerObject(o.RefType, false),
 		"reprocess_historical": toExportTriggerObject(o.ReprocessHistorical, false),
-		"updated_ts":           toExportTriggerObject(o.UpdatedAt, false),
 		"uuid":                 toExportTriggerObject(o.UUID, true),
 		"hashcode":             toExportTriggerObject(o.Hashcode, false),
 	}
@@ -376,21 +326,6 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["uuid"].(*string); ok {
 		o.UUID = val
 	} else if val, ok := kv["uuid"].(string); ok {
@@ -419,7 +354,6 @@ func (o *ExportTrigger) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.ReprocessHistorical)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

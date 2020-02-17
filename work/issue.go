@@ -25,8 +25,6 @@ import (
 )
 
 const (
-	// IssueTopic is the default topic name
-	IssueTopic datamodel.TopicNameType = "work_Issue_topic"
 
 	// IssueTable is the default table name
 	IssueTable datamodel.ModelNameType = "work_issue"
@@ -1462,8 +1460,6 @@ type Issue struct {
 	Type string `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// UpdatedDate the date that the issue was updated
 	UpdatedDate IssueUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the sprint page
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -1522,7 +1518,7 @@ func (o *Issue) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Issue) GetTopicName() datamodel.TopicNameType {
-	return IssueTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -1541,8 +1537,8 @@ func (o *Issue) GetModelName() datamodel.ModelNameType {
 }
 
 // NewIssueID provides a template for generating an ID field for Issue
-func NewIssueID(customerID string, refType string, refID string) string {
-	return hash.Values("Issue", customerID, refType, refID)
+func NewIssueID(customerID string, refID string, refType string) string {
+	return hash.Values(customerID, refID, refType)
 }
 
 func (o *Issue) setDefaults(frommap bool) {
@@ -1566,8 +1562,7 @@ func (o *Issue) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Issue", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
 	}
 
 	if frommap {
@@ -1584,31 +1579,12 @@ func (o *Issue) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Issue) GetTopicKey() string {
-	var i interface{} = o.ProjectID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Issue) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	case IssueCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
-	}
-	panic("not sure how to handle the date time format for Issue")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -1633,39 +1609,12 @@ func (o *Issue) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Issue) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Issue) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = IssueModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Issue) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "project_id",
-		Timestamp:         "created_date",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -1758,7 +1707,6 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"title":              toIssueObject(o.Title, false),
 		"type":               toIssueObject(o.Type, false),
 		"updated_date":       toIssueObject(o.UpdatedDate, false),
-		"updated_ts":         toIssueObject(o.UpdatedAt, false),
 		"url":                toIssueObject(o.URL, false),
 		"hashcode":           toIssueObject(o.Hashcode, false),
 	}
@@ -2556,21 +2504,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -2623,7 +2556,6 @@ func (o *Issue) Hash() string {
 	args = append(args, o.Title)
 	args = append(args, o.Type)
 	args = append(args, o.UpdatedDate)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

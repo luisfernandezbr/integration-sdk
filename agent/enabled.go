@@ -20,8 +20,6 @@ import (
 )
 
 const (
-	// EnabledTopic is the default topic name
-	EnabledTopic datamodel.TopicNameType = "agent_Enabled_topic"
 
 	// EnabledTable is the default table name
 	EnabledTable datamodel.ModelNameType = "agent_enabled"
@@ -462,8 +460,6 @@ type Enabled struct {
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type EnabledType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
 	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
@@ -506,7 +502,7 @@ func (o *Enabled) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Enabled) GetTopicName() datamodel.TopicNameType {
-	return EnabledTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -556,29 +552,12 @@ func (o *Enabled) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Enabled) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Enabled) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Enabled")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -603,39 +582,12 @@ func (o *Enabled) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig 
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Enabled) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Enabled) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = EnabledModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Enabled) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -722,12 +674,11 @@ func (o *Enabled) ToMap() map[string]interface{} {
 		"success":          toEnabledObject(o.Success, false),
 		"system_id":        toEnabledObject(o.SystemID, false),
 
-		"type":       o.Type.String(),
-		"updated_ts": toEnabledObject(o.UpdatedAt, false),
-		"uptime":     toEnabledObject(o.Uptime, false),
-		"uuid":       toEnabledObject(o.UUID, false),
-		"version":    toEnabledObject(o.Version, false),
-		"hashcode":   toEnabledObject(o.Hashcode, false),
+		"type":     o.Type.String(),
+		"uptime":   toEnabledObject(o.Uptime, false),
+		"uuid":     toEnabledObject(o.UUID, false),
+		"version":  toEnabledObject(o.Version, false),
+		"hashcode": toEnabledObject(o.Hashcode, false),
 	}
 }
 
@@ -1214,21 +1165,6 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["uptime"].(int64); ok {
 		o.Uptime = val
 	} else {
@@ -1310,7 +1246,6 @@ func (o *Enabled) Hash() string {
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
 	args = append(args, o.Type)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)

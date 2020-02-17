@@ -24,8 +24,6 @@ import (
 )
 
 const (
-	// PullRequestTopic is the default topic name
-	PullRequestTopic datamodel.TopicNameType = "sourcecode_PullRequest_topic"
 
 	// PullRequestTable is the default table name
 	PullRequestTable datamodel.ModelNameType = "sourcecode_pullrequest"
@@ -566,8 +564,6 @@ type PullRequest struct {
 	Title string `json:"title" codec:"title" bson:"title" yaml:"title" faker:"commit_message"`
 	// UpdatedDate the timestamp in UTC that the pull request was closed
 	UpdatedDate PullRequestUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the pull request home page
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -612,7 +608,7 @@ func (o *PullRequest) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *PullRequest) GetTopicName() datamodel.TopicNameType {
-	return PullRequestTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -661,31 +657,12 @@ func (o *PullRequest) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *PullRequest) GetTopicKey() string {
-	var i interface{} = o.RepoID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.CreatedDate
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	case PullRequestCreatedDate:
-		return datetime.DateFromEpoch(v.Epoch)
-	}
-	panic("not sure how to handle the date time format for PullRequest")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -710,39 +687,12 @@ func (o *PullRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeCon
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *PullRequest) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *PullRequest) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = PullRequestModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "repo_id",
-		Timestamp:         "created_date",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -831,7 +781,6 @@ func (o *PullRequest) ToMap() map[string]interface{} {
 		"status":       o.Status.String(),
 		"title":        toPullRequestObject(o.Title, false),
 		"updated_date": toPullRequestObject(o.UpdatedDate, false),
-		"updated_ts":   toPullRequestObject(o.UpdatedAt, false),
 		"url":          toPullRequestObject(o.URL, false),
 		"hashcode":     toPullRequestObject(o.Hashcode, false),
 	}
@@ -1415,21 +1364,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 		o.UpdatedDate.FromMap(map[string]interface{}{})
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -1477,7 +1411,6 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.Status)
 	args = append(args, o.Title)
 	args = append(args, o.UpdatedDate)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

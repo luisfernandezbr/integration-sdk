@@ -19,7 +19,7 @@ import (
 
 const (
 	// RepoTopic is the default topic name
-	RepoTopic datamodel.TopicNameType = "sourcecode_Repo_topic"
+	RepoTopic datamodel.TopicNameType = "sourcecode_repo_topic"
 
 	// RepoTable is the default table name
 	RepoTable datamodel.ModelNameType = "sourcecode_repo"
@@ -203,7 +203,7 @@ func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
 		Timestamp:         "updated_ts",
-		NumPartitions:     8,
+		NumPartitions:     128,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,

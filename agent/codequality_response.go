@@ -22,8 +22,6 @@ import (
 )
 
 const (
-	// CodequalityResponseTopic is the default topic name
-	CodequalityResponseTopic datamodel.TopicNameType = "agent_CodequalityResponse_topic"
 
 	// CodequalityResponseTable is the default table name
 	CodequalityResponseTable datamodel.ModelNameType = "agent_codequalityresponse"
@@ -649,8 +647,6 @@ type CodequalityResponse struct {
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type CodequalityResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
 	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
@@ -700,7 +696,7 @@ func (o *CodequalityResponse) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *CodequalityResponse) GetTopicName() datamodel.TopicNameType {
-	return CodequalityResponseTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -753,29 +749,12 @@ func (o *CodequalityResponse) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *CodequalityResponse) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *CodequalityResponse) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for CodequalityResponse")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -800,39 +779,12 @@ func (o *CodequalityResponse) GetModelMaterializeConfig() *datamodel.ModelMateri
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *CodequalityResponse) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *CodequalityResponse) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = CodequalityResponseModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *CodequalityResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -921,12 +873,11 @@ func (o *CodequalityResponse) ToMap() map[string]interface{} {
 		"success":          toCodequalityResponseObject(o.Success, false),
 		"system_id":        toCodequalityResponseObject(o.SystemID, false),
 
-		"type":       o.Type.String(),
-		"updated_ts": toCodequalityResponseObject(o.UpdatedAt, false),
-		"uptime":     toCodequalityResponseObject(o.Uptime, false),
-		"uuid":       toCodequalityResponseObject(o.UUID, false),
-		"version":    toCodequalityResponseObject(o.Version, false),
-		"hashcode":   toCodequalityResponseObject(o.Hashcode, false),
+		"type":     o.Type.String(),
+		"uptime":   toCodequalityResponseObject(o.Uptime, false),
+		"uuid":     toCodequalityResponseObject(o.UUID, false),
+		"version":  toCodequalityResponseObject(o.Version, false),
+		"hashcode": toCodequalityResponseObject(o.Hashcode, false),
 	}
 }
 
@@ -1496,21 +1447,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["uptime"].(int64); ok {
 		o.Uptime = val
 	} else {
@@ -1594,7 +1530,6 @@ func (o *CodequalityResponse) Hash() string {
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
 	args = append(args, o.Type)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)

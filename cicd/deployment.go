@@ -20,8 +20,6 @@ import (
 )
 
 const (
-	// DeploymentTopic is the default topic name
-	DeploymentTopic datamodel.TopicNameType = "cicd_Deployment_topic"
 
 	// DeploymentTable is the default table name
 	DeploymentTable datamodel.ModelNameType = "cicd_deployment"
@@ -424,8 +422,6 @@ type Deployment struct {
 	StartDate DeploymentStartDate `json:"start_date" codec:"start_date" bson:"start_date" yaml:"start_date" faker:"-"`
 	// Status the status of the deployment
 	Status DeploymentStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the deployment status page
 	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -467,7 +463,7 @@ func (o *Deployment) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Deployment) GetTopicName() datamodel.TopicNameType {
-	return DeploymentTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -514,29 +510,12 @@ func (o *Deployment) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Deployment) GetTopicKey() string {
-	var i interface{} = o.CustomerID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Deployment) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Deployment")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -561,39 +540,12 @@ func (o *Deployment) GetModelMaterializeConfig() *datamodel.ModelMaterializeConf
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Deployment) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Deployment) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = DeploymentModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Deployment) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "customer_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -672,10 +624,9 @@ func (o *Deployment) ToMap() map[string]interface{} {
 		"repo_name":   toDeploymentObject(o.RepoName, false),
 		"start_date":  toDeploymentObject(o.StartDate, false),
 
-		"status":     o.Status.String(),
-		"updated_ts": toDeploymentObject(o.UpdatedAt, false),
-		"url":        toDeploymentObject(o.URL, true),
-		"hashcode":   toDeploymentObject(o.Hashcode, false),
+		"status":   o.Status.String(),
+		"url":      toDeploymentObject(o.URL, true),
+		"hashcode": toDeploymentObject(o.Hashcode, false),
 	}
 }
 
@@ -971,21 +922,6 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["url"].(*string); ok {
 		o.URL = val
 	} else if val, ok := kv["url"].(string); ok {
@@ -1021,7 +957,6 @@ func (o *Deployment) Hash() string {
 	args = append(args, o.RepoName)
 	args = append(args, o.StartDate)
 	args = append(args, o.Status)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

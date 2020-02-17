@@ -10,16 +10,12 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
-	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
-	// CodequalityTriggerTopic is the default topic name
-	CodequalityTriggerTopic datamodel.TopicNameType = "agent_CodequalityTrigger_topic"
 
 	// CodequalityTriggerTable is the default table name
 	CodequalityTriggerTable datamodel.ModelNameType = "agent_codequalitytrigger"
@@ -40,8 +36,6 @@ type CodequalityTrigger struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -69,7 +63,7 @@ func (o *CodequalityTrigger) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *CodequalityTrigger) GetTopicName() datamodel.TopicNameType {
-	return CodequalityTriggerTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -113,29 +107,12 @@ func (o *CodequalityTrigger) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *CodequalityTrigger) GetTopicKey() string {
-	var i interface{} = o.ID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *CodequalityTrigger) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for CodequalityTrigger")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -160,39 +137,12 @@ func (o *CodequalityTrigger) GetModelMaterializeConfig() *datamodel.ModelMateria
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *CodequalityTrigger) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *CodequalityTrigger) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = CodequalityTriggerModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *CodequalityTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("24h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("delete"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -263,7 +213,6 @@ func (o *CodequalityTrigger) ToMap() map[string]interface{} {
 		"integration_id": toCodequalityTriggerObject(o.IntegrationID, false),
 		"ref_id":         toCodequalityTriggerObject(o.RefID, false),
 		"ref_type":       toCodequalityTriggerObject(o.RefType, false),
-		"updated_ts":     toCodequalityTriggerObject(o.UpdatedAt, false),
 		"hashcode":       toCodequalityTriggerObject(o.Hashcode, false),
 	}
 }
@@ -377,21 +326,6 @@ func (o *CodequalityTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
 	o.setDefaults(false)
 }
 
@@ -403,7 +337,6 @@ func (o *CodequalityTrigger) Hash() string {
 	args = append(args, o.IntegrationID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

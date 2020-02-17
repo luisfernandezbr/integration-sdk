@@ -22,8 +22,6 @@ import (
 )
 
 const (
-	// CommitTopic is the default topic name
-	CommitTopic datamodel.TopicNameType = "sourcecode_Commit_topic"
 
 	// CommitTable is the default table name
 	CommitTable datamodel.ModelNameType = "sourcecode_commit"
@@ -806,8 +804,6 @@ type Commit struct {
 	Size int64 `json:"size" codec:"size" bson:"size" yaml:"size" faker:"-"`
 	// Sloc the number of source lines in the commit
 	Sloc int64 `json:"sloc" codec:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the commit detail
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -847,7 +843,7 @@ func (o *Commit) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Commit) GetTopicName() datamodel.TopicNameType {
-	return CommitTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -896,29 +892,12 @@ func (o *Commit) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Commit) GetTopicKey() string {
-	var i interface{} = o.RepoID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Commit) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Commit")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -944,39 +923,12 @@ func (o *Commit) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Commit) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Commit) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = CommitModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "repo_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -1065,7 +1017,6 @@ func (o *Commit) ToMap() map[string]interface{} {
 		"sha":              toCommitObject(o.Sha, false),
 		"size":             toCommitObject(o.Size, false),
 		"sloc":             toCommitObject(o.Sloc, false),
-		"updated_ts":       toCommitObject(o.UpdatedAt, false),
 		"url":              toCommitObject(o.URL, false),
 		"hashcode":         toCommitObject(o.Hashcode, false),
 	}
@@ -1570,21 +1521,6 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -1633,7 +1569,6 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Sha)
 	args = append(args, o.Size)
 	args = append(args, o.Sloc)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

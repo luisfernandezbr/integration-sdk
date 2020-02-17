@@ -160,18 +160,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.UpdateTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "agent.UserRequest":
-		o := new(dm_agent.UserRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent.UserResponse":
-		o := new(dm_agent.UserResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent.UserTrigger":
-		o := new(dm_agent.UserTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "agent.WebappIntegrationMutationRequest":
 		o := new(dm_agent.WebappIntegrationMutationRequest)
 		o.FromMap(map[string]interface{}{})
@@ -214,10 +202,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "customer.Team":
 		o := new(dm_customer.Team)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "customer.User":
-		o := new(dm_customer.User)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "sourcecode.Blame":
@@ -283,263 +267,27 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
-	case "agent_CancelRequest_topic":
-		o := new(dm_agent.CancelRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_CancelRequestTrigger_topic":
-		o := new(dm_agent.CancelRequestTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_CancelResponse_topic":
-		o := new(dm_agent.CancelResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_CodequalityRequest_topic":
-		o := new(dm_agent.CodequalityRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_CodequalityResponse_topic":
-		o := new(dm_agent.CodequalityResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_CodequalityTrigger_topic":
-		o := new(dm_agent.CodequalityTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Crash_topic":
-		o := new(dm_agent.Crash)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Enabled_topic":
-		o := new(dm_agent.Enabled)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_EnrollRequest_topic":
-		o := new(dm_agent.EnrollRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_EnrollResponse_topic":
-		o := new(dm_agent.EnrollResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Event_topic":
-		o := new(dm_agent.Event)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_ExportRequest_topic":
-		o := new(dm_agent.ExportRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_ExportResponse_topic":
+	case "agent_exportresponse_topic":
 		o := new(dm_agent.ExportResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "agent_ExportTrigger_topic":
-		o := new(dm_agent.ExportTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_IntegrationMutationRequest_topic":
-		o := new(dm_agent.IntegrationMutationRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_IntegrationMutationResponse_topic":
-		o := new(dm_agent.IntegrationMutationResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_IntegrationRequest_topic":
-		o := new(dm_agent.IntegrationRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_IntegrationResponse_topic":
-		o := new(dm_agent.IntegrationResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Log_topic":
-		o := new(dm_agent.Log)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Pause_topic":
-		o := new(dm_agent.Pause)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Ping_topic":
-		o := new(dm_agent.Ping)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_ProjectRequest_topic":
-		o := new(dm_agent.ProjectRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_ProjectResponse_topic":
-		o := new(dm_agent.ProjectResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_ProjectTrigger_topic":
-		o := new(dm_agent.ProjectTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_RepoRequest_topic":
-		o := new(dm_agent.RepoRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_RepoResponse_topic":
-		o := new(dm_agent.RepoResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_RepoTrigger_topic":
-		o := new(dm_agent.RepoTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Resume_topic":
-		o := new(dm_agent.Resume)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Start_topic":
-		o := new(dm_agent.Start)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Stop_topic":
-		o := new(dm_agent.Stop)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_Uninstall_topic":
-		o := new(dm_agent.Uninstall)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_UninstallRequest_topic":
-		o := new(dm_agent.UninstallRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_UninstallResponse_topic":
-		o := new(dm_agent.UninstallResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_UpdateRequest_topic":
-		o := new(dm_agent.UpdateRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_UpdateResponse_topic":
-		o := new(dm_agent.UpdateResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_UpdateTrigger_topic":
-		o := new(dm_agent.UpdateTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_UserRequest_topic":
-		o := new(dm_agent.UserRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_UserResponse_topic":
-		o := new(dm_agent.UserResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_UserTrigger_topic":
-		o := new(dm_agent.UserTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_WebappIntegrationMutationRequest_topic":
-		o := new(dm_agent.WebappIntegrationMutationRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_WebappIntegrationMutationResponse_topic":
-		o := new(dm_agent.WebappIntegrationMutationResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_WorkStatusRequest_topic":
-		o := new(dm_agent.WorkStatusRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_WorkStatusResponse_topic":
-		o := new(dm_agent.WorkStatusResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "agent_WorkStatusTrigger_topic":
-		o := new(dm_agent.WorkStatusTrigger)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "cicd_Build_topic":
-		o := new(dm_cicd.Build)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "cicd_Deployment_topic":
-		o := new(dm_cicd.Deployment)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "codequality_Metric_topic":
-		o := new(dm_codequality.Metric)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "codequality_Project_topic":
-		o := new(dm_codequality.Project)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "customer_CostCenter_topic":
-		o := new(dm_customer.CostCenter)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "customer_Team_topic":
-		o := new(dm_customer.Team)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "customer_User_topic":
-		o := new(dm_customer.User)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_Blame_topic":
-		o := new(dm_sourcecode.Blame)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_Branch_topic":
-		o := new(dm_sourcecode.Branch)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_Commit_topic":
-		o := new(dm_sourcecode.Commit)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_PullRequest_topic":
-		o := new(dm_sourcecode.PullRequest)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_PullRequestBranch_topic":
-		o := new(dm_sourcecode.PullRequestBranch)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_PullRequestComment_topic":
-		o := new(dm_sourcecode.PullRequestComment)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_PullRequestCommit_topic":
-		o := new(dm_sourcecode.PullRequestCommit)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_PullRequestReview_topic":
-		o := new(dm_sourcecode.PullRequestReview)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "sourcecode_Repo_topic":
+	case "sourcecode_repo_topic":
 		o := new(dm_sourcecode.Repo)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "sourcecode_User_topic":
+	case "sourcecode_user_topic":
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_Issue_topic":
-		o := new(dm_work.Issue)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "work_Project_topic":
+	case "work_project_topic":
 		o := new(dm_work.Project)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_Sprint_topic":
+	case "work_sprint_topic":
 		o := new(dm_work.Sprint)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_User_topic":
+	case "work_user_topic":
 		o := new(dm_work.User)
 		o.FromMap(map[string]interface{}{})
 		return o
@@ -552,76 +300,19 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{}
 }
 
-// GetTopics returns an array of topics that are configured
+// GetTopics returns an array of topics that are configured to be evented
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
-		datamodel.TopicNameType("agent_CancelRequestTrigger_topic"),
-		datamodel.TopicNameType("agent_CancelRequest_topic"),
-		datamodel.TopicNameType("agent_CancelResponse_topic"),
-		datamodel.TopicNameType("agent_CodequalityRequest_topic"),
-		datamodel.TopicNameType("agent_CodequalityResponse_topic"),
-		datamodel.TopicNameType("agent_CodequalityTrigger_topic"),
-		datamodel.TopicNameType("agent_Crash_topic"),
-		datamodel.TopicNameType("agent_Enabled_topic"),
-		datamodel.TopicNameType("agent_EnrollRequest_topic"),
-		datamodel.TopicNameType("agent_EnrollResponse_topic"),
-		datamodel.TopicNameType("agent_Event_topic"),
-		datamodel.TopicNameType("agent_ExportRequest_topic"),
-		datamodel.TopicNameType("agent_ExportResponse_topic"),
-		datamodel.TopicNameType("agent_ExportTrigger_topic"),
-		datamodel.TopicNameType("agent_IntegrationMutationRequest_topic"),
-		datamodel.TopicNameType("agent_IntegrationMutationResponse_topic"),
-		datamodel.TopicNameType("agent_IntegrationRequest_topic"),
-		datamodel.TopicNameType("agent_IntegrationResponse_topic"),
-		datamodel.TopicNameType("agent_Log_topic"),
-		datamodel.TopicNameType("agent_Pause_topic"),
-		datamodel.TopicNameType("agent_Ping_topic"),
-		datamodel.TopicNameType("agent_ProjectRequest_topic"),
-		datamodel.TopicNameType("agent_ProjectResponse_topic"),
-		datamodel.TopicNameType("agent_ProjectTrigger_topic"),
-		datamodel.TopicNameType("agent_RepoRequest_topic"),
-		datamodel.TopicNameType("agent_RepoResponse_topic"),
-		datamodel.TopicNameType("agent_RepoTrigger_topic"),
-		datamodel.TopicNameType("agent_Resume_topic"),
-		datamodel.TopicNameType("agent_Start_topic"),
-		datamodel.TopicNameType("agent_Stop_topic"),
-		datamodel.TopicNameType("agent_UninstallRequest_topic"),
-		datamodel.TopicNameType("agent_UninstallResponse_topic"),
-		datamodel.TopicNameType("agent_Uninstall_topic"),
-		datamodel.TopicNameType("agent_UpdateRequest_topic"),
-		datamodel.TopicNameType("agent_UpdateResponse_topic"),
-		datamodel.TopicNameType("agent_UpdateTrigger_topic"),
-		datamodel.TopicNameType("agent_UserRequest_topic"),
-		datamodel.TopicNameType("agent_UserResponse_topic"),
-		datamodel.TopicNameType("agent_UserTrigger_topic"),
-		datamodel.TopicNameType("agent_WorkStatusRequest_topic"),
-		datamodel.TopicNameType("agent_WorkStatusResponse_topic"),
-		datamodel.TopicNameType("agent_WorkStatusTrigger_topic"),
-		datamodel.TopicNameType("cicd_Build_topic"),
-		datamodel.TopicNameType("cicd_Deployment_topic"),
-		datamodel.TopicNameType("codequality_Metric_topic"),
-		datamodel.TopicNameType("codequality_Project_topic"),
-		datamodel.TopicNameType("customer_CostCenter_topic"),
-		datamodel.TopicNameType("customer_Team_topic"),
-		datamodel.TopicNameType("customer_User_topic"),
-		datamodel.TopicNameType("sourcecode_Blame_topic"),
-		datamodel.TopicNameType("sourcecode_Branch_topic"),
-		datamodel.TopicNameType("sourcecode_Commit_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequestBranch_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequestComment_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequestCommit_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequestReview_topic"),
-		datamodel.TopicNameType("sourcecode_PullRequest_topic"),
-		datamodel.TopicNameType("sourcecode_Repo_topic"),
-		datamodel.TopicNameType("sourcecode_User_topic"),
-		datamodel.TopicNameType("work_Issue_topic"),
-		datamodel.TopicNameType("work_Project_topic"),
-		datamodel.TopicNameType("work_Sprint_topic"),
-		datamodel.TopicNameType("work_User_topic"),
+		datamodel.TopicNameType("agent_exportresponse_topic"),
+		datamodel.TopicNameType("sourcecode_repo_topic"),
+		datamodel.TopicNameType("sourcecode_user_topic"),
+		datamodel.TopicNameType("work_project_topic"),
+		datamodel.TopicNameType("work_sprint_topic"),
+		datamodel.TopicNameType("work_user_topic"),
 	}
 }
 
-// GetModelNames returns an array of model names that are configured
+// GetModelNames returns an array of model names
 func GetModelNames() []datamodel.ModelNameType {
 	return []datamodel.ModelNameType{
 		datamodel.ModelNameType("agent.CancelRequest"),
@@ -660,9 +351,6 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.UpdateRequest"),
 		datamodel.ModelNameType("agent.UpdateResponse"),
 		datamodel.ModelNameType("agent.UpdateTrigger"),
-		datamodel.ModelNameType("agent.UserRequest"),
-		datamodel.ModelNameType("agent.UserResponse"),
-		datamodel.ModelNameType("agent.UserTrigger"),
 		datamodel.ModelNameType("agent.WebappIntegrationMutationRequest"),
 		datamodel.ModelNameType("agent.WebappIntegrationMutationResponse"),
 		datamodel.ModelNameType("agent.WorkStatusRequest"),
@@ -674,7 +362,6 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("codequality.Project"),
 		datamodel.ModelNameType("customer.CostCenter"),
 		datamodel.ModelNameType("customer.Team"),
-		datamodel.ModelNameType("customer.User"),
 		datamodel.ModelNameType("sourcecode.Blame"),
 		datamodel.ModelNameType("sourcecode.Branch"),
 		datamodel.ModelNameType("sourcecode.Commit"),

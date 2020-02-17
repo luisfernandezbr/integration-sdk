@@ -18,8 +18,6 @@ import (
 )
 
 const (
-	// EnrollRequestTopic is the default topic name
-	EnrollRequestTopic datamodel.TopicNameType = "agent_EnrollRequest_topic"
 
 	// EnrollRequestTable is the default table name
 	EnrollRequestTable datamodel.ModelNameType = "agent_enrollrequest"
@@ -135,8 +133,6 @@ type EnrollRequest struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// RequestDate the date when the request was made
 	RequestDate EnrollRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -169,7 +165,7 @@ func (o *EnrollRequest) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *EnrollRequest) GetTopicName() datamodel.TopicNameType {
-	return EnrollRequestTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -210,29 +206,12 @@ func (o *EnrollRequest) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *EnrollRequest) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *EnrollRequest) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for EnrollRequest")
+	return time.Now().UTC()
 }
 
 // IsMaterialized returns true if the model is materialized
@@ -252,38 +231,12 @@ func (o *EnrollRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeC
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *EnrollRequest) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *EnrollRequest) SetEventHeaders(kv map[string]string) {
-	kv["model"] = EnrollRequestModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *EnrollRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // Clone returns an exact copy of EnrollRequest
@@ -344,7 +297,6 @@ func (o *EnrollRequest) ToMap() map[string]interface{} {
 		"code":         toEnrollRequestObject(o.Code, false),
 		"id":           toEnrollRequestObject(o.ID, false),
 		"request_date": toEnrollRequestObject(o.RequestDate, false),
-		"updated_ts":   toEnrollRequestObject(o.UpdatedAt, false),
 		"uuid":         toEnrollRequestObject(o.UUID, false),
 	}
 }
@@ -430,21 +382,6 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
 	}
 
 	if val, ok := kv["uuid"].(string); ok {

@@ -22,8 +22,6 @@ import (
 )
 
 const (
-	// BlameTopic is the default topic name
-	BlameTopic datamodel.TopicNameType = "sourcecode_Blame_topic"
 
 	// BlameTable is the default table name
 	BlameTable datamodel.ModelNameType = "sourcecode_blame"
@@ -402,8 +400,6 @@ type Blame struct {
 	Sloc int64 `json:"sloc" codec:"sloc" bson:"sloc" yaml:"sloc" faker:"-"`
 	// Status the status of the change
 	Status BlameStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -431,7 +427,6 @@ func toBlameObject(o interface{}, isoptional bool) interface{} {
 
 	case BlameStatus:
 		return v.String()
-
 	default:
 		return o
 	}
@@ -444,7 +439,7 @@ func (o *Blame) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Blame) GetTopicName() datamodel.TopicNameType {
-	return BlameTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -493,31 +488,12 @@ func (o *Blame) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Blame) GetTopicKey() string {
-	var i interface{} = o.RepoID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Blame) GetTimestamp() time.Time {
-	var dt interface{} = o.ChangeDate
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	case BlameChangeDate:
-		return datetime.DateFromEpoch(v.Epoch)
-	}
-	panic("not sure how to handle the date time format for Blame")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -542,39 +518,12 @@ func (o *Blame) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Blame) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Blame) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = BlameModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Blame) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "repo_id",
-		Timestamp:         "change_date",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -661,9 +610,8 @@ func (o *Blame) ToMap() map[string]interface{} {
 		"size":            toBlameObject(o.Size, false),
 		"sloc":            toBlameObject(o.Sloc, false),
 
-		"status":     o.Status.String(),
-		"updated_ts": toBlameObject(o.UpdatedAt, false),
-		"hashcode":   toBlameObject(o.Hashcode, false),
+		"status":   o.Status.String(),
+		"hashcode": toBlameObject(o.Hashcode, false),
 	}
 }
 
@@ -1118,21 +1066,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
 	o.setDefaults(false)
 }
 
@@ -1160,7 +1093,6 @@ func (o *Blame) Hash() string {
 	args = append(args, o.Size)
 	args = append(args, o.Sloc)
 	args = append(args, o.Status)
-	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

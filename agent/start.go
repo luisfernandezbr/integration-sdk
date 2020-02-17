@@ -20,8 +20,6 @@ import (
 )
 
 const (
-	// StartTopic is the default topic name
-	StartTopic datamodel.TopicNameType = "agent_Start_topic"
 
 	// StartTable is the default table name
 	StartTable datamodel.ModelNameType = "agent_start"
@@ -462,8 +460,6 @@ type Start struct {
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type StartType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
 	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
@@ -506,7 +502,7 @@ func (o *Start) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Start) GetTopicName() datamodel.TopicNameType {
-	return StartTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -556,29 +552,12 @@ func (o *Start) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Start) GetTopicKey() string {
-	var i interface{} = o.UUID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Start) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Start")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -603,39 +582,12 @@ func (o *Start) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Start) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Start) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = StartModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Start) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -722,12 +674,11 @@ func (o *Start) ToMap() map[string]interface{} {
 		"success":          toStartObject(o.Success, false),
 		"system_id":        toStartObject(o.SystemID, false),
 
-		"type":       o.Type.String(),
-		"updated_ts": toStartObject(o.UpdatedAt, false),
-		"uptime":     toStartObject(o.Uptime, false),
-		"uuid":       toStartObject(o.UUID, false),
-		"version":    toStartObject(o.Version, false),
-		"hashcode":   toStartObject(o.Hashcode, false),
+		"type":     o.Type.String(),
+		"uptime":   toStartObject(o.Uptime, false),
+		"uuid":     toStartObject(o.UUID, false),
+		"version":  toStartObject(o.Version, false),
+		"hashcode": toStartObject(o.Hashcode, false),
 	}
 }
 
@@ -1214,21 +1165,6 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["uptime"].(int64); ok {
 		o.Uptime = val
 	} else {
@@ -1310,7 +1246,6 @@ func (o *Start) Hash() string {
 	args = append(args, o.Success)
 	args = append(args, o.SystemID)
 	args = append(args, o.Type)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)

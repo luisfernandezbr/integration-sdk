@@ -19,7 +19,7 @@ import (
 
 const (
 	// UserTopic is the default topic name
-	UserTopic datamodel.TopicNameType = "work_User_topic"
+	UserTopic datamodel.TopicNameType = "work_user_topic"
 
 	// UserTable is the default table name
 	UserTable datamodel.ModelNameType = "work_user"
@@ -98,8 +98,8 @@ func (o *User) GetModelName() datamodel.ModelNameType {
 }
 
 // NewUserID provides a template for generating an ID field for User
-func NewUserID(customerID string, refType string, refID string) string {
-	return hash.Values("User", customerID, refType, refID)
+func NewUserID(customerID string, refID string, refType string) string {
+	return hash.Values(customerID, refID, refType)
 }
 
 func (o *User) setDefaults(frommap bool) {
@@ -117,8 +117,7 @@ func (o *User) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("User", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
 	}
 
 	if frommap {
@@ -135,7 +134,7 @@ func (o *User) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *User) GetTopicKey() string {
-	var i interface{} = o.CustomerID
+	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -206,9 +205,9 @@ func (o *User) GetTopicConfig() *datamodel.ModelTopicConfig {
 		ttl = retention // they should be the same if not set
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "customer_id",
+		Key:               "id",
 		Timestamp:         "updated_ts",
-		NumPartitions:     8,
+		NumPartitions:     128,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,

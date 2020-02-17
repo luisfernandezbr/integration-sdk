@@ -22,8 +22,6 @@ import (
 )
 
 const (
-	// PullRequestBranchTopic is the default topic name
-	PullRequestBranchTopic datamodel.TopicNameType = "sourcecode_PullRequestBranch_topic"
 
 	// PullRequestBranchTable is the default table name
 	PullRequestBranchTable datamodel.ModelNameType = "sourcecode_pullrequestbranch"
@@ -68,8 +66,6 @@ type PullRequestBranch struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoID the unique id for the repo
 	RepoID string `json:"repo_id" codec:"repo_id" bson:"repo_id" yaml:"repo_id" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the URL to the source system for this branch
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -99,7 +95,7 @@ func (o *PullRequestBranch) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *PullRequestBranch) GetTopicName() datamodel.TopicNameType {
-	return PullRequestBranchTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -154,29 +150,12 @@ func (o *PullRequestBranch) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *PullRequestBranch) GetTopicKey() string {
-	var i interface{} = o.RepoID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *PullRequestBranch) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for PullRequestBranch")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -201,39 +180,12 @@ func (o *PullRequestBranch) GetModelMaterializeConfig() *datamodel.ModelMaterial
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *PullRequestBranch) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *PullRequestBranch) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = PullRequestBranchModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *PullRequestBranch) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "repo_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -316,7 +268,6 @@ func (o *PullRequestBranch) ToMap() map[string]interface{} {
 		"ref_id":                    toPullRequestBranchObject(o.RefID, false),
 		"ref_type":                  toPullRequestBranchObject(o.RefType, false),
 		"repo_id":                   toPullRequestBranchObject(o.RepoID, false),
-		"updated_ts":                toPullRequestBranchObject(o.UpdatedAt, false),
 		"url":                       toPullRequestBranchObject(o.URL, false),
 		"hashcode":                  toPullRequestBranchObject(o.Hashcode, false),
 	}
@@ -770,21 +721,6 @@ func (o *PullRequestBranch) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -827,7 +763,6 @@ func (o *PullRequestBranch) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

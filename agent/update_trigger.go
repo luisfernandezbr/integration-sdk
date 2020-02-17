@@ -10,16 +10,12 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
-	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
 const (
-	// UpdateTriggerTopic is the default topic name
-	UpdateTriggerTopic datamodel.TopicNameType = "agent_UpdateTrigger_topic"
 
 	// UpdateTriggerTable is the default table name
 	UpdateTriggerTable datamodel.ModelNameType = "agent_updatetrigger"
@@ -38,8 +34,6 @@ type UpdateTrigger struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UUID UUID of the agent to update
 	UUID *string `json:"uuid,omitempty" codec:"uuid,omitempty" bson:"uuid" yaml:"uuid,omitempty" faker:"-"`
 	// Version
@@ -71,7 +65,7 @@ func (o *UpdateTrigger) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *UpdateTrigger) GetTopicName() datamodel.TopicNameType {
-	return UpdateTriggerTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -121,29 +115,12 @@ func (o *UpdateTrigger) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *UpdateTrigger) GetTopicKey() string {
-	var i interface{} = o.ID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *UpdateTrigger) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for UpdateTrigger")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -168,39 +145,12 @@ func (o *UpdateTrigger) GetModelMaterializeConfig() *datamodel.ModelMaterializeC
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *UpdateTrigger) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *UpdateTrigger) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = UpdateTriggerModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *UpdateTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("24h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 24h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("delete"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -270,7 +220,6 @@ func (o *UpdateTrigger) ToMap() map[string]interface{} {
 		"id":          toUpdateTriggerObject(o.ID, false),
 		"ref_id":      toUpdateTriggerObject(o.RefID, false),
 		"ref_type":    toUpdateTriggerObject(o.RefType, false),
-		"updated_ts":  toUpdateTriggerObject(o.UpdatedAt, false),
 		"uuid":        toUpdateTriggerObject(o.UUID, true),
 		"version":     toUpdateTriggerObject(o.Version, true),
 		"hashcode":    toUpdateTriggerObject(o.Hashcode, false),
@@ -367,21 +316,6 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["uuid"].(*string); ok {
 		o.UUID = val
 	} else if val, ok := kv["uuid"].(string); ok {
@@ -427,7 +361,6 @@ func (o *UpdateTrigger) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)

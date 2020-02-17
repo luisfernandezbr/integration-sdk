@@ -20,8 +20,6 @@ import (
 )
 
 const (
-	// MetricTopic is the default topic name
-	MetricTopic datamodel.TopicNameType = "codequality_Metric_topic"
 
 	// MetricTable is the default table name
 	MetricTable datamodel.ModelNameType = "codequality_metric"
@@ -229,8 +227,6 @@ type Metric struct {
 	RepoID *string `json:"repo_id,omitempty" codec:"repo_id,omitempty" bson:"repo_id" yaml:"repo_id,omitempty" faker:"-"`
 	// Status status of the analysis for this commit
 	Status MetricStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
-	// UpdatedAt the timestamp that the model was last updated fo real
-	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Value the value of the metric
 	Value string `json:"value" codec:"value" bson:"value" yaml:"value" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -266,7 +262,7 @@ func (o *Metric) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Metric) GetTopicName() datamodel.TopicNameType {
-	return MetricTopic
+	return ""
 }
 
 // GetStreamName returns the name of the stream
@@ -328,29 +324,12 @@ func (o *Metric) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Metric) GetTopicKey() string {
-	var i interface{} = o.ProjectID
-	if s, ok := i.(string); ok {
-		return s
-	}
-	return fmt.Sprintf("%v", i)
+	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Metric) GetTimestamp() time.Time {
-	var dt interface{} = o.UpdatedAt
-	switch v := dt.(type) {
-	case int64:
-		return datetime.DateFromEpoch(v).UTC()
-	case string:
-		tv, err := datetime.ISODateToTime(v)
-		if err != nil {
-			panic(err)
-		}
-		return tv.UTC()
-	case time.Time:
-		return v.UTC()
-	}
-	panic("not sure how to handle the date time format for Metric")
+	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
@@ -375,39 +354,12 @@ func (o *Metric) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Metric) IsEvented() bool {
-	return true
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *Metric) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = MetricModelName.String()
+	return false
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Metric) GetTopicConfig() *datamodel.ModelTopicConfig {
-	retention, err := time.ParseDuration("87360h0m0s")
-	if err != nil {
-		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
-	}
-
-	ttl, err := time.ParseDuration("0s")
-	if err != nil {
-		ttl = 0
-	}
-	if ttl == 0 && retention != 0 {
-		ttl = retention // they should be the same if not set
-	}
-	return &datamodel.ModelTopicConfig{
-		Key:               "project_id",
-		Timestamp:         "updated_ts",
-		NumPartitions:     8,
-		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
-		ReplicationFactor: 3,
-		Retention:         retention,
-		MaxSize:           5242880,
-		TTL:               ttl,
-	}
+	return nil
 }
 
 // GetCustomerID will return the customer_id
@@ -487,10 +439,9 @@ func (o *Metric) ToMap() map[string]interface{} {
 		"ref_type":            toMetricObject(o.RefType, false),
 		"repo_id":             toMetricObject(o.RepoID, true),
 
-		"status":     o.Status.String(),
-		"updated_ts": toMetricObject(o.UpdatedAt, false),
-		"value":      toMetricObject(o.Value, false),
-		"hashcode":   toMetricObject(o.Hashcode, false),
+		"status":   o.Status.String(),
+		"value":    toMetricObject(o.Value, false),
+		"hashcode": toMetricObject(o.Hashcode, false),
 	}
 }
 
@@ -791,21 +742,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["updated_ts"].(int64); ok {
-		o.UpdatedAt = val
-	} else {
-		if val, ok := kv["updated_ts"]; ok {
-			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.UpdatedAt = number.ToInt64Any(val)
-			}
-		}
-	}
-
 	if val, ok := kv["value"].(string); ok {
 		o.Value = val
 	} else {
@@ -845,7 +781,6 @@ func (o *Metric) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RepoID)
 	args = append(args, o.Status)
-	args = append(args, o.UpdatedAt)
 	args = append(args, o.Value)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

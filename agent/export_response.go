@@ -23,7 +23,7 @@ import (
 
 const (
 	// ExportResponseTopic is the default topic name
-	ExportResponseTopic datamodel.TopicNameType = "agent_ExportResponse_topic"
+	ExportResponseTopic datamodel.TopicNameType = "agent_exportresponse_topic"
 
 	// ExportResponseTable is the default table name
 	ExportResponseTable datamodel.ModelNameType = "agent_exportresponse"
@@ -1361,7 +1361,7 @@ func (o *ExportResponse) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *ExportResponse) GetTopicKey() string {
-	var i interface{} = o.UUID
+	var i interface{} = o.CustomerID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -1432,9 +1432,9 @@ func (o *ExportResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 		ttl = retention // they should be the same if not set
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "uuid",
+		Key:               "customer_id",
 		Timestamp:         "updated_ts",
-		NumPartitions:     8,
+		NumPartitions:     128,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,

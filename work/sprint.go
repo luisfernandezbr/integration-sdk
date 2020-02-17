@@ -21,7 +21,7 @@ import (
 
 const (
 	// SprintTopic is the default topic name
-	SprintTopic datamodel.TopicNameType = "work_Sprint_topic"
+	SprintTopic datamodel.TopicNameType = "work_sprint_topic"
 
 	// SprintTable is the default table name
 	SprintTable datamodel.ModelNameType = "work_sprint"
@@ -503,7 +503,7 @@ func (o *Sprint) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Sprint) GetTopicKey() string {
-	var i interface{} = o.CustomerID
+	var i interface{} = o.ID
 	if s, ok := i.(string); ok {
 		return s
 	}
@@ -576,9 +576,9 @@ func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 		ttl = retention // they should be the same if not set
 	}
 	return &datamodel.ModelTopicConfig{
-		Key:               "customer_id",
+		Key:               "id",
 		Timestamp:         "started_date",
-		NumPartitions:     8,
+		NumPartitions:     128,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,
