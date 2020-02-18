@@ -19,7 +19,7 @@ import (
 
 const (
 	// ProjectTopic is the default topic name
-	ProjectTopic datamodel.TopicNameType = "work_project_topic"
+	ProjectTopic datamodel.TopicNameType = "work_project"
 
 	// ProjectTable is the default table name
 	ProjectTable datamodel.ModelNameType = "work_project"

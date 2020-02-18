@@ -21,7 +21,7 @@ import (
 
 const (
 	// UserTopic is the default topic name
-	UserTopic datamodel.TopicNameType = "sourcecode_user_topic"
+	UserTopic datamodel.TopicNameType = "sourcecode_user"
 
 	// UserTable is the default table name
 	UserTable datamodel.ModelNameType = "sourcecode_user"

@@ -267,23 +267,23 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
-	case "sourcecode_repo_topic":
+	case "sourcecode_Repo":
 		o := new(dm_sourcecode.Repo)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "sourcecode_user_topic":
+	case "sourcecode_User":
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_project_topic":
+	case "work_Project":
 		o := new(dm_work.Project)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_sprint_topic":
+	case "work_Sprint":
 		o := new(dm_work.Sprint)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_user_topic":
+	case "work_User":
 		o := new(dm_work.User)
 		o.FromMap(map[string]interface{}{})
 		return o
@@ -299,11 +299,11 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured to be evented
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
-		datamodel.TopicNameType("sourcecode_repo_topic"),
-		datamodel.TopicNameType("sourcecode_user_topic"),
-		datamodel.TopicNameType("work_project_topic"),
-		datamodel.TopicNameType("work_sprint_topic"),
-		datamodel.TopicNameType("work_user_topic"),
+		datamodel.TopicNameType("sourcecode_Repo"),
+		datamodel.TopicNameType("sourcecode_User"),
+		datamodel.TopicNameType("work_Project"),
+		datamodel.TopicNameType("work_Sprint"),
+		datamodel.TopicNameType("work_User"),
 	}
 }
 

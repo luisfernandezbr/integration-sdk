@@ -21,7 +21,7 @@ import (
 
 const (
 	// SprintTopic is the default topic name
-	SprintTopic datamodel.TopicNameType = "work_sprint_topic"
+	SprintTopic datamodel.TopicNameType = "work_sprint"
 
 	// SprintTable is the default table name
 	SprintTable datamodel.ModelNameType = "work_sprint"
