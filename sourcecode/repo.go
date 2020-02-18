@@ -19,7 +19,7 @@ import (
 
 const (
 	// RepoTopic is the default topic name
-	RepoTopic datamodel.TopicNameType = "sourcecode_repo"
+	RepoTopic datamodel.TopicNameType = "sourcecode_Repo"
 
 	// RepoTable is the default table name
 	RepoTable datamodel.ModelNameType = "sourcecode_repo"
