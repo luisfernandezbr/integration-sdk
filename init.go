@@ -248,6 +248,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_work.Issue)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "work.IssueComment":
+		o := new(dm_work.IssueComment)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.Project":
 		o := new(dm_work.Project)
 		o.FromMap(map[string]interface{}{})
@@ -368,6 +372,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("sourcecode.Repo"),
 		datamodel.ModelNameType("sourcecode.User"),
 		datamodel.ModelNameType("work.Issue"),
+		datamodel.ModelNameType("work.IssueComment"),
 		datamodel.ModelNameType("work.Project"),
 		datamodel.ModelNameType("work.Sprint"),
 		datamodel.ModelNameType("work.User"),
