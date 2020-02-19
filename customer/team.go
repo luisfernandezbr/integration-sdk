@@ -547,7 +547,7 @@ type Team struct {
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"team"`
 	// ParentIds the parent_ids for this team
 	ParentIds []string `json:"parent_ids" codec:"parent_ids" bson:"parent_ids" yaml:"parent_ids" faker:"-"`
-	// ProjectIds (DYNAMIC) project ids for the team
+	// ProjectIds project ids for the team
 	ProjectIds []string `json:"project_ids" codec:"project_ids" bson:"project_ids" yaml:"project_ids" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
@@ -557,7 +557,7 @@ type Team struct {
 	RepoIds []string `json:"repo_ids" codec:"repo_ids" bson:"repo_ids" yaml:"repo_ids" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
-	// Users (DYNAMIC) users for the team
+	// Users users for the team
 	Users []TeamUsers `json:"users" codec:"users" bson:"users" yaml:"users" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
