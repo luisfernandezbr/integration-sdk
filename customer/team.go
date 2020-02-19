@@ -553,7 +553,7 @@ type Team struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// RepoIds (DYNAMIC) repo ids for the team
+	// RepoIds repo ids for the team
 	RepoIds []string `json:"repo_ids" codec:"repo_ids" bson:"repo_ids" yaml:"repo_ids" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
