@@ -33,6 +33,345 @@ const (
 	IssueModelName datamodel.ModelNameType = "work.Issue"
 )
 
+// IssueAttachmentsCreatedDate represents the object structure for created_date
+type IssueAttachmentsCreatedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toIssueAttachmentsCreatedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssueAttachmentsCreatedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *IssueAttachmentsCreatedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toIssueAttachmentsCreatedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toIssueAttachmentsCreatedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toIssueAttachmentsCreatedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *IssueAttachmentsCreatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueAttachmentsCreatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// IssueAttachments represents the object structure for attachments
+type IssueAttachments struct {
+	// CreatedDate the date that the issue was created
+	CreatedDate IssueAttachmentsCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
+	// MimeType attachment mime type
+	MimeType string `json:"mime_type" codec:"mime_type" bson:"mime_type" yaml:"mime_type" faker:"-"`
+	// Name attachment file name
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID id of the attachment in the source system
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// Size attachment size in bytes
+	Size int64 `json:"size" codec:"size" bson:"size" yaml:"size" faker:"-"`
+	// ThumbnailURL url to fetch the thumbnail
+	ThumbnailURL string `json:"thumbnail_url" codec:"thumbnail_url" bson:"thumbnail_url" yaml:"thumbnail_url" faker:"-"`
+	// URL url to fetch the attachment
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
+	// UserRefID ref_id of the user who added attachment
+	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
+}
+
+func toIssueAttachmentsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssueAttachments:
+		return v.ToMap()
+
+	case IssueAttachmentsCreatedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *IssueAttachments) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// CreatedDate the date that the issue was created
+		"created_date": toIssueAttachmentsObject(o.CreatedDate, false),
+		// MimeType attachment mime type
+		"mime_type": toIssueAttachmentsObject(o.MimeType, false),
+		// Name attachment file name
+		"name": toIssueAttachmentsObject(o.Name, false),
+		// RefID id of the attachment in the source system
+		"ref_id": toIssueAttachmentsObject(o.RefID, false),
+		// Size attachment size in bytes
+		"size": toIssueAttachmentsObject(o.Size, false),
+		// ThumbnailURL url to fetch the thumbnail
+		"thumbnail_url": toIssueAttachmentsObject(o.ThumbnailURL, false),
+		// URL url to fetch the attachment
+		"url": toIssueAttachmentsObject(o.URL, false),
+		// UserRefID ref_id of the user who added attachment
+		"user_ref_id": toIssueAttachmentsObject(o.UserRefID, false),
+	}
+}
+
+func (o *IssueAttachments) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueAttachments) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(IssueAttachmentsCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*IssueAttachmentsCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["mime_type"].(string); ok {
+		o.MimeType = val
+	} else {
+		if val, ok := kv["mime_type"]; ok {
+			if val == nil {
+				o.MimeType = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.MimeType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["size"].(int64); ok {
+		o.Size = val
+	} else {
+		if val, ok := kv["size"]; ok {
+			if val == nil {
+				o.Size = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Size = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["thumbnail_url"].(string); ok {
+		o.ThumbnailURL = val
+	} else {
+		if val, ok := kv["thumbnail_url"]; ok {
+			if val == nil {
+				o.ThumbnailURL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ThumbnailURL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["user_ref_id"].(string); ok {
+		o.UserRefID = val
+	} else {
+		if val, ok := kv["user_ref_id"]; ok {
+			if val == nil {
+				o.UserRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.UserRefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // IssueChangeLogCreatedDate represents the object structure for created_date
 type IssueChangeLogCreatedDate struct {
 	// Epoch the date in epoch format
@@ -1408,6 +1747,8 @@ func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
 type Issue struct {
 	// AssigneeRefID user id of the assignee
 	AssigneeRefID string `json:"assignee_ref_id" codec:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
+	// Attachments file attachments
+	Attachments []IssueAttachments `json:"attachments" codec:"attachments" bson:"attachments" yaml:"attachments" faker:"-"`
 	// ChangeLog the change history of this issue
 	ChangeLog []IssueChangeLog `json:"change_log" codec:"change_log" bson:"change_log" yaml:"change_log" faker:"-"`
 	// CreatedDate the date that the issue was created
@@ -1477,6 +1818,13 @@ func toIssueObject(o interface{}, isoptional bool) interface{} {
 	case *Issue:
 		return v.ToMap()
 
+	case []IssueAttachments:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	case []IssueChangeLog:
 		arr := make([]interface{}, 0)
 		for _, i := range v {
@@ -1542,6 +1890,9 @@ func NewIssueID(customerID string, refID string, refType string) string {
 }
 
 func (o *Issue) setDefaults(frommap bool) {
+	if o.Attachments == nil {
+		o.Attachments = make([]IssueAttachments, 0)
+	}
 	if o.ChangeLog == nil {
 		o.ChangeLog = make([]IssueChangeLog, 0)
 	}
@@ -1681,6 +2032,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"assignee_ref_id":    toIssueObject(o.AssigneeRefID, false),
+		"attachments":        toIssueObject(o.Attachments, false),
 		"change_log":         toIssueObject(o.ChangeLog, false),
 		"created_date":       toIssueObject(o.CreatedDate, false),
 		"creator_ref_id":     toIssueObject(o.CreatorRefID, false),
@@ -1738,6 +2090,69 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.AssigneeRefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.Attachments = make([]IssueAttachments, 0)
+
+	}
+	if val, ok := kv["attachments"]; ok {
+		if sv, ok := val.([]IssueAttachments); ok {
+			o.Attachments = sv
+		} else if sp, ok := val.([]*IssueAttachments); ok {
+			o.Attachments = o.Attachments[:0]
+			for _, e := range sp {
+				o.Attachments = append(o.Attachments, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IssueAttachments); ok {
+					o.Attachments = append(o.Attachments, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IssueAttachments
+					fm.FromMap(av)
+					o.Attachments = append(o.Attachments, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					var av IssueAttachments
+					if err := json.Unmarshal(b, &av); err != nil {
+						panic("unsupported type for attachments field entry: " + reflect.TypeOf(ae).String())
+					}
+					o.Attachments = append(o.Attachments, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IssueAttachments); ok {
+					o.Attachments = append(o.Attachments, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IssueAttachments
+					fm.FromMap(r)
+					o.Attachments = append(o.Attachments, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IssueAttachments{}
+					fm.FromMap(r)
+					o.Attachments = append(o.Attachments, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IssueAttachments
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Attachments = append(o.Attachments, fm)
+						}
+					}
+				}
 			}
 		}
 	}
@@ -2530,6 +2945,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 func (o *Issue) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.AssigneeRefID)
+	args = append(args, o.Attachments)
 	args = append(args, o.ChangeLog)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CreatorRefID)
