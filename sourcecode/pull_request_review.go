@@ -148,6 +148,14 @@ func (v *PullRequestReviewState) UnmarshalBSONValue(t bsontype.Type, data []byte
 			*v = PullRequestReviewState(3)
 		case "DISMISSED":
 			*v = PullRequestReviewState(4)
+		case "REQUESTED":
+			*v = PullRequestReviewState(5)
+		case "REQUEST_REMOVED":
+			*v = PullRequestReviewState(6)
+		case "ASSIGNED":
+			*v = PullRequestReviewState(7)
+		case "UNASSIGNED":
+			*v = PullRequestReviewState(8)
 		}
 	}
 	return nil
@@ -166,6 +174,14 @@ func (v PullRequestReviewState) UnmarshalJSON(buf []byte) error {
 		v = 3
 	case "DISMISSED":
 		v = 4
+	case "REQUESTED":
+		v = 5
+	case "REQUEST_REMOVED":
+		v = 6
+	case "ASSIGNED":
+		v = 7
+	case "UNASSIGNED":
+		v = 8
 	}
 	return nil
 }
@@ -183,6 +199,14 @@ func (v PullRequestReviewState) MarshalJSON() ([]byte, error) {
 		return json.Marshal("PENDING")
 	case 4:
 		return json.Marshal("DISMISSED")
+	case 5:
+		return json.Marshal("REQUESTED")
+	case 6:
+		return json.Marshal("REQUEST_REMOVED")
+	case 7:
+		return json.Marshal("ASSIGNED")
+	case 8:
+		return json.Marshal("UNASSIGNED")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -200,6 +224,14 @@ func (v PullRequestReviewState) String() string {
 		return "PENDING"
 	case 4:
 		return "DISMISSED"
+	case 5:
+		return "REQUESTED"
+	case 6:
+		return "REQUEST_REMOVED"
+	case 7:
+		return "ASSIGNED"
+	case 8:
+		return "UNASSIGNED"
 	}
 	return "unset"
 }
@@ -215,6 +247,14 @@ const (
 	PullRequestReviewStatePending PullRequestReviewState = 3
 	// StateDismissed is the enumeration value for dismissed
 	PullRequestReviewStateDismissed PullRequestReviewState = 4
+	// StateRequested is the enumeration value for requested
+	PullRequestReviewStateRequested PullRequestReviewState = 5
+	// StateRequestRemoved is the enumeration value for request_removed
+	PullRequestReviewStateRequestRemoved PullRequestReviewState = 6
+	// StateAssigned is the enumeration value for assigned
+	PullRequestReviewStateAssigned PullRequestReviewState = 7
+	// StateUnassigned is the enumeration value for unassigned
+	PullRequestReviewStateUnassigned PullRequestReviewState = 8
 )
 
 // PullRequestReview the review for a given pull request
@@ -610,6 +650,14 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 				o.State = 3
 			case "dismissed", "DISMISSED":
 				o.State = 4
+			case "requested", "REQUESTED":
+				o.State = 5
+			case "request_removed", "REQUEST_REMOVED":
+				o.State = 6
+			case "assigned", "ASSIGNED":
+				o.State = 7
+			case "unassigned", "UNASSIGNED":
+				o.State = 8
 			}
 		}
 		if em, ok := kv["state"].(string); ok {
@@ -624,6 +672,14 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 				o.State = 3
 			case "dismissed", "DISMISSED":
 				o.State = 4
+			case "requested", "REQUESTED":
+				o.State = 5
+			case "request_removed", "REQUEST_REMOVED":
+				o.State = 6
+			case "assigned", "ASSIGNED":
+				o.State = 7
+			case "unassigned", "UNASSIGNED":
+				o.State = 8
 			}
 		}
 	}
