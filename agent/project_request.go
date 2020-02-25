@@ -442,6 +442,204 @@ func (o *ProjectRequestIntegrationEntityErrors) FromMap(kv map[string]interface{
 	o.setDefaults(false)
 }
 
+// ProjectRequestIntegrationLastExportCompletedDate represents the object structure for last_export_completed_date
+type ProjectRequestIntegrationLastExportCompletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toProjectRequestIntegrationLastExportCompletedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationLastExportCompletedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *ProjectRequestIntegrationLastExportCompletedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toProjectRequestIntegrationLastExportCompletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toProjectRequestIntegrationLastExportCompletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toProjectRequestIntegrationLastExportCompletedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *ProjectRequestIntegrationLastExportCompletedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationLastExportCompletedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// ProjectRequestIntegrationLastExportRequestedDate represents the object structure for last_export_requested_date
+type ProjectRequestIntegrationLastExportRequestedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toProjectRequestIntegrationLastExportRequestedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationLastExportRequestedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *ProjectRequestIntegrationLastExportRequestedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toProjectRequestIntegrationLastExportRequestedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toProjectRequestIntegrationLastExportRequestedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toProjectRequestIntegrationLastExportRequestedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *ProjectRequestIntegrationLastExportRequestedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationLastExportRequestedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // ProjectRequestIntegrationLastProcessedDate represents the object structure for last_processed_date
 type ProjectRequestIntegrationLastProcessedDate struct {
 	// Epoch the date in epoch format
@@ -483,6 +681,204 @@ func (o *ProjectRequestIntegrationLastProcessedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectRequestIntegrationLastProcessedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// ProjectRequestIntegrationLastProcessingCompletedDate represents the object structure for last_processing_completed_date
+type ProjectRequestIntegrationLastProcessingCompletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toProjectRequestIntegrationLastProcessingCompletedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationLastProcessingCompletedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *ProjectRequestIntegrationLastProcessingCompletedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toProjectRequestIntegrationLastProcessingCompletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toProjectRequestIntegrationLastProcessingCompletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toProjectRequestIntegrationLastProcessingCompletedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *ProjectRequestIntegrationLastProcessingCompletedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationLastProcessingCompletedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// ProjectRequestIntegrationLastProcessingStartedDate represents the object structure for last_processing_started_date
+type ProjectRequestIntegrationLastProcessingStartedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toProjectRequestIntegrationLastProcessingStartedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationLastProcessingStartedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *ProjectRequestIntegrationLastProcessingStartedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toProjectRequestIntegrationLastProcessingStartedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toProjectRequestIntegrationLastProcessingStartedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toProjectRequestIntegrationLastProcessingStartedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *ProjectRequestIntegrationLastProcessingStartedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationLastProcessingStartedDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -799,104 +1195,75 @@ func (o *ProjectRequestIntegrationOnboardRequestedDate) FromMap(kv map[string]in
 	o.setDefaults(false)
 }
 
-// ProjectRequestIntegrationProgress represents the object structure for progress
-type ProjectRequestIntegrationProgress struct {
-	// Message Any relevant messaging during processing
-	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
-	// Total The total amount to be processed
-	Total int64 `json:"total" codec:"total" bson:"total" yaml:"total" faker:"-"`
-	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" codec:"completed" bson:"completed" yaml:"completed" faker:"-"`
-}
+// ProjectRequestIntegrationState is the enumeration type for state
+type ProjectRequestIntegrationState int32
 
-func toProjectRequestIntegrationProgressObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ProjectRequestIntegrationProgress:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *ProjectRequestIntegrationProgress) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Message Any relevant messaging during processing
-		"message": toProjectRequestIntegrationProgressObject(o.Message, false),
-		// Total The total amount to be processed
-		"total": toProjectRequestIntegrationProgressObject(o.Total, false),
-		// Completed The total amount processed thus far
-		"completed": toProjectRequestIntegrationProgressObject(o.Completed, false),
-	}
-}
-
-func (o *ProjectRequestIntegrationProgress) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ProjectRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["message"].(string); ok {
-		o.Message = val
-	} else {
-		if val, ok := kv["message"]; ok {
-			if val == nil {
-				o.Message = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Message = fmt.Sprintf("%v", val)
-			}
+// UnmarshalBSONValue for unmarshaling value
+func (v *ProjectRequestIntegrationState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = ProjectRequestIntegrationState(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "IDLE":
+			*v = ProjectRequestIntegrationState(0)
+		case "EXPORTING":
+			*v = ProjectRequestIntegrationState(1)
+		case "PROCESSING":
+			*v = ProjectRequestIntegrationState(2)
 		}
 	}
-
-	if val, ok := kv["total"].(int64); ok {
-		o.Total = val
-	} else {
-		if val, ok := kv["total"]; ok {
-			if val == nil {
-				o.Total = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Total = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["completed"].(int64); ok {
-		o.Completed = val
-	} else {
-		if val, ok := kv["completed"]; ok {
-			if val == nil {
-				o.Completed = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Completed = number.ToInt64Any(val)
-			}
-		}
-	}
-	o.setDefaults(false)
+	return nil
 }
+
+// UnmarshalJSON unmarshals the enum value
+func (v ProjectRequestIntegrationState) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "IDLE":
+		v = 0
+	case "EXPORTING":
+		v = 1
+	case "PROCESSING":
+		v = 2
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v ProjectRequestIntegrationState) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("IDLE")
+	case 1:
+		return json.Marshal("EXPORTING")
+	case 2:
+		return json.Marshal("PROCESSING")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for IntegrationState
+func (v ProjectRequestIntegrationState) String() string {
+	switch int32(v) {
+	case 0:
+		return "IDLE"
+	case 1:
+		return "EXPORTING"
+	case 2:
+		return "PROCESSING"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationStateIdle is the enumeration value for idle
+	ProjectRequestIntegrationStateIdle ProjectRequestIntegrationState = 0
+	// IntegrationStateExporting is the enumeration value for exporting
+	ProjectRequestIntegrationStateExporting ProjectRequestIntegrationState = 1
+	// IntegrationStateProcessing is the enumeration value for processing
+	ProjectRequestIntegrationStateProcessing ProjectRequestIntegrationState = 2
+)
 
 // ProjectRequestIntegrationSystemType is the enumeration type for system_type
 type ProjectRequestIntegrationSystemType int32
@@ -1093,12 +1460,22 @@ type ProjectRequestIntegration struct {
 	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
 	// Exclusions The exclusion list for this integration
 	Exclusions []string `json:"exclusions" codec:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
+	// Exportable a flag to indicate if the integration is ready for export
+	Exportable bool `json:"exportable" codec:"exportable" bson:"exportable" yaml:"exportable" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// Inclusions The inclusion list for this integration
 	Inclusions []string `json:"inclusions" codec:"inclusions" bson:"inclusions" yaml:"inclusions" faker:"-"`
+	// LastExportCompletedDate when the export response was received (set by the backend)
+	LastExportCompletedDate ProjectRequestIntegrationLastExportCompletedDate `json:"last_export_completed_date" codec:"last_export_completed_date" bson:"last_export_completed_date" yaml:"last_export_completed_date" faker:"-"`
+	// LastExportRequestedDate when the export request was made (set by the backend)
+	LastExportRequestedDate ProjectRequestIntegrationLastExportRequestedDate `json:"last_export_requested_date" codec:"last_export_requested_date" bson:"last_export_requested_date" yaml:"last_export_requested_date" faker:"-"`
 	// LastProcessedDate Date when last processed
 	LastProcessedDate ProjectRequestIntegrationLastProcessedDate `json:"last_processed_date" codec:"last_processed_date" bson:"last_processed_date" yaml:"last_processed_date" faker:"-"`
+	// LastProcessingCompletedDate when the processing completes (set by the pipeline)
+	LastProcessingCompletedDate ProjectRequestIntegrationLastProcessingCompletedDate `json:"last_processing_completed_date" codec:"last_processing_completed_date" bson:"last_processing_completed_date" yaml:"last_processing_completed_date" faker:"-"`
+	// LastProcessingStartedDate when the processing starts (set by the pipeline)
+	LastProcessingStartedDate ProjectRequestIntegrationLastProcessingStartedDate `json:"last_processing_started_date" codec:"last_processing_started_date" bson:"last_processing_started_date" yaml:"last_processing_started_date" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
 	Location ProjectRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
@@ -1113,14 +1490,14 @@ type ProjectRequestIntegration struct {
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 	// Processed If the integration has been processed at least once
 	Processed *bool `json:"processed,omitempty" codec:"processed,omitempty" bson:"processed" yaml:"processed,omitempty" faker:"-"`
-	// Progress Agent processing progress
-	Progress ProjectRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// ServerVersion the server version for this integration
 	ServerVersion *string `json:"server_version,omitempty" codec:"server_version,omitempty" bson:"server_version" yaml:"server_version,omitempty" faker:"-"`
+	// State the current state of the integration
+	State ProjectRequestIntegrationState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 	SystemType ProjectRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
@@ -1148,7 +1525,19 @@ func toProjectRequestIntegrationObject(o interface{}, isoptional bool) interface
 		}
 		return arr
 
+	case ProjectRequestIntegrationLastExportCompletedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationLastExportRequestedDate:
+		return v.ToMap()
+
 	case ProjectRequestIntegrationLastProcessedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationLastProcessingCompletedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationLastProcessingStartedDate:
 		return v.ToMap()
 
 	case ProjectRequestIntegrationLocation:
@@ -1160,8 +1549,8 @@ func toProjectRequestIntegrationObject(o interface{}, isoptional bool) interface
 	case ProjectRequestIntegrationOnboardRequestedDate:
 		return v.ToMap()
 
-	case ProjectRequestIntegrationProgress:
-		return v.ToMap()
+	case ProjectRequestIntegrationState:
+		return v.String()
 
 	case ProjectRequestIntegrationSystemType:
 		return v.String()
@@ -1191,12 +1580,22 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"errored": toProjectRequestIntegrationObject(o.Errored, true),
 		// Exclusions The exclusion list for this integration
 		"exclusions": toProjectRequestIntegrationObject(o.Exclusions, false),
+		// Exportable a flag to indicate if the integration is ready for export
+		"exportable": toProjectRequestIntegrationObject(o.Exportable, false),
 		// ID the primary key for the model instance
 		"id": toProjectRequestIntegrationObject(o.ID, false),
 		// Inclusions The inclusion list for this integration
 		"inclusions": toProjectRequestIntegrationObject(o.Inclusions, false),
+		// LastExportCompletedDate when the export response was received (set by the backend)
+		"last_export_completed_date": toProjectRequestIntegrationObject(o.LastExportCompletedDate, false),
+		// LastExportRequestedDate when the export request was made (set by the backend)
+		"last_export_requested_date": toProjectRequestIntegrationObject(o.LastExportRequestedDate, false),
 		// LastProcessedDate Date when last processed
 		"last_processed_date": toProjectRequestIntegrationObject(o.LastProcessedDate, false),
+		// LastProcessingCompletedDate when the processing completes (set by the pipeline)
+		"last_processing_completed_date": toProjectRequestIntegrationObject(o.LastProcessingCompletedDate, false),
+		// LastProcessingStartedDate when the processing starts (set by the pipeline)
+		"last_processing_started_date": toProjectRequestIntegrationObject(o.LastProcessingStartedDate, false),
 		// Location The location of this integration (on-premise / private or cloud)
 		"location": toProjectRequestIntegrationObject(o.Location, false),
 		// Name The user friendly name of the integration
@@ -1211,14 +1610,14 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"organization": toProjectRequestIntegrationObject(o.Organization, true),
 		// Processed If the integration has been processed at least once
 		"processed": toProjectRequestIntegrationObject(o.Processed, true),
-		// Progress Agent processing progress
-		"progress": toProjectRequestIntegrationObject(o.Progress, false),
 		// RefID the source system id for the model instance
 		"ref_id": toProjectRequestIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
 		"ref_type": toProjectRequestIntegrationObject(o.RefType, false),
 		// ServerVersion the server version for this integration
 		"server_version": toProjectRequestIntegrationObject(o.ServerVersion, true),
+		// State the current state of the integration
+		"state": toProjectRequestIntegrationObject(o.State, false),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 		"system_type": toProjectRequestIntegrationObject(o.SystemType, false),
 		// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
@@ -1458,6 +1857,18 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.Exclusions = make([]string, 0)
 	}
 
+	if val, ok := kv["exportable"].(bool); ok {
+		o.Exportable = val
+	} else {
+		if val, ok := kv["exportable"]; ok {
+			if val == nil {
+				o.Exportable = number.ToBoolAny(nil)
+			} else {
+				o.Exportable = number.ToBoolAny(val)
+			}
+		}
+	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1529,6 +1940,72 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.Inclusions = make([]string, 0)
 	}
 
+	if val, ok := kv["last_export_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationLastExportCompletedDate); ok {
+			// struct
+			o.LastExportCompletedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationLastExportCompletedDate); ok {
+			// struct pointer
+			o.LastExportCompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportCompletedDate.Epoch = dt.Epoch
+			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportCompletedDate.Epoch = dt.Epoch
+			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportCompletedDate.Epoch = dt.Epoch
+				o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+				o.LastExportCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_export_requested_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportRequestedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationLastExportRequestedDate); ok {
+			// struct
+			o.LastExportRequestedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationLastExportRequestedDate); ok {
+			// struct pointer
+			o.LastExportRequestedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportRequestedDate.Epoch = dt.Epoch
+			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportRequestedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportRequestedDate.Epoch = dt.Epoch
+			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportRequestedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportRequestedDate.Epoch = dt.Epoch
+				o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+				o.LastExportRequestedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["last_processed_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.LastProcessedDate.FromMap(kv)
@@ -1560,6 +2037,72 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.LastProcessedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_processing_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastProcessingCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationLastProcessingCompletedDate); ok {
+			// struct
+			o.LastProcessingCompletedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationLastProcessingCompletedDate); ok {
+			// struct pointer
+			o.LastProcessingCompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastProcessingCompletedDate.Epoch = dt.Epoch
+			o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastProcessingCompletedDate.Epoch = dt.Epoch
+			o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastProcessingCompletedDate.Epoch = dt.Epoch
+				o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+				o.LastProcessingCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastProcessingCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_processing_started_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastProcessingStartedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationLastProcessingStartedDate); ok {
+			// struct
+			o.LastProcessingStartedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationLastProcessingStartedDate); ok {
+			// struct pointer
+			o.LastProcessingStartedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastProcessingStartedDate.Epoch = dt.Epoch
+			o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingStartedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastProcessingStartedDate.Epoch = dt.Epoch
+			o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingStartedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastProcessingStartedDate.Epoch = dt.Epoch
+				o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+				o.LastProcessingStartedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastProcessingStartedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["location"].(ProjectRequestIntegrationLocation); ok {
@@ -1718,20 +2261,6 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["progress"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.Progress.FromMap(kv)
-		} else if sv, ok := val.(ProjectRequestIntegrationProgress); ok {
-			// struct
-			o.Progress = sv
-		} else if sp, ok := val.(*ProjectRequestIntegrationProgress); ok {
-			// struct pointer
-			o.Progress = *sp
-		}
-	} else {
-		o.Progress.FromMap(map[string]interface{}{})
-	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1786,6 +2315,32 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.ServerVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["state"].(ProjectRequestIntegrationState); ok {
+		o.State = val
+	} else {
+		if em, ok := kv["state"].(map[string]interface{}); ok {
+			ev := em["agent.state"].(string)
+			switch ev {
+			case "idle", "IDLE":
+				o.State = 0
+			case "exporting", "EXPORTING":
+				o.State = 1
+			case "processing", "PROCESSING":
+				o.State = 2
+			}
+		}
+		if em, ok := kv["state"].(string); ok {
+			switch em {
+			case "idle", "IDLE":
+				o.State = 0
+			case "exporting", "EXPORTING":
+				o.State = 1
+			case "processing", "PROCESSING":
+				o.State = 2
 			}
 		}
 	}
@@ -2329,6 +2884,25 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

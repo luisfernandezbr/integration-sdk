@@ -442,6 +442,204 @@ func (o *CodequalityRequestIntegrationEntityErrors) FromMap(kv map[string]interf
 	o.setDefaults(false)
 }
 
+// CodequalityRequestIntegrationLastExportCompletedDate represents the object structure for last_export_completed_date
+type CodequalityRequestIntegrationLastExportCompletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toCodequalityRequestIntegrationLastExportCompletedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *CodequalityRequestIntegrationLastExportCompletedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *CodequalityRequestIntegrationLastExportCompletedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toCodequalityRequestIntegrationLastExportCompletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toCodequalityRequestIntegrationLastExportCompletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toCodequalityRequestIntegrationLastExportCompletedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *CodequalityRequestIntegrationLastExportCompletedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CodequalityRequestIntegrationLastExportCompletedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// CodequalityRequestIntegrationLastExportRequestedDate represents the object structure for last_export_requested_date
+type CodequalityRequestIntegrationLastExportRequestedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toCodequalityRequestIntegrationLastExportRequestedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *CodequalityRequestIntegrationLastExportRequestedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *CodequalityRequestIntegrationLastExportRequestedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toCodequalityRequestIntegrationLastExportRequestedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toCodequalityRequestIntegrationLastExportRequestedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toCodequalityRequestIntegrationLastExportRequestedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *CodequalityRequestIntegrationLastExportRequestedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CodequalityRequestIntegrationLastExportRequestedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // CodequalityRequestIntegrationLastProcessedDate represents the object structure for last_processed_date
 type CodequalityRequestIntegrationLastProcessedDate struct {
 	// Epoch the date in epoch format
@@ -483,6 +681,204 @@ func (o *CodequalityRequestIntegrationLastProcessedDate) setDefaults(frommap boo
 
 // FromMap attempts to load data into object from a map
 func (o *CodequalityRequestIntegrationLastProcessedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// CodequalityRequestIntegrationLastProcessingCompletedDate represents the object structure for last_processing_completed_date
+type CodequalityRequestIntegrationLastProcessingCompletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toCodequalityRequestIntegrationLastProcessingCompletedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *CodequalityRequestIntegrationLastProcessingCompletedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *CodequalityRequestIntegrationLastProcessingCompletedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toCodequalityRequestIntegrationLastProcessingCompletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toCodequalityRequestIntegrationLastProcessingCompletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toCodequalityRequestIntegrationLastProcessingCompletedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *CodequalityRequestIntegrationLastProcessingCompletedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CodequalityRequestIntegrationLastProcessingCompletedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// CodequalityRequestIntegrationLastProcessingStartedDate represents the object structure for last_processing_started_date
+type CodequalityRequestIntegrationLastProcessingStartedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toCodequalityRequestIntegrationLastProcessingStartedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *CodequalityRequestIntegrationLastProcessingStartedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *CodequalityRequestIntegrationLastProcessingStartedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toCodequalityRequestIntegrationLastProcessingStartedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toCodequalityRequestIntegrationLastProcessingStartedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toCodequalityRequestIntegrationLastProcessingStartedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *CodequalityRequestIntegrationLastProcessingStartedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CodequalityRequestIntegrationLastProcessingStartedDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -799,104 +1195,75 @@ func (o *CodequalityRequestIntegrationOnboardRequestedDate) FromMap(kv map[strin
 	o.setDefaults(false)
 }
 
-// CodequalityRequestIntegrationProgress represents the object structure for progress
-type CodequalityRequestIntegrationProgress struct {
-	// Message Any relevant messaging during processing
-	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"-"`
-	// Total The total amount to be processed
-	Total int64 `json:"total" codec:"total" bson:"total" yaml:"total" faker:"-"`
-	// Completed The total amount processed thus far
-	Completed int64 `json:"completed" codec:"completed" bson:"completed" yaml:"completed" faker:"-"`
-}
+// CodequalityRequestIntegrationState is the enumeration type for state
+type CodequalityRequestIntegrationState int32
 
-func toCodequalityRequestIntegrationProgressObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *CodequalityRequestIntegrationProgress:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *CodequalityRequestIntegrationProgress) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Message Any relevant messaging during processing
-		"message": toCodequalityRequestIntegrationProgressObject(o.Message, false),
-		// Total The total amount to be processed
-		"total": toCodequalityRequestIntegrationProgressObject(o.Total, false),
-		// Completed The total amount processed thus far
-		"completed": toCodequalityRequestIntegrationProgressObject(o.Completed, false),
-	}
-}
-
-func (o *CodequalityRequestIntegrationProgress) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *CodequalityRequestIntegrationProgress) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["message"].(string); ok {
-		o.Message = val
-	} else {
-		if val, ok := kv["message"]; ok {
-			if val == nil {
-				o.Message = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Message = fmt.Sprintf("%v", val)
-			}
+// UnmarshalBSONValue for unmarshaling value
+func (v *CodequalityRequestIntegrationState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = CodequalityRequestIntegrationState(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "IDLE":
+			*v = CodequalityRequestIntegrationState(0)
+		case "EXPORTING":
+			*v = CodequalityRequestIntegrationState(1)
+		case "PROCESSING":
+			*v = CodequalityRequestIntegrationState(2)
 		}
 	}
-
-	if val, ok := kv["total"].(int64); ok {
-		o.Total = val
-	} else {
-		if val, ok := kv["total"]; ok {
-			if val == nil {
-				o.Total = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Total = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["completed"].(int64); ok {
-		o.Completed = val
-	} else {
-		if val, ok := kv["completed"]; ok {
-			if val == nil {
-				o.Completed = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Completed = number.ToInt64Any(val)
-			}
-		}
-	}
-	o.setDefaults(false)
+	return nil
 }
+
+// UnmarshalJSON unmarshals the enum value
+func (v CodequalityRequestIntegrationState) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "IDLE":
+		v = 0
+	case "EXPORTING":
+		v = 1
+	case "PROCESSING":
+		v = 2
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v CodequalityRequestIntegrationState) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("IDLE")
+	case 1:
+		return json.Marshal("EXPORTING")
+	case 2:
+		return json.Marshal("PROCESSING")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for IntegrationState
+func (v CodequalityRequestIntegrationState) String() string {
+	switch int32(v) {
+	case 0:
+		return "IDLE"
+	case 1:
+		return "EXPORTING"
+	case 2:
+		return "PROCESSING"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationStateIdle is the enumeration value for idle
+	CodequalityRequestIntegrationStateIdle CodequalityRequestIntegrationState = 0
+	// IntegrationStateExporting is the enumeration value for exporting
+	CodequalityRequestIntegrationStateExporting CodequalityRequestIntegrationState = 1
+	// IntegrationStateProcessing is the enumeration value for processing
+	CodequalityRequestIntegrationStateProcessing CodequalityRequestIntegrationState = 2
+)
 
 // CodequalityRequestIntegrationSystemType is the enumeration type for system_type
 type CodequalityRequestIntegrationSystemType int32
@@ -1093,12 +1460,22 @@ type CodequalityRequestIntegration struct {
 	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
 	// Exclusions The exclusion list for this integration
 	Exclusions []string `json:"exclusions" codec:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
+	// Exportable a flag to indicate if the integration is ready for export
+	Exportable bool `json:"exportable" codec:"exportable" bson:"exportable" yaml:"exportable" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// Inclusions The inclusion list for this integration
 	Inclusions []string `json:"inclusions" codec:"inclusions" bson:"inclusions" yaml:"inclusions" faker:"-"`
+	// LastExportCompletedDate when the export response was received (set by the backend)
+	LastExportCompletedDate CodequalityRequestIntegrationLastExportCompletedDate `json:"last_export_completed_date" codec:"last_export_completed_date" bson:"last_export_completed_date" yaml:"last_export_completed_date" faker:"-"`
+	// LastExportRequestedDate when the export request was made (set by the backend)
+	LastExportRequestedDate CodequalityRequestIntegrationLastExportRequestedDate `json:"last_export_requested_date" codec:"last_export_requested_date" bson:"last_export_requested_date" yaml:"last_export_requested_date" faker:"-"`
 	// LastProcessedDate Date when last processed
 	LastProcessedDate CodequalityRequestIntegrationLastProcessedDate `json:"last_processed_date" codec:"last_processed_date" bson:"last_processed_date" yaml:"last_processed_date" faker:"-"`
+	// LastProcessingCompletedDate when the processing completes (set by the pipeline)
+	LastProcessingCompletedDate CodequalityRequestIntegrationLastProcessingCompletedDate `json:"last_processing_completed_date" codec:"last_processing_completed_date" bson:"last_processing_completed_date" yaml:"last_processing_completed_date" faker:"-"`
+	// LastProcessingStartedDate when the processing starts (set by the pipeline)
+	LastProcessingStartedDate CodequalityRequestIntegrationLastProcessingStartedDate `json:"last_processing_started_date" codec:"last_processing_started_date" bson:"last_processing_started_date" yaml:"last_processing_started_date" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
 	Location CodequalityRequestIntegrationLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
@@ -1113,14 +1490,14 @@ type CodequalityRequestIntegration struct {
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
 	// Processed If the integration has been processed at least once
 	Processed *bool `json:"processed,omitempty" codec:"processed,omitempty" bson:"processed" yaml:"processed,omitempty" faker:"-"`
-	// Progress Agent processing progress
-	Progress CodequalityRequestIntegrationProgress `json:"progress" codec:"progress" bson:"progress" yaml:"progress" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// ServerVersion the server version for this integration
 	ServerVersion *string `json:"server_version,omitempty" codec:"server_version,omitempty" bson:"server_version" yaml:"server_version,omitempty" faker:"-"`
+	// State the current state of the integration
+	State CodequalityRequestIntegrationState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 	SystemType CodequalityRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
@@ -1148,7 +1525,19 @@ func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) inter
 		}
 		return arr
 
+	case CodequalityRequestIntegrationLastExportCompletedDate:
+		return v.ToMap()
+
+	case CodequalityRequestIntegrationLastExportRequestedDate:
+		return v.ToMap()
+
 	case CodequalityRequestIntegrationLastProcessedDate:
+		return v.ToMap()
+
+	case CodequalityRequestIntegrationLastProcessingCompletedDate:
+		return v.ToMap()
+
+	case CodequalityRequestIntegrationLastProcessingStartedDate:
 		return v.ToMap()
 
 	case CodequalityRequestIntegrationLocation:
@@ -1160,8 +1549,8 @@ func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) inter
 	case CodequalityRequestIntegrationOnboardRequestedDate:
 		return v.ToMap()
 
-	case CodequalityRequestIntegrationProgress:
-		return v.ToMap()
+	case CodequalityRequestIntegrationState:
+		return v.String()
 
 	case CodequalityRequestIntegrationSystemType:
 		return v.String()
@@ -1191,12 +1580,22 @@ func (o *CodequalityRequestIntegration) ToMap() map[string]interface{} {
 		"errored": toCodequalityRequestIntegrationObject(o.Errored, true),
 		// Exclusions The exclusion list for this integration
 		"exclusions": toCodequalityRequestIntegrationObject(o.Exclusions, false),
+		// Exportable a flag to indicate if the integration is ready for export
+		"exportable": toCodequalityRequestIntegrationObject(o.Exportable, false),
 		// ID the primary key for the model instance
 		"id": toCodequalityRequestIntegrationObject(o.ID, false),
 		// Inclusions The inclusion list for this integration
 		"inclusions": toCodequalityRequestIntegrationObject(o.Inclusions, false),
+		// LastExportCompletedDate when the export response was received (set by the backend)
+		"last_export_completed_date": toCodequalityRequestIntegrationObject(o.LastExportCompletedDate, false),
+		// LastExportRequestedDate when the export request was made (set by the backend)
+		"last_export_requested_date": toCodequalityRequestIntegrationObject(o.LastExportRequestedDate, false),
 		// LastProcessedDate Date when last processed
 		"last_processed_date": toCodequalityRequestIntegrationObject(o.LastProcessedDate, false),
+		// LastProcessingCompletedDate when the processing completes (set by the pipeline)
+		"last_processing_completed_date": toCodequalityRequestIntegrationObject(o.LastProcessingCompletedDate, false),
+		// LastProcessingStartedDate when the processing starts (set by the pipeline)
+		"last_processing_started_date": toCodequalityRequestIntegrationObject(o.LastProcessingStartedDate, false),
 		// Location The location of this integration (on-premise / private or cloud)
 		"location": toCodequalityRequestIntegrationObject(o.Location, false),
 		// Name The user friendly name of the integration
@@ -1211,14 +1610,14 @@ func (o *CodequalityRequestIntegration) ToMap() map[string]interface{} {
 		"organization": toCodequalityRequestIntegrationObject(o.Organization, true),
 		// Processed If the integration has been processed at least once
 		"processed": toCodequalityRequestIntegrationObject(o.Processed, true),
-		// Progress Agent processing progress
-		"progress": toCodequalityRequestIntegrationObject(o.Progress, false),
 		// RefID the source system id for the model instance
 		"ref_id": toCodequalityRequestIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
 		"ref_type": toCodequalityRequestIntegrationObject(o.RefType, false),
 		// ServerVersion the server version for this integration
 		"server_version": toCodequalityRequestIntegrationObject(o.ServerVersion, true),
+		// State the current state of the integration
+		"state": toCodequalityRequestIntegrationObject(o.State, false),
 		// SystemType The system type of the integration (sourcecode / work (jira) / codequality / etc.)
 		"system_type": toCodequalityRequestIntegrationObject(o.SystemType, false),
 		// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
@@ -1458,6 +1857,18 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.Exclusions = make([]string, 0)
 	}
 
+	if val, ok := kv["exportable"].(bool); ok {
+		o.Exportable = val
+	} else {
+		if val, ok := kv["exportable"]; ok {
+			if val == nil {
+				o.Exportable = number.ToBoolAny(nil)
+			} else {
+				o.Exportable = number.ToBoolAny(val)
+			}
+		}
+	}
+
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1529,6 +1940,72 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.Inclusions = make([]string, 0)
 	}
 
+	if val, ok := kv["last_export_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(CodequalityRequestIntegrationLastExportCompletedDate); ok {
+			// struct
+			o.LastExportCompletedDate = sv
+		} else if sp, ok := val.(*CodequalityRequestIntegrationLastExportCompletedDate); ok {
+			// struct pointer
+			o.LastExportCompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportCompletedDate.Epoch = dt.Epoch
+			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportCompletedDate.Epoch = dt.Epoch
+			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportCompletedDate.Epoch = dt.Epoch
+				o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+				o.LastExportCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_export_requested_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportRequestedDate.FromMap(kv)
+		} else if sv, ok := val.(CodequalityRequestIntegrationLastExportRequestedDate); ok {
+			// struct
+			o.LastExportRequestedDate = sv
+		} else if sp, ok := val.(*CodequalityRequestIntegrationLastExportRequestedDate); ok {
+			// struct pointer
+			o.LastExportRequestedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportRequestedDate.Epoch = dt.Epoch
+			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportRequestedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportRequestedDate.Epoch = dt.Epoch
+			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportRequestedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportRequestedDate.Epoch = dt.Epoch
+				o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+				o.LastExportRequestedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["last_processed_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.LastProcessedDate.FromMap(kv)
@@ -1560,6 +2037,72 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.LastProcessedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_processing_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastProcessingCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(CodequalityRequestIntegrationLastProcessingCompletedDate); ok {
+			// struct
+			o.LastProcessingCompletedDate = sv
+		} else if sp, ok := val.(*CodequalityRequestIntegrationLastProcessingCompletedDate); ok {
+			// struct pointer
+			o.LastProcessingCompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastProcessingCompletedDate.Epoch = dt.Epoch
+			o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastProcessingCompletedDate.Epoch = dt.Epoch
+			o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastProcessingCompletedDate.Epoch = dt.Epoch
+				o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+				o.LastProcessingCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastProcessingCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_processing_started_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastProcessingStartedDate.FromMap(kv)
+		} else if sv, ok := val.(CodequalityRequestIntegrationLastProcessingStartedDate); ok {
+			// struct
+			o.LastProcessingStartedDate = sv
+		} else if sp, ok := val.(*CodequalityRequestIntegrationLastProcessingStartedDate); ok {
+			// struct pointer
+			o.LastProcessingStartedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastProcessingStartedDate.Epoch = dt.Epoch
+			o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingStartedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastProcessingStartedDate.Epoch = dt.Epoch
+			o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingStartedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastProcessingStartedDate.Epoch = dt.Epoch
+				o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+				o.LastProcessingStartedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastProcessingStartedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["location"].(CodequalityRequestIntegrationLocation); ok {
@@ -1718,20 +2261,6 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["progress"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.Progress.FromMap(kv)
-		} else if sv, ok := val.(CodequalityRequestIntegrationProgress); ok {
-			// struct
-			o.Progress = sv
-		} else if sp, ok := val.(*CodequalityRequestIntegrationProgress); ok {
-			// struct pointer
-			o.Progress = *sp
-		}
-	} else {
-		o.Progress.FromMap(map[string]interface{}{})
-	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1786,6 +2315,32 @@ func (o *CodequalityRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.ServerVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["state"].(CodequalityRequestIntegrationState); ok {
+		o.State = val
+	} else {
+		if em, ok := kv["state"].(map[string]interface{}); ok {
+			ev := em["agent.state"].(string)
+			switch ev {
+			case "idle", "IDLE":
+				o.State = 0
+			case "exporting", "EXPORTING":
+				o.State = 1
+			case "processing", "PROCESSING":
+				o.State = 2
+			}
+		}
+		if em, ok := kv["state"].(string); ok {
+			switch em {
+			case "idle", "IDLE":
+				o.State = 0
+			case "exporting", "EXPORTING":
+				o.State = 1
+			case "processing", "PROCESSING":
+				o.State = 2
 			}
 		}
 	}
