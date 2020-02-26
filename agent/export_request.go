@@ -640,105 +640,6 @@ func (o *ExportRequestIntegrationsLastExportRequestedDate) FromMap(kv map[string
 	o.setDefaults(false)
 }
 
-// ExportRequestIntegrationsLastProcessedDate represents the object structure for last_processed_date
-type ExportRequestIntegrationsLastProcessedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toExportRequestIntegrationsLastProcessedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ExportRequestIntegrationsLastProcessedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *ExportRequestIntegrationsLastProcessedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toExportRequestIntegrationsLastProcessedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toExportRequestIntegrationsLastProcessedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toExportRequestIntegrationsLastProcessedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *ExportRequestIntegrationsLastProcessedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ExportRequestIntegrationsLastProcessedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // ExportRequestIntegrationsLastProcessingCompletedDate represents the object structure for last_processing_completed_date
 type ExportRequestIntegrationsLastProcessingCompletedDate struct {
 	// Epoch the date in epoch format
@@ -1470,8 +1371,6 @@ type ExportRequestIntegrations struct {
 	LastExportCompletedDate ExportRequestIntegrationsLastExportCompletedDate `json:"last_export_completed_date" codec:"last_export_completed_date" bson:"last_export_completed_date" yaml:"last_export_completed_date" faker:"-"`
 	// LastExportRequestedDate when the export request was made (set by the backend)
 	LastExportRequestedDate ExportRequestIntegrationsLastExportRequestedDate `json:"last_export_requested_date" codec:"last_export_requested_date" bson:"last_export_requested_date" yaml:"last_export_requested_date" faker:"-"`
-	// LastProcessedDate Date when last processed
-	LastProcessedDate ExportRequestIntegrationsLastProcessedDate `json:"last_processed_date" codec:"last_processed_date" bson:"last_processed_date" yaml:"last_processed_date" faker:"-"`
 	// LastProcessingCompletedDate when the processing completes (set by the pipeline)
 	LastProcessingCompletedDate ExportRequestIntegrationsLastProcessingCompletedDate `json:"last_processing_completed_date" codec:"last_processing_completed_date" bson:"last_processing_completed_date" yaml:"last_processing_completed_date" faker:"-"`
 	// LastProcessingStartedDate when the processing starts (set by the pipeline)
@@ -1531,9 +1430,6 @@ func toExportRequestIntegrationsObject(o interface{}, isoptional bool) interface
 	case ExportRequestIntegrationsLastExportRequestedDate:
 		return v.ToMap()
 
-	case ExportRequestIntegrationsLastProcessedDate:
-		return v.ToMap()
-
 	case ExportRequestIntegrationsLastProcessingCompletedDate:
 		return v.ToMap()
 
@@ -1590,8 +1486,6 @@ func (o *ExportRequestIntegrations) ToMap() map[string]interface{} {
 		"last_export_completed_date": toExportRequestIntegrationsObject(o.LastExportCompletedDate, false),
 		// LastExportRequestedDate when the export request was made (set by the backend)
 		"last_export_requested_date": toExportRequestIntegrationsObject(o.LastExportRequestedDate, false),
-		// LastProcessedDate Date when last processed
-		"last_processed_date": toExportRequestIntegrationsObject(o.LastProcessedDate, false),
 		// LastProcessingCompletedDate when the processing completes (set by the pipeline)
 		"last_processing_completed_date": toExportRequestIntegrationsObject(o.LastProcessingCompletedDate, false),
 		// LastProcessingStartedDate when the processing starts (set by the pipeline)
@@ -2004,39 +1898,6 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["last_processed_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastProcessedDate.FromMap(kv)
-		} else if sv, ok := val.(ExportRequestIntegrationsLastProcessedDate); ok {
-			// struct
-			o.LastProcessedDate = sv
-		} else if sp, ok := val.(*ExportRequestIntegrationsLastProcessedDate); ok {
-			// struct pointer
-			o.LastProcessedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastProcessedDate.Epoch = dt.Epoch
-			o.LastProcessedDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastProcessedDate.Epoch = dt.Epoch
-			o.LastProcessedDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastProcessedDate.Epoch = dt.Epoch
-				o.LastProcessedDate.Rfc3339 = dt.Rfc3339
-				o.LastProcessedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastProcessedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["last_processing_completed_date"]; ok {
@@ -2981,6 +2842,25 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
