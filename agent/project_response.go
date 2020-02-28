@@ -288,341 +288,6 @@ const (
 	ProjectResponseProjectsErrorPERMISSIONS ProjectResponseProjectsError = 1
 )
 
-// ProjectResponseProjectsLastIssueCreatedDate represents the object structure for created_date
-type ProjectResponseProjectsLastIssueCreatedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toProjectResponseProjectsLastIssueCreatedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ProjectResponseProjectsLastIssueCreatedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *ProjectResponseProjectsLastIssueCreatedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toProjectResponseProjectsLastIssueCreatedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toProjectResponseProjectsLastIssueCreatedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toProjectResponseProjectsLastIssueCreatedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *ProjectResponseProjectsLastIssueCreatedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ProjectResponseProjectsLastIssueCreatedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// ProjectResponseProjectsLastIssueLastUser represents the object structure for last_user
-type ProjectResponseProjectsLastIssueLastUser struct {
-	// UserID the work project user id
-	UserID string `json:"user_id" codec:"user_id" bson:"user_id" yaml:"user_id" faker:"-"`
-	// Name the user name
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"name"`
-	// AvatarURL the avatar url
-	AvatarURL string `json:"avatar_url" codec:"avatar_url" bson:"avatar_url" yaml:"avatar_url" faker:"avatar"`
-}
-
-func toProjectResponseProjectsLastIssueLastUserObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ProjectResponseProjectsLastIssueLastUser:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-func (o *ProjectResponseProjectsLastIssueLastUser) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// UserID the work project user id
-		"user_id": toProjectResponseProjectsLastIssueLastUserObject(o.UserID, false),
-		// Name the user name
-		"name": toProjectResponseProjectsLastIssueLastUserObject(o.Name, false),
-		// AvatarURL the avatar url
-		"avatar_url": toProjectResponseProjectsLastIssueLastUserObject(o.AvatarURL, false),
-	}
-}
-
-func (o *ProjectResponseProjectsLastIssueLastUser) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ProjectResponseProjectsLastIssueLastUser) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["user_id"].(string); ok {
-		o.UserID = val
-	} else {
-		if val, ok := kv["user_id"]; ok {
-			if val == nil {
-				o.UserID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.UserID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Name = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["avatar_url"].(string); ok {
-		o.AvatarURL = val
-	} else {
-		if val, ok := kv["avatar_url"]; ok {
-			if val == nil {
-				o.AvatarURL = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.AvatarURL = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// ProjectResponseProjectsLastIssue represents the object structure for last_issue
-type ProjectResponseProjectsLastIssue struct {
-	// IssueID issue id
-	IssueID string `json:"issue_id" codec:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
-	// Identifier the issue key from the source
-	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
-	// CreatedDate the date of the change
-	CreatedDate ProjectResponseProjectsLastIssueCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
-	// LastUser the last user
-	LastUser ProjectResponseProjectsLastIssueLastUser `json:"last_user" codec:"last_user" bson:"last_user" yaml:"last_user" faker:"-"`
-}
-
-func toProjectResponseProjectsLastIssueObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ProjectResponseProjectsLastIssue:
-		return v.ToMap()
-
-	case ProjectResponseProjectsLastIssueCreatedDate:
-		return v.ToMap()
-
-	case ProjectResponseProjectsLastIssueLastUser:
-		return v.ToMap()
-	default:
-		return o
-	}
-}
-
-func (o *ProjectResponseProjectsLastIssue) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// IssueID issue id
-		"issue_id": toProjectResponseProjectsLastIssueObject(o.IssueID, false),
-		// Identifier the issue key from the source
-		"identifier": toProjectResponseProjectsLastIssueObject(o.Identifier, false),
-		// CreatedDate the date of the change
-		"created_date": toProjectResponseProjectsLastIssueObject(o.CreatedDate, false),
-		// LastUser the last user
-		"last_user": toProjectResponseProjectsLastIssueObject(o.LastUser, false),
-	}
-}
-
-func (o *ProjectResponseProjectsLastIssue) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ProjectResponseProjectsLastIssue) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["issue_id"].(string); ok {
-		o.IssueID = val
-	} else {
-		if val, ok := kv["issue_id"]; ok {
-			if val == nil {
-				o.IssueID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.IssueID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["identifier"].(string); ok {
-		o.Identifier = val
-	} else {
-		if val, ok := kv["identifier"]; ok {
-			if val == nil {
-				o.Identifier = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Identifier = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["created_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.CreatedDate.FromMap(kv)
-		} else if sv, ok := val.(ProjectResponseProjectsLastIssueCreatedDate); ok {
-			// struct
-			o.CreatedDate = sv
-		} else if sp, ok := val.(*ProjectResponseProjectsLastIssueCreatedDate); ok {
-			// struct pointer
-			o.CreatedDate = *sp
-		}
-	} else {
-		o.CreatedDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["last_user"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastUser.FromMap(kv)
-		} else if sv, ok := val.(ProjectResponseProjectsLastIssueLastUser); ok {
-			// struct
-			o.LastUser = sv
-		} else if sp, ok := val.(*ProjectResponseProjectsLastIssueLastUser); ok {
-			// struct pointer
-			o.LastUser = *sp
-		}
-	} else {
-		o.LastUser.FromMap(map[string]interface{}{})
-	}
-
-	o.setDefaults(false)
-}
-
 // ProjectResponseProjects represents the object structure for projects
 type ProjectResponseProjects struct {
 	// Active the status of the project
@@ -635,16 +300,12 @@ type ProjectResponseProjects struct {
 	Error ProjectResponseProjectsError `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
 	// Identifier the common identifier for the project
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
-	// LastIssue last issue for this project
-	LastIssue ProjectResponseProjectsLastIssue `json:"last_issue" codec:"last_issue" bson:"last_issue" yaml:"last_issue" faker:"-"`
 	// Name the name of the project
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the id of the project
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the record type
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// TotalIssues the total issues count for the project
-	TotalIssues int64 `json:"total_issues" codec:"total_issues" bson:"total_issues" yaml:"total_issues" faker:"-"`
 	// URL the url to the project home page
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
 }
@@ -656,9 +317,6 @@ func toProjectResponseProjectsObject(o interface{}, isoptional bool) interface{}
 
 	case ProjectResponseProjectsError:
 		return v.String()
-
-	case ProjectResponseProjectsLastIssue:
-		return v.ToMap()
 
 	default:
 		return o
@@ -678,16 +336,12 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 		"error": toProjectResponseProjectsObject(o.Error, false),
 		// Identifier the common identifier for the project
 		"identifier": toProjectResponseProjectsObject(o.Identifier, false),
-		// LastIssue last issue for this project
-		"last_issue": toProjectResponseProjectsObject(o.LastIssue, false),
 		// Name the name of the project
 		"name": toProjectResponseProjectsObject(o.Name, false),
 		// RefID the id of the project
 		"ref_id": toProjectResponseProjectsObject(o.RefID, false),
 		// RefType the record type
 		"ref_type": toProjectResponseProjectsObject(o.RefType, false),
-		// TotalIssues the total issues count for the project
-		"total_issues": toProjectResponseProjectsObject(o.TotalIssues, false),
 		// URL the url to the project home page
 		"url": toProjectResponseProjectsObject(o.URL, false),
 	}
@@ -798,20 +452,6 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["last_issue"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastIssue.FromMap(kv)
-		} else if sv, ok := val.(ProjectResponseProjectsLastIssue); ok {
-			// struct
-			o.LastIssue = sv
-		} else if sp, ok := val.(*ProjectResponseProjectsLastIssue); ok {
-			// struct pointer
-			o.LastIssue = *sp
-		}
-	} else {
-		o.LastIssue.FromMap(map[string]interface{}{})
-	}
-
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -868,21 +508,6 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.RefType = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["total_issues"].(int64); ok {
-		o.TotalIssues = val
-	} else {
-		if val, ok := kv["total_issues"]; ok {
-			if val == nil {
-				o.TotalIssues = number.ToInt64Any(nil)
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.TotalIssues = number.ToInt64Any(val)
 			}
 		}
 	}
