@@ -1777,8 +1777,6 @@ type Issue struct {
 	Priority string `json:"priority" codec:"priority" bson:"priority" yaml:"priority" faker:"-"`
 	// ProjectID unique project id
 	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
-	// PullRequestIds pull request ids linked to this issue, if available
-	PullRequestIds []string `json:"pull_request_ids" codec:"pull_request_ids" bson:"pull_request_ids" yaml:"pull_request_ids" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -1898,9 +1896,6 @@ func (o *Issue) setDefaults(frommap bool) {
 	}
 	if o.LinkedIssues == nil {
 		o.LinkedIssues = make([]IssueLinkedIssues, 0)
-	}
-	if o.PullRequestIds == nil {
-		o.PullRequestIds = make([]string, 0)
 	}
 	if o.SprintIds == nil {
 		o.SprintIds = make([]string, 0)
@@ -2047,7 +2042,6 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"planned_start_date": toIssueObject(o.PlannedStartDate, false),
 		"priority":           toIssueObject(o.Priority, false),
 		"project_id":         toIssueObject(o.ProjectID, false),
-		"pull_request_ids":   toIssueObject(o.PullRequestIds, false),
 		"ref_id":             toIssueObject(o.RefID, false),
 		"ref_type":           toIssueObject(o.RefType, false),
 		"reporter_ref_id":    toIssueObject(o.ReporterRefID, false),
@@ -2575,57 +2569,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["pull_request_ids"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
-			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for pull_request_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for pull_request_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for pull_request_ids field")
-				}
-			}
-			o.PullRequestIds = na
-		}
-	}
-	if o.PullRequestIds == nil {
-		o.PullRequestIds = make([]string, 0)
-	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -2960,7 +2903,6 @@ func (o *Issue) Hash() string {
 	args = append(args, o.PlannedStartDate)
 	args = append(args, o.Priority)
 	args = append(args, o.ProjectID)
-	args = append(args, o.PullRequestIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.ReporterRefID)
