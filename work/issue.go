@@ -1761,6 +1761,8 @@ type Issue struct {
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// DueDate due date of the issue
 	DueDate IssueDueDate `json:"due_date" codec:"due_date" bson:"due_date" yaml:"due_date" faker:"-"`
+	// EpicID epic issue id, if any
+	EpicID *string `json:"epic_id,omitempty" codec:"epic_id,omitempty" bson:"epic_id" yaml:"epic_id,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the issue (for example EXM-1 instead of 1000 for jira)
@@ -1893,6 +1895,9 @@ func (o *Issue) setDefaults(frommap bool) {
 	}
 	if o.ChangeLog == nil {
 		o.ChangeLog = make([]IssueChangeLog, 0)
+	}
+	if o.EpicID == nil {
+		o.EpicID = pstrings.Pointer("")
 	}
 	if o.LinkedIssues == nil {
 		o.LinkedIssues = make([]IssueLinkedIssues, 0)
@@ -2034,6 +2039,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"customer_id":        toIssueObject(o.CustomerID, false),
 		"description":        toIssueObject(o.Description, false),
 		"due_date":           toIssueObject(o.DueDate, false),
+		"epic_id":            toIssueObject(o.EpicID, true),
 		"id":                 toIssueObject(o.ID, false),
 		"identifier":         toIssueObject(o.Identifier, false),
 		"linked_issues":      toIssueObject(o.LinkedIssues, false),
@@ -2338,6 +2344,24 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.DueDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["epic_id"].(*string); ok {
+		o.EpicID = val
+	} else if val, ok := kv["epic_id"].(string); ok {
+		o.EpicID = &val
+	} else {
+		if val, ok := kv["epic_id"]; ok {
+			if val == nil {
+				o.EpicID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EpicID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
 	}
 
 	if val, ok := kv["id"].(string); ok {
@@ -2895,6 +2919,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.DueDate)
+	args = append(args, o.EpicID)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
 	args = append(args, o.LinkedIssues)
