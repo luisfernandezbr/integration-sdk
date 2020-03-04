@@ -40,6 +40,8 @@ type User struct {
 	Email *string `json:"email,omitempty" codec:"email,omitempty" bson:"email" yaml:"email,omitempty" faker:"email"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Member if the user is a member of organization
+	Member bool `json:"member" codec:"member" bson:"member" yaml:"member" faker:"-"`
 	// Name the name of the user
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
 	// RefID the source system id for the model instance
@@ -284,6 +286,7 @@ func (o *User) ToMap() map[string]interface{} {
 		"customer_id":       toUserObject(o.CustomerID, false),
 		"email":             toUserObject(o.Email, true),
 		"id":                toUserObject(o.ID, false),
+		"member":            toUserObject(o.Member, false),
 		"name":              toUserObject(o.Name, false),
 		"ref_id":            toUserObject(o.RefID, false),
 		"ref_type":          toUserObject(o.RefType, false),
@@ -394,6 +397,18 @@ func (o *User) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["member"].(bool); ok {
+		o.Member = val
+	} else {
+		if val, ok := kv["member"]; ok {
+			if val == nil {
+				o.Member = number.ToBoolAny(nil)
+			} else {
+				o.Member = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -521,6 +536,7 @@ func (o *User) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Email)
 	args = append(args, o.ID)
+	args = append(args, o.Member)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
