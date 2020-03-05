@@ -1246,6 +1246,105 @@ const (
 	ProjectRequestIntegrationSystemTypeUser ProjectRequestIntegrationSystemType = 3
 )
 
+// ProjectRequestIntegrationThrottledUntil represents the object structure for throttled_until
+type ProjectRequestIntegrationThrottledUntil struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toProjectRequestIntegrationThrottledUntilObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectRequestIntegrationThrottledUntil:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *ProjectRequestIntegrationThrottledUntil) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toProjectRequestIntegrationThrottledUntilObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toProjectRequestIntegrationThrottledUntilObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toProjectRequestIntegrationThrottledUntilObject(o.Rfc3339, false),
+	}
+}
+
+func (o *ProjectRequestIntegrationThrottledUntil) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestIntegrationThrottledUntil) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = number.ToInt64Any(nil)
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // ProjectRequestIntegrationValidatedDate represents the object structure for validated_date
 type ProjectRequestIntegrationValidatedDate struct {
 	// Epoch the date in epoch format
@@ -1401,6 +1500,10 @@ type ProjectRequestIntegration struct {
 	SystemType ProjectRequestIntegrationSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
 	TeamID *string `json:"team_id,omitempty" codec:"team_id,omitempty" bson:"team_id" yaml:"team_id,omitempty" faker:"-"`
+	// Throttled Set to true when integration is throttled.
+	Throttled bool `json:"throttled" codec:"throttled" bson:"throttled" yaml:"throttled" faker:"-"`
+	// ThrottledUntil After throttling integration, we set this field for estimated resume date.
+	ThrottledUntil ProjectRequestIntegrationThrottledUntil `json:"throttled_until" codec:"throttled_until" bson:"throttled_until" yaml:"throttled_until" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated,omitempty" codec:"validated,omitempty" bson:"validated" yaml:"validated,omitempty" faker:"-"`
 	// ValidatedDate Date when validated
@@ -1450,6 +1553,9 @@ func toProjectRequestIntegrationObject(o interface{}, isoptional bool) interface
 
 	case ProjectRequestIntegrationSystemType:
 		return v.String()
+
+	case ProjectRequestIntegrationThrottledUntil:
+		return v.ToMap()
 
 	case ProjectRequestIntegrationValidatedDate:
 		return v.ToMap()
@@ -1516,6 +1622,10 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"system_type": toProjectRequestIntegrationObject(o.SystemType, false),
 		// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
 		"team_id": toProjectRequestIntegrationObject(o.TeamID, true),
+		// Throttled Set to true when integration is throttled.
+		"throttled": toProjectRequestIntegrationObject(o.Throttled, false),
+		// ThrottledUntil After throttling integration, we set this field for estimated resume date.
+		"throttled_until": toProjectRequestIntegrationObject(o.ThrottledUntil, false),
 		// Validated If the validation has been run against this instance
 		"validated": toProjectRequestIntegrationObject(o.Validated, true),
 		// ValidatedDate Date when validated
@@ -2252,6 +2362,51 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.TeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+
+	if val, ok := kv["throttled"].(bool); ok {
+		o.Throttled = val
+	} else {
+		if val, ok := kv["throttled"]; ok {
+			if val == nil {
+				o.Throttled = number.ToBoolAny(nil)
+			} else {
+				o.Throttled = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["throttled_until"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ThrottledUntil.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationThrottledUntil); ok {
+			// struct
+			o.ThrottledUntil = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationThrottledUntil); ok {
+			// struct pointer
+			o.ThrottledUntil = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ThrottledUntil.Epoch = dt.Epoch
+			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+			o.ThrottledUntil.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ThrottledUntil.Epoch = dt.Epoch
+			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+			o.ThrottledUntil.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ThrottledUntil.Epoch = dt.Epoch
+				o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+				o.ThrottledUntil.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ThrottledUntil.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["validated"].(*bool); ok {
