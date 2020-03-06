@@ -1501,9 +1501,9 @@ type IntegrationRequestIntegration struct {
 	// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
 	TeamID *string `json:"team_id,omitempty" codec:"team_id,omitempty" bson:"team_id" yaml:"team_id,omitempty" faker:"-"`
 	// Throttled Set to true when integration is throttled.
-	Throttled bool `json:"throttled" codec:"throttled" bson:"throttled" yaml:"throttled" faker:"-"`
+	Throttled *bool `json:"throttled,omitempty" codec:"throttled,omitempty" bson:"throttled" yaml:"throttled,omitempty" faker:"-"`
 	// ThrottledUntil After throttling integration, we set this field for estimated resume date.
-	ThrottledUntil IntegrationRequestIntegrationThrottledUntil `json:"throttled_until" codec:"throttled_until" bson:"throttled_until" yaml:"throttled_until" faker:"-"`
+	ThrottledUntil *IntegrationRequestIntegrationThrottledUntil `json:"throttled_until,omitempty" codec:"throttled_until,omitempty" bson:"throttled_until" yaml:"throttled_until,omitempty" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated,omitempty" codec:"validated,omitempty" bson:"validated" yaml:"validated,omitempty" faker:"-"`
 	// ValidatedDate Date when validated
@@ -1554,7 +1554,7 @@ func toIntegrationRequestIntegrationObject(o interface{}, isoptional bool) inter
 	case IntegrationRequestIntegrationSystemType:
 		return v.String()
 
-	case IntegrationRequestIntegrationThrottledUntil:
+	case *IntegrationRequestIntegrationThrottledUntil:
 		return v.ToMap()
 
 	case IntegrationRequestIntegrationValidatedDate:
@@ -1623,9 +1623,9 @@ func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 		// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
 		"team_id": toIntegrationRequestIntegrationObject(o.TeamID, true),
 		// Throttled Set to true when integration is throttled.
-		"throttled": toIntegrationRequestIntegrationObject(o.Throttled, false),
+		"throttled": toIntegrationRequestIntegrationObject(o.Throttled, true),
 		// ThrottledUntil After throttling integration, we set this field for estimated resume date.
-		"throttled_until": toIntegrationRequestIntegrationObject(o.ThrottledUntil, false),
+		"throttled_until": toIntegrationRequestIntegrationObject(o.ThrottledUntil, true),
 		// Validated If the validation has been run against this instance
 		"validated": toIntegrationRequestIntegrationObject(o.Validated, true),
 		// ValidatedDate Date when validated
@@ -1645,6 +1645,11 @@ func (o *IntegrationRequestIntegration) setDefaults(frommap bool) {
 	if o.Processed == nil {
 		var v bool
 		o.Processed = &v
+	}
+
+	if o.Throttled == nil {
+		var v bool
+		o.Throttled = &v
 	}
 
 	if o.Validated == nil {
@@ -2364,16 +2369,26 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["throttled"].(bool); ok {
+	if val, ok := kv["throttled"].(*bool); ok {
 		o.Throttled = val
+	} else if val, ok := kv["throttled"].(bool); ok {
+		o.Throttled = &val
 	} else {
 		if val, ok := kv["throttled"]; ok {
 			if val == nil {
-				o.Throttled = number.ToBoolAny(nil)
+				o.Throttled = number.BoolPointer(number.ToBoolAny(nil))
 			} else {
-				o.Throttled = number.ToBoolAny(val)
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Throttled = number.BoolPointer(number.ToBoolAny(val))
 			}
 		}
+	}
+
+	if o.ThrottledUntil == nil {
+		o.ThrottledUntil = &IntegrationRequestIntegrationThrottledUntil{}
 	}
 
 	if val, ok := kv["throttled_until"]; ok {
@@ -2381,10 +2396,10 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.ThrottledUntil.FromMap(kv)
 		} else if sv, ok := val.(IntegrationRequestIntegrationThrottledUntil); ok {
 			// struct
-			o.ThrottledUntil = sv
+			o.ThrottledUntil = &sv
 		} else if sp, ok := val.(*IntegrationRequestIntegrationThrottledUntil); ok {
 			// struct pointer
-			o.ThrottledUntil = *sp
+			o.ThrottledUntil = sp
 		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
 			o.ThrottledUntil.Epoch = dt.Epoch
 			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
@@ -2654,6 +2669,9 @@ func NewIntegrationRequestID(customerID string, refType string, refID string) st
 func (o *IntegrationRequest) setDefaults(frommap bool) {
 	if o.Integration.EntityErrors == nil {
 		o.Integration.EntityErrors = make([]IntegrationRequestIntegrationEntityErrors, 0)
+	}
+	if o.Integration.ThrottledUntil == nil {
+		o.Integration.ThrottledUntil = &IntegrationRequestIntegrationThrottledUntil{}
 	}
 
 	if o.ID == "" {

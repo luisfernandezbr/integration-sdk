@@ -1501,9 +1501,9 @@ type RepoRequestIntegration struct {
 	// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
 	TeamID *string `json:"team_id,omitempty" codec:"team_id,omitempty" bson:"team_id" yaml:"team_id,omitempty" faker:"-"`
 	// Throttled Set to true when integration is throttled.
-	Throttled bool `json:"throttled" codec:"throttled" bson:"throttled" yaml:"throttled" faker:"-"`
+	Throttled *bool `json:"throttled,omitempty" codec:"throttled,omitempty" bson:"throttled" yaml:"throttled,omitempty" faker:"-"`
 	// ThrottledUntil After throttling integration, we set this field for estimated resume date.
-	ThrottledUntil RepoRequestIntegrationThrottledUntil `json:"throttled_until" codec:"throttled_until" bson:"throttled_until" yaml:"throttled_until" faker:"-"`
+	ThrottledUntil *RepoRequestIntegrationThrottledUntil `json:"throttled_until,omitempty" codec:"throttled_until,omitempty" bson:"throttled_until" yaml:"throttled_until,omitempty" faker:"-"`
 	// Validated If the validation has been run against this instance
 	Validated *bool `json:"validated,omitempty" codec:"validated,omitempty" bson:"validated" yaml:"validated,omitempty" faker:"-"`
 	// ValidatedDate Date when validated
@@ -1554,7 +1554,7 @@ func toRepoRequestIntegrationObject(o interface{}, isoptional bool) interface{} 
 	case RepoRequestIntegrationSystemType:
 		return v.String()
 
-	case RepoRequestIntegrationThrottledUntil:
+	case *RepoRequestIntegrationThrottledUntil:
 		return v.ToMap()
 
 	case RepoRequestIntegrationValidatedDate:
@@ -1623,9 +1623,9 @@ func (o *RepoRequestIntegration) ToMap() map[string]interface{} {
 		// TeamID The optional team_id for this integration. If set the integration is scoped to a specific team, otherwise global.
 		"team_id": toRepoRequestIntegrationObject(o.TeamID, true),
 		// Throttled Set to true when integration is throttled.
-		"throttled": toRepoRequestIntegrationObject(o.Throttled, false),
+		"throttled": toRepoRequestIntegrationObject(o.Throttled, true),
 		// ThrottledUntil After throttling integration, we set this field for estimated resume date.
-		"throttled_until": toRepoRequestIntegrationObject(o.ThrottledUntil, false),
+		"throttled_until": toRepoRequestIntegrationObject(o.ThrottledUntil, true),
 		// Validated If the validation has been run against this instance
 		"validated": toRepoRequestIntegrationObject(o.Validated, true),
 		// ValidatedDate Date when validated
@@ -1645,6 +1645,11 @@ func (o *RepoRequestIntegration) setDefaults(frommap bool) {
 	if o.Processed == nil {
 		var v bool
 		o.Processed = &v
+	}
+
+	if o.Throttled == nil {
+		var v bool
+		o.Throttled = &v
 	}
 
 	if o.Validated == nil {
@@ -2364,16 +2369,26 @@ func (o *RepoRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["throttled"].(bool); ok {
+	if val, ok := kv["throttled"].(*bool); ok {
 		o.Throttled = val
+	} else if val, ok := kv["throttled"].(bool); ok {
+		o.Throttled = &val
 	} else {
 		if val, ok := kv["throttled"]; ok {
 			if val == nil {
-				o.Throttled = number.ToBoolAny(nil)
+				o.Throttled = number.BoolPointer(number.ToBoolAny(nil))
 			} else {
-				o.Throttled = number.ToBoolAny(val)
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Throttled = number.BoolPointer(number.ToBoolAny(val))
 			}
 		}
+	}
+
+	if o.ThrottledUntil == nil {
+		o.ThrottledUntil = &RepoRequestIntegrationThrottledUntil{}
 	}
 
 	if val, ok := kv["throttled_until"]; ok {
@@ -2381,10 +2396,10 @@ func (o *RepoRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.ThrottledUntil.FromMap(kv)
 		} else if sv, ok := val.(RepoRequestIntegrationThrottledUntil); ok {
 			// struct
-			o.ThrottledUntil = sv
+			o.ThrottledUntil = &sv
 		} else if sp, ok := val.(*RepoRequestIntegrationThrottledUntil); ok {
 			// struct pointer
-			o.ThrottledUntil = *sp
+			o.ThrottledUntil = sp
 		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
 			o.ThrottledUntil.Epoch = dt.Epoch
 			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
@@ -2654,6 +2669,9 @@ func NewRepoRequestID(customerID string, refType string, refID string) string {
 func (o *RepoRequest) setDefaults(frommap bool) {
 	if o.Integration.EntityErrors == nil {
 		o.Integration.EntityErrors = make([]RepoRequestIntegrationEntityErrors, 0)
+	}
+	if o.Integration.ThrottledUntil == nil {
+		o.Integration.ThrottledUntil = &RepoRequestIntegrationThrottledUntil{}
 	}
 
 	if o.ID == "" {
