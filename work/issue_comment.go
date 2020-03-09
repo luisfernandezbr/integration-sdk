@@ -246,7 +246,7 @@ type IssueComment struct {
 	UpdatedDate IssueCommentUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// URL the URL to the source system for this comment
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
-	// UserRefID the user ref_id in the source system
+	// UserRefID the user ref_id in the source system of the user that made the comment
 	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
