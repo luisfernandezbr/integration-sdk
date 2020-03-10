@@ -1450,6 +1450,10 @@ type WorkStatusRequestIntegration struct {
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
 	Authorization WorkStatusRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	// CreatedByProfileID The id of the profile for the user that created the integration
+	CreatedByProfileID *string `json:"created_by_profile_id,omitempty" codec:"created_by_profile_id,omitempty" bson:"created_by_profile_id" yaml:"created_by_profile_id,omitempty" faker:"-"`
+	// CreatedByUserID The id of the user that created the integration
+	CreatedByUserID *string `json:"created_by_user_id,omitempty" codec:"created_by_user_id,omitempty" bson:"created_by_user_id" yaml:"created_by_user_id,omitempty" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// EntityErrors export status and error per entity in the integration
@@ -1572,6 +1576,10 @@ func (o *WorkStatusRequestIntegration) ToMap() map[string]interface{} {
 		"active": toWorkStatusRequestIntegrationObject(o.Active, false),
 		// Authorization Authorization information
 		"authorization": toWorkStatusRequestIntegrationObject(o.Authorization, false),
+		// CreatedByProfileID The id of the profile for the user that created the integration
+		"created_by_profile_id": toWorkStatusRequestIntegrationObject(o.CreatedByProfileID, true),
+		// CreatedByUserID The id of the user that created the integration
+		"created_by_user_id": toWorkStatusRequestIntegrationObject(o.CreatedByUserID, true),
 		// CustomerID the customer id for the model instance
 		"customer_id": toWorkStatusRequestIntegrationObject(o.CustomerID, false),
 		// EntityErrors export status and error per entity in the integration
@@ -1694,6 +1702,42 @@ func (o *WorkStatusRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.Authorization.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["created_by_profile_id"].(*string); ok {
+		o.CreatedByProfileID = val
+	} else if val, ok := kv["created_by_profile_id"].(string); ok {
+		o.CreatedByProfileID = &val
+	} else {
+		if val, ok := kv["created_by_profile_id"]; ok {
+			if val == nil {
+				o.CreatedByProfileID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["created_by_user_id"].(*string); ok {
+		o.CreatedByUserID = val
+	} else if val, ok := kv["created_by_user_id"].(string); ok {
+		o.CreatedByUserID = &val
+	} else {
+		if val, ok := kv["created_by_user_id"]; ok {
+			if val == nil {
+				o.CreatedByUserID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByUserID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
@@ -2918,25 +2962,6 @@ func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

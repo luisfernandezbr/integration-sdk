@@ -1450,6 +1450,10 @@ type IntegrationRequestIntegration struct {
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
 	Authorization IntegrationRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	// CreatedByProfileID The id of the profile for the user that created the integration
+	CreatedByProfileID *string `json:"created_by_profile_id,omitempty" codec:"created_by_profile_id,omitempty" bson:"created_by_profile_id" yaml:"created_by_profile_id,omitempty" faker:"-"`
+	// CreatedByUserID The id of the user that created the integration
+	CreatedByUserID *string `json:"created_by_user_id,omitempty" codec:"created_by_user_id,omitempty" bson:"created_by_user_id" yaml:"created_by_user_id,omitempty" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// EntityErrors export status and error per entity in the integration
@@ -1572,6 +1576,10 @@ func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 		"active": toIntegrationRequestIntegrationObject(o.Active, false),
 		// Authorization Authorization information
 		"authorization": toIntegrationRequestIntegrationObject(o.Authorization, false),
+		// CreatedByProfileID The id of the profile for the user that created the integration
+		"created_by_profile_id": toIntegrationRequestIntegrationObject(o.CreatedByProfileID, true),
+		// CreatedByUserID The id of the user that created the integration
+		"created_by_user_id": toIntegrationRequestIntegrationObject(o.CreatedByUserID, true),
 		// CustomerID the customer id for the model instance
 		"customer_id": toIntegrationRequestIntegrationObject(o.CustomerID, false),
 		// EntityErrors export status and error per entity in the integration
@@ -1694,6 +1702,42 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.Authorization.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["created_by_profile_id"].(*string); ok {
+		o.CreatedByProfileID = val
+	} else if val, ok := kv["created_by_profile_id"].(string); ok {
+		o.CreatedByProfileID = &val
+	} else {
+		if val, ok := kv["created_by_profile_id"]; ok {
+			if val == nil {
+				o.CreatedByProfileID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["created_by_user_id"].(*string); ok {
+		o.CreatedByUserID = val
+	} else if val, ok := kv["created_by_user_id"].(string); ok {
+		o.CreatedByUserID = &val
+	} else {
+		if val, ok := kv["created_by_user_id"]; ok {
+			if val == nil {
+				o.CreatedByUserID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByUserID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
