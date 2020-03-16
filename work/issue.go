@@ -2117,10 +2117,10 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					o.Attachments = append(o.Attachments, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av IssueAttachments
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for attachments field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.Attachments = append(o.Attachments, av)
 				}
 			}
@@ -2180,10 +2180,10 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					o.ChangeLog = append(o.ChangeLog, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av IssueChangeLog
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for change_log field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.ChangeLog = append(o.ChangeLog, av)
 				}
 			}
@@ -2427,10 +2427,10 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					o.LinkedIssues = append(o.LinkedIssues, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av IssueLinkedIssues
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for linked_issues field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.LinkedIssues = append(o.LinkedIssues, av)
 				}
 			}

@@ -1783,10 +1783,10 @@ func (o *WorkStatusRequestIntegration) FromMap(kv map[string]interface{}) {
 					o.EntityErrors = append(o.EntityErrors, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av WorkStatusRequestIntegrationEntityErrors
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for entity_errors field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.EntityErrors = append(o.EntityErrors, av)
 				}
 			}

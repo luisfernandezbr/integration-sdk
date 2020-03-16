@@ -1233,10 +1233,10 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 					o.Users = append(o.Users, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av TeamUsers
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for users field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.Users = append(o.Users, av)
 				}
 			}

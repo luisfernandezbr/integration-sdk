@@ -1463,10 +1463,10 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 					o.Repos = append(o.Repos, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av RepoResponseRepos
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for repos field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.Repos = append(o.Repos, av)
 				}
 			}

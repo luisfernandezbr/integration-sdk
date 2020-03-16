@@ -1286,10 +1286,10 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 					o.Files = append(o.Files, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av CommitFiles
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for files field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.Files = append(o.Files, av)
 				}
 			}

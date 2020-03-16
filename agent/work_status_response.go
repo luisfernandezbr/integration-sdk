@@ -1683,10 +1683,10 @@ func (o *WorkStatusResponseWorkConfigTypeRules) FromMap(kv map[string]interface{
 					o.Predicates = append(o.Predicates, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av WorkStatusResponseWorkConfigTypeRulesPredicates
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for predicates field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.Predicates = append(o.Predicates, av)
 				}
 			}
@@ -2338,10 +2338,10 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 					o.TypeRules = append(o.TypeRules, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av WorkStatusResponseWorkConfigTypeRules
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for type_rules field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.TypeRules = append(o.TypeRules, av)
 				}
 			}

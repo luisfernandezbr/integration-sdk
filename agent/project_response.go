@@ -1328,10 +1328,10 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 					o.Projects = append(o.Projects, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av ProjectResponseProjects
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for projects field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.Projects = append(o.Projects, av)
 				}
 			}

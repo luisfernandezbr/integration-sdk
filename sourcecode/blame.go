@@ -876,10 +876,10 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 					o.Lines = append(o.Lines, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av BlameLines
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for lines field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.Lines = append(o.Lines, av)
 				}
 			}

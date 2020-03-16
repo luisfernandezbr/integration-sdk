@@ -571,10 +571,10 @@ func (o *ExportResponseIntegrations) FromMap(kv map[string]interface{}) {
 					o.EntityErrors = append(o.EntityErrors, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av ExportResponseIntegrationsEntityErrors
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for entity_errors field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.EntityErrors = append(o.EntityErrors, av)
 				}
 			}
@@ -1747,10 +1747,10 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 					o.Integrations = append(o.Integrations, fm)
 				} else {
 					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
 					var av ExportResponseIntegrations
-					if err := json.Unmarshal(b, &av); err != nil {
-						panic("unsupported type for integrations field entry: " + reflect.TypeOf(ae).String())
-					}
+					av.FromMap(bkv)
 					o.Integrations = append(o.Integrations, av)
 				}
 			}
