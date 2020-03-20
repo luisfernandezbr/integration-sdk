@@ -1777,6 +1777,8 @@ type Issue struct {
 	PlannedStartDate IssuePlannedStartDate `json:"planned_start_date" codec:"planned_start_date" bson:"planned_start_date" yaml:"planned_start_date" faker:"-"`
 	// Priority priority of the issue
 	Priority string `json:"priority" codec:"priority" bson:"priority" yaml:"priority" faker:"-"`
+	// PriorityID priority id for the issue
+	PriorityID string `json:"priority_id" codec:"priority_id" bson:"priority_id" yaml:"priority_id" faker:"-"`
 	// ProjectID unique project id
 	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
@@ -1799,6 +1801,8 @@ type Issue struct {
 	Title string `json:"title" codec:"title" bson:"title" yaml:"title" faker:"issue_title"`
 	// Type type of issue
 	Type string `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	// TypeID the issue type id
+	TypeID string `json:"type_id" codec:"type_id" bson:"type_id" yaml:"type_id" faker:"-"`
 	// UpdatedDate the date that the issue was updated
 	UpdatedDate IssueUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// URL the url to the sprint page
@@ -2047,6 +2051,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"planned_end_date":   toIssueObject(o.PlannedEndDate, false),
 		"planned_start_date": toIssueObject(o.PlannedStartDate, false),
 		"priority":           toIssueObject(o.Priority, false),
+		"priority_id":        toIssueObject(o.PriorityID, false),
 		"project_id":         toIssueObject(o.ProjectID, false),
 		"ref_id":             toIssueObject(o.RefID, false),
 		"ref_type":           toIssueObject(o.RefType, false),
@@ -2058,6 +2063,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"tags":               toIssueObject(o.Tags, false),
 		"title":              toIssueObject(o.Title, false),
 		"type":               toIssueObject(o.Type, false),
+		"type_id":            toIssueObject(o.TypeID, false),
 		"updated_date":       toIssueObject(o.UpdatedDate, false),
 		"url":                toIssueObject(o.URL, false),
 		"hashcode":           toIssueObject(o.Hashcode, false),
@@ -2573,6 +2579,26 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["priority_id"].(string); ok {
+		o.PriorityID = val
+	} else {
+		if val, ok := kv["priority_id"]; ok {
+			if val == nil {
+				o.PriorityID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.PriorityID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["project_id"].(string); ok {
 		o.ProjectID = val
 	} else {
@@ -2853,6 +2879,26 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["type_id"].(string); ok {
+		o.TypeID = val
+	} else {
+		if val, ok := kv["type_id"]; ok {
+			if val == nil {
+				o.TypeID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.TypeID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["updated_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.UpdatedDate.FromMap(kv)
@@ -2927,6 +2973,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.PlannedEndDate)
 	args = append(args, o.PlannedStartDate)
 	args = append(args, o.Priority)
+	args = append(args, o.PriorityID)
 	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
@@ -2938,6 +2985,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.Tags)
 	args = append(args, o.Title)
 	args = append(args, o.Type)
+	args = append(args, o.TypeID)
 	args = append(args, o.UpdatedDate)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
