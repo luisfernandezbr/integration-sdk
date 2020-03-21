@@ -1650,6 +1650,20 @@ func (o *WorkStatusRequestIntegration) setDefaults(frommap bool) {
 		o.Errored = &v
 	}
 
+	{
+		v := false
+
+		o.Exportable = v
+
+	}
+
+	{
+		v := false
+
+		o.Onboarding = v
+
+	}
+
 	if o.Processed == nil {
 		var v bool
 		o.Processed = &v

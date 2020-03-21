@@ -112,9 +112,6 @@ func (o *IssuePriority) setDefaults(frommap bool) {
 	}
 
 	{
-		v := int64(0)
-
-		o.Order = v
 
 	}
 
