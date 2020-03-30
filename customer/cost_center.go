@@ -249,7 +249,7 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["active"]; ok {
 			if val == nil {
-				o.Active = number.ToBoolAny(nil)
+				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
 			}
@@ -261,7 +261,7 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["cost"]; ok {
 			if val == nil {
-				o.Cost = number.ToFloat64Any(nil)
+				o.Cost = 0.0
 			} else {
 				o.Cost = number.ToFloat64Any(val)
 			}
@@ -273,7 +273,7 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["created_ts"]; ok {
 			if val == nil {
-				o.CreatedAt = number.ToInt64Any(nil)
+				o.CreatedAt = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -408,7 +408,7 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["updated_ts"]; ok {
 			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
+				o.UpdatedAt = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)

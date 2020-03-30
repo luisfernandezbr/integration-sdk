@@ -16,7 +16,6 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
-	pnumber "github.com/pinpt/go-common/number"
 	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
@@ -85,7 +84,7 @@ func (o *IssueAttachmentsCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -100,7 +99,7 @@ func (o *IssueAttachmentsCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -300,7 +299,7 @@ func (o *IssueAttachments) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["size"]; ok {
 			if val == nil {
-				o.Size = number.ToInt64Any(nil)
+				o.Size = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -424,7 +423,7 @@ func (o *IssueChangeLogCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -439,7 +438,7 @@ func (o *IssueChangeLogCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -876,7 +875,7 @@ func (o *IssueChangeLog) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["ordinal"]; ok {
 			if val == nil {
-				o.Ordinal = number.ToInt64Any(nil)
+				o.Ordinal = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1020,7 +1019,7 @@ func (o *IssueCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1035,7 +1034,7 @@ func (o *IssueCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1119,7 +1118,7 @@ func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1134,7 +1133,7 @@ func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1437,7 +1436,7 @@ func (o *IssueLinkedIssues) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["reverse_direction"]; ok {
 			if val == nil {
-				o.ReverseDirection = number.ToBoolAny(nil)
+				o.ReverseDirection = false
 			} else {
 				o.ReverseDirection = number.ToBoolAny(val)
 			}
@@ -1498,7 +1497,7 @@ func (o *IssuePlannedEndDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1513,7 +1512,7 @@ func (o *IssuePlannedEndDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1597,7 +1596,7 @@ func (o *IssuePlannedStartDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1612,7 +1611,7 @@ func (o *IssuePlannedStartDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1696,7 +1695,7 @@ func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1711,7 +1710,7 @@ func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1900,17 +1899,11 @@ func (o *Issue) setDefaults(frommap bool) {
 	if o.ChangeLog == nil {
 		o.ChangeLog = make([]IssueChangeLog, 0)
 	}
-	if o.EpicID == nil {
-		o.EpicID = pstrings.Pointer("")
-	}
 	if o.LinkedIssues == nil {
 		o.LinkedIssues = make([]IssueLinkedIssues, 0)
 	}
 	if o.SprintIds == nil {
 		o.SprintIds = make([]string, 0)
-	}
-	if o.StoryPoints == nil {
-		o.StoryPoints = pnumber.Float64Pointer(0)
 	}
 	if o.Tags == nil {
 		o.Tags = make([]string, 0)
@@ -2777,7 +2770,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["story_points"]; ok {
 			if val == nil {
-				o.StoryPoints = number.Float64Pointer(number.ToFloat64Any(nil))
+				o.StoryPoints = nil
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {

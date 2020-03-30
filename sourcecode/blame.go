@@ -82,7 +82,7 @@ func (o *BlameChangeDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -97,7 +97,7 @@ func (o *BlameChangeDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -213,7 +213,7 @@ func (o *BlameLines) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["blank"]; ok {
 			if val == nil {
-				o.Blank = number.ToBoolAny(nil)
+				o.Blank = false
 			} else {
 				o.Blank = number.ToBoolAny(val)
 			}
@@ -225,7 +225,7 @@ func (o *BlameLines) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["code"]; ok {
 			if val == nil {
-				o.Code = number.ToBoolAny(nil)
+				o.Code = false
 			} else {
 				o.Code = number.ToBoolAny(val)
 			}
@@ -237,7 +237,7 @@ func (o *BlameLines) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["comment"]; ok {
 			if val == nil {
-				o.Comment = number.ToBoolAny(nil)
+				o.Comment = false
 			} else {
 				o.Comment = number.ToBoolAny(val)
 			}
@@ -463,9 +463,6 @@ func NewBlameID(customerID string, refID string, refType string, RepoID string, 
 }
 
 func (o *Blame) setDefaults(frommap bool) {
-	if o.License == nil {
-		o.License = pstrings.Pointer("")
-	}
 	if o.Lines == nil {
 		o.Lines = make([]BlameLines, 0)
 	}
@@ -630,7 +627,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["blanks"]; ok {
 			if val == nil {
-				o.Blanks = number.ToInt64Any(nil)
+				o.Blanks = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -678,7 +675,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["comments"]; ok {
 			if val == nil {
-				o.Comments = number.ToInt64Any(nil)
+				o.Comments = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -713,7 +710,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["complexity"]; ok {
 			if val == nil {
-				o.Complexity = number.ToInt64Any(nil)
+				o.Complexity = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -748,7 +745,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["excluded"]; ok {
 			if val == nil {
-				o.Excluded = number.ToBoolAny(nil)
+				o.Excluded = false
 			} else {
 				o.Excluded = number.ToBoolAny(val)
 			}
@@ -921,7 +918,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["loc"]; ok {
 			if val == nil {
-				o.Loc = number.ToInt64Any(nil)
+				o.Loc = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1016,7 +1013,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["size"]; ok {
 			if val == nil {
-				o.Size = number.ToInt64Any(nil)
+				o.Size = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1031,7 +1028,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["sloc"]; ok {
 			if val == nil {
-				o.Sloc = number.ToInt64Any(nil)
+				o.Sloc = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)

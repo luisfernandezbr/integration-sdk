@@ -80,7 +80,7 @@ func (o *BuildEndDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -95,7 +95,7 @@ func (o *BuildEndDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -279,7 +279,7 @@ func (o *BuildStartDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -294,7 +294,7 @@ func (o *BuildStartDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -485,9 +485,6 @@ func NewBuildID(customerID string, refType string, refID string) string {
 }
 
 func (o *Build) setDefaults(frommap bool) {
-	if o.URL == nil {
-		o.URL = pstrings.Pointer("")
-	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -642,7 +639,7 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["automated"]; ok {
 			if val == nil {
-				o.Automated = number.ToBoolAny(nil)
+				o.Automated = false
 			} else {
 				o.Automated = number.ToBoolAny(val)
 			}

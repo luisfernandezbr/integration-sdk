@@ -291,7 +291,7 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["ahead_default_count"]; ok {
 			if val == nil {
-				o.AheadDefaultCount = number.ToInt64Any(nil)
+				o.AheadDefaultCount = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -306,7 +306,7 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["behind_default_count"]; ok {
 			if val == nil {
-				o.BehindDefaultCount = number.ToInt64Any(nil)
+				o.BehindDefaultCount = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -545,7 +545,7 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["default"]; ok {
 			if val == nil {
-				o.Default = number.ToBoolAny(nil)
+				o.Default = false
 			} else {
 				o.Default = number.ToBoolAny(val)
 			}
@@ -657,7 +657,7 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["merged"]; ok {
 			if val == nil {
-				o.Merged = number.ToBoolAny(nil)
+				o.Merged = false
 			} else {
 				o.Merged = number.ToBoolAny(val)
 			}

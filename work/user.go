@@ -105,18 +105,6 @@ func NewUserID(customerID string, refID string, refType string) string {
 }
 
 func (o *User) setDefaults(frommap bool) {
-	if o.AssociatedRefID == nil {
-		o.AssociatedRefID = pstrings.Pointer("")
-	}
-	if o.AvatarURL == nil {
-		o.AvatarURL = pstrings.Pointer("")
-	}
-	if o.Email == nil {
-		o.Email = pstrings.Pointer("")
-	}
-	if o.URL == nil {
-		o.URL = pstrings.Pointer("")
-	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
@@ -406,7 +394,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["member"]; ok {
 			if val == nil {
-				o.Member = number.ToBoolAny(nil)
+				o.Member = false
 			} else {
 				o.Member = number.ToBoolAny(val)
 			}
@@ -478,7 +466,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["updated_ts"]; ok {
 			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
+				o.UpdatedAt = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)

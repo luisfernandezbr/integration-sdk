@@ -84,7 +84,7 @@ func (o *TeamDeletedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -99,7 +99,7 @@ func (o *TeamDeletedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -792,7 +792,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["active"]; ok {
 			if val == nil {
-				o.Active = number.ToBoolAny(nil)
+				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
 			}
@@ -855,7 +855,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["created_ts"]; ok {
 			if val == nil {
-				o.CreatedAt = number.ToInt64Any(nil)
+				o.CreatedAt = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -890,7 +890,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["deleted"]; ok {
 			if val == nil {
-				o.Deleted = number.ToBoolAny(nil)
+				o.Deleted = false
 			} else {
 				o.Deleted = number.ToBoolAny(val)
 			}
@@ -975,7 +975,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["leaf"]; ok {
 			if val == nil {
-				o.Leaf = number.ToBoolAny(nil)
+				o.Leaf = false
 			} else {
 				o.Leaf = number.ToBoolAny(val)
 			}
@@ -1200,7 +1200,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["updated_ts"]; ok {
 			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
+				o.UpdatedAt = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)

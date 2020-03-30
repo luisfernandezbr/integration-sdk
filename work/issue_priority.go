@@ -97,15 +97,6 @@ func NewIssuePriorityID(customerID string, refType string, refID string) string 
 }
 
 func (o *IssuePriority) setDefaults(frommap bool) {
-	if o.Color == nil {
-		o.Color = pstrings.Pointer("")
-	}
-	if o.Description == nil {
-		o.Description = pstrings.Pointer("")
-	}
-	if o.IconURL == nil {
-		o.IconURL = pstrings.Pointer("")
-	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefType, o.RefID)
@@ -372,7 +363,7 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["order"]; ok {
 			if val == nil {
-				o.Order = number.ToInt64Any(nil)
+				o.Order = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)

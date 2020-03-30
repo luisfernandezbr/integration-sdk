@@ -89,12 +89,6 @@ func NewUpdateTriggerID(customerID string, refType string, refID string) string 
 }
 
 func (o *UpdateTrigger) setDefaults(frommap bool) {
-	if o.UUID == nil {
-		o.UUID = pstrings.Pointer("")
-	}
-	if o.Version == nil {
-		o.Version = pstrings.Pointer("")
-	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash

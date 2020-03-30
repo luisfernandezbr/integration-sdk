@@ -218,12 +218,6 @@ func NewIssueTypeID(customerID string, refType string, refID string) string {
 }
 
 func (o *IssueType) setDefaults(frommap bool) {
-	if o.Description == nil {
-		o.Description = pstrings.Pointer("")
-	}
-	if o.IconURL == nil {
-		o.IconURL = pstrings.Pointer("")
-	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefType, o.RefID)

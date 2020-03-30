@@ -82,7 +82,7 @@ func (o *RepoResponseEventDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -97,7 +97,7 @@ func (o *RepoResponseEventDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -181,7 +181,7 @@ func (o *RepoResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -196,7 +196,7 @@ func (o *RepoResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -280,7 +280,7 @@ func (o *RepoResponseReposCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -295,7 +295,7 @@ func (o *RepoResponseReposCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -465,7 +465,7 @@ func (o *RepoResponseRepos) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["active"]; ok {
 			if val == nil {
-				o.Active = number.ToBoolAny(nil)
+				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
 			}
@@ -940,12 +940,6 @@ func NewRepoResponseID(customerID string, refType string, refID string) string {
 }
 
 func (o *RepoResponse) setDefaults(frommap bool) {
-	if o.Data == nil {
-		o.Data = pstrings.Pointer("")
-	}
-	if o.Error == nil {
-		o.Error = pstrings.Pointer("")
-	}
 	if o.Repos == nil {
 		o.Repos = make([]RepoResponseRepos, 0)
 	}
@@ -1216,25 +1210,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1245,7 +1220,7 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["free_space"]; ok {
 			if val == nil {
-				o.FreeSpace = number.ToInt64Any(nil)
+				o.FreeSpace = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1344,25 +1319,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1373,7 +1329,7 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["memory"]; ok {
 			if val == nil {
-				o.Memory = number.ToInt64Any(nil)
+				o.Memory = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1408,7 +1364,7 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["num_cpu"]; ok {
 			if val == nil {
-				o.NumCPU = number.ToInt64Any(nil)
+				o.NumCPU = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1566,7 +1522,7 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["success"]; ok {
 			if val == nil {
-				o.Success = number.ToBoolAny(nil)
+				o.Success = false
 			} else {
 				o.Success = number.ToBoolAny(val)
 			}
@@ -1672,7 +1628,7 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["uptime"]; ok {
 			if val == nil {
-				o.Uptime = number.ToInt64Any(nil)
+				o.Uptime = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)

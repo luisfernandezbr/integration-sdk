@@ -80,7 +80,7 @@ func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -95,7 +95,7 @@ func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -286,24 +286,6 @@ func NewMetricID(customerID string, refType string, refID string) string {
 }
 
 func (o *Metric) setDefaults(frommap bool) {
-	if o.Branch == nil {
-		o.Branch = pstrings.Pointer("")
-	}
-	if o.CommitID == nil {
-		o.CommitID = pstrings.Pointer("")
-	}
-	if o.CommitSha == nil {
-		o.CommitSha = pstrings.Pointer("")
-	}
-	if o.PullRequestID == nil {
-		o.PullRequestID = pstrings.Pointer("")
-	}
-	if o.PullRequestRefID == nil {
-		o.PullRequestRefID = pstrings.Pointer("")
-	}
-	if o.RepoID == nil {
-		o.RepoID = pstrings.Pointer("")
-	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash

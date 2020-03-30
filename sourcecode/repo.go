@@ -305,7 +305,7 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["active"]; ok {
 			if val == nil {
-				o.Active = number.ToBoolAny(nil)
+				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
 			}
@@ -477,7 +477,7 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["updated_ts"]; ok {
 			if val == nil {
-				o.UpdatedAt = number.ToInt64Any(nil)
+				o.UpdatedAt = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)

@@ -494,7 +494,7 @@ func (o *ExportRequestIntegrationsLastExportCompletedDate) FromMap(kv map[string
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -509,7 +509,7 @@ func (o *ExportRequestIntegrationsLastExportCompletedDate) FromMap(kv map[string
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -593,7 +593,7 @@ func (o *ExportRequestIntegrationsLastExportRequestedDate) FromMap(kv map[string
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -608,7 +608,7 @@ func (o *ExportRequestIntegrationsLastExportRequestedDate) FromMap(kv map[string
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -692,7 +692,7 @@ func (o *ExportRequestIntegrationsLastProcessingCompletedDate) FromMap(kv map[st
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -707,7 +707,7 @@ func (o *ExportRequestIntegrationsLastProcessingCompletedDate) FromMap(kv map[st
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -791,7 +791,7 @@ func (o *ExportRequestIntegrationsLastProcessingStartedDate) FromMap(kv map[stri
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -806,7 +806,7 @@ func (o *ExportRequestIntegrationsLastProcessingStartedDate) FromMap(kv map[stri
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -950,7 +950,7 @@ func (o *ExportRequestIntegrationsOnboardCompletedDate) FromMap(kv map[string]in
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -965,7 +965,7 @@ func (o *ExportRequestIntegrationsOnboardCompletedDate) FromMap(kv map[string]in
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1049,7 +1049,7 @@ func (o *ExportRequestIntegrationsOnboardRequestedDate) FromMap(kv map[string]in
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1064,7 +1064,7 @@ func (o *ExportRequestIntegrationsOnboardRequestedDate) FromMap(kv map[string]in
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1298,7 +1298,7 @@ func (o *ExportRequestIntegrationsThrottledUntil) FromMap(kv map[string]interfac
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1313,7 +1313,7 @@ func (o *ExportRequestIntegrationsThrottledUntil) FromMap(kv map[string]interfac
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1397,7 +1397,7 @@ func (o *ExportRequestIntegrationsValidatedDate) FromMap(kv map[string]interface
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1412,7 +1412,7 @@ func (o *ExportRequestIntegrationsValidatedDate) FromMap(kv map[string]interface
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1683,7 +1683,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["active"]; ok {
 			if val == nil {
-				o.Active = number.ToBoolAny(nil)
+				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
 			}
@@ -1848,7 +1848,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["errored"]; ok {
 			if val == nil {
-				o.Errored = number.BoolPointer(number.ToBoolAny(nil))
+				o.Errored = nil
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
@@ -1915,7 +1915,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["exportable"]; ok {
 			if val == nil {
-				o.Exportable = number.ToBoolAny(nil)
+				o.Exportable = false
 			} else {
 				o.Exportable = number.ToBoolAny(val)
 			}
@@ -2238,7 +2238,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["onboarding"]; ok {
 			if val == nil {
-				o.Onboarding = number.ToBoolAny(nil)
+				o.Onboarding = false
 			} else {
 				o.Onboarding = number.ToBoolAny(val)
 			}
@@ -2270,7 +2270,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["processed"]; ok {
 			if val == nil {
-				o.Processed = number.BoolPointer(number.ToBoolAny(nil))
+				o.Processed = nil
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
@@ -2420,7 +2420,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["throttled"]; ok {
 			if val == nil {
-				o.Throttled = number.BoolPointer(number.ToBoolAny(nil))
+				o.Throttled = nil
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
@@ -2475,7 +2475,7 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["validated"]; ok {
 			if val == nil {
-				o.Validated = number.BoolPointer(number.ToBoolAny(nil))
+				o.Validated = nil
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
@@ -2591,7 +2591,7 @@ func (o *ExportRequestRequestDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -2606,7 +2606,7 @@ func (o *ExportRequestRequestDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -2723,9 +2723,6 @@ func NewExportRequestID(customerID string, refType string, refID string) string 
 func (o *ExportRequest) setDefaults(frommap bool) {
 	if o.Integrations == nil {
 		o.Integrations = make([]ExportRequestIntegrations, 0)
-	}
-	if o.UploadURL == nil {
-		o.UploadURL = pstrings.Pointer("")
 	}
 
 	if o.ID == "" {
@@ -3040,7 +3037,7 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["reprocess_historical"]; ok {
 			if val == nil {
-				o.ReprocessHistorical = number.ToBoolAny(nil)
+				o.ReprocessHistorical = false
 			} else {
 				o.ReprocessHistorical = number.ToBoolAny(val)
 			}
@@ -3056,6 +3053,25 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

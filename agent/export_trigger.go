@@ -90,9 +90,6 @@ func NewExportTriggerID(customerID string, refType string, refID string) string 
 }
 
 func (o *ExportTrigger) setDefaults(frommap bool) {
-	if o.UUID == nil {
-		o.UUID = pstrings.Pointer("")
-	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -319,7 +316,7 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["reprocess_historical"]; ok {
 			if val == nil {
-				o.ReprocessHistorical = number.ToBoolAny(nil)
+				o.ReprocessHistorical = false
 			} else {
 				o.ReprocessHistorical = number.ToBoolAny(val)
 			}

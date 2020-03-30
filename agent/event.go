@@ -80,7 +80,7 @@ func (o *EventEventDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -95,7 +95,7 @@ func (o *EventEventDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -179,7 +179,7 @@ func (o *EventLastExportDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Epoch = number.ToInt64Any(nil)
+				o.Epoch = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -194,7 +194,7 @@ func (o *EventLastExportDate) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.Offset = number.ToInt64Any(nil)
+				o.Offset = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -522,12 +522,6 @@ func NewEventID(customerID string, refType string, refID string) string {
 }
 
 func (o *Event) setDefaults(frommap bool) {
-	if o.Data == nil {
-		o.Data = pstrings.Pointer("")
-	}
-	if o.Error == nil {
-		o.Error = pstrings.Pointer("")
-	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -820,7 +814,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["free_space"]; ok {
 			if val == nil {
-				o.FreeSpace = number.ToInt64Any(nil)
+				o.FreeSpace = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -928,7 +922,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["memory"]; ok {
 			if val == nil {
-				o.Memory = number.ToInt64Any(nil)
+				o.Memory = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -963,7 +957,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["num_cpu"]; ok {
 			if val == nil {
-				o.NumCPU = number.ToInt64Any(nil)
+				o.NumCPU = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
@@ -1132,7 +1126,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 	} else {
 		if val, ok := kv["uptime"]; ok {
 			if val == nil {
-				o.Uptime = number.ToInt64Any(nil)
+				o.Uptime = 0
 			} else {
 				if tv, ok := val.(time.Time); ok {
 					val = datetime.TimeToEpoch(tv)
