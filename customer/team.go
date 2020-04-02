@@ -13,6 +13,7 @@ import (
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
+	"github.com/pinpt/go-common/graphql"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -1311,4 +1312,67 @@ func (o *Team) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Key:    "",
 		},
 	}
+}
+
+// ExecTeamUpdateMutation returns a graphql update mutation for Team
+func ExecTeamUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*Team, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["upsert"] = upsert
+	variables["input"] = input
+	var sb strings.Builder
+	sb.WriteString("mutation TeamUpdateMutation($id: String, $input: UpdateCustomerTeamInput, $upsert: Boolean) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tupdateTeam(_id: $id, input: $input, upsert: $upsert) {\n")
+
+	// scalar
+	sb.WriteString("\t\t\tactive\n")
+	// scalar
+	sb.WriteString("\t\t\tchildren_ids\n")
+	// scalar
+	sb.WriteString("\t\t\tcreated_ts\n")
+	// scalar
+	sb.WriteString("\t\t\tdeleted\n")
+	// object with fields
+	sb.WriteString("\t\t\tdeleted_date {\n")
+
+	// scalar
+	sb.WriteString("\t\t\tepoch\n")
+	// scalar
+	sb.WriteString("\t\t\toffset\n")
+	// scalar
+	sb.WriteString("\t\t\trfc3339\n")
+	sb.WriteString("\t\t\t}\n")
+	// scalar
+	sb.WriteString("\t\t\tdescription\n")
+	// id
+	sb.WriteString("\t\t\t_id\n")
+	// scalar
+	sb.WriteString("\t\t\tleaf\n")
+	// scalar
+	sb.WriteString("\t\t\tname\n")
+	// scalar
+	sb.WriteString("\t\t\tparent_ids\n")
+	// scalar
+	sb.WriteString("\t\t\tref_id\n")
+	// scalar
+	sb.WriteString("\t\t\tref_type\n")
+	// scalar
+	sb.WriteString("\t\t\tupdated_ts\n")
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	kv := make(map[string]interface{})
+	if err := client.Mutate(sb.String(), variables, &kv); err != nil {
+		return nil, err
+	}
+	if sdata, ok := kv["customer"].(map[string]interface{}); ok {
+		if mdata, ok := sdata["updateTeam"].(map[string]interface{}); ok {
+			var object Team
+			object.FromMap(mdata)
+			return &object, nil
+		}
+		return nil, fmt.Errorf("missing expected updateTeam key from customer")
+	}
+	return nil, fmt.Errorf("missing expected customer key from data")
 }

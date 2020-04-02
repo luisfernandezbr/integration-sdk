@@ -6,11 +6,13 @@ package customer
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/datetime"
+	"github.com/pinpt/go-common/graphql"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -448,4 +450,51 @@ func (o *CostCenter) GetEventAPIConfig() datamodel.EventAPIConfig {
 			Key:    "",
 		},
 	}
+}
+
+// ExecCostCenterUpdateMutation returns a graphql update mutation for CostCenter
+func ExecCostCenterUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*CostCenter, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["upsert"] = upsert
+	variables["input"] = input
+	var sb strings.Builder
+	sb.WriteString("mutation CostCenterUpdateMutation($id: String, $input: UpdateCustomerCostCenterInput, $upsert: Boolean) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tupdateCostCenter(_id: $id, input: $input, upsert: $upsert) {\n")
+
+	// scalar
+	sb.WriteString("\t\t\tactive\n")
+	// scalar
+	sb.WriteString("\t\t\tcost\n")
+	// scalar
+	sb.WriteString("\t\t\tcreated_ts\n")
+	// scalar
+	sb.WriteString("\t\t\tdescription\n")
+	// id
+	sb.WriteString("\t\t\t_id\n")
+	// scalar
+	sb.WriteString("\t\t\tname\n")
+	// scalar
+	sb.WriteString("\t\t\tref_id\n")
+	// scalar
+	sb.WriteString("\t\t\tref_type\n")
+	// scalar
+	sb.WriteString("\t\t\tupdated_ts\n")
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	kv := make(map[string]interface{})
+	if err := client.Mutate(sb.String(), variables, &kv); err != nil {
+		return nil, err
+	}
+	if sdata, ok := kv["customer"].(map[string]interface{}); ok {
+		if mdata, ok := sdata["updateCostCenter"].(map[string]interface{}); ok {
+			var object CostCenter
+			object.FromMap(mdata)
+			return &object, nil
+		}
+		return nil, fmt.Errorf("missing expected updateCostCenter key from customer")
+	}
+	return nil, fmt.Errorf("missing expected customer key from data")
 }
