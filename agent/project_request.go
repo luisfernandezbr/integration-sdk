@@ -1183,8 +1183,10 @@ func (v *ProjectRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type
 			*v = ProjectRequestIntegrationSystemType(1)
 		case "CODEQUALITY":
 			*v = ProjectRequestIntegrationSystemType(2)
-		case "USER":
+		case "CALENDAR":
 			*v = ProjectRequestIntegrationSystemType(3)
+		case "USER":
+			*v = ProjectRequestIntegrationSystemType(4)
 		}
 	}
 	return nil
@@ -1199,8 +1201,10 @@ func (v ProjectRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error {
 		v = 1
 	case "CODEQUALITY":
 		v = 2
-	case "USER":
+	case "CALENDAR":
 		v = 3
+	case "USER":
+		v = 4
 	}
 	return nil
 }
@@ -1215,6 +1219,8 @@ func (v ProjectRequestIntegrationSystemType) MarshalJSON() ([]byte, error) {
 	case 2:
 		return json.Marshal("CODEQUALITY")
 	case 3:
+		return json.Marshal("CALENDAR")
+	case 4:
 		return json.Marshal("USER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -1230,6 +1236,8 @@ func (v ProjectRequestIntegrationSystemType) String() string {
 	case 2:
 		return "CODEQUALITY"
 	case 3:
+		return "CALENDAR"
+	case 4:
 		return "USER"
 	}
 	return "unset"
@@ -1242,8 +1250,10 @@ const (
 	ProjectRequestIntegrationSystemTypeSourcecode ProjectRequestIntegrationSystemType = 1
 	// IntegrationSystemTypeCodequality is the enumeration value for codequality
 	ProjectRequestIntegrationSystemTypeCodequality ProjectRequestIntegrationSystemType = 2
+	// IntegrationSystemTypeCalendar is the enumeration value for calendar
+	ProjectRequestIntegrationSystemTypeCalendar ProjectRequestIntegrationSystemType = 3
 	// IntegrationSystemTypeUser is the enumeration value for user
-	ProjectRequestIntegrationSystemTypeUser ProjectRequestIntegrationSystemType = 3
+	ProjectRequestIntegrationSystemTypeUser ProjectRequestIntegrationSystemType = 4
 )
 
 // ProjectRequestIntegrationThrottledUntil represents the object structure for throttled_until
@@ -2377,8 +2387,10 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
-			case "user", "USER":
+			case "calendar", "CALENDAR":
 				o.SystemType = 3
+			case "user", "USER":
+				o.SystemType = 4
 			}
 		}
 		if em, ok := kv["system_type"].(string); ok {
@@ -2389,8 +2401,10 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
-			case "user", "USER":
+			case "calendar", "CALENDAR":
 				o.SystemType = 3
+			case "user", "USER":
+				o.SystemType = 4
 			}
 		}
 	}
@@ -2962,25 +2976,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

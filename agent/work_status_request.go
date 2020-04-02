@@ -1183,8 +1183,10 @@ func (v *WorkStatusRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.T
 			*v = WorkStatusRequestIntegrationSystemType(1)
 		case "CODEQUALITY":
 			*v = WorkStatusRequestIntegrationSystemType(2)
-		case "USER":
+		case "CALENDAR":
 			*v = WorkStatusRequestIntegrationSystemType(3)
+		case "USER":
+			*v = WorkStatusRequestIntegrationSystemType(4)
 		}
 	}
 	return nil
@@ -1199,8 +1201,10 @@ func (v WorkStatusRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error 
 		v = 1
 	case "CODEQUALITY":
 		v = 2
-	case "USER":
+	case "CALENDAR":
 		v = 3
+	case "USER":
+		v = 4
 	}
 	return nil
 }
@@ -1215,6 +1219,8 @@ func (v WorkStatusRequestIntegrationSystemType) MarshalJSON() ([]byte, error) {
 	case 2:
 		return json.Marshal("CODEQUALITY")
 	case 3:
+		return json.Marshal("CALENDAR")
+	case 4:
 		return json.Marshal("USER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -1230,6 +1236,8 @@ func (v WorkStatusRequestIntegrationSystemType) String() string {
 	case 2:
 		return "CODEQUALITY"
 	case 3:
+		return "CALENDAR"
+	case 4:
 		return "USER"
 	}
 	return "unset"
@@ -1242,8 +1250,10 @@ const (
 	WorkStatusRequestIntegrationSystemTypeSourcecode WorkStatusRequestIntegrationSystemType = 1
 	// IntegrationSystemTypeCodequality is the enumeration value for codequality
 	WorkStatusRequestIntegrationSystemTypeCodequality WorkStatusRequestIntegrationSystemType = 2
+	// IntegrationSystemTypeCalendar is the enumeration value for calendar
+	WorkStatusRequestIntegrationSystemTypeCalendar WorkStatusRequestIntegrationSystemType = 3
 	// IntegrationSystemTypeUser is the enumeration value for user
-	WorkStatusRequestIntegrationSystemTypeUser WorkStatusRequestIntegrationSystemType = 3
+	WorkStatusRequestIntegrationSystemTypeUser WorkStatusRequestIntegrationSystemType = 4
 )
 
 // WorkStatusRequestIntegrationThrottledUntil represents the object structure for throttled_until
@@ -2377,8 +2387,10 @@ func (o *WorkStatusRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
-			case "user", "USER":
+			case "calendar", "CALENDAR":
 				o.SystemType = 3
+			case "user", "USER":
+				o.SystemType = 4
 			}
 		}
 		if em, ok := kv["system_type"].(string); ok {
@@ -2389,8 +2401,10 @@ func (o *WorkStatusRequestIntegration) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
-			case "user", "USER":
+			case "calendar", "CALENDAR":
 				o.SystemType = 3
+			case "user", "USER":
+				o.SystemType = 4
 			}
 		}
 	}

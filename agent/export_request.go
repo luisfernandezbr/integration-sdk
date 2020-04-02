@@ -1183,8 +1183,10 @@ func (v *ExportRequestIntegrationsSystemType) UnmarshalBSONValue(t bsontype.Type
 			*v = ExportRequestIntegrationsSystemType(1)
 		case "CODEQUALITY":
 			*v = ExportRequestIntegrationsSystemType(2)
-		case "USER":
+		case "CALENDAR":
 			*v = ExportRequestIntegrationsSystemType(3)
+		case "USER":
+			*v = ExportRequestIntegrationsSystemType(4)
 		}
 	}
 	return nil
@@ -1199,8 +1201,10 @@ func (v ExportRequestIntegrationsSystemType) UnmarshalJSON(buf []byte) error {
 		v = 1
 	case "CODEQUALITY":
 		v = 2
-	case "USER":
+	case "CALENDAR":
 		v = 3
+	case "USER":
+		v = 4
 	}
 	return nil
 }
@@ -1215,6 +1219,8 @@ func (v ExportRequestIntegrationsSystemType) MarshalJSON() ([]byte, error) {
 	case 2:
 		return json.Marshal("CODEQUALITY")
 	case 3:
+		return json.Marshal("CALENDAR")
+	case 4:
 		return json.Marshal("USER")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -1230,6 +1236,8 @@ func (v ExportRequestIntegrationsSystemType) String() string {
 	case 2:
 		return "CODEQUALITY"
 	case 3:
+		return "CALENDAR"
+	case 4:
 		return "USER"
 	}
 	return "unset"
@@ -1242,8 +1250,10 @@ const (
 	ExportRequestIntegrationsSystemTypeSourcecode ExportRequestIntegrationsSystemType = 1
 	// IntegrationsSystemTypeCodequality is the enumeration value for codequality
 	ExportRequestIntegrationsSystemTypeCodequality ExportRequestIntegrationsSystemType = 2
+	// IntegrationsSystemTypeCalendar is the enumeration value for calendar
+	ExportRequestIntegrationsSystemTypeCalendar ExportRequestIntegrationsSystemType = 3
 	// IntegrationsSystemTypeUser is the enumeration value for user
-	ExportRequestIntegrationsSystemTypeUser ExportRequestIntegrationsSystemType = 3
+	ExportRequestIntegrationsSystemTypeUser ExportRequestIntegrationsSystemType = 4
 )
 
 // ExportRequestIntegrationsThrottledUntil represents the object structure for throttled_until
@@ -2377,8 +2387,10 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
-			case "user", "USER":
+			case "calendar", "CALENDAR":
 				o.SystemType = 3
+			case "user", "USER":
+				o.SystemType = 4
 			}
 		}
 		if em, ok := kv["system_type"].(string); ok {
@@ -2389,8 +2401,10 @@ func (o *ExportRequestIntegrations) FromMap(kv map[string]interface{}) {
 				o.SystemType = 1
 			case "codequality", "CODEQUALITY":
 				o.SystemType = 2
-			case "user", "USER":
+			case "calendar", "CALENDAR":
 				o.SystemType = 3
+			case "user", "USER":
+				o.SystemType = 4
 			}
 		}
 	}
@@ -3053,25 +3067,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

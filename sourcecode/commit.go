@@ -139,6 +139,8 @@ type Commit struct {
 	Excluded bool `json:"excluded" codec:"excluded" bson:"excluded" yaml:"excluded" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// Identifier the identifier for the commit
+	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// Message the commit message
 	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"commit_message"`
 	// RefID the source system id for the model instance
@@ -332,6 +334,7 @@ func (o *Commit) ToMap() map[string]interface{} {
 		"customer_id":      toCommitObject(o.CustomerID, false),
 		"excluded":         toCommitObject(o.Excluded, false),
 		"id":               toCommitObject(o.ID, false),
+		"identifier":       toCommitObject(o.Identifier, false),
 		"message":          toCommitObject(o.Message, false),
 		"ref_id":           toCommitObject(o.RefID, false),
 		"ref_type":         toCommitObject(o.RefType, false),
@@ -477,6 +480,26 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
+	} else {
+		if val, ok := kv["identifier"]; ok {
+			if val == nil {
+				o.Identifier = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Identifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -608,6 +631,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Excluded)
 	args = append(args, o.ID)
+	args = append(args, o.Identifier)
 	args = append(args, o.Message)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
