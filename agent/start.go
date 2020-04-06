@@ -28,6 +28,69 @@ const (
 	StartModelName datamodel.ModelNameType = "agent.Start"
 )
 
+const (
+	// StartModelArchitectureColumn is the column json value architecture
+	StartModelArchitectureColumn = "architecture"
+	// StartModelCustomerIDColumn is the column json value customer_id
+	StartModelCustomerIDColumn = "customer_id"
+	// StartModelDataColumn is the column json value data
+	StartModelDataColumn = "data"
+	// StartModelDistroColumn is the column json value distro
+	StartModelDistroColumn = "distro"
+	// StartModelErrorColumn is the column json value error
+	StartModelErrorColumn = "error"
+	// StartModelEventDateColumn is the column json value event_date
+	StartModelEventDateColumn = "event_date"
+	// StartModelEventDateEpochColumn is the column json value epoch
+	StartModelEventDateEpochColumn = "epoch"
+	// StartModelEventDateOffsetColumn is the column json value offset
+	StartModelEventDateOffsetColumn = "offset"
+	// StartModelEventDateRfc3339Column is the column json value rfc3339
+	StartModelEventDateRfc3339Column = "rfc3339"
+	// StartModelFreeSpaceColumn is the column json value free_space
+	StartModelFreeSpaceColumn = "free_space"
+	// StartModelGoVersionColumn is the column json value go_version
+	StartModelGoVersionColumn = "go_version"
+	// StartModelHostnameColumn is the column json value hostname
+	StartModelHostnameColumn = "hostname"
+	// StartModelIDColumn is the column json value id
+	StartModelIDColumn = "id"
+	// StartModelLastExportDateColumn is the column json value last_export_date
+	StartModelLastExportDateColumn = "last_export_date"
+	// StartModelLastExportDateEpochColumn is the column json value epoch
+	StartModelLastExportDateEpochColumn = "epoch"
+	// StartModelLastExportDateOffsetColumn is the column json value offset
+	StartModelLastExportDateOffsetColumn = "offset"
+	// StartModelLastExportDateRfc3339Column is the column json value rfc3339
+	StartModelLastExportDateRfc3339Column = "rfc3339"
+	// StartModelMemoryColumn is the column json value memory
+	StartModelMemoryColumn = "memory"
+	// StartModelMessageColumn is the column json value message
+	StartModelMessageColumn = "message"
+	// StartModelNumCPUColumn is the column json value num_cpu
+	StartModelNumCPUColumn = "num_cpu"
+	// StartModelOSColumn is the column json value os
+	StartModelOSColumn = "os"
+	// StartModelRefIDColumn is the column json value ref_id
+	StartModelRefIDColumn = "ref_id"
+	// StartModelRefTypeColumn is the column json value ref_type
+	StartModelRefTypeColumn = "ref_type"
+	// StartModelRequestIDColumn is the column json value request_id
+	StartModelRequestIDColumn = "request_id"
+	// StartModelSuccessColumn is the column json value success
+	StartModelSuccessColumn = "success"
+	// StartModelSystemIDColumn is the column json value system_id
+	StartModelSystemIDColumn = "system_id"
+	// StartModelTypeColumn is the column json value type
+	StartModelTypeColumn = "type"
+	// StartModelUptimeColumn is the column json value uptime
+	StartModelUptimeColumn = "uptime"
+	// StartModelUUIDColumn is the column json value uuid
+	StartModelUUIDColumn = "uuid"
+	// StartModelVersionColumn is the column json value version
+	StartModelVersionColumn = "version"
+)
+
 // StartEventDate represents the object structure for event_date
 type StartEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +447,35 @@ func (v StartType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// StartTypeEnroll is the enumeration value for enroll
 	StartTypeEnroll StartType = 0
-	// TypePing is the enumeration value for ping
+	// StartTypePing is the enumeration value for ping
 	StartTypePing StartType = 1
-	// TypeCrash is the enumeration value for crash
+	// StartTypeCrash is the enumeration value for crash
 	StartTypeCrash StartType = 2
-	// TypeLog is the enumeration value for log
+	// StartTypeLog is the enumeration value for log
 	StartTypeLog StartType = 3
-	// TypeIntegration is the enumeration value for integration
+	// StartTypeIntegration is the enumeration value for integration
 	StartTypeIntegration StartType = 4
-	// TypeExport is the enumeration value for export
+	// StartTypeExport is the enumeration value for export
 	StartTypeExport StartType = 5
-	// TypeProject is the enumeration value for project
+	// StartTypeProject is the enumeration value for project
 	StartTypeProject StartType = 6
-	// TypeRepo is the enumeration value for repo
+	// StartTypeRepo is the enumeration value for repo
 	StartTypeRepo StartType = 7
-	// TypeUser is the enumeration value for user
+	// StartTypeUser is the enumeration value for user
 	StartTypeUser StartType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// StartTypeUninstall is the enumeration value for uninstall
 	StartTypeUninstall StartType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// StartTypeUpgrade is the enumeration value for upgrade
 	StartTypeUpgrade StartType = 10
-	// TypeStart is the enumeration value for start
+	// StartTypeStart is the enumeration value for start
 	StartTypeStart StartType = 11
-	// TypeStop is the enumeration value for stop
+	// StartTypeStop is the enumeration value for stop
 	StartTypeStop StartType = 12
-	// TypePause is the enumeration value for pause
+	// StartTypePause is the enumeration value for pause
 	StartTypePause StartType = 13
-	// TypeResume is the enumeration value for resume
+	// StartTypeResume is the enumeration value for resume
 	StartTypeResume StartType = 14
 )
 
@@ -636,6 +699,12 @@ func (o *Start) UnmarshalJSON(data []byte) error {
 func (o *Start) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Start) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Start objects are equal

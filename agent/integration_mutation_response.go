@@ -28,6 +28,73 @@ const (
 	IntegrationMutationResponseModelName datamodel.ModelNameType = "agent.IntegrationMutationResponse"
 )
 
+const (
+	// IntegrationMutationResponseModelArchitectureColumn is the column json value architecture
+	IntegrationMutationResponseModelArchitectureColumn = "architecture"
+	// IntegrationMutationResponseModelCustomerIDColumn is the column json value customer_id
+	IntegrationMutationResponseModelCustomerIDColumn = "customer_id"
+	// IntegrationMutationResponseModelDataColumn is the column json value data
+	IntegrationMutationResponseModelDataColumn = "data"
+	// IntegrationMutationResponseModelDistroColumn is the column json value distro
+	IntegrationMutationResponseModelDistroColumn = "distro"
+	// IntegrationMutationResponseModelErrorColumn is the column json value error
+	IntegrationMutationResponseModelErrorColumn = "error"
+	// IntegrationMutationResponseModelEventDateColumn is the column json value event_date
+	IntegrationMutationResponseModelEventDateColumn = "event_date"
+	// IntegrationMutationResponseModelEventDateEpochColumn is the column json value epoch
+	IntegrationMutationResponseModelEventDateEpochColumn = "epoch"
+	// IntegrationMutationResponseModelEventDateOffsetColumn is the column json value offset
+	IntegrationMutationResponseModelEventDateOffsetColumn = "offset"
+	// IntegrationMutationResponseModelEventDateRfc3339Column is the column json value rfc3339
+	IntegrationMutationResponseModelEventDateRfc3339Column = "rfc3339"
+	// IntegrationMutationResponseModelFreeSpaceColumn is the column json value free_space
+	IntegrationMutationResponseModelFreeSpaceColumn = "free_space"
+	// IntegrationMutationResponseModelGoVersionColumn is the column json value go_version
+	IntegrationMutationResponseModelGoVersionColumn = "go_version"
+	// IntegrationMutationResponseModelHostnameColumn is the column json value hostname
+	IntegrationMutationResponseModelHostnameColumn = "hostname"
+	// IntegrationMutationResponseModelIDColumn is the column json value id
+	IntegrationMutationResponseModelIDColumn = "id"
+	// IntegrationMutationResponseModelJobIDColumn is the column json value job_id
+	IntegrationMutationResponseModelJobIDColumn = "job_id"
+	// IntegrationMutationResponseModelLastExportDateColumn is the column json value last_export_date
+	IntegrationMutationResponseModelLastExportDateColumn = "last_export_date"
+	// IntegrationMutationResponseModelLastExportDateEpochColumn is the column json value epoch
+	IntegrationMutationResponseModelLastExportDateEpochColumn = "epoch"
+	// IntegrationMutationResponseModelLastExportDateOffsetColumn is the column json value offset
+	IntegrationMutationResponseModelLastExportDateOffsetColumn = "offset"
+	// IntegrationMutationResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	IntegrationMutationResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// IntegrationMutationResponseModelMemoryColumn is the column json value memory
+	IntegrationMutationResponseModelMemoryColumn = "memory"
+	// IntegrationMutationResponseModelMessageColumn is the column json value message
+	IntegrationMutationResponseModelMessageColumn = "message"
+	// IntegrationMutationResponseModelNumCPUColumn is the column json value num_cpu
+	IntegrationMutationResponseModelNumCPUColumn = "num_cpu"
+	// IntegrationMutationResponseModelOSColumn is the column json value os
+	IntegrationMutationResponseModelOSColumn = "os"
+	// IntegrationMutationResponseModelRefIDColumn is the column json value ref_id
+	IntegrationMutationResponseModelRefIDColumn = "ref_id"
+	// IntegrationMutationResponseModelRefTypeColumn is the column json value ref_type
+	IntegrationMutationResponseModelRefTypeColumn = "ref_type"
+	// IntegrationMutationResponseModelRequestIDColumn is the column json value request_id
+	IntegrationMutationResponseModelRequestIDColumn = "request_id"
+	// IntegrationMutationResponseModelSuccessColumn is the column json value success
+	IntegrationMutationResponseModelSuccessColumn = "success"
+	// IntegrationMutationResponseModelSystemIDColumn is the column json value system_id
+	IntegrationMutationResponseModelSystemIDColumn = "system_id"
+	// IntegrationMutationResponseModelTypeColumn is the column json value type
+	IntegrationMutationResponseModelTypeColumn = "type"
+	// IntegrationMutationResponseModelUpdatedObjectsColumn is the column json value updated_objects
+	IntegrationMutationResponseModelUpdatedObjectsColumn = "updated_objects"
+	// IntegrationMutationResponseModelUptimeColumn is the column json value uptime
+	IntegrationMutationResponseModelUptimeColumn = "uptime"
+	// IntegrationMutationResponseModelUUIDColumn is the column json value uuid
+	IntegrationMutationResponseModelUUIDColumn = "uuid"
+	// IntegrationMutationResponseModelVersionColumn is the column json value version
+	IntegrationMutationResponseModelVersionColumn = "version"
+)
+
 // IntegrationMutationResponseEventDate represents the object structure for event_date
 type IntegrationMutationResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +451,35 @@ func (v IntegrationMutationResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// IntegrationMutationResponseTypeEnroll is the enumeration value for enroll
 	IntegrationMutationResponseTypeEnroll IntegrationMutationResponseType = 0
-	// TypePing is the enumeration value for ping
+	// IntegrationMutationResponseTypePing is the enumeration value for ping
 	IntegrationMutationResponseTypePing IntegrationMutationResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// IntegrationMutationResponseTypeCrash is the enumeration value for crash
 	IntegrationMutationResponseTypeCrash IntegrationMutationResponseType = 2
-	// TypeLog is the enumeration value for log
+	// IntegrationMutationResponseTypeLog is the enumeration value for log
 	IntegrationMutationResponseTypeLog IntegrationMutationResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// IntegrationMutationResponseTypeIntegration is the enumeration value for integration
 	IntegrationMutationResponseTypeIntegration IntegrationMutationResponseType = 4
-	// TypeExport is the enumeration value for export
+	// IntegrationMutationResponseTypeExport is the enumeration value for export
 	IntegrationMutationResponseTypeExport IntegrationMutationResponseType = 5
-	// TypeProject is the enumeration value for project
+	// IntegrationMutationResponseTypeProject is the enumeration value for project
 	IntegrationMutationResponseTypeProject IntegrationMutationResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// IntegrationMutationResponseTypeRepo is the enumeration value for repo
 	IntegrationMutationResponseTypeRepo IntegrationMutationResponseType = 7
-	// TypeUser is the enumeration value for user
+	// IntegrationMutationResponseTypeUser is the enumeration value for user
 	IntegrationMutationResponseTypeUser IntegrationMutationResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// IntegrationMutationResponseTypeUninstall is the enumeration value for uninstall
 	IntegrationMutationResponseTypeUninstall IntegrationMutationResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// IntegrationMutationResponseTypeUpgrade is the enumeration value for upgrade
 	IntegrationMutationResponseTypeUpgrade IntegrationMutationResponseType = 10
-	// TypeStart is the enumeration value for start
+	// IntegrationMutationResponseTypeStart is the enumeration value for start
 	IntegrationMutationResponseTypeStart IntegrationMutationResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// IntegrationMutationResponseTypeStop is the enumeration value for stop
 	IntegrationMutationResponseTypeStop IntegrationMutationResponseType = 12
-	// TypePause is the enumeration value for pause
+	// IntegrationMutationResponseTypePause is the enumeration value for pause
 	IntegrationMutationResponseTypePause IntegrationMutationResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// IntegrationMutationResponseTypeResume is the enumeration value for resume
 	IntegrationMutationResponseTypeResume IntegrationMutationResponseType = 14
 )
 
@@ -642,6 +709,12 @@ func (o *IntegrationMutationResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *IntegrationMutationResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two IntegrationMutationResponse objects are equal
 func (o *IntegrationMutationResponse) IsEqual(other *IntegrationMutationResponse) bool {
 	return o.Hash() == other.Hash()
@@ -797,25 +870,6 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -925,25 +979,6 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

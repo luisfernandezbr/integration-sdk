@@ -26,6 +26,45 @@ const (
 	PullRequestCommitModelName datamodel.ModelNameType = "sourcecode.PullRequestCommit"
 )
 
+const (
+	// PullRequestCommitModelAdditionsColumn is the column json value additions
+	PullRequestCommitModelAdditionsColumn = "additions"
+	// PullRequestCommitModelAuthorRefIDColumn is the column json value author_ref_id
+	PullRequestCommitModelAuthorRefIDColumn = "author_ref_id"
+	// PullRequestCommitModelBranchIDColumn is the column json value branch_id
+	PullRequestCommitModelBranchIDColumn = "branch_id"
+	// PullRequestCommitModelCommitterRefIDColumn is the column json value committer_ref_id
+	PullRequestCommitModelCommitterRefIDColumn = "committer_ref_id"
+	// PullRequestCommitModelCreatedDateColumn is the column json value created_date
+	PullRequestCommitModelCreatedDateColumn = "created_date"
+	// PullRequestCommitModelCreatedDateEpochColumn is the column json value epoch
+	PullRequestCommitModelCreatedDateEpochColumn = "epoch"
+	// PullRequestCommitModelCreatedDateOffsetColumn is the column json value offset
+	PullRequestCommitModelCreatedDateOffsetColumn = "offset"
+	// PullRequestCommitModelCreatedDateRfc3339Column is the column json value rfc3339
+	PullRequestCommitModelCreatedDateRfc3339Column = "rfc3339"
+	// PullRequestCommitModelCustomerIDColumn is the column json value customer_id
+	PullRequestCommitModelCustomerIDColumn = "customer_id"
+	// PullRequestCommitModelDeletionsColumn is the column json value deletions
+	PullRequestCommitModelDeletionsColumn = "deletions"
+	// PullRequestCommitModelIDColumn is the column json value id
+	PullRequestCommitModelIDColumn = "id"
+	// PullRequestCommitModelMessageColumn is the column json value message
+	PullRequestCommitModelMessageColumn = "message"
+	// PullRequestCommitModelPullRequestIDColumn is the column json value pull_request_id
+	PullRequestCommitModelPullRequestIDColumn = "pull_request_id"
+	// PullRequestCommitModelRefIDColumn is the column json value ref_id
+	PullRequestCommitModelRefIDColumn = "ref_id"
+	// PullRequestCommitModelRefTypeColumn is the column json value ref_type
+	PullRequestCommitModelRefTypeColumn = "ref_type"
+	// PullRequestCommitModelRepoIDColumn is the column json value repo_id
+	PullRequestCommitModelRepoIDColumn = "repo_id"
+	// PullRequestCommitModelShaColumn is the column json value sha
+	PullRequestCommitModelShaColumn = "sha"
+	// PullRequestCommitModelURLColumn is the column json value url
+	PullRequestCommitModelURLColumn = "url"
+)
+
 // PullRequestCommitCreatedDate represents the object structure for created_date
 type PullRequestCommitCreatedDate struct {
 	// Epoch the date in epoch format
@@ -321,6 +360,12 @@ func (o *PullRequestCommit) UnmarshalJSON(data []byte) error {
 func (o *PullRequestCommit) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *PullRequestCommit) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two PullRequestCommit objects are equal

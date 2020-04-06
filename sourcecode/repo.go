@@ -28,6 +28,31 @@ const (
 	RepoModelName datamodel.ModelNameType = "sourcecode.Repo"
 )
 
+const (
+	// RepoModelActiveColumn is the column json value active
+	RepoModelActiveColumn = "active"
+	// RepoModelCustomerIDColumn is the column json value customer_id
+	RepoModelCustomerIDColumn = "customer_id"
+	// RepoModelDefaultBranchColumn is the column json value default_branch
+	RepoModelDefaultBranchColumn = "default_branch"
+	// RepoModelDescriptionColumn is the column json value description
+	RepoModelDescriptionColumn = "description"
+	// RepoModelIDColumn is the column json value id
+	RepoModelIDColumn = "id"
+	// RepoModelLanguageColumn is the column json value language
+	RepoModelLanguageColumn = "language"
+	// RepoModelNameColumn is the column json value name
+	RepoModelNameColumn = "name"
+	// RepoModelRefIDColumn is the column json value ref_id
+	RepoModelRefIDColumn = "ref_id"
+	// RepoModelRefTypeColumn is the column json value ref_type
+	RepoModelRefTypeColumn = "ref_type"
+	// RepoModelUpdatedAtColumn is the column json value updated_ts
+	RepoModelUpdatedAtColumn = "updated_ts"
+	// RepoModelURLColumn is the column json value url
+	RepoModelURLColumn = "url"
+)
+
 // Repo the repo holds source code
 type Repo struct {
 	// Active the status of the repo
@@ -264,6 +289,12 @@ func (o *Repo) UnmarshalJSON(data []byte) error {
 func (o *Repo) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Repo) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Repo objects are equal

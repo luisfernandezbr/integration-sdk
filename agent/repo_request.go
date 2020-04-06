@@ -32,6 +32,175 @@ const (
 	RepoRequestModelName datamodel.ModelNameType = "agent.RepoRequest"
 )
 
+const (
+	// RepoRequestModelCustomerIDColumn is the column json value customer_id
+	RepoRequestModelCustomerIDColumn = "customer_id"
+	// RepoRequestModelIDColumn is the column json value id
+	RepoRequestModelIDColumn = "id"
+	// RepoRequestModelIntegrationColumn is the column json value integration
+	RepoRequestModelIntegrationColumn = "integration"
+	// RepoRequestModelIntegrationActiveColumn is the column json value active
+	RepoRequestModelIntegrationActiveColumn = "active"
+	// RepoRequestModelIntegrationAuthorizationColumn is the column json value authorization
+	RepoRequestModelIntegrationAuthorizationColumn = "authorization"
+	// RepoRequestModelIntegrationAuthorizationAccessTokenColumn is the column json value access_token
+	RepoRequestModelIntegrationAuthorizationAccessTokenColumn = "access_token"
+	// RepoRequestModelIntegrationAuthorizationRefreshTokenColumn is the column json value refresh_token
+	RepoRequestModelIntegrationAuthorizationRefreshTokenColumn = "refresh_token"
+	// RepoRequestModelIntegrationAuthorizationURLColumn is the column json value url
+	RepoRequestModelIntegrationAuthorizationURLColumn = "url"
+	// RepoRequestModelIntegrationAuthorizationUsernameColumn is the column json value username
+	RepoRequestModelIntegrationAuthorizationUsernameColumn = "username"
+	// RepoRequestModelIntegrationAuthorizationPasswordColumn is the column json value password
+	RepoRequestModelIntegrationAuthorizationPasswordColumn = "password"
+	// RepoRequestModelIntegrationAuthorizationAPITokenColumn is the column json value api_token
+	RepoRequestModelIntegrationAuthorizationAPITokenColumn = "api_token"
+	// RepoRequestModelIntegrationAuthorizationCollectionNameColumn is the column json value collection_name
+	RepoRequestModelIntegrationAuthorizationCollectionNameColumn = "collection_name"
+	// RepoRequestModelIntegrationAuthorizationAPIKeyColumn is the column json value api_key
+	RepoRequestModelIntegrationAuthorizationAPIKeyColumn = "api_key"
+	// RepoRequestModelIntegrationAuthorizationAuthorizationColumn is the column json value authorization
+	RepoRequestModelIntegrationAuthorizationAuthorizationColumn = "authorization"
+	// RepoRequestModelIntegrationAuthorizationHostnameColumn is the column json value hostname
+	RepoRequestModelIntegrationAuthorizationHostnameColumn = "hostname"
+	// RepoRequestModelIntegrationAuthorizationAPIVersionColumn is the column json value api_version
+	RepoRequestModelIntegrationAuthorizationAPIVersionColumn = "api_version"
+	// RepoRequestModelIntegrationAuthorizationOrganizationColumn is the column json value organization
+	RepoRequestModelIntegrationAuthorizationOrganizationColumn = "organization"
+	// RepoRequestModelIntegrationCreatedByProfileIDColumn is the column json value created_by_profile_id
+	RepoRequestModelIntegrationCreatedByProfileIDColumn = "created_by_profile_id"
+	// RepoRequestModelIntegrationCreatedByUserIDColumn is the column json value created_by_user_id
+	RepoRequestModelIntegrationCreatedByUserIDColumn = "created_by_user_id"
+	// RepoRequestModelIntegrationCustomerIDColumn is the column json value customer_id
+	RepoRequestModelIntegrationCustomerIDColumn = "customer_id"
+	// RepoRequestModelIntegrationEntityErrorsColumn is the column json value entity_errors
+	RepoRequestModelIntegrationEntityErrorsColumn = "entity_errors"
+	// RepoRequestModelIntegrationEntityErrorsIDColumn is the column json value id
+	RepoRequestModelIntegrationEntityErrorsIDColumn = "id"
+	// RepoRequestModelIntegrationEntityErrorsRefIDColumn is the column json value ref_id
+	RepoRequestModelIntegrationEntityErrorsRefIDColumn = "ref_id"
+	// RepoRequestModelIntegrationEntityErrorsErrorColumn is the column json value error
+	RepoRequestModelIntegrationEntityErrorsErrorColumn = "error"
+	// RepoRequestModelIntegrationErrorMessageColumn is the column json value error_message
+	RepoRequestModelIntegrationErrorMessageColumn = "error_message"
+	// RepoRequestModelIntegrationErroredColumn is the column json value errored
+	RepoRequestModelIntegrationErroredColumn = "errored"
+	// RepoRequestModelIntegrationExclusionsColumn is the column json value exclusions
+	RepoRequestModelIntegrationExclusionsColumn = "exclusions"
+	// RepoRequestModelIntegrationExportableColumn is the column json value exportable
+	RepoRequestModelIntegrationExportableColumn = "exportable"
+	// RepoRequestModelIntegrationIDColumn is the column json value id
+	RepoRequestModelIntegrationIDColumn = "id"
+	// RepoRequestModelIntegrationInclusionsColumn is the column json value inclusions
+	RepoRequestModelIntegrationInclusionsColumn = "inclusions"
+	// RepoRequestModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
+	RepoRequestModelIntegrationLastExportCompletedDateColumn = "last_export_completed_date"
+	// RepoRequestModelIntegrationLastExportCompletedDateEpochColumn is the column json value epoch
+	RepoRequestModelIntegrationLastExportCompletedDateEpochColumn = "epoch"
+	// RepoRequestModelIntegrationLastExportCompletedDateOffsetColumn is the column json value offset
+	RepoRequestModelIntegrationLastExportCompletedDateOffsetColumn = "offset"
+	// RepoRequestModelIntegrationLastExportCompletedDateRfc3339Column is the column json value rfc3339
+	RepoRequestModelIntegrationLastExportCompletedDateRfc3339Column = "rfc3339"
+	// RepoRequestModelIntegrationLastExportRequestedDateColumn is the column json value last_export_requested_date
+	RepoRequestModelIntegrationLastExportRequestedDateColumn = "last_export_requested_date"
+	// RepoRequestModelIntegrationLastExportRequestedDateEpochColumn is the column json value epoch
+	RepoRequestModelIntegrationLastExportRequestedDateEpochColumn = "epoch"
+	// RepoRequestModelIntegrationLastExportRequestedDateOffsetColumn is the column json value offset
+	RepoRequestModelIntegrationLastExportRequestedDateOffsetColumn = "offset"
+	// RepoRequestModelIntegrationLastExportRequestedDateRfc3339Column is the column json value rfc3339
+	RepoRequestModelIntegrationLastExportRequestedDateRfc3339Column = "rfc3339"
+	// RepoRequestModelIntegrationLastProcessingCompletedDateColumn is the column json value last_processing_completed_date
+	RepoRequestModelIntegrationLastProcessingCompletedDateColumn = "last_processing_completed_date"
+	// RepoRequestModelIntegrationLastProcessingCompletedDateEpochColumn is the column json value epoch
+	RepoRequestModelIntegrationLastProcessingCompletedDateEpochColumn = "epoch"
+	// RepoRequestModelIntegrationLastProcessingCompletedDateOffsetColumn is the column json value offset
+	RepoRequestModelIntegrationLastProcessingCompletedDateOffsetColumn = "offset"
+	// RepoRequestModelIntegrationLastProcessingCompletedDateRfc3339Column is the column json value rfc3339
+	RepoRequestModelIntegrationLastProcessingCompletedDateRfc3339Column = "rfc3339"
+	// RepoRequestModelIntegrationLastProcessingStartedDateColumn is the column json value last_processing_started_date
+	RepoRequestModelIntegrationLastProcessingStartedDateColumn = "last_processing_started_date"
+	// RepoRequestModelIntegrationLastProcessingStartedDateEpochColumn is the column json value epoch
+	RepoRequestModelIntegrationLastProcessingStartedDateEpochColumn = "epoch"
+	// RepoRequestModelIntegrationLastProcessingStartedDateOffsetColumn is the column json value offset
+	RepoRequestModelIntegrationLastProcessingStartedDateOffsetColumn = "offset"
+	// RepoRequestModelIntegrationLastProcessingStartedDateRfc3339Column is the column json value rfc3339
+	RepoRequestModelIntegrationLastProcessingStartedDateRfc3339Column = "rfc3339"
+	// RepoRequestModelIntegrationLocationColumn is the column json value location
+	RepoRequestModelIntegrationLocationColumn = "location"
+	// RepoRequestModelIntegrationNameColumn is the column json value name
+	RepoRequestModelIntegrationNameColumn = "name"
+	// RepoRequestModelIntegrationOnboardCompletedDateColumn is the column json value onboard_completed_date
+	RepoRequestModelIntegrationOnboardCompletedDateColumn = "onboard_completed_date"
+	// RepoRequestModelIntegrationOnboardCompletedDateEpochColumn is the column json value epoch
+	RepoRequestModelIntegrationOnboardCompletedDateEpochColumn = "epoch"
+	// RepoRequestModelIntegrationOnboardCompletedDateOffsetColumn is the column json value offset
+	RepoRequestModelIntegrationOnboardCompletedDateOffsetColumn = "offset"
+	// RepoRequestModelIntegrationOnboardCompletedDateRfc3339Column is the column json value rfc3339
+	RepoRequestModelIntegrationOnboardCompletedDateRfc3339Column = "rfc3339"
+	// RepoRequestModelIntegrationOnboardRequestedDateColumn is the column json value onboard_requested_date
+	RepoRequestModelIntegrationOnboardRequestedDateColumn = "onboard_requested_date"
+	// RepoRequestModelIntegrationOnboardRequestedDateEpochColumn is the column json value epoch
+	RepoRequestModelIntegrationOnboardRequestedDateEpochColumn = "epoch"
+	// RepoRequestModelIntegrationOnboardRequestedDateOffsetColumn is the column json value offset
+	RepoRequestModelIntegrationOnboardRequestedDateOffsetColumn = "offset"
+	// RepoRequestModelIntegrationOnboardRequestedDateRfc3339Column is the column json value rfc3339
+	RepoRequestModelIntegrationOnboardRequestedDateRfc3339Column = "rfc3339"
+	// RepoRequestModelIntegrationOnboardingColumn is the column json value onboarding
+	RepoRequestModelIntegrationOnboardingColumn = "onboarding"
+	// RepoRequestModelIntegrationOrganizationColumn is the column json value organization
+	RepoRequestModelIntegrationOrganizationColumn = "organization"
+	// RepoRequestModelIntegrationProcessedColumn is the column json value processed
+	RepoRequestModelIntegrationProcessedColumn = "processed"
+	// RepoRequestModelIntegrationRefIDColumn is the column json value ref_id
+	RepoRequestModelIntegrationRefIDColumn = "ref_id"
+	// RepoRequestModelIntegrationRefTypeColumn is the column json value ref_type
+	RepoRequestModelIntegrationRefTypeColumn = "ref_type"
+	// RepoRequestModelIntegrationServerVersionColumn is the column json value server_version
+	RepoRequestModelIntegrationServerVersionColumn = "server_version"
+	// RepoRequestModelIntegrationStateColumn is the column json value state
+	RepoRequestModelIntegrationStateColumn = "state"
+	// RepoRequestModelIntegrationSystemTypeColumn is the column json value system_type
+	RepoRequestModelIntegrationSystemTypeColumn = "system_type"
+	// RepoRequestModelIntegrationTeamIDColumn is the column json value team_id
+	RepoRequestModelIntegrationTeamIDColumn = "team_id"
+	// RepoRequestModelIntegrationThrottledColumn is the column json value throttled
+	RepoRequestModelIntegrationThrottledColumn = "throttled"
+	// RepoRequestModelIntegrationThrottledUntilColumn is the column json value throttled_until
+	RepoRequestModelIntegrationThrottledUntilColumn = "throttled_until"
+	// RepoRequestModelIntegrationThrottledUntilEpochColumn is the column json value epoch
+	RepoRequestModelIntegrationThrottledUntilEpochColumn = "epoch"
+	// RepoRequestModelIntegrationThrottledUntilOffsetColumn is the column json value offset
+	RepoRequestModelIntegrationThrottledUntilOffsetColumn = "offset"
+	// RepoRequestModelIntegrationThrottledUntilRfc3339Column is the column json value rfc3339
+	RepoRequestModelIntegrationThrottledUntilRfc3339Column = "rfc3339"
+	// RepoRequestModelIntegrationValidatedColumn is the column json value validated
+	RepoRequestModelIntegrationValidatedColumn = "validated"
+	// RepoRequestModelIntegrationValidatedDateColumn is the column json value validated_date
+	RepoRequestModelIntegrationValidatedDateColumn = "validated_date"
+	// RepoRequestModelIntegrationValidatedDateEpochColumn is the column json value epoch
+	RepoRequestModelIntegrationValidatedDateEpochColumn = "epoch"
+	// RepoRequestModelIntegrationValidatedDateOffsetColumn is the column json value offset
+	RepoRequestModelIntegrationValidatedDateOffsetColumn = "offset"
+	// RepoRequestModelIntegrationValidatedDateRfc3339Column is the column json value rfc3339
+	RepoRequestModelIntegrationValidatedDateRfc3339Column = "rfc3339"
+	// RepoRequestModelIntegrationValidationMessageColumn is the column json value validation_message
+	RepoRequestModelIntegrationValidationMessageColumn = "validation_message"
+	// RepoRequestModelRefIDColumn is the column json value ref_id
+	RepoRequestModelRefIDColumn = "ref_id"
+	// RepoRequestModelRefTypeColumn is the column json value ref_type
+	RepoRequestModelRefTypeColumn = "ref_type"
+	// RepoRequestModelRequestDateColumn is the column json value request_date
+	RepoRequestModelRequestDateColumn = "request_date"
+	// RepoRequestModelRequestDateEpochColumn is the column json value epoch
+	RepoRequestModelRequestDateEpochColumn = "epoch"
+	// RepoRequestModelRequestDateOffsetColumn is the column json value offset
+	RepoRequestModelRequestDateOffsetColumn = "offset"
+	// RepoRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	RepoRequestModelRequestDateRfc3339Column = "rfc3339"
+	// RepoRequestModelUUIDColumn is the column json value uuid
+	RepoRequestModelUUIDColumn = "uuid"
+)
+
 // RepoRequestIntegrationAuthorization represents the object structure for authorization
 type RepoRequestIntegrationAuthorization struct {
 	// AccessToken Access token
@@ -892,9 +1061,9 @@ func (v RepoRequestIntegrationLocation) String() string {
 }
 
 const (
-	// IntegrationLocationPrivate is the enumeration value for private
+	// RepoRequestIntegrationLocationPrivate is the enumeration value for private
 	RepoRequestIntegrationLocationPrivate RepoRequestIntegrationLocation = 0
-	// IntegrationLocationCloud is the enumeration value for cloud
+	// RepoRequestIntegrationLocationCloud is the enumeration value for cloud
 	RepoRequestIntegrationLocationCloud RepoRequestIntegrationLocation = 1
 )
 
@@ -1158,11 +1327,11 @@ func (v RepoRequestIntegrationState) String() string {
 }
 
 const (
-	// IntegrationStateIdle is the enumeration value for idle
+	// RepoRequestIntegrationStateIdle is the enumeration value for idle
 	RepoRequestIntegrationStateIdle RepoRequestIntegrationState = 0
-	// IntegrationStateExporting is the enumeration value for exporting
+	// RepoRequestIntegrationStateExporting is the enumeration value for exporting
 	RepoRequestIntegrationStateExporting RepoRequestIntegrationState = 1
-	// IntegrationStateProcessing is the enumeration value for processing
+	// RepoRequestIntegrationStateProcessing is the enumeration value for processing
 	RepoRequestIntegrationStateProcessing RepoRequestIntegrationState = 2
 )
 
@@ -1244,15 +1413,15 @@ func (v RepoRequestIntegrationSystemType) String() string {
 }
 
 const (
-	// IntegrationSystemTypeWork is the enumeration value for work
+	// RepoRequestIntegrationSystemTypeWork is the enumeration value for work
 	RepoRequestIntegrationSystemTypeWork RepoRequestIntegrationSystemType = 0
-	// IntegrationSystemTypeSourcecode is the enumeration value for sourcecode
+	// RepoRequestIntegrationSystemTypeSourcecode is the enumeration value for sourcecode
 	RepoRequestIntegrationSystemTypeSourcecode RepoRequestIntegrationSystemType = 1
-	// IntegrationSystemTypeCodequality is the enumeration value for codequality
+	// RepoRequestIntegrationSystemTypeCodequality is the enumeration value for codequality
 	RepoRequestIntegrationSystemTypeCodequality RepoRequestIntegrationSystemType = 2
-	// IntegrationSystemTypeCalendar is the enumeration value for calendar
+	// RepoRequestIntegrationSystemTypeCalendar is the enumeration value for calendar
 	RepoRequestIntegrationSystemTypeCalendar RepoRequestIntegrationSystemType = 3
-	// IntegrationSystemTypeUser is the enumeration value for user
+	// RepoRequestIntegrationSystemTypeUser is the enumeration value for user
 	RepoRequestIntegrationSystemTypeUser RepoRequestIntegrationSystemType = 4
 )
 
@@ -2841,6 +3010,12 @@ func (o *RepoRequest) UnmarshalJSON(data []byte) error {
 func (o *RepoRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *RepoRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two RepoRequest objects are equal

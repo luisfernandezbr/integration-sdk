@@ -24,6 +24,21 @@ const (
 	ProjectModelName datamodel.ModelNameType = "codequality.Project"
 )
 
+const (
+	// ProjectModelCustomerIDColumn is the column json value customer_id
+	ProjectModelCustomerIDColumn = "customer_id"
+	// ProjectModelIDColumn is the column json value id
+	ProjectModelIDColumn = "id"
+	// ProjectModelIdentifierColumn is the column json value identifier
+	ProjectModelIdentifierColumn = "identifier"
+	// ProjectModelNameColumn is the column json value name
+	ProjectModelNameColumn = "name"
+	// ProjectModelRefIDColumn is the column json value ref_id
+	ProjectModelRefIDColumn = "ref_id"
+	// ProjectModelRefTypeColumn is the column json value ref_type
+	ProjectModelRefTypeColumn = "ref_type"
+)
+
 // Project project information
 type Project struct {
 	// CustomerID the customer id for the model instance
@@ -199,6 +214,12 @@ func (o *Project) UnmarshalJSON(data []byte) error {
 func (o *Project) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Project) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Project objects are equal

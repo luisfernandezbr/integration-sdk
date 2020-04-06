@@ -28,6 +28,69 @@ const (
 	EnabledModelName datamodel.ModelNameType = "agent.Enabled"
 )
 
+const (
+	// EnabledModelArchitectureColumn is the column json value architecture
+	EnabledModelArchitectureColumn = "architecture"
+	// EnabledModelCustomerIDColumn is the column json value customer_id
+	EnabledModelCustomerIDColumn = "customer_id"
+	// EnabledModelDataColumn is the column json value data
+	EnabledModelDataColumn = "data"
+	// EnabledModelDistroColumn is the column json value distro
+	EnabledModelDistroColumn = "distro"
+	// EnabledModelErrorColumn is the column json value error
+	EnabledModelErrorColumn = "error"
+	// EnabledModelEventDateColumn is the column json value event_date
+	EnabledModelEventDateColumn = "event_date"
+	// EnabledModelEventDateEpochColumn is the column json value epoch
+	EnabledModelEventDateEpochColumn = "epoch"
+	// EnabledModelEventDateOffsetColumn is the column json value offset
+	EnabledModelEventDateOffsetColumn = "offset"
+	// EnabledModelEventDateRfc3339Column is the column json value rfc3339
+	EnabledModelEventDateRfc3339Column = "rfc3339"
+	// EnabledModelFreeSpaceColumn is the column json value free_space
+	EnabledModelFreeSpaceColumn = "free_space"
+	// EnabledModelGoVersionColumn is the column json value go_version
+	EnabledModelGoVersionColumn = "go_version"
+	// EnabledModelHostnameColumn is the column json value hostname
+	EnabledModelHostnameColumn = "hostname"
+	// EnabledModelIDColumn is the column json value id
+	EnabledModelIDColumn = "id"
+	// EnabledModelLastExportDateColumn is the column json value last_export_date
+	EnabledModelLastExportDateColumn = "last_export_date"
+	// EnabledModelLastExportDateEpochColumn is the column json value epoch
+	EnabledModelLastExportDateEpochColumn = "epoch"
+	// EnabledModelLastExportDateOffsetColumn is the column json value offset
+	EnabledModelLastExportDateOffsetColumn = "offset"
+	// EnabledModelLastExportDateRfc3339Column is the column json value rfc3339
+	EnabledModelLastExportDateRfc3339Column = "rfc3339"
+	// EnabledModelMemoryColumn is the column json value memory
+	EnabledModelMemoryColumn = "memory"
+	// EnabledModelMessageColumn is the column json value message
+	EnabledModelMessageColumn = "message"
+	// EnabledModelNumCPUColumn is the column json value num_cpu
+	EnabledModelNumCPUColumn = "num_cpu"
+	// EnabledModelOSColumn is the column json value os
+	EnabledModelOSColumn = "os"
+	// EnabledModelRefIDColumn is the column json value ref_id
+	EnabledModelRefIDColumn = "ref_id"
+	// EnabledModelRefTypeColumn is the column json value ref_type
+	EnabledModelRefTypeColumn = "ref_type"
+	// EnabledModelRequestIDColumn is the column json value request_id
+	EnabledModelRequestIDColumn = "request_id"
+	// EnabledModelSuccessColumn is the column json value success
+	EnabledModelSuccessColumn = "success"
+	// EnabledModelSystemIDColumn is the column json value system_id
+	EnabledModelSystemIDColumn = "system_id"
+	// EnabledModelTypeColumn is the column json value type
+	EnabledModelTypeColumn = "type"
+	// EnabledModelUptimeColumn is the column json value uptime
+	EnabledModelUptimeColumn = "uptime"
+	// EnabledModelUUIDColumn is the column json value uuid
+	EnabledModelUUIDColumn = "uuid"
+	// EnabledModelVersionColumn is the column json value version
+	EnabledModelVersionColumn = "version"
+)
+
 // EnabledEventDate represents the object structure for event_date
 type EnabledEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +447,35 @@ func (v EnabledType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// EnabledTypeEnroll is the enumeration value for enroll
 	EnabledTypeEnroll EnabledType = 0
-	// TypePing is the enumeration value for ping
+	// EnabledTypePing is the enumeration value for ping
 	EnabledTypePing EnabledType = 1
-	// TypeCrash is the enumeration value for crash
+	// EnabledTypeCrash is the enumeration value for crash
 	EnabledTypeCrash EnabledType = 2
-	// TypeLog is the enumeration value for log
+	// EnabledTypeLog is the enumeration value for log
 	EnabledTypeLog EnabledType = 3
-	// TypeIntegration is the enumeration value for integration
+	// EnabledTypeIntegration is the enumeration value for integration
 	EnabledTypeIntegration EnabledType = 4
-	// TypeExport is the enumeration value for export
+	// EnabledTypeExport is the enumeration value for export
 	EnabledTypeExport EnabledType = 5
-	// TypeProject is the enumeration value for project
+	// EnabledTypeProject is the enumeration value for project
 	EnabledTypeProject EnabledType = 6
-	// TypeRepo is the enumeration value for repo
+	// EnabledTypeRepo is the enumeration value for repo
 	EnabledTypeRepo EnabledType = 7
-	// TypeUser is the enumeration value for user
+	// EnabledTypeUser is the enumeration value for user
 	EnabledTypeUser EnabledType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// EnabledTypeUninstall is the enumeration value for uninstall
 	EnabledTypeUninstall EnabledType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// EnabledTypeUpgrade is the enumeration value for upgrade
 	EnabledTypeUpgrade EnabledType = 10
-	// TypeStart is the enumeration value for start
+	// EnabledTypeStart is the enumeration value for start
 	EnabledTypeStart EnabledType = 11
-	// TypeStop is the enumeration value for stop
+	// EnabledTypeStop is the enumeration value for stop
 	EnabledTypeStop EnabledType = 12
-	// TypePause is the enumeration value for pause
+	// EnabledTypePause is the enumeration value for pause
 	EnabledTypePause EnabledType = 13
-	// TypeResume is the enumeration value for resume
+	// EnabledTypeResume is the enumeration value for resume
 	EnabledTypeResume EnabledType = 14
 )
 
@@ -636,6 +699,12 @@ func (o *Enabled) UnmarshalJSON(data []byte) error {
 func (o *Enabled) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Enabled) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Enabled objects are equal

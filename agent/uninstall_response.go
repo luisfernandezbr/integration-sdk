@@ -28,6 +28,69 @@ const (
 	UninstallResponseModelName datamodel.ModelNameType = "agent.UninstallResponse"
 )
 
+const (
+	// UninstallResponseModelArchitectureColumn is the column json value architecture
+	UninstallResponseModelArchitectureColumn = "architecture"
+	// UninstallResponseModelCustomerIDColumn is the column json value customer_id
+	UninstallResponseModelCustomerIDColumn = "customer_id"
+	// UninstallResponseModelDataColumn is the column json value data
+	UninstallResponseModelDataColumn = "data"
+	// UninstallResponseModelDistroColumn is the column json value distro
+	UninstallResponseModelDistroColumn = "distro"
+	// UninstallResponseModelErrorColumn is the column json value error
+	UninstallResponseModelErrorColumn = "error"
+	// UninstallResponseModelEventDateColumn is the column json value event_date
+	UninstallResponseModelEventDateColumn = "event_date"
+	// UninstallResponseModelEventDateEpochColumn is the column json value epoch
+	UninstallResponseModelEventDateEpochColumn = "epoch"
+	// UninstallResponseModelEventDateOffsetColumn is the column json value offset
+	UninstallResponseModelEventDateOffsetColumn = "offset"
+	// UninstallResponseModelEventDateRfc3339Column is the column json value rfc3339
+	UninstallResponseModelEventDateRfc3339Column = "rfc3339"
+	// UninstallResponseModelFreeSpaceColumn is the column json value free_space
+	UninstallResponseModelFreeSpaceColumn = "free_space"
+	// UninstallResponseModelGoVersionColumn is the column json value go_version
+	UninstallResponseModelGoVersionColumn = "go_version"
+	// UninstallResponseModelHostnameColumn is the column json value hostname
+	UninstallResponseModelHostnameColumn = "hostname"
+	// UninstallResponseModelIDColumn is the column json value id
+	UninstallResponseModelIDColumn = "id"
+	// UninstallResponseModelLastExportDateColumn is the column json value last_export_date
+	UninstallResponseModelLastExportDateColumn = "last_export_date"
+	// UninstallResponseModelLastExportDateEpochColumn is the column json value epoch
+	UninstallResponseModelLastExportDateEpochColumn = "epoch"
+	// UninstallResponseModelLastExportDateOffsetColumn is the column json value offset
+	UninstallResponseModelLastExportDateOffsetColumn = "offset"
+	// UninstallResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	UninstallResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// UninstallResponseModelMemoryColumn is the column json value memory
+	UninstallResponseModelMemoryColumn = "memory"
+	// UninstallResponseModelMessageColumn is the column json value message
+	UninstallResponseModelMessageColumn = "message"
+	// UninstallResponseModelNumCPUColumn is the column json value num_cpu
+	UninstallResponseModelNumCPUColumn = "num_cpu"
+	// UninstallResponseModelOSColumn is the column json value os
+	UninstallResponseModelOSColumn = "os"
+	// UninstallResponseModelRefIDColumn is the column json value ref_id
+	UninstallResponseModelRefIDColumn = "ref_id"
+	// UninstallResponseModelRefTypeColumn is the column json value ref_type
+	UninstallResponseModelRefTypeColumn = "ref_type"
+	// UninstallResponseModelRequestIDColumn is the column json value request_id
+	UninstallResponseModelRequestIDColumn = "request_id"
+	// UninstallResponseModelSuccessColumn is the column json value success
+	UninstallResponseModelSuccessColumn = "success"
+	// UninstallResponseModelSystemIDColumn is the column json value system_id
+	UninstallResponseModelSystemIDColumn = "system_id"
+	// UninstallResponseModelTypeColumn is the column json value type
+	UninstallResponseModelTypeColumn = "type"
+	// UninstallResponseModelUptimeColumn is the column json value uptime
+	UninstallResponseModelUptimeColumn = "uptime"
+	// UninstallResponseModelUUIDColumn is the column json value uuid
+	UninstallResponseModelUUIDColumn = "uuid"
+	// UninstallResponseModelVersionColumn is the column json value version
+	UninstallResponseModelVersionColumn = "version"
+)
+
 // UninstallResponseEventDate represents the object structure for event_date
 type UninstallResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +447,35 @@ func (v UninstallResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// UninstallResponseTypeEnroll is the enumeration value for enroll
 	UninstallResponseTypeEnroll UninstallResponseType = 0
-	// TypePing is the enumeration value for ping
+	// UninstallResponseTypePing is the enumeration value for ping
 	UninstallResponseTypePing UninstallResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// UninstallResponseTypeCrash is the enumeration value for crash
 	UninstallResponseTypeCrash UninstallResponseType = 2
-	// TypeLog is the enumeration value for log
+	// UninstallResponseTypeLog is the enumeration value for log
 	UninstallResponseTypeLog UninstallResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// UninstallResponseTypeIntegration is the enumeration value for integration
 	UninstallResponseTypeIntegration UninstallResponseType = 4
-	// TypeExport is the enumeration value for export
+	// UninstallResponseTypeExport is the enumeration value for export
 	UninstallResponseTypeExport UninstallResponseType = 5
-	// TypeProject is the enumeration value for project
+	// UninstallResponseTypeProject is the enumeration value for project
 	UninstallResponseTypeProject UninstallResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// UninstallResponseTypeRepo is the enumeration value for repo
 	UninstallResponseTypeRepo UninstallResponseType = 7
-	// TypeUser is the enumeration value for user
+	// UninstallResponseTypeUser is the enumeration value for user
 	UninstallResponseTypeUser UninstallResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// UninstallResponseTypeUninstall is the enumeration value for uninstall
 	UninstallResponseTypeUninstall UninstallResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// UninstallResponseTypeUpgrade is the enumeration value for upgrade
 	UninstallResponseTypeUpgrade UninstallResponseType = 10
-	// TypeStart is the enumeration value for start
+	// UninstallResponseTypeStart is the enumeration value for start
 	UninstallResponseTypeStart UninstallResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// UninstallResponseTypeStop is the enumeration value for stop
 	UninstallResponseTypeStop UninstallResponseType = 12
-	// TypePause is the enumeration value for pause
+	// UninstallResponseTypePause is the enumeration value for pause
 	UninstallResponseTypePause UninstallResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// UninstallResponseTypeResume is the enumeration value for resume
 	UninstallResponseTypeResume UninstallResponseType = 14
 )
 
@@ -638,6 +701,12 @@ func (o *UninstallResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *UninstallResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two UninstallResponse objects are equal
 func (o *UninstallResponse) IsEqual(other *UninstallResponse) bool {
 	return o.Hash() == other.Hash()
@@ -791,25 +860,6 @@ func (o *UninstallResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UninstallResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -899,25 +949,6 @@ func (o *UninstallResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UninstallResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

@@ -28,6 +28,77 @@ const (
 	CancelResponseModelName datamodel.ModelNameType = "agent.CancelResponse"
 )
 
+const (
+	// CancelResponseModelArchitectureColumn is the column json value architecture
+	CancelResponseModelArchitectureColumn = "architecture"
+	// CancelResponseModelCancelDateColumn is the column json value cancel_date
+	CancelResponseModelCancelDateColumn = "cancel_date"
+	// CancelResponseModelCancelDateEpochColumn is the column json value epoch
+	CancelResponseModelCancelDateEpochColumn = "epoch"
+	// CancelResponseModelCancelDateOffsetColumn is the column json value offset
+	CancelResponseModelCancelDateOffsetColumn = "offset"
+	// CancelResponseModelCancelDateRfc3339Column is the column json value rfc3339
+	CancelResponseModelCancelDateRfc3339Column = "rfc3339"
+	// CancelResponseModelCustomerIDColumn is the column json value customer_id
+	CancelResponseModelCustomerIDColumn = "customer_id"
+	// CancelResponseModelDataColumn is the column json value data
+	CancelResponseModelDataColumn = "data"
+	// CancelResponseModelDistroColumn is the column json value distro
+	CancelResponseModelDistroColumn = "distro"
+	// CancelResponseModelErrorColumn is the column json value error
+	CancelResponseModelErrorColumn = "error"
+	// CancelResponseModelEventDateColumn is the column json value event_date
+	CancelResponseModelEventDateColumn = "event_date"
+	// CancelResponseModelEventDateEpochColumn is the column json value epoch
+	CancelResponseModelEventDateEpochColumn = "epoch"
+	// CancelResponseModelEventDateOffsetColumn is the column json value offset
+	CancelResponseModelEventDateOffsetColumn = "offset"
+	// CancelResponseModelEventDateRfc3339Column is the column json value rfc3339
+	CancelResponseModelEventDateRfc3339Column = "rfc3339"
+	// CancelResponseModelFreeSpaceColumn is the column json value free_space
+	CancelResponseModelFreeSpaceColumn = "free_space"
+	// CancelResponseModelGoVersionColumn is the column json value go_version
+	CancelResponseModelGoVersionColumn = "go_version"
+	// CancelResponseModelHostnameColumn is the column json value hostname
+	CancelResponseModelHostnameColumn = "hostname"
+	// CancelResponseModelIDColumn is the column json value id
+	CancelResponseModelIDColumn = "id"
+	// CancelResponseModelLastExportDateColumn is the column json value last_export_date
+	CancelResponseModelLastExportDateColumn = "last_export_date"
+	// CancelResponseModelLastExportDateEpochColumn is the column json value epoch
+	CancelResponseModelLastExportDateEpochColumn = "epoch"
+	// CancelResponseModelLastExportDateOffsetColumn is the column json value offset
+	CancelResponseModelLastExportDateOffsetColumn = "offset"
+	// CancelResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	CancelResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// CancelResponseModelMemoryColumn is the column json value memory
+	CancelResponseModelMemoryColumn = "memory"
+	// CancelResponseModelMessageColumn is the column json value message
+	CancelResponseModelMessageColumn = "message"
+	// CancelResponseModelNumCPUColumn is the column json value num_cpu
+	CancelResponseModelNumCPUColumn = "num_cpu"
+	// CancelResponseModelOSColumn is the column json value os
+	CancelResponseModelOSColumn = "os"
+	// CancelResponseModelRefIDColumn is the column json value ref_id
+	CancelResponseModelRefIDColumn = "ref_id"
+	// CancelResponseModelRefTypeColumn is the column json value ref_type
+	CancelResponseModelRefTypeColumn = "ref_type"
+	// CancelResponseModelRequestIDColumn is the column json value request_id
+	CancelResponseModelRequestIDColumn = "request_id"
+	// CancelResponseModelSuccessColumn is the column json value success
+	CancelResponseModelSuccessColumn = "success"
+	// CancelResponseModelSystemIDColumn is the column json value system_id
+	CancelResponseModelSystemIDColumn = "system_id"
+	// CancelResponseModelTypeColumn is the column json value type
+	CancelResponseModelTypeColumn = "type"
+	// CancelResponseModelUptimeColumn is the column json value uptime
+	CancelResponseModelUptimeColumn = "uptime"
+	// CancelResponseModelUUIDColumn is the column json value uuid
+	CancelResponseModelUUIDColumn = "uuid"
+	// CancelResponseModelVersionColumn is the column json value version
+	CancelResponseModelVersionColumn = "version"
+)
+
 // CancelResponseCancelDate represents the object structure for cancel_date
 type CancelResponseCancelDate struct {
 	// Epoch the date in epoch format
@@ -483,35 +554,35 @@ func (v CancelResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// CancelResponseTypeEnroll is the enumeration value for enroll
 	CancelResponseTypeEnroll CancelResponseType = 0
-	// TypePing is the enumeration value for ping
+	// CancelResponseTypePing is the enumeration value for ping
 	CancelResponseTypePing CancelResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// CancelResponseTypeCrash is the enumeration value for crash
 	CancelResponseTypeCrash CancelResponseType = 2
-	// TypeLog is the enumeration value for log
+	// CancelResponseTypeLog is the enumeration value for log
 	CancelResponseTypeLog CancelResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// CancelResponseTypeIntegration is the enumeration value for integration
 	CancelResponseTypeIntegration CancelResponseType = 4
-	// TypeExport is the enumeration value for export
+	// CancelResponseTypeExport is the enumeration value for export
 	CancelResponseTypeExport CancelResponseType = 5
-	// TypeProject is the enumeration value for project
+	// CancelResponseTypeProject is the enumeration value for project
 	CancelResponseTypeProject CancelResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// CancelResponseTypeRepo is the enumeration value for repo
 	CancelResponseTypeRepo CancelResponseType = 7
-	// TypeUser is the enumeration value for user
+	// CancelResponseTypeUser is the enumeration value for user
 	CancelResponseTypeUser CancelResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// CancelResponseTypeUninstall is the enumeration value for uninstall
 	CancelResponseTypeUninstall CancelResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// CancelResponseTypeUpgrade is the enumeration value for upgrade
 	CancelResponseTypeUpgrade CancelResponseType = 10
-	// TypeStart is the enumeration value for start
+	// CancelResponseTypeStart is the enumeration value for start
 	CancelResponseTypeStart CancelResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// CancelResponseTypeStop is the enumeration value for stop
 	CancelResponseTypeStop CancelResponseType = 12
-	// TypePause is the enumeration value for pause
+	// CancelResponseTypePause is the enumeration value for pause
 	CancelResponseTypePause CancelResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// CancelResponseTypeResume is the enumeration value for resume
 	CancelResponseTypeResume CancelResponseType = 14
 )
 
@@ -742,6 +813,12 @@ func (o *CancelResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *CancelResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two CancelResponse objects are equal
 func (o *CancelResponse) IsEqual(other *CancelResponse) bool {
 	return o.Hash() == other.Hash()
@@ -929,25 +1006,6 @@ func (o *CancelResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CancelResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1037,25 +1095,6 @@ func (o *CancelResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CancelResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

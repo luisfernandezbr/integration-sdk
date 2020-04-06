@@ -28,6 +28,65 @@ const (
 	EventModelName datamodel.ModelNameType = "agent.Event"
 )
 
+const (
+	// EventModelArchitectureColumn is the column json value architecture
+	EventModelArchitectureColumn = "architecture"
+	// EventModelCustomerIDColumn is the column json value customer_id
+	EventModelCustomerIDColumn = "customer_id"
+	// EventModelDataColumn is the column json value data
+	EventModelDataColumn = "data"
+	// EventModelDistroColumn is the column json value distro
+	EventModelDistroColumn = "distro"
+	// EventModelErrorColumn is the column json value error
+	EventModelErrorColumn = "error"
+	// EventModelEventDateColumn is the column json value event_date
+	EventModelEventDateColumn = "event_date"
+	// EventModelEventDateEpochColumn is the column json value epoch
+	EventModelEventDateEpochColumn = "epoch"
+	// EventModelEventDateOffsetColumn is the column json value offset
+	EventModelEventDateOffsetColumn = "offset"
+	// EventModelEventDateRfc3339Column is the column json value rfc3339
+	EventModelEventDateRfc3339Column = "rfc3339"
+	// EventModelFreeSpaceColumn is the column json value free_space
+	EventModelFreeSpaceColumn = "free_space"
+	// EventModelGoVersionColumn is the column json value go_version
+	EventModelGoVersionColumn = "go_version"
+	// EventModelHostnameColumn is the column json value hostname
+	EventModelHostnameColumn = "hostname"
+	// EventModelIDColumn is the column json value id
+	EventModelIDColumn = "id"
+	// EventModelLastExportDateColumn is the column json value last_export_date
+	EventModelLastExportDateColumn = "last_export_date"
+	// EventModelLastExportDateEpochColumn is the column json value epoch
+	EventModelLastExportDateEpochColumn = "epoch"
+	// EventModelLastExportDateOffsetColumn is the column json value offset
+	EventModelLastExportDateOffsetColumn = "offset"
+	// EventModelLastExportDateRfc3339Column is the column json value rfc3339
+	EventModelLastExportDateRfc3339Column = "rfc3339"
+	// EventModelMemoryColumn is the column json value memory
+	EventModelMemoryColumn = "memory"
+	// EventModelMessageColumn is the column json value message
+	EventModelMessageColumn = "message"
+	// EventModelNumCPUColumn is the column json value num_cpu
+	EventModelNumCPUColumn = "num_cpu"
+	// EventModelOSColumn is the column json value os
+	EventModelOSColumn = "os"
+	// EventModelRefIDColumn is the column json value ref_id
+	EventModelRefIDColumn = "ref_id"
+	// EventModelRefTypeColumn is the column json value ref_type
+	EventModelRefTypeColumn = "ref_type"
+	// EventModelSystemIDColumn is the column json value system_id
+	EventModelSystemIDColumn = "system_id"
+	// EventModelTypeColumn is the column json value type
+	EventModelTypeColumn = "type"
+	// EventModelUptimeColumn is the column json value uptime
+	EventModelUptimeColumn = "uptime"
+	// EventModelUUIDColumn is the column json value uuid
+	EventModelUUIDColumn = "uuid"
+	// EventModelVersionColumn is the column json value version
+	EventModelVersionColumn = "version"
+)
+
 // EventEventDate represents the object structure for event_date
 type EventEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +443,35 @@ func (v EventType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// EventTypeEnroll is the enumeration value for enroll
 	EventTypeEnroll EventType = 0
-	// TypePing is the enumeration value for ping
+	// EventTypePing is the enumeration value for ping
 	EventTypePing EventType = 1
-	// TypeCrash is the enumeration value for crash
+	// EventTypeCrash is the enumeration value for crash
 	EventTypeCrash EventType = 2
-	// TypeLog is the enumeration value for log
+	// EventTypeLog is the enumeration value for log
 	EventTypeLog EventType = 3
-	// TypeIntegration is the enumeration value for integration
+	// EventTypeIntegration is the enumeration value for integration
 	EventTypeIntegration EventType = 4
-	// TypeExport is the enumeration value for export
+	// EventTypeExport is the enumeration value for export
 	EventTypeExport EventType = 5
-	// TypeProject is the enumeration value for project
+	// EventTypeProject is the enumeration value for project
 	EventTypeProject EventType = 6
-	// TypeRepo is the enumeration value for repo
+	// EventTypeRepo is the enumeration value for repo
 	EventTypeRepo EventType = 7
-	// TypeUser is the enumeration value for user
+	// EventTypeUser is the enumeration value for user
 	EventTypeUser EventType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// EventTypeUninstall is the enumeration value for uninstall
 	EventTypeUninstall EventType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// EventTypeUpgrade is the enumeration value for upgrade
 	EventTypeUpgrade EventType = 10
-	// TypeStart is the enumeration value for start
+	// EventTypeStart is the enumeration value for start
 	EventTypeStart EventType = 11
-	// TypeStop is the enumeration value for stop
+	// EventTypeStop is the enumeration value for stop
 	EventTypeStop EventType = 12
-	// TypePause is the enumeration value for pause
+	// EventTypePause is the enumeration value for pause
 	EventTypePause EventType = 13
-	// TypeResume is the enumeration value for resume
+	// EventTypeResume is the enumeration value for resume
 	EventTypeResume EventType = 14
 )
 
@@ -632,6 +691,12 @@ func (o *Event) UnmarshalJSON(data []byte) error {
 func (o *Event) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Event) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Event objects are equal

@@ -26,6 +26,29 @@ const (
 	UpdateRequestModelName datamodel.ModelNameType = "agent.UpdateRequest"
 )
 
+const (
+	// UpdateRequestModelCustomerIDColumn is the column json value customer_id
+	UpdateRequestModelCustomerIDColumn = "customer_id"
+	// UpdateRequestModelIDColumn is the column json value id
+	UpdateRequestModelIDColumn = "id"
+	// UpdateRequestModelRefIDColumn is the column json value ref_id
+	UpdateRequestModelRefIDColumn = "ref_id"
+	// UpdateRequestModelRefTypeColumn is the column json value ref_type
+	UpdateRequestModelRefTypeColumn = "ref_type"
+	// UpdateRequestModelRequestDateColumn is the column json value request_date
+	UpdateRequestModelRequestDateColumn = "request_date"
+	// UpdateRequestModelRequestDateEpochColumn is the column json value epoch
+	UpdateRequestModelRequestDateEpochColumn = "epoch"
+	// UpdateRequestModelRequestDateOffsetColumn is the column json value offset
+	UpdateRequestModelRequestDateOffsetColumn = "offset"
+	// UpdateRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	UpdateRequestModelRequestDateRfc3339Column = "rfc3339"
+	// UpdateRequestModelToVersionColumn is the column json value to_version
+	UpdateRequestModelToVersionColumn = "to_version"
+	// UpdateRequestModelUUIDColumn is the column json value uuid
+	UpdateRequestModelUUIDColumn = "uuid"
+)
+
 // UpdateRequestRequestDate represents the object structure for request_date
 type UpdateRequestRequestDate struct {
 	// Epoch the date in epoch format
@@ -305,6 +328,12 @@ func (o *UpdateRequest) UnmarshalJSON(data []byte) error {
 func (o *UpdateRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *UpdateRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two UpdateRequest objects are equal

@@ -26,6 +26,21 @@ const (
 	CancelRequestTriggerModelName datamodel.ModelNameType = "agent.CancelRequestTrigger"
 )
 
+const (
+	// CancelRequestTriggerModelCommandColumn is the column json value command
+	CancelRequestTriggerModelCommandColumn = "command"
+	// CancelRequestTriggerModelCustomerIDColumn is the column json value customer_id
+	CancelRequestTriggerModelCustomerIDColumn = "customer_id"
+	// CancelRequestTriggerModelIDColumn is the column json value id
+	CancelRequestTriggerModelIDColumn = "id"
+	// CancelRequestTriggerModelRefIDColumn is the column json value ref_id
+	CancelRequestTriggerModelRefIDColumn = "ref_id"
+	// CancelRequestTriggerModelRefTypeColumn is the column json value ref_type
+	CancelRequestTriggerModelRefTypeColumn = "ref_type"
+	// CancelRequestTriggerModelUUIDColumn is the column json value uuid
+	CancelRequestTriggerModelUUIDColumn = "uuid"
+)
+
 // CancelRequestTriggerCommand is the enumeration type for command
 type CancelRequestTriggerCommand int32
 
@@ -88,11 +103,11 @@ func (v CancelRequestTriggerCommand) String() string {
 }
 
 const (
-	// CommandEXPORT is the enumeration value for EXPORT
+	// CancelRequestTriggerCommandEXPORT is the enumeration value for EXPORT
 	CancelRequestTriggerCommandEXPORT CancelRequestTriggerCommand = 0
-	// CommandONBOARD is the enumeration value for ONBOARD
+	// CancelRequestTriggerCommandONBOARD is the enumeration value for ONBOARD
 	CancelRequestTriggerCommandONBOARD CancelRequestTriggerCommand = 1
-	// CommandINTEGRATION is the enumeration value for INTEGRATION
+	// CancelRequestTriggerCommandINTEGRATION is the enumeration value for INTEGRATION
 	CancelRequestTriggerCommandINTEGRATION CancelRequestTriggerCommand = 2
 )
 
@@ -274,6 +289,12 @@ func (o *CancelRequestTrigger) UnmarshalJSON(data []byte) error {
 func (o *CancelRequestTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *CancelRequestTrigger) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two CancelRequestTrigger objects are equal

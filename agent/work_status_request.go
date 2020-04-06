@@ -32,6 +32,175 @@ const (
 	WorkStatusRequestModelName datamodel.ModelNameType = "agent.WorkStatusRequest"
 )
 
+const (
+	// WorkStatusRequestModelCustomerIDColumn is the column json value customer_id
+	WorkStatusRequestModelCustomerIDColumn = "customer_id"
+	// WorkStatusRequestModelIDColumn is the column json value id
+	WorkStatusRequestModelIDColumn = "id"
+	// WorkStatusRequestModelIntegrationColumn is the column json value integration
+	WorkStatusRequestModelIntegrationColumn = "integration"
+	// WorkStatusRequestModelIntegrationActiveColumn is the column json value active
+	WorkStatusRequestModelIntegrationActiveColumn = "active"
+	// WorkStatusRequestModelIntegrationAuthorizationColumn is the column json value authorization
+	WorkStatusRequestModelIntegrationAuthorizationColumn = "authorization"
+	// WorkStatusRequestModelIntegrationAuthorizationAccessTokenColumn is the column json value access_token
+	WorkStatusRequestModelIntegrationAuthorizationAccessTokenColumn = "access_token"
+	// WorkStatusRequestModelIntegrationAuthorizationRefreshTokenColumn is the column json value refresh_token
+	WorkStatusRequestModelIntegrationAuthorizationRefreshTokenColumn = "refresh_token"
+	// WorkStatusRequestModelIntegrationAuthorizationURLColumn is the column json value url
+	WorkStatusRequestModelIntegrationAuthorizationURLColumn = "url"
+	// WorkStatusRequestModelIntegrationAuthorizationUsernameColumn is the column json value username
+	WorkStatusRequestModelIntegrationAuthorizationUsernameColumn = "username"
+	// WorkStatusRequestModelIntegrationAuthorizationPasswordColumn is the column json value password
+	WorkStatusRequestModelIntegrationAuthorizationPasswordColumn = "password"
+	// WorkStatusRequestModelIntegrationAuthorizationAPITokenColumn is the column json value api_token
+	WorkStatusRequestModelIntegrationAuthorizationAPITokenColumn = "api_token"
+	// WorkStatusRequestModelIntegrationAuthorizationCollectionNameColumn is the column json value collection_name
+	WorkStatusRequestModelIntegrationAuthorizationCollectionNameColumn = "collection_name"
+	// WorkStatusRequestModelIntegrationAuthorizationAPIKeyColumn is the column json value api_key
+	WorkStatusRequestModelIntegrationAuthorizationAPIKeyColumn = "api_key"
+	// WorkStatusRequestModelIntegrationAuthorizationAuthorizationColumn is the column json value authorization
+	WorkStatusRequestModelIntegrationAuthorizationAuthorizationColumn = "authorization"
+	// WorkStatusRequestModelIntegrationAuthorizationHostnameColumn is the column json value hostname
+	WorkStatusRequestModelIntegrationAuthorizationHostnameColumn = "hostname"
+	// WorkStatusRequestModelIntegrationAuthorizationAPIVersionColumn is the column json value api_version
+	WorkStatusRequestModelIntegrationAuthorizationAPIVersionColumn = "api_version"
+	// WorkStatusRequestModelIntegrationAuthorizationOrganizationColumn is the column json value organization
+	WorkStatusRequestModelIntegrationAuthorizationOrganizationColumn = "organization"
+	// WorkStatusRequestModelIntegrationCreatedByProfileIDColumn is the column json value created_by_profile_id
+	WorkStatusRequestModelIntegrationCreatedByProfileIDColumn = "created_by_profile_id"
+	// WorkStatusRequestModelIntegrationCreatedByUserIDColumn is the column json value created_by_user_id
+	WorkStatusRequestModelIntegrationCreatedByUserIDColumn = "created_by_user_id"
+	// WorkStatusRequestModelIntegrationCustomerIDColumn is the column json value customer_id
+	WorkStatusRequestModelIntegrationCustomerIDColumn = "customer_id"
+	// WorkStatusRequestModelIntegrationEntityErrorsColumn is the column json value entity_errors
+	WorkStatusRequestModelIntegrationEntityErrorsColumn = "entity_errors"
+	// WorkStatusRequestModelIntegrationEntityErrorsIDColumn is the column json value id
+	WorkStatusRequestModelIntegrationEntityErrorsIDColumn = "id"
+	// WorkStatusRequestModelIntegrationEntityErrorsRefIDColumn is the column json value ref_id
+	WorkStatusRequestModelIntegrationEntityErrorsRefIDColumn = "ref_id"
+	// WorkStatusRequestModelIntegrationEntityErrorsErrorColumn is the column json value error
+	WorkStatusRequestModelIntegrationEntityErrorsErrorColumn = "error"
+	// WorkStatusRequestModelIntegrationErrorMessageColumn is the column json value error_message
+	WorkStatusRequestModelIntegrationErrorMessageColumn = "error_message"
+	// WorkStatusRequestModelIntegrationErroredColumn is the column json value errored
+	WorkStatusRequestModelIntegrationErroredColumn = "errored"
+	// WorkStatusRequestModelIntegrationExclusionsColumn is the column json value exclusions
+	WorkStatusRequestModelIntegrationExclusionsColumn = "exclusions"
+	// WorkStatusRequestModelIntegrationExportableColumn is the column json value exportable
+	WorkStatusRequestModelIntegrationExportableColumn = "exportable"
+	// WorkStatusRequestModelIntegrationIDColumn is the column json value id
+	WorkStatusRequestModelIntegrationIDColumn = "id"
+	// WorkStatusRequestModelIntegrationInclusionsColumn is the column json value inclusions
+	WorkStatusRequestModelIntegrationInclusionsColumn = "inclusions"
+	// WorkStatusRequestModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
+	WorkStatusRequestModelIntegrationLastExportCompletedDateColumn = "last_export_completed_date"
+	// WorkStatusRequestModelIntegrationLastExportCompletedDateEpochColumn is the column json value epoch
+	WorkStatusRequestModelIntegrationLastExportCompletedDateEpochColumn = "epoch"
+	// WorkStatusRequestModelIntegrationLastExportCompletedDateOffsetColumn is the column json value offset
+	WorkStatusRequestModelIntegrationLastExportCompletedDateOffsetColumn = "offset"
+	// WorkStatusRequestModelIntegrationLastExportCompletedDateRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelIntegrationLastExportCompletedDateRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelIntegrationLastExportRequestedDateColumn is the column json value last_export_requested_date
+	WorkStatusRequestModelIntegrationLastExportRequestedDateColumn = "last_export_requested_date"
+	// WorkStatusRequestModelIntegrationLastExportRequestedDateEpochColumn is the column json value epoch
+	WorkStatusRequestModelIntegrationLastExportRequestedDateEpochColumn = "epoch"
+	// WorkStatusRequestModelIntegrationLastExportRequestedDateOffsetColumn is the column json value offset
+	WorkStatusRequestModelIntegrationLastExportRequestedDateOffsetColumn = "offset"
+	// WorkStatusRequestModelIntegrationLastExportRequestedDateRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelIntegrationLastExportRequestedDateRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelIntegrationLastProcessingCompletedDateColumn is the column json value last_processing_completed_date
+	WorkStatusRequestModelIntegrationLastProcessingCompletedDateColumn = "last_processing_completed_date"
+	// WorkStatusRequestModelIntegrationLastProcessingCompletedDateEpochColumn is the column json value epoch
+	WorkStatusRequestModelIntegrationLastProcessingCompletedDateEpochColumn = "epoch"
+	// WorkStatusRequestModelIntegrationLastProcessingCompletedDateOffsetColumn is the column json value offset
+	WorkStatusRequestModelIntegrationLastProcessingCompletedDateOffsetColumn = "offset"
+	// WorkStatusRequestModelIntegrationLastProcessingCompletedDateRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelIntegrationLastProcessingCompletedDateRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelIntegrationLastProcessingStartedDateColumn is the column json value last_processing_started_date
+	WorkStatusRequestModelIntegrationLastProcessingStartedDateColumn = "last_processing_started_date"
+	// WorkStatusRequestModelIntegrationLastProcessingStartedDateEpochColumn is the column json value epoch
+	WorkStatusRequestModelIntegrationLastProcessingStartedDateEpochColumn = "epoch"
+	// WorkStatusRequestModelIntegrationLastProcessingStartedDateOffsetColumn is the column json value offset
+	WorkStatusRequestModelIntegrationLastProcessingStartedDateOffsetColumn = "offset"
+	// WorkStatusRequestModelIntegrationLastProcessingStartedDateRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelIntegrationLastProcessingStartedDateRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelIntegrationLocationColumn is the column json value location
+	WorkStatusRequestModelIntegrationLocationColumn = "location"
+	// WorkStatusRequestModelIntegrationNameColumn is the column json value name
+	WorkStatusRequestModelIntegrationNameColumn = "name"
+	// WorkStatusRequestModelIntegrationOnboardCompletedDateColumn is the column json value onboard_completed_date
+	WorkStatusRequestModelIntegrationOnboardCompletedDateColumn = "onboard_completed_date"
+	// WorkStatusRequestModelIntegrationOnboardCompletedDateEpochColumn is the column json value epoch
+	WorkStatusRequestModelIntegrationOnboardCompletedDateEpochColumn = "epoch"
+	// WorkStatusRequestModelIntegrationOnboardCompletedDateOffsetColumn is the column json value offset
+	WorkStatusRequestModelIntegrationOnboardCompletedDateOffsetColumn = "offset"
+	// WorkStatusRequestModelIntegrationOnboardCompletedDateRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelIntegrationOnboardCompletedDateRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelIntegrationOnboardRequestedDateColumn is the column json value onboard_requested_date
+	WorkStatusRequestModelIntegrationOnboardRequestedDateColumn = "onboard_requested_date"
+	// WorkStatusRequestModelIntegrationOnboardRequestedDateEpochColumn is the column json value epoch
+	WorkStatusRequestModelIntegrationOnboardRequestedDateEpochColumn = "epoch"
+	// WorkStatusRequestModelIntegrationOnboardRequestedDateOffsetColumn is the column json value offset
+	WorkStatusRequestModelIntegrationOnboardRequestedDateOffsetColumn = "offset"
+	// WorkStatusRequestModelIntegrationOnboardRequestedDateRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelIntegrationOnboardRequestedDateRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelIntegrationOnboardingColumn is the column json value onboarding
+	WorkStatusRequestModelIntegrationOnboardingColumn = "onboarding"
+	// WorkStatusRequestModelIntegrationOrganizationColumn is the column json value organization
+	WorkStatusRequestModelIntegrationOrganizationColumn = "organization"
+	// WorkStatusRequestModelIntegrationProcessedColumn is the column json value processed
+	WorkStatusRequestModelIntegrationProcessedColumn = "processed"
+	// WorkStatusRequestModelIntegrationRefIDColumn is the column json value ref_id
+	WorkStatusRequestModelIntegrationRefIDColumn = "ref_id"
+	// WorkStatusRequestModelIntegrationRefTypeColumn is the column json value ref_type
+	WorkStatusRequestModelIntegrationRefTypeColumn = "ref_type"
+	// WorkStatusRequestModelIntegrationServerVersionColumn is the column json value server_version
+	WorkStatusRequestModelIntegrationServerVersionColumn = "server_version"
+	// WorkStatusRequestModelIntegrationStateColumn is the column json value state
+	WorkStatusRequestModelIntegrationStateColumn = "state"
+	// WorkStatusRequestModelIntegrationSystemTypeColumn is the column json value system_type
+	WorkStatusRequestModelIntegrationSystemTypeColumn = "system_type"
+	// WorkStatusRequestModelIntegrationTeamIDColumn is the column json value team_id
+	WorkStatusRequestModelIntegrationTeamIDColumn = "team_id"
+	// WorkStatusRequestModelIntegrationThrottledColumn is the column json value throttled
+	WorkStatusRequestModelIntegrationThrottledColumn = "throttled"
+	// WorkStatusRequestModelIntegrationThrottledUntilColumn is the column json value throttled_until
+	WorkStatusRequestModelIntegrationThrottledUntilColumn = "throttled_until"
+	// WorkStatusRequestModelIntegrationThrottledUntilEpochColumn is the column json value epoch
+	WorkStatusRequestModelIntegrationThrottledUntilEpochColumn = "epoch"
+	// WorkStatusRequestModelIntegrationThrottledUntilOffsetColumn is the column json value offset
+	WorkStatusRequestModelIntegrationThrottledUntilOffsetColumn = "offset"
+	// WorkStatusRequestModelIntegrationThrottledUntilRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelIntegrationThrottledUntilRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelIntegrationValidatedColumn is the column json value validated
+	WorkStatusRequestModelIntegrationValidatedColumn = "validated"
+	// WorkStatusRequestModelIntegrationValidatedDateColumn is the column json value validated_date
+	WorkStatusRequestModelIntegrationValidatedDateColumn = "validated_date"
+	// WorkStatusRequestModelIntegrationValidatedDateEpochColumn is the column json value epoch
+	WorkStatusRequestModelIntegrationValidatedDateEpochColumn = "epoch"
+	// WorkStatusRequestModelIntegrationValidatedDateOffsetColumn is the column json value offset
+	WorkStatusRequestModelIntegrationValidatedDateOffsetColumn = "offset"
+	// WorkStatusRequestModelIntegrationValidatedDateRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelIntegrationValidatedDateRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelIntegrationValidationMessageColumn is the column json value validation_message
+	WorkStatusRequestModelIntegrationValidationMessageColumn = "validation_message"
+	// WorkStatusRequestModelRefIDColumn is the column json value ref_id
+	WorkStatusRequestModelRefIDColumn = "ref_id"
+	// WorkStatusRequestModelRefTypeColumn is the column json value ref_type
+	WorkStatusRequestModelRefTypeColumn = "ref_type"
+	// WorkStatusRequestModelRequestDateColumn is the column json value request_date
+	WorkStatusRequestModelRequestDateColumn = "request_date"
+	// WorkStatusRequestModelRequestDateEpochColumn is the column json value epoch
+	WorkStatusRequestModelRequestDateEpochColumn = "epoch"
+	// WorkStatusRequestModelRequestDateOffsetColumn is the column json value offset
+	WorkStatusRequestModelRequestDateOffsetColumn = "offset"
+	// WorkStatusRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	WorkStatusRequestModelRequestDateRfc3339Column = "rfc3339"
+	// WorkStatusRequestModelUUIDColumn is the column json value uuid
+	WorkStatusRequestModelUUIDColumn = "uuid"
+)
+
 // WorkStatusRequestIntegrationAuthorization represents the object structure for authorization
 type WorkStatusRequestIntegrationAuthorization struct {
 	// AccessToken Access token
@@ -892,9 +1061,9 @@ func (v WorkStatusRequestIntegrationLocation) String() string {
 }
 
 const (
-	// IntegrationLocationPrivate is the enumeration value for private
+	// WorkStatusRequestIntegrationLocationPrivate is the enumeration value for private
 	WorkStatusRequestIntegrationLocationPrivate WorkStatusRequestIntegrationLocation = 0
-	// IntegrationLocationCloud is the enumeration value for cloud
+	// WorkStatusRequestIntegrationLocationCloud is the enumeration value for cloud
 	WorkStatusRequestIntegrationLocationCloud WorkStatusRequestIntegrationLocation = 1
 )
 
@@ -1158,11 +1327,11 @@ func (v WorkStatusRequestIntegrationState) String() string {
 }
 
 const (
-	// IntegrationStateIdle is the enumeration value for idle
+	// WorkStatusRequestIntegrationStateIdle is the enumeration value for idle
 	WorkStatusRequestIntegrationStateIdle WorkStatusRequestIntegrationState = 0
-	// IntegrationStateExporting is the enumeration value for exporting
+	// WorkStatusRequestIntegrationStateExporting is the enumeration value for exporting
 	WorkStatusRequestIntegrationStateExporting WorkStatusRequestIntegrationState = 1
-	// IntegrationStateProcessing is the enumeration value for processing
+	// WorkStatusRequestIntegrationStateProcessing is the enumeration value for processing
 	WorkStatusRequestIntegrationStateProcessing WorkStatusRequestIntegrationState = 2
 )
 
@@ -1244,15 +1413,15 @@ func (v WorkStatusRequestIntegrationSystemType) String() string {
 }
 
 const (
-	// IntegrationSystemTypeWork is the enumeration value for work
+	// WorkStatusRequestIntegrationSystemTypeWork is the enumeration value for work
 	WorkStatusRequestIntegrationSystemTypeWork WorkStatusRequestIntegrationSystemType = 0
-	// IntegrationSystemTypeSourcecode is the enumeration value for sourcecode
+	// WorkStatusRequestIntegrationSystemTypeSourcecode is the enumeration value for sourcecode
 	WorkStatusRequestIntegrationSystemTypeSourcecode WorkStatusRequestIntegrationSystemType = 1
-	// IntegrationSystemTypeCodequality is the enumeration value for codequality
+	// WorkStatusRequestIntegrationSystemTypeCodequality is the enumeration value for codequality
 	WorkStatusRequestIntegrationSystemTypeCodequality WorkStatusRequestIntegrationSystemType = 2
-	// IntegrationSystemTypeCalendar is the enumeration value for calendar
+	// WorkStatusRequestIntegrationSystemTypeCalendar is the enumeration value for calendar
 	WorkStatusRequestIntegrationSystemTypeCalendar WorkStatusRequestIntegrationSystemType = 3
-	// IntegrationSystemTypeUser is the enumeration value for user
+	// WorkStatusRequestIntegrationSystemTypeUser is the enumeration value for user
 	WorkStatusRequestIntegrationSystemTypeUser WorkStatusRequestIntegrationSystemType = 4
 )
 
@@ -2843,6 +3012,12 @@ func (o *WorkStatusRequest) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *WorkStatusRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two WorkStatusRequest objects are equal
 func (o *WorkStatusRequest) IsEqual(other *WorkStatusRequest) bool {
 	return o.Hash() == other.Hash()
@@ -2976,25 +3151,6 @@ func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

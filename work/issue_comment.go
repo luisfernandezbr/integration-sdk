@@ -26,6 +26,43 @@ const (
 	IssueCommentModelName datamodel.ModelNameType = "work.IssueComment"
 )
 
+const (
+	// IssueCommentModelBodyColumn is the column json value body
+	IssueCommentModelBodyColumn = "body"
+	// IssueCommentModelCreatedDateColumn is the column json value created_date
+	IssueCommentModelCreatedDateColumn = "created_date"
+	// IssueCommentModelCreatedDateEpochColumn is the column json value epoch
+	IssueCommentModelCreatedDateEpochColumn = "epoch"
+	// IssueCommentModelCreatedDateOffsetColumn is the column json value offset
+	IssueCommentModelCreatedDateOffsetColumn = "offset"
+	// IssueCommentModelCreatedDateRfc3339Column is the column json value rfc3339
+	IssueCommentModelCreatedDateRfc3339Column = "rfc3339"
+	// IssueCommentModelCustomerIDColumn is the column json value customer_id
+	IssueCommentModelCustomerIDColumn = "customer_id"
+	// IssueCommentModelIDColumn is the column json value id
+	IssueCommentModelIDColumn = "id"
+	// IssueCommentModelIssueIDColumn is the column json value issue_id
+	IssueCommentModelIssueIDColumn = "issue_id"
+	// IssueCommentModelProjectIDColumn is the column json value project_id
+	IssueCommentModelProjectIDColumn = "project_id"
+	// IssueCommentModelRefIDColumn is the column json value ref_id
+	IssueCommentModelRefIDColumn = "ref_id"
+	// IssueCommentModelRefTypeColumn is the column json value ref_type
+	IssueCommentModelRefTypeColumn = "ref_type"
+	// IssueCommentModelUpdatedDateColumn is the column json value updated_date
+	IssueCommentModelUpdatedDateColumn = "updated_date"
+	// IssueCommentModelUpdatedDateEpochColumn is the column json value epoch
+	IssueCommentModelUpdatedDateEpochColumn = "epoch"
+	// IssueCommentModelUpdatedDateOffsetColumn is the column json value offset
+	IssueCommentModelUpdatedDateOffsetColumn = "offset"
+	// IssueCommentModelUpdatedDateRfc3339Column is the column json value rfc3339
+	IssueCommentModelUpdatedDateRfc3339Column = "rfc3339"
+	// IssueCommentModelURLColumn is the column json value url
+	IssueCommentModelURLColumn = "url"
+	// IssueCommentModelUserRefIDColumn is the column json value user_ref_id
+	IssueCommentModelUserRefIDColumn = "user_ref_id"
+)
+
 // IssueCommentCreatedDate represents the object structure for created_date
 type IssueCommentCreatedDate struct {
 	// Epoch the date in epoch format
@@ -414,6 +451,12 @@ func (o *IssueComment) UnmarshalJSON(data []byte) error {
 func (o *IssueComment) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *IssueComment) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two IssueComment objects are equal

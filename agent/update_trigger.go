@@ -24,6 +24,21 @@ const (
 	UpdateTriggerModelName datamodel.ModelNameType = "agent.UpdateTrigger"
 )
 
+const (
+	// UpdateTriggerModelCustomerIDColumn is the column json value customer_id
+	UpdateTriggerModelCustomerIDColumn = "customer_id"
+	// UpdateTriggerModelIDColumn is the column json value id
+	UpdateTriggerModelIDColumn = "id"
+	// UpdateTriggerModelRefIDColumn is the column json value ref_id
+	UpdateTriggerModelRefIDColumn = "ref_id"
+	// UpdateTriggerModelRefTypeColumn is the column json value ref_type
+	UpdateTriggerModelRefTypeColumn = "ref_type"
+	// UpdateTriggerModelUUIDColumn is the column json value uuid
+	UpdateTriggerModelUUIDColumn = "uuid"
+	// UpdateTriggerModelVersionColumn is the column json value version
+	UpdateTriggerModelVersionColumn = "version"
+)
+
 // UpdateTrigger used to trigger an agent.UpdateRequest
 type UpdateTrigger struct {
 	// CustomerID the customer id for the model instance
@@ -199,6 +214,12 @@ func (o *UpdateTrigger) UnmarshalJSON(data []byte) error {
 func (o *UpdateTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *UpdateTrigger) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two UpdateTrigger objects are equal

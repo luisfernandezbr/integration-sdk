@@ -32,6 +32,159 @@ const (
 	IssueModelName datamodel.ModelNameType = "work.Issue"
 )
 
+const (
+	// IssueModelAssigneeRefIDColumn is the column json value assignee_ref_id
+	IssueModelAssigneeRefIDColumn = "assignee_ref_id"
+	// IssueModelAttachmentsColumn is the column json value attachments
+	IssueModelAttachmentsColumn = "attachments"
+	// IssueModelAttachmentsCreatedDateColumn is the column json value created_date
+	IssueModelAttachmentsCreatedDateColumn = "created_date"
+	// IssueModelAttachmentsCreatedDateEpochColumn is the column json value epoch
+	IssueModelAttachmentsCreatedDateEpochColumn = "epoch"
+	// IssueModelAttachmentsCreatedDateOffsetColumn is the column json value offset
+	IssueModelAttachmentsCreatedDateOffsetColumn = "offset"
+	// IssueModelAttachmentsCreatedDateRfc3339Column is the column json value rfc3339
+	IssueModelAttachmentsCreatedDateRfc3339Column = "rfc3339"
+	// IssueModelAttachmentsMimeTypeColumn is the column json value mime_type
+	IssueModelAttachmentsMimeTypeColumn = "mime_type"
+	// IssueModelAttachmentsNameColumn is the column json value name
+	IssueModelAttachmentsNameColumn = "name"
+	// IssueModelAttachmentsRefIDColumn is the column json value ref_id
+	IssueModelAttachmentsRefIDColumn = "ref_id"
+	// IssueModelAttachmentsSizeColumn is the column json value size
+	IssueModelAttachmentsSizeColumn = "size"
+	// IssueModelAttachmentsThumbnailURLColumn is the column json value thumbnail_url
+	IssueModelAttachmentsThumbnailURLColumn = "thumbnail_url"
+	// IssueModelAttachmentsURLColumn is the column json value url
+	IssueModelAttachmentsURLColumn = "url"
+	// IssueModelAttachmentsUserRefIDColumn is the column json value user_ref_id
+	IssueModelAttachmentsUserRefIDColumn = "user_ref_id"
+	// IssueModelChangeLogColumn is the column json value change_log
+	IssueModelChangeLogColumn = "change_log"
+	// IssueModelChangeLogCreatedDateColumn is the column json value created_date
+	IssueModelChangeLogCreatedDateColumn = "created_date"
+	// IssueModelChangeLogCreatedDateEpochColumn is the column json value epoch
+	IssueModelChangeLogCreatedDateEpochColumn = "epoch"
+	// IssueModelChangeLogCreatedDateOffsetColumn is the column json value offset
+	IssueModelChangeLogCreatedDateOffsetColumn = "offset"
+	// IssueModelChangeLogCreatedDateRfc3339Column is the column json value rfc3339
+	IssueModelChangeLogCreatedDateRfc3339Column = "rfc3339"
+	// IssueModelChangeLogFieldColumn is the column json value field
+	IssueModelChangeLogFieldColumn = "field"
+	// IssueModelChangeLogFromColumn is the column json value from
+	IssueModelChangeLogFromColumn = "from"
+	// IssueModelChangeLogFromStringColumn is the column json value from_string
+	IssueModelChangeLogFromStringColumn = "from_string"
+	// IssueModelChangeLogOrdinalColumn is the column json value ordinal
+	IssueModelChangeLogOrdinalColumn = "ordinal"
+	// IssueModelChangeLogRefIDColumn is the column json value ref_id
+	IssueModelChangeLogRefIDColumn = "ref_id"
+	// IssueModelChangeLogToColumn is the column json value to
+	IssueModelChangeLogToColumn = "to"
+	// IssueModelChangeLogToStringColumn is the column json value to_string
+	IssueModelChangeLogToStringColumn = "to_string"
+	// IssueModelChangeLogUserIDColumn is the column json value user_id
+	IssueModelChangeLogUserIDColumn = "user_id"
+	// IssueModelCreatedDateColumn is the column json value created_date
+	IssueModelCreatedDateColumn = "created_date"
+	// IssueModelCreatedDateEpochColumn is the column json value epoch
+	IssueModelCreatedDateEpochColumn = "epoch"
+	// IssueModelCreatedDateOffsetColumn is the column json value offset
+	IssueModelCreatedDateOffsetColumn = "offset"
+	// IssueModelCreatedDateRfc3339Column is the column json value rfc3339
+	IssueModelCreatedDateRfc3339Column = "rfc3339"
+	// IssueModelCreatorRefIDColumn is the column json value creator_ref_id
+	IssueModelCreatorRefIDColumn = "creator_ref_id"
+	// IssueModelCustomerIDColumn is the column json value customer_id
+	IssueModelCustomerIDColumn = "customer_id"
+	// IssueModelDescriptionColumn is the column json value description
+	IssueModelDescriptionColumn = "description"
+	// IssueModelDueDateColumn is the column json value due_date
+	IssueModelDueDateColumn = "due_date"
+	// IssueModelDueDateEpochColumn is the column json value epoch
+	IssueModelDueDateEpochColumn = "epoch"
+	// IssueModelDueDateOffsetColumn is the column json value offset
+	IssueModelDueDateOffsetColumn = "offset"
+	// IssueModelDueDateRfc3339Column is the column json value rfc3339
+	IssueModelDueDateRfc3339Column = "rfc3339"
+	// IssueModelEpicIDColumn is the column json value epic_id
+	IssueModelEpicIDColumn = "epic_id"
+	// IssueModelIDColumn is the column json value id
+	IssueModelIDColumn = "id"
+	// IssueModelIdentifierColumn is the column json value identifier
+	IssueModelIdentifierColumn = "identifier"
+	// IssueModelLinkedIssuesLinkTypeColumn is the column json value link_type
+	IssueModelLinkedIssuesLinkTypeColumn = "link_type"
+	// IssueModelLinkedIssuesColumn is the column json value linked_issues
+	IssueModelLinkedIssuesColumn = "linked_issues"
+	// IssueModelLinkedIssuesIssueIDColumn is the column json value issue_id
+	IssueModelLinkedIssuesIssueIDColumn = "issue_id"
+	// IssueModelLinkedIssuesIssueIdentifierColumn is the column json value issue_identifier
+	IssueModelLinkedIssuesIssueIdentifierColumn = "issue_identifier"
+	// IssueModelLinkedIssuesIssueRefIDColumn is the column json value issue_ref_id
+	IssueModelLinkedIssuesIssueRefIDColumn = "issue_ref_id"
+	// IssueModelLinkedIssuesRefIDColumn is the column json value ref_id
+	IssueModelLinkedIssuesRefIDColumn = "ref_id"
+	// IssueModelLinkedIssuesReverseDirectionColumn is the column json value reverse_direction
+	IssueModelLinkedIssuesReverseDirectionColumn = "reverse_direction"
+	// IssueModelParentIDColumn is the column json value parent_id
+	IssueModelParentIDColumn = "parent_id"
+	// IssueModelPlannedEndDateColumn is the column json value planned_end_date
+	IssueModelPlannedEndDateColumn = "planned_end_date"
+	// IssueModelPlannedEndDateEpochColumn is the column json value epoch
+	IssueModelPlannedEndDateEpochColumn = "epoch"
+	// IssueModelPlannedEndDateOffsetColumn is the column json value offset
+	IssueModelPlannedEndDateOffsetColumn = "offset"
+	// IssueModelPlannedEndDateRfc3339Column is the column json value rfc3339
+	IssueModelPlannedEndDateRfc3339Column = "rfc3339"
+	// IssueModelPlannedStartDateColumn is the column json value planned_start_date
+	IssueModelPlannedStartDateColumn = "planned_start_date"
+	// IssueModelPlannedStartDateEpochColumn is the column json value epoch
+	IssueModelPlannedStartDateEpochColumn = "epoch"
+	// IssueModelPlannedStartDateOffsetColumn is the column json value offset
+	IssueModelPlannedStartDateOffsetColumn = "offset"
+	// IssueModelPlannedStartDateRfc3339Column is the column json value rfc3339
+	IssueModelPlannedStartDateRfc3339Column = "rfc3339"
+	// IssueModelPriorityColumn is the column json value priority
+	IssueModelPriorityColumn = "priority"
+	// IssueModelPriorityIDColumn is the column json value priority_id
+	IssueModelPriorityIDColumn = "priority_id"
+	// IssueModelProjectIDColumn is the column json value project_id
+	IssueModelProjectIDColumn = "project_id"
+	// IssueModelRefIDColumn is the column json value ref_id
+	IssueModelRefIDColumn = "ref_id"
+	// IssueModelRefTypeColumn is the column json value ref_type
+	IssueModelRefTypeColumn = "ref_type"
+	// IssueModelReporterRefIDColumn is the column json value reporter_ref_id
+	IssueModelReporterRefIDColumn = "reporter_ref_id"
+	// IssueModelResolutionColumn is the column json value resolution
+	IssueModelResolutionColumn = "resolution"
+	// IssueModelSprintIdsColumn is the column json value sprint_ids
+	IssueModelSprintIdsColumn = "sprint_ids"
+	// IssueModelStatusColumn is the column json value status
+	IssueModelStatusColumn = "status"
+	// IssueModelStoryPointsColumn is the column json value story_points
+	IssueModelStoryPointsColumn = "story_points"
+	// IssueModelTagsColumn is the column json value tags
+	IssueModelTagsColumn = "tags"
+	// IssueModelTitleColumn is the column json value title
+	IssueModelTitleColumn = "title"
+	// IssueModelTypeColumn is the column json value type
+	IssueModelTypeColumn = "type"
+	// IssueModelTypeIDColumn is the column json value type_id
+	IssueModelTypeIDColumn = "type_id"
+	// IssueModelUpdatedDateColumn is the column json value updated_date
+	IssueModelUpdatedDateColumn = "updated_date"
+	// IssueModelUpdatedDateEpochColumn is the column json value epoch
+	IssueModelUpdatedDateEpochColumn = "epoch"
+	// IssueModelUpdatedDateOffsetColumn is the column json value offset
+	IssueModelUpdatedDateOffsetColumn = "offset"
+	// IssueModelUpdatedDateRfc3339Column is the column json value rfc3339
+	IssueModelUpdatedDateRfc3339Column = "rfc3339"
+	// IssueModelURLColumn is the column json value url
+	IssueModelURLColumn = "url"
+)
+
 // IssueAttachmentsCreatedDate represents the object structure for created_date
 type IssueAttachmentsCreatedDate struct {
 	// Epoch the date in epoch format
@@ -620,33 +773,33 @@ func (v IssueChangeLogField) String() string {
 }
 
 const (
-	// ChangeLogFieldAssigneeRefID is the enumeration value for assignee_ref_id
+	// IssueChangeLogFieldAssigneeRefID is the enumeration value for assignee_ref_id
 	IssueChangeLogFieldAssigneeRefID IssueChangeLogField = 0
-	// ChangeLogFieldDueDate is the enumeration value for due_date
+	// IssueChangeLogFieldDueDate is the enumeration value for due_date
 	IssueChangeLogFieldDueDate IssueChangeLogField = 1
-	// ChangeLogFieldEpicID is the enumeration value for epic_id
+	// IssueChangeLogFieldEpicID is the enumeration value for epic_id
 	IssueChangeLogFieldEpicID IssueChangeLogField = 2
-	// ChangeLogFieldIdentifier is the enumeration value for identifier
+	// IssueChangeLogFieldIdentifier is the enumeration value for identifier
 	IssueChangeLogFieldIdentifier IssueChangeLogField = 3
-	// ChangeLogFieldParentID is the enumeration value for parent_id
+	// IssueChangeLogFieldParentID is the enumeration value for parent_id
 	IssueChangeLogFieldParentID IssueChangeLogField = 4
-	// ChangeLogFieldPriority is the enumeration value for priority
+	// IssueChangeLogFieldPriority is the enumeration value for priority
 	IssueChangeLogFieldPriority IssueChangeLogField = 5
-	// ChangeLogFieldProjectID is the enumeration value for project_id
+	// IssueChangeLogFieldProjectID is the enumeration value for project_id
 	IssueChangeLogFieldProjectID IssueChangeLogField = 6
-	// ChangeLogFieldReporterRefID is the enumeration value for reporter_ref_id
+	// IssueChangeLogFieldReporterRefID is the enumeration value for reporter_ref_id
 	IssueChangeLogFieldReporterRefID IssueChangeLogField = 7
-	// ChangeLogFieldResolution is the enumeration value for resolution
+	// IssueChangeLogFieldResolution is the enumeration value for resolution
 	IssueChangeLogFieldResolution IssueChangeLogField = 8
-	// ChangeLogFieldSprintIds is the enumeration value for sprint_ids
+	// IssueChangeLogFieldSprintIds is the enumeration value for sprint_ids
 	IssueChangeLogFieldSprintIds IssueChangeLogField = 9
-	// ChangeLogFieldStatus is the enumeration value for status
+	// IssueChangeLogFieldStatus is the enumeration value for status
 	IssueChangeLogFieldStatus IssueChangeLogField = 10
-	// ChangeLogFieldTags is the enumeration value for tags
+	// IssueChangeLogFieldTags is the enumeration value for tags
 	IssueChangeLogFieldTags IssueChangeLogField = 11
-	// ChangeLogFieldTitle is the enumeration value for title
+	// IssueChangeLogFieldTitle is the enumeration value for title
 	IssueChangeLogFieldTitle IssueChangeLogField = 12
-	// ChangeLogFieldType is the enumeration value for type
+	// IssueChangeLogFieldType is the enumeration value for type
 	IssueChangeLogFieldType IssueChangeLogField = 13
 )
 
@@ -1243,15 +1396,15 @@ func (v IssueLinkedIssuesLinkType) String() string {
 }
 
 const (
-	// LinkedIssuesLinkTypeBlocks is the enumeration value for blocks
+	// IssueLinkedIssuesLinkTypeBlocks is the enumeration value for blocks
 	IssueLinkedIssuesLinkTypeBlocks IssueLinkedIssuesLinkType = 0
-	// LinkedIssuesLinkTypeClones is the enumeration value for clones
+	// IssueLinkedIssuesLinkTypeClones is the enumeration value for clones
 	IssueLinkedIssuesLinkTypeClones IssueLinkedIssuesLinkType = 1
-	// LinkedIssuesLinkTypeDuplicates is the enumeration value for duplicates
+	// IssueLinkedIssuesLinkTypeDuplicates is the enumeration value for duplicates
 	IssueLinkedIssuesLinkTypeDuplicates IssueLinkedIssuesLinkType = 2
-	// LinkedIssuesLinkTypeCauses is the enumeration value for causes
+	// IssueLinkedIssuesLinkTypeCauses is the enumeration value for causes
 	IssueLinkedIssuesLinkTypeCauses IssueLinkedIssuesLinkType = 3
-	// LinkedIssuesLinkTypeRelates is the enumeration value for relates
+	// IssueLinkedIssuesLinkTypeRelates is the enumeration value for relates
 	IssueLinkedIssuesLinkTypeRelates IssueLinkedIssuesLinkType = 4
 )
 
@@ -2017,6 +2170,12 @@ func (o *Issue) UnmarshalJSON(data []byte) error {
 func (o *Issue) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Issue) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Issue objects are equal

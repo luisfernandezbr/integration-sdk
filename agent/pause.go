@@ -28,6 +28,81 @@ const (
 	PauseModelName datamodel.ModelNameType = "agent.Pause"
 )
 
+const (
+	// PauseModelArchitectureColumn is the column json value architecture
+	PauseModelArchitectureColumn = "architecture"
+	// PauseModelCustomerIDColumn is the column json value customer_id
+	PauseModelCustomerIDColumn = "customer_id"
+	// PauseModelDataColumn is the column json value data
+	PauseModelDataColumn = "data"
+	// PauseModelDistroColumn is the column json value distro
+	PauseModelDistroColumn = "distro"
+	// PauseModelErrorColumn is the column json value error
+	PauseModelErrorColumn = "error"
+	// PauseModelEventDateColumn is the column json value event_date
+	PauseModelEventDateColumn = "event_date"
+	// PauseModelEventDateEpochColumn is the column json value epoch
+	PauseModelEventDateEpochColumn = "epoch"
+	// PauseModelEventDateOffsetColumn is the column json value offset
+	PauseModelEventDateOffsetColumn = "offset"
+	// PauseModelEventDateRfc3339Column is the column json value rfc3339
+	PauseModelEventDateRfc3339Column = "rfc3339"
+	// PauseModelFreeSpaceColumn is the column json value free_space
+	PauseModelFreeSpaceColumn = "free_space"
+	// PauseModelGoVersionColumn is the column json value go_version
+	PauseModelGoVersionColumn = "go_version"
+	// PauseModelHostnameColumn is the column json value hostname
+	PauseModelHostnameColumn = "hostname"
+	// PauseModelIDColumn is the column json value id
+	PauseModelIDColumn = "id"
+	// PauseModelIntegrationColumn is the column json value integration
+	PauseModelIntegrationColumn = "integration"
+	// PauseModelJobIDColumn is the column json value job_id
+	PauseModelJobIDColumn = "job_id"
+	// PauseModelLastExportDateColumn is the column json value last_export_date
+	PauseModelLastExportDateColumn = "last_export_date"
+	// PauseModelLastExportDateEpochColumn is the column json value epoch
+	PauseModelLastExportDateEpochColumn = "epoch"
+	// PauseModelLastExportDateOffsetColumn is the column json value offset
+	PauseModelLastExportDateOffsetColumn = "offset"
+	// PauseModelLastExportDateRfc3339Column is the column json value rfc3339
+	PauseModelLastExportDateRfc3339Column = "rfc3339"
+	// PauseModelMemoryColumn is the column json value memory
+	PauseModelMemoryColumn = "memory"
+	// PauseModelMessageColumn is the column json value message
+	PauseModelMessageColumn = "message"
+	// PauseModelNumCPUColumn is the column json value num_cpu
+	PauseModelNumCPUColumn = "num_cpu"
+	// PauseModelOSColumn is the column json value os
+	PauseModelOSColumn = "os"
+	// PauseModelRefIDColumn is the column json value ref_id
+	PauseModelRefIDColumn = "ref_id"
+	// PauseModelRefTypeColumn is the column json value ref_type
+	PauseModelRefTypeColumn = "ref_type"
+	// PauseModelRequestIDColumn is the column json value request_id
+	PauseModelRequestIDColumn = "request_id"
+	// PauseModelResumeDateColumn is the column json value resume_date
+	PauseModelResumeDateColumn = "resume_date"
+	// PauseModelResumeDateEpochColumn is the column json value epoch
+	PauseModelResumeDateEpochColumn = "epoch"
+	// PauseModelResumeDateOffsetColumn is the column json value offset
+	PauseModelResumeDateOffsetColumn = "offset"
+	// PauseModelResumeDateRfc3339Column is the column json value rfc3339
+	PauseModelResumeDateRfc3339Column = "rfc3339"
+	// PauseModelSuccessColumn is the column json value success
+	PauseModelSuccessColumn = "success"
+	// PauseModelSystemIDColumn is the column json value system_id
+	PauseModelSystemIDColumn = "system_id"
+	// PauseModelTypeColumn is the column json value type
+	PauseModelTypeColumn = "type"
+	// PauseModelUptimeColumn is the column json value uptime
+	PauseModelUptimeColumn = "uptime"
+	// PauseModelUUIDColumn is the column json value uuid
+	PauseModelUUIDColumn = "uuid"
+	// PauseModelVersionColumn is the column json value version
+	PauseModelVersionColumn = "version"
+)
+
 // PauseEventDate represents the object structure for event_date
 type PauseEventDate struct {
 	// Epoch the date in epoch format
@@ -483,35 +558,35 @@ func (v PauseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// PauseTypeEnroll is the enumeration value for enroll
 	PauseTypeEnroll PauseType = 0
-	// TypePing is the enumeration value for ping
+	// PauseTypePing is the enumeration value for ping
 	PauseTypePing PauseType = 1
-	// TypeCrash is the enumeration value for crash
+	// PauseTypeCrash is the enumeration value for crash
 	PauseTypeCrash PauseType = 2
-	// TypeLog is the enumeration value for log
+	// PauseTypeLog is the enumeration value for log
 	PauseTypeLog PauseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// PauseTypeIntegration is the enumeration value for integration
 	PauseTypeIntegration PauseType = 4
-	// TypeExport is the enumeration value for export
+	// PauseTypeExport is the enumeration value for export
 	PauseTypeExport PauseType = 5
-	// TypeProject is the enumeration value for project
+	// PauseTypeProject is the enumeration value for project
 	PauseTypeProject PauseType = 6
-	// TypeRepo is the enumeration value for repo
+	// PauseTypeRepo is the enumeration value for repo
 	PauseTypeRepo PauseType = 7
-	// TypeUser is the enumeration value for user
+	// PauseTypeUser is the enumeration value for user
 	PauseTypeUser PauseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// PauseTypeUninstall is the enumeration value for uninstall
 	PauseTypeUninstall PauseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// PauseTypeUpgrade is the enumeration value for upgrade
 	PauseTypeUpgrade PauseType = 10
-	// TypeStart is the enumeration value for start
+	// PauseTypeStart is the enumeration value for start
 	PauseTypeStart PauseType = 11
-	// TypeStop is the enumeration value for stop
+	// PauseTypeStop is the enumeration value for stop
 	PauseTypeStop PauseType = 12
-	// TypePause is the enumeration value for pause
+	// PauseTypePause is the enumeration value for pause
 	PauseTypePause PauseType = 13
-	// TypeResume is the enumeration value for resume
+	// PauseTypeResume is the enumeration value for resume
 	PauseTypeResume PauseType = 14
 )
 
@@ -744,6 +819,12 @@ func (o *Pause) UnmarshalJSON(data []byte) error {
 func (o *Pause) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Pause) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Pause objects are equal

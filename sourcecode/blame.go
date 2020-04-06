@@ -30,6 +30,69 @@ const (
 	BlameModelName datamodel.ModelNameType = "sourcecode.Blame"
 )
 
+const (
+	// BlameModelBlanksColumn is the column json value blanks
+	BlameModelBlanksColumn = "blanks"
+	// BlameModelChangeDateColumn is the column json value change_date
+	BlameModelChangeDateColumn = "change_date"
+	// BlameModelChangeDateEpochColumn is the column json value epoch
+	BlameModelChangeDateEpochColumn = "epoch"
+	// BlameModelChangeDateOffsetColumn is the column json value offset
+	BlameModelChangeDateOffsetColumn = "offset"
+	// BlameModelChangeDateRfc3339Column is the column json value rfc3339
+	BlameModelChangeDateRfc3339Column = "rfc3339"
+	// BlameModelCommentsColumn is the column json value comments
+	BlameModelCommentsColumn = "comments"
+	// BlameModelCommitIDColumn is the column json value commit_id
+	BlameModelCommitIDColumn = "commit_id"
+	// BlameModelComplexityColumn is the column json value complexity
+	BlameModelComplexityColumn = "complexity"
+	// BlameModelCustomerIDColumn is the column json value customer_id
+	BlameModelCustomerIDColumn = "customer_id"
+	// BlameModelExcludedColumn is the column json value excluded
+	BlameModelExcludedColumn = "excluded"
+	// BlameModelExcludedReasonColumn is the column json value excluded_reason
+	BlameModelExcludedReasonColumn = "excluded_reason"
+	// BlameModelFilenameColumn is the column json value filename
+	BlameModelFilenameColumn = "filename"
+	// BlameModelIDColumn is the column json value id
+	BlameModelIDColumn = "id"
+	// BlameModelLanguageColumn is the column json value language
+	BlameModelLanguageColumn = "language"
+	// BlameModelLicenseColumn is the column json value license
+	BlameModelLicenseColumn = "license"
+	// BlameModelLinesColumn is the column json value lines
+	BlameModelLinesColumn = "lines"
+	// BlameModelLinesAuthorRefIDColumn is the column json value author_ref_id
+	BlameModelLinesAuthorRefIDColumn = "author_ref_id"
+	// BlameModelLinesBlankColumn is the column json value blank
+	BlameModelLinesBlankColumn = "blank"
+	// BlameModelLinesCodeColumn is the column json value code
+	BlameModelLinesCodeColumn = "code"
+	// BlameModelLinesCommentColumn is the column json value comment
+	BlameModelLinesCommentColumn = "comment"
+	// BlameModelLinesDateColumn is the column json value date
+	BlameModelLinesDateColumn = "date"
+	// BlameModelLinesShaColumn is the column json value sha
+	BlameModelLinesShaColumn = "sha"
+	// BlameModelLocColumn is the column json value loc
+	BlameModelLocColumn = "loc"
+	// BlameModelRefIDColumn is the column json value ref_id
+	BlameModelRefIDColumn = "ref_id"
+	// BlameModelRefTypeColumn is the column json value ref_type
+	BlameModelRefTypeColumn = "ref_type"
+	// BlameModelRepoIDColumn is the column json value repo_id
+	BlameModelRepoIDColumn = "repo_id"
+	// BlameModelShaColumn is the column json value sha
+	BlameModelShaColumn = "sha"
+	// BlameModelSizeColumn is the column json value size
+	BlameModelSizeColumn = "size"
+	// BlameModelSlocColumn is the column json value sloc
+	BlameModelSlocColumn = "sloc"
+	// BlameModelStatusColumn is the column json value status
+	BlameModelStatusColumn = "status"
+)
+
 // BlameChangeDate represents the object structure for change_date
 type BlameChangeDate struct {
 	// Epoch the date in epoch format
@@ -348,11 +411,11 @@ func (v BlameStatus) String() string {
 }
 
 const (
-	// StatusAdded is the enumeration value for added
+	// BlameStatusAdded is the enumeration value for added
 	BlameStatusAdded BlameStatus = 0
-	// StatusModified is the enumeration value for modified
+	// BlameStatusModified is the enumeration value for modified
 	BlameStatusModified BlameStatus = 1
-	// StatusRemoved is the enumeration value for removed
+	// BlameStatusRemoved is the enumeration value for removed
 	BlameStatusRemoved BlameStatus = 2
 )
 
@@ -575,6 +638,12 @@ func (o *Blame) UnmarshalJSON(data []byte) error {
 func (o *Blame) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Blame) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Blame objects are equal

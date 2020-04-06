@@ -30,6 +30,95 @@ const (
 	RepoResponseModelName datamodel.ModelNameType = "agent.RepoResponse"
 )
 
+const (
+	// RepoResponseModelArchitectureColumn is the column json value architecture
+	RepoResponseModelArchitectureColumn = "architecture"
+	// RepoResponseModelCustomerIDColumn is the column json value customer_id
+	RepoResponseModelCustomerIDColumn = "customer_id"
+	// RepoResponseModelDataColumn is the column json value data
+	RepoResponseModelDataColumn = "data"
+	// RepoResponseModelDistroColumn is the column json value distro
+	RepoResponseModelDistroColumn = "distro"
+	// RepoResponseModelErrorColumn is the column json value error
+	RepoResponseModelErrorColumn = "error"
+	// RepoResponseModelEventDateColumn is the column json value event_date
+	RepoResponseModelEventDateColumn = "event_date"
+	// RepoResponseModelEventDateEpochColumn is the column json value epoch
+	RepoResponseModelEventDateEpochColumn = "epoch"
+	// RepoResponseModelEventDateOffsetColumn is the column json value offset
+	RepoResponseModelEventDateOffsetColumn = "offset"
+	// RepoResponseModelEventDateRfc3339Column is the column json value rfc3339
+	RepoResponseModelEventDateRfc3339Column = "rfc3339"
+	// RepoResponseModelFreeSpaceColumn is the column json value free_space
+	RepoResponseModelFreeSpaceColumn = "free_space"
+	// RepoResponseModelGoVersionColumn is the column json value go_version
+	RepoResponseModelGoVersionColumn = "go_version"
+	// RepoResponseModelHostnameColumn is the column json value hostname
+	RepoResponseModelHostnameColumn = "hostname"
+	// RepoResponseModelIDColumn is the column json value id
+	RepoResponseModelIDColumn = "id"
+	// RepoResponseModelIntegrationIDColumn is the column json value integration_id
+	RepoResponseModelIntegrationIDColumn = "integration_id"
+	// RepoResponseModelLastExportDateColumn is the column json value last_export_date
+	RepoResponseModelLastExportDateColumn = "last_export_date"
+	// RepoResponseModelLastExportDateEpochColumn is the column json value epoch
+	RepoResponseModelLastExportDateEpochColumn = "epoch"
+	// RepoResponseModelLastExportDateOffsetColumn is the column json value offset
+	RepoResponseModelLastExportDateOffsetColumn = "offset"
+	// RepoResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	RepoResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// RepoResponseModelMemoryColumn is the column json value memory
+	RepoResponseModelMemoryColumn = "memory"
+	// RepoResponseModelMessageColumn is the column json value message
+	RepoResponseModelMessageColumn = "message"
+	// RepoResponseModelNumCPUColumn is the column json value num_cpu
+	RepoResponseModelNumCPUColumn = "num_cpu"
+	// RepoResponseModelOSColumn is the column json value os
+	RepoResponseModelOSColumn = "os"
+	// RepoResponseModelRefIDColumn is the column json value ref_id
+	RepoResponseModelRefIDColumn = "ref_id"
+	// RepoResponseModelRefTypeColumn is the column json value ref_type
+	RepoResponseModelRefTypeColumn = "ref_type"
+	// RepoResponseModelReposColumn is the column json value repos
+	RepoResponseModelReposColumn = "repos"
+	// RepoResponseModelReposActiveColumn is the column json value active
+	RepoResponseModelReposActiveColumn = "active"
+	// RepoResponseModelReposCreatedDateColumn is the column json value created_date
+	RepoResponseModelReposCreatedDateColumn = "created_date"
+	// RepoResponseModelReposCreatedDateEpochColumn is the column json value epoch
+	RepoResponseModelReposCreatedDateEpochColumn = "epoch"
+	// RepoResponseModelReposCreatedDateOffsetColumn is the column json value offset
+	RepoResponseModelReposCreatedDateOffsetColumn = "offset"
+	// RepoResponseModelReposCreatedDateRfc3339Column is the column json value rfc3339
+	RepoResponseModelReposCreatedDateRfc3339Column = "rfc3339"
+	// RepoResponseModelReposDescriptionColumn is the column json value description
+	RepoResponseModelReposDescriptionColumn = "description"
+	// RepoResponseModelReposErrorColumn is the column json value error
+	RepoResponseModelReposErrorColumn = "error"
+	// RepoResponseModelReposLanguageColumn is the column json value language
+	RepoResponseModelReposLanguageColumn = "language"
+	// RepoResponseModelReposNameColumn is the column json value name
+	RepoResponseModelReposNameColumn = "name"
+	// RepoResponseModelReposRefIDColumn is the column json value ref_id
+	RepoResponseModelReposRefIDColumn = "ref_id"
+	// RepoResponseModelReposRefTypeColumn is the column json value ref_type
+	RepoResponseModelReposRefTypeColumn = "ref_type"
+	// RepoResponseModelRequestIDColumn is the column json value request_id
+	RepoResponseModelRequestIDColumn = "request_id"
+	// RepoResponseModelSuccessColumn is the column json value success
+	RepoResponseModelSuccessColumn = "success"
+	// RepoResponseModelSystemIDColumn is the column json value system_id
+	RepoResponseModelSystemIDColumn = "system_id"
+	// RepoResponseModelTypeColumn is the column json value type
+	RepoResponseModelTypeColumn = "type"
+	// RepoResponseModelUptimeColumn is the column json value uptime
+	RepoResponseModelUptimeColumn = "uptime"
+	// RepoResponseModelUUIDColumn is the column json value uuid
+	RepoResponseModelUUIDColumn = "uuid"
+	// RepoResponseModelVersionColumn is the column json value version
+	RepoResponseModelVersionColumn = "version"
+)
+
 // RepoResponseEventDate represents the object structure for event_date
 type RepoResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -381,9 +470,9 @@ func (v RepoResponseReposError) String() string {
 }
 
 const (
-	// ReposErrorNONE is the enumeration value for NONE
+	// RepoResponseReposErrorNONE is the enumeration value for NONE
 	RepoResponseReposErrorNONE RepoResponseReposError = 0
-	// ReposErrorPERMISSIONS is the enumeration value for PERMISSIONS
+	// RepoResponseReposErrorPERMISSIONS is the enumeration value for PERMISSIONS
 	RepoResponseReposErrorPERMISSIONS RepoResponseReposError = 1
 )
 
@@ -787,35 +876,35 @@ func (v RepoResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// RepoResponseTypeEnroll is the enumeration value for enroll
 	RepoResponseTypeEnroll RepoResponseType = 0
-	// TypePing is the enumeration value for ping
+	// RepoResponseTypePing is the enumeration value for ping
 	RepoResponseTypePing RepoResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// RepoResponseTypeCrash is the enumeration value for crash
 	RepoResponseTypeCrash RepoResponseType = 2
-	// TypeLog is the enumeration value for log
+	// RepoResponseTypeLog is the enumeration value for log
 	RepoResponseTypeLog RepoResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// RepoResponseTypeIntegration is the enumeration value for integration
 	RepoResponseTypeIntegration RepoResponseType = 4
-	// TypeExport is the enumeration value for export
+	// RepoResponseTypeExport is the enumeration value for export
 	RepoResponseTypeExport RepoResponseType = 5
-	// TypeProject is the enumeration value for project
+	// RepoResponseTypeProject is the enumeration value for project
 	RepoResponseTypeProject RepoResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// RepoResponseTypeRepo is the enumeration value for repo
 	RepoResponseTypeRepo RepoResponseType = 7
-	// TypeUser is the enumeration value for user
+	// RepoResponseTypeUser is the enumeration value for user
 	RepoResponseTypeUser RepoResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// RepoResponseTypeUninstall is the enumeration value for uninstall
 	RepoResponseTypeUninstall RepoResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// RepoResponseTypeUpgrade is the enumeration value for upgrade
 	RepoResponseTypeUpgrade RepoResponseType = 10
-	// TypeStart is the enumeration value for start
+	// RepoResponseTypeStart is the enumeration value for start
 	RepoResponseTypeStart RepoResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// RepoResponseTypeStop is the enumeration value for stop
 	RepoResponseTypeStop RepoResponseType = 12
-	// TypePause is the enumeration value for pause
+	// RepoResponseTypePause is the enumeration value for pause
 	RepoResponseTypePause RepoResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// RepoResponseTypeResume is the enumeration value for resume
 	RepoResponseTypeResume RepoResponseType = 14
 )
 
@@ -1055,6 +1144,12 @@ func (o *RepoResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *RepoResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two RepoResponse objects are equal
 func (o *RepoResponse) IsEqual(other *RepoResponse) bool {
 	return o.Hash() == other.Hash()
@@ -1210,25 +1305,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1338,25 +1414,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

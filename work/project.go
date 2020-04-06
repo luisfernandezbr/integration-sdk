@@ -28,6 +28,31 @@ const (
 	ProjectModelName datamodel.ModelNameType = "work.Project"
 )
 
+const (
+	// ProjectModelActiveColumn is the column json value active
+	ProjectModelActiveColumn = "active"
+	// ProjectModelCategoryColumn is the column json value category
+	ProjectModelCategoryColumn = "category"
+	// ProjectModelCustomerIDColumn is the column json value customer_id
+	ProjectModelCustomerIDColumn = "customer_id"
+	// ProjectModelDescriptionColumn is the column json value description
+	ProjectModelDescriptionColumn = "description"
+	// ProjectModelIDColumn is the column json value id
+	ProjectModelIDColumn = "id"
+	// ProjectModelIdentifierColumn is the column json value identifier
+	ProjectModelIdentifierColumn = "identifier"
+	// ProjectModelNameColumn is the column json value name
+	ProjectModelNameColumn = "name"
+	// ProjectModelRefIDColumn is the column json value ref_id
+	ProjectModelRefIDColumn = "ref_id"
+	// ProjectModelRefTypeColumn is the column json value ref_type
+	ProjectModelRefTypeColumn = "ref_type"
+	// ProjectModelUpdatedAtColumn is the column json value updated_ts
+	ProjectModelUpdatedAtColumn = "updated_ts"
+	// ProjectModelURLColumn is the column json value url
+	ProjectModelURLColumn = "url"
+)
+
 // Project the project holds work
 type Project struct {
 	// Active the status of the project
@@ -256,6 +281,12 @@ func (o *Project) UnmarshalJSON(data []byte) error {
 func (o *Project) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Project) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Project objects are equal

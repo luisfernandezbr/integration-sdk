@@ -32,6 +32,103 @@ const (
 	WorkStatusResponseModelName datamodel.ModelNameType = "agent.WorkStatusResponse"
 )
 
+const (
+	// WorkStatusResponseModelArchitectureColumn is the column json value architecture
+	WorkStatusResponseModelArchitectureColumn = "architecture"
+	// WorkStatusResponseModelCustomerIDColumn is the column json value customer_id
+	WorkStatusResponseModelCustomerIDColumn = "customer_id"
+	// WorkStatusResponseModelDataColumn is the column json value data
+	WorkStatusResponseModelDataColumn = "data"
+	// WorkStatusResponseModelDistroColumn is the column json value distro
+	WorkStatusResponseModelDistroColumn = "distro"
+	// WorkStatusResponseModelErrorColumn is the column json value error
+	WorkStatusResponseModelErrorColumn = "error"
+	// WorkStatusResponseModelEventDateColumn is the column json value event_date
+	WorkStatusResponseModelEventDateColumn = "event_date"
+	// WorkStatusResponseModelEventDateEpochColumn is the column json value epoch
+	WorkStatusResponseModelEventDateEpochColumn = "epoch"
+	// WorkStatusResponseModelEventDateOffsetColumn is the column json value offset
+	WorkStatusResponseModelEventDateOffsetColumn = "offset"
+	// WorkStatusResponseModelEventDateRfc3339Column is the column json value rfc3339
+	WorkStatusResponseModelEventDateRfc3339Column = "rfc3339"
+	// WorkStatusResponseModelFreeSpaceColumn is the column json value free_space
+	WorkStatusResponseModelFreeSpaceColumn = "free_space"
+	// WorkStatusResponseModelGoVersionColumn is the column json value go_version
+	WorkStatusResponseModelGoVersionColumn = "go_version"
+	// WorkStatusResponseModelHostnameColumn is the column json value hostname
+	WorkStatusResponseModelHostnameColumn = "hostname"
+	// WorkStatusResponseModelIDColumn is the column json value id
+	WorkStatusResponseModelIDColumn = "id"
+	// WorkStatusResponseModelIntegrationIDColumn is the column json value integration_id
+	WorkStatusResponseModelIntegrationIDColumn = "integration_id"
+	// WorkStatusResponseModelLastExportDateColumn is the column json value last_export_date
+	WorkStatusResponseModelLastExportDateColumn = "last_export_date"
+	// WorkStatusResponseModelLastExportDateEpochColumn is the column json value epoch
+	WorkStatusResponseModelLastExportDateEpochColumn = "epoch"
+	// WorkStatusResponseModelLastExportDateOffsetColumn is the column json value offset
+	WorkStatusResponseModelLastExportDateOffsetColumn = "offset"
+	// WorkStatusResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	WorkStatusResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// WorkStatusResponseModelMemoryColumn is the column json value memory
+	WorkStatusResponseModelMemoryColumn = "memory"
+	// WorkStatusResponseModelMessageColumn is the column json value message
+	WorkStatusResponseModelMessageColumn = "message"
+	// WorkStatusResponseModelNumCPUColumn is the column json value num_cpu
+	WorkStatusResponseModelNumCPUColumn = "num_cpu"
+	// WorkStatusResponseModelOSColumn is the column json value os
+	WorkStatusResponseModelOSColumn = "os"
+	// WorkStatusResponseModelRefIDColumn is the column json value ref_id
+	WorkStatusResponseModelRefIDColumn = "ref_id"
+	// WorkStatusResponseModelRefTypeColumn is the column json value ref_type
+	WorkStatusResponseModelRefTypeColumn = "ref_type"
+	// WorkStatusResponseModelRequestIDColumn is the column json value request_id
+	WorkStatusResponseModelRequestIDColumn = "request_id"
+	// WorkStatusResponseModelSuccessColumn is the column json value success
+	WorkStatusResponseModelSuccessColumn = "success"
+	// WorkStatusResponseModelSystemIDColumn is the column json value system_id
+	WorkStatusResponseModelSystemIDColumn = "system_id"
+	// WorkStatusResponseModelTypeColumn is the column json value type
+	WorkStatusResponseModelTypeColumn = "type"
+	// WorkStatusResponseModelUptimeColumn is the column json value uptime
+	WorkStatusResponseModelUptimeColumn = "uptime"
+	// WorkStatusResponseModelUUIDColumn is the column json value uuid
+	WorkStatusResponseModelUUIDColumn = "uuid"
+	// WorkStatusResponseModelVersionColumn is the column json value version
+	WorkStatusResponseModelVersionColumn = "version"
+	// WorkStatusResponseModelWorkConfigColumn is the column json value work_config
+	WorkStatusResponseModelWorkConfigColumn = "work_config"
+	// WorkStatusResponseModelWorkConfigCustomerIDColumn is the column json value customer_id
+	WorkStatusResponseModelWorkConfigCustomerIDColumn = "customer_id"
+	// WorkStatusResponseModelWorkConfigIDColumn is the column json value id
+	WorkStatusResponseModelWorkConfigIDColumn = "id"
+	// WorkStatusResponseModelWorkConfigIntegrationIDColumn is the column json value integration_id
+	WorkStatusResponseModelWorkConfigIntegrationIDColumn = "integration_id"
+	// WorkStatusResponseModelWorkConfigRefIDColumn is the column json value ref_id
+	WorkStatusResponseModelWorkConfigRefIDColumn = "ref_id"
+	// WorkStatusResponseModelWorkConfigRefTypeColumn is the column json value ref_type
+	WorkStatusResponseModelWorkConfigRefTypeColumn = "ref_type"
+	// WorkStatusResponseModelWorkConfigStatusesColumn is the column json value statuses
+	WorkStatusResponseModelWorkConfigStatusesColumn = "statuses"
+	// WorkStatusResponseModelWorkConfigStatusesOpenStatusColumn is the column json value open_status
+	WorkStatusResponseModelWorkConfigStatusesOpenStatusColumn = "open_status"
+	// WorkStatusResponseModelWorkConfigStatusesInProgressStatusColumn is the column json value in_progress_status
+	WorkStatusResponseModelWorkConfigStatusesInProgressStatusColumn = "in_progress_status"
+	// WorkStatusResponseModelWorkConfigStatusesInReviewStatusColumn is the column json value in_review_status
+	WorkStatusResponseModelWorkConfigStatusesInReviewStatusColumn = "in_review_status"
+	// WorkStatusResponseModelWorkConfigStatusesReleasedStatusColumn is the column json value released_status
+	WorkStatusResponseModelWorkConfigStatusesReleasedStatusColumn = "released_status"
+	// WorkStatusResponseModelWorkConfigStatusesReopenedStatusColumn is the column json value reopened_status
+	WorkStatusResponseModelWorkConfigStatusesReopenedStatusColumn = "reopened_status"
+	// WorkStatusResponseModelWorkConfigStatusesClosedStatusColumn is the column json value closed_status
+	WorkStatusResponseModelWorkConfigStatusesClosedStatusColumn = "closed_status"
+	// WorkStatusResponseModelWorkConfigTopLevelIssueColumn is the column json value top_level_issue
+	WorkStatusResponseModelWorkConfigTopLevelIssueColumn = "top_level_issue"
+	// WorkStatusResponseModelWorkConfigTopLevelIssueNameColumn is the column json value name
+	WorkStatusResponseModelWorkConfigTopLevelIssueNameColumn = "name"
+	// WorkStatusResponseModelWorkConfigTopLevelIssueTypeColumn is the column json value type
+	WorkStatusResponseModelWorkConfigTopLevelIssueTypeColumn = "type"
+)
+
 // WorkStatusResponseEventDate represents the object structure for event_date
 type WorkStatusResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -388,35 +485,35 @@ func (v WorkStatusResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// WorkStatusResponseTypeEnroll is the enumeration value for enroll
 	WorkStatusResponseTypeEnroll WorkStatusResponseType = 0
-	// TypePing is the enumeration value for ping
+	// WorkStatusResponseTypePing is the enumeration value for ping
 	WorkStatusResponseTypePing WorkStatusResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// WorkStatusResponseTypeCrash is the enumeration value for crash
 	WorkStatusResponseTypeCrash WorkStatusResponseType = 2
-	// TypeLog is the enumeration value for log
+	// WorkStatusResponseTypeLog is the enumeration value for log
 	WorkStatusResponseTypeLog WorkStatusResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// WorkStatusResponseTypeIntegration is the enumeration value for integration
 	WorkStatusResponseTypeIntegration WorkStatusResponseType = 4
-	// TypeExport is the enumeration value for export
+	// WorkStatusResponseTypeExport is the enumeration value for export
 	WorkStatusResponseTypeExport WorkStatusResponseType = 5
-	// TypeProject is the enumeration value for project
+	// WorkStatusResponseTypeProject is the enumeration value for project
 	WorkStatusResponseTypeProject WorkStatusResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// WorkStatusResponseTypeRepo is the enumeration value for repo
 	WorkStatusResponseTypeRepo WorkStatusResponseType = 7
-	// TypeUser is the enumeration value for user
+	// WorkStatusResponseTypeUser is the enumeration value for user
 	WorkStatusResponseTypeUser WorkStatusResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// WorkStatusResponseTypeUninstall is the enumeration value for uninstall
 	WorkStatusResponseTypeUninstall WorkStatusResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// WorkStatusResponseTypeUpgrade is the enumeration value for upgrade
 	WorkStatusResponseTypeUpgrade WorkStatusResponseType = 10
-	// TypeStart is the enumeration value for start
+	// WorkStatusResponseTypeStart is the enumeration value for start
 	WorkStatusResponseTypeStart WorkStatusResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// WorkStatusResponseTypeStop is the enumeration value for stop
 	WorkStatusResponseTypeStop WorkStatusResponseType = 12
-	// TypePause is the enumeration value for pause
+	// WorkStatusResponseTypePause is the enumeration value for pause
 	WorkStatusResponseTypePause WorkStatusResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// WorkStatusResponseTypeResume is the enumeration value for resume
 	WorkStatusResponseTypeResume WorkStatusResponseType = 14
 )
 
@@ -1299,6 +1396,12 @@ func (o *WorkStatusResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *WorkStatusResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two WorkStatusResponse objects are equal
 func (o *WorkStatusResponse) IsEqual(other *WorkStatusResponse) bool {
 	return o.Hash() == other.Hash()
@@ -1454,25 +1557,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1582,25 +1666,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

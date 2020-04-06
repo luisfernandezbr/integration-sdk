@@ -32,6 +32,181 @@ const (
 	ExportRequestModelName datamodel.ModelNameType = "agent.ExportRequest"
 )
 
+const (
+	// ExportRequestModelCustomerIDColumn is the column json value customer_id
+	ExportRequestModelCustomerIDColumn = "customer_id"
+	// ExportRequestModelIDColumn is the column json value id
+	ExportRequestModelIDColumn = "id"
+	// ExportRequestModelIntegrationsColumn is the column json value integrations
+	ExportRequestModelIntegrationsColumn = "integrations"
+	// ExportRequestModelIntegrationsActiveColumn is the column json value active
+	ExportRequestModelIntegrationsActiveColumn = "active"
+	// ExportRequestModelIntegrationsAuthorizationColumn is the column json value authorization
+	ExportRequestModelIntegrationsAuthorizationColumn = "authorization"
+	// ExportRequestModelIntegrationsAuthorizationAccessTokenColumn is the column json value access_token
+	ExportRequestModelIntegrationsAuthorizationAccessTokenColumn = "access_token"
+	// ExportRequestModelIntegrationsAuthorizationRefreshTokenColumn is the column json value refresh_token
+	ExportRequestModelIntegrationsAuthorizationRefreshTokenColumn = "refresh_token"
+	// ExportRequestModelIntegrationsAuthorizationURLColumn is the column json value url
+	ExportRequestModelIntegrationsAuthorizationURLColumn = "url"
+	// ExportRequestModelIntegrationsAuthorizationUsernameColumn is the column json value username
+	ExportRequestModelIntegrationsAuthorizationUsernameColumn = "username"
+	// ExportRequestModelIntegrationsAuthorizationPasswordColumn is the column json value password
+	ExportRequestModelIntegrationsAuthorizationPasswordColumn = "password"
+	// ExportRequestModelIntegrationsAuthorizationAPITokenColumn is the column json value api_token
+	ExportRequestModelIntegrationsAuthorizationAPITokenColumn = "api_token"
+	// ExportRequestModelIntegrationsAuthorizationCollectionNameColumn is the column json value collection_name
+	ExportRequestModelIntegrationsAuthorizationCollectionNameColumn = "collection_name"
+	// ExportRequestModelIntegrationsAuthorizationAPIKeyColumn is the column json value api_key
+	ExportRequestModelIntegrationsAuthorizationAPIKeyColumn = "api_key"
+	// ExportRequestModelIntegrationsAuthorizationAuthorizationColumn is the column json value authorization
+	ExportRequestModelIntegrationsAuthorizationAuthorizationColumn = "authorization"
+	// ExportRequestModelIntegrationsAuthorizationHostnameColumn is the column json value hostname
+	ExportRequestModelIntegrationsAuthorizationHostnameColumn = "hostname"
+	// ExportRequestModelIntegrationsAuthorizationAPIVersionColumn is the column json value api_version
+	ExportRequestModelIntegrationsAuthorizationAPIVersionColumn = "api_version"
+	// ExportRequestModelIntegrationsAuthorizationOrganizationColumn is the column json value organization
+	ExportRequestModelIntegrationsAuthorizationOrganizationColumn = "organization"
+	// ExportRequestModelIntegrationsCreatedByProfileIDColumn is the column json value created_by_profile_id
+	ExportRequestModelIntegrationsCreatedByProfileIDColumn = "created_by_profile_id"
+	// ExportRequestModelIntegrationsCreatedByUserIDColumn is the column json value created_by_user_id
+	ExportRequestModelIntegrationsCreatedByUserIDColumn = "created_by_user_id"
+	// ExportRequestModelIntegrationsCustomerIDColumn is the column json value customer_id
+	ExportRequestModelIntegrationsCustomerIDColumn = "customer_id"
+	// ExportRequestModelIntegrationsEntityErrorsColumn is the column json value entity_errors
+	ExportRequestModelIntegrationsEntityErrorsColumn = "entity_errors"
+	// ExportRequestModelIntegrationsEntityErrorsIDColumn is the column json value id
+	ExportRequestModelIntegrationsEntityErrorsIDColumn = "id"
+	// ExportRequestModelIntegrationsEntityErrorsRefIDColumn is the column json value ref_id
+	ExportRequestModelIntegrationsEntityErrorsRefIDColumn = "ref_id"
+	// ExportRequestModelIntegrationsEntityErrorsErrorColumn is the column json value error
+	ExportRequestModelIntegrationsEntityErrorsErrorColumn = "error"
+	// ExportRequestModelIntegrationsErrorMessageColumn is the column json value error_message
+	ExportRequestModelIntegrationsErrorMessageColumn = "error_message"
+	// ExportRequestModelIntegrationsErroredColumn is the column json value errored
+	ExportRequestModelIntegrationsErroredColumn = "errored"
+	// ExportRequestModelIntegrationsExclusionsColumn is the column json value exclusions
+	ExportRequestModelIntegrationsExclusionsColumn = "exclusions"
+	// ExportRequestModelIntegrationsExportableColumn is the column json value exportable
+	ExportRequestModelIntegrationsExportableColumn = "exportable"
+	// ExportRequestModelIntegrationsIDColumn is the column json value id
+	ExportRequestModelIntegrationsIDColumn = "id"
+	// ExportRequestModelIntegrationsInclusionsColumn is the column json value inclusions
+	ExportRequestModelIntegrationsInclusionsColumn = "inclusions"
+	// ExportRequestModelIntegrationsLastExportCompletedDateColumn is the column json value last_export_completed_date
+	ExportRequestModelIntegrationsLastExportCompletedDateColumn = "last_export_completed_date"
+	// ExportRequestModelIntegrationsLastExportCompletedDateEpochColumn is the column json value epoch
+	ExportRequestModelIntegrationsLastExportCompletedDateEpochColumn = "epoch"
+	// ExportRequestModelIntegrationsLastExportCompletedDateOffsetColumn is the column json value offset
+	ExportRequestModelIntegrationsLastExportCompletedDateOffsetColumn = "offset"
+	// ExportRequestModelIntegrationsLastExportCompletedDateRfc3339Column is the column json value rfc3339
+	ExportRequestModelIntegrationsLastExportCompletedDateRfc3339Column = "rfc3339"
+	// ExportRequestModelIntegrationsLastExportRequestedDateColumn is the column json value last_export_requested_date
+	ExportRequestModelIntegrationsLastExportRequestedDateColumn = "last_export_requested_date"
+	// ExportRequestModelIntegrationsLastExportRequestedDateEpochColumn is the column json value epoch
+	ExportRequestModelIntegrationsLastExportRequestedDateEpochColumn = "epoch"
+	// ExportRequestModelIntegrationsLastExportRequestedDateOffsetColumn is the column json value offset
+	ExportRequestModelIntegrationsLastExportRequestedDateOffsetColumn = "offset"
+	// ExportRequestModelIntegrationsLastExportRequestedDateRfc3339Column is the column json value rfc3339
+	ExportRequestModelIntegrationsLastExportRequestedDateRfc3339Column = "rfc3339"
+	// ExportRequestModelIntegrationsLastProcessingCompletedDateColumn is the column json value last_processing_completed_date
+	ExportRequestModelIntegrationsLastProcessingCompletedDateColumn = "last_processing_completed_date"
+	// ExportRequestModelIntegrationsLastProcessingCompletedDateEpochColumn is the column json value epoch
+	ExportRequestModelIntegrationsLastProcessingCompletedDateEpochColumn = "epoch"
+	// ExportRequestModelIntegrationsLastProcessingCompletedDateOffsetColumn is the column json value offset
+	ExportRequestModelIntegrationsLastProcessingCompletedDateOffsetColumn = "offset"
+	// ExportRequestModelIntegrationsLastProcessingCompletedDateRfc3339Column is the column json value rfc3339
+	ExportRequestModelIntegrationsLastProcessingCompletedDateRfc3339Column = "rfc3339"
+	// ExportRequestModelIntegrationsLastProcessingStartedDateColumn is the column json value last_processing_started_date
+	ExportRequestModelIntegrationsLastProcessingStartedDateColumn = "last_processing_started_date"
+	// ExportRequestModelIntegrationsLastProcessingStartedDateEpochColumn is the column json value epoch
+	ExportRequestModelIntegrationsLastProcessingStartedDateEpochColumn = "epoch"
+	// ExportRequestModelIntegrationsLastProcessingStartedDateOffsetColumn is the column json value offset
+	ExportRequestModelIntegrationsLastProcessingStartedDateOffsetColumn = "offset"
+	// ExportRequestModelIntegrationsLastProcessingStartedDateRfc3339Column is the column json value rfc3339
+	ExportRequestModelIntegrationsLastProcessingStartedDateRfc3339Column = "rfc3339"
+	// ExportRequestModelIntegrationsLocationColumn is the column json value location
+	ExportRequestModelIntegrationsLocationColumn = "location"
+	// ExportRequestModelIntegrationsNameColumn is the column json value name
+	ExportRequestModelIntegrationsNameColumn = "name"
+	// ExportRequestModelIntegrationsOnboardCompletedDateColumn is the column json value onboard_completed_date
+	ExportRequestModelIntegrationsOnboardCompletedDateColumn = "onboard_completed_date"
+	// ExportRequestModelIntegrationsOnboardCompletedDateEpochColumn is the column json value epoch
+	ExportRequestModelIntegrationsOnboardCompletedDateEpochColumn = "epoch"
+	// ExportRequestModelIntegrationsOnboardCompletedDateOffsetColumn is the column json value offset
+	ExportRequestModelIntegrationsOnboardCompletedDateOffsetColumn = "offset"
+	// ExportRequestModelIntegrationsOnboardCompletedDateRfc3339Column is the column json value rfc3339
+	ExportRequestModelIntegrationsOnboardCompletedDateRfc3339Column = "rfc3339"
+	// ExportRequestModelIntegrationsOnboardRequestedDateColumn is the column json value onboard_requested_date
+	ExportRequestModelIntegrationsOnboardRequestedDateColumn = "onboard_requested_date"
+	// ExportRequestModelIntegrationsOnboardRequestedDateEpochColumn is the column json value epoch
+	ExportRequestModelIntegrationsOnboardRequestedDateEpochColumn = "epoch"
+	// ExportRequestModelIntegrationsOnboardRequestedDateOffsetColumn is the column json value offset
+	ExportRequestModelIntegrationsOnboardRequestedDateOffsetColumn = "offset"
+	// ExportRequestModelIntegrationsOnboardRequestedDateRfc3339Column is the column json value rfc3339
+	ExportRequestModelIntegrationsOnboardRequestedDateRfc3339Column = "rfc3339"
+	// ExportRequestModelIntegrationsOnboardingColumn is the column json value onboarding
+	ExportRequestModelIntegrationsOnboardingColumn = "onboarding"
+	// ExportRequestModelIntegrationsOrganizationColumn is the column json value organization
+	ExportRequestModelIntegrationsOrganizationColumn = "organization"
+	// ExportRequestModelIntegrationsProcessedColumn is the column json value processed
+	ExportRequestModelIntegrationsProcessedColumn = "processed"
+	// ExportRequestModelIntegrationsRefIDColumn is the column json value ref_id
+	ExportRequestModelIntegrationsRefIDColumn = "ref_id"
+	// ExportRequestModelIntegrationsRefTypeColumn is the column json value ref_type
+	ExportRequestModelIntegrationsRefTypeColumn = "ref_type"
+	// ExportRequestModelIntegrationsServerVersionColumn is the column json value server_version
+	ExportRequestModelIntegrationsServerVersionColumn = "server_version"
+	// ExportRequestModelIntegrationsStateColumn is the column json value state
+	ExportRequestModelIntegrationsStateColumn = "state"
+	// ExportRequestModelIntegrationsSystemTypeColumn is the column json value system_type
+	ExportRequestModelIntegrationsSystemTypeColumn = "system_type"
+	// ExportRequestModelIntegrationsTeamIDColumn is the column json value team_id
+	ExportRequestModelIntegrationsTeamIDColumn = "team_id"
+	// ExportRequestModelIntegrationsThrottledColumn is the column json value throttled
+	ExportRequestModelIntegrationsThrottledColumn = "throttled"
+	// ExportRequestModelIntegrationsThrottledUntilColumn is the column json value throttled_until
+	ExportRequestModelIntegrationsThrottledUntilColumn = "throttled_until"
+	// ExportRequestModelIntegrationsThrottledUntilEpochColumn is the column json value epoch
+	ExportRequestModelIntegrationsThrottledUntilEpochColumn = "epoch"
+	// ExportRequestModelIntegrationsThrottledUntilOffsetColumn is the column json value offset
+	ExportRequestModelIntegrationsThrottledUntilOffsetColumn = "offset"
+	// ExportRequestModelIntegrationsThrottledUntilRfc3339Column is the column json value rfc3339
+	ExportRequestModelIntegrationsThrottledUntilRfc3339Column = "rfc3339"
+	// ExportRequestModelIntegrationsValidatedColumn is the column json value validated
+	ExportRequestModelIntegrationsValidatedColumn = "validated"
+	// ExportRequestModelIntegrationsValidatedDateColumn is the column json value validated_date
+	ExportRequestModelIntegrationsValidatedDateColumn = "validated_date"
+	// ExportRequestModelIntegrationsValidatedDateEpochColumn is the column json value epoch
+	ExportRequestModelIntegrationsValidatedDateEpochColumn = "epoch"
+	// ExportRequestModelIntegrationsValidatedDateOffsetColumn is the column json value offset
+	ExportRequestModelIntegrationsValidatedDateOffsetColumn = "offset"
+	// ExportRequestModelIntegrationsValidatedDateRfc3339Column is the column json value rfc3339
+	ExportRequestModelIntegrationsValidatedDateRfc3339Column = "rfc3339"
+	// ExportRequestModelIntegrationsValidationMessageColumn is the column json value validation_message
+	ExportRequestModelIntegrationsValidationMessageColumn = "validation_message"
+	// ExportRequestModelJobIDColumn is the column json value job_id
+	ExportRequestModelJobIDColumn = "job_id"
+	// ExportRequestModelRefIDColumn is the column json value ref_id
+	ExportRequestModelRefIDColumn = "ref_id"
+	// ExportRequestModelRefTypeColumn is the column json value ref_type
+	ExportRequestModelRefTypeColumn = "ref_type"
+	// ExportRequestModelReprocessHistoricalColumn is the column json value reprocess_historical
+	ExportRequestModelReprocessHistoricalColumn = "reprocess_historical"
+	// ExportRequestModelRequestDateColumn is the column json value request_date
+	ExportRequestModelRequestDateColumn = "request_date"
+	// ExportRequestModelRequestDateEpochColumn is the column json value epoch
+	ExportRequestModelRequestDateEpochColumn = "epoch"
+	// ExportRequestModelRequestDateOffsetColumn is the column json value offset
+	ExportRequestModelRequestDateOffsetColumn = "offset"
+	// ExportRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	ExportRequestModelRequestDateRfc3339Column = "rfc3339"
+	// ExportRequestModelUploadURLColumn is the column json value upload_url
+	ExportRequestModelUploadURLColumn = "upload_url"
+	// ExportRequestModelUUIDColumn is the column json value uuid
+	ExportRequestModelUUIDColumn = "uuid"
+)
+
 // ExportRequestIntegrationsAuthorization represents the object structure for authorization
 type ExportRequestIntegrationsAuthorization struct {
 	// AccessToken Access token
@@ -892,9 +1067,9 @@ func (v ExportRequestIntegrationsLocation) String() string {
 }
 
 const (
-	// IntegrationsLocationPrivate is the enumeration value for private
+	// ExportRequestIntegrationsLocationPrivate is the enumeration value for private
 	ExportRequestIntegrationsLocationPrivate ExportRequestIntegrationsLocation = 0
-	// IntegrationsLocationCloud is the enumeration value for cloud
+	// ExportRequestIntegrationsLocationCloud is the enumeration value for cloud
 	ExportRequestIntegrationsLocationCloud ExportRequestIntegrationsLocation = 1
 )
 
@@ -1158,11 +1333,11 @@ func (v ExportRequestIntegrationsState) String() string {
 }
 
 const (
-	// IntegrationsStateIdle is the enumeration value for idle
+	// ExportRequestIntegrationsStateIdle is the enumeration value for idle
 	ExportRequestIntegrationsStateIdle ExportRequestIntegrationsState = 0
-	// IntegrationsStateExporting is the enumeration value for exporting
+	// ExportRequestIntegrationsStateExporting is the enumeration value for exporting
 	ExportRequestIntegrationsStateExporting ExportRequestIntegrationsState = 1
-	// IntegrationsStateProcessing is the enumeration value for processing
+	// ExportRequestIntegrationsStateProcessing is the enumeration value for processing
 	ExportRequestIntegrationsStateProcessing ExportRequestIntegrationsState = 2
 )
 
@@ -1244,15 +1419,15 @@ func (v ExportRequestIntegrationsSystemType) String() string {
 }
 
 const (
-	// IntegrationsSystemTypeWork is the enumeration value for work
+	// ExportRequestIntegrationsSystemTypeWork is the enumeration value for work
 	ExportRequestIntegrationsSystemTypeWork ExportRequestIntegrationsSystemType = 0
-	// IntegrationsSystemTypeSourcecode is the enumeration value for sourcecode
+	// ExportRequestIntegrationsSystemTypeSourcecode is the enumeration value for sourcecode
 	ExportRequestIntegrationsSystemTypeSourcecode ExportRequestIntegrationsSystemType = 1
-	// IntegrationsSystemTypeCodequality is the enumeration value for codequality
+	// ExportRequestIntegrationsSystemTypeCodequality is the enumeration value for codequality
 	ExportRequestIntegrationsSystemTypeCodequality ExportRequestIntegrationsSystemType = 2
-	// IntegrationsSystemTypeCalendar is the enumeration value for calendar
+	// ExportRequestIntegrationsSystemTypeCalendar is the enumeration value for calendar
 	ExportRequestIntegrationsSystemTypeCalendar ExportRequestIntegrationsSystemType = 3
-	// IntegrationsSystemTypeUser is the enumeration value for user
+	// ExportRequestIntegrationsSystemTypeUser is the enumeration value for user
 	ExportRequestIntegrationsSystemTypeUser ExportRequestIntegrationsSystemType = 4
 )
 
@@ -2848,6 +3023,12 @@ func (o *ExportRequest) UnmarshalJSON(data []byte) error {
 func (o *ExportRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *ExportRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two ExportRequest objects are equal

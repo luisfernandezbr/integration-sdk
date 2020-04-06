@@ -28,6 +28,43 @@ const (
 	IntegrationMutationRequestModelName datamodel.ModelNameType = "agent.IntegrationMutationRequest"
 )
 
+const (
+	// IntegrationMutationRequestModelActionColumn is the column json value action
+	IntegrationMutationRequestModelActionColumn = "action"
+	// IntegrationMutationRequestModelAuthorizationColumn is the column json value authorization
+	IntegrationMutationRequestModelAuthorizationColumn = "authorization"
+	// IntegrationMutationRequestModelAuthorizationRefreshTokenColumn is the column json value refresh_token
+	IntegrationMutationRequestModelAuthorizationRefreshTokenColumn = "refresh_token"
+	// IntegrationMutationRequestModelAuthorizationURLColumn is the column json value url
+	IntegrationMutationRequestModelAuthorizationURLColumn = "url"
+	// IntegrationMutationRequestModelCustomerIDColumn is the column json value customer_id
+	IntegrationMutationRequestModelCustomerIDColumn = "customer_id"
+	// IntegrationMutationRequestModelDataColumn is the column json value data
+	IntegrationMutationRequestModelDataColumn = "data"
+	// IntegrationMutationRequestModelIDColumn is the column json value id
+	IntegrationMutationRequestModelIDColumn = "id"
+	// IntegrationMutationRequestModelIntegrationNameColumn is the column json value integration_name
+	IntegrationMutationRequestModelIntegrationNameColumn = "integration_name"
+	// IntegrationMutationRequestModelJobIDColumn is the column json value job_id
+	IntegrationMutationRequestModelJobIDColumn = "job_id"
+	// IntegrationMutationRequestModelRefIDColumn is the column json value ref_id
+	IntegrationMutationRequestModelRefIDColumn = "ref_id"
+	// IntegrationMutationRequestModelRefTypeColumn is the column json value ref_type
+	IntegrationMutationRequestModelRefTypeColumn = "ref_type"
+	// IntegrationMutationRequestModelRequestDateColumn is the column json value request_date
+	IntegrationMutationRequestModelRequestDateColumn = "request_date"
+	// IntegrationMutationRequestModelRequestDateEpochColumn is the column json value epoch
+	IntegrationMutationRequestModelRequestDateEpochColumn = "epoch"
+	// IntegrationMutationRequestModelRequestDateOffsetColumn is the column json value offset
+	IntegrationMutationRequestModelRequestDateOffsetColumn = "offset"
+	// IntegrationMutationRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	IntegrationMutationRequestModelRequestDateRfc3339Column = "rfc3339"
+	// IntegrationMutationRequestModelSystemTypeColumn is the column json value system_type
+	IntegrationMutationRequestModelSystemTypeColumn = "system_type"
+	// IntegrationMutationRequestModelUUIDColumn is the column json value uuid
+	IntegrationMutationRequestModelUUIDColumn = "uuid"
+)
+
 // IntegrationMutationRequestAction is the enumeration type for action
 type IntegrationMutationRequestAction int32
 
@@ -106,15 +143,15 @@ func (v IntegrationMutationRequestAction) String() string {
 }
 
 const (
-	// ActionIssueAddComment is the enumeration value for issue_add_comment
+	// IntegrationMutationRequestActionIssueAddComment is the enumeration value for issue_add_comment
 	IntegrationMutationRequestActionIssueAddComment IntegrationMutationRequestAction = 0
-	// ActionIssueSetTitle is the enumeration value for issue_set_title
+	// IntegrationMutationRequestActionIssueSetTitle is the enumeration value for issue_set_title
 	IntegrationMutationRequestActionIssueSetTitle IntegrationMutationRequestAction = 1
-	// ActionIssueSetStatus is the enumeration value for issue_set_status
+	// IntegrationMutationRequestActionIssueSetStatus is the enumeration value for issue_set_status
 	IntegrationMutationRequestActionIssueSetStatus IntegrationMutationRequestAction = 2
-	// ActionIssueSetPriority is the enumeration value for issue_set_priority
+	// IntegrationMutationRequestActionIssueSetPriority is the enumeration value for issue_set_priority
 	IntegrationMutationRequestActionIssueSetPriority IntegrationMutationRequestAction = 3
-	// ActionIssueSetAssignee is the enumeration value for issue_set_assignee
+	// IntegrationMutationRequestActionIssueSetAssignee is the enumeration value for issue_set_assignee
 	IntegrationMutationRequestActionIssueSetAssignee IntegrationMutationRequestAction = 4
 )
 
@@ -370,13 +407,13 @@ func (v IntegrationMutationRequestSystemType) String() string {
 }
 
 const (
-	// SystemTypeWork is the enumeration value for work
+	// IntegrationMutationRequestSystemTypeWork is the enumeration value for work
 	IntegrationMutationRequestSystemTypeWork IntegrationMutationRequestSystemType = 0
-	// SystemTypeSourcecode is the enumeration value for sourcecode
+	// IntegrationMutationRequestSystemTypeSourcecode is the enumeration value for sourcecode
 	IntegrationMutationRequestSystemTypeSourcecode IntegrationMutationRequestSystemType = 1
-	// SystemTypeCodequality is the enumeration value for codequality
+	// IntegrationMutationRequestSystemTypeCodequality is the enumeration value for codequality
 	IntegrationMutationRequestSystemTypeCodequality IntegrationMutationRequestSystemType = 2
-	// SystemTypeUser is the enumeration value for user
+	// IntegrationMutationRequestSystemTypeUser is the enumeration value for user
 	IntegrationMutationRequestSystemTypeUser IntegrationMutationRequestSystemType = 3
 )
 
@@ -579,6 +616,12 @@ func (o *IntegrationMutationRequest) UnmarshalJSON(data []byte) error {
 func (o *IntegrationMutationRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *IntegrationMutationRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two IntegrationMutationRequest objects are equal
@@ -815,6 +858,25 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

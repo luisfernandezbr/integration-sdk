@@ -28,6 +28,69 @@ const (
 	StopModelName datamodel.ModelNameType = "agent.Stop"
 )
 
+const (
+	// StopModelArchitectureColumn is the column json value architecture
+	StopModelArchitectureColumn = "architecture"
+	// StopModelCustomerIDColumn is the column json value customer_id
+	StopModelCustomerIDColumn = "customer_id"
+	// StopModelDataColumn is the column json value data
+	StopModelDataColumn = "data"
+	// StopModelDistroColumn is the column json value distro
+	StopModelDistroColumn = "distro"
+	// StopModelErrorColumn is the column json value error
+	StopModelErrorColumn = "error"
+	// StopModelEventDateColumn is the column json value event_date
+	StopModelEventDateColumn = "event_date"
+	// StopModelEventDateEpochColumn is the column json value epoch
+	StopModelEventDateEpochColumn = "epoch"
+	// StopModelEventDateOffsetColumn is the column json value offset
+	StopModelEventDateOffsetColumn = "offset"
+	// StopModelEventDateRfc3339Column is the column json value rfc3339
+	StopModelEventDateRfc3339Column = "rfc3339"
+	// StopModelFreeSpaceColumn is the column json value free_space
+	StopModelFreeSpaceColumn = "free_space"
+	// StopModelGoVersionColumn is the column json value go_version
+	StopModelGoVersionColumn = "go_version"
+	// StopModelHostnameColumn is the column json value hostname
+	StopModelHostnameColumn = "hostname"
+	// StopModelIDColumn is the column json value id
+	StopModelIDColumn = "id"
+	// StopModelLastExportDateColumn is the column json value last_export_date
+	StopModelLastExportDateColumn = "last_export_date"
+	// StopModelLastExportDateEpochColumn is the column json value epoch
+	StopModelLastExportDateEpochColumn = "epoch"
+	// StopModelLastExportDateOffsetColumn is the column json value offset
+	StopModelLastExportDateOffsetColumn = "offset"
+	// StopModelLastExportDateRfc3339Column is the column json value rfc3339
+	StopModelLastExportDateRfc3339Column = "rfc3339"
+	// StopModelMemoryColumn is the column json value memory
+	StopModelMemoryColumn = "memory"
+	// StopModelMessageColumn is the column json value message
+	StopModelMessageColumn = "message"
+	// StopModelNumCPUColumn is the column json value num_cpu
+	StopModelNumCPUColumn = "num_cpu"
+	// StopModelOSColumn is the column json value os
+	StopModelOSColumn = "os"
+	// StopModelRefIDColumn is the column json value ref_id
+	StopModelRefIDColumn = "ref_id"
+	// StopModelRefTypeColumn is the column json value ref_type
+	StopModelRefTypeColumn = "ref_type"
+	// StopModelRequestIDColumn is the column json value request_id
+	StopModelRequestIDColumn = "request_id"
+	// StopModelSuccessColumn is the column json value success
+	StopModelSuccessColumn = "success"
+	// StopModelSystemIDColumn is the column json value system_id
+	StopModelSystemIDColumn = "system_id"
+	// StopModelTypeColumn is the column json value type
+	StopModelTypeColumn = "type"
+	// StopModelUptimeColumn is the column json value uptime
+	StopModelUptimeColumn = "uptime"
+	// StopModelUUIDColumn is the column json value uuid
+	StopModelUUIDColumn = "uuid"
+	// StopModelVersionColumn is the column json value version
+	StopModelVersionColumn = "version"
+)
+
 // StopEventDate represents the object structure for event_date
 type StopEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +447,35 @@ func (v StopType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// StopTypeEnroll is the enumeration value for enroll
 	StopTypeEnroll StopType = 0
-	// TypePing is the enumeration value for ping
+	// StopTypePing is the enumeration value for ping
 	StopTypePing StopType = 1
-	// TypeCrash is the enumeration value for crash
+	// StopTypeCrash is the enumeration value for crash
 	StopTypeCrash StopType = 2
-	// TypeLog is the enumeration value for log
+	// StopTypeLog is the enumeration value for log
 	StopTypeLog StopType = 3
-	// TypeIntegration is the enumeration value for integration
+	// StopTypeIntegration is the enumeration value for integration
 	StopTypeIntegration StopType = 4
-	// TypeExport is the enumeration value for export
+	// StopTypeExport is the enumeration value for export
 	StopTypeExport StopType = 5
-	// TypeProject is the enumeration value for project
+	// StopTypeProject is the enumeration value for project
 	StopTypeProject StopType = 6
-	// TypeRepo is the enumeration value for repo
+	// StopTypeRepo is the enumeration value for repo
 	StopTypeRepo StopType = 7
-	// TypeUser is the enumeration value for user
+	// StopTypeUser is the enumeration value for user
 	StopTypeUser StopType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// StopTypeUninstall is the enumeration value for uninstall
 	StopTypeUninstall StopType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// StopTypeUpgrade is the enumeration value for upgrade
 	StopTypeUpgrade StopType = 10
-	// TypeStart is the enumeration value for start
+	// StopTypeStart is the enumeration value for start
 	StopTypeStart StopType = 11
-	// TypeStop is the enumeration value for stop
+	// StopTypeStop is the enumeration value for stop
 	StopTypeStop StopType = 12
-	// TypePause is the enumeration value for pause
+	// StopTypePause is the enumeration value for pause
 	StopTypePause StopType = 13
-	// TypeResume is the enumeration value for resume
+	// StopTypeResume is the enumeration value for resume
 	StopTypeResume StopType = 14
 )
 
@@ -638,6 +701,12 @@ func (o *Stop) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Stop) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two Stop objects are equal
 func (o *Stop) IsEqual(other *Stop) bool {
 	return o.Hash() == other.Hash()
@@ -791,6 +860,25 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -880,6 +968,25 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

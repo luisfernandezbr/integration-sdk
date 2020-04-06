@@ -32,6 +32,79 @@ const (
 	PullRequestModelName datamodel.ModelNameType = "sourcecode.PullRequest"
 )
 
+const (
+	// PullRequestModelBranchIDColumn is the column json value branch_id
+	PullRequestModelBranchIDColumn = "branch_id"
+	// PullRequestModelBranchNameColumn is the column json value branch_name
+	PullRequestModelBranchNameColumn = "branch_name"
+	// PullRequestModelClosedByRefIDColumn is the column json value closed_by_ref_id
+	PullRequestModelClosedByRefIDColumn = "closed_by_ref_id"
+	// PullRequestModelClosedDateColumn is the column json value closed_date
+	PullRequestModelClosedDateColumn = "closed_date"
+	// PullRequestModelClosedDateEpochColumn is the column json value epoch
+	PullRequestModelClosedDateEpochColumn = "epoch"
+	// PullRequestModelClosedDateOffsetColumn is the column json value offset
+	PullRequestModelClosedDateOffsetColumn = "offset"
+	// PullRequestModelClosedDateRfc3339Column is the column json value rfc3339
+	PullRequestModelClosedDateRfc3339Column = "rfc3339"
+	// PullRequestModelCommitIdsColumn is the column json value commit_ids
+	PullRequestModelCommitIdsColumn = "commit_ids"
+	// PullRequestModelCommitShasColumn is the column json value commit_shas
+	PullRequestModelCommitShasColumn = "commit_shas"
+	// PullRequestModelCreatedByRefIDColumn is the column json value created_by_ref_id
+	PullRequestModelCreatedByRefIDColumn = "created_by_ref_id"
+	// PullRequestModelCreatedDateColumn is the column json value created_date
+	PullRequestModelCreatedDateColumn = "created_date"
+	// PullRequestModelCreatedDateEpochColumn is the column json value epoch
+	PullRequestModelCreatedDateEpochColumn = "epoch"
+	// PullRequestModelCreatedDateOffsetColumn is the column json value offset
+	PullRequestModelCreatedDateOffsetColumn = "offset"
+	// PullRequestModelCreatedDateRfc3339Column is the column json value rfc3339
+	PullRequestModelCreatedDateRfc3339Column = "rfc3339"
+	// PullRequestModelCustomerIDColumn is the column json value customer_id
+	PullRequestModelCustomerIDColumn = "customer_id"
+	// PullRequestModelDescriptionColumn is the column json value description
+	PullRequestModelDescriptionColumn = "description"
+	// PullRequestModelIDColumn is the column json value id
+	PullRequestModelIDColumn = "id"
+	// PullRequestModelIdentifierColumn is the column json value identifier
+	PullRequestModelIdentifierColumn = "identifier"
+	// PullRequestModelMergeCommitIDColumn is the column json value merge_commit_id
+	PullRequestModelMergeCommitIDColumn = "merge_commit_id"
+	// PullRequestModelMergeShaColumn is the column json value merge_sha
+	PullRequestModelMergeShaColumn = "merge_sha"
+	// PullRequestModelMergedByRefIDColumn is the column json value merged_by_ref_id
+	PullRequestModelMergedByRefIDColumn = "merged_by_ref_id"
+	// PullRequestModelMergedDateColumn is the column json value merged_date
+	PullRequestModelMergedDateColumn = "merged_date"
+	// PullRequestModelMergedDateEpochColumn is the column json value epoch
+	PullRequestModelMergedDateEpochColumn = "epoch"
+	// PullRequestModelMergedDateOffsetColumn is the column json value offset
+	PullRequestModelMergedDateOffsetColumn = "offset"
+	// PullRequestModelMergedDateRfc3339Column is the column json value rfc3339
+	PullRequestModelMergedDateRfc3339Column = "rfc3339"
+	// PullRequestModelRefIDColumn is the column json value ref_id
+	PullRequestModelRefIDColumn = "ref_id"
+	// PullRequestModelRefTypeColumn is the column json value ref_type
+	PullRequestModelRefTypeColumn = "ref_type"
+	// PullRequestModelRepoIDColumn is the column json value repo_id
+	PullRequestModelRepoIDColumn = "repo_id"
+	// PullRequestModelStatusColumn is the column json value status
+	PullRequestModelStatusColumn = "status"
+	// PullRequestModelTitleColumn is the column json value title
+	PullRequestModelTitleColumn = "title"
+	// PullRequestModelUpdatedDateColumn is the column json value updated_date
+	PullRequestModelUpdatedDateColumn = "updated_date"
+	// PullRequestModelUpdatedDateEpochColumn is the column json value epoch
+	PullRequestModelUpdatedDateEpochColumn = "epoch"
+	// PullRequestModelUpdatedDateOffsetColumn is the column json value offset
+	PullRequestModelUpdatedDateOffsetColumn = "offset"
+	// PullRequestModelUpdatedDateRfc3339Column is the column json value rfc3339
+	PullRequestModelUpdatedDateRfc3339Column = "rfc3339"
+	// PullRequestModelURLColumn is the column json value url
+	PullRequestModelURLColumn = "url"
+)
+
 // PullRequestClosedDate represents the object structure for closed_date
 type PullRequestClosedDate struct {
 	// Epoch the date in epoch format
@@ -407,15 +480,15 @@ func (v PullRequestStatus) String() string {
 }
 
 const (
-	// StatusOpen is the enumeration value for open
+	// PullRequestStatusOpen is the enumeration value for open
 	PullRequestStatusOpen PullRequestStatus = 0
-	// StatusClosed is the enumeration value for closed
+	// PullRequestStatusClosed is the enumeration value for closed
 	PullRequestStatusClosed PullRequestStatus = 1
-	// StatusMerged is the enumeration value for merged
+	// PullRequestStatusMerged is the enumeration value for merged
 	PullRequestStatusMerged PullRequestStatus = 2
-	// StatusSuperseded is the enumeration value for superseded
+	// PullRequestStatusSuperseded is the enumeration value for superseded
 	PullRequestStatusSuperseded PullRequestStatus = 3
-	// StatusLocked is the enumeration value for locked
+	// PullRequestStatusLocked is the enumeration value for locked
 	PullRequestStatusLocked PullRequestStatus = 4
 )
 
@@ -747,6 +820,12 @@ func (o *PullRequest) UnmarshalJSON(data []byte) error {
 func (o *PullRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *PullRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two PullRequest objects are equal

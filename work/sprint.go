@@ -30,6 +30,49 @@ const (
 	SprintModelName datamodel.ModelNameType = "work.Sprint"
 )
 
+const (
+	// SprintModelCompletedDateColumn is the column json value completed_date
+	SprintModelCompletedDateColumn = "completed_date"
+	// SprintModelCompletedDateEpochColumn is the column json value epoch
+	SprintModelCompletedDateEpochColumn = "epoch"
+	// SprintModelCompletedDateOffsetColumn is the column json value offset
+	SprintModelCompletedDateOffsetColumn = "offset"
+	// SprintModelCompletedDateRfc3339Column is the column json value rfc3339
+	SprintModelCompletedDateRfc3339Column = "rfc3339"
+	// SprintModelCustomerIDColumn is the column json value customer_id
+	SprintModelCustomerIDColumn = "customer_id"
+	// SprintModelEndedDateColumn is the column json value ended_date
+	SprintModelEndedDateColumn = "ended_date"
+	// SprintModelEndedDateEpochColumn is the column json value epoch
+	SprintModelEndedDateEpochColumn = "epoch"
+	// SprintModelEndedDateOffsetColumn is the column json value offset
+	SprintModelEndedDateOffsetColumn = "offset"
+	// SprintModelEndedDateRfc3339Column is the column json value rfc3339
+	SprintModelEndedDateRfc3339Column = "rfc3339"
+	// SprintModelGoalColumn is the column json value goal
+	SprintModelGoalColumn = "goal"
+	// SprintModelIDColumn is the column json value id
+	SprintModelIDColumn = "id"
+	// SprintModelNameColumn is the column json value name
+	SprintModelNameColumn = "name"
+	// SprintModelRefIDColumn is the column json value ref_id
+	SprintModelRefIDColumn = "ref_id"
+	// SprintModelRefTypeColumn is the column json value ref_type
+	SprintModelRefTypeColumn = "ref_type"
+	// SprintModelStartedDateColumn is the column json value started_date
+	SprintModelStartedDateColumn = "started_date"
+	// SprintModelStartedDateEpochColumn is the column json value epoch
+	SprintModelStartedDateEpochColumn = "epoch"
+	// SprintModelStartedDateOffsetColumn is the column json value offset
+	SprintModelStartedDateOffsetColumn = "offset"
+	// SprintModelStartedDateRfc3339Column is the column json value rfc3339
+	SprintModelStartedDateRfc3339Column = "rfc3339"
+	// SprintModelStatusColumn is the column json value status
+	SprintModelStatusColumn = "status"
+	// SprintModelUpdatedAtColumn is the column json value updated_ts
+	SprintModelUpdatedAtColumn = "updated_ts"
+)
+
 // SprintCompletedDate represents the object structure for completed_date
 type SprintCompletedDate struct {
 	// Epoch the date in epoch format
@@ -389,11 +432,11 @@ func (v SprintStatus) String() string {
 }
 
 const (
-	// StatusActive is the enumeration value for active
+	// SprintStatusActive is the enumeration value for active
 	SprintStatusActive SprintStatus = 0
-	// StatusFuture is the enumeration value for future
+	// SprintStatusFuture is the enumeration value for future
 	SprintStatusFuture SprintStatus = 1
-	// StatusClosed is the enumeration value for closed
+	// SprintStatusClosed is the enumeration value for closed
 	SprintStatusClosed SprintStatus = 2
 )
 
@@ -639,6 +682,12 @@ func (o *Sprint) UnmarshalJSON(data []byte) error {
 func (o *Sprint) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Sprint) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Sprint objects are equal

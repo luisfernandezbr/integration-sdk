@@ -26,6 +26,41 @@ const (
 	CommitModelName datamodel.ModelNameType = "sourcecode.Commit"
 )
 
+const (
+	// CommitModelAuthorRefIDColumn is the column json value author_ref_id
+	CommitModelAuthorRefIDColumn = "author_ref_id"
+	// CommitModelCommitterRefIDColumn is the column json value committer_ref_id
+	CommitModelCommitterRefIDColumn = "committer_ref_id"
+	// CommitModelCreatedDateColumn is the column json value created_date
+	CommitModelCreatedDateColumn = "created_date"
+	// CommitModelCreatedDateEpochColumn is the column json value epoch
+	CommitModelCreatedDateEpochColumn = "epoch"
+	// CommitModelCreatedDateOffsetColumn is the column json value offset
+	CommitModelCreatedDateOffsetColumn = "offset"
+	// CommitModelCreatedDateRfc3339Column is the column json value rfc3339
+	CommitModelCreatedDateRfc3339Column = "rfc3339"
+	// CommitModelCustomerIDColumn is the column json value customer_id
+	CommitModelCustomerIDColumn = "customer_id"
+	// CommitModelExcludedColumn is the column json value excluded
+	CommitModelExcludedColumn = "excluded"
+	// CommitModelIDColumn is the column json value id
+	CommitModelIDColumn = "id"
+	// CommitModelIdentifierColumn is the column json value identifier
+	CommitModelIdentifierColumn = "identifier"
+	// CommitModelMessageColumn is the column json value message
+	CommitModelMessageColumn = "message"
+	// CommitModelRefIDColumn is the column json value ref_id
+	CommitModelRefIDColumn = "ref_id"
+	// CommitModelRefTypeColumn is the column json value ref_type
+	CommitModelRefTypeColumn = "ref_type"
+	// CommitModelRepoIDColumn is the column json value repo_id
+	CommitModelRepoIDColumn = "repo_id"
+	// CommitModelShaColumn is the column json value sha
+	CommitModelShaColumn = "sha"
+	// CommitModelURLColumn is the column json value url
+	CommitModelURLColumn = "url"
+)
+
 // CommitCreatedDate represents the object structure for created_date
 type CommitCreatedDate struct {
 	// Epoch the date in epoch format
@@ -317,6 +352,12 @@ func (o *Commit) UnmarshalJSON(data []byte) error {
 func (o *Commit) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Commit) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Commit objects are equal

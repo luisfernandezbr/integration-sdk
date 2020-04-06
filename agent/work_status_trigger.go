@@ -24,6 +24,19 @@ const (
 	WorkStatusTriggerModelName datamodel.ModelNameType = "agent.WorkStatusTrigger"
 )
 
+const (
+	// WorkStatusTriggerModelCustomerIDColumn is the column json value customer_id
+	WorkStatusTriggerModelCustomerIDColumn = "customer_id"
+	// WorkStatusTriggerModelIDColumn is the column json value id
+	WorkStatusTriggerModelIDColumn = "id"
+	// WorkStatusTriggerModelIntegrationIDColumn is the column json value integration_id
+	WorkStatusTriggerModelIntegrationIDColumn = "integration_id"
+	// WorkStatusTriggerModelRefIDColumn is the column json value ref_id
+	WorkStatusTriggerModelRefIDColumn = "ref_id"
+	// WorkStatusTriggerModelRefTypeColumn is the column json value ref_type
+	WorkStatusTriggerModelRefTypeColumn = "ref_type"
+)
+
 // WorkStatusTrigger used to trigger an agent.WorkStatusRequest
 type WorkStatusTrigger struct {
 	// CustomerID the customer id for the model instance
@@ -197,6 +210,12 @@ func (o *WorkStatusTrigger) UnmarshalJSON(data []byte) error {
 func (o *WorkStatusTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *WorkStatusTrigger) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two WorkStatusTrigger objects are equal

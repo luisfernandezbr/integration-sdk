@@ -24,6 +24,19 @@ const (
 	ProjectTriggerModelName datamodel.ModelNameType = "agent.ProjectTrigger"
 )
 
+const (
+	// ProjectTriggerModelCustomerIDColumn is the column json value customer_id
+	ProjectTriggerModelCustomerIDColumn = "customer_id"
+	// ProjectTriggerModelIDColumn is the column json value id
+	ProjectTriggerModelIDColumn = "id"
+	// ProjectTriggerModelIntegrationIDColumn is the column json value integration_id
+	ProjectTriggerModelIntegrationIDColumn = "integration_id"
+	// ProjectTriggerModelRefIDColumn is the column json value ref_id
+	ProjectTriggerModelRefIDColumn = "ref_id"
+	// ProjectTriggerModelRefTypeColumn is the column json value ref_type
+	ProjectTriggerModelRefTypeColumn = "ref_type"
+)
+
 // ProjectTrigger used to trigger an agent.ProjectRequest
 type ProjectTrigger struct {
 	// CustomerID the customer id for the model instance
@@ -197,6 +210,12 @@ func (o *ProjectTrigger) UnmarshalJSON(data []byte) error {
 func (o *ProjectTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *ProjectTrigger) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two ProjectTrigger objects are equal

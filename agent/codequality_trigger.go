@@ -24,6 +24,19 @@ const (
 	CodequalityTriggerModelName datamodel.ModelNameType = "agent.CodequalityTrigger"
 )
 
+const (
+	// CodequalityTriggerModelCustomerIDColumn is the column json value customer_id
+	CodequalityTriggerModelCustomerIDColumn = "customer_id"
+	// CodequalityTriggerModelIDColumn is the column json value id
+	CodequalityTriggerModelIDColumn = "id"
+	// CodequalityTriggerModelIntegrationIDColumn is the column json value integration_id
+	CodequalityTriggerModelIntegrationIDColumn = "integration_id"
+	// CodequalityTriggerModelRefIDColumn is the column json value ref_id
+	CodequalityTriggerModelRefIDColumn = "ref_id"
+	// CodequalityTriggerModelRefTypeColumn is the column json value ref_type
+	CodequalityTriggerModelRefTypeColumn = "ref_type"
+)
+
 // CodequalityTrigger used to trigger an agent.CodequalityRequest
 type CodequalityTrigger struct {
 	// CustomerID the customer id for the model instance
@@ -197,6 +210,12 @@ func (o *CodequalityTrigger) UnmarshalJSON(data []byte) error {
 func (o *CodequalityTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *CodequalityTrigger) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two CodequalityTrigger objects are equal

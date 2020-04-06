@@ -26,6 +26,27 @@ const (
 	IssuePriorityModelName datamodel.ModelNameType = "work.IssuePriority"
 )
 
+const (
+	// IssuePriorityModelColorColumn is the column json value color
+	IssuePriorityModelColorColumn = "color"
+	// IssuePriorityModelCustomerIDColumn is the column json value customer_id
+	IssuePriorityModelCustomerIDColumn = "customer_id"
+	// IssuePriorityModelDescriptionColumn is the column json value description
+	IssuePriorityModelDescriptionColumn = "description"
+	// IssuePriorityModelIconURLColumn is the column json value icon_url
+	IssuePriorityModelIconURLColumn = "icon_url"
+	// IssuePriorityModelIDColumn is the column json value id
+	IssuePriorityModelIDColumn = "id"
+	// IssuePriorityModelNameColumn is the column json value name
+	IssuePriorityModelNameColumn = "name"
+	// IssuePriorityModelOrderColumn is the column json value order
+	IssuePriorityModelOrderColumn = "order"
+	// IssuePriorityModelRefIDColumn is the column json value ref_id
+	IssuePriorityModelRefIDColumn = "ref_id"
+	// IssuePriorityModelRefTypeColumn is the column json value ref_type
+	IssuePriorityModelRefTypeColumn = "ref_type"
+)
+
 // IssuePriority the priority type of an issue
 type IssuePriority struct {
 	// Color an optional color in hex for display
@@ -210,6 +231,12 @@ func (o *IssuePriority) UnmarshalJSON(data []byte) error {
 func (o *IssuePriority) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *IssuePriority) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two IssuePriority objects are equal

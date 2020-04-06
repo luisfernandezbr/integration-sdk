@@ -32,6 +32,175 @@ const (
 	CodequalityRequestModelName datamodel.ModelNameType = "agent.CodequalityRequest"
 )
 
+const (
+	// CodequalityRequestModelCustomerIDColumn is the column json value customer_id
+	CodequalityRequestModelCustomerIDColumn = "customer_id"
+	// CodequalityRequestModelIDColumn is the column json value id
+	CodequalityRequestModelIDColumn = "id"
+	// CodequalityRequestModelIntegrationColumn is the column json value integration
+	CodequalityRequestModelIntegrationColumn = "integration"
+	// CodequalityRequestModelIntegrationActiveColumn is the column json value active
+	CodequalityRequestModelIntegrationActiveColumn = "active"
+	// CodequalityRequestModelIntegrationAuthorizationColumn is the column json value authorization
+	CodequalityRequestModelIntegrationAuthorizationColumn = "authorization"
+	// CodequalityRequestModelIntegrationAuthorizationAccessTokenColumn is the column json value access_token
+	CodequalityRequestModelIntegrationAuthorizationAccessTokenColumn = "access_token"
+	// CodequalityRequestModelIntegrationAuthorizationRefreshTokenColumn is the column json value refresh_token
+	CodequalityRequestModelIntegrationAuthorizationRefreshTokenColumn = "refresh_token"
+	// CodequalityRequestModelIntegrationAuthorizationURLColumn is the column json value url
+	CodequalityRequestModelIntegrationAuthorizationURLColumn = "url"
+	// CodequalityRequestModelIntegrationAuthorizationUsernameColumn is the column json value username
+	CodequalityRequestModelIntegrationAuthorizationUsernameColumn = "username"
+	// CodequalityRequestModelIntegrationAuthorizationPasswordColumn is the column json value password
+	CodequalityRequestModelIntegrationAuthorizationPasswordColumn = "password"
+	// CodequalityRequestModelIntegrationAuthorizationAPITokenColumn is the column json value api_token
+	CodequalityRequestModelIntegrationAuthorizationAPITokenColumn = "api_token"
+	// CodequalityRequestModelIntegrationAuthorizationCollectionNameColumn is the column json value collection_name
+	CodequalityRequestModelIntegrationAuthorizationCollectionNameColumn = "collection_name"
+	// CodequalityRequestModelIntegrationAuthorizationAPIKeyColumn is the column json value api_key
+	CodequalityRequestModelIntegrationAuthorizationAPIKeyColumn = "api_key"
+	// CodequalityRequestModelIntegrationAuthorizationAuthorizationColumn is the column json value authorization
+	CodequalityRequestModelIntegrationAuthorizationAuthorizationColumn = "authorization"
+	// CodequalityRequestModelIntegrationAuthorizationHostnameColumn is the column json value hostname
+	CodequalityRequestModelIntegrationAuthorizationHostnameColumn = "hostname"
+	// CodequalityRequestModelIntegrationAuthorizationAPIVersionColumn is the column json value api_version
+	CodequalityRequestModelIntegrationAuthorizationAPIVersionColumn = "api_version"
+	// CodequalityRequestModelIntegrationAuthorizationOrganizationColumn is the column json value organization
+	CodequalityRequestModelIntegrationAuthorizationOrganizationColumn = "organization"
+	// CodequalityRequestModelIntegrationCreatedByProfileIDColumn is the column json value created_by_profile_id
+	CodequalityRequestModelIntegrationCreatedByProfileIDColumn = "created_by_profile_id"
+	// CodequalityRequestModelIntegrationCreatedByUserIDColumn is the column json value created_by_user_id
+	CodequalityRequestModelIntegrationCreatedByUserIDColumn = "created_by_user_id"
+	// CodequalityRequestModelIntegrationCustomerIDColumn is the column json value customer_id
+	CodequalityRequestModelIntegrationCustomerIDColumn = "customer_id"
+	// CodequalityRequestModelIntegrationEntityErrorsColumn is the column json value entity_errors
+	CodequalityRequestModelIntegrationEntityErrorsColumn = "entity_errors"
+	// CodequalityRequestModelIntegrationEntityErrorsIDColumn is the column json value id
+	CodequalityRequestModelIntegrationEntityErrorsIDColumn = "id"
+	// CodequalityRequestModelIntegrationEntityErrorsRefIDColumn is the column json value ref_id
+	CodequalityRequestModelIntegrationEntityErrorsRefIDColumn = "ref_id"
+	// CodequalityRequestModelIntegrationEntityErrorsErrorColumn is the column json value error
+	CodequalityRequestModelIntegrationEntityErrorsErrorColumn = "error"
+	// CodequalityRequestModelIntegrationErrorMessageColumn is the column json value error_message
+	CodequalityRequestModelIntegrationErrorMessageColumn = "error_message"
+	// CodequalityRequestModelIntegrationErroredColumn is the column json value errored
+	CodequalityRequestModelIntegrationErroredColumn = "errored"
+	// CodequalityRequestModelIntegrationExclusionsColumn is the column json value exclusions
+	CodequalityRequestModelIntegrationExclusionsColumn = "exclusions"
+	// CodequalityRequestModelIntegrationExportableColumn is the column json value exportable
+	CodequalityRequestModelIntegrationExportableColumn = "exportable"
+	// CodequalityRequestModelIntegrationIDColumn is the column json value id
+	CodequalityRequestModelIntegrationIDColumn = "id"
+	// CodequalityRequestModelIntegrationInclusionsColumn is the column json value inclusions
+	CodequalityRequestModelIntegrationInclusionsColumn = "inclusions"
+	// CodequalityRequestModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
+	CodequalityRequestModelIntegrationLastExportCompletedDateColumn = "last_export_completed_date"
+	// CodequalityRequestModelIntegrationLastExportCompletedDateEpochColumn is the column json value epoch
+	CodequalityRequestModelIntegrationLastExportCompletedDateEpochColumn = "epoch"
+	// CodequalityRequestModelIntegrationLastExportCompletedDateOffsetColumn is the column json value offset
+	CodequalityRequestModelIntegrationLastExportCompletedDateOffsetColumn = "offset"
+	// CodequalityRequestModelIntegrationLastExportCompletedDateRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelIntegrationLastExportCompletedDateRfc3339Column = "rfc3339"
+	// CodequalityRequestModelIntegrationLastExportRequestedDateColumn is the column json value last_export_requested_date
+	CodequalityRequestModelIntegrationLastExportRequestedDateColumn = "last_export_requested_date"
+	// CodequalityRequestModelIntegrationLastExportRequestedDateEpochColumn is the column json value epoch
+	CodequalityRequestModelIntegrationLastExportRequestedDateEpochColumn = "epoch"
+	// CodequalityRequestModelIntegrationLastExportRequestedDateOffsetColumn is the column json value offset
+	CodequalityRequestModelIntegrationLastExportRequestedDateOffsetColumn = "offset"
+	// CodequalityRequestModelIntegrationLastExportRequestedDateRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelIntegrationLastExportRequestedDateRfc3339Column = "rfc3339"
+	// CodequalityRequestModelIntegrationLastProcessingCompletedDateColumn is the column json value last_processing_completed_date
+	CodequalityRequestModelIntegrationLastProcessingCompletedDateColumn = "last_processing_completed_date"
+	// CodequalityRequestModelIntegrationLastProcessingCompletedDateEpochColumn is the column json value epoch
+	CodequalityRequestModelIntegrationLastProcessingCompletedDateEpochColumn = "epoch"
+	// CodequalityRequestModelIntegrationLastProcessingCompletedDateOffsetColumn is the column json value offset
+	CodequalityRequestModelIntegrationLastProcessingCompletedDateOffsetColumn = "offset"
+	// CodequalityRequestModelIntegrationLastProcessingCompletedDateRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelIntegrationLastProcessingCompletedDateRfc3339Column = "rfc3339"
+	// CodequalityRequestModelIntegrationLastProcessingStartedDateColumn is the column json value last_processing_started_date
+	CodequalityRequestModelIntegrationLastProcessingStartedDateColumn = "last_processing_started_date"
+	// CodequalityRequestModelIntegrationLastProcessingStartedDateEpochColumn is the column json value epoch
+	CodequalityRequestModelIntegrationLastProcessingStartedDateEpochColumn = "epoch"
+	// CodequalityRequestModelIntegrationLastProcessingStartedDateOffsetColumn is the column json value offset
+	CodequalityRequestModelIntegrationLastProcessingStartedDateOffsetColumn = "offset"
+	// CodequalityRequestModelIntegrationLastProcessingStartedDateRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelIntegrationLastProcessingStartedDateRfc3339Column = "rfc3339"
+	// CodequalityRequestModelIntegrationLocationColumn is the column json value location
+	CodequalityRequestModelIntegrationLocationColumn = "location"
+	// CodequalityRequestModelIntegrationNameColumn is the column json value name
+	CodequalityRequestModelIntegrationNameColumn = "name"
+	// CodequalityRequestModelIntegrationOnboardCompletedDateColumn is the column json value onboard_completed_date
+	CodequalityRequestModelIntegrationOnboardCompletedDateColumn = "onboard_completed_date"
+	// CodequalityRequestModelIntegrationOnboardCompletedDateEpochColumn is the column json value epoch
+	CodequalityRequestModelIntegrationOnboardCompletedDateEpochColumn = "epoch"
+	// CodequalityRequestModelIntegrationOnboardCompletedDateOffsetColumn is the column json value offset
+	CodequalityRequestModelIntegrationOnboardCompletedDateOffsetColumn = "offset"
+	// CodequalityRequestModelIntegrationOnboardCompletedDateRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelIntegrationOnboardCompletedDateRfc3339Column = "rfc3339"
+	// CodequalityRequestModelIntegrationOnboardRequestedDateColumn is the column json value onboard_requested_date
+	CodequalityRequestModelIntegrationOnboardRequestedDateColumn = "onboard_requested_date"
+	// CodequalityRequestModelIntegrationOnboardRequestedDateEpochColumn is the column json value epoch
+	CodequalityRequestModelIntegrationOnboardRequestedDateEpochColumn = "epoch"
+	// CodequalityRequestModelIntegrationOnboardRequestedDateOffsetColumn is the column json value offset
+	CodequalityRequestModelIntegrationOnboardRequestedDateOffsetColumn = "offset"
+	// CodequalityRequestModelIntegrationOnboardRequestedDateRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelIntegrationOnboardRequestedDateRfc3339Column = "rfc3339"
+	// CodequalityRequestModelIntegrationOnboardingColumn is the column json value onboarding
+	CodequalityRequestModelIntegrationOnboardingColumn = "onboarding"
+	// CodequalityRequestModelIntegrationOrganizationColumn is the column json value organization
+	CodequalityRequestModelIntegrationOrganizationColumn = "organization"
+	// CodequalityRequestModelIntegrationProcessedColumn is the column json value processed
+	CodequalityRequestModelIntegrationProcessedColumn = "processed"
+	// CodequalityRequestModelIntegrationRefIDColumn is the column json value ref_id
+	CodequalityRequestModelIntegrationRefIDColumn = "ref_id"
+	// CodequalityRequestModelIntegrationRefTypeColumn is the column json value ref_type
+	CodequalityRequestModelIntegrationRefTypeColumn = "ref_type"
+	// CodequalityRequestModelIntegrationServerVersionColumn is the column json value server_version
+	CodequalityRequestModelIntegrationServerVersionColumn = "server_version"
+	// CodequalityRequestModelIntegrationStateColumn is the column json value state
+	CodequalityRequestModelIntegrationStateColumn = "state"
+	// CodequalityRequestModelIntegrationSystemTypeColumn is the column json value system_type
+	CodequalityRequestModelIntegrationSystemTypeColumn = "system_type"
+	// CodequalityRequestModelIntegrationTeamIDColumn is the column json value team_id
+	CodequalityRequestModelIntegrationTeamIDColumn = "team_id"
+	// CodequalityRequestModelIntegrationThrottledColumn is the column json value throttled
+	CodequalityRequestModelIntegrationThrottledColumn = "throttled"
+	// CodequalityRequestModelIntegrationThrottledUntilColumn is the column json value throttled_until
+	CodequalityRequestModelIntegrationThrottledUntilColumn = "throttled_until"
+	// CodequalityRequestModelIntegrationThrottledUntilEpochColumn is the column json value epoch
+	CodequalityRequestModelIntegrationThrottledUntilEpochColumn = "epoch"
+	// CodequalityRequestModelIntegrationThrottledUntilOffsetColumn is the column json value offset
+	CodequalityRequestModelIntegrationThrottledUntilOffsetColumn = "offset"
+	// CodequalityRequestModelIntegrationThrottledUntilRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelIntegrationThrottledUntilRfc3339Column = "rfc3339"
+	// CodequalityRequestModelIntegrationValidatedColumn is the column json value validated
+	CodequalityRequestModelIntegrationValidatedColumn = "validated"
+	// CodequalityRequestModelIntegrationValidatedDateColumn is the column json value validated_date
+	CodequalityRequestModelIntegrationValidatedDateColumn = "validated_date"
+	// CodequalityRequestModelIntegrationValidatedDateEpochColumn is the column json value epoch
+	CodequalityRequestModelIntegrationValidatedDateEpochColumn = "epoch"
+	// CodequalityRequestModelIntegrationValidatedDateOffsetColumn is the column json value offset
+	CodequalityRequestModelIntegrationValidatedDateOffsetColumn = "offset"
+	// CodequalityRequestModelIntegrationValidatedDateRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelIntegrationValidatedDateRfc3339Column = "rfc3339"
+	// CodequalityRequestModelIntegrationValidationMessageColumn is the column json value validation_message
+	CodequalityRequestModelIntegrationValidationMessageColumn = "validation_message"
+	// CodequalityRequestModelRefIDColumn is the column json value ref_id
+	CodequalityRequestModelRefIDColumn = "ref_id"
+	// CodequalityRequestModelRefTypeColumn is the column json value ref_type
+	CodequalityRequestModelRefTypeColumn = "ref_type"
+	// CodequalityRequestModelRequestDateColumn is the column json value request_date
+	CodequalityRequestModelRequestDateColumn = "request_date"
+	// CodequalityRequestModelRequestDateEpochColumn is the column json value epoch
+	CodequalityRequestModelRequestDateEpochColumn = "epoch"
+	// CodequalityRequestModelRequestDateOffsetColumn is the column json value offset
+	CodequalityRequestModelRequestDateOffsetColumn = "offset"
+	// CodequalityRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	CodequalityRequestModelRequestDateRfc3339Column = "rfc3339"
+	// CodequalityRequestModelUUIDColumn is the column json value uuid
+	CodequalityRequestModelUUIDColumn = "uuid"
+)
+
 // CodequalityRequestIntegrationAuthorization represents the object structure for authorization
 type CodequalityRequestIntegrationAuthorization struct {
 	// AccessToken Access token
@@ -892,9 +1061,9 @@ func (v CodequalityRequestIntegrationLocation) String() string {
 }
 
 const (
-	// IntegrationLocationPrivate is the enumeration value for private
+	// CodequalityRequestIntegrationLocationPrivate is the enumeration value for private
 	CodequalityRequestIntegrationLocationPrivate CodequalityRequestIntegrationLocation = 0
-	// IntegrationLocationCloud is the enumeration value for cloud
+	// CodequalityRequestIntegrationLocationCloud is the enumeration value for cloud
 	CodequalityRequestIntegrationLocationCloud CodequalityRequestIntegrationLocation = 1
 )
 
@@ -1158,11 +1327,11 @@ func (v CodequalityRequestIntegrationState) String() string {
 }
 
 const (
-	// IntegrationStateIdle is the enumeration value for idle
+	// CodequalityRequestIntegrationStateIdle is the enumeration value for idle
 	CodequalityRequestIntegrationStateIdle CodequalityRequestIntegrationState = 0
-	// IntegrationStateExporting is the enumeration value for exporting
+	// CodequalityRequestIntegrationStateExporting is the enumeration value for exporting
 	CodequalityRequestIntegrationStateExporting CodequalityRequestIntegrationState = 1
-	// IntegrationStateProcessing is the enumeration value for processing
+	// CodequalityRequestIntegrationStateProcessing is the enumeration value for processing
 	CodequalityRequestIntegrationStateProcessing CodequalityRequestIntegrationState = 2
 )
 
@@ -1244,15 +1413,15 @@ func (v CodequalityRequestIntegrationSystemType) String() string {
 }
 
 const (
-	// IntegrationSystemTypeWork is the enumeration value for work
+	// CodequalityRequestIntegrationSystemTypeWork is the enumeration value for work
 	CodequalityRequestIntegrationSystemTypeWork CodequalityRequestIntegrationSystemType = 0
-	// IntegrationSystemTypeSourcecode is the enumeration value for sourcecode
+	// CodequalityRequestIntegrationSystemTypeSourcecode is the enumeration value for sourcecode
 	CodequalityRequestIntegrationSystemTypeSourcecode CodequalityRequestIntegrationSystemType = 1
-	// IntegrationSystemTypeCodequality is the enumeration value for codequality
+	// CodequalityRequestIntegrationSystemTypeCodequality is the enumeration value for codequality
 	CodequalityRequestIntegrationSystemTypeCodequality CodequalityRequestIntegrationSystemType = 2
-	// IntegrationSystemTypeCalendar is the enumeration value for calendar
+	// CodequalityRequestIntegrationSystemTypeCalendar is the enumeration value for calendar
 	CodequalityRequestIntegrationSystemTypeCalendar CodequalityRequestIntegrationSystemType = 3
-	// IntegrationSystemTypeUser is the enumeration value for user
+	// CodequalityRequestIntegrationSystemTypeUser is the enumeration value for user
 	CodequalityRequestIntegrationSystemTypeUser CodequalityRequestIntegrationSystemType = 4
 )
 
@@ -2841,6 +3010,12 @@ func (o *CodequalityRequest) UnmarshalJSON(data []byte) error {
 func (o *CodequalityRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *CodequalityRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two CodequalityRequest objects are equal

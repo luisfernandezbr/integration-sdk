@@ -28,6 +28,29 @@ const (
 	CostCenterModelName datamodel.ModelNameType = "customer.CostCenter"
 )
 
+const (
+	// CostCenterModelActiveColumn is the column json value active
+	CostCenterModelActiveColumn = "active"
+	// CostCenterModelCostColumn is the column json value cost
+	CostCenterModelCostColumn = "cost"
+	// CostCenterModelCreatedAtColumn is the column json value created_ts
+	CostCenterModelCreatedAtColumn = "created_ts"
+	// CostCenterModelCustomerIDColumn is the column json value customer_id
+	CostCenterModelCustomerIDColumn = "customer_id"
+	// CostCenterModelDescriptionColumn is the column json value description
+	CostCenterModelDescriptionColumn = "description"
+	// CostCenterModelIDColumn is the column json value id
+	CostCenterModelIDColumn = "id"
+	// CostCenterModelNameColumn is the column json value name
+	CostCenterModelNameColumn = "name"
+	// CostCenterModelRefIDColumn is the column json value ref_id
+	CostCenterModelRefIDColumn = "ref_id"
+	// CostCenterModelRefTypeColumn is the column json value ref_type
+	CostCenterModelRefTypeColumn = "ref_type"
+	// CostCenterModelUpdatedAtColumn is the column json value updated_ts
+	CostCenterModelUpdatedAtColumn = "updated_ts"
+)
+
 // CostCenter a cost center represents information about users and their cost
 type CostCenter struct {
 	// Active whether the cost center is tracked in pinpoint
@@ -211,6 +234,12 @@ func (o *CostCenter) UnmarshalJSON(data []byte) error {
 func (o *CostCenter) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *CostCenter) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two CostCenter objects are equal
@@ -452,16 +481,8 @@ func (o *CostCenter) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// ExecCostCenterUpdateMutation returns a graphql update mutation for CostCenter
-func ExecCostCenterUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*CostCenter, error) {
-	variables := make(graphql.Variables)
-	variables["id"] = id
-	variables["upsert"] = upsert
-	variables["input"] = input
+func getCostCenterQueryFields() string {
 	var sb strings.Builder
-	sb.WriteString("mutation CostCenterUpdateMutation($id: String, $input: UpdateCustomerCostCenterInput, $upsert: Boolean) {\n")
-	sb.WriteString("\tcustomer {\n")
-	sb.WriteString("\t\tupdateCostCenter(_id: $id, input: $input, upsert: $upsert) {\n")
 
 	// scalar
 	sb.WriteString("\t\t\tactive\n")
@@ -481,20 +502,196 @@ func ExecCostCenterUpdateMutation(client graphql.Client, id string, input graphq
 	sb.WriteString("\t\t\tref_type\n")
 	// scalar
 	sb.WriteString("\t\t\tupdated_ts\n")
+	return sb.String()
+}
+
+// CostCenterPageInfo is a grapqhl PageInfo
+type CostCenterPageInfo struct {
+	StartCursor     string `json:"startCursor,omitempty"`
+	EndCursor       string `json:"endCursor,omitempty"`
+	HasNextPage     bool   `json:"hasNextPage,omitempty"`
+	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
+}
+
+// CostCenterConnection is a grapqhl connection
+type CostCenterConnection struct {
+	Edges      []*CostCenterEdge  `json:"edges,omitempty"`
+	PageInfo   CostCenterPageInfo `json:"pageInfo,omitempty"`
+	TotalCount *int64             `json:"totalCount,omitempty"`
+}
+
+// CostCenterEdge is a grapqhl edge
+type CostCenterEdge struct {
+	Node *CostCenter `json:"node,omitempty"`
+}
+
+// QueryManyCostCenterNode is a grapqhl query many node
+type QueryManyCostCenterNode struct {
+	Object *CostCenterConnection `json:"CostCenters,omitempty"`
+}
+
+// QueryManyCostCenterData is a grapqhl query many data node
+type QueryManyCostCenterData struct {
+	Data *QueryManyCostCenterNode `json:"customer,omitempty"`
+}
+
+// QueryOneCostCenterNode is a grapqhl query one node
+type QueryOneCostCenterNode struct {
+	Object *CostCenter `json:"CostCenter,omitempty"`
+}
+
+// QueryOneCostCenterData is a grapqhl query one data node
+type QueryOneCostCenterData struct {
+	Data *QueryOneCostCenterNode `json:"customer,omitempty"`
+}
+
+// CostCenterQuery is query struct
+type CostCenterQuery struct {
+	Filters []string      `json:"filters,omitempty"`
+	Params  []interface{} `json:"params,omitempty"`
+}
+
+// CostCenterQueryInput is query input struct
+type CostCenterQueryInput struct {
+	First  *int64           `json:"first,omitempty"`
+	Last   *int64           `json:"last,omitempty"`
+	Before *string          `json:"before,omitempty"`
+	After  *string          `json:"after,omitempty"`
+	Query  *CostCenterQuery `json:"query,omitempty"`
+}
+
+// NewCostCenterQuery is a convenience for building a *CostCenterQuery
+func NewCostCenterQuery(params ...interface{}) *CostCenterQueryInput {
+	if len(params)%2 != 0 {
+		panic("incorrect number of arguments passed")
+	}
+	q := &CostCenterQuery{
+		Filters: make([]string, 0),
+		Params:  make([]interface{}, 0),
+	}
+	for i := 0; i < len(params); i += 2 {
+		q.Filters = append(q.Filters, params[i].(string))
+		q.Params = append(q.Params, params[i+1])
+	}
+	return &CostCenterQueryInput{
+		Query: q,
+	}
+}
+
+// FindCostCenter will query an CostCenter by id
+func FindCostCenter(client graphql.Client, id string) (*CostCenter, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("query CostCenterQuery($id: ID) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tCostCenter(_id: $id) {\n")
+	sb.WriteString(getCostCenterQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
 	sb.WriteString("}\n")
-	kv := make(map[string]interface{})
-	if err := client.Mutate(sb.String(), variables, &kv); err != nil {
+	var res QueryOneCostCenterData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
 		return nil, err
 	}
-	if sdata, ok := kv["customer"].(map[string]interface{}); ok {
-		if mdata, ok := sdata["updateCostCenter"].(map[string]interface{}); ok {
-			var object CostCenter
-			object.FromMap(mdata)
-			return &object, nil
-		}
-		return nil, fmt.Errorf("missing expected updateCostCenter key from customer")
+	if res.Data != nil {
+		return res.Data.Object, nil
 	}
-	return nil, fmt.Errorf("missing expected customer key from data")
+	return nil, nil
+}
+
+// FindCostCenters will query for any CostCenters matching the query
+func FindCostCenters(client graphql.Client, input *CostCenterQueryInput) (*CostCenterConnection, error) {
+	variables := make(graphql.Variables)
+	if input != nil {
+		variables["first"] = input.First
+		variables["last"] = input.Last
+		variables["before"] = input.Before
+		variables["after"] = input.After
+		variables["query"] = input.Query
+	}
+	var sb strings.Builder
+	sb.WriteString("query CostCenterQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tCostCenters(first: $first last: $last before: $before after: $after query: $query) {\n")
+	sb.WriteString("\t\t\tpageInfo {\n")
+	sb.WriteString("\t\t\t\tstartCursor\n")
+	sb.WriteString("\t\t\t\tendCursor\n")
+	sb.WriteString("\t\t\t\thasNextPage\n")
+	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\ttotalCount\n")
+	sb.WriteString("\t\t\tedges {\n")
+	sb.WriteString("\t\t\t\tnode {\n")
+	sb.WriteString(getCostCenterQueryFields())
+	sb.WriteString("\t\t\t\t}\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryManyCostCenterData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	return res.Data.Object, nil
+}
+
+// FindCostCentersPaginatedCallback is a callback function for handling each page
+type FindCostCentersPaginatedCallback func(conn *CostCenterConnection) (bool, error)
+
+// FindCostCenters will query for any CostCenters matching the query and return each page callback
+func FindCostCentersPaginated(client graphql.Client, query *CostCenterQuery, pageSize int64, callback FindCostCentersPaginatedCallback) error {
+	input := &CostCenterQueryInput{
+		First: &pageSize,
+		Query: query,
+	}
+	for {
+		res, err := FindCostCenters(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// UpdateCostCenterNode is a grapqhl update node
+type UpdateCostCenterNode struct {
+	Object *CostCenter `json:"updateCostCenter,omitempty"`
+}
+
+// UpdateCostCenterData is a grapqhl update data node
+type UpdateCostCenterData struct {
+	Data *UpdateCostCenterNode `json:"customer,omitempty"`
+}
+
+// ExecCostCenterUpdateMutation returns a graphql update mutation result for CostCenter
+func ExecCostCenterUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*CostCenter, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["upsert"] = upsert
+	variables["input"] = input
+	var sb strings.Builder
+	sb.WriteString("mutation CostCenterUpdateMutation($id: String, $input: UpdateCustomerCostCenterInput, $upsert: Boolean) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tupdateCostCenter(_id: $id, input: $input, upsert: $upsert) {\n")
+	sb.WriteString(getCostCenterQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res UpdateCostCenterData
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	return res.Data.Object, nil
 }

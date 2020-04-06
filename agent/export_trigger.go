@@ -25,6 +25,21 @@ const (
 	ExportTriggerModelName datamodel.ModelNameType = "agent.ExportTrigger"
 )
 
+const (
+	// ExportTriggerModelCustomerIDColumn is the column json value customer_id
+	ExportTriggerModelCustomerIDColumn = "customer_id"
+	// ExportTriggerModelIDColumn is the column json value id
+	ExportTriggerModelIDColumn = "id"
+	// ExportTriggerModelRefIDColumn is the column json value ref_id
+	ExportTriggerModelRefIDColumn = "ref_id"
+	// ExportTriggerModelRefTypeColumn is the column json value ref_type
+	ExportTriggerModelRefTypeColumn = "ref_type"
+	// ExportTriggerModelReprocessHistoricalColumn is the column json value reprocess_historical
+	ExportTriggerModelReprocessHistoricalColumn = "reprocess_historical"
+	// ExportTriggerModelUUIDColumn is the column json value uuid
+	ExportTriggerModelUUIDColumn = "uuid"
+)
+
 // ExportTrigger used to trigger an agent.ExportRequest
 type ExportTrigger struct {
 	// CustomerID the customer id for the model instance
@@ -200,6 +215,12 @@ func (o *ExportTrigger) UnmarshalJSON(data []byte) error {
 func (o *ExportTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *ExportTrigger) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two ExportTrigger objects are equal

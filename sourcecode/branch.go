@@ -30,6 +30,47 @@ const (
 	BranchModelName datamodel.ModelNameType = "sourcecode.Branch"
 )
 
+const (
+	// BranchModelAheadDefaultCountColumn is the column json value ahead_default_count
+	BranchModelAheadDefaultCountColumn = "ahead_default_count"
+	// BranchModelBehindDefaultCountColumn is the column json value behind_default_count
+	BranchModelBehindDefaultCountColumn = "behind_default_count"
+	// BranchModelBranchedFromCommitIdsColumn is the column json value branched_from_commit_ids
+	BranchModelBranchedFromCommitIdsColumn = "branched_from_commit_ids"
+	// BranchModelBranchedFromCommitShasColumn is the column json value branched_from_commit_shas
+	BranchModelBranchedFromCommitShasColumn = "branched_from_commit_shas"
+	// BranchModelCommitIdsColumn is the column json value commit_ids
+	BranchModelCommitIdsColumn = "commit_ids"
+	// BranchModelCommitShasColumn is the column json value commit_shas
+	BranchModelCommitShasColumn = "commit_shas"
+	// BranchModelCustomerIDColumn is the column json value customer_id
+	BranchModelCustomerIDColumn = "customer_id"
+	// BranchModelDefaultColumn is the column json value default
+	BranchModelDefaultColumn = "default"
+	// BranchModelFirstCommitIDColumn is the column json value first_commit_id
+	BranchModelFirstCommitIDColumn = "first_commit_id"
+	// BranchModelFirstCommitShaColumn is the column json value first_commit_sha
+	BranchModelFirstCommitShaColumn = "first_commit_sha"
+	// BranchModelIDColumn is the column json value id
+	BranchModelIDColumn = "id"
+	// BranchModelMergeCommitIDColumn is the column json value merge_commit_id
+	BranchModelMergeCommitIDColumn = "merge_commit_id"
+	// BranchModelMergeCommitShaColumn is the column json value merge_commit_sha
+	BranchModelMergeCommitShaColumn = "merge_commit_sha"
+	// BranchModelMergedColumn is the column json value merged
+	BranchModelMergedColumn = "merged"
+	// BranchModelNameColumn is the column json value name
+	BranchModelNameColumn = "name"
+	// BranchModelRefIDColumn is the column json value ref_id
+	BranchModelRefIDColumn = "ref_id"
+	// BranchModelRefTypeColumn is the column json value ref_type
+	BranchModelRefTypeColumn = "ref_type"
+	// BranchModelRepoIDColumn is the column json value repo_id
+	BranchModelRepoIDColumn = "repo_id"
+	// BranchModelURLColumn is the column json value url
+	BranchModelURLColumn = "url"
+)
+
 // Branch git branches
 type Branch struct {
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
@@ -242,6 +283,12 @@ func (o *Branch) UnmarshalJSON(data []byte) error {
 func (o *Branch) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Branch) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Branch objects are equal

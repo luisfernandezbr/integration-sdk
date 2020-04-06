@@ -30,6 +30,91 @@ const (
 	ProjectResponseModelName datamodel.ModelNameType = "agent.ProjectResponse"
 )
 
+const (
+	// ProjectResponseModelArchitectureColumn is the column json value architecture
+	ProjectResponseModelArchitectureColumn = "architecture"
+	// ProjectResponseModelCustomerIDColumn is the column json value customer_id
+	ProjectResponseModelCustomerIDColumn = "customer_id"
+	// ProjectResponseModelDataColumn is the column json value data
+	ProjectResponseModelDataColumn = "data"
+	// ProjectResponseModelDistroColumn is the column json value distro
+	ProjectResponseModelDistroColumn = "distro"
+	// ProjectResponseModelErrorColumn is the column json value error
+	ProjectResponseModelErrorColumn = "error"
+	// ProjectResponseModelEventDateColumn is the column json value event_date
+	ProjectResponseModelEventDateColumn = "event_date"
+	// ProjectResponseModelEventDateEpochColumn is the column json value epoch
+	ProjectResponseModelEventDateEpochColumn = "epoch"
+	// ProjectResponseModelEventDateOffsetColumn is the column json value offset
+	ProjectResponseModelEventDateOffsetColumn = "offset"
+	// ProjectResponseModelEventDateRfc3339Column is the column json value rfc3339
+	ProjectResponseModelEventDateRfc3339Column = "rfc3339"
+	// ProjectResponseModelFreeSpaceColumn is the column json value free_space
+	ProjectResponseModelFreeSpaceColumn = "free_space"
+	// ProjectResponseModelGoVersionColumn is the column json value go_version
+	ProjectResponseModelGoVersionColumn = "go_version"
+	// ProjectResponseModelHostnameColumn is the column json value hostname
+	ProjectResponseModelHostnameColumn = "hostname"
+	// ProjectResponseModelIDColumn is the column json value id
+	ProjectResponseModelIDColumn = "id"
+	// ProjectResponseModelIntegrationIDColumn is the column json value integration_id
+	ProjectResponseModelIntegrationIDColumn = "integration_id"
+	// ProjectResponseModelLastExportDateColumn is the column json value last_export_date
+	ProjectResponseModelLastExportDateColumn = "last_export_date"
+	// ProjectResponseModelLastExportDateEpochColumn is the column json value epoch
+	ProjectResponseModelLastExportDateEpochColumn = "epoch"
+	// ProjectResponseModelLastExportDateOffsetColumn is the column json value offset
+	ProjectResponseModelLastExportDateOffsetColumn = "offset"
+	// ProjectResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	ProjectResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// ProjectResponseModelMemoryColumn is the column json value memory
+	ProjectResponseModelMemoryColumn = "memory"
+	// ProjectResponseModelMessageColumn is the column json value message
+	ProjectResponseModelMessageColumn = "message"
+	// ProjectResponseModelNumCPUColumn is the column json value num_cpu
+	ProjectResponseModelNumCPUColumn = "num_cpu"
+	// ProjectResponseModelOSColumn is the column json value os
+	ProjectResponseModelOSColumn = "os"
+	// ProjectResponseModelProjectsColumn is the column json value projects
+	ProjectResponseModelProjectsColumn = "projects"
+	// ProjectResponseModelProjectsActiveColumn is the column json value active
+	ProjectResponseModelProjectsActiveColumn = "active"
+	// ProjectResponseModelProjectsCategoryColumn is the column json value category
+	ProjectResponseModelProjectsCategoryColumn = "category"
+	// ProjectResponseModelProjectsDescriptionColumn is the column json value description
+	ProjectResponseModelProjectsDescriptionColumn = "description"
+	// ProjectResponseModelProjectsErrorColumn is the column json value error
+	ProjectResponseModelProjectsErrorColumn = "error"
+	// ProjectResponseModelProjectsIdentifierColumn is the column json value identifier
+	ProjectResponseModelProjectsIdentifierColumn = "identifier"
+	// ProjectResponseModelProjectsNameColumn is the column json value name
+	ProjectResponseModelProjectsNameColumn = "name"
+	// ProjectResponseModelProjectsRefIDColumn is the column json value ref_id
+	ProjectResponseModelProjectsRefIDColumn = "ref_id"
+	// ProjectResponseModelProjectsRefTypeColumn is the column json value ref_type
+	ProjectResponseModelProjectsRefTypeColumn = "ref_type"
+	// ProjectResponseModelProjectsURLColumn is the column json value url
+	ProjectResponseModelProjectsURLColumn = "url"
+	// ProjectResponseModelRefIDColumn is the column json value ref_id
+	ProjectResponseModelRefIDColumn = "ref_id"
+	// ProjectResponseModelRefTypeColumn is the column json value ref_type
+	ProjectResponseModelRefTypeColumn = "ref_type"
+	// ProjectResponseModelRequestIDColumn is the column json value request_id
+	ProjectResponseModelRequestIDColumn = "request_id"
+	// ProjectResponseModelSuccessColumn is the column json value success
+	ProjectResponseModelSuccessColumn = "success"
+	// ProjectResponseModelSystemIDColumn is the column json value system_id
+	ProjectResponseModelSystemIDColumn = "system_id"
+	// ProjectResponseModelTypeColumn is the column json value type
+	ProjectResponseModelTypeColumn = "type"
+	// ProjectResponseModelUptimeColumn is the column json value uptime
+	ProjectResponseModelUptimeColumn = "uptime"
+	// ProjectResponseModelUUIDColumn is the column json value uuid
+	ProjectResponseModelUUIDColumn = "uuid"
+	// ProjectResponseModelVersionColumn is the column json value version
+	ProjectResponseModelVersionColumn = "version"
+)
+
 // ProjectResponseEventDate represents the object structure for event_date
 type ProjectResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -282,9 +367,9 @@ func (v ProjectResponseProjectsError) String() string {
 }
 
 const (
-	// ProjectsErrorNONE is the enumeration value for NONE
+	// ProjectResponseProjectsErrorNONE is the enumeration value for NONE
 	ProjectResponseProjectsErrorNONE ProjectResponseProjectsError = 0
-	// ProjectsErrorPERMISSIONS is the enumeration value for PERMISSIONS
+	// ProjectResponseProjectsErrorPERMISSIONS is the enumeration value for PERMISSIONS
 	ProjectResponseProjectsErrorPERMISSIONS ProjectResponseProjectsError = 1
 )
 
@@ -692,35 +777,35 @@ func (v ProjectResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// ProjectResponseTypeEnroll is the enumeration value for enroll
 	ProjectResponseTypeEnroll ProjectResponseType = 0
-	// TypePing is the enumeration value for ping
+	// ProjectResponseTypePing is the enumeration value for ping
 	ProjectResponseTypePing ProjectResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// ProjectResponseTypeCrash is the enumeration value for crash
 	ProjectResponseTypeCrash ProjectResponseType = 2
-	// TypeLog is the enumeration value for log
+	// ProjectResponseTypeLog is the enumeration value for log
 	ProjectResponseTypeLog ProjectResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// ProjectResponseTypeIntegration is the enumeration value for integration
 	ProjectResponseTypeIntegration ProjectResponseType = 4
-	// TypeExport is the enumeration value for export
+	// ProjectResponseTypeExport is the enumeration value for export
 	ProjectResponseTypeExport ProjectResponseType = 5
-	// TypeProject is the enumeration value for project
+	// ProjectResponseTypeProject is the enumeration value for project
 	ProjectResponseTypeProject ProjectResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// ProjectResponseTypeRepo is the enumeration value for repo
 	ProjectResponseTypeRepo ProjectResponseType = 7
-	// TypeUser is the enumeration value for user
+	// ProjectResponseTypeUser is the enumeration value for user
 	ProjectResponseTypeUser ProjectResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// ProjectResponseTypeUninstall is the enumeration value for uninstall
 	ProjectResponseTypeUninstall ProjectResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// ProjectResponseTypeUpgrade is the enumeration value for upgrade
 	ProjectResponseTypeUpgrade ProjectResponseType = 10
-	// TypeStart is the enumeration value for start
+	// ProjectResponseTypeStart is the enumeration value for start
 	ProjectResponseTypeStart ProjectResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// ProjectResponseTypeStop is the enumeration value for stop
 	ProjectResponseTypeStop ProjectResponseType = 12
-	// TypePause is the enumeration value for pause
+	// ProjectResponseTypePause is the enumeration value for pause
 	ProjectResponseTypePause ProjectResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// ProjectResponseTypeResume is the enumeration value for resume
 	ProjectResponseTypeResume ProjectResponseType = 14
 )
 
@@ -960,6 +1045,12 @@ func (o *ProjectResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *ProjectResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two ProjectResponse objects are equal
 func (o *ProjectResponse) IsEqual(other *ProjectResponse) bool {
 	return o.Hash() == other.Hash()
@@ -1115,25 +1206,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1243,25 +1315,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

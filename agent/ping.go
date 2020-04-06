@@ -28,6 +28,75 @@ const (
 	PingModelName datamodel.ModelNameType = "agent.Ping"
 )
 
+const (
+	// PingModelArchitectureColumn is the column json value architecture
+	PingModelArchitectureColumn = "architecture"
+	// PingModelCustomerIDColumn is the column json value customer_id
+	PingModelCustomerIDColumn = "customer_id"
+	// PingModelDataColumn is the column json value data
+	PingModelDataColumn = "data"
+	// PingModelDistroColumn is the column json value distro
+	PingModelDistroColumn = "distro"
+	// PingModelErrorColumn is the column json value error
+	PingModelErrorColumn = "error"
+	// PingModelEventDateColumn is the column json value event_date
+	PingModelEventDateColumn = "event_date"
+	// PingModelEventDateEpochColumn is the column json value epoch
+	PingModelEventDateEpochColumn = "epoch"
+	// PingModelEventDateOffsetColumn is the column json value offset
+	PingModelEventDateOffsetColumn = "offset"
+	// PingModelEventDateRfc3339Column is the column json value rfc3339
+	PingModelEventDateRfc3339Column = "rfc3339"
+	// PingModelExportingColumn is the column json value exporting
+	PingModelExportingColumn = "exporting"
+	// PingModelFreeSpaceColumn is the column json value free_space
+	PingModelFreeSpaceColumn = "free_space"
+	// PingModelGoVersionColumn is the column json value go_version
+	PingModelGoVersionColumn = "go_version"
+	// PingModelHostnameColumn is the column json value hostname
+	PingModelHostnameColumn = "hostname"
+	// PingModelIDColumn is the column json value id
+	PingModelIDColumn = "id"
+	// PingModelLastExportDateColumn is the column json value last_export_date
+	PingModelLastExportDateColumn = "last_export_date"
+	// PingModelLastExportDateEpochColumn is the column json value epoch
+	PingModelLastExportDateEpochColumn = "epoch"
+	// PingModelLastExportDateOffsetColumn is the column json value offset
+	PingModelLastExportDateOffsetColumn = "offset"
+	// PingModelLastExportDateRfc3339Column is the column json value rfc3339
+	PingModelLastExportDateRfc3339Column = "rfc3339"
+	// PingModelMemoryColumn is the column json value memory
+	PingModelMemoryColumn = "memory"
+	// PingModelMessageColumn is the column json value message
+	PingModelMessageColumn = "message"
+	// PingModelNumCPUColumn is the column json value num_cpu
+	PingModelNumCPUColumn = "num_cpu"
+	// PingModelOnboardingColumn is the column json value onboarding
+	PingModelOnboardingColumn = "onboarding"
+	// PingModelOSColumn is the column json value os
+	PingModelOSColumn = "os"
+	// PingModelRefIDColumn is the column json value ref_id
+	PingModelRefIDColumn = "ref_id"
+	// PingModelRefTypeColumn is the column json value ref_type
+	PingModelRefTypeColumn = "ref_type"
+	// PingModelRequestIDColumn is the column json value request_id
+	PingModelRequestIDColumn = "request_id"
+	// PingModelStateColumn is the column json value state
+	PingModelStateColumn = "state"
+	// PingModelSuccessColumn is the column json value success
+	PingModelSuccessColumn = "success"
+	// PingModelSystemIDColumn is the column json value system_id
+	PingModelSystemIDColumn = "system_id"
+	// PingModelTypeColumn is the column json value type
+	PingModelTypeColumn = "type"
+	// PingModelUptimeColumn is the column json value uptime
+	PingModelUptimeColumn = "uptime"
+	// PingModelUUIDColumn is the column json value uuid
+	PingModelUUIDColumn = "uuid"
+	// PingModelVersionColumn is the column json value version
+	PingModelVersionColumn = "version"
+)
+
 // PingEventDate represents the object structure for event_date
 type PingEventDate struct {
 	// Epoch the date in epoch format
@@ -296,13 +365,13 @@ func (v PingState) String() string {
 }
 
 const (
-	// StateIdle is the enumeration value for idle
+	// PingStateIdle is the enumeration value for idle
 	PingStateIdle PingState = 0
-	// StateStarting is the enumeration value for starting
+	// PingStateStarting is the enumeration value for starting
 	PingStateStarting PingState = 1
-	// StateStopping is the enumeration value for stopping
+	// PingStateStopping is the enumeration value for stopping
 	PingStateStopping PingState = 2
-	// StateExporting is the enumeration value for exporting
+	// PingStateExporting is the enumeration value for exporting
 	PingStateExporting PingState = 3
 )
 
@@ -464,35 +533,35 @@ func (v PingType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// PingTypeEnroll is the enumeration value for enroll
 	PingTypeEnroll PingType = 0
-	// TypePing is the enumeration value for ping
+	// PingTypePing is the enumeration value for ping
 	PingTypePing PingType = 1
-	// TypeCrash is the enumeration value for crash
+	// PingTypeCrash is the enumeration value for crash
 	PingTypeCrash PingType = 2
-	// TypeLog is the enumeration value for log
+	// PingTypeLog is the enumeration value for log
 	PingTypeLog PingType = 3
-	// TypeIntegration is the enumeration value for integration
+	// PingTypeIntegration is the enumeration value for integration
 	PingTypeIntegration PingType = 4
-	// TypeExport is the enumeration value for export
+	// PingTypeExport is the enumeration value for export
 	PingTypeExport PingType = 5
-	// TypeProject is the enumeration value for project
+	// PingTypeProject is the enumeration value for project
 	PingTypeProject PingType = 6
-	// TypeRepo is the enumeration value for repo
+	// PingTypeRepo is the enumeration value for repo
 	PingTypeRepo PingType = 7
-	// TypeUser is the enumeration value for user
+	// PingTypeUser is the enumeration value for user
 	PingTypeUser PingType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// PingTypeUninstall is the enumeration value for uninstall
 	PingTypeUninstall PingType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// PingTypeUpgrade is the enumeration value for upgrade
 	PingTypeUpgrade PingType = 10
-	// TypeStart is the enumeration value for start
+	// PingTypeStart is the enumeration value for start
 	PingTypeStart PingType = 11
-	// TypeStop is the enumeration value for stop
+	// PingTypeStop is the enumeration value for stop
 	PingTypeStop PingType = 12
-	// TypePause is the enumeration value for pause
+	// PingTypePause is the enumeration value for pause
 	PingTypePause PingType = 13
-	// TypeResume is the enumeration value for resume
+	// PingTypeResume is the enumeration value for resume
 	PingTypeResume PingType = 14
 )
 
@@ -727,6 +796,12 @@ func (o *Ping) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Ping) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two Ping objects are equal
 func (o *Ping) IsEqual(other *Ping) bool {
 	return o.Hash() == other.Hash()
@@ -884,25 +959,6 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1004,25 +1060,6 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

@@ -28,6 +28,73 @@ const (
 	ResumeModelName datamodel.ModelNameType = "agent.Resume"
 )
 
+const (
+	// ResumeModelArchitectureColumn is the column json value architecture
+	ResumeModelArchitectureColumn = "architecture"
+	// ResumeModelCustomerIDColumn is the column json value customer_id
+	ResumeModelCustomerIDColumn = "customer_id"
+	// ResumeModelDataColumn is the column json value data
+	ResumeModelDataColumn = "data"
+	// ResumeModelDistroColumn is the column json value distro
+	ResumeModelDistroColumn = "distro"
+	// ResumeModelErrorColumn is the column json value error
+	ResumeModelErrorColumn = "error"
+	// ResumeModelEventDateColumn is the column json value event_date
+	ResumeModelEventDateColumn = "event_date"
+	// ResumeModelEventDateEpochColumn is the column json value epoch
+	ResumeModelEventDateEpochColumn = "epoch"
+	// ResumeModelEventDateOffsetColumn is the column json value offset
+	ResumeModelEventDateOffsetColumn = "offset"
+	// ResumeModelEventDateRfc3339Column is the column json value rfc3339
+	ResumeModelEventDateRfc3339Column = "rfc3339"
+	// ResumeModelFreeSpaceColumn is the column json value free_space
+	ResumeModelFreeSpaceColumn = "free_space"
+	// ResumeModelGoVersionColumn is the column json value go_version
+	ResumeModelGoVersionColumn = "go_version"
+	// ResumeModelHostnameColumn is the column json value hostname
+	ResumeModelHostnameColumn = "hostname"
+	// ResumeModelIDColumn is the column json value id
+	ResumeModelIDColumn = "id"
+	// ResumeModelIntegrationColumn is the column json value integration
+	ResumeModelIntegrationColumn = "integration"
+	// ResumeModelJobIDColumn is the column json value job_id
+	ResumeModelJobIDColumn = "job_id"
+	// ResumeModelLastExportDateColumn is the column json value last_export_date
+	ResumeModelLastExportDateColumn = "last_export_date"
+	// ResumeModelLastExportDateEpochColumn is the column json value epoch
+	ResumeModelLastExportDateEpochColumn = "epoch"
+	// ResumeModelLastExportDateOffsetColumn is the column json value offset
+	ResumeModelLastExportDateOffsetColumn = "offset"
+	// ResumeModelLastExportDateRfc3339Column is the column json value rfc3339
+	ResumeModelLastExportDateRfc3339Column = "rfc3339"
+	// ResumeModelMemoryColumn is the column json value memory
+	ResumeModelMemoryColumn = "memory"
+	// ResumeModelMessageColumn is the column json value message
+	ResumeModelMessageColumn = "message"
+	// ResumeModelNumCPUColumn is the column json value num_cpu
+	ResumeModelNumCPUColumn = "num_cpu"
+	// ResumeModelOSColumn is the column json value os
+	ResumeModelOSColumn = "os"
+	// ResumeModelRefIDColumn is the column json value ref_id
+	ResumeModelRefIDColumn = "ref_id"
+	// ResumeModelRefTypeColumn is the column json value ref_type
+	ResumeModelRefTypeColumn = "ref_type"
+	// ResumeModelRequestIDColumn is the column json value request_id
+	ResumeModelRequestIDColumn = "request_id"
+	// ResumeModelSuccessColumn is the column json value success
+	ResumeModelSuccessColumn = "success"
+	// ResumeModelSystemIDColumn is the column json value system_id
+	ResumeModelSystemIDColumn = "system_id"
+	// ResumeModelTypeColumn is the column json value type
+	ResumeModelTypeColumn = "type"
+	// ResumeModelUptimeColumn is the column json value uptime
+	ResumeModelUptimeColumn = "uptime"
+	// ResumeModelUUIDColumn is the column json value uuid
+	ResumeModelUUIDColumn = "uuid"
+	// ResumeModelVersionColumn is the column json value version
+	ResumeModelVersionColumn = "version"
+)
+
 // ResumeEventDate represents the object structure for event_date
 type ResumeEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +451,35 @@ func (v ResumeType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// ResumeTypeEnroll is the enumeration value for enroll
 	ResumeTypeEnroll ResumeType = 0
-	// TypePing is the enumeration value for ping
+	// ResumeTypePing is the enumeration value for ping
 	ResumeTypePing ResumeType = 1
-	// TypeCrash is the enumeration value for crash
+	// ResumeTypeCrash is the enumeration value for crash
 	ResumeTypeCrash ResumeType = 2
-	// TypeLog is the enumeration value for log
+	// ResumeTypeLog is the enumeration value for log
 	ResumeTypeLog ResumeType = 3
-	// TypeIntegration is the enumeration value for integration
+	// ResumeTypeIntegration is the enumeration value for integration
 	ResumeTypeIntegration ResumeType = 4
-	// TypeExport is the enumeration value for export
+	// ResumeTypeExport is the enumeration value for export
 	ResumeTypeExport ResumeType = 5
-	// TypeProject is the enumeration value for project
+	// ResumeTypeProject is the enumeration value for project
 	ResumeTypeProject ResumeType = 6
-	// TypeRepo is the enumeration value for repo
+	// ResumeTypeRepo is the enumeration value for repo
 	ResumeTypeRepo ResumeType = 7
-	// TypeUser is the enumeration value for user
+	// ResumeTypeUser is the enumeration value for user
 	ResumeTypeUser ResumeType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// ResumeTypeUninstall is the enumeration value for uninstall
 	ResumeTypeUninstall ResumeType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// ResumeTypeUpgrade is the enumeration value for upgrade
 	ResumeTypeUpgrade ResumeType = 10
-	// TypeStart is the enumeration value for start
+	// ResumeTypeStart is the enumeration value for start
 	ResumeTypeStart ResumeType = 11
-	// TypeStop is the enumeration value for stop
+	// ResumeTypeStop is the enumeration value for stop
 	ResumeTypeStop ResumeType = 12
-	// TypePause is the enumeration value for pause
+	// ResumeTypePause is the enumeration value for pause
 	ResumeTypePause ResumeType = 13
-	// TypeResume is the enumeration value for resume
+	// ResumeTypeResume is the enumeration value for resume
 	ResumeTypeResume ResumeType = 14
 )
 
@@ -642,6 +709,12 @@ func (o *Resume) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Resume) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two Resume objects are equal
 func (o *Resume) IsEqual(other *Resume) bool {
 	return o.Hash() == other.Hash()
@@ -797,25 +870,6 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ResumeEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -945,25 +999,6 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ResumeLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

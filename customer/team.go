@@ -33,6 +33,67 @@ const (
 	TeamModelName datamodel.ModelNameType = "customer.Team"
 )
 
+const (
+	// TeamModelActiveColumn is the column json value active
+	TeamModelActiveColumn = "active"
+	// TeamModelChildrenIdsColumn is the column json value children_ids
+	TeamModelChildrenIdsColumn = "children_ids"
+	// TeamModelCreatedAtColumn is the column json value created_ts
+	TeamModelCreatedAtColumn = "created_ts"
+	// TeamModelCustomerIDColumn is the column json value customer_id
+	TeamModelCustomerIDColumn = "customer_id"
+	// TeamModelDeletedColumn is the column json value deleted
+	TeamModelDeletedColumn = "deleted"
+	// TeamModelDeletedDateColumn is the column json value deleted_date
+	TeamModelDeletedDateColumn = "deleted_date"
+	// TeamModelDeletedDateEpochColumn is the column json value epoch
+	TeamModelDeletedDateEpochColumn = "epoch"
+	// TeamModelDeletedDateOffsetColumn is the column json value offset
+	TeamModelDeletedDateOffsetColumn = "offset"
+	// TeamModelDeletedDateRfc3339Column is the column json value rfc3339
+	TeamModelDeletedDateRfc3339Column = "rfc3339"
+	// TeamModelDescriptionColumn is the column json value description
+	TeamModelDescriptionColumn = "description"
+	// TeamModelIDColumn is the column json value id
+	TeamModelIDColumn = "id"
+	// TeamModelLeafColumn is the column json value leaf
+	TeamModelLeafColumn = "leaf"
+	// TeamModelNameColumn is the column json value name
+	TeamModelNameColumn = "name"
+	// TeamModelParentIdsColumn is the column json value parent_ids
+	TeamModelParentIdsColumn = "parent_ids"
+	// TeamModelProjectIdsColumn is the column json value project_ids
+	TeamModelProjectIdsColumn = "project_ids"
+	// TeamModelRefIDColumn is the column json value ref_id
+	TeamModelRefIDColumn = "ref_id"
+	// TeamModelRefTypeColumn is the column json value ref_type
+	TeamModelRefTypeColumn = "ref_type"
+	// TeamModelRepoIdsColumn is the column json value repo_ids
+	TeamModelRepoIdsColumn = "repo_ids"
+	// TeamModelUsersTypeColumn is the column json value type
+	TeamModelUsersTypeColumn = "type"
+	// TeamModelUpdatedAtColumn is the column json value updated_ts
+	TeamModelUpdatedAtColumn = "updated_ts"
+	// TeamModelUsersColumn is the column json value users
+	TeamModelUsersColumn = "users"
+	// TeamModelUsersAvatarURLColumn is the column json value avatar_url
+	TeamModelUsersAvatarURLColumn = "avatar_url"
+	// TeamModelUsersIDColumn is the column json value id
+	TeamModelUsersIDColumn = "id"
+	// TeamModelUsersNameColumn is the column json value name
+	TeamModelUsersNameColumn = "name"
+	// TeamModelUsersNicknameColumn is the column json value nickname
+	TeamModelUsersNicknameColumn = "nickname"
+	// TeamModelUsersProfileIDColumn is the column json value profile_id
+	TeamModelUsersProfileIDColumn = "profile_id"
+	// TeamModelUsersRefIDColumn is the column json value ref_id
+	TeamModelUsersRefIDColumn = "ref_id"
+	// TeamModelUsersTeamIDColumn is the column json value team_id
+	TeamModelUsersTeamIDColumn = "team_id"
+	// TeamModelUsersURLColumn is the column json value url
+	TeamModelUsersURLColumn = "url"
+)
+
 // TeamDeletedDate represents the object structure for deleted_date
 type TeamDeletedDate struct {
 	// Epoch the date in epoch format
@@ -234,21 +295,21 @@ func (v TeamUsersType) String() string {
 }
 
 const (
-	// UsersTypeNONE is the enumeration value for NONE
+	// TeamUsersTypeNONE is the enumeration value for NONE
 	TeamUsersTypeNONE TeamUsersType = 0
-	// UsersTypeTRACKABLE is the enumeration value for TRACKABLE
+	// TeamUsersTypeTRACKABLE is the enumeration value for TRACKABLE
 	TeamUsersTypeTRACKABLE TeamUsersType = 1
-	// UsersTypeBOT is the enumeration value for BOT
+	// TeamUsersTypeBOT is the enumeration value for BOT
 	TeamUsersTypeBOT TeamUsersType = 2
-	// UsersTypeUNTRACKABLE is the enumeration value for UNTRACKABLE
+	// TeamUsersTypeUNTRACKABLE is the enumeration value for UNTRACKABLE
 	TeamUsersTypeUNTRACKABLE TeamUsersType = 3
-	// UsersTypeUNMAPPED is the enumeration value for UNMAPPED
+	// TeamUsersTypeUNMAPPED is the enumeration value for UNMAPPED
 	TeamUsersTypeUNMAPPED TeamUsersType = 4
-	// UsersTypeTERMINATED is the enumeration value for TERMINATED
+	// TeamUsersTypeTERMINATED is the enumeration value for TERMINATED
 	TeamUsersTypeTERMINATED TeamUsersType = 5
-	// UsersTypeDELETED is the enumeration value for DELETED
+	// TeamUsersTypeDELETED is the enumeration value for DELETED
 	TeamUsersTypeDELETED TeamUsersType = 6
-	// UsersTypeINVITED is the enumeration value for INVITED
+	// TeamUsersTypeINVITED is the enumeration value for INVITED
 	TeamUsersTypeINVITED TeamUsersType = 7
 )
 
@@ -746,6 +807,12 @@ func (o *Team) UnmarshalJSON(data []byte) error {
 func (o *Team) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Team) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Team objects are equal
@@ -1314,16 +1381,8 @@ func (o *Team) GetEventAPIConfig() datamodel.EventAPIConfig {
 	}
 }
 
-// ExecTeamUpdateMutation returns a graphql update mutation for Team
-func ExecTeamUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*Team, error) {
-	variables := make(graphql.Variables)
-	variables["id"] = id
-	variables["upsert"] = upsert
-	variables["input"] = input
+func getTeamQueryFields() string {
 	var sb strings.Builder
-	sb.WriteString("mutation TeamUpdateMutation($id: String, $input: UpdateCustomerTeamInput, $upsert: Boolean) {\n")
-	sb.WriteString("\tcustomer {\n")
-	sb.WriteString("\t\tupdateTeam(_id: $id, input: $input, upsert: $upsert) {\n")
 
 	// scalar
 	sb.WriteString("\t\t\tactive\n")
@@ -1359,20 +1418,196 @@ func ExecTeamUpdateMutation(client graphql.Client, id string, input graphql.Vari
 	sb.WriteString("\t\t\tref_type\n")
 	// scalar
 	sb.WriteString("\t\t\tupdated_ts\n")
+	return sb.String()
+}
+
+// TeamPageInfo is a grapqhl PageInfo
+type TeamPageInfo struct {
+	StartCursor     string `json:"startCursor,omitempty"`
+	EndCursor       string `json:"endCursor,omitempty"`
+	HasNextPage     bool   `json:"hasNextPage,omitempty"`
+	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
+}
+
+// TeamConnection is a grapqhl connection
+type TeamConnection struct {
+	Edges      []*TeamEdge  `json:"edges,omitempty"`
+	PageInfo   TeamPageInfo `json:"pageInfo,omitempty"`
+	TotalCount *int64       `json:"totalCount,omitempty"`
+}
+
+// TeamEdge is a grapqhl edge
+type TeamEdge struct {
+	Node *Team `json:"node,omitempty"`
+}
+
+// QueryManyTeamNode is a grapqhl query many node
+type QueryManyTeamNode struct {
+	Object *TeamConnection `json:"Teams,omitempty"`
+}
+
+// QueryManyTeamData is a grapqhl query many data node
+type QueryManyTeamData struct {
+	Data *QueryManyTeamNode `json:"customer,omitempty"`
+}
+
+// QueryOneTeamNode is a grapqhl query one node
+type QueryOneTeamNode struct {
+	Object *Team `json:"Team,omitempty"`
+}
+
+// QueryOneTeamData is a grapqhl query one data node
+type QueryOneTeamData struct {
+	Data *QueryOneTeamNode `json:"customer,omitempty"`
+}
+
+// TeamQuery is query struct
+type TeamQuery struct {
+	Filters []string      `json:"filters,omitempty"`
+	Params  []interface{} `json:"params,omitempty"`
+}
+
+// TeamQueryInput is query input struct
+type TeamQueryInput struct {
+	First  *int64     `json:"first,omitempty"`
+	Last   *int64     `json:"last,omitempty"`
+	Before *string    `json:"before,omitempty"`
+	After  *string    `json:"after,omitempty"`
+	Query  *TeamQuery `json:"query,omitempty"`
+}
+
+// NewTeamQuery is a convenience for building a *TeamQuery
+func NewTeamQuery(params ...interface{}) *TeamQueryInput {
+	if len(params)%2 != 0 {
+		panic("incorrect number of arguments passed")
+	}
+	q := &TeamQuery{
+		Filters: make([]string, 0),
+		Params:  make([]interface{}, 0),
+	}
+	for i := 0; i < len(params); i += 2 {
+		q.Filters = append(q.Filters, params[i].(string))
+		q.Params = append(q.Params, params[i+1])
+	}
+	return &TeamQueryInput{
+		Query: q,
+	}
+}
+
+// FindTeam will query an Team by id
+func FindTeam(client graphql.Client, id string) (*Team, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("query TeamQuery($id: ID) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tTeam(_id: $id) {\n")
+	sb.WriteString(getTeamQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
 	sb.WriteString("}\n")
-	kv := make(map[string]interface{})
-	if err := client.Mutate(sb.String(), variables, &kv); err != nil {
+	var res QueryOneTeamData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
 		return nil, err
 	}
-	if sdata, ok := kv["customer"].(map[string]interface{}); ok {
-		if mdata, ok := sdata["updateTeam"].(map[string]interface{}); ok {
-			var object Team
-			object.FromMap(mdata)
-			return &object, nil
-		}
-		return nil, fmt.Errorf("missing expected updateTeam key from customer")
+	if res.Data != nil {
+		return res.Data.Object, nil
 	}
-	return nil, fmt.Errorf("missing expected customer key from data")
+	return nil, nil
+}
+
+// FindTeams will query for any Teams matching the query
+func FindTeams(client graphql.Client, input *TeamQueryInput) (*TeamConnection, error) {
+	variables := make(graphql.Variables)
+	if input != nil {
+		variables["first"] = input.First
+		variables["last"] = input.Last
+		variables["before"] = input.Before
+		variables["after"] = input.After
+		variables["query"] = input.Query
+	}
+	var sb strings.Builder
+	sb.WriteString("query TeamQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tTeams(first: $first last: $last before: $before after: $after query: $query) {\n")
+	sb.WriteString("\t\t\tpageInfo {\n")
+	sb.WriteString("\t\t\t\tstartCursor\n")
+	sb.WriteString("\t\t\t\tendCursor\n")
+	sb.WriteString("\t\t\t\thasNextPage\n")
+	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\ttotalCount\n")
+	sb.WriteString("\t\t\tedges {\n")
+	sb.WriteString("\t\t\t\tnode {\n")
+	sb.WriteString(getTeamQueryFields())
+	sb.WriteString("\t\t\t\t}\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryManyTeamData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	return res.Data.Object, nil
+}
+
+// FindTeamsPaginatedCallback is a callback function for handling each page
+type FindTeamsPaginatedCallback func(conn *TeamConnection) (bool, error)
+
+// FindTeams will query for any Teams matching the query and return each page callback
+func FindTeamsPaginated(client graphql.Client, query *TeamQuery, pageSize int64, callback FindTeamsPaginatedCallback) error {
+	input := &TeamQueryInput{
+		First: &pageSize,
+		Query: query,
+	}
+	for {
+		res, err := FindTeams(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// UpdateTeamNode is a grapqhl update node
+type UpdateTeamNode struct {
+	Object *Team `json:"updateTeam,omitempty"`
+}
+
+// UpdateTeamData is a grapqhl update data node
+type UpdateTeamData struct {
+	Data *UpdateTeamNode `json:"customer,omitempty"`
+}
+
+// ExecTeamUpdateMutation returns a graphql update mutation result for Team
+func ExecTeamUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*Team, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["upsert"] = upsert
+	variables["input"] = input
+	var sb strings.Builder
+	sb.WriteString("mutation TeamUpdateMutation($id: String, $input: UpdateCustomerTeamInput, $upsert: Boolean) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tupdateTeam(_id: $id, input: $input, upsert: $upsert) {\n")
+	sb.WriteString(getTeamQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res UpdateTeamData
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	return res.Data.Object, nil
 }

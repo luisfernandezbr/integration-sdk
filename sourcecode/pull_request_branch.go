@@ -30,6 +30,45 @@ const (
 	PullRequestBranchModelName datamodel.ModelNameType = "sourcecode.PullRequestBranch"
 )
 
+const (
+	// PullRequestBranchModelAheadDefaultCountColumn is the column json value ahead_default_count
+	PullRequestBranchModelAheadDefaultCountColumn = "ahead_default_count"
+	// PullRequestBranchModelBehindDefaultCountColumn is the column json value behind_default_count
+	PullRequestBranchModelBehindDefaultCountColumn = "behind_default_count"
+	// PullRequestBranchModelBranchedFromCommitIdsColumn is the column json value branched_from_commit_ids
+	PullRequestBranchModelBranchedFromCommitIdsColumn = "branched_from_commit_ids"
+	// PullRequestBranchModelBranchedFromCommitShasColumn is the column json value branched_from_commit_shas
+	PullRequestBranchModelBranchedFromCommitShasColumn = "branched_from_commit_shas"
+	// PullRequestBranchModelCommitIdsColumn is the column json value commit_ids
+	PullRequestBranchModelCommitIdsColumn = "commit_ids"
+	// PullRequestBranchModelCommitShasColumn is the column json value commit_shas
+	PullRequestBranchModelCommitShasColumn = "commit_shas"
+	// PullRequestBranchModelCustomerIDColumn is the column json value customer_id
+	PullRequestBranchModelCustomerIDColumn = "customer_id"
+	// PullRequestBranchModelDefaultColumn is the column json value default
+	PullRequestBranchModelDefaultColumn = "default"
+	// PullRequestBranchModelIDColumn is the column json value id
+	PullRequestBranchModelIDColumn = "id"
+	// PullRequestBranchModelMergeCommitIDColumn is the column json value merge_commit_id
+	PullRequestBranchModelMergeCommitIDColumn = "merge_commit_id"
+	// PullRequestBranchModelMergeCommitShaColumn is the column json value merge_commit_sha
+	PullRequestBranchModelMergeCommitShaColumn = "merge_commit_sha"
+	// PullRequestBranchModelMergedColumn is the column json value merged
+	PullRequestBranchModelMergedColumn = "merged"
+	// PullRequestBranchModelNameColumn is the column json value name
+	PullRequestBranchModelNameColumn = "name"
+	// PullRequestBranchModelPullRequestIDColumn is the column json value pull_request_id
+	PullRequestBranchModelPullRequestIDColumn = "pull_request_id"
+	// PullRequestBranchModelRefIDColumn is the column json value ref_id
+	PullRequestBranchModelRefIDColumn = "ref_id"
+	// PullRequestBranchModelRefTypeColumn is the column json value ref_type
+	PullRequestBranchModelRefTypeColumn = "ref_type"
+	// PullRequestBranchModelRepoIDColumn is the column json value repo_id
+	PullRequestBranchModelRepoIDColumn = "repo_id"
+	// PullRequestBranchModelURLColumn is the column json value url
+	PullRequestBranchModelURLColumn = "url"
+)
+
 // PullRequestBranch the pull request branch is a branch in a repo that was extracted from a pull request instead of from git
 type PullRequestBranch struct {
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
@@ -240,6 +279,12 @@ func (o *PullRequestBranch) UnmarshalJSON(data []byte) error {
 func (o *PullRequestBranch) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *PullRequestBranch) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two PullRequestBranch objects are equal

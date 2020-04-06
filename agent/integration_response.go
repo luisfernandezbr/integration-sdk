@@ -28,6 +28,73 @@ const (
 	IntegrationResponseModelName datamodel.ModelNameType = "agent.IntegrationResponse"
 )
 
+const (
+	// IntegrationResponseModelArchitectureColumn is the column json value architecture
+	IntegrationResponseModelArchitectureColumn = "architecture"
+	// IntegrationResponseModelAuthorizationColumn is the column json value authorization
+	IntegrationResponseModelAuthorizationColumn = "authorization"
+	// IntegrationResponseModelCustomerIDColumn is the column json value customer_id
+	IntegrationResponseModelCustomerIDColumn = "customer_id"
+	// IntegrationResponseModelDataColumn is the column json value data
+	IntegrationResponseModelDataColumn = "data"
+	// IntegrationResponseModelDistroColumn is the column json value distro
+	IntegrationResponseModelDistroColumn = "distro"
+	// IntegrationResponseModelErrorColumn is the column json value error
+	IntegrationResponseModelErrorColumn = "error"
+	// IntegrationResponseModelEventDateColumn is the column json value event_date
+	IntegrationResponseModelEventDateColumn = "event_date"
+	// IntegrationResponseModelEventDateEpochColumn is the column json value epoch
+	IntegrationResponseModelEventDateEpochColumn = "epoch"
+	// IntegrationResponseModelEventDateOffsetColumn is the column json value offset
+	IntegrationResponseModelEventDateOffsetColumn = "offset"
+	// IntegrationResponseModelEventDateRfc3339Column is the column json value rfc3339
+	IntegrationResponseModelEventDateRfc3339Column = "rfc3339"
+	// IntegrationResponseModelFreeSpaceColumn is the column json value free_space
+	IntegrationResponseModelFreeSpaceColumn = "free_space"
+	// IntegrationResponseModelGoVersionColumn is the column json value go_version
+	IntegrationResponseModelGoVersionColumn = "go_version"
+	// IntegrationResponseModelHostnameColumn is the column json value hostname
+	IntegrationResponseModelHostnameColumn = "hostname"
+	// IntegrationResponseModelIDColumn is the column json value id
+	IntegrationResponseModelIDColumn = "id"
+	// IntegrationResponseModelLastExportDateColumn is the column json value last_export_date
+	IntegrationResponseModelLastExportDateColumn = "last_export_date"
+	// IntegrationResponseModelLastExportDateEpochColumn is the column json value epoch
+	IntegrationResponseModelLastExportDateEpochColumn = "epoch"
+	// IntegrationResponseModelLastExportDateOffsetColumn is the column json value offset
+	IntegrationResponseModelLastExportDateOffsetColumn = "offset"
+	// IntegrationResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	IntegrationResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// IntegrationResponseModelMemoryColumn is the column json value memory
+	IntegrationResponseModelMemoryColumn = "memory"
+	// IntegrationResponseModelMessageColumn is the column json value message
+	IntegrationResponseModelMessageColumn = "message"
+	// IntegrationResponseModelNumCPUColumn is the column json value num_cpu
+	IntegrationResponseModelNumCPUColumn = "num_cpu"
+	// IntegrationResponseModelOSColumn is the column json value os
+	IntegrationResponseModelOSColumn = "os"
+	// IntegrationResponseModelRefIDColumn is the column json value ref_id
+	IntegrationResponseModelRefIDColumn = "ref_id"
+	// IntegrationResponseModelRefTypeColumn is the column json value ref_type
+	IntegrationResponseModelRefTypeColumn = "ref_type"
+	// IntegrationResponseModelRequestIDColumn is the column json value request_id
+	IntegrationResponseModelRequestIDColumn = "request_id"
+	// IntegrationResponseModelServerVersionColumn is the column json value server_version
+	IntegrationResponseModelServerVersionColumn = "server_version"
+	// IntegrationResponseModelSuccessColumn is the column json value success
+	IntegrationResponseModelSuccessColumn = "success"
+	// IntegrationResponseModelSystemIDColumn is the column json value system_id
+	IntegrationResponseModelSystemIDColumn = "system_id"
+	// IntegrationResponseModelTypeColumn is the column json value type
+	IntegrationResponseModelTypeColumn = "type"
+	// IntegrationResponseModelUptimeColumn is the column json value uptime
+	IntegrationResponseModelUptimeColumn = "uptime"
+	// IntegrationResponseModelUUIDColumn is the column json value uuid
+	IntegrationResponseModelUUIDColumn = "uuid"
+	// IntegrationResponseModelVersionColumn is the column json value version
+	IntegrationResponseModelVersionColumn = "version"
+)
+
 // IntegrationResponseEventDate represents the object structure for event_date
 type IntegrationResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +451,35 @@ func (v IntegrationResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// IntegrationResponseTypeEnroll is the enumeration value for enroll
 	IntegrationResponseTypeEnroll IntegrationResponseType = 0
-	// TypePing is the enumeration value for ping
+	// IntegrationResponseTypePing is the enumeration value for ping
 	IntegrationResponseTypePing IntegrationResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// IntegrationResponseTypeCrash is the enumeration value for crash
 	IntegrationResponseTypeCrash IntegrationResponseType = 2
-	// TypeLog is the enumeration value for log
+	// IntegrationResponseTypeLog is the enumeration value for log
 	IntegrationResponseTypeLog IntegrationResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// IntegrationResponseTypeIntegration is the enumeration value for integration
 	IntegrationResponseTypeIntegration IntegrationResponseType = 4
-	// TypeExport is the enumeration value for export
+	// IntegrationResponseTypeExport is the enumeration value for export
 	IntegrationResponseTypeExport IntegrationResponseType = 5
-	// TypeProject is the enumeration value for project
+	// IntegrationResponseTypeProject is the enumeration value for project
 	IntegrationResponseTypeProject IntegrationResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// IntegrationResponseTypeRepo is the enumeration value for repo
 	IntegrationResponseTypeRepo IntegrationResponseType = 7
-	// TypeUser is the enumeration value for user
+	// IntegrationResponseTypeUser is the enumeration value for user
 	IntegrationResponseTypeUser IntegrationResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// IntegrationResponseTypeUninstall is the enumeration value for uninstall
 	IntegrationResponseTypeUninstall IntegrationResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// IntegrationResponseTypeUpgrade is the enumeration value for upgrade
 	IntegrationResponseTypeUpgrade IntegrationResponseType = 10
-	// TypeStart is the enumeration value for start
+	// IntegrationResponseTypeStart is the enumeration value for start
 	IntegrationResponseTypeStart IntegrationResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// IntegrationResponseTypeStop is the enumeration value for stop
 	IntegrationResponseTypeStop IntegrationResponseType = 12
-	// TypePause is the enumeration value for pause
+	// IntegrationResponseTypePause is the enumeration value for pause
 	IntegrationResponseTypePause IntegrationResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// IntegrationResponseTypeResume is the enumeration value for resume
 	IntegrationResponseTypeResume IntegrationResponseType = 14
 )
 
@@ -640,6 +707,12 @@ func (o *IntegrationResponse) UnmarshalJSON(data []byte) error {
 func (o *IntegrationResponse) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *IntegrationResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two IntegrationResponse objects are equal

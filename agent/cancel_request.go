@@ -28,6 +28,29 @@ const (
 	CancelRequestModelName datamodel.ModelNameType = "agent.CancelRequest"
 )
 
+const (
+	// CancelRequestModelCommandColumn is the column json value command
+	CancelRequestModelCommandColumn = "command"
+	// CancelRequestModelCustomerIDColumn is the column json value customer_id
+	CancelRequestModelCustomerIDColumn = "customer_id"
+	// CancelRequestModelIDColumn is the column json value id
+	CancelRequestModelIDColumn = "id"
+	// CancelRequestModelRefIDColumn is the column json value ref_id
+	CancelRequestModelRefIDColumn = "ref_id"
+	// CancelRequestModelRefTypeColumn is the column json value ref_type
+	CancelRequestModelRefTypeColumn = "ref_type"
+	// CancelRequestModelRequestDateColumn is the column json value request_date
+	CancelRequestModelRequestDateColumn = "request_date"
+	// CancelRequestModelRequestDateEpochColumn is the column json value epoch
+	CancelRequestModelRequestDateEpochColumn = "epoch"
+	// CancelRequestModelRequestDateOffsetColumn is the column json value offset
+	CancelRequestModelRequestDateOffsetColumn = "offset"
+	// CancelRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	CancelRequestModelRequestDateRfc3339Column = "rfc3339"
+	// CancelRequestModelUUIDColumn is the column json value uuid
+	CancelRequestModelUUIDColumn = "uuid"
+)
+
 // CancelRequestCommand is the enumeration type for command
 type CancelRequestCommand int32
 
@@ -90,11 +113,11 @@ func (v CancelRequestCommand) String() string {
 }
 
 const (
-	// CommandEXPORT is the enumeration value for EXPORT
+	// CancelRequestCommandEXPORT is the enumeration value for EXPORT
 	CancelRequestCommandEXPORT CancelRequestCommand = 0
-	// CommandONBOARD is the enumeration value for ONBOARD
+	// CancelRequestCommandONBOARD is the enumeration value for ONBOARD
 	CancelRequestCommandONBOARD CancelRequestCommand = 1
-	// CommandINTEGRATION is the enumeration value for INTEGRATION
+	// CancelRequestCommandINTEGRATION is the enumeration value for INTEGRATION
 	CancelRequestCommandINTEGRATION CancelRequestCommand = 2
 )
 
@@ -380,6 +403,12 @@ func (o *CancelRequest) UnmarshalJSON(data []byte) error {
 func (o *CancelRequest) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *CancelRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two CancelRequest objects are equal

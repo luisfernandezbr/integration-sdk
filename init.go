@@ -164,10 +164,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.WebappIntegrationMutationRequest)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "agent.WebappIntegrationMutationResponse":
-		o := new(dm_agent.WebappIntegrationMutationResponse)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "agent.WorkStatusRequest":
 		o := new(dm_agent.WorkStatusRequest)
 		o.FromMap(map[string]interface{}{})
@@ -359,7 +355,6 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.UpdateResponse"),
 		datamodel.ModelNameType("agent.UpdateTrigger"),
 		datamodel.ModelNameType("agent.WebappIntegrationMutationRequest"),
-		datamodel.ModelNameType("agent.WebappIntegrationMutationResponse"),
 		datamodel.ModelNameType("agent.WorkStatusRequest"),
 		datamodel.ModelNameType("agent.WorkStatusResponse"),
 		datamodel.ModelNameType("agent.WorkStatusTrigger"),

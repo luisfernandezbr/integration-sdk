@@ -26,6 +26,27 @@ const (
 	WebappIntegrationMutationRequestModelName datamodel.ModelNameType = "agent.WebappIntegrationMutationRequest"
 )
 
+const (
+	// WebappIntegrationMutationRequestModelActionColumn is the column json value action
+	WebappIntegrationMutationRequestModelActionColumn = "action"
+	// WebappIntegrationMutationRequestModelCustomerIDColumn is the column json value customer_id
+	WebappIntegrationMutationRequestModelCustomerIDColumn = "customer_id"
+	// WebappIntegrationMutationRequestModelDataColumn is the column json value data
+	WebappIntegrationMutationRequestModelDataColumn = "data"
+	// WebappIntegrationMutationRequestModelIDColumn is the column json value id
+	WebappIntegrationMutationRequestModelIDColumn = "id"
+	// WebappIntegrationMutationRequestModelIntegrationNameColumn is the column json value integration_name
+	WebappIntegrationMutationRequestModelIntegrationNameColumn = "integration_name"
+	// WebappIntegrationMutationRequestModelJobIDColumn is the column json value job_id
+	WebappIntegrationMutationRequestModelJobIDColumn = "job_id"
+	// WebappIntegrationMutationRequestModelRefIDColumn is the column json value ref_id
+	WebappIntegrationMutationRequestModelRefIDColumn = "ref_id"
+	// WebappIntegrationMutationRequestModelRefTypeColumn is the column json value ref_type
+	WebappIntegrationMutationRequestModelRefTypeColumn = "ref_type"
+	// WebappIntegrationMutationRequestModelSystemTypeColumn is the column json value system_type
+	WebappIntegrationMutationRequestModelSystemTypeColumn = "system_type"
+)
+
 // WebappIntegrationMutationRequestAction is the enumeration type for action
 type WebappIntegrationMutationRequestAction int32
 
@@ -104,15 +125,15 @@ func (v WebappIntegrationMutationRequestAction) String() string {
 }
 
 const (
-	// ActionIssueAddComment is the enumeration value for issue_add_comment
+	// WebappIntegrationMutationRequestActionIssueAddComment is the enumeration value for issue_add_comment
 	WebappIntegrationMutationRequestActionIssueAddComment WebappIntegrationMutationRequestAction = 0
-	// ActionIssueSetTitle is the enumeration value for issue_set_title
+	// WebappIntegrationMutationRequestActionIssueSetTitle is the enumeration value for issue_set_title
 	WebappIntegrationMutationRequestActionIssueSetTitle WebappIntegrationMutationRequestAction = 1
-	// ActionIssueSetStatus is the enumeration value for issue_set_status
+	// WebappIntegrationMutationRequestActionIssueSetStatus is the enumeration value for issue_set_status
 	WebappIntegrationMutationRequestActionIssueSetStatus WebappIntegrationMutationRequestAction = 2
-	// ActionIssueSetPriority is the enumeration value for issue_set_priority
+	// WebappIntegrationMutationRequestActionIssueSetPriority is the enumeration value for issue_set_priority
 	WebappIntegrationMutationRequestActionIssueSetPriority WebappIntegrationMutationRequestAction = 3
-	// ActionIssueSetAssignee is the enumeration value for issue_set_assignee
+	// WebappIntegrationMutationRequestActionIssueSetAssignee is the enumeration value for issue_set_assignee
 	WebappIntegrationMutationRequestActionIssueSetAssignee WebappIntegrationMutationRequestAction = 4
 )
 
@@ -186,13 +207,13 @@ func (v WebappIntegrationMutationRequestSystemType) String() string {
 }
 
 const (
-	// SystemTypeWork is the enumeration value for work
+	// WebappIntegrationMutationRequestSystemTypeWork is the enumeration value for work
 	WebappIntegrationMutationRequestSystemTypeWork WebappIntegrationMutationRequestSystemType = 0
-	// SystemTypeSourcecode is the enumeration value for sourcecode
+	// WebappIntegrationMutationRequestSystemTypeSourcecode is the enumeration value for sourcecode
 	WebappIntegrationMutationRequestSystemTypeSourcecode WebappIntegrationMutationRequestSystemType = 1
-	// SystemTypeCodequality is the enumeration value for codequality
+	// WebappIntegrationMutationRequestSystemTypeCodequality is the enumeration value for codequality
 	WebappIntegrationMutationRequestSystemTypeCodequality WebappIntegrationMutationRequestSystemType = 2
-	// SystemTypeUser is the enumeration value for user
+	// WebappIntegrationMutationRequestSystemTypeUser is the enumeration value for user
 	WebappIntegrationMutationRequestSystemTypeUser WebappIntegrationMutationRequestSystemType = 3
 )
 
@@ -208,6 +229,8 @@ type WebappIntegrationMutationRequest struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationName Name of the integration binary
 	IntegrationName string `json:"integration_name" codec:"integration_name" bson:"integration_name" yaml:"integration_name" faker:"-"`
+	// JobID The job ID
+	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -382,6 +405,12 @@ func (o *WebappIntegrationMutationRequest) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *WebappIntegrationMutationRequest) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two WebappIntegrationMutationRequest objects are equal
 func (o *WebappIntegrationMutationRequest) IsEqual(other *WebappIntegrationMutationRequest) bool {
 	return o.Hash() == other.Hash()
@@ -397,6 +426,7 @@ func (o *WebappIntegrationMutationRequest) ToMap() map[string]interface{} {
 		"data":             toWebappIntegrationMutationRequestObject(o.Data, false),
 		"id":               toWebappIntegrationMutationRequestObject(o.ID, false),
 		"integration_name": toWebappIntegrationMutationRequestObject(o.IntegrationName, false),
+		"job_id":           toWebappIntegrationMutationRequestObject(o.JobID, false),
 		"ref_id":           toWebappIntegrationMutationRequestObject(o.RefID, false),
 		"ref_type":         toWebappIntegrationMutationRequestObject(o.RefType, false),
 
@@ -529,6 +559,26 @@ func (o *WebappIntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["job_id"].(string); ok {
+		o.JobID = val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.JobID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -609,6 +659,7 @@ func (o *WebappIntegrationMutationRequest) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationName)
+	args = append(args, o.JobID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.SystemType)

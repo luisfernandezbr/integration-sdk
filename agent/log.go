@@ -28,6 +28,69 @@ const (
 	LogModelName datamodel.ModelNameType = "agent.Log"
 )
 
+const (
+	// LogModelArchitectureColumn is the column json value architecture
+	LogModelArchitectureColumn = "architecture"
+	// LogModelCustomerIDColumn is the column json value customer_id
+	LogModelCustomerIDColumn = "customer_id"
+	// LogModelDataColumn is the column json value data
+	LogModelDataColumn = "data"
+	// LogModelDistroColumn is the column json value distro
+	LogModelDistroColumn = "distro"
+	// LogModelErrorColumn is the column json value error
+	LogModelErrorColumn = "error"
+	// LogModelEventDateColumn is the column json value event_date
+	LogModelEventDateColumn = "event_date"
+	// LogModelEventDateEpochColumn is the column json value epoch
+	LogModelEventDateEpochColumn = "epoch"
+	// LogModelEventDateOffsetColumn is the column json value offset
+	LogModelEventDateOffsetColumn = "offset"
+	// LogModelEventDateRfc3339Column is the column json value rfc3339
+	LogModelEventDateRfc3339Column = "rfc3339"
+	// LogModelFreeSpaceColumn is the column json value free_space
+	LogModelFreeSpaceColumn = "free_space"
+	// LogModelGoVersionColumn is the column json value go_version
+	LogModelGoVersionColumn = "go_version"
+	// LogModelHostnameColumn is the column json value hostname
+	LogModelHostnameColumn = "hostname"
+	// LogModelIDColumn is the column json value id
+	LogModelIDColumn = "id"
+	// LogModelLastExportDateColumn is the column json value last_export_date
+	LogModelLastExportDateColumn = "last_export_date"
+	// LogModelLastExportDateEpochColumn is the column json value epoch
+	LogModelLastExportDateEpochColumn = "epoch"
+	// LogModelLastExportDateOffsetColumn is the column json value offset
+	LogModelLastExportDateOffsetColumn = "offset"
+	// LogModelLastExportDateRfc3339Column is the column json value rfc3339
+	LogModelLastExportDateRfc3339Column = "rfc3339"
+	// LogModelMemoryColumn is the column json value memory
+	LogModelMemoryColumn = "memory"
+	// LogModelMessageColumn is the column json value message
+	LogModelMessageColumn = "message"
+	// LogModelNumCPUColumn is the column json value num_cpu
+	LogModelNumCPUColumn = "num_cpu"
+	// LogModelOSColumn is the column json value os
+	LogModelOSColumn = "os"
+	// LogModelRefIDColumn is the column json value ref_id
+	LogModelRefIDColumn = "ref_id"
+	// LogModelRefTypeColumn is the column json value ref_type
+	LogModelRefTypeColumn = "ref_type"
+	// LogModelRequestIDColumn is the column json value request_id
+	LogModelRequestIDColumn = "request_id"
+	// LogModelSuccessColumn is the column json value success
+	LogModelSuccessColumn = "success"
+	// LogModelSystemIDColumn is the column json value system_id
+	LogModelSystemIDColumn = "system_id"
+	// LogModelTypeColumn is the column json value type
+	LogModelTypeColumn = "type"
+	// LogModelUptimeColumn is the column json value uptime
+	LogModelUptimeColumn = "uptime"
+	// LogModelUUIDColumn is the column json value uuid
+	LogModelUUIDColumn = "uuid"
+	// LogModelVersionColumn is the column json value version
+	LogModelVersionColumn = "version"
+)
+
 // LogEventDate represents the object structure for event_date
 type LogEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +447,35 @@ func (v LogType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// LogTypeEnroll is the enumeration value for enroll
 	LogTypeEnroll LogType = 0
-	// TypePing is the enumeration value for ping
+	// LogTypePing is the enumeration value for ping
 	LogTypePing LogType = 1
-	// TypeCrash is the enumeration value for crash
+	// LogTypeCrash is the enumeration value for crash
 	LogTypeCrash LogType = 2
-	// TypeLog is the enumeration value for log
+	// LogTypeLog is the enumeration value for log
 	LogTypeLog LogType = 3
-	// TypeIntegration is the enumeration value for integration
+	// LogTypeIntegration is the enumeration value for integration
 	LogTypeIntegration LogType = 4
-	// TypeExport is the enumeration value for export
+	// LogTypeExport is the enumeration value for export
 	LogTypeExport LogType = 5
-	// TypeProject is the enumeration value for project
+	// LogTypeProject is the enumeration value for project
 	LogTypeProject LogType = 6
-	// TypeRepo is the enumeration value for repo
+	// LogTypeRepo is the enumeration value for repo
 	LogTypeRepo LogType = 7
-	// TypeUser is the enumeration value for user
+	// LogTypeUser is the enumeration value for user
 	LogTypeUser LogType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// LogTypeUninstall is the enumeration value for uninstall
 	LogTypeUninstall LogType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// LogTypeUpgrade is the enumeration value for upgrade
 	LogTypeUpgrade LogType = 10
-	// TypeStart is the enumeration value for start
+	// LogTypeStart is the enumeration value for start
 	LogTypeStart LogType = 11
-	// TypeStop is the enumeration value for stop
+	// LogTypeStop is the enumeration value for stop
 	LogTypeStop LogType = 12
-	// TypePause is the enumeration value for pause
+	// LogTypePause is the enumeration value for pause
 	LogTypePause LogType = 13
-	// TypeResume is the enumeration value for resume
+	// LogTypeResume is the enumeration value for resume
 	LogTypeResume LogType = 14
 )
 
@@ -638,6 +701,12 @@ func (o *Log) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Log) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two Log objects are equal
 func (o *Log) IsEqual(other *Log) bool {
 	return o.Hash() == other.Hash()
@@ -791,25 +860,6 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*LogEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -899,25 +949,6 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*LogLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

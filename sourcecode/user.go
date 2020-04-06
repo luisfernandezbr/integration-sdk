@@ -30,6 +30,35 @@ const (
 	UserModelName datamodel.ModelNameType = "sourcecode.User"
 )
 
+const (
+	// UserModelAssociatedRefIDColumn is the column json value associated_ref_id
+	UserModelAssociatedRefIDColumn = "associated_ref_id"
+	// UserModelAvatarURLColumn is the column json value avatar_url
+	UserModelAvatarURLColumn = "avatar_url"
+	// UserModelCustomerIDColumn is the column json value customer_id
+	UserModelCustomerIDColumn = "customer_id"
+	// UserModelEmailColumn is the column json value email
+	UserModelEmailColumn = "email"
+	// UserModelIDColumn is the column json value id
+	UserModelIDColumn = "id"
+	// UserModelMemberColumn is the column json value member
+	UserModelMemberColumn = "member"
+	// UserModelNameColumn is the column json value name
+	UserModelNameColumn = "name"
+	// UserModelRefIDColumn is the column json value ref_id
+	UserModelRefIDColumn = "ref_id"
+	// UserModelRefTypeColumn is the column json value ref_type
+	UserModelRefTypeColumn = "ref_type"
+	// UserModelTypeColumn is the column json value type
+	UserModelTypeColumn = "type"
+	// UserModelUpdatedAtColumn is the column json value updated_ts
+	UserModelUpdatedAtColumn = "updated_ts"
+	// UserModelURLColumn is the column json value url
+	UserModelURLColumn = "url"
+	// UserModelUsernameColumn is the column json value username
+	UserModelUsernameColumn = "username"
+)
+
 // UserType is the enumeration type for type
 type UserType int32
 
@@ -92,11 +121,11 @@ func (v UserType) String() string {
 }
 
 const (
-	// TypeHuman is the enumeration value for human
+	// UserTypeHuman is the enumeration value for human
 	UserTypeHuman UserType = 0
-	// TypeBot is the enumeration value for bot
+	// UserTypeBot is the enumeration value for bot
 	UserTypeBot UserType = 1
-	// TypeDeletedSpecialUser is the enumeration value for deleted_special_user
+	// UserTypeDeletedSpecialUser is the enumeration value for deleted_special_user
 	UserTypeDeletedSpecialUser UserType = 2
 )
 
@@ -336,6 +365,12 @@ func (o *User) UnmarshalJSON(data []byte) error {
 func (o *User) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *User) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two User objects are equal

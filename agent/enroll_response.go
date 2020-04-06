@@ -28,6 +28,71 @@ const (
 	EnrollResponseModelName datamodel.ModelNameType = "agent.EnrollResponse"
 )
 
+const (
+	// EnrollResponseModelApikeyColumn is the column json value apikey
+	EnrollResponseModelApikeyColumn = "apikey"
+	// EnrollResponseModelArchitectureColumn is the column json value architecture
+	EnrollResponseModelArchitectureColumn = "architecture"
+	// EnrollResponseModelCustomerIDColumn is the column json value customer_id
+	EnrollResponseModelCustomerIDColumn = "customer_id"
+	// EnrollResponseModelDataColumn is the column json value data
+	EnrollResponseModelDataColumn = "data"
+	// EnrollResponseModelDistroColumn is the column json value distro
+	EnrollResponseModelDistroColumn = "distro"
+	// EnrollResponseModelErrorColumn is the column json value error
+	EnrollResponseModelErrorColumn = "error"
+	// EnrollResponseModelEventDateColumn is the column json value event_date
+	EnrollResponseModelEventDateColumn = "event_date"
+	// EnrollResponseModelEventDateEpochColumn is the column json value epoch
+	EnrollResponseModelEventDateEpochColumn = "epoch"
+	// EnrollResponseModelEventDateOffsetColumn is the column json value offset
+	EnrollResponseModelEventDateOffsetColumn = "offset"
+	// EnrollResponseModelEventDateRfc3339Column is the column json value rfc3339
+	EnrollResponseModelEventDateRfc3339Column = "rfc3339"
+	// EnrollResponseModelFreeSpaceColumn is the column json value free_space
+	EnrollResponseModelFreeSpaceColumn = "free_space"
+	// EnrollResponseModelGoVersionColumn is the column json value go_version
+	EnrollResponseModelGoVersionColumn = "go_version"
+	// EnrollResponseModelHostnameColumn is the column json value hostname
+	EnrollResponseModelHostnameColumn = "hostname"
+	// EnrollResponseModelIDColumn is the column json value id
+	EnrollResponseModelIDColumn = "id"
+	// EnrollResponseModelLastExportDateColumn is the column json value last_export_date
+	EnrollResponseModelLastExportDateColumn = "last_export_date"
+	// EnrollResponseModelLastExportDateEpochColumn is the column json value epoch
+	EnrollResponseModelLastExportDateEpochColumn = "epoch"
+	// EnrollResponseModelLastExportDateOffsetColumn is the column json value offset
+	EnrollResponseModelLastExportDateOffsetColumn = "offset"
+	// EnrollResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	EnrollResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// EnrollResponseModelMemoryColumn is the column json value memory
+	EnrollResponseModelMemoryColumn = "memory"
+	// EnrollResponseModelMessageColumn is the column json value message
+	EnrollResponseModelMessageColumn = "message"
+	// EnrollResponseModelNumCPUColumn is the column json value num_cpu
+	EnrollResponseModelNumCPUColumn = "num_cpu"
+	// EnrollResponseModelOSColumn is the column json value os
+	EnrollResponseModelOSColumn = "os"
+	// EnrollResponseModelRefIDColumn is the column json value ref_id
+	EnrollResponseModelRefIDColumn = "ref_id"
+	// EnrollResponseModelRefTypeColumn is the column json value ref_type
+	EnrollResponseModelRefTypeColumn = "ref_type"
+	// EnrollResponseModelRequestIDColumn is the column json value request_id
+	EnrollResponseModelRequestIDColumn = "request_id"
+	// EnrollResponseModelSuccessColumn is the column json value success
+	EnrollResponseModelSuccessColumn = "success"
+	// EnrollResponseModelSystemIDColumn is the column json value system_id
+	EnrollResponseModelSystemIDColumn = "system_id"
+	// EnrollResponseModelTypeColumn is the column json value type
+	EnrollResponseModelTypeColumn = "type"
+	// EnrollResponseModelUptimeColumn is the column json value uptime
+	EnrollResponseModelUptimeColumn = "uptime"
+	// EnrollResponseModelUUIDColumn is the column json value uuid
+	EnrollResponseModelUUIDColumn = "uuid"
+	// EnrollResponseModelVersionColumn is the column json value version
+	EnrollResponseModelVersionColumn = "version"
+)
+
 // EnrollResponseEventDate represents the object structure for event_date
 type EnrollResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +449,35 @@ func (v EnrollResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// EnrollResponseTypeEnroll is the enumeration value for enroll
 	EnrollResponseTypeEnroll EnrollResponseType = 0
-	// TypePing is the enumeration value for ping
+	// EnrollResponseTypePing is the enumeration value for ping
 	EnrollResponseTypePing EnrollResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// EnrollResponseTypeCrash is the enumeration value for crash
 	EnrollResponseTypeCrash EnrollResponseType = 2
-	// TypeLog is the enumeration value for log
+	// EnrollResponseTypeLog is the enumeration value for log
 	EnrollResponseTypeLog EnrollResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// EnrollResponseTypeIntegration is the enumeration value for integration
 	EnrollResponseTypeIntegration EnrollResponseType = 4
-	// TypeExport is the enumeration value for export
+	// EnrollResponseTypeExport is the enumeration value for export
 	EnrollResponseTypeExport EnrollResponseType = 5
-	// TypeProject is the enumeration value for project
+	// EnrollResponseTypeProject is the enumeration value for project
 	EnrollResponseTypeProject EnrollResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// EnrollResponseTypeRepo is the enumeration value for repo
 	EnrollResponseTypeRepo EnrollResponseType = 7
-	// TypeUser is the enumeration value for user
+	// EnrollResponseTypeUser is the enumeration value for user
 	EnrollResponseTypeUser EnrollResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// EnrollResponseTypeUninstall is the enumeration value for uninstall
 	EnrollResponseTypeUninstall EnrollResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// EnrollResponseTypeUpgrade is the enumeration value for upgrade
 	EnrollResponseTypeUpgrade EnrollResponseType = 10
-	// TypeStart is the enumeration value for start
+	// EnrollResponseTypeStart is the enumeration value for start
 	EnrollResponseTypeStart EnrollResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// EnrollResponseTypeStop is the enumeration value for stop
 	EnrollResponseTypeStop EnrollResponseType = 12
-	// TypePause is the enumeration value for pause
+	// EnrollResponseTypePause is the enumeration value for pause
 	EnrollResponseTypePause EnrollResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// EnrollResponseTypeResume is the enumeration value for resume
 	EnrollResponseTypeResume EnrollResponseType = 14
 )
 
@@ -640,6 +705,12 @@ func (o *EnrollResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *EnrollResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two EnrollResponse objects are equal
 func (o *EnrollResponse) IsEqual(other *EnrollResponse) bool {
 	return o.Hash() == other.Hash()
@@ -814,25 +885,6 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnrollResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -922,25 +974,6 @@ func (o *EnrollResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnrollResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

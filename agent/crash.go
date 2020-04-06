@@ -28,6 +28,79 @@ const (
 	CrashModelName datamodel.ModelNameType = "agent.Crash"
 )
 
+const (
+	// CrashModelArchitectureColumn is the column json value architecture
+	CrashModelArchitectureColumn = "architecture"
+	// CrashModelComponentColumn is the column json value component
+	CrashModelComponentColumn = "component"
+	// CrashModelCrashDateColumn is the column json value crash_date
+	CrashModelCrashDateColumn = "crash_date"
+	// CrashModelCrashDateEpochColumn is the column json value epoch
+	CrashModelCrashDateEpochColumn = "epoch"
+	// CrashModelCrashDateOffsetColumn is the column json value offset
+	CrashModelCrashDateOffsetColumn = "offset"
+	// CrashModelCrashDateRfc3339Column is the column json value rfc3339
+	CrashModelCrashDateRfc3339Column = "rfc3339"
+	// CrashModelCustomerIDColumn is the column json value customer_id
+	CrashModelCustomerIDColumn = "customer_id"
+	// CrashModelDataColumn is the column json value data
+	CrashModelDataColumn = "data"
+	// CrashModelDistroColumn is the column json value distro
+	CrashModelDistroColumn = "distro"
+	// CrashModelErrorColumn is the column json value error
+	CrashModelErrorColumn = "error"
+	// CrashModelEventDateColumn is the column json value event_date
+	CrashModelEventDateColumn = "event_date"
+	// CrashModelEventDateEpochColumn is the column json value epoch
+	CrashModelEventDateEpochColumn = "epoch"
+	// CrashModelEventDateOffsetColumn is the column json value offset
+	CrashModelEventDateOffsetColumn = "offset"
+	// CrashModelEventDateRfc3339Column is the column json value rfc3339
+	CrashModelEventDateRfc3339Column = "rfc3339"
+	// CrashModelFreeSpaceColumn is the column json value free_space
+	CrashModelFreeSpaceColumn = "free_space"
+	// CrashModelGoVersionColumn is the column json value go_version
+	CrashModelGoVersionColumn = "go_version"
+	// CrashModelHostnameColumn is the column json value hostname
+	CrashModelHostnameColumn = "hostname"
+	// CrashModelIDColumn is the column json value id
+	CrashModelIDColumn = "id"
+	// CrashModelLastExportDateColumn is the column json value last_export_date
+	CrashModelLastExportDateColumn = "last_export_date"
+	// CrashModelLastExportDateEpochColumn is the column json value epoch
+	CrashModelLastExportDateEpochColumn = "epoch"
+	// CrashModelLastExportDateOffsetColumn is the column json value offset
+	CrashModelLastExportDateOffsetColumn = "offset"
+	// CrashModelLastExportDateRfc3339Column is the column json value rfc3339
+	CrashModelLastExportDateRfc3339Column = "rfc3339"
+	// CrashModelMemoryColumn is the column json value memory
+	CrashModelMemoryColumn = "memory"
+	// CrashModelMessageColumn is the column json value message
+	CrashModelMessageColumn = "message"
+	// CrashModelNumCPUColumn is the column json value num_cpu
+	CrashModelNumCPUColumn = "num_cpu"
+	// CrashModelOSColumn is the column json value os
+	CrashModelOSColumn = "os"
+	// CrashModelRefIDColumn is the column json value ref_id
+	CrashModelRefIDColumn = "ref_id"
+	// CrashModelRefTypeColumn is the column json value ref_type
+	CrashModelRefTypeColumn = "ref_type"
+	// CrashModelRequestIDColumn is the column json value request_id
+	CrashModelRequestIDColumn = "request_id"
+	// CrashModelSuccessColumn is the column json value success
+	CrashModelSuccessColumn = "success"
+	// CrashModelSystemIDColumn is the column json value system_id
+	CrashModelSystemIDColumn = "system_id"
+	// CrashModelTypeColumn is the column json value type
+	CrashModelTypeColumn = "type"
+	// CrashModelUptimeColumn is the column json value uptime
+	CrashModelUptimeColumn = "uptime"
+	// CrashModelUUIDColumn is the column json value uuid
+	CrashModelUUIDColumn = "uuid"
+	// CrashModelVersionColumn is the column json value version
+	CrashModelVersionColumn = "version"
+)
+
 // CrashCrashDate represents the object structure for crash_date
 type CrashCrashDate struct {
 	// Epoch the date in epoch format
@@ -483,35 +556,35 @@ func (v CrashType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// CrashTypeEnroll is the enumeration value for enroll
 	CrashTypeEnroll CrashType = 0
-	// TypePing is the enumeration value for ping
+	// CrashTypePing is the enumeration value for ping
 	CrashTypePing CrashType = 1
-	// TypeCrash is the enumeration value for crash
+	// CrashTypeCrash is the enumeration value for crash
 	CrashTypeCrash CrashType = 2
-	// TypeLog is the enumeration value for log
+	// CrashTypeLog is the enumeration value for log
 	CrashTypeLog CrashType = 3
-	// TypeIntegration is the enumeration value for integration
+	// CrashTypeIntegration is the enumeration value for integration
 	CrashTypeIntegration CrashType = 4
-	// TypeExport is the enumeration value for export
+	// CrashTypeExport is the enumeration value for export
 	CrashTypeExport CrashType = 5
-	// TypeProject is the enumeration value for project
+	// CrashTypeProject is the enumeration value for project
 	CrashTypeProject CrashType = 6
-	// TypeRepo is the enumeration value for repo
+	// CrashTypeRepo is the enumeration value for repo
 	CrashTypeRepo CrashType = 7
-	// TypeUser is the enumeration value for user
+	// CrashTypeUser is the enumeration value for user
 	CrashTypeUser CrashType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// CrashTypeUninstall is the enumeration value for uninstall
 	CrashTypeUninstall CrashType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// CrashTypeUpgrade is the enumeration value for upgrade
 	CrashTypeUpgrade CrashType = 10
-	// TypeStart is the enumeration value for start
+	// CrashTypeStart is the enumeration value for start
 	CrashTypeStart CrashType = 11
-	// TypeStop is the enumeration value for stop
+	// CrashTypeStop is the enumeration value for stop
 	CrashTypeStop CrashType = 12
-	// TypePause is the enumeration value for pause
+	// CrashTypePause is the enumeration value for pause
 	CrashTypePause CrashType = 13
-	// TypeResume is the enumeration value for resume
+	// CrashTypeResume is the enumeration value for resume
 	CrashTypeResume CrashType = 14
 )
 
@@ -744,6 +817,12 @@ func (o *Crash) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Crash) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two Crash objects are equal
 func (o *Crash) IsEqual(other *Crash) bool {
 	return o.Hash() == other.Hash()
@@ -952,25 +1031,6 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CrashEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1060,25 +1120,6 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CrashLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

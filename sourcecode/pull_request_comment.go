@@ -26,6 +26,43 @@ const (
 	PullRequestCommentModelName datamodel.ModelNameType = "sourcecode.PullRequestComment"
 )
 
+const (
+	// PullRequestCommentModelBodyColumn is the column json value body
+	PullRequestCommentModelBodyColumn = "body"
+	// PullRequestCommentModelCreatedDateColumn is the column json value created_date
+	PullRequestCommentModelCreatedDateColumn = "created_date"
+	// PullRequestCommentModelCreatedDateEpochColumn is the column json value epoch
+	PullRequestCommentModelCreatedDateEpochColumn = "epoch"
+	// PullRequestCommentModelCreatedDateOffsetColumn is the column json value offset
+	PullRequestCommentModelCreatedDateOffsetColumn = "offset"
+	// PullRequestCommentModelCreatedDateRfc3339Column is the column json value rfc3339
+	PullRequestCommentModelCreatedDateRfc3339Column = "rfc3339"
+	// PullRequestCommentModelCustomerIDColumn is the column json value customer_id
+	PullRequestCommentModelCustomerIDColumn = "customer_id"
+	// PullRequestCommentModelIDColumn is the column json value id
+	PullRequestCommentModelIDColumn = "id"
+	// PullRequestCommentModelPullRequestIDColumn is the column json value pull_request_id
+	PullRequestCommentModelPullRequestIDColumn = "pull_request_id"
+	// PullRequestCommentModelRefIDColumn is the column json value ref_id
+	PullRequestCommentModelRefIDColumn = "ref_id"
+	// PullRequestCommentModelRefTypeColumn is the column json value ref_type
+	PullRequestCommentModelRefTypeColumn = "ref_type"
+	// PullRequestCommentModelRepoIDColumn is the column json value repo_id
+	PullRequestCommentModelRepoIDColumn = "repo_id"
+	// PullRequestCommentModelUpdatedDateColumn is the column json value updated_date
+	PullRequestCommentModelUpdatedDateColumn = "updated_date"
+	// PullRequestCommentModelUpdatedDateEpochColumn is the column json value epoch
+	PullRequestCommentModelUpdatedDateEpochColumn = "epoch"
+	// PullRequestCommentModelUpdatedDateOffsetColumn is the column json value offset
+	PullRequestCommentModelUpdatedDateOffsetColumn = "offset"
+	// PullRequestCommentModelUpdatedDateRfc3339Column is the column json value rfc3339
+	PullRequestCommentModelUpdatedDateRfc3339Column = "rfc3339"
+	// PullRequestCommentModelURLColumn is the column json value url
+	PullRequestCommentModelURLColumn = "url"
+	// PullRequestCommentModelUserRefIDColumn is the column json value user_ref_id
+	PullRequestCommentModelUserRefIDColumn = "user_ref_id"
+)
+
 // PullRequestCommentCreatedDate represents the object structure for created_date
 type PullRequestCommentCreatedDate struct {
 	// Epoch the date in epoch format
@@ -414,6 +451,12 @@ func (o *PullRequestComment) UnmarshalJSON(data []byte) error {
 func (o *PullRequestComment) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *PullRequestComment) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two PullRequestComment objects are equal

@@ -30,6 +30,115 @@ const (
 	ExportResponseModelName datamodel.ModelNameType = "agent.ExportResponse"
 )
 
+const (
+	// ExportResponseModelArchitectureColumn is the column json value architecture
+	ExportResponseModelArchitectureColumn = "architecture"
+	// ExportResponseModelCustomerIDColumn is the column json value customer_id
+	ExportResponseModelCustomerIDColumn = "customer_id"
+	// ExportResponseModelDataColumn is the column json value data
+	ExportResponseModelDataColumn = "data"
+	// ExportResponseModelDistroColumn is the column json value distro
+	ExportResponseModelDistroColumn = "distro"
+	// ExportResponseModelEndDateColumn is the column json value end_date
+	ExportResponseModelEndDateColumn = "end_date"
+	// ExportResponseModelEndDateEpochColumn is the column json value epoch
+	ExportResponseModelEndDateEpochColumn = "epoch"
+	// ExportResponseModelEndDateOffsetColumn is the column json value offset
+	ExportResponseModelEndDateOffsetColumn = "offset"
+	// ExportResponseModelEndDateRfc3339Column is the column json value rfc3339
+	ExportResponseModelEndDateRfc3339Column = "rfc3339"
+	// ExportResponseModelErrorColumn is the column json value error
+	ExportResponseModelErrorColumn = "error"
+	// ExportResponseModelEventDateColumn is the column json value event_date
+	ExportResponseModelEventDateColumn = "event_date"
+	// ExportResponseModelEventDateEpochColumn is the column json value epoch
+	ExportResponseModelEventDateEpochColumn = "epoch"
+	// ExportResponseModelEventDateOffsetColumn is the column json value offset
+	ExportResponseModelEventDateOffsetColumn = "offset"
+	// ExportResponseModelEventDateRfc3339Column is the column json value rfc3339
+	ExportResponseModelEventDateRfc3339Column = "rfc3339"
+	// ExportResponseModelIntegrationsExportTypeColumn is the column json value export_type
+	ExportResponseModelIntegrationsExportTypeColumn = "export_type"
+	// ExportResponseModelFreeSpaceColumn is the column json value free_space
+	ExportResponseModelFreeSpaceColumn = "free_space"
+	// ExportResponseModelGoVersionColumn is the column json value go_version
+	ExportResponseModelGoVersionColumn = "go_version"
+	// ExportResponseModelHostnameColumn is the column json value hostname
+	ExportResponseModelHostnameColumn = "hostname"
+	// ExportResponseModelIDColumn is the column json value id
+	ExportResponseModelIDColumn = "id"
+	// ExportResponseModelIntegrationsColumn is the column json value integrations
+	ExportResponseModelIntegrationsColumn = "integrations"
+	// ExportResponseModelIntegrationsEntityErrorsColumn is the column json value entity_errors
+	ExportResponseModelIntegrationsEntityErrorsColumn = "entity_errors"
+	// ExportResponseModelIntegrationsEntityErrorsIDColumn is the column json value id
+	ExportResponseModelIntegrationsEntityErrorsIDColumn = "id"
+	// ExportResponseModelIntegrationsEntityErrorsRefIDColumn is the column json value ref_id
+	ExportResponseModelIntegrationsEntityErrorsRefIDColumn = "ref_id"
+	// ExportResponseModelIntegrationsEntityErrorsErrorColumn is the column json value error
+	ExportResponseModelIntegrationsEntityErrorsErrorColumn = "error"
+	// ExportResponseModelIntegrationsErrorColumn is the column json value error
+	ExportResponseModelIntegrationsErrorColumn = "error"
+	// ExportResponseModelIntegrationsIntegrationIDColumn is the column json value integration_id
+	ExportResponseModelIntegrationsIntegrationIDColumn = "integration_id"
+	// ExportResponseModelIntegrationsNameColumn is the column json value name
+	ExportResponseModelIntegrationsNameColumn = "name"
+	// ExportResponseModelIntegrationsSystemTypeColumn is the column json value system_type
+	ExportResponseModelIntegrationsSystemTypeColumn = "system_type"
+	// ExportResponseModelJobIDColumn is the column json value job_id
+	ExportResponseModelJobIDColumn = "job_id"
+	// ExportResponseModelLastExportDateColumn is the column json value last_export_date
+	ExportResponseModelLastExportDateColumn = "last_export_date"
+	// ExportResponseModelLastExportDateEpochColumn is the column json value epoch
+	ExportResponseModelLastExportDateEpochColumn = "epoch"
+	// ExportResponseModelLastExportDateOffsetColumn is the column json value offset
+	ExportResponseModelLastExportDateOffsetColumn = "offset"
+	// ExportResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	ExportResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// ExportResponseModelMemoryColumn is the column json value memory
+	ExportResponseModelMemoryColumn = "memory"
+	// ExportResponseModelMessageColumn is the column json value message
+	ExportResponseModelMessageColumn = "message"
+	// ExportResponseModelNumCPUColumn is the column json value num_cpu
+	ExportResponseModelNumCPUColumn = "num_cpu"
+	// ExportResponseModelOSColumn is the column json value os
+	ExportResponseModelOSColumn = "os"
+	// ExportResponseModelRefIDColumn is the column json value ref_id
+	ExportResponseModelRefIDColumn = "ref_id"
+	// ExportResponseModelRefTypeColumn is the column json value ref_type
+	ExportResponseModelRefTypeColumn = "ref_type"
+	// ExportResponseModelRequestIDColumn is the column json value request_id
+	ExportResponseModelRequestIDColumn = "request_id"
+	// ExportResponseModelSizeColumn is the column json value size
+	ExportResponseModelSizeColumn = "size"
+	// ExportResponseModelStartDateColumn is the column json value start_date
+	ExportResponseModelStartDateColumn = "start_date"
+	// ExportResponseModelStartDateEpochColumn is the column json value epoch
+	ExportResponseModelStartDateEpochColumn = "epoch"
+	// ExportResponseModelStartDateOffsetColumn is the column json value offset
+	ExportResponseModelStartDateOffsetColumn = "offset"
+	// ExportResponseModelStartDateRfc3339Column is the column json value rfc3339
+	ExportResponseModelStartDateRfc3339Column = "rfc3339"
+	// ExportResponseModelStateColumn is the column json value state
+	ExportResponseModelStateColumn = "state"
+	// ExportResponseModelSuccessColumn is the column json value success
+	ExportResponseModelSuccessColumn = "success"
+	// ExportResponseModelSystemIDColumn is the column json value system_id
+	ExportResponseModelSystemIDColumn = "system_id"
+	// ExportResponseModelTypeColumn is the column json value type
+	ExportResponseModelTypeColumn = "type"
+	// ExportResponseModelUploadPartCountColumn is the column json value upload_part_count
+	ExportResponseModelUploadPartCountColumn = "upload_part_count"
+	// ExportResponseModelUploadURLColumn is the column json value upload_url
+	ExportResponseModelUploadURLColumn = "upload_url"
+	// ExportResponseModelUptimeColumn is the column json value uptime
+	ExportResponseModelUptimeColumn = "uptime"
+	// ExportResponseModelUUIDColumn is the column json value uuid
+	ExportResponseModelUUIDColumn = "uuid"
+	// ExportResponseModelVersionColumn is the column json value version
+	ExportResponseModelVersionColumn = "version"
+)
+
 // ExportResponseEndDate represents the object structure for end_date
 type ExportResponseEndDate struct {
 	// Epoch the date in epoch format
@@ -282,9 +391,9 @@ func (v ExportResponseIntegrationsExportType) String() string {
 }
 
 const (
-	// IntegrationsExportTypeHistorical is the enumeration value for historical
+	// ExportResponseIntegrationsExportTypeHistorical is the enumeration value for historical
 	ExportResponseIntegrationsExportTypeHistorical ExportResponseIntegrationsExportType = 0
-	// IntegrationsExportTypeIncremental is the enumeration value for incremental
+	// ExportResponseIntegrationsExportTypeIncremental is the enumeration value for incremental
 	ExportResponseIntegrationsExportTypeIncremental ExportResponseIntegrationsExportType = 1
 )
 
@@ -467,13 +576,13 @@ func (v ExportResponseIntegrationsSystemType) String() string {
 }
 
 const (
-	// IntegrationsSystemTypeWork is the enumeration value for work
+	// ExportResponseIntegrationsSystemTypeWork is the enumeration value for work
 	ExportResponseIntegrationsSystemTypeWork ExportResponseIntegrationsSystemType = 0
-	// IntegrationsSystemTypeSourcecode is the enumeration value for sourcecode
+	// ExportResponseIntegrationsSystemTypeSourcecode is the enumeration value for sourcecode
 	ExportResponseIntegrationsSystemTypeSourcecode ExportResponseIntegrationsSystemType = 1
-	// IntegrationsSystemTypeCodequality is the enumeration value for codequality
+	// ExportResponseIntegrationsSystemTypeCodequality is the enumeration value for codequality
 	ExportResponseIntegrationsSystemTypeCodequality ExportResponseIntegrationsSystemType = 2
-	// IntegrationsSystemTypeUser is the enumeration value for user
+	// ExportResponseIntegrationsSystemTypeUser is the enumeration value for user
 	ExportResponseIntegrationsSystemTypeUser ExportResponseIntegrationsSystemType = 3
 )
 
@@ -985,11 +1094,11 @@ func (v ExportResponseState) String() string {
 }
 
 const (
-	// StateStarting is the enumeration value for starting
+	// ExportResponseStateStarting is the enumeration value for starting
 	ExportResponseStateStarting ExportResponseState = 0
-	// StateProgress is the enumeration value for progress
+	// ExportResponseStateProgress is the enumeration value for progress
 	ExportResponseStateProgress ExportResponseState = 1
-	// StateCompleted is the enumeration value for completed
+	// ExportResponseStateCompleted is the enumeration value for completed
 	ExportResponseStateCompleted ExportResponseState = 2
 )
 
@@ -1151,35 +1260,35 @@ func (v ExportResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// ExportResponseTypeEnroll is the enumeration value for enroll
 	ExportResponseTypeEnroll ExportResponseType = 0
-	// TypePing is the enumeration value for ping
+	// ExportResponseTypePing is the enumeration value for ping
 	ExportResponseTypePing ExportResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// ExportResponseTypeCrash is the enumeration value for crash
 	ExportResponseTypeCrash ExportResponseType = 2
-	// TypeLog is the enumeration value for log
+	// ExportResponseTypeLog is the enumeration value for log
 	ExportResponseTypeLog ExportResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// ExportResponseTypeIntegration is the enumeration value for integration
 	ExportResponseTypeIntegration ExportResponseType = 4
-	// TypeExport is the enumeration value for export
+	// ExportResponseTypeExport is the enumeration value for export
 	ExportResponseTypeExport ExportResponseType = 5
-	// TypeProject is the enumeration value for project
+	// ExportResponseTypeProject is the enumeration value for project
 	ExportResponseTypeProject ExportResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// ExportResponseTypeRepo is the enumeration value for repo
 	ExportResponseTypeRepo ExportResponseType = 7
-	// TypeUser is the enumeration value for user
+	// ExportResponseTypeUser is the enumeration value for user
 	ExportResponseTypeUser ExportResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// ExportResponseTypeUninstall is the enumeration value for uninstall
 	ExportResponseTypeUninstall ExportResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// ExportResponseTypeUpgrade is the enumeration value for upgrade
 	ExportResponseTypeUpgrade ExportResponseType = 10
-	// TypeStart is the enumeration value for start
+	// ExportResponseTypeStart is the enumeration value for start
 	ExportResponseTypeStart ExportResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// ExportResponseTypeStop is the enumeration value for stop
 	ExportResponseTypeStop ExportResponseType = 12
-	// TypePause is the enumeration value for pause
+	// ExportResponseTypePause is the enumeration value for pause
 	ExportResponseTypePause ExportResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// ExportResponseTypeResume is the enumeration value for resume
 	ExportResponseTypeResume ExportResponseType = 14
 )
 
@@ -1440,6 +1549,12 @@ func (o *ExportResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *ExportResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two ExportResponse objects are equal
 func (o *ExportResponse) IsEqual(other *ExportResponse) bool {
 	return o.Hash() == other.Hash()
@@ -1635,25 +1750,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1826,25 +1922,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

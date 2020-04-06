@@ -28,6 +28,47 @@ const (
 	DeploymentModelName datamodel.ModelNameType = "cicd.Deployment"
 )
 
+const (
+	// DeploymentModelAutomatedColumn is the column json value automated
+	DeploymentModelAutomatedColumn = "automated"
+	// DeploymentModelBuildRefIDColumn is the column json value build_ref_id
+	DeploymentModelBuildRefIDColumn = "build_ref_id"
+	// DeploymentModelCommitShaColumn is the column json value commit_sha
+	DeploymentModelCommitShaColumn = "commit_sha"
+	// DeploymentModelCustomerIDColumn is the column json value customer_id
+	DeploymentModelCustomerIDColumn = "customer_id"
+	// DeploymentModelEndDateColumn is the column json value end_date
+	DeploymentModelEndDateColumn = "end_date"
+	// DeploymentModelEndDateEpochColumn is the column json value epoch
+	DeploymentModelEndDateEpochColumn = "epoch"
+	// DeploymentModelEndDateOffsetColumn is the column json value offset
+	DeploymentModelEndDateOffsetColumn = "offset"
+	// DeploymentModelEndDateRfc3339Column is the column json value rfc3339
+	DeploymentModelEndDateRfc3339Column = "rfc3339"
+	// DeploymentModelEnvironmentColumn is the column json value environment
+	DeploymentModelEnvironmentColumn = "environment"
+	// DeploymentModelIDColumn is the column json value id
+	DeploymentModelIDColumn = "id"
+	// DeploymentModelRefIDColumn is the column json value ref_id
+	DeploymentModelRefIDColumn = "ref_id"
+	// DeploymentModelRefTypeColumn is the column json value ref_type
+	DeploymentModelRefTypeColumn = "ref_type"
+	// DeploymentModelRepoNameColumn is the column json value repo_name
+	DeploymentModelRepoNameColumn = "repo_name"
+	// DeploymentModelStartDateColumn is the column json value start_date
+	DeploymentModelStartDateColumn = "start_date"
+	// DeploymentModelStartDateEpochColumn is the column json value epoch
+	DeploymentModelStartDateEpochColumn = "epoch"
+	// DeploymentModelStartDateOffsetColumn is the column json value offset
+	DeploymentModelStartDateOffsetColumn = "offset"
+	// DeploymentModelStartDateRfc3339Column is the column json value rfc3339
+	DeploymentModelStartDateRfc3339Column = "rfc3339"
+	// DeploymentModelStatusColumn is the column json value status
+	DeploymentModelStatusColumn = "status"
+	// DeploymentModelURLColumn is the column json value url
+	DeploymentModelURLColumn = "url"
+)
+
 // DeploymentEndDate represents the object structure for end_date
 type DeploymentEndDate struct {
 	// Epoch the date in epoch format
@@ -213,17 +254,17 @@ func (v DeploymentEnvironment) String() string {
 }
 
 const (
-	// EnvironmentProduction is the enumeration value for production
+	// DeploymentEnvironmentProduction is the enumeration value for production
 	DeploymentEnvironmentProduction DeploymentEnvironment = 0
-	// EnvironmentDevelopment is the enumeration value for development
+	// DeploymentEnvironmentDevelopment is the enumeration value for development
 	DeploymentEnvironmentDevelopment DeploymentEnvironment = 1
-	// EnvironmentBeta is the enumeration value for beta
+	// DeploymentEnvironmentBeta is the enumeration value for beta
 	DeploymentEnvironmentBeta DeploymentEnvironment = 2
-	// EnvironmentStaging is the enumeration value for staging
+	// DeploymentEnvironmentStaging is the enumeration value for staging
 	DeploymentEnvironmentStaging DeploymentEnvironment = 3
-	// EnvironmentTest is the enumeration value for test
+	// DeploymentEnvironmentTest is the enumeration value for test
 	DeploymentEnvironmentTest DeploymentEnvironment = 4
-	// EnvironmentOther is the enumeration value for other
+	// DeploymentEnvironmentOther is the enumeration value for other
 	DeploymentEnvironmentOther DeploymentEnvironment = 5
 )
 
@@ -388,11 +429,11 @@ func (v DeploymentStatus) String() string {
 }
 
 const (
-	// StatusPass is the enumeration value for pass
+	// DeploymentStatusPass is the enumeration value for pass
 	DeploymentStatusPass DeploymentStatus = 0
-	// StatusFail is the enumeration value for fail
+	// DeploymentStatusFail is the enumeration value for fail
 	DeploymentStatusFail DeploymentStatus = 1
-	// StatusCancel is the enumeration value for cancel
+	// DeploymentStatusCancel is the enumeration value for cancel
 	DeploymentStatusCancel DeploymentStatus = 2
 )
 
@@ -597,6 +638,12 @@ func (o *Deployment) UnmarshalJSON(data []byte) error {
 func (o *Deployment) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Deployment) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Deployment objects are equal

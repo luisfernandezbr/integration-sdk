@@ -28,6 +28,45 @@ const (
 	BuildModelName datamodel.ModelNameType = "cicd.Build"
 )
 
+const (
+	// BuildModelAutomatedColumn is the column json value automated
+	BuildModelAutomatedColumn = "automated"
+	// BuildModelCommitShaColumn is the column json value commit_sha
+	BuildModelCommitShaColumn = "commit_sha"
+	// BuildModelCustomerIDColumn is the column json value customer_id
+	BuildModelCustomerIDColumn = "customer_id"
+	// BuildModelEndDateColumn is the column json value end_date
+	BuildModelEndDateColumn = "end_date"
+	// BuildModelEndDateEpochColumn is the column json value epoch
+	BuildModelEndDateEpochColumn = "epoch"
+	// BuildModelEndDateOffsetColumn is the column json value offset
+	BuildModelEndDateOffsetColumn = "offset"
+	// BuildModelEndDateRfc3339Column is the column json value rfc3339
+	BuildModelEndDateRfc3339Column = "rfc3339"
+	// BuildModelEnvironmentColumn is the column json value environment
+	BuildModelEnvironmentColumn = "environment"
+	// BuildModelIDColumn is the column json value id
+	BuildModelIDColumn = "id"
+	// BuildModelRefIDColumn is the column json value ref_id
+	BuildModelRefIDColumn = "ref_id"
+	// BuildModelRefTypeColumn is the column json value ref_type
+	BuildModelRefTypeColumn = "ref_type"
+	// BuildModelRepoNameColumn is the column json value repo_name
+	BuildModelRepoNameColumn = "repo_name"
+	// BuildModelStartDateColumn is the column json value start_date
+	BuildModelStartDateColumn = "start_date"
+	// BuildModelStartDateEpochColumn is the column json value epoch
+	BuildModelStartDateEpochColumn = "epoch"
+	// BuildModelStartDateOffsetColumn is the column json value offset
+	BuildModelStartDateOffsetColumn = "offset"
+	// BuildModelStartDateRfc3339Column is the column json value rfc3339
+	BuildModelStartDateRfc3339Column = "rfc3339"
+	// BuildModelStatusColumn is the column json value status
+	BuildModelStatusColumn = "status"
+	// BuildModelURLColumn is the column json value url
+	BuildModelURLColumn = "url"
+)
+
 // BuildEndDate represents the object structure for end_date
 type BuildEndDate struct {
 	// Epoch the date in epoch format
@@ -213,17 +252,17 @@ func (v BuildEnvironment) String() string {
 }
 
 const (
-	// EnvironmentProduction is the enumeration value for production
+	// BuildEnvironmentProduction is the enumeration value for production
 	BuildEnvironmentProduction BuildEnvironment = 0
-	// EnvironmentDevelopment is the enumeration value for development
+	// BuildEnvironmentDevelopment is the enumeration value for development
 	BuildEnvironmentDevelopment BuildEnvironment = 1
-	// EnvironmentBeta is the enumeration value for beta
+	// BuildEnvironmentBeta is the enumeration value for beta
 	BuildEnvironmentBeta BuildEnvironment = 2
-	// EnvironmentStaging is the enumeration value for staging
+	// BuildEnvironmentStaging is the enumeration value for staging
 	BuildEnvironmentStaging BuildEnvironment = 3
-	// EnvironmentTest is the enumeration value for test
+	// BuildEnvironmentTest is the enumeration value for test
 	BuildEnvironmentTest BuildEnvironment = 4
-	// EnvironmentOther is the enumeration value for other
+	// BuildEnvironmentOther is the enumeration value for other
 	BuildEnvironmentOther BuildEnvironment = 5
 )
 
@@ -388,11 +427,11 @@ func (v BuildStatus) String() string {
 }
 
 const (
-	// StatusPass is the enumeration value for pass
+	// BuildStatusPass is the enumeration value for pass
 	BuildStatusPass BuildStatus = 0
-	// StatusFail is the enumeration value for fail
+	// BuildStatusFail is the enumeration value for fail
 	BuildStatusFail BuildStatus = 1
-	// StatusCancel is the enumeration value for cancel
+	// BuildStatusCancel is the enumeration value for cancel
 	BuildStatusCancel BuildStatus = 2
 )
 
@@ -595,6 +634,12 @@ func (o *Build) UnmarshalJSON(data []byte) error {
 func (o *Build) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Build) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Build objects are equal

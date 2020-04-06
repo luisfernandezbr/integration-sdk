@@ -28,6 +28,35 @@ const (
 	PullRequestReviewModelName datamodel.ModelNameType = "sourcecode.PullRequestReview"
 )
 
+const (
+	// PullRequestReviewModelCreatedDateColumn is the column json value created_date
+	PullRequestReviewModelCreatedDateColumn = "created_date"
+	// PullRequestReviewModelCreatedDateEpochColumn is the column json value epoch
+	PullRequestReviewModelCreatedDateEpochColumn = "epoch"
+	// PullRequestReviewModelCreatedDateOffsetColumn is the column json value offset
+	PullRequestReviewModelCreatedDateOffsetColumn = "offset"
+	// PullRequestReviewModelCreatedDateRfc3339Column is the column json value rfc3339
+	PullRequestReviewModelCreatedDateRfc3339Column = "rfc3339"
+	// PullRequestReviewModelCustomerIDColumn is the column json value customer_id
+	PullRequestReviewModelCustomerIDColumn = "customer_id"
+	// PullRequestReviewModelIDColumn is the column json value id
+	PullRequestReviewModelIDColumn = "id"
+	// PullRequestReviewModelPullRequestIDColumn is the column json value pull_request_id
+	PullRequestReviewModelPullRequestIDColumn = "pull_request_id"
+	// PullRequestReviewModelRefIDColumn is the column json value ref_id
+	PullRequestReviewModelRefIDColumn = "ref_id"
+	// PullRequestReviewModelRefTypeColumn is the column json value ref_type
+	PullRequestReviewModelRefTypeColumn = "ref_type"
+	// PullRequestReviewModelRepoIDColumn is the column json value repo_id
+	PullRequestReviewModelRepoIDColumn = "repo_id"
+	// PullRequestReviewModelStateColumn is the column json value state
+	PullRequestReviewModelStateColumn = "state"
+	// PullRequestReviewModelURLColumn is the column json value url
+	PullRequestReviewModelURLColumn = "url"
+	// PullRequestReviewModelUserRefIDColumn is the column json value user_ref_id
+	PullRequestReviewModelUserRefIDColumn = "user_ref_id"
+)
+
 // PullRequestReviewCreatedDate represents the object structure for created_date
 type PullRequestReviewCreatedDate struct {
 	// Epoch the date in epoch format
@@ -237,23 +266,23 @@ func (v PullRequestReviewState) String() string {
 }
 
 const (
-	// StateApproved is the enumeration value for approved
+	// PullRequestReviewStateApproved is the enumeration value for approved
 	PullRequestReviewStateApproved PullRequestReviewState = 0
-	// StateCommented is the enumeration value for commented
+	// PullRequestReviewStateCommented is the enumeration value for commented
 	PullRequestReviewStateCommented PullRequestReviewState = 1
-	// StateChangesRequested is the enumeration value for changes_requested
+	// PullRequestReviewStateChangesRequested is the enumeration value for changes_requested
 	PullRequestReviewStateChangesRequested PullRequestReviewState = 2
-	// StatePending is the enumeration value for pending
+	// PullRequestReviewStatePending is the enumeration value for pending
 	PullRequestReviewStatePending PullRequestReviewState = 3
-	// StateDismissed is the enumeration value for dismissed
+	// PullRequestReviewStateDismissed is the enumeration value for dismissed
 	PullRequestReviewStateDismissed PullRequestReviewState = 4
-	// StateRequested is the enumeration value for requested
+	// PullRequestReviewStateRequested is the enumeration value for requested
 	PullRequestReviewStateRequested PullRequestReviewState = 5
-	// StateRequestRemoved is the enumeration value for request_removed
+	// PullRequestReviewStateRequestRemoved is the enumeration value for request_removed
 	PullRequestReviewStateRequestRemoved PullRequestReviewState = 6
-	// StateAssigned is the enumeration value for assigned
+	// PullRequestReviewStateAssigned is the enumeration value for assigned
 	PullRequestReviewStateAssigned PullRequestReviewState = 7
-	// StateUnassigned is the enumeration value for unassigned
+	// PullRequestReviewStateUnassigned is the enumeration value for unassigned
 	PullRequestReviewStateUnassigned PullRequestReviewState = 8
 )
 
@@ -445,6 +474,12 @@ func (o *PullRequestReview) UnmarshalJSON(data []byte) error {
 func (o *PullRequestReview) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *PullRequestReview) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two PullRequestReview objects are equal

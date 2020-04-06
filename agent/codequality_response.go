@@ -30,6 +30,85 @@ const (
 	CodequalityResponseModelName datamodel.ModelNameType = "agent.CodequalityResponse"
 )
 
+const (
+	// CodequalityResponseModelArchitectureColumn is the column json value architecture
+	CodequalityResponseModelArchitectureColumn = "architecture"
+	// CodequalityResponseModelCustomerIDColumn is the column json value customer_id
+	CodequalityResponseModelCustomerIDColumn = "customer_id"
+	// CodequalityResponseModelDataColumn is the column json value data
+	CodequalityResponseModelDataColumn = "data"
+	// CodequalityResponseModelDistroColumn is the column json value distro
+	CodequalityResponseModelDistroColumn = "distro"
+	// CodequalityResponseModelErrorColumn is the column json value error
+	CodequalityResponseModelErrorColumn = "error"
+	// CodequalityResponseModelEventDateColumn is the column json value event_date
+	CodequalityResponseModelEventDateColumn = "event_date"
+	// CodequalityResponseModelEventDateEpochColumn is the column json value epoch
+	CodequalityResponseModelEventDateEpochColumn = "epoch"
+	// CodequalityResponseModelEventDateOffsetColumn is the column json value offset
+	CodequalityResponseModelEventDateOffsetColumn = "offset"
+	// CodequalityResponseModelEventDateRfc3339Column is the column json value rfc3339
+	CodequalityResponseModelEventDateRfc3339Column = "rfc3339"
+	// CodequalityResponseModelFreeSpaceColumn is the column json value free_space
+	CodequalityResponseModelFreeSpaceColumn = "free_space"
+	// CodequalityResponseModelGoVersionColumn is the column json value go_version
+	CodequalityResponseModelGoVersionColumn = "go_version"
+	// CodequalityResponseModelHostnameColumn is the column json value hostname
+	CodequalityResponseModelHostnameColumn = "hostname"
+	// CodequalityResponseModelIDColumn is the column json value id
+	CodequalityResponseModelIDColumn = "id"
+	// CodequalityResponseModelIntegrationIDColumn is the column json value integration_id
+	CodequalityResponseModelIntegrationIDColumn = "integration_id"
+	// CodequalityResponseModelLastExportDateColumn is the column json value last_export_date
+	CodequalityResponseModelLastExportDateColumn = "last_export_date"
+	// CodequalityResponseModelLastExportDateEpochColumn is the column json value epoch
+	CodequalityResponseModelLastExportDateEpochColumn = "epoch"
+	// CodequalityResponseModelLastExportDateOffsetColumn is the column json value offset
+	CodequalityResponseModelLastExportDateOffsetColumn = "offset"
+	// CodequalityResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	CodequalityResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// CodequalityResponseModelMemoryColumn is the column json value memory
+	CodequalityResponseModelMemoryColumn = "memory"
+	// CodequalityResponseModelMessageColumn is the column json value message
+	CodequalityResponseModelMessageColumn = "message"
+	// CodequalityResponseModelNumCPUColumn is the column json value num_cpu
+	CodequalityResponseModelNumCPUColumn = "num_cpu"
+	// CodequalityResponseModelOSColumn is the column json value os
+	CodequalityResponseModelOSColumn = "os"
+	// CodequalityResponseModelProjectsColumn is the column json value projects
+	CodequalityResponseModelProjectsColumn = "projects"
+	// CodequalityResponseModelProjectsCustomerIDColumn is the column json value customer_id
+	CodequalityResponseModelProjectsCustomerIDColumn = "customer_id"
+	// CodequalityResponseModelProjectsIDColumn is the column json value id
+	CodequalityResponseModelProjectsIDColumn = "id"
+	// CodequalityResponseModelProjectsIdentifierColumn is the column json value identifier
+	CodequalityResponseModelProjectsIdentifierColumn = "identifier"
+	// CodequalityResponseModelProjectsNameColumn is the column json value name
+	CodequalityResponseModelProjectsNameColumn = "name"
+	// CodequalityResponseModelProjectsRefIDColumn is the column json value ref_id
+	CodequalityResponseModelProjectsRefIDColumn = "ref_id"
+	// CodequalityResponseModelProjectsRefTypeColumn is the column json value ref_type
+	CodequalityResponseModelProjectsRefTypeColumn = "ref_type"
+	// CodequalityResponseModelRefIDColumn is the column json value ref_id
+	CodequalityResponseModelRefIDColumn = "ref_id"
+	// CodequalityResponseModelRefTypeColumn is the column json value ref_type
+	CodequalityResponseModelRefTypeColumn = "ref_type"
+	// CodequalityResponseModelRequestIDColumn is the column json value request_id
+	CodequalityResponseModelRequestIDColumn = "request_id"
+	// CodequalityResponseModelSuccessColumn is the column json value success
+	CodequalityResponseModelSuccessColumn = "success"
+	// CodequalityResponseModelSystemIDColumn is the column json value system_id
+	CodequalityResponseModelSystemIDColumn = "system_id"
+	// CodequalityResponseModelTypeColumn is the column json value type
+	CodequalityResponseModelTypeColumn = "type"
+	// CodequalityResponseModelUptimeColumn is the column json value uptime
+	CodequalityResponseModelUptimeColumn = "uptime"
+	// CodequalityResponseModelUUIDColumn is the column json value uuid
+	CodequalityResponseModelUUIDColumn = "uuid"
+	// CodequalityResponseModelVersionColumn is the column json value version
+	CodequalityResponseModelVersionColumn = "version"
+)
+
 // CodequalityResponseEventDate represents the object structure for event_date
 type CodequalityResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -567,35 +646,35 @@ func (v CodequalityResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// CodequalityResponseTypeEnroll is the enumeration value for enroll
 	CodequalityResponseTypeEnroll CodequalityResponseType = 0
-	// TypePing is the enumeration value for ping
+	// CodequalityResponseTypePing is the enumeration value for ping
 	CodequalityResponseTypePing CodequalityResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// CodequalityResponseTypeCrash is the enumeration value for crash
 	CodequalityResponseTypeCrash CodequalityResponseType = 2
-	// TypeLog is the enumeration value for log
+	// CodequalityResponseTypeLog is the enumeration value for log
 	CodequalityResponseTypeLog CodequalityResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// CodequalityResponseTypeIntegration is the enumeration value for integration
 	CodequalityResponseTypeIntegration CodequalityResponseType = 4
-	// TypeExport is the enumeration value for export
+	// CodequalityResponseTypeExport is the enumeration value for export
 	CodequalityResponseTypeExport CodequalityResponseType = 5
-	// TypeProject is the enumeration value for project
+	// CodequalityResponseTypeProject is the enumeration value for project
 	CodequalityResponseTypeProject CodequalityResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// CodequalityResponseTypeRepo is the enumeration value for repo
 	CodequalityResponseTypeRepo CodequalityResponseType = 7
-	// TypeUser is the enumeration value for user
+	// CodequalityResponseTypeUser is the enumeration value for user
 	CodequalityResponseTypeUser CodequalityResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// CodequalityResponseTypeUninstall is the enumeration value for uninstall
 	CodequalityResponseTypeUninstall CodequalityResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// CodequalityResponseTypeUpgrade is the enumeration value for upgrade
 	CodequalityResponseTypeUpgrade CodequalityResponseType = 10
-	// TypeStart is the enumeration value for start
+	// CodequalityResponseTypeStart is the enumeration value for start
 	CodequalityResponseTypeStart CodequalityResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// CodequalityResponseTypeStop is the enumeration value for stop
 	CodequalityResponseTypeStop CodequalityResponseType = 12
-	// TypePause is the enumeration value for pause
+	// CodequalityResponseTypePause is the enumeration value for pause
 	CodequalityResponseTypePause CodequalityResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// CodequalityResponseTypeResume is the enumeration value for resume
 	CodequalityResponseTypeResume CodequalityResponseType = 14
 )
 
@@ -833,6 +912,12 @@ func (o *CodequalityResponse) UnmarshalJSON(data []byte) error {
 func (o *CodequalityResponse) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *CodequalityResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two CodequalityResponse objects are equal

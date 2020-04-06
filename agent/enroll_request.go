@@ -26,6 +26,23 @@ const (
 	EnrollRequestModelName datamodel.ModelNameType = "agent.EnrollRequest"
 )
 
+const (
+	// EnrollRequestModelCodeColumn is the column json value code
+	EnrollRequestModelCodeColumn = "code"
+	// EnrollRequestModelIDColumn is the column json value id
+	EnrollRequestModelIDColumn = "id"
+	// EnrollRequestModelRequestDateColumn is the column json value request_date
+	EnrollRequestModelRequestDateColumn = "request_date"
+	// EnrollRequestModelRequestDateEpochColumn is the column json value epoch
+	EnrollRequestModelRequestDateEpochColumn = "epoch"
+	// EnrollRequestModelRequestDateOffsetColumn is the column json value offset
+	EnrollRequestModelRequestDateOffsetColumn = "offset"
+	// EnrollRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	EnrollRequestModelRequestDateRfc3339Column = "rfc3339"
+	// EnrollRequestModelUUIDColumn is the column json value uuid
+	EnrollRequestModelUUIDColumn = "uuid"
+)
+
 // EnrollRequestRequestDate represents the object structure for request_date
 type EnrollRequestRequestDate struct {
 	// Epoch the date in epoch format
@@ -283,6 +300,11 @@ func (o *EnrollRequest) UnmarshalJSON(data []byte) error {
 // Stringify returns the object in JSON format as a string
 func (o *EnrollRequest) Stringify() string {
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *EnrollRequest) StringifyPretty() string {
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two EnrollRequest objects are equal

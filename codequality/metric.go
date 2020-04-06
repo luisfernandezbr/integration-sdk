@@ -28,6 +28,45 @@ const (
 	MetricModelName datamodel.ModelNameType = "codequality.Metric"
 )
 
+const (
+	// MetricModelBranchColumn is the column json value branch
+	MetricModelBranchColumn = "branch"
+	// MetricModelCommitIDColumn is the column json value commit_id
+	MetricModelCommitIDColumn = "commit_id"
+	// MetricModelCommitShaColumn is the column json value commit_sha
+	MetricModelCommitShaColumn = "commit_sha"
+	// MetricModelCreatedDateColumn is the column json value created_date
+	MetricModelCreatedDateColumn = "created_date"
+	// MetricModelCreatedDateEpochColumn is the column json value epoch
+	MetricModelCreatedDateEpochColumn = "epoch"
+	// MetricModelCreatedDateOffsetColumn is the column json value offset
+	MetricModelCreatedDateOffsetColumn = "offset"
+	// MetricModelCreatedDateRfc3339Column is the column json value rfc3339
+	MetricModelCreatedDateRfc3339Column = "rfc3339"
+	// MetricModelCustomerIDColumn is the column json value customer_id
+	MetricModelCustomerIDColumn = "customer_id"
+	// MetricModelIDColumn is the column json value id
+	MetricModelIDColumn = "id"
+	// MetricModelNameColumn is the column json value name
+	MetricModelNameColumn = "name"
+	// MetricModelProjectIDColumn is the column json value project_id
+	MetricModelProjectIDColumn = "project_id"
+	// MetricModelPullRequestIDColumn is the column json value pull_request_id
+	MetricModelPullRequestIDColumn = "pull_request_id"
+	// MetricModelPullRequestRefIDColumn is the column json value pull_request_ref_id
+	MetricModelPullRequestRefIDColumn = "pull_request_ref_id"
+	// MetricModelRefIDColumn is the column json value ref_id
+	MetricModelRefIDColumn = "ref_id"
+	// MetricModelRefTypeColumn is the column json value ref_type
+	MetricModelRefTypeColumn = "ref_type"
+	// MetricModelRepoIDColumn is the column json value repo_id
+	MetricModelRepoIDColumn = "repo_id"
+	// MetricModelStatusColumn is the column json value status
+	MetricModelStatusColumn = "status"
+	// MetricModelValueColumn is the column json value value
+	MetricModelValueColumn = "value"
+)
+
 // MetricCreatedDate represents the object structure for created_date
 type MetricCreatedDate struct {
 	// Epoch the date in epoch format
@@ -189,11 +228,11 @@ func (v MetricStatus) String() string {
 }
 
 const (
-	// StatusUnsupported is the enumeration value for unsupported
+	// MetricStatusUnsupported is the enumeration value for unsupported
 	MetricStatusUnsupported MetricStatus = 0
-	// StatusNotAnalysed is the enumeration value for not_analysed
+	// MetricStatusNotAnalysed is the enumeration value for not_analysed
 	MetricStatusNotAnalysed MetricStatus = 1
-	// StatusAnalysed is the enumeration value for analysed
+	// MetricStatusAnalysed is the enumeration value for analysed
 	MetricStatusAnalysed MetricStatus = 2
 )
 
@@ -396,6 +435,12 @@ func (o *Metric) UnmarshalJSON(data []byte) error {
 func (o *Metric) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *Metric) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two Metric objects are equal

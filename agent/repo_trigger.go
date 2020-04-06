@@ -24,6 +24,19 @@ const (
 	RepoTriggerModelName datamodel.ModelNameType = "agent.RepoTrigger"
 )
 
+const (
+	// RepoTriggerModelCustomerIDColumn is the column json value customer_id
+	RepoTriggerModelCustomerIDColumn = "customer_id"
+	// RepoTriggerModelIDColumn is the column json value id
+	RepoTriggerModelIDColumn = "id"
+	// RepoTriggerModelIntegrationIDColumn is the column json value integration_id
+	RepoTriggerModelIntegrationIDColumn = "integration_id"
+	// RepoTriggerModelRefIDColumn is the column json value ref_id
+	RepoTriggerModelRefIDColumn = "ref_id"
+	// RepoTriggerModelRefTypeColumn is the column json value ref_type
+	RepoTriggerModelRefTypeColumn = "ref_type"
+)
+
 // RepoTrigger used to trigger an agent.RepoRequest
 type RepoTrigger struct {
 	// CustomerID the customer id for the model instance
@@ -197,6 +210,12 @@ func (o *RepoTrigger) UnmarshalJSON(data []byte) error {
 func (o *RepoTrigger) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *RepoTrigger) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two RepoTrigger objects are equal

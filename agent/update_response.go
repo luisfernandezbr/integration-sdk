@@ -28,6 +28,73 @@ const (
 	UpdateResponseModelName datamodel.ModelNameType = "agent.UpdateResponse"
 )
 
+const (
+	// UpdateResponseModelArchitectureColumn is the column json value architecture
+	UpdateResponseModelArchitectureColumn = "architecture"
+	// UpdateResponseModelCustomerIDColumn is the column json value customer_id
+	UpdateResponseModelCustomerIDColumn = "customer_id"
+	// UpdateResponseModelDataColumn is the column json value data
+	UpdateResponseModelDataColumn = "data"
+	// UpdateResponseModelDistroColumn is the column json value distro
+	UpdateResponseModelDistroColumn = "distro"
+	// UpdateResponseModelErrorColumn is the column json value error
+	UpdateResponseModelErrorColumn = "error"
+	// UpdateResponseModelEventDateColumn is the column json value event_date
+	UpdateResponseModelEventDateColumn = "event_date"
+	// UpdateResponseModelEventDateEpochColumn is the column json value epoch
+	UpdateResponseModelEventDateEpochColumn = "epoch"
+	// UpdateResponseModelEventDateOffsetColumn is the column json value offset
+	UpdateResponseModelEventDateOffsetColumn = "offset"
+	// UpdateResponseModelEventDateRfc3339Column is the column json value rfc3339
+	UpdateResponseModelEventDateRfc3339Column = "rfc3339"
+	// UpdateResponseModelFreeSpaceColumn is the column json value free_space
+	UpdateResponseModelFreeSpaceColumn = "free_space"
+	// UpdateResponseModelFromVersionColumn is the column json value from_version
+	UpdateResponseModelFromVersionColumn = "from_version"
+	// UpdateResponseModelGoVersionColumn is the column json value go_version
+	UpdateResponseModelGoVersionColumn = "go_version"
+	// UpdateResponseModelHostnameColumn is the column json value hostname
+	UpdateResponseModelHostnameColumn = "hostname"
+	// UpdateResponseModelIDColumn is the column json value id
+	UpdateResponseModelIDColumn = "id"
+	// UpdateResponseModelLastExportDateColumn is the column json value last_export_date
+	UpdateResponseModelLastExportDateColumn = "last_export_date"
+	// UpdateResponseModelLastExportDateEpochColumn is the column json value epoch
+	UpdateResponseModelLastExportDateEpochColumn = "epoch"
+	// UpdateResponseModelLastExportDateOffsetColumn is the column json value offset
+	UpdateResponseModelLastExportDateOffsetColumn = "offset"
+	// UpdateResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	UpdateResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// UpdateResponseModelMemoryColumn is the column json value memory
+	UpdateResponseModelMemoryColumn = "memory"
+	// UpdateResponseModelMessageColumn is the column json value message
+	UpdateResponseModelMessageColumn = "message"
+	// UpdateResponseModelNumCPUColumn is the column json value num_cpu
+	UpdateResponseModelNumCPUColumn = "num_cpu"
+	// UpdateResponseModelOSColumn is the column json value os
+	UpdateResponseModelOSColumn = "os"
+	// UpdateResponseModelRefIDColumn is the column json value ref_id
+	UpdateResponseModelRefIDColumn = "ref_id"
+	// UpdateResponseModelRefTypeColumn is the column json value ref_type
+	UpdateResponseModelRefTypeColumn = "ref_type"
+	// UpdateResponseModelRequestIDColumn is the column json value request_id
+	UpdateResponseModelRequestIDColumn = "request_id"
+	// UpdateResponseModelSuccessColumn is the column json value success
+	UpdateResponseModelSuccessColumn = "success"
+	// UpdateResponseModelSystemIDColumn is the column json value system_id
+	UpdateResponseModelSystemIDColumn = "system_id"
+	// UpdateResponseModelToVersionColumn is the column json value to_version
+	UpdateResponseModelToVersionColumn = "to_version"
+	// UpdateResponseModelTypeColumn is the column json value type
+	UpdateResponseModelTypeColumn = "type"
+	// UpdateResponseModelUptimeColumn is the column json value uptime
+	UpdateResponseModelUptimeColumn = "uptime"
+	// UpdateResponseModelUUIDColumn is the column json value uuid
+	UpdateResponseModelUUIDColumn = "uuid"
+	// UpdateResponseModelVersionColumn is the column json value version
+	UpdateResponseModelVersionColumn = "version"
+)
+
 // UpdateResponseEventDate represents the object structure for event_date
 type UpdateResponseEventDate struct {
 	// Epoch the date in epoch format
@@ -384,35 +451,35 @@ func (v UpdateResponseType) String() string {
 }
 
 const (
-	// TypeEnroll is the enumeration value for enroll
+	// UpdateResponseTypeEnroll is the enumeration value for enroll
 	UpdateResponseTypeEnroll UpdateResponseType = 0
-	// TypePing is the enumeration value for ping
+	// UpdateResponseTypePing is the enumeration value for ping
 	UpdateResponseTypePing UpdateResponseType = 1
-	// TypeCrash is the enumeration value for crash
+	// UpdateResponseTypeCrash is the enumeration value for crash
 	UpdateResponseTypeCrash UpdateResponseType = 2
-	// TypeLog is the enumeration value for log
+	// UpdateResponseTypeLog is the enumeration value for log
 	UpdateResponseTypeLog UpdateResponseType = 3
-	// TypeIntegration is the enumeration value for integration
+	// UpdateResponseTypeIntegration is the enumeration value for integration
 	UpdateResponseTypeIntegration UpdateResponseType = 4
-	// TypeExport is the enumeration value for export
+	// UpdateResponseTypeExport is the enumeration value for export
 	UpdateResponseTypeExport UpdateResponseType = 5
-	// TypeProject is the enumeration value for project
+	// UpdateResponseTypeProject is the enumeration value for project
 	UpdateResponseTypeProject UpdateResponseType = 6
-	// TypeRepo is the enumeration value for repo
+	// UpdateResponseTypeRepo is the enumeration value for repo
 	UpdateResponseTypeRepo UpdateResponseType = 7
-	// TypeUser is the enumeration value for user
+	// UpdateResponseTypeUser is the enumeration value for user
 	UpdateResponseTypeUser UpdateResponseType = 8
-	// TypeUninstall is the enumeration value for uninstall
+	// UpdateResponseTypeUninstall is the enumeration value for uninstall
 	UpdateResponseTypeUninstall UpdateResponseType = 9
-	// TypeUpgrade is the enumeration value for upgrade
+	// UpdateResponseTypeUpgrade is the enumeration value for upgrade
 	UpdateResponseTypeUpgrade UpdateResponseType = 10
-	// TypeStart is the enumeration value for start
+	// UpdateResponseTypeStart is the enumeration value for start
 	UpdateResponseTypeStart UpdateResponseType = 11
-	// TypeStop is the enumeration value for stop
+	// UpdateResponseTypeStop is the enumeration value for stop
 	UpdateResponseTypeStop UpdateResponseType = 12
-	// TypePause is the enumeration value for pause
+	// UpdateResponseTypePause is the enumeration value for pause
 	UpdateResponseTypePause UpdateResponseType = 13
-	// TypeResume is the enumeration value for resume
+	// UpdateResponseTypeResume is the enumeration value for resume
 	UpdateResponseTypeResume UpdateResponseType = 14
 )
 
@@ -642,6 +709,12 @@ func (o *UpdateResponse) Stringify() string {
 	return pjson.Stringify(o)
 }
 
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *UpdateResponse) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
+}
+
 // IsEqual returns true if the two UpdateResponse objects are equal
 func (o *UpdateResponse) IsEqual(other *UpdateResponse) bool {
 	return o.Hash() == other.Hash()
@@ -797,25 +870,6 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpdateResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -925,25 +979,6 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpdateResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

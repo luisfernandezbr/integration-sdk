@@ -26,6 +26,25 @@ const (
 	IssueTypeModelName datamodel.ModelNameType = "work.IssueType"
 )
 
+const (
+	// IssueTypeModelCustomerIDColumn is the column json value customer_id
+	IssueTypeModelCustomerIDColumn = "customer_id"
+	// IssueTypeModelDescriptionColumn is the column json value description
+	IssueTypeModelDescriptionColumn = "description"
+	// IssueTypeModelIconURLColumn is the column json value icon_url
+	IssueTypeModelIconURLColumn = "icon_url"
+	// IssueTypeModelIDColumn is the column json value id
+	IssueTypeModelIDColumn = "id"
+	// IssueTypeModelMappedTypeColumn is the column json value mapped_type
+	IssueTypeModelMappedTypeColumn = "mapped_type"
+	// IssueTypeModelNameColumn is the column json value name
+	IssueTypeModelNameColumn = "name"
+	// IssueTypeModelRefIDColumn is the column json value ref_id
+	IssueTypeModelRefIDColumn = "ref_id"
+	// IssueTypeModelRefTypeColumn is the column json value ref_type
+	IssueTypeModelRefTypeColumn = "ref_type"
+)
+
 // IssueTypeMappedType is the enumeration type for mapped_type
 type IssueTypeMappedType int32
 
@@ -128,21 +147,21 @@ func (v IssueTypeMappedType) String() string {
 }
 
 const (
-	// MappedTypeUnknown is the enumeration value for unknown
+	// IssueTypeMappedTypeUnknown is the enumeration value for unknown
 	IssueTypeMappedTypeUnknown IssueTypeMappedType = 0
-	// MappedTypeFeature is the enumeration value for feature
+	// IssueTypeMappedTypeFeature is the enumeration value for feature
 	IssueTypeMappedTypeFeature IssueTypeMappedType = 1
-	// MappedTypeBug is the enumeration value for bug
+	// IssueTypeMappedTypeBug is the enumeration value for bug
 	IssueTypeMappedTypeBug IssueTypeMappedType = 2
-	// MappedTypeEnhancement is the enumeration value for enhancement
+	// IssueTypeMappedTypeEnhancement is the enumeration value for enhancement
 	IssueTypeMappedTypeEnhancement IssueTypeMappedType = 3
-	// MappedTypeEpic is the enumeration value for epic
+	// IssueTypeMappedTypeEpic is the enumeration value for epic
 	IssueTypeMappedTypeEpic IssueTypeMappedType = 4
-	// MappedTypeStory is the enumeration value for story
+	// IssueTypeMappedTypeStory is the enumeration value for story
 	IssueTypeMappedTypeStory IssueTypeMappedType = 5
-	// MappedTypeTask is the enumeration value for task
+	// IssueTypeMappedTypeTask is the enumeration value for task
 	IssueTypeMappedTypeTask IssueTypeMappedType = 6
-	// MappedTypeSubtask is the enumeration value for subtask
+	// IssueTypeMappedTypeSubtask is the enumeration value for subtask
 	IssueTypeMappedTypeSubtask IssueTypeMappedType = 7
 )
 
@@ -327,6 +346,12 @@ func (o *IssueType) UnmarshalJSON(data []byte) error {
 func (o *IssueType) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
+}
+
+// StringifyPretty returns the object in JSON format as a string prettified
+func (o *IssueType) StringifyPretty() string {
+	o.Hash()
+	return pjson.Stringify(o, true)
 }
 
 // IsEqual returns true if the two IssueType objects are equal
