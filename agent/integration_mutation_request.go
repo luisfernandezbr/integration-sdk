@@ -86,6 +86,8 @@ func (v *IntegrationMutationRequestAction) UnmarshalBSONValue(t bsontype.Type, d
 			*v = IntegrationMutationRequestAction(3)
 		case "ISSUE_SET_ASSIGNEE":
 			*v = IntegrationMutationRequestAction(4)
+		case "ISSUE_GET_TRANSITIONS":
+			*v = IntegrationMutationRequestAction(5)
 		}
 	}
 	return nil
@@ -104,6 +106,8 @@ func (v IntegrationMutationRequestAction) UnmarshalJSON(buf []byte) error {
 		v = 3
 	case "ISSUE_SET_ASSIGNEE":
 		v = 4
+	case "ISSUE_GET_TRANSITIONS":
+		v = 5
 	}
 	return nil
 }
@@ -121,6 +125,8 @@ func (v IntegrationMutationRequestAction) MarshalJSON() ([]byte, error) {
 		return json.Marshal("ISSUE_SET_PRIORITY")
 	case 4:
 		return json.Marshal("ISSUE_SET_ASSIGNEE")
+	case 5:
+		return json.Marshal("ISSUE_GET_TRANSITIONS")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -138,6 +144,8 @@ func (v IntegrationMutationRequestAction) String() string {
 		return "ISSUE_SET_PRIORITY"
 	case 4:
 		return "ISSUE_SET_ASSIGNEE"
+	case 5:
+		return "ISSUE_GET_TRANSITIONS"
 	}
 	return "unset"
 }
@@ -153,6 +161,8 @@ const (
 	IntegrationMutationRequestActionIssueSetPriority IntegrationMutationRequestAction = 3
 	// IntegrationMutationRequestActionIssueSetAssignee is the enumeration value for issue_set_assignee
 	IntegrationMutationRequestActionIssueSetAssignee IntegrationMutationRequestAction = 4
+	// IntegrationMutationRequestActionIssueGetTransitions is the enumeration value for issue_get_transitions
+	IntegrationMutationRequestActionIssueGetTransitions IntegrationMutationRequestAction = 5
 )
 
 // IntegrationMutationRequestAuthorization represents the object structure for authorization
@@ -677,6 +687,8 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 3
 			case "issue_set_assignee", "ISSUE_SET_ASSIGNEE":
 				o.Action = 4
+			case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
+				o.Action = 5
 			}
 		}
 		if em, ok := kv["action"].(string); ok {
@@ -691,6 +703,8 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 3
 			case "issue_set_assignee", "ISSUE_SET_ASSIGNEE":
 				o.Action = 4
+			case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
+				o.Action = 5
 			}
 		}
 	}
