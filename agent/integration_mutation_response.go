@@ -93,6 +93,8 @@ const (
 	IntegrationMutationResponseModelUUIDColumn = "uuid"
 	// IntegrationMutationResponseModelVersionColumn is the column json value version
 	IntegrationMutationResponseModelVersionColumn = "version"
+	// IntegrationMutationResponseModelWebappResponseColumn is the column json value webapp_response
+	IntegrationMutationResponseModelWebappResponseColumn = "webapp_response"
 )
 
 // IntegrationMutationResponseEventDate represents the object structure for event_date
@@ -529,7 +531,7 @@ type IntegrationMutationResponse struct {
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
 	Type IntegrationMutationResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
-	// UpdatedObjects Updated objects as JSON map[type][]object
+	// UpdatedObjects Updated objects as JSON map[type][]object for use in pipeline
 	UpdatedObjects string `json:"updated_objects" codec:"updated_objects" bson:"updated_objects" yaml:"updated_objects" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
 	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
@@ -537,6 +539,8 @@ type IntegrationMutationResponse struct {
 	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
 	// Version the agent version
 	Version string `json:"version" codec:"version" bson:"version" yaml:"version" faker:"-"`
+	// WebappResponse Arbitrary response to be used in webapp
+	WebappResponse string `json:"webapp_response" codec:"webapp_response" bson:"webapp_response" yaml:"webapp_response" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -751,6 +755,7 @@ func (o *IntegrationMutationResponse) ToMap() map[string]interface{} {
 		"uptime":          toIntegrationMutationResponseObject(o.Uptime, false),
 		"uuid":            toIntegrationMutationResponseObject(o.UUID, false),
 		"version":         toIntegrationMutationResponseObject(o.Version, false),
+		"webapp_response": toIntegrationMutationResponseObject(o.WebappResponse, false),
 		"hashcode":        toIntegrationMutationResponseObject(o.Hashcode, false),
 	}
 }
@@ -870,6 +875,25 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -979,6 +1003,25 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1294,6 +1337,26 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["webapp_response"].(string); ok {
+		o.WebappResponse = val
+	} else {
+		if val, ok := kv["webapp_response"]; ok {
+			if val == nil {
+				o.WebappResponse = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.WebappResponse = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1326,6 +1389,7 @@ func (o *IntegrationMutationResponse) Hash() string {
 	args = append(args, o.Uptime)
 	args = append(args, o.UUID)
 	args = append(args, o.Version)
+	args = append(args, o.WebappResponse)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

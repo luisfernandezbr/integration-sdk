@@ -68,6 +68,8 @@ func (v *WebappIntegrationMutationRequestAction) UnmarshalBSONValue(t bsontype.T
 			*v = WebappIntegrationMutationRequestAction(3)
 		case "ISSUE_SET_ASSIGNEE":
 			*v = WebappIntegrationMutationRequestAction(4)
+		case "ISSUE_GET_TRANSITIONS":
+			*v = WebappIntegrationMutationRequestAction(5)
 		}
 	}
 	return nil
@@ -86,6 +88,8 @@ func (v WebappIntegrationMutationRequestAction) UnmarshalJSON(buf []byte) error 
 		v = 3
 	case "ISSUE_SET_ASSIGNEE":
 		v = 4
+	case "ISSUE_GET_TRANSITIONS":
+		v = 5
 	}
 	return nil
 }
@@ -103,6 +107,8 @@ func (v WebappIntegrationMutationRequestAction) MarshalJSON() ([]byte, error) {
 		return json.Marshal("ISSUE_SET_PRIORITY")
 	case 4:
 		return json.Marshal("ISSUE_SET_ASSIGNEE")
+	case 5:
+		return json.Marshal("ISSUE_GET_TRANSITIONS")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -120,6 +126,8 @@ func (v WebappIntegrationMutationRequestAction) String() string {
 		return "ISSUE_SET_PRIORITY"
 	case 4:
 		return "ISSUE_SET_ASSIGNEE"
+	case 5:
+		return "ISSUE_GET_TRANSITIONS"
 	}
 	return "unset"
 }
@@ -135,6 +143,8 @@ const (
 	WebappIntegrationMutationRequestActionIssueSetPriority WebappIntegrationMutationRequestAction = 3
 	// WebappIntegrationMutationRequestActionIssueSetAssignee is the enumeration value for issue_set_assignee
 	WebappIntegrationMutationRequestActionIssueSetAssignee WebappIntegrationMutationRequestAction = 4
+	// WebappIntegrationMutationRequestActionIssueGetTransitions is the enumeration value for issue_get_transitions
+	WebappIntegrationMutationRequestActionIssueGetTransitions WebappIntegrationMutationRequestAction = 5
 )
 
 // WebappIntegrationMutationRequestSystemType is the enumeration type for system_type
@@ -461,6 +471,8 @@ func (o *WebappIntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 3
 			case "issue_set_assignee", "ISSUE_SET_ASSIGNEE":
 				o.Action = 4
+			case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
+				o.Action = 5
 			}
 		}
 		if em, ok := kv["action"].(string); ok {
@@ -475,6 +487,8 @@ func (o *WebappIntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 3
 			case "issue_set_assignee", "ISSUE_SET_ASSIGNEE":
 				o.Action = 4
+			case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
+				o.Action = 5
 			}
 		}
 	}
