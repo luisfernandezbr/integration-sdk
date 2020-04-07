@@ -610,17 +610,17 @@ type Team struct {
 	// ParentIds the parent_ids for this team
 	ParentIds []string `json:"parent_ids" codec:"parent_ids" bson:"parent_ids" yaml:"parent_ids" faker:"-"`
 	// ProjectIds project ids for the team
-	ProjectIds []string `json:"project_ids" codec:"project_ids" bson:"project_ids" yaml:"project_ids" faker:"-"`
+	ProjectIds []string `json:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RepoIds repo ids for the team
-	RepoIds []string `json:"repo_ids" codec:"repo_ids" bson:"repo_ids" yaml:"repo_ids" faker:"-"`
+	RepoIds []string `json:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Users users for the team
-	Users []TeamUsers `json:"users" codec:"users" bson:"users" yaml:"users" faker:"-"`
+	Users []TeamUsers `json:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -1413,11 +1413,37 @@ func getTeamQueryFields() string {
 	// scalar
 	sb.WriteString("\t\t\tparent_ids\n")
 	// scalar
+	sb.WriteString("\t\t\tproject_ids\n")
+	// scalar
 	sb.WriteString("\t\t\tref_id\n")
 	// scalar
 	sb.WriteString("\t\t\tref_type\n")
 	// scalar
+	sb.WriteString("\t\t\trepo_ids\n")
+	// scalar
 	sb.WriteString("\t\t\tupdated_ts\n")
+	// object with fields
+	sb.WriteString("\t\t\tusers {\n")
+
+	// scalar
+	sb.WriteString("\t\t\tavatar_url\n")
+	// scalar
+	sb.WriteString("\t\t\tid\n")
+	// scalar
+	sb.WriteString("\t\t\tname\n")
+	// scalar
+	sb.WriteString("\t\t\tnickname\n")
+	// scalar
+	sb.WriteString("\t\t\tprofile_id\n")
+	// scalar
+	sb.WriteString("\t\t\tref_id\n")
+	// scalar
+	sb.WriteString("\t\t\tteam_id\n")
+	// scalar
+	sb.WriteString("\t\t\ttype\n")
+	// scalar
+	sb.WriteString("\t\t\turl\n")
+	sb.WriteString("\t\t\t}\n")
 	return sb.String()
 }
 
