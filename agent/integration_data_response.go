@@ -1,6 +1,6 @@
 // DO NOT EDIT -- generated code
 
-// Package agent - the agent communicates with pinpoint cloud to send integration data
+// Package agent -
 package agent
 
 import (
@@ -21,82 +21,80 @@ import (
 
 const (
 
-	// ResumeTable is the default table name
-	ResumeTable datamodel.ModelNameType = "agent_resume"
+	// IntegrationDataResponseTable is the default table name
+	IntegrationDataResponseTable datamodel.ModelNameType = "agent_integrationdataresponse"
 
-	// ResumeModelName is the model name
-	ResumeModelName datamodel.ModelNameType = "agent.Resume"
+	// IntegrationDataResponseModelName is the model name
+	IntegrationDataResponseModelName datamodel.ModelNameType = "agent.IntegrationDataResponse"
 )
 
 const (
-	// ResumeModelArchitectureColumn is the column json value architecture
-	ResumeModelArchitectureColumn = "architecture"
-	// ResumeModelCustomerIDColumn is the column json value customer_id
-	ResumeModelCustomerIDColumn = "customer_id"
-	// ResumeModelDataColumn is the column json value data
-	ResumeModelDataColumn = "data"
-	// ResumeModelDistroColumn is the column json value distro
-	ResumeModelDistroColumn = "distro"
-	// ResumeModelErrorColumn is the column json value error
-	ResumeModelErrorColumn = "error"
-	// ResumeModelEventDateColumn is the column json value event_date
-	ResumeModelEventDateColumn = "event_date"
-	// ResumeModelEventDateEpochColumn is the column json value epoch
-	ResumeModelEventDateEpochColumn = "epoch"
-	// ResumeModelEventDateOffsetColumn is the column json value offset
-	ResumeModelEventDateOffsetColumn = "offset"
-	// ResumeModelEventDateRfc3339Column is the column json value rfc3339
-	ResumeModelEventDateRfc3339Column = "rfc3339"
-	// ResumeModelFreeSpaceColumn is the column json value free_space
-	ResumeModelFreeSpaceColumn = "free_space"
-	// ResumeModelGoVersionColumn is the column json value go_version
-	ResumeModelGoVersionColumn = "go_version"
-	// ResumeModelHostnameColumn is the column json value hostname
-	ResumeModelHostnameColumn = "hostname"
-	// ResumeModelIDColumn is the column json value id
-	ResumeModelIDColumn = "id"
-	// ResumeModelIntegrationColumn is the column json value integration
-	ResumeModelIntegrationColumn = "integration"
-	// ResumeModelJobIDColumn is the column json value job_id
-	ResumeModelJobIDColumn = "job_id"
-	// ResumeModelLastExportDateColumn is the column json value last_export_date
-	ResumeModelLastExportDateColumn = "last_export_date"
-	// ResumeModelLastExportDateEpochColumn is the column json value epoch
-	ResumeModelLastExportDateEpochColumn = "epoch"
-	// ResumeModelLastExportDateOffsetColumn is the column json value offset
-	ResumeModelLastExportDateOffsetColumn = "offset"
-	// ResumeModelLastExportDateRfc3339Column is the column json value rfc3339
-	ResumeModelLastExportDateRfc3339Column = "rfc3339"
-	// ResumeModelMemoryColumn is the column json value memory
-	ResumeModelMemoryColumn = "memory"
-	// ResumeModelMessageColumn is the column json value message
-	ResumeModelMessageColumn = "message"
-	// ResumeModelNumCPUColumn is the column json value num_cpu
-	ResumeModelNumCPUColumn = "num_cpu"
-	// ResumeModelOSColumn is the column json value os
-	ResumeModelOSColumn = "os"
-	// ResumeModelRefIDColumn is the column json value ref_id
-	ResumeModelRefIDColumn = "ref_id"
-	// ResumeModelRefTypeColumn is the column json value ref_type
-	ResumeModelRefTypeColumn = "ref_type"
-	// ResumeModelRequestIDColumn is the column json value request_id
-	ResumeModelRequestIDColumn = "request_id"
-	// ResumeModelSuccessColumn is the column json value success
-	ResumeModelSuccessColumn = "success"
-	// ResumeModelSystemIDColumn is the column json value system_id
-	ResumeModelSystemIDColumn = "system_id"
-	// ResumeModelTypeColumn is the column json value type
-	ResumeModelTypeColumn = "type"
-	// ResumeModelUptimeColumn is the column json value uptime
-	ResumeModelUptimeColumn = "uptime"
-	// ResumeModelUUIDColumn is the column json value uuid
-	ResumeModelUUIDColumn = "uuid"
-	// ResumeModelVersionColumn is the column json value version
-	ResumeModelVersionColumn = "version"
+	// IntegrationDataResponseModelArchitectureColumn is the column json value architecture
+	IntegrationDataResponseModelArchitectureColumn = "architecture"
+	// IntegrationDataResponseModelCustomerIDColumn is the column json value customer_id
+	IntegrationDataResponseModelCustomerIDColumn = "customer_id"
+	// IntegrationDataResponseModelDataColumn is the column json value data
+	IntegrationDataResponseModelDataColumn = "data"
+	// IntegrationDataResponseModelDistroColumn is the column json value distro
+	IntegrationDataResponseModelDistroColumn = "distro"
+	// IntegrationDataResponseModelErrorColumn is the column json value error
+	IntegrationDataResponseModelErrorColumn = "error"
+	// IntegrationDataResponseModelEventDateColumn is the column json value event_date
+	IntegrationDataResponseModelEventDateColumn = "event_date"
+	// IntegrationDataResponseModelEventDateEpochColumn is the column json value epoch
+	IntegrationDataResponseModelEventDateEpochColumn = "epoch"
+	// IntegrationDataResponseModelEventDateOffsetColumn is the column json value offset
+	IntegrationDataResponseModelEventDateOffsetColumn = "offset"
+	// IntegrationDataResponseModelEventDateRfc3339Column is the column json value rfc3339
+	IntegrationDataResponseModelEventDateRfc3339Column = "rfc3339"
+	// IntegrationDataResponseModelFreeSpaceColumn is the column json value free_space
+	IntegrationDataResponseModelFreeSpaceColumn = "free_space"
+	// IntegrationDataResponseModelGoVersionColumn is the column json value go_version
+	IntegrationDataResponseModelGoVersionColumn = "go_version"
+	// IntegrationDataResponseModelHostnameColumn is the column json value hostname
+	IntegrationDataResponseModelHostnameColumn = "hostname"
+	// IntegrationDataResponseModelIDColumn is the column json value id
+	IntegrationDataResponseModelIDColumn = "id"
+	// IntegrationDataResponseModelJobIDColumn is the column json value job_id
+	IntegrationDataResponseModelJobIDColumn = "job_id"
+	// IntegrationDataResponseModelLastExportDateColumn is the column json value last_export_date
+	IntegrationDataResponseModelLastExportDateColumn = "last_export_date"
+	// IntegrationDataResponseModelLastExportDateEpochColumn is the column json value epoch
+	IntegrationDataResponseModelLastExportDateEpochColumn = "epoch"
+	// IntegrationDataResponseModelLastExportDateOffsetColumn is the column json value offset
+	IntegrationDataResponseModelLastExportDateOffsetColumn = "offset"
+	// IntegrationDataResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	IntegrationDataResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// IntegrationDataResponseModelMemoryColumn is the column json value memory
+	IntegrationDataResponseModelMemoryColumn = "memory"
+	// IntegrationDataResponseModelMessageColumn is the column json value message
+	IntegrationDataResponseModelMessageColumn = "message"
+	// IntegrationDataResponseModelNumCPUColumn is the column json value num_cpu
+	IntegrationDataResponseModelNumCPUColumn = "num_cpu"
+	// IntegrationDataResponseModelOSColumn is the column json value os
+	IntegrationDataResponseModelOSColumn = "os"
+	// IntegrationDataResponseModelRefIDColumn is the column json value ref_id
+	IntegrationDataResponseModelRefIDColumn = "ref_id"
+	// IntegrationDataResponseModelRefTypeColumn is the column json value ref_type
+	IntegrationDataResponseModelRefTypeColumn = "ref_type"
+	// IntegrationDataResponseModelRequestIDColumn is the column json value request_id
+	IntegrationDataResponseModelRequestIDColumn = "request_id"
+	// IntegrationDataResponseModelSuccessColumn is the column json value success
+	IntegrationDataResponseModelSuccessColumn = "success"
+	// IntegrationDataResponseModelSystemIDColumn is the column json value system_id
+	IntegrationDataResponseModelSystemIDColumn = "system_id"
+	// IntegrationDataResponseModelTypeColumn is the column json value type
+	IntegrationDataResponseModelTypeColumn = "type"
+	// IntegrationDataResponseModelUptimeColumn is the column json value uptime
+	IntegrationDataResponseModelUptimeColumn = "uptime"
+	// IntegrationDataResponseModelUUIDColumn is the column json value uuid
+	IntegrationDataResponseModelUUIDColumn = "uuid"
+	// IntegrationDataResponseModelVersionColumn is the column json value version
+	IntegrationDataResponseModelVersionColumn = "version"
 )
 
-// ResumeEventDate represents the object structure for event_date
-type ResumeEventDate struct {
+// IntegrationDataResponseEventDate represents the object structure for event_date
+type IntegrationDataResponseEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -105,9 +103,9 @@ type ResumeEventDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toResumeEventDateObject(o interface{}, isoptional bool) interface{} {
+func toIntegrationDataResponseEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *ResumeEventDate:
+	case *IntegrationDataResponseEventDate:
 		return v.ToMap()
 
 	default:
@@ -115,19 +113,19 @@ func toResumeEventDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-func (o *ResumeEventDate) ToMap() map[string]interface{} {
+func (o *IntegrationDataResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toResumeEventDateObject(o.Epoch, false),
+		"epoch": toIntegrationDataResponseEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toResumeEventDateObject(o.Offset, false),
+		"offset": toIntegrationDataResponseEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toResumeEventDateObject(o.Rfc3339, false),
+		"rfc3339": toIntegrationDataResponseEventDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *ResumeEventDate) setDefaults(frommap bool) {
+func (o *IntegrationDataResponseEventDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -135,7 +133,7 @@ func (o *ResumeEventDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *ResumeEventDate) FromMap(kv map[string]interface{}) {
+func (o *IntegrationDataResponseEventDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -194,8 +192,8 @@ func (o *ResumeEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// ResumeLastExportDate represents the object structure for last_export_date
-type ResumeLastExportDate struct {
+// IntegrationDataResponseLastExportDate represents the object structure for last_export_date
+type IntegrationDataResponseLastExportDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -204,9 +202,9 @@ type ResumeLastExportDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toResumeLastExportDateObject(o interface{}, isoptional bool) interface{} {
+func toIntegrationDataResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *ResumeLastExportDate:
+	case *IntegrationDataResponseLastExportDate:
 		return v.ToMap()
 
 	default:
@@ -214,19 +212,19 @@ func toResumeLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-func (o *ResumeLastExportDate) ToMap() map[string]interface{} {
+func (o *IntegrationDataResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toResumeLastExportDateObject(o.Epoch, false),
+		"epoch": toIntegrationDataResponseLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toResumeLastExportDateObject(o.Offset, false),
+		"offset": toIntegrationDataResponseLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toResumeLastExportDateObject(o.Rfc3339, false),
+		"rfc3339": toIntegrationDataResponseLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *ResumeLastExportDate) setDefaults(frommap bool) {
+func (o *IntegrationDataResponseLastExportDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -234,7 +232,7 @@ func (o *ResumeLastExportDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *ResumeLastExportDate) FromMap(kv map[string]interface{}) {
+func (o *IntegrationDataResponseLastExportDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -293,54 +291,54 @@ func (o *ResumeLastExportDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// ResumeType is the enumeration type for type
-type ResumeType int32
+// IntegrationDataResponseType is the enumeration type for type
+type IntegrationDataResponseType int32
 
 // UnmarshalBSONValue for unmarshaling value
-func (v *ResumeType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+func (v *IntegrationDataResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
 	switch t {
 	case bsontype.Int32:
-		*v = ResumeType(val.Int32())
+		*v = IntegrationDataResponseType(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
 		case "ENROLL":
-			*v = ResumeType(0)
+			*v = IntegrationDataResponseType(0)
 		case "PING":
-			*v = ResumeType(1)
+			*v = IntegrationDataResponseType(1)
 		case "CRASH":
-			*v = ResumeType(2)
+			*v = IntegrationDataResponseType(2)
 		case "LOG":
-			*v = ResumeType(3)
+			*v = IntegrationDataResponseType(3)
 		case "INTEGRATION":
-			*v = ResumeType(4)
+			*v = IntegrationDataResponseType(4)
 		case "EXPORT":
-			*v = ResumeType(5)
+			*v = IntegrationDataResponseType(5)
 		case "PROJECT":
-			*v = ResumeType(6)
+			*v = IntegrationDataResponseType(6)
 		case "REPO":
-			*v = ResumeType(7)
+			*v = IntegrationDataResponseType(7)
 		case "USER":
-			*v = ResumeType(8)
+			*v = IntegrationDataResponseType(8)
 		case "UNINSTALL":
-			*v = ResumeType(9)
+			*v = IntegrationDataResponseType(9)
 		case "UPGRADE":
-			*v = ResumeType(10)
+			*v = IntegrationDataResponseType(10)
 		case "START":
-			*v = ResumeType(11)
+			*v = IntegrationDataResponseType(11)
 		case "STOP":
-			*v = ResumeType(12)
+			*v = IntegrationDataResponseType(12)
 		case "PAUSE":
-			*v = ResumeType(13)
+			*v = IntegrationDataResponseType(13)
 		case "RESUME":
-			*v = ResumeType(14)
+			*v = IntegrationDataResponseType(14)
 		}
 	}
 	return nil
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v ResumeType) UnmarshalJSON(buf []byte) error {
+func (v IntegrationDataResponseType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -377,7 +375,7 @@ func (v ResumeType) UnmarshalJSON(buf []byte) error {
 }
 
 // MarshalJSON marshals the enum value
-func (v ResumeType) MarshalJSON() ([]byte, error) {
+func (v IntegrationDataResponseType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
 		return json.Marshal("ENROLL")
@@ -414,7 +412,7 @@ func (v ResumeType) MarshalJSON() ([]byte, error) {
 }
 
 // String returns the string value for Type
-func (v ResumeType) String() string {
+func (v IntegrationDataResponseType) String() string {
 	switch int32(v) {
 	case 0:
 		return "ENROLL"
@@ -451,52 +449,52 @@ func (v ResumeType) String() string {
 }
 
 const (
-	// ResumeTypeEnroll is the enumeration value for enroll
-	ResumeTypeEnroll ResumeType = 0
-	// ResumeTypePing is the enumeration value for ping
-	ResumeTypePing ResumeType = 1
-	// ResumeTypeCrash is the enumeration value for crash
-	ResumeTypeCrash ResumeType = 2
-	// ResumeTypeLog is the enumeration value for log
-	ResumeTypeLog ResumeType = 3
-	// ResumeTypeIntegration is the enumeration value for integration
-	ResumeTypeIntegration ResumeType = 4
-	// ResumeTypeExport is the enumeration value for export
-	ResumeTypeExport ResumeType = 5
-	// ResumeTypeProject is the enumeration value for project
-	ResumeTypeProject ResumeType = 6
-	// ResumeTypeRepo is the enumeration value for repo
-	ResumeTypeRepo ResumeType = 7
-	// ResumeTypeUser is the enumeration value for user
-	ResumeTypeUser ResumeType = 8
-	// ResumeTypeUninstall is the enumeration value for uninstall
-	ResumeTypeUninstall ResumeType = 9
-	// ResumeTypeUpgrade is the enumeration value for upgrade
-	ResumeTypeUpgrade ResumeType = 10
-	// ResumeTypeStart is the enumeration value for start
-	ResumeTypeStart ResumeType = 11
-	// ResumeTypeStop is the enumeration value for stop
-	ResumeTypeStop ResumeType = 12
-	// ResumeTypePause is the enumeration value for pause
-	ResumeTypePause ResumeType = 13
-	// ResumeTypeResume is the enumeration value for resume
-	ResumeTypeResume ResumeType = 14
+	// IntegrationDataResponseTypeEnroll is the enumeration value for enroll
+	IntegrationDataResponseTypeEnroll IntegrationDataResponseType = 0
+	// IntegrationDataResponseTypePing is the enumeration value for ping
+	IntegrationDataResponseTypePing IntegrationDataResponseType = 1
+	// IntegrationDataResponseTypeCrash is the enumeration value for crash
+	IntegrationDataResponseTypeCrash IntegrationDataResponseType = 2
+	// IntegrationDataResponseTypeLog is the enumeration value for log
+	IntegrationDataResponseTypeLog IntegrationDataResponseType = 3
+	// IntegrationDataResponseTypeIntegration is the enumeration value for integration
+	IntegrationDataResponseTypeIntegration IntegrationDataResponseType = 4
+	// IntegrationDataResponseTypeExport is the enumeration value for export
+	IntegrationDataResponseTypeExport IntegrationDataResponseType = 5
+	// IntegrationDataResponseTypeProject is the enumeration value for project
+	IntegrationDataResponseTypeProject IntegrationDataResponseType = 6
+	// IntegrationDataResponseTypeRepo is the enumeration value for repo
+	IntegrationDataResponseTypeRepo IntegrationDataResponseType = 7
+	// IntegrationDataResponseTypeUser is the enumeration value for user
+	IntegrationDataResponseTypeUser IntegrationDataResponseType = 8
+	// IntegrationDataResponseTypeUninstall is the enumeration value for uninstall
+	IntegrationDataResponseTypeUninstall IntegrationDataResponseType = 9
+	// IntegrationDataResponseTypeUpgrade is the enumeration value for upgrade
+	IntegrationDataResponseTypeUpgrade IntegrationDataResponseType = 10
+	// IntegrationDataResponseTypeStart is the enumeration value for start
+	IntegrationDataResponseTypeStart IntegrationDataResponseType = 11
+	// IntegrationDataResponseTypeStop is the enumeration value for stop
+	IntegrationDataResponseTypeStop IntegrationDataResponseType = 12
+	// IntegrationDataResponseTypePause is the enumeration value for pause
+	IntegrationDataResponseTypePause IntegrationDataResponseType = 13
+	// IntegrationDataResponseTypeResume is the enumeration value for resume
+	IntegrationDataResponseTypeResume IntegrationDataResponseType = 14
 )
 
-// Resume an agent event to indicate that the integration export has resumed
-type Resume struct {
+// IntegrationDataResponse response for data request going back from agent (used by webapp)
+type IntegrationDataResponse struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// Data extra data that is specific about this event
-	Data *string `json:"data,omitempty" codec:"data,omitempty" bson:"data" yaml:"data,omitempty" faker:"-"`
+	// Data Arbitrary response stored as json
+	Data string `json:"data" codec:"data" bson:"data" yaml:"data" faker:"-"`
 	// Distro the agent os distribution
 	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
 	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate ResumeEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate IntegrationDataResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -505,12 +503,10 @@ type Resume struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Integration the name of the integration that was resumed
-	Integration string `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
-	// JobID the job id
+	// JobID The job ID
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate ResumeLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate IntegrationDataResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -530,7 +526,7 @@ type Resume struct {
 	// SystemID system unique device ID
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type ResumeType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type IntegrationDataResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
 	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
@@ -542,23 +538,23 @@ type Resume struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*Resume)(nil)
+var _ datamodel.Model = (*IntegrationDataResponse)(nil)
 
 // ensure that this type implements the streamed data model interface
-var _ datamodel.StreamedModel = (*Resume)(nil)
+var _ datamodel.StreamedModel = (*IntegrationDataResponse)(nil)
 
-func toResumeObject(o interface{}, isoptional bool) interface{} {
+func toIntegrationDataResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *Resume:
+	case *IntegrationDataResponse:
 		return v.ToMap()
 
-	case ResumeEventDate:
+	case IntegrationDataResponseEventDate:
 		return v.ToMap()
 
-	case ResumeLastExportDate:
+	case IntegrationDataResponseLastExportDate:
 		return v.ToMap()
 
-	case ResumeType:
+	case IntegrationDataResponseType:
 		return v.String()
 
 	default:
@@ -566,41 +562,41 @@ func toResumeObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-// String returns a string representation of Resume
-func (o *Resume) String() string {
-	return fmt.Sprintf("agent.Resume<%s>", o.ID)
+// String returns a string representation of IntegrationDataResponse
+func (o *IntegrationDataResponse) String() string {
+	return fmt.Sprintf("agent.IntegrationDataResponse<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *Resume) GetTopicName() datamodel.TopicNameType {
+func (o *IntegrationDataResponse) GetTopicName() datamodel.TopicNameType {
 	return ""
 }
 
 // GetStreamName returns the name of the stream
-func (o *Resume) GetStreamName() string {
+func (o *IntegrationDataResponse) GetStreamName() string {
 	return ""
 }
 
 // GetTableName returns the name of the table
-func (o *Resume) GetTableName() string {
+func (o *IntegrationDataResponse) GetTableName() string {
 	return ""
 }
 
 // GetModelName returns the name of the model
-func (o *Resume) GetModelName() datamodel.ModelNameType {
-	return ResumeModelName
+func (o *IntegrationDataResponse) GetModelName() datamodel.ModelNameType {
+	return IntegrationDataResponseModelName
 }
 
-// NewResumeID provides a template for generating an ID field for Resume
-func NewResumeID(customerID string, refType string, refID string) string {
-	return hash.Values("Resume", customerID, refType, refID)
+// NewIntegrationDataResponseID provides a template for generating an ID field for IntegrationDataResponse
+func NewIntegrationDataResponseID(customerID string, refType string, refID string) string {
+	return hash.Values("IntegrationDataResponse", customerID, refType, refID)
 }
 
-func (o *Resume) setDefaults(frommap bool) {
+func (o *IntegrationDataResponse) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Resume", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("IntegrationDataResponse", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -611,67 +607,67 @@ func (o *Resume) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *Resume) GetID() string {
+func (o *IntegrationDataResponse) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *Resume) GetTopicKey() string {
+func (o *IntegrationDataResponse) GetTopicKey() string {
 	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *Resume) GetTimestamp() time.Time {
+func (o *IntegrationDataResponse) GetTimestamp() time.Time {
 	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
-func (o *Resume) GetRefID() string {
+func (o *IntegrationDataResponse) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *Resume) IsMaterialized() bool {
+func (o *IntegrationDataResponse) IsMaterialized() bool {
 	return false
 }
 
 // IsMutable returns true if the model is mutable
-func (o *Resume) IsMutable() bool {
+func (o *IntegrationDataResponse) IsMutable() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *Resume) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *IntegrationDataResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *Resume) IsEvented() bool {
+func (o *IntegrationDataResponse) IsEvented() bool {
 	return false
 }
 
 // GetTopicConfig returns the topic config object
-func (o *Resume) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *IntegrationDataResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil
 }
 
 // GetCustomerID will return the customer_id
-func (o *Resume) GetCustomerID() string {
+func (o *IntegrationDataResponse) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of Resume
-func (o *Resume) Clone() datamodel.Model {
-	c := new(Resume)
+// Clone returns an exact copy of IntegrationDataResponse
+func (o *IntegrationDataResponse) Clone() datamodel.Model {
+	c := new(IntegrationDataResponse)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *Resume) Anon() datamodel.Model {
-	c := new(Resume)
+func (o *IntegrationDataResponse) Anon() datamodel.Model {
+	c := new(IntegrationDataResponse)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -686,12 +682,12 @@ func (o *Resume) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *Resume) MarshalJSON() ([]byte, error) {
+func (o *IntegrationDataResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *Resume) UnmarshalJSON(data []byte) error {
+func (o *IntegrationDataResponse) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -704,59 +700,58 @@ func (o *Resume) UnmarshalJSON(data []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *Resume) Stringify() string {
+func (o *IntegrationDataResponse) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
 // StringifyPretty returns the object in JSON format as a string prettified
-func (o *Resume) StringifyPretty() string {
+func (o *IntegrationDataResponse) StringifyPretty() string {
 	o.Hash()
 	return pjson.Stringify(o, true)
 }
 
-// IsEqual returns true if the two Resume objects are equal
-func (o *Resume) IsEqual(other *Resume) bool {
+// IsEqual returns true if the two IntegrationDataResponse objects are equal
+func (o *IntegrationDataResponse) IsEqual(other *IntegrationDataResponse) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *Resume) ToMap() map[string]interface{} {
+func (o *IntegrationDataResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toResumeObject(o.Architecture, false),
-		"customer_id":      toResumeObject(o.CustomerID, false),
-		"data":             toResumeObject(o.Data, true),
-		"distro":           toResumeObject(o.Distro, false),
-		"error":            toResumeObject(o.Error, true),
-		"event_date":       toResumeObject(o.EventDate, false),
-		"free_space":       toResumeObject(o.FreeSpace, false),
-		"go_version":       toResumeObject(o.GoVersion, false),
-		"hostname":         toResumeObject(o.Hostname, false),
-		"id":               toResumeObject(o.ID, false),
-		"integration":      toResumeObject(o.Integration, false),
-		"job_id":           toResumeObject(o.JobID, false),
-		"last_export_date": toResumeObject(o.LastExportDate, false),
-		"memory":           toResumeObject(o.Memory, false),
-		"message":          toResumeObject(o.Message, false),
-		"num_cpu":          toResumeObject(o.NumCPU, false),
-		"os":               toResumeObject(o.OS, false),
-		"ref_id":           toResumeObject(o.RefID, false),
-		"ref_type":         toResumeObject(o.RefType, false),
-		"request_id":       toResumeObject(o.RequestID, false),
-		"success":          toResumeObject(o.Success, false),
-		"system_id":        toResumeObject(o.SystemID, false),
+		"architecture":     toIntegrationDataResponseObject(o.Architecture, false),
+		"customer_id":      toIntegrationDataResponseObject(o.CustomerID, false),
+		"data":             toIntegrationDataResponseObject(o.Data, false),
+		"distro":           toIntegrationDataResponseObject(o.Distro, false),
+		"error":            toIntegrationDataResponseObject(o.Error, true),
+		"event_date":       toIntegrationDataResponseObject(o.EventDate, false),
+		"free_space":       toIntegrationDataResponseObject(o.FreeSpace, false),
+		"go_version":       toIntegrationDataResponseObject(o.GoVersion, false),
+		"hostname":         toIntegrationDataResponseObject(o.Hostname, false),
+		"id":               toIntegrationDataResponseObject(o.ID, false),
+		"job_id":           toIntegrationDataResponseObject(o.JobID, false),
+		"last_export_date": toIntegrationDataResponseObject(o.LastExportDate, false),
+		"memory":           toIntegrationDataResponseObject(o.Memory, false),
+		"message":          toIntegrationDataResponseObject(o.Message, false),
+		"num_cpu":          toIntegrationDataResponseObject(o.NumCPU, false),
+		"os":               toIntegrationDataResponseObject(o.OS, false),
+		"ref_id":           toIntegrationDataResponseObject(o.RefID, false),
+		"ref_type":         toIntegrationDataResponseObject(o.RefType, false),
+		"request_id":       toIntegrationDataResponseObject(o.RequestID, false),
+		"success":          toIntegrationDataResponseObject(o.Success, false),
+		"system_id":        toIntegrationDataResponseObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
-		"uptime":   toResumeObject(o.Uptime, false),
-		"uuid":     toResumeObject(o.UUID, false),
-		"version":  toResumeObject(o.Version, false),
-		"hashcode": toResumeObject(o.Hashcode, false),
+		"uptime":   toIntegrationDataResponseObject(o.Uptime, false),
+		"uuid":     toIntegrationDataResponseObject(o.UUID, false),
+		"version":  toIntegrationDataResponseObject(o.Version, false),
+		"hashcode": toIntegrationDataResponseObject(o.Hashcode, false),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *Resume) FromMap(kv map[string]interface{}) {
+func (o *IntegrationDataResponse) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -805,20 +800,22 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["data"].(*string); ok {
+	if val, ok := kv["data"].(string); ok {
 		o.Data = val
-	} else if val, ok := kv["data"].(string); ok {
-		o.Data = &val
 	} else {
 		if val, ok := kv["data"]; ok {
 			if val == nil {
-				o.Data = pstrings.Pointer("")
+				o.Data = ""
 			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
 				}
-				o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
+				o.Data = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -864,10 +861,10 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["event_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.EventDate.FromMap(kv)
-		} else if sv, ok := val.(ResumeEventDate); ok {
+		} else if sv, ok := val.(IntegrationDataResponseEventDate); ok {
 			// struct
 			o.EventDate = sv
-		} else if sp, ok := val.(*ResumeEventDate); ok {
+		} else if sp, ok := val.(*IntegrationDataResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
 		}
@@ -950,26 +947,6 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["integration"].(string); ok {
-		o.Integration = val
-	} else {
-		if val, ok := kv["integration"]; ok {
-			if val == nil {
-				o.Integration = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Integration = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
 	if val, ok := kv["job_id"].(string); ok {
 		o.JobID = val
 	} else {
@@ -993,10 +970,10 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.LastExportDate.FromMap(kv)
-		} else if sv, ok := val.(ResumeLastExportDate); ok {
+		} else if sv, ok := val.(IntegrationDataResponseLastExportDate); ok {
 			// struct
 			o.LastExportDate = sv
-		} else if sp, ok := val.(*ResumeLastExportDate); ok {
+		} else if sp, ok := val.(*IntegrationDataResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
 		}
@@ -1166,7 +1143,7 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["type"].(ResumeType); ok {
+	if val, ok := kv["type"].(IntegrationDataResponseType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -1298,7 +1275,7 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *Resume) Hash() string {
+func (o *IntegrationDataResponse) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
 	args = append(args, o.CustomerID)
@@ -1310,7 +1287,6 @@ func (o *Resume) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
-	args = append(args, o.Integration)
 	args = append(args, o.JobID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
@@ -1331,7 +1307,7 @@ func (o *Resume) Hash() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *Resume) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *IntegrationDataResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
