@@ -39,6 +39,8 @@ const (
 	IntegrationMutationResponseModelDistroColumn = "distro"
 	// IntegrationMutationResponseModelErrorColumn is the column json value error
 	IntegrationMutationResponseModelErrorColumn = "error"
+	// IntegrationMutationResponseModelErrorCodeColumn is the column json value error_code
+	IntegrationMutationResponseModelErrorCodeColumn = "error_code"
 	// IntegrationMutationResponseModelEventDateColumn is the column json value event_date
 	IntegrationMutationResponseModelEventDateColumn = "event_date"
 	// IntegrationMutationResponseModelEventDateEpochColumn is the column json value epoch
@@ -95,6 +97,76 @@ const (
 	IntegrationMutationResponseModelVersionColumn = "version"
 	// IntegrationMutationResponseModelWebappResponseColumn is the column json value webapp_response
 	IntegrationMutationResponseModelWebappResponseColumn = "webapp_response"
+)
+
+// IntegrationMutationResponseErrorCode is the enumeration type for error_code
+type IntegrationMutationResponseErrorCode int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *IntegrationMutationResponseErrorCode) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = IntegrationMutationResponseErrorCode(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "UNKNOWN":
+			*v = IntegrationMutationResponseErrorCode(0)
+		case "NOT_FOUND":
+			*v = IntegrationMutationResponseErrorCode(1)
+		case "NOT_AUTHORIZED":
+			*v = IntegrationMutationResponseErrorCode(2)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v IntegrationMutationResponseErrorCode) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "UNKNOWN":
+		v = 0
+	case "NOT_FOUND":
+		v = 1
+	case "NOT_AUTHORIZED":
+		v = 2
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v IntegrationMutationResponseErrorCode) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("UNKNOWN")
+	case 1:
+		return json.Marshal("NOT_FOUND")
+	case 2:
+		return json.Marshal("NOT_AUTHORIZED")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for ErrorCode
+func (v IntegrationMutationResponseErrorCode) String() string {
+	switch int32(v) {
+	case 0:
+		return "UNKNOWN"
+	case 1:
+		return "NOT_FOUND"
+	case 2:
+		return "NOT_AUTHORIZED"
+	}
+	return "unset"
+}
+
+const (
+	// IntegrationMutationResponseErrorCodeUnknown is the enumeration value for unknown
+	IntegrationMutationResponseErrorCodeUnknown IntegrationMutationResponseErrorCode = 0
+	// IntegrationMutationResponseErrorCodeNotFound is the enumeration value for not_found
+	IntegrationMutationResponseErrorCodeNotFound IntegrationMutationResponseErrorCode = 1
+	// IntegrationMutationResponseErrorCodeNotAuthorized is the enumeration value for not_authorized
+	IntegrationMutationResponseErrorCodeNotAuthorized IntegrationMutationResponseErrorCode = 2
 )
 
 // IntegrationMutationResponseEventDate represents the object structure for event_date
@@ -497,6 +569,8 @@ type IntegrationMutationResponse struct {
 	Distro string `json:"distro" codec:"distro" bson:"distro" yaml:"distro" faker:"-"`
 	// Error an error message related to this event
 	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
+	// ErrorCode Error code
+	ErrorCode IntegrationMutationResponseErrorCode `json:"error_code" codec:"error_code" bson:"error_code" yaml:"error_code" faker:"-"`
 	// EventDate the date of the event
 	EventDate IntegrationMutationResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
@@ -555,6 +629,9 @@ func toIntegrationMutationResponseObject(o interface{}, isoptional bool) interfa
 	switch v := o.(type) {
 	case *IntegrationMutationResponse:
 		return v.ToMap()
+
+	case IntegrationMutationResponseErrorCode:
+		return v.String()
 
 	case IntegrationMutationResponseEventDate:
 		return v.ToMap()
@@ -728,11 +805,13 @@ func (o *IntegrationMutationResponse) IsEqual(other *IntegrationMutationResponse
 func (o *IntegrationMutationResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toIntegrationMutationResponseObject(o.Architecture, false),
-		"customer_id":      toIntegrationMutationResponseObject(o.CustomerID, false),
-		"data":             toIntegrationMutationResponseObject(o.Data, true),
-		"distro":           toIntegrationMutationResponseObject(o.Distro, false),
-		"error":            toIntegrationMutationResponseObject(o.Error, true),
+		"architecture": toIntegrationMutationResponseObject(o.Architecture, false),
+		"customer_id":  toIntegrationMutationResponseObject(o.CustomerID, false),
+		"data":         toIntegrationMutationResponseObject(o.Data, true),
+		"distro":       toIntegrationMutationResponseObject(o.Distro, false),
+		"error":        toIntegrationMutationResponseObject(o.Error, true),
+
+		"error_code":       o.ErrorCode.String(),
 		"event_date":       toIntegrationMutationResponseObject(o.EventDate, false),
 		"free_space":       toIntegrationMutationResponseObject(o.FreeSpace, false),
 		"go_version":       toIntegrationMutationResponseObject(o.GoVersion, false),
@@ -862,6 +941,32 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["error_code"].(IntegrationMutationResponseErrorCode); ok {
+		o.ErrorCode = val
+	} else {
+		if em, ok := kv["error_code"].(map[string]interface{}); ok {
+			ev := em["agent.error_code"].(string)
+			switch ev {
+			case "unknown", "UNKNOWN":
+				o.ErrorCode = 0
+			case "not_found", "NOT_FOUND":
+				o.ErrorCode = 1
+			case "not_authorized", "NOT_AUTHORIZED":
+				o.ErrorCode = 2
+			}
+		}
+		if em, ok := kv["error_code"].(string); ok {
+			switch em {
+			case "unknown", "UNKNOWN":
+				o.ErrorCode = 0
+			case "not_found", "NOT_FOUND":
+				o.ErrorCode = 1
+			case "not_authorized", "NOT_AUTHORIZED":
+				o.ErrorCode = 2
 			}
 		}
 	}
@@ -1368,6 +1473,7 @@ func (o *IntegrationMutationResponse) Hash() string {
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
 	args = append(args, o.Error)
+	args = append(args, o.ErrorCode)
 	args = append(args, o.EventDate)
 	args = append(args, o.FreeSpace)
 	args = append(args, o.GoVersion)
