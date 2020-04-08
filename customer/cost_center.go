@@ -491,6 +491,8 @@ func getCostCenterQueryFields() string {
 	// scalar
 	sb.WriteString("\t\t\tcreated_ts\n")
 	// scalar
+	sb.WriteString("\t\t\tcustomer_id\n")
+	// scalar
 	sb.WriteString("\t\t\tdescription\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")

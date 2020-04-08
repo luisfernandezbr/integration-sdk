@@ -1391,6 +1391,8 @@ func getTeamQueryFields() string {
 	// scalar
 	sb.WriteString("\t\t\tcreated_ts\n")
 	// scalar
+	sb.WriteString("\t\t\tcustomer_id\n")
+	// scalar
 	sb.WriteString("\t\t\tdeleted\n")
 	// object with fields
 	sb.WriteString("\t\t\tdeleted_date {\n")
