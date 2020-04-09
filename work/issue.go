@@ -1910,7 +1910,7 @@ type Issue struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the issue description
-	Description string `json:"-"`
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// DueDate due date of the issue
 	DueDate IssueDueDate `json:"-"`
 	// EpicID epic issue id, if any

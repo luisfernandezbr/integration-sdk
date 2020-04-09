@@ -612,7 +612,7 @@ type PullRequest struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the pull request
-	Description string `json:"-"`
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier a human friendly identifier when displaying this pull request
