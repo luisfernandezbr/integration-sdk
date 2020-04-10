@@ -70,6 +70,10 @@ func (v *WebappIntegrationMutationRequestAction) UnmarshalBSONValue(t bsontype.T
 			*v = WebappIntegrationMutationRequestAction(4)
 		case "ISSUE_GET_TRANSITIONS":
 			*v = WebappIntegrationMutationRequestAction(5)
+		case "PR_SET_TITLE":
+			*v = WebappIntegrationMutationRequestAction(6)
+		case "PR_SET_DESCRIPTION":
+			*v = WebappIntegrationMutationRequestAction(7)
 		}
 	}
 	return nil
@@ -90,6 +94,10 @@ func (v WebappIntegrationMutationRequestAction) UnmarshalJSON(buf []byte) error 
 		v = 4
 	case "ISSUE_GET_TRANSITIONS":
 		v = 5
+	case "PR_SET_TITLE":
+		v = 6
+	case "PR_SET_DESCRIPTION":
+		v = 7
 	}
 	return nil
 }
@@ -109,6 +117,10 @@ func (v WebappIntegrationMutationRequestAction) MarshalJSON() ([]byte, error) {
 		return json.Marshal("ISSUE_SET_ASSIGNEE")
 	case 5:
 		return json.Marshal("ISSUE_GET_TRANSITIONS")
+	case 6:
+		return json.Marshal("PR_SET_TITLE")
+	case 7:
+		return json.Marshal("PR_SET_DESCRIPTION")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -128,6 +140,10 @@ func (v WebappIntegrationMutationRequestAction) String() string {
 		return "ISSUE_SET_ASSIGNEE"
 	case 5:
 		return "ISSUE_GET_TRANSITIONS"
+	case 6:
+		return "PR_SET_TITLE"
+	case 7:
+		return "PR_SET_DESCRIPTION"
 	}
 	return "unset"
 }
@@ -145,6 +161,10 @@ const (
 	WebappIntegrationMutationRequestActionIssueSetAssignee WebappIntegrationMutationRequestAction = 4
 	// WebappIntegrationMutationRequestActionIssueGetTransitions is the enumeration value for issue_get_transitions
 	WebappIntegrationMutationRequestActionIssueGetTransitions WebappIntegrationMutationRequestAction = 5
+	// WebappIntegrationMutationRequestActionPrSetTitle is the enumeration value for pr_set_title
+	WebappIntegrationMutationRequestActionPrSetTitle WebappIntegrationMutationRequestAction = 6
+	// WebappIntegrationMutationRequestActionPrSetDescription is the enumeration value for pr_set_description
+	WebappIntegrationMutationRequestActionPrSetDescription WebappIntegrationMutationRequestAction = 7
 )
 
 // WebappIntegrationMutationRequestSystemType is the enumeration type for system_type
@@ -473,6 +493,10 @@ func (o *WebappIntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 4
 			case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
 				o.Action = 5
+			case "pr_set_title", "PR_SET_TITLE":
+				o.Action = 6
+			case "pr_set_description", "PR_SET_DESCRIPTION":
+				o.Action = 7
 			}
 		}
 		if em, ok := kv["action"].(string); ok {
@@ -489,6 +513,10 @@ func (o *WebappIntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 4
 			case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
 				o.Action = 5
+			case "pr_set_title", "PR_SET_TITLE":
+				o.Action = 6
+			case "pr_set_description", "PR_SET_DESCRIPTION":
+				o.Action = 7
 			}
 		}
 	}

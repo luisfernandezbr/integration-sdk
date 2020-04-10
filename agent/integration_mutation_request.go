@@ -88,6 +88,10 @@ func (v *IntegrationMutationRequestAction) UnmarshalBSONValue(t bsontype.Type, d
 			*v = IntegrationMutationRequestAction(4)
 		case "ISSUE_GET_TRANSITIONS":
 			*v = IntegrationMutationRequestAction(5)
+		case "PR_SET_TITLE":
+			*v = IntegrationMutationRequestAction(6)
+		case "PR_SET_DESCRIPTION":
+			*v = IntegrationMutationRequestAction(7)
 		}
 	}
 	return nil
@@ -108,6 +112,10 @@ func (v IntegrationMutationRequestAction) UnmarshalJSON(buf []byte) error {
 		v = 4
 	case "ISSUE_GET_TRANSITIONS":
 		v = 5
+	case "PR_SET_TITLE":
+		v = 6
+	case "PR_SET_DESCRIPTION":
+		v = 7
 	}
 	return nil
 }
@@ -127,6 +135,10 @@ func (v IntegrationMutationRequestAction) MarshalJSON() ([]byte, error) {
 		return json.Marshal("ISSUE_SET_ASSIGNEE")
 	case 5:
 		return json.Marshal("ISSUE_GET_TRANSITIONS")
+	case 6:
+		return json.Marshal("PR_SET_TITLE")
+	case 7:
+		return json.Marshal("PR_SET_DESCRIPTION")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -146,6 +158,10 @@ func (v IntegrationMutationRequestAction) String() string {
 		return "ISSUE_SET_ASSIGNEE"
 	case 5:
 		return "ISSUE_GET_TRANSITIONS"
+	case 6:
+		return "PR_SET_TITLE"
+	case 7:
+		return "PR_SET_DESCRIPTION"
 	}
 	return "unset"
 }
@@ -163,6 +179,10 @@ const (
 	IntegrationMutationRequestActionIssueSetAssignee IntegrationMutationRequestAction = 4
 	// IntegrationMutationRequestActionIssueGetTransitions is the enumeration value for issue_get_transitions
 	IntegrationMutationRequestActionIssueGetTransitions IntegrationMutationRequestAction = 5
+	// IntegrationMutationRequestActionPrSetTitle is the enumeration value for pr_set_title
+	IntegrationMutationRequestActionPrSetTitle IntegrationMutationRequestAction = 6
+	// IntegrationMutationRequestActionPrSetDescription is the enumeration value for pr_set_description
+	IntegrationMutationRequestActionPrSetDescription IntegrationMutationRequestAction = 7
 )
 
 // IntegrationMutationRequestAuthorization represents the object structure for authorization
@@ -689,6 +709,10 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 4
 			case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
 				o.Action = 5
+			case "pr_set_title", "PR_SET_TITLE":
+				o.Action = 6
+			case "pr_set_description", "PR_SET_DESCRIPTION":
+				o.Action = 7
 			}
 		}
 		if em, ok := kv["action"].(string); ok {
@@ -705,6 +729,10 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 4
 			case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
 				o.Action = 5
+			case "pr_set_title", "PR_SET_TITLE":
+				o.Action = 6
+			case "pr_set_description", "PR_SET_DESCRIPTION":
+				o.Action = 7
 			}
 		}
 	}
@@ -872,6 +900,25 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
