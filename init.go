@@ -6,6 +6,7 @@ import (
 	"github.com/pinpt/go-common/datamodel"
 
 	dm_agent "github.com/pinpt/integration-sdk/agent"
+	dm_calendar "github.com/pinpt/integration-sdk/calendar"
 	dm_cicd "github.com/pinpt/integration-sdk/cicd"
 	dm_codequality "github.com/pinpt/integration-sdk/codequality"
 	dm_customer "github.com/pinpt/integration-sdk/customer"
@@ -16,6 +17,18 @@ import (
 // New returns a new instanceof from a ModelNameType
 func New(name datamodel.ModelNameType) datamodel.Model {
 	switch name {
+	case "agent.CalendarRequest":
+		o := new(dm_agent.CalendarRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.CalendarResponse":
+		o := new(dm_agent.CalendarResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.CalendarTrigger":
+		o := new(dm_agent.CalendarTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.CancelRequest":
 		o := new(dm_agent.CancelRequest)
 		o.FromMap(map[string]interface{}{})
@@ -176,6 +189,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.WorkStatusTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "calendar.Calendar":
+		o := new(dm_calendar.Calendar)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "calendar.Event":
+		o := new(dm_calendar.Event)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "cicd.Build":
 		o := new(dm_cicd.Build)
 		o.FromMap(map[string]interface{}{})
@@ -318,6 +339,9 @@ func GetTopics() []datamodel.TopicNameType {
 // GetModelNames returns an array of model names
 func GetModelNames() []datamodel.ModelNameType {
 	return []datamodel.ModelNameType{
+		datamodel.ModelNameType("agent.CalendarRequest"),
+		datamodel.ModelNameType("agent.CalendarResponse"),
+		datamodel.ModelNameType("agent.CalendarTrigger"),
 		datamodel.ModelNameType("agent.CancelRequest"),
 		datamodel.ModelNameType("agent.CancelRequestTrigger"),
 		datamodel.ModelNameType("agent.CancelResponse"),
@@ -358,6 +382,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.WorkStatusRequest"),
 		datamodel.ModelNameType("agent.WorkStatusResponse"),
 		datamodel.ModelNameType("agent.WorkStatusTrigger"),
+		datamodel.ModelNameType("calendar.Calendar"),
+		datamodel.ModelNameType("calendar.Event"),
 		datamodel.ModelNameType("cicd.Build"),
 		datamodel.ModelNameType("cicd.Deployment"),
 		datamodel.ModelNameType("codequality.Metric"),

@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -17,82 +18,280 @@ import (
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
 
-	// UninstallRequestTable is the default table name
-	UninstallRequestTable datamodel.ModelNameType = "agent_uninstallrequest"
+	// CalendarResponseTable is the default table name
+	CalendarResponseTable datamodel.ModelNameType = "agent_calendarresponse"
 
-	// UninstallRequestModelName is the model name
-	UninstallRequestModelName datamodel.ModelNameType = "agent.UninstallRequest"
+	// CalendarResponseModelName is the model name
+	CalendarResponseModelName datamodel.ModelNameType = "agent.CalendarResponse"
 )
 
 const (
-	// UninstallRequestModelArchitectureColumn is the column json value architecture
-	UninstallRequestModelArchitectureColumn = "architecture"
-	// UninstallRequestModelCustomerIDColumn is the column json value customer_id
-	UninstallRequestModelCustomerIDColumn = "customer_id"
-	// UninstallRequestModelDataColumn is the column json value data
-	UninstallRequestModelDataColumn = "data"
-	// UninstallRequestModelDistroColumn is the column json value distro
-	UninstallRequestModelDistroColumn = "distro"
-	// UninstallRequestModelErrorColumn is the column json value error
-	UninstallRequestModelErrorColumn = "error"
-	// UninstallRequestModelEventDateColumn is the column json value event_date
-	UninstallRequestModelEventDateColumn = "event_date"
-	// UninstallRequestModelEventDateEpochColumn is the column json value epoch
-	UninstallRequestModelEventDateEpochColumn = "epoch"
-	// UninstallRequestModelEventDateOffsetColumn is the column json value offset
-	UninstallRequestModelEventDateOffsetColumn = "offset"
-	// UninstallRequestModelEventDateRfc3339Column is the column json value rfc3339
-	UninstallRequestModelEventDateRfc3339Column = "rfc3339"
-	// UninstallRequestModelFreeSpaceColumn is the column json value free_space
-	UninstallRequestModelFreeSpaceColumn = "free_space"
-	// UninstallRequestModelGoVersionColumn is the column json value go_version
-	UninstallRequestModelGoVersionColumn = "go_version"
-	// UninstallRequestModelHostnameColumn is the column json value hostname
-	UninstallRequestModelHostnameColumn = "hostname"
-	// UninstallRequestModelIDColumn is the column json value id
-	UninstallRequestModelIDColumn = "id"
-	// UninstallRequestModelLastExportDateColumn is the column json value last_export_date
-	UninstallRequestModelLastExportDateColumn = "last_export_date"
-	// UninstallRequestModelLastExportDateEpochColumn is the column json value epoch
-	UninstallRequestModelLastExportDateEpochColumn = "epoch"
-	// UninstallRequestModelLastExportDateOffsetColumn is the column json value offset
-	UninstallRequestModelLastExportDateOffsetColumn = "offset"
-	// UninstallRequestModelLastExportDateRfc3339Column is the column json value rfc3339
-	UninstallRequestModelLastExportDateRfc3339Column = "rfc3339"
-	// UninstallRequestModelMemoryColumn is the column json value memory
-	UninstallRequestModelMemoryColumn = "memory"
-	// UninstallRequestModelMessageColumn is the column json value message
-	UninstallRequestModelMessageColumn = "message"
-	// UninstallRequestModelNumCPUColumn is the column json value num_cpu
-	UninstallRequestModelNumCPUColumn = "num_cpu"
-	// UninstallRequestModelOSColumn is the column json value os
-	UninstallRequestModelOSColumn = "os"
-	// UninstallRequestModelRefIDColumn is the column json value ref_id
-	UninstallRequestModelRefIDColumn = "ref_id"
-	// UninstallRequestModelRefTypeColumn is the column json value ref_type
-	UninstallRequestModelRefTypeColumn = "ref_type"
-	// UninstallRequestModelRequestIDColumn is the column json value request_id
-	UninstallRequestModelRequestIDColumn = "request_id"
-	// UninstallRequestModelSuccessColumn is the column json value success
-	UninstallRequestModelSuccessColumn = "success"
-	// UninstallRequestModelSystemIDColumn is the column json value system_id
-	UninstallRequestModelSystemIDColumn = "system_id"
-	// UninstallRequestModelTypeColumn is the column json value type
-	UninstallRequestModelTypeColumn = "type"
-	// UninstallRequestModelUptimeColumn is the column json value uptime
-	UninstallRequestModelUptimeColumn = "uptime"
-	// UninstallRequestModelUUIDColumn is the column json value uuid
-	UninstallRequestModelUUIDColumn = "uuid"
-	// UninstallRequestModelVersionColumn is the column json value version
-	UninstallRequestModelVersionColumn = "version"
+	// CalendarResponseModelArchitectureColumn is the column json value architecture
+	CalendarResponseModelArchitectureColumn = "architecture"
+	// CalendarResponseModelCalendarsColumn is the column json value calendars
+	CalendarResponseModelCalendarsColumn = "calendars"
+	// CalendarResponseModelCalendarsCustomerIDColumn is the column json value customer_id
+	CalendarResponseModelCalendarsCustomerIDColumn = "customer_id"
+	// CalendarResponseModelCalendarsDescriptionColumn is the column json value description
+	CalendarResponseModelCalendarsDescriptionColumn = "description"
+	// CalendarResponseModelCalendarsIDColumn is the column json value id
+	CalendarResponseModelCalendarsIDColumn = "id"
+	// CalendarResponseModelCalendarsNameColumn is the column json value name
+	CalendarResponseModelCalendarsNameColumn = "name"
+	// CalendarResponseModelCalendarsRefIDColumn is the column json value ref_id
+	CalendarResponseModelCalendarsRefIDColumn = "ref_id"
+	// CalendarResponseModelCalendarsRefTypeColumn is the column json value ref_type
+	CalendarResponseModelCalendarsRefTypeColumn = "ref_type"
+	// CalendarResponseModelCustomerIDColumn is the column json value customer_id
+	CalendarResponseModelCustomerIDColumn = "customer_id"
+	// CalendarResponseModelDataColumn is the column json value data
+	CalendarResponseModelDataColumn = "data"
+	// CalendarResponseModelDistroColumn is the column json value distro
+	CalendarResponseModelDistroColumn = "distro"
+	// CalendarResponseModelErrorColumn is the column json value error
+	CalendarResponseModelErrorColumn = "error"
+	// CalendarResponseModelEventDateColumn is the column json value event_date
+	CalendarResponseModelEventDateColumn = "event_date"
+	// CalendarResponseModelEventDateEpochColumn is the column json value epoch
+	CalendarResponseModelEventDateEpochColumn = "epoch"
+	// CalendarResponseModelEventDateOffsetColumn is the column json value offset
+	CalendarResponseModelEventDateOffsetColumn = "offset"
+	// CalendarResponseModelEventDateRfc3339Column is the column json value rfc3339
+	CalendarResponseModelEventDateRfc3339Column = "rfc3339"
+	// CalendarResponseModelFreeSpaceColumn is the column json value free_space
+	CalendarResponseModelFreeSpaceColumn = "free_space"
+	// CalendarResponseModelGoVersionColumn is the column json value go_version
+	CalendarResponseModelGoVersionColumn = "go_version"
+	// CalendarResponseModelHostnameColumn is the column json value hostname
+	CalendarResponseModelHostnameColumn = "hostname"
+	// CalendarResponseModelIDColumn is the column json value id
+	CalendarResponseModelIDColumn = "id"
+	// CalendarResponseModelIntegrationIDColumn is the column json value integration_id
+	CalendarResponseModelIntegrationIDColumn = "integration_id"
+	// CalendarResponseModelLastExportDateColumn is the column json value last_export_date
+	CalendarResponseModelLastExportDateColumn = "last_export_date"
+	// CalendarResponseModelLastExportDateEpochColumn is the column json value epoch
+	CalendarResponseModelLastExportDateEpochColumn = "epoch"
+	// CalendarResponseModelLastExportDateOffsetColumn is the column json value offset
+	CalendarResponseModelLastExportDateOffsetColumn = "offset"
+	// CalendarResponseModelLastExportDateRfc3339Column is the column json value rfc3339
+	CalendarResponseModelLastExportDateRfc3339Column = "rfc3339"
+	// CalendarResponseModelMemoryColumn is the column json value memory
+	CalendarResponseModelMemoryColumn = "memory"
+	// CalendarResponseModelMessageColumn is the column json value message
+	CalendarResponseModelMessageColumn = "message"
+	// CalendarResponseModelNumCPUColumn is the column json value num_cpu
+	CalendarResponseModelNumCPUColumn = "num_cpu"
+	// CalendarResponseModelOSColumn is the column json value os
+	CalendarResponseModelOSColumn = "os"
+	// CalendarResponseModelRefIDColumn is the column json value ref_id
+	CalendarResponseModelRefIDColumn = "ref_id"
+	// CalendarResponseModelRefTypeColumn is the column json value ref_type
+	CalendarResponseModelRefTypeColumn = "ref_type"
+	// CalendarResponseModelRequestIDColumn is the column json value request_id
+	CalendarResponseModelRequestIDColumn = "request_id"
+	// CalendarResponseModelSuccessColumn is the column json value success
+	CalendarResponseModelSuccessColumn = "success"
+	// CalendarResponseModelSystemIDColumn is the column json value system_id
+	CalendarResponseModelSystemIDColumn = "system_id"
+	// CalendarResponseModelTypeColumn is the column json value type
+	CalendarResponseModelTypeColumn = "type"
+	// CalendarResponseModelUptimeColumn is the column json value uptime
+	CalendarResponseModelUptimeColumn = "uptime"
+	// CalendarResponseModelUUIDColumn is the column json value uuid
+	CalendarResponseModelUUIDColumn = "uuid"
+	// CalendarResponseModelVersionColumn is the column json value version
+	CalendarResponseModelVersionColumn = "version"
 )
 
-// UninstallRequestEventDate represents the object structure for event_date
-type UninstallRequestEventDate struct {
+// CalendarResponseCalendars represents the object structure for calendars
+type CalendarResponseCalendars struct {
+	// CustomerID the customer id for the model instance
+	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Description the description of the calendar
+	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
+	// ID the primary key for the model instance
+	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
+	// Name the name of the calendar
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID the source system id for the model instance
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the source system identifier for the model instance
+	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+}
+
+func toCalendarResponseCalendarsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *CalendarResponseCalendars:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *CalendarResponseCalendars) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// CustomerID the customer id for the model instance
+		"customer_id": toCalendarResponseCalendarsObject(o.CustomerID, false),
+		// Description the description of the calendar
+		"description": toCalendarResponseCalendarsObject(o.Description, false),
+		// ID the primary key for the model instance
+		"id": toCalendarResponseCalendarsObject(o.ID, false),
+		// Name the name of the calendar
+		"name": toCalendarResponseCalendarsObject(o.Name, false),
+		// RefID the source system id for the model instance
+		"ref_id": toCalendarResponseCalendarsObject(o.RefID, false),
+		// RefType the source system identifier for the model instance
+		"ref_type": toCalendarResponseCalendarsObject(o.RefType, false),
+	}
+}
+
+func (o *CalendarResponseCalendars) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CalendarResponseCalendars) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// CalendarResponseEventDate represents the object structure for event_date
+type CalendarResponseEventDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -101,9 +300,9 @@ type UninstallRequestEventDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toUninstallRequestEventDateObject(o interface{}, isoptional bool) interface{} {
+func toCalendarResponseEventDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *UninstallRequestEventDate:
+	case *CalendarResponseEventDate:
 		return v.ToMap()
 
 	default:
@@ -111,19 +310,19 @@ func toUninstallRequestEventDateObject(o interface{}, isoptional bool) interface
 	}
 }
 
-func (o *UninstallRequestEventDate) ToMap() map[string]interface{} {
+func (o *CalendarResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toUninstallRequestEventDateObject(o.Epoch, false),
+		"epoch": toCalendarResponseEventDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toUninstallRequestEventDateObject(o.Offset, false),
+		"offset": toCalendarResponseEventDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toUninstallRequestEventDateObject(o.Rfc3339, false),
+		"rfc3339": toCalendarResponseEventDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *UninstallRequestEventDate) setDefaults(frommap bool) {
+func (o *CalendarResponseEventDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -131,7 +330,7 @@ func (o *UninstallRequestEventDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *UninstallRequestEventDate) FromMap(kv map[string]interface{}) {
+func (o *CalendarResponseEventDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -190,8 +389,8 @@ func (o *UninstallRequestEventDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// UninstallRequestLastExportDate represents the object structure for last_export_date
-type UninstallRequestLastExportDate struct {
+// CalendarResponseLastExportDate represents the object structure for last_export_date
+type CalendarResponseLastExportDate struct {
 	// Epoch the date in epoch format
 	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
 	// Offset the timezone offset from GMT
@@ -200,9 +399,9 @@ type UninstallRequestLastExportDate struct {
 	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toUninstallRequestLastExportDateObject(o interface{}, isoptional bool) interface{} {
+func toCalendarResponseLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *UninstallRequestLastExportDate:
+	case *CalendarResponseLastExportDate:
 		return v.ToMap()
 
 	default:
@@ -210,19 +409,19 @@ func toUninstallRequestLastExportDateObject(o interface{}, isoptional bool) inte
 	}
 }
 
-func (o *UninstallRequestLastExportDate) ToMap() map[string]interface{} {
+func (o *CalendarResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
 		// Epoch the date in epoch format
-		"epoch": toUninstallRequestLastExportDateObject(o.Epoch, false),
+		"epoch": toCalendarResponseLastExportDateObject(o.Epoch, false),
 		// Offset the timezone offset from GMT
-		"offset": toUninstallRequestLastExportDateObject(o.Offset, false),
+		"offset": toCalendarResponseLastExportDateObject(o.Offset, false),
 		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toUninstallRequestLastExportDateObject(o.Rfc3339, false),
+		"rfc3339": toCalendarResponseLastExportDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *UninstallRequestLastExportDate) setDefaults(frommap bool) {
+func (o *CalendarResponseLastExportDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -230,7 +429,7 @@ func (o *UninstallRequestLastExportDate) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *UninstallRequestLastExportDate) FromMap(kv map[string]interface{}) {
+func (o *CalendarResponseLastExportDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -289,54 +488,54 @@ func (o *UninstallRequestLastExportDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// UninstallRequestType is the enumeration type for type
-type UninstallRequestType int32
+// CalendarResponseType is the enumeration type for type
+type CalendarResponseType int32
 
 // UnmarshalBSONValue for unmarshaling value
-func (v *UninstallRequestType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+func (v *CalendarResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
 	switch t {
 	case bsontype.Int32:
-		*v = UninstallRequestType(val.Int32())
+		*v = CalendarResponseType(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
 		case "ENROLL":
-			*v = UninstallRequestType(0)
+			*v = CalendarResponseType(0)
 		case "PING":
-			*v = UninstallRequestType(1)
+			*v = CalendarResponseType(1)
 		case "CRASH":
-			*v = UninstallRequestType(2)
+			*v = CalendarResponseType(2)
 		case "LOG":
-			*v = UninstallRequestType(3)
+			*v = CalendarResponseType(3)
 		case "INTEGRATION":
-			*v = UninstallRequestType(4)
+			*v = CalendarResponseType(4)
 		case "EXPORT":
-			*v = UninstallRequestType(5)
+			*v = CalendarResponseType(5)
 		case "PROJECT":
-			*v = UninstallRequestType(6)
+			*v = CalendarResponseType(6)
 		case "REPO":
-			*v = UninstallRequestType(7)
+			*v = CalendarResponseType(7)
 		case "USER":
-			*v = UninstallRequestType(8)
+			*v = CalendarResponseType(8)
 		case "UNINSTALL":
-			*v = UninstallRequestType(9)
+			*v = CalendarResponseType(9)
 		case "UPGRADE":
-			*v = UninstallRequestType(10)
+			*v = CalendarResponseType(10)
 		case "START":
-			*v = UninstallRequestType(11)
+			*v = CalendarResponseType(11)
 		case "STOP":
-			*v = UninstallRequestType(12)
+			*v = CalendarResponseType(12)
 		case "PAUSE":
-			*v = UninstallRequestType(13)
+			*v = CalendarResponseType(13)
 		case "RESUME":
-			*v = UninstallRequestType(14)
+			*v = CalendarResponseType(14)
 		}
 	}
 	return nil
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v UninstallRequestType) UnmarshalJSON(buf []byte) error {
+func (v CalendarResponseType) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "ENROLL":
 		v = 0
@@ -373,7 +572,7 @@ func (v UninstallRequestType) UnmarshalJSON(buf []byte) error {
 }
 
 // MarshalJSON marshals the enum value
-func (v UninstallRequestType) MarshalJSON() ([]byte, error) {
+func (v CalendarResponseType) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
 		return json.Marshal("ENROLL")
@@ -410,7 +609,7 @@ func (v UninstallRequestType) MarshalJSON() ([]byte, error) {
 }
 
 // String returns the string value for Type
-func (v UninstallRequestType) String() string {
+func (v CalendarResponseType) String() string {
 	switch int32(v) {
 	case 0:
 		return "ENROLL"
@@ -447,42 +646,44 @@ func (v UninstallRequestType) String() string {
 }
 
 const (
-	// UninstallRequestTypeEnroll is the enumeration value for enroll
-	UninstallRequestTypeEnroll UninstallRequestType = 0
-	// UninstallRequestTypePing is the enumeration value for ping
-	UninstallRequestTypePing UninstallRequestType = 1
-	// UninstallRequestTypeCrash is the enumeration value for crash
-	UninstallRequestTypeCrash UninstallRequestType = 2
-	// UninstallRequestTypeLog is the enumeration value for log
-	UninstallRequestTypeLog UninstallRequestType = 3
-	// UninstallRequestTypeIntegration is the enumeration value for integration
-	UninstallRequestTypeIntegration UninstallRequestType = 4
-	// UninstallRequestTypeExport is the enumeration value for export
-	UninstallRequestTypeExport UninstallRequestType = 5
-	// UninstallRequestTypeProject is the enumeration value for project
-	UninstallRequestTypeProject UninstallRequestType = 6
-	// UninstallRequestTypeRepo is the enumeration value for repo
-	UninstallRequestTypeRepo UninstallRequestType = 7
-	// UninstallRequestTypeUser is the enumeration value for user
-	UninstallRequestTypeUser UninstallRequestType = 8
-	// UninstallRequestTypeUninstall is the enumeration value for uninstall
-	UninstallRequestTypeUninstall UninstallRequestType = 9
-	// UninstallRequestTypeUpgrade is the enumeration value for upgrade
-	UninstallRequestTypeUpgrade UninstallRequestType = 10
-	// UninstallRequestTypeStart is the enumeration value for start
-	UninstallRequestTypeStart UninstallRequestType = 11
-	// UninstallRequestTypeStop is the enumeration value for stop
-	UninstallRequestTypeStop UninstallRequestType = 12
-	// UninstallRequestTypePause is the enumeration value for pause
-	UninstallRequestTypePause UninstallRequestType = 13
-	// UninstallRequestTypeResume is the enumeration value for resume
-	UninstallRequestTypeResume UninstallRequestType = 14
+	// CalendarResponseTypeEnroll is the enumeration value for enroll
+	CalendarResponseTypeEnroll CalendarResponseType = 0
+	// CalendarResponseTypePing is the enumeration value for ping
+	CalendarResponseTypePing CalendarResponseType = 1
+	// CalendarResponseTypeCrash is the enumeration value for crash
+	CalendarResponseTypeCrash CalendarResponseType = 2
+	// CalendarResponseTypeLog is the enumeration value for log
+	CalendarResponseTypeLog CalendarResponseType = 3
+	// CalendarResponseTypeIntegration is the enumeration value for integration
+	CalendarResponseTypeIntegration CalendarResponseType = 4
+	// CalendarResponseTypeExport is the enumeration value for export
+	CalendarResponseTypeExport CalendarResponseType = 5
+	// CalendarResponseTypeProject is the enumeration value for project
+	CalendarResponseTypeProject CalendarResponseType = 6
+	// CalendarResponseTypeRepo is the enumeration value for repo
+	CalendarResponseTypeRepo CalendarResponseType = 7
+	// CalendarResponseTypeUser is the enumeration value for user
+	CalendarResponseTypeUser CalendarResponseType = 8
+	// CalendarResponseTypeUninstall is the enumeration value for uninstall
+	CalendarResponseTypeUninstall CalendarResponseType = 9
+	// CalendarResponseTypeUpgrade is the enumeration value for upgrade
+	CalendarResponseTypeUpgrade CalendarResponseType = 10
+	// CalendarResponseTypeStart is the enumeration value for start
+	CalendarResponseTypeStart CalendarResponseType = 11
+	// CalendarResponseTypeStop is the enumeration value for stop
+	CalendarResponseTypeStop CalendarResponseType = 12
+	// CalendarResponseTypePause is the enumeration value for pause
+	CalendarResponseTypePause CalendarResponseType = 13
+	// CalendarResponseTypeResume is the enumeration value for resume
+	CalendarResponseTypeResume CalendarResponseType = 14
 )
 
-// UninstallRequest an event to request agent to uninstall itself
-type UninstallRequest struct {
+// CalendarResponse an agent response to an action request adding calendar(s)
+type CalendarResponse struct {
 	// Architecture the architecture of the agent machine
 	Architecture string `json:"architecture" codec:"architecture" bson:"architecture" yaml:"architecture" faker:"-"`
+	// Calendars the calendars exported
+	Calendars []CalendarResponseCalendars `json:"calendars" codec:"calendars" bson:"calendars" yaml:"calendars" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Data extra data that is specific about this event
@@ -492,7 +693,7 @@ type UninstallRequest struct {
 	// Error an error message related to this event
 	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// EventDate the date of the event
-	EventDate UninstallRequestEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
+	EventDate CalendarResponseEventDate `json:"event_date" codec:"event_date" bson:"event_date" yaml:"event_date" faker:"-"`
 	// FreeSpace the amount of free space in bytes for the agent machine
 	FreeSpace int64 `json:"free_space" codec:"free_space" bson:"free_space" yaml:"free_space" faker:"-"`
 	// GoVersion the go version that the agent build was built with
@@ -501,8 +702,10 @@ type UninstallRequest struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationID the integration id
+	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// LastExportDate the last export date
-	LastExportDate UninstallRequestLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
+	LastExportDate CalendarResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
 	Memory int64 `json:"memory" codec:"memory" bson:"memory" yaml:"memory" faker:"-"`
 	// Message a message related to this event
@@ -522,7 +725,7 @@ type UninstallRequest struct {
 	// SystemID system unique device ID
 	SystemID string `json:"system_id" codec:"system_id" bson:"system_id" yaml:"system_id" faker:"-"`
 	// Type the type of event
-	Type UninstallRequestType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	Type CalendarResponseType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// Uptime the uptime in milliseconds since the agent started
 	Uptime int64 `json:"uptime" codec:"uptime" bson:"uptime" yaml:"uptime" faker:"-"`
 	// UUID the agent unique identifier
@@ -534,23 +737,30 @@ type UninstallRequest struct {
 }
 
 // ensure that this type implements the data model interface
-var _ datamodel.Model = (*UninstallRequest)(nil)
+var _ datamodel.Model = (*CalendarResponse)(nil)
 
 // ensure that this type implements the streamed data model interface
-var _ datamodel.StreamedModel = (*UninstallRequest)(nil)
+var _ datamodel.StreamedModel = (*CalendarResponse)(nil)
 
-func toUninstallRequestObject(o interface{}, isoptional bool) interface{} {
+func toCalendarResponseObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *UninstallRequest:
+	case *CalendarResponse:
 		return v.ToMap()
 
-	case UninstallRequestEventDate:
+	case []CalendarResponseCalendars:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
+	case CalendarResponseEventDate:
 		return v.ToMap()
 
-	case UninstallRequestLastExportDate:
+	case CalendarResponseLastExportDate:
 		return v.ToMap()
 
-	case UninstallRequestType:
+	case CalendarResponseType:
 		return v.String()
 
 	default:
@@ -558,41 +768,44 @@ func toUninstallRequestObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
-// String returns a string representation of UninstallRequest
-func (o *UninstallRequest) String() string {
-	return fmt.Sprintf("agent.UninstallRequest<%s>", o.ID)
+// String returns a string representation of CalendarResponse
+func (o *CalendarResponse) String() string {
+	return fmt.Sprintf("agent.CalendarResponse<%s>", o.ID)
 }
 
 // GetTopicName returns the name of the topic if evented
-func (o *UninstallRequest) GetTopicName() datamodel.TopicNameType {
+func (o *CalendarResponse) GetTopicName() datamodel.TopicNameType {
 	return ""
 }
 
 // GetStreamName returns the name of the stream
-func (o *UninstallRequest) GetStreamName() string {
+func (o *CalendarResponse) GetStreamName() string {
 	return ""
 }
 
 // GetTableName returns the name of the table
-func (o *UninstallRequest) GetTableName() string {
+func (o *CalendarResponse) GetTableName() string {
 	return ""
 }
 
 // GetModelName returns the name of the model
-func (o *UninstallRequest) GetModelName() datamodel.ModelNameType {
-	return UninstallRequestModelName
+func (o *CalendarResponse) GetModelName() datamodel.ModelNameType {
+	return CalendarResponseModelName
 }
 
-// NewUninstallRequestID provides a template for generating an ID field for UninstallRequest
-func NewUninstallRequestID(customerID string, refType string, refID string) string {
-	return hash.Values("UninstallRequest", customerID, refType, refID)
+// NewCalendarResponseID provides a template for generating an ID field for CalendarResponse
+func NewCalendarResponseID(customerID string, refType string, refID string) string {
+	return hash.Values("CalendarResponse", customerID, refType, refID)
 }
 
-func (o *UninstallRequest) setDefaults(frommap bool) {
+func (o *CalendarResponse) setDefaults(frommap bool) {
+	if o.Calendars == nil {
+		o.Calendars = make([]CalendarResponseCalendars, 0)
+	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("UninstallRequest", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values("CalendarResponse", o.CustomerID, o.RefType, o.GetRefID())
 	}
 
 	if frommap {
@@ -603,67 +816,67 @@ func (o *UninstallRequest) setDefaults(frommap bool) {
 }
 
 // GetID returns the ID for the object
-func (o *UninstallRequest) GetID() string {
+func (o *CalendarResponse) GetID() string {
 	return o.ID
 }
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
-func (o *UninstallRequest) GetTopicKey() string {
+func (o *CalendarResponse) GetTopicKey() string {
 	return ""
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
-func (o *UninstallRequest) GetTimestamp() time.Time {
+func (o *CalendarResponse) GetTimestamp() time.Time {
 	return time.Now().UTC()
 }
 
 // GetRefID returns the RefID for the object
-func (o *UninstallRequest) GetRefID() string {
+func (o *CalendarResponse) GetRefID() string {
 	return o.RefID
 }
 
 // IsMaterialized returns true if the model is materialized
-func (o *UninstallRequest) IsMaterialized() bool {
+func (o *CalendarResponse) IsMaterialized() bool {
 	return false
 }
 
 // IsMutable returns true if the model is mutable
-func (o *UninstallRequest) IsMutable() bool {
+func (o *CalendarResponse) IsMutable() bool {
 	return false
 }
 
 // GetModelMaterializeConfig returns the materialization config if materialized or nil if not
-func (o *UninstallRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
+func (o *CalendarResponse) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 	return nil
 }
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
-func (o *UninstallRequest) IsEvented() bool {
+func (o *CalendarResponse) IsEvented() bool {
 	return false
 }
 
 // GetTopicConfig returns the topic config object
-func (o *UninstallRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
+func (o *CalendarResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil
 }
 
 // GetCustomerID will return the customer_id
-func (o *UninstallRequest) GetCustomerID() string {
+func (o *CalendarResponse) GetCustomerID() string {
 
 	return o.CustomerID
 
 }
 
-// Clone returns an exact copy of UninstallRequest
-func (o *UninstallRequest) Clone() datamodel.Model {
-	c := new(UninstallRequest)
+// Clone returns an exact copy of CalendarResponse
+func (o *CalendarResponse) Clone() datamodel.Model {
+	c := new(CalendarResponse)
 	c.FromMap(o.ToMap())
 	return c
 }
 
 // Anon returns the data structure as anonymous data
-func (o *UninstallRequest) Anon() datamodel.Model {
-	c := new(UninstallRequest)
+func (o *CalendarResponse) Anon() datamodel.Model {
+	c := new(CalendarResponse)
 	if err := faker.FakeData(c); err != nil {
 		panic("couldn't create anon version of object: " + err.Error())
 	}
@@ -678,12 +891,12 @@ func (o *UninstallRequest) Anon() datamodel.Model {
 }
 
 // MarshalJSON returns the bytes for marshaling to json
-func (o *UninstallRequest) MarshalJSON() ([]byte, error) {
+func (o *CalendarResponse) MarshalJSON() ([]byte, error) {
 	return json.Marshal(o.ToMap())
 }
 
 // UnmarshalJSON will unmarshal the json buffer into the object
-func (o *UninstallRequest) UnmarshalJSON(data []byte) error {
+func (o *CalendarResponse) UnmarshalJSON(data []byte) error {
 	kv := make(map[string]interface{})
 	if err := json.Unmarshal(data, &kv); err != nil {
 		return err
@@ -696,57 +909,59 @@ func (o *UninstallRequest) UnmarshalJSON(data []byte) error {
 }
 
 // Stringify returns the object in JSON format as a string
-func (o *UninstallRequest) Stringify() string {
+func (o *CalendarResponse) Stringify() string {
 	o.Hash()
 	return pjson.Stringify(o)
 }
 
 // StringifyPretty returns the object in JSON format as a string prettified
-func (o *UninstallRequest) StringifyPretty() string {
+func (o *CalendarResponse) StringifyPretty() string {
 	o.Hash()
 	return pjson.Stringify(o, true)
 }
 
-// IsEqual returns true if the two UninstallRequest objects are equal
-func (o *UninstallRequest) IsEqual(other *UninstallRequest) bool {
+// IsEqual returns true if the two CalendarResponse objects are equal
+func (o *CalendarResponse) IsEqual(other *CalendarResponse) bool {
 	return o.Hash() == other.Hash()
 }
 
 // ToMap returns the object as a map
-func (o *UninstallRequest) ToMap() map[string]interface{} {
+func (o *CalendarResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toUninstallRequestObject(o.Architecture, false),
-		"customer_id":      toUninstallRequestObject(o.CustomerID, false),
-		"data":             toUninstallRequestObject(o.Data, true),
-		"distro":           toUninstallRequestObject(o.Distro, false),
-		"error":            toUninstallRequestObject(o.Error, true),
-		"event_date":       toUninstallRequestObject(o.EventDate, false),
-		"free_space":       toUninstallRequestObject(o.FreeSpace, false),
-		"go_version":       toUninstallRequestObject(o.GoVersion, false),
-		"hostname":         toUninstallRequestObject(o.Hostname, false),
-		"id":               toUninstallRequestObject(o.ID, false),
-		"last_export_date": toUninstallRequestObject(o.LastExportDate, false),
-		"memory":           toUninstallRequestObject(o.Memory, false),
-		"message":          toUninstallRequestObject(o.Message, false),
-		"num_cpu":          toUninstallRequestObject(o.NumCPU, false),
-		"os":               toUninstallRequestObject(o.OS, false),
-		"ref_id":           toUninstallRequestObject(o.RefID, false),
-		"ref_type":         toUninstallRequestObject(o.RefType, false),
-		"request_id":       toUninstallRequestObject(o.RequestID, false),
-		"success":          toUninstallRequestObject(o.Success, false),
-		"system_id":        toUninstallRequestObject(o.SystemID, false),
+		"architecture":     toCalendarResponseObject(o.Architecture, false),
+		"calendars":        toCalendarResponseObject(o.Calendars, false),
+		"customer_id":      toCalendarResponseObject(o.CustomerID, false),
+		"data":             toCalendarResponseObject(o.Data, true),
+		"distro":           toCalendarResponseObject(o.Distro, false),
+		"error":            toCalendarResponseObject(o.Error, true),
+		"event_date":       toCalendarResponseObject(o.EventDate, false),
+		"free_space":       toCalendarResponseObject(o.FreeSpace, false),
+		"go_version":       toCalendarResponseObject(o.GoVersion, false),
+		"hostname":         toCalendarResponseObject(o.Hostname, false),
+		"id":               toCalendarResponseObject(o.ID, false),
+		"integration_id":   toCalendarResponseObject(o.IntegrationID, false),
+		"last_export_date": toCalendarResponseObject(o.LastExportDate, false),
+		"memory":           toCalendarResponseObject(o.Memory, false),
+		"message":          toCalendarResponseObject(o.Message, false),
+		"num_cpu":          toCalendarResponseObject(o.NumCPU, false),
+		"os":               toCalendarResponseObject(o.OS, false),
+		"ref_id":           toCalendarResponseObject(o.RefID, false),
+		"ref_type":         toCalendarResponseObject(o.RefType, false),
+		"request_id":       toCalendarResponseObject(o.RequestID, false),
+		"success":          toCalendarResponseObject(o.Success, false),
+		"system_id":        toCalendarResponseObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
-		"uptime":   toUninstallRequestObject(o.Uptime, false),
-		"uuid":     toUninstallRequestObject(o.UUID, false),
-		"version":  toUninstallRequestObject(o.Version, false),
-		"hashcode": toUninstallRequestObject(o.Hashcode, false),
+		"uptime":   toCalendarResponseObject(o.Uptime, false),
+		"uuid":     toCalendarResponseObject(o.UUID, false),
+		"version":  toCalendarResponseObject(o.Version, false),
+		"hashcode": toCalendarResponseObject(o.Hashcode, false),
 	}
 }
 
 // FromMap attempts to load data into object from a map
-func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
+func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 
 	o.ID = ""
 
@@ -771,6 +986,69 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Architecture = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.Calendars = make([]CalendarResponseCalendars, 0)
+
+	}
+	if val, ok := kv["calendars"]; ok {
+		if sv, ok := val.([]CalendarResponseCalendars); ok {
+			o.Calendars = sv
+		} else if sp, ok := val.([]*CalendarResponseCalendars); ok {
+			o.Calendars = o.Calendars[:0]
+			for _, e := range sp {
+				o.Calendars = append(o.Calendars, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(CalendarResponseCalendars); ok {
+					o.Calendars = append(o.Calendars, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm CalendarResponseCalendars
+					fm.FromMap(av)
+					o.Calendars = append(o.Calendars, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av CalendarResponseCalendars
+					av.FromMap(bkv)
+					o.Calendars = append(o.Calendars, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(CalendarResponseCalendars); ok {
+					o.Calendars = append(o.Calendars, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm CalendarResponseCalendars
+					fm.FromMap(r)
+					o.Calendars = append(o.Calendars, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := CalendarResponseCalendars{}
+					fm.FromMap(r)
+					o.Calendars = append(o.Calendars, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm CalendarResponseCalendars
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Calendars = append(o.Calendars, fm)
+						}
+					}
+				}
 			}
 		}
 	}
@@ -854,12 +1132,31 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 	if val, ok := kv["event_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.EventDate.FromMap(kv)
-		} else if sv, ok := val.(UninstallRequestEventDate); ok {
+		} else if sv, ok := val.(CalendarResponseEventDate); ok {
 			// struct
 			o.EventDate = sv
-		} else if sp, ok := val.(*UninstallRequestEventDate); ok {
+		} else if sp, ok := val.(*CalendarResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -940,15 +1237,54 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = val
+	} else {
+		if val, ok := kv["integration_id"]; ok {
+			if val == nil {
+				o.IntegrationID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
 			o.LastExportDate.FromMap(kv)
-		} else if sv, ok := val.(UninstallRequestLastExportDate); ok {
+		} else if sv, ok := val.(CalendarResponseLastExportDate); ok {
 			// struct
 			o.LastExportDate = sv
-		} else if sp, ok := val.(*UninstallRequestLastExportDate); ok {
+		} else if sp, ok := val.(*CalendarResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1116,7 +1452,7 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["type"].(UninstallRequestType); ok {
+	if val, ok := kv["type"].(CalendarResponseType); ok {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
@@ -1248,9 +1584,10 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 }
 
 // Hash will return a hashcode for the object
-func (o *UninstallRequest) Hash() string {
+func (o *CalendarResponse) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Architecture)
+	args = append(args, o.Calendars)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.Distro)
@@ -1260,6 +1597,7 @@ func (o *UninstallRequest) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
@@ -1279,7 +1617,7 @@ func (o *UninstallRequest) Hash() string {
 }
 
 // GetEventAPIConfig returns the EventAPIConfig
-func (o *UninstallRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
+func (o *CalendarResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
 	return datamodel.EventAPIConfig{
 		Publish: datamodel.EventAPIPublish{
 			Public: false,
