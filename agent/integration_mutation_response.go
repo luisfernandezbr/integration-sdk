@@ -396,18 +396,20 @@ func (v *IntegrationMutationResponseType) UnmarshalBSONValue(t bsontype.Type, da
 			*v = IntegrationMutationResponseType(7)
 		case "USER":
 			*v = IntegrationMutationResponseType(8)
-		case "UNINSTALL":
+		case "CALENDAR":
 			*v = IntegrationMutationResponseType(9)
-		case "UPGRADE":
+		case "UNINSTALL":
 			*v = IntegrationMutationResponseType(10)
-		case "START":
+		case "UPGRADE":
 			*v = IntegrationMutationResponseType(11)
-		case "STOP":
+		case "START":
 			*v = IntegrationMutationResponseType(12)
-		case "PAUSE":
+		case "STOP":
 			*v = IntegrationMutationResponseType(13)
-		case "RESUME":
+		case "PAUSE":
 			*v = IntegrationMutationResponseType(14)
+		case "RESUME":
+			*v = IntegrationMutationResponseType(15)
 		}
 	}
 	return nil
@@ -434,18 +436,20 @@ func (v IntegrationMutationResponseType) UnmarshalJSON(buf []byte) error {
 		v = 7
 	case "USER":
 		v = 8
-	case "UNINSTALL":
+	case "CALENDAR":
 		v = 9
-	case "UPGRADE":
+	case "UNINSTALL":
 		v = 10
-	case "START":
+	case "UPGRADE":
 		v = 11
-	case "STOP":
+	case "START":
 		v = 12
-	case "PAUSE":
+	case "STOP":
 		v = 13
-	case "RESUME":
+	case "PAUSE":
 		v = 14
+	case "RESUME":
+		v = 15
 	}
 	return nil
 }
@@ -472,16 +476,18 @@ func (v IntegrationMutationResponseType) MarshalJSON() ([]byte, error) {
 	case 8:
 		return json.Marshal("USER")
 	case 9:
-		return json.Marshal("UNINSTALL")
+		return json.Marshal("CALENDAR")
 	case 10:
-		return json.Marshal("UPGRADE")
+		return json.Marshal("UNINSTALL")
 	case 11:
-		return json.Marshal("START")
+		return json.Marshal("UPGRADE")
 	case 12:
-		return json.Marshal("STOP")
+		return json.Marshal("START")
 	case 13:
-		return json.Marshal("PAUSE")
+		return json.Marshal("STOP")
 	case 14:
+		return json.Marshal("PAUSE")
+	case 15:
 		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -509,16 +515,18 @@ func (v IntegrationMutationResponseType) String() string {
 	case 8:
 		return "USER"
 	case 9:
-		return "UNINSTALL"
+		return "CALENDAR"
 	case 10:
-		return "UPGRADE"
+		return "UNINSTALL"
 	case 11:
-		return "START"
+		return "UPGRADE"
 	case 12:
-		return "STOP"
+		return "START"
 	case 13:
-		return "PAUSE"
+		return "STOP"
 	case 14:
+		return "PAUSE"
+	case 15:
 		return "RESUME"
 	}
 	return "unset"
@@ -543,18 +551,20 @@ const (
 	IntegrationMutationResponseTypeRepo IntegrationMutationResponseType = 7
 	// IntegrationMutationResponseTypeUser is the enumeration value for user
 	IntegrationMutationResponseTypeUser IntegrationMutationResponseType = 8
+	// IntegrationMutationResponseTypeCalendar is the enumeration value for calendar
+	IntegrationMutationResponseTypeCalendar IntegrationMutationResponseType = 9
 	// IntegrationMutationResponseTypeUninstall is the enumeration value for uninstall
-	IntegrationMutationResponseTypeUninstall IntegrationMutationResponseType = 9
+	IntegrationMutationResponseTypeUninstall IntegrationMutationResponseType = 10
 	// IntegrationMutationResponseTypeUpgrade is the enumeration value for upgrade
-	IntegrationMutationResponseTypeUpgrade IntegrationMutationResponseType = 10
+	IntegrationMutationResponseTypeUpgrade IntegrationMutationResponseType = 11
 	// IntegrationMutationResponseTypeStart is the enumeration value for start
-	IntegrationMutationResponseTypeStart IntegrationMutationResponseType = 11
+	IntegrationMutationResponseTypeStart IntegrationMutationResponseType = 12
 	// IntegrationMutationResponseTypeStop is the enumeration value for stop
-	IntegrationMutationResponseTypeStop IntegrationMutationResponseType = 12
+	IntegrationMutationResponseTypeStop IntegrationMutationResponseType = 13
 	// IntegrationMutationResponseTypePause is the enumeration value for pause
-	IntegrationMutationResponseTypePause IntegrationMutationResponseType = 13
+	IntegrationMutationResponseTypePause IntegrationMutationResponseType = 14
 	// IntegrationMutationResponseTypeResume is the enumeration value for resume
-	IntegrationMutationResponseTypeResume IntegrationMutationResponseType = 14
+	IntegrationMutationResponseTypeResume IntegrationMutationResponseType = 15
 )
 
 // IntegrationMutationResponse response for data mutation going back from agent (used by pipeline and webapp)
@@ -980,25 +990,6 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1108,25 +1099,6 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1318,18 +1290,20 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1352,18 +1326,20 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 	}

@@ -404,18 +404,20 @@ func (v *PingType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 			*v = PingType(7)
 		case "USER":
 			*v = PingType(8)
-		case "UNINSTALL":
+		case "CALENDAR":
 			*v = PingType(9)
-		case "UPGRADE":
+		case "UNINSTALL":
 			*v = PingType(10)
-		case "START":
+		case "UPGRADE":
 			*v = PingType(11)
-		case "STOP":
+		case "START":
 			*v = PingType(12)
-		case "PAUSE":
+		case "STOP":
 			*v = PingType(13)
-		case "RESUME":
+		case "PAUSE":
 			*v = PingType(14)
+		case "RESUME":
+			*v = PingType(15)
 		}
 	}
 	return nil
@@ -442,18 +444,20 @@ func (v PingType) UnmarshalJSON(buf []byte) error {
 		v = 7
 	case "USER":
 		v = 8
-	case "UNINSTALL":
+	case "CALENDAR":
 		v = 9
-	case "UPGRADE":
+	case "UNINSTALL":
 		v = 10
-	case "START":
+	case "UPGRADE":
 		v = 11
-	case "STOP":
+	case "START":
 		v = 12
-	case "PAUSE":
+	case "STOP":
 		v = 13
-	case "RESUME":
+	case "PAUSE":
 		v = 14
+	case "RESUME":
+		v = 15
 	}
 	return nil
 }
@@ -480,16 +484,18 @@ func (v PingType) MarshalJSON() ([]byte, error) {
 	case 8:
 		return json.Marshal("USER")
 	case 9:
-		return json.Marshal("UNINSTALL")
+		return json.Marshal("CALENDAR")
 	case 10:
-		return json.Marshal("UPGRADE")
+		return json.Marshal("UNINSTALL")
 	case 11:
-		return json.Marshal("START")
+		return json.Marshal("UPGRADE")
 	case 12:
-		return json.Marshal("STOP")
+		return json.Marshal("START")
 	case 13:
-		return json.Marshal("PAUSE")
+		return json.Marshal("STOP")
 	case 14:
+		return json.Marshal("PAUSE")
+	case 15:
 		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -517,16 +523,18 @@ func (v PingType) String() string {
 	case 8:
 		return "USER"
 	case 9:
-		return "UNINSTALL"
+		return "CALENDAR"
 	case 10:
-		return "UPGRADE"
+		return "UNINSTALL"
 	case 11:
-		return "START"
+		return "UPGRADE"
 	case 12:
-		return "STOP"
+		return "START"
 	case 13:
-		return "PAUSE"
+		return "STOP"
 	case 14:
+		return "PAUSE"
+	case 15:
 		return "RESUME"
 	}
 	return "unset"
@@ -551,18 +559,20 @@ const (
 	PingTypeRepo PingType = 7
 	// PingTypeUser is the enumeration value for user
 	PingTypeUser PingType = 8
+	// PingTypeCalendar is the enumeration value for calendar
+	PingTypeCalendar PingType = 9
 	// PingTypeUninstall is the enumeration value for uninstall
-	PingTypeUninstall PingType = 9
+	PingTypeUninstall PingType = 10
 	// PingTypeUpgrade is the enumeration value for upgrade
-	PingTypeUpgrade PingType = 10
+	PingTypeUpgrade PingType = 11
 	// PingTypeStart is the enumeration value for start
-	PingTypeStart PingType = 11
+	PingTypeStart PingType = 12
 	// PingTypeStop is the enumeration value for stop
-	PingTypeStop PingType = 12
+	PingTypeStop PingType = 13
 	// PingTypePause is the enumeration value for pause
-	PingTypePause PingType = 13
+	PingTypePause PingType = 14
 	// PingTypeResume is the enumeration value for resume
-	PingTypeResume PingType = 14
+	PingTypeResume PingType = 15
 )
 
 // Ping an agent event for recording a ping
@@ -959,25 +969,6 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1079,25 +1070,6 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PingLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1331,18 +1303,20 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1365,18 +1339,20 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 	}

@@ -318,18 +318,20 @@ func (v *EnabledType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 			*v = EnabledType(7)
 		case "USER":
 			*v = EnabledType(8)
-		case "UNINSTALL":
+		case "CALENDAR":
 			*v = EnabledType(9)
-		case "UPGRADE":
+		case "UNINSTALL":
 			*v = EnabledType(10)
-		case "START":
+		case "UPGRADE":
 			*v = EnabledType(11)
-		case "STOP":
+		case "START":
 			*v = EnabledType(12)
-		case "PAUSE":
+		case "STOP":
 			*v = EnabledType(13)
-		case "RESUME":
+		case "PAUSE":
 			*v = EnabledType(14)
+		case "RESUME":
+			*v = EnabledType(15)
 		}
 	}
 	return nil
@@ -356,18 +358,20 @@ func (v EnabledType) UnmarshalJSON(buf []byte) error {
 		v = 7
 	case "USER":
 		v = 8
-	case "UNINSTALL":
+	case "CALENDAR":
 		v = 9
-	case "UPGRADE":
+	case "UNINSTALL":
 		v = 10
-	case "START":
+	case "UPGRADE":
 		v = 11
-	case "STOP":
+	case "START":
 		v = 12
-	case "PAUSE":
+	case "STOP":
 		v = 13
-	case "RESUME":
+	case "PAUSE":
 		v = 14
+	case "RESUME":
+		v = 15
 	}
 	return nil
 }
@@ -394,16 +398,18 @@ func (v EnabledType) MarshalJSON() ([]byte, error) {
 	case 8:
 		return json.Marshal("USER")
 	case 9:
-		return json.Marshal("UNINSTALL")
+		return json.Marshal("CALENDAR")
 	case 10:
-		return json.Marshal("UPGRADE")
+		return json.Marshal("UNINSTALL")
 	case 11:
-		return json.Marshal("START")
+		return json.Marshal("UPGRADE")
 	case 12:
-		return json.Marshal("STOP")
+		return json.Marshal("START")
 	case 13:
-		return json.Marshal("PAUSE")
+		return json.Marshal("STOP")
 	case 14:
+		return json.Marshal("PAUSE")
+	case 15:
 		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -431,16 +437,18 @@ func (v EnabledType) String() string {
 	case 8:
 		return "USER"
 	case 9:
-		return "UNINSTALL"
+		return "CALENDAR"
 	case 10:
-		return "UPGRADE"
+		return "UNINSTALL"
 	case 11:
-		return "START"
+		return "UPGRADE"
 	case 12:
-		return "STOP"
+		return "START"
 	case 13:
-		return "PAUSE"
+		return "STOP"
 	case 14:
+		return "PAUSE"
+	case 15:
 		return "RESUME"
 	}
 	return "unset"
@@ -465,18 +473,20 @@ const (
 	EnabledTypeRepo EnabledType = 7
 	// EnabledTypeUser is the enumeration value for user
 	EnabledTypeUser EnabledType = 8
+	// EnabledTypeCalendar is the enumeration value for calendar
+	EnabledTypeCalendar EnabledType = 9
 	// EnabledTypeUninstall is the enumeration value for uninstall
-	EnabledTypeUninstall EnabledType = 9
+	EnabledTypeUninstall EnabledType = 10
 	// EnabledTypeUpgrade is the enumeration value for upgrade
-	EnabledTypeUpgrade EnabledType = 10
+	EnabledTypeUpgrade EnabledType = 11
 	// EnabledTypeStart is the enumeration value for start
-	EnabledTypeStart EnabledType = 11
+	EnabledTypeStart EnabledType = 12
 	// EnabledTypeStop is the enumeration value for stop
-	EnabledTypeStop EnabledType = 12
+	EnabledTypeStop EnabledType = 13
 	// EnabledTypePause is the enumeration value for pause
-	EnabledTypePause EnabledType = 13
+	EnabledTypePause EnabledType = 14
 	// EnabledTypeResume is the enumeration value for resume
-	EnabledTypeResume EnabledType = 14
+	EnabledTypeResume EnabledType = 15
 )
 
 // Enabled an agent event to indicate that it's enabled and ready for actions
@@ -860,25 +870,6 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -968,25 +959,6 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1178,18 +1150,20 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1212,18 +1186,20 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 	}

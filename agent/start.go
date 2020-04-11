@@ -318,18 +318,20 @@ func (v *StartType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 			*v = StartType(7)
 		case "USER":
 			*v = StartType(8)
-		case "UNINSTALL":
+		case "CALENDAR":
 			*v = StartType(9)
-		case "UPGRADE":
+		case "UNINSTALL":
 			*v = StartType(10)
-		case "START":
+		case "UPGRADE":
 			*v = StartType(11)
-		case "STOP":
+		case "START":
 			*v = StartType(12)
-		case "PAUSE":
+		case "STOP":
 			*v = StartType(13)
-		case "RESUME":
+		case "PAUSE":
 			*v = StartType(14)
+		case "RESUME":
+			*v = StartType(15)
 		}
 	}
 	return nil
@@ -356,18 +358,20 @@ func (v StartType) UnmarshalJSON(buf []byte) error {
 		v = 7
 	case "USER":
 		v = 8
-	case "UNINSTALL":
+	case "CALENDAR":
 		v = 9
-	case "UPGRADE":
+	case "UNINSTALL":
 		v = 10
-	case "START":
+	case "UPGRADE":
 		v = 11
-	case "STOP":
+	case "START":
 		v = 12
-	case "PAUSE":
+	case "STOP":
 		v = 13
-	case "RESUME":
+	case "PAUSE":
 		v = 14
+	case "RESUME":
+		v = 15
 	}
 	return nil
 }
@@ -394,16 +398,18 @@ func (v StartType) MarshalJSON() ([]byte, error) {
 	case 8:
 		return json.Marshal("USER")
 	case 9:
-		return json.Marshal("UNINSTALL")
+		return json.Marshal("CALENDAR")
 	case 10:
-		return json.Marshal("UPGRADE")
+		return json.Marshal("UNINSTALL")
 	case 11:
-		return json.Marshal("START")
+		return json.Marshal("UPGRADE")
 	case 12:
-		return json.Marshal("STOP")
+		return json.Marshal("START")
 	case 13:
-		return json.Marshal("PAUSE")
+		return json.Marshal("STOP")
 	case 14:
+		return json.Marshal("PAUSE")
+	case 15:
 		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -431,16 +437,18 @@ func (v StartType) String() string {
 	case 8:
 		return "USER"
 	case 9:
-		return "UNINSTALL"
+		return "CALENDAR"
 	case 10:
-		return "UPGRADE"
+		return "UNINSTALL"
 	case 11:
-		return "START"
+		return "UPGRADE"
 	case 12:
-		return "STOP"
+		return "START"
 	case 13:
-		return "PAUSE"
+		return "STOP"
 	case 14:
+		return "PAUSE"
+	case 15:
 		return "RESUME"
 	}
 	return "unset"
@@ -465,18 +473,20 @@ const (
 	StartTypeRepo StartType = 7
 	// StartTypeUser is the enumeration value for user
 	StartTypeUser StartType = 8
+	// StartTypeCalendar is the enumeration value for calendar
+	StartTypeCalendar StartType = 9
 	// StartTypeUninstall is the enumeration value for uninstall
-	StartTypeUninstall StartType = 9
+	StartTypeUninstall StartType = 10
 	// StartTypeUpgrade is the enumeration value for upgrade
-	StartTypeUpgrade StartType = 10
+	StartTypeUpgrade StartType = 11
 	// StartTypeStart is the enumeration value for start
-	StartTypeStart StartType = 11
+	StartTypeStart StartType = 12
 	// StartTypeStop is the enumeration value for stop
-	StartTypeStop StartType = 12
+	StartTypeStop StartType = 13
 	// StartTypePause is the enumeration value for pause
-	StartTypePause StartType = 13
+	StartTypePause StartType = 14
 	// StartTypeResume is the enumeration value for resume
-	StartTypeResume StartType = 14
+	StartTypeResume StartType = 15
 )
 
 // Start an agent event which is sent on start
@@ -1140,18 +1150,20 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1174,18 +1186,20 @@ func (o *Start) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 	}

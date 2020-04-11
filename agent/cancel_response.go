@@ -425,18 +425,20 @@ func (v *CancelResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) er
 			*v = CancelResponseType(7)
 		case "USER":
 			*v = CancelResponseType(8)
-		case "UNINSTALL":
+		case "CALENDAR":
 			*v = CancelResponseType(9)
-		case "UPGRADE":
+		case "UNINSTALL":
 			*v = CancelResponseType(10)
-		case "START":
+		case "UPGRADE":
 			*v = CancelResponseType(11)
-		case "STOP":
+		case "START":
 			*v = CancelResponseType(12)
-		case "PAUSE":
+		case "STOP":
 			*v = CancelResponseType(13)
-		case "RESUME":
+		case "PAUSE":
 			*v = CancelResponseType(14)
+		case "RESUME":
+			*v = CancelResponseType(15)
 		}
 	}
 	return nil
@@ -463,18 +465,20 @@ func (v CancelResponseType) UnmarshalJSON(buf []byte) error {
 		v = 7
 	case "USER":
 		v = 8
-	case "UNINSTALL":
+	case "CALENDAR":
 		v = 9
-	case "UPGRADE":
+	case "UNINSTALL":
 		v = 10
-	case "START":
+	case "UPGRADE":
 		v = 11
-	case "STOP":
+	case "START":
 		v = 12
-	case "PAUSE":
+	case "STOP":
 		v = 13
-	case "RESUME":
+	case "PAUSE":
 		v = 14
+	case "RESUME":
+		v = 15
 	}
 	return nil
 }
@@ -501,16 +505,18 @@ func (v CancelResponseType) MarshalJSON() ([]byte, error) {
 	case 8:
 		return json.Marshal("USER")
 	case 9:
-		return json.Marshal("UNINSTALL")
+		return json.Marshal("CALENDAR")
 	case 10:
-		return json.Marshal("UPGRADE")
+		return json.Marshal("UNINSTALL")
 	case 11:
-		return json.Marshal("START")
+		return json.Marshal("UPGRADE")
 	case 12:
-		return json.Marshal("STOP")
+		return json.Marshal("START")
 	case 13:
-		return json.Marshal("PAUSE")
+		return json.Marshal("STOP")
 	case 14:
+		return json.Marshal("PAUSE")
+	case 15:
 		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -538,16 +544,18 @@ func (v CancelResponseType) String() string {
 	case 8:
 		return "USER"
 	case 9:
-		return "UNINSTALL"
+		return "CALENDAR"
 	case 10:
-		return "UPGRADE"
+		return "UNINSTALL"
 	case 11:
-		return "START"
+		return "UPGRADE"
 	case 12:
-		return "STOP"
+		return "START"
 	case 13:
-		return "PAUSE"
+		return "STOP"
 	case 14:
+		return "PAUSE"
+	case 15:
 		return "RESUME"
 	}
 	return "unset"
@@ -572,18 +580,20 @@ const (
 	CancelResponseTypeRepo CancelResponseType = 7
 	// CancelResponseTypeUser is the enumeration value for user
 	CancelResponseTypeUser CancelResponseType = 8
+	// CancelResponseTypeCalendar is the enumeration value for calendar
+	CancelResponseTypeCalendar CancelResponseType = 9
 	// CancelResponseTypeUninstall is the enumeration value for uninstall
-	CancelResponseTypeUninstall CancelResponseType = 9
+	CancelResponseTypeUninstall CancelResponseType = 10
 	// CancelResponseTypeUpgrade is the enumeration value for upgrade
-	CancelResponseTypeUpgrade CancelResponseType = 10
+	CancelResponseTypeUpgrade CancelResponseType = 11
 	// CancelResponseTypeStart is the enumeration value for start
-	CancelResponseTypeStart CancelResponseType = 11
+	CancelResponseTypeStart CancelResponseType = 12
 	// CancelResponseTypeStop is the enumeration value for stop
-	CancelResponseTypeStop CancelResponseType = 12
+	CancelResponseTypeStop CancelResponseType = 13
 	// CancelResponseTypePause is the enumeration value for pause
-	CancelResponseTypePause CancelResponseType = 13
+	CancelResponseTypePause CancelResponseType = 14
 	// CancelResponseTypeResume is the enumeration value for resume
-	CancelResponseTypeResume CancelResponseType = 14
+	CancelResponseTypeResume CancelResponseType = 15
 )
 
 // CancelResponse an agent response to an action request for cancel
@@ -1324,18 +1334,20 @@ func (o *CancelResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1358,18 +1370,20 @@ func (o *CancelResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 	}

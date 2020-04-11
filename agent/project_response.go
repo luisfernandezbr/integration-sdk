@@ -648,18 +648,20 @@ func (v *ProjectResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) e
 			*v = ProjectResponseType(7)
 		case "USER":
 			*v = ProjectResponseType(8)
-		case "UNINSTALL":
+		case "CALENDAR":
 			*v = ProjectResponseType(9)
-		case "UPGRADE":
+		case "UNINSTALL":
 			*v = ProjectResponseType(10)
-		case "START":
+		case "UPGRADE":
 			*v = ProjectResponseType(11)
-		case "STOP":
+		case "START":
 			*v = ProjectResponseType(12)
-		case "PAUSE":
+		case "STOP":
 			*v = ProjectResponseType(13)
-		case "RESUME":
+		case "PAUSE":
 			*v = ProjectResponseType(14)
+		case "RESUME":
+			*v = ProjectResponseType(15)
 		}
 	}
 	return nil
@@ -686,18 +688,20 @@ func (v ProjectResponseType) UnmarshalJSON(buf []byte) error {
 		v = 7
 	case "USER":
 		v = 8
-	case "UNINSTALL":
+	case "CALENDAR":
 		v = 9
-	case "UPGRADE":
+	case "UNINSTALL":
 		v = 10
-	case "START":
+	case "UPGRADE":
 		v = 11
-	case "STOP":
+	case "START":
 		v = 12
-	case "PAUSE":
+	case "STOP":
 		v = 13
-	case "RESUME":
+	case "PAUSE":
 		v = 14
+	case "RESUME":
+		v = 15
 	}
 	return nil
 }
@@ -724,16 +728,18 @@ func (v ProjectResponseType) MarshalJSON() ([]byte, error) {
 	case 8:
 		return json.Marshal("USER")
 	case 9:
-		return json.Marshal("UNINSTALL")
+		return json.Marshal("CALENDAR")
 	case 10:
-		return json.Marshal("UPGRADE")
+		return json.Marshal("UNINSTALL")
 	case 11:
-		return json.Marshal("START")
+		return json.Marshal("UPGRADE")
 	case 12:
-		return json.Marshal("STOP")
+		return json.Marshal("START")
 	case 13:
-		return json.Marshal("PAUSE")
+		return json.Marshal("STOP")
 	case 14:
+		return json.Marshal("PAUSE")
+	case 15:
 		return json.Marshal("RESUME")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -761,16 +767,18 @@ func (v ProjectResponseType) String() string {
 	case 8:
 		return "USER"
 	case 9:
-		return "UNINSTALL"
+		return "CALENDAR"
 	case 10:
-		return "UPGRADE"
+		return "UNINSTALL"
 	case 11:
-		return "START"
+		return "UPGRADE"
 	case 12:
-		return "STOP"
+		return "START"
 	case 13:
-		return "PAUSE"
+		return "STOP"
 	case 14:
+		return "PAUSE"
+	case 15:
 		return "RESUME"
 	}
 	return "unset"
@@ -795,18 +803,20 @@ const (
 	ProjectResponseTypeRepo ProjectResponseType = 7
 	// ProjectResponseTypeUser is the enumeration value for user
 	ProjectResponseTypeUser ProjectResponseType = 8
+	// ProjectResponseTypeCalendar is the enumeration value for calendar
+	ProjectResponseTypeCalendar ProjectResponseType = 9
 	// ProjectResponseTypeUninstall is the enumeration value for uninstall
-	ProjectResponseTypeUninstall ProjectResponseType = 9
+	ProjectResponseTypeUninstall ProjectResponseType = 10
 	// ProjectResponseTypeUpgrade is the enumeration value for upgrade
-	ProjectResponseTypeUpgrade ProjectResponseType = 10
+	ProjectResponseTypeUpgrade ProjectResponseType = 11
 	// ProjectResponseTypeStart is the enumeration value for start
-	ProjectResponseTypeStart ProjectResponseType = 11
+	ProjectResponseTypeStart ProjectResponseType = 12
 	// ProjectResponseTypeStop is the enumeration value for stop
-	ProjectResponseTypeStop ProjectResponseType = 12
+	ProjectResponseTypeStop ProjectResponseType = 13
 	// ProjectResponseTypePause is the enumeration value for pause
-	ProjectResponseTypePause ProjectResponseType = 13
+	ProjectResponseTypePause ProjectResponseType = 14
 	// ProjectResponseTypeResume is the enumeration value for resume
-	ProjectResponseTypeResume ProjectResponseType = 14
+	ProjectResponseTypeResume ProjectResponseType = 15
 )
 
 // ProjectResponse an agent response to an action request adding project(s)
@@ -1206,25 +1216,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1334,25 +1325,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1607,18 +1579,20 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -1641,18 +1615,20 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 				o.Type = 7
 			case "user", "USER":
 				o.Type = 8
-			case "uninstall", "UNINSTALL":
+			case "calendar", "CALENDAR":
 				o.Type = 9
-			case "upgrade", "UPGRADE":
+			case "uninstall", "UNINSTALL":
 				o.Type = 10
-			case "start", "START":
+			case "upgrade", "UPGRADE":
 				o.Type = 11
-			case "stop", "STOP":
+			case "start", "START":
 				o.Type = 12
-			case "pause", "PAUSE":
+			case "stop", "STOP":
 				o.Type = 13
-			case "resume", "RESUME":
+			case "pause", "PAUSE":
 				o.Type = 14
+			case "resume", "RESUME":
+				o.Type = 15
 			}
 		}
 	}
