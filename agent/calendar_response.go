@@ -35,12 +35,8 @@ const (
 	CalendarResponseModelArchitectureColumn = "architecture"
 	// CalendarResponseModelCalendarsColumn is the column json value calendars
 	CalendarResponseModelCalendarsColumn = "calendars"
-	// CalendarResponseModelCalendarsCustomerIDColumn is the column json value customer_id
-	CalendarResponseModelCalendarsCustomerIDColumn = "customer_id"
 	// CalendarResponseModelCalendarsDescriptionColumn is the column json value description
 	CalendarResponseModelCalendarsDescriptionColumn = "description"
-	// CalendarResponseModelCalendarsIDColumn is the column json value id
-	CalendarResponseModelCalendarsIDColumn = "id"
 	// CalendarResponseModelCalendarsNameColumn is the column json value name
 	CalendarResponseModelCalendarsNameColumn = "name"
 	// CalendarResponseModelCalendarsRefIDColumn is the column json value ref_id
@@ -111,17 +107,13 @@ const (
 
 // CalendarResponseCalendars represents the object structure for calendars
 type CalendarResponseCalendars struct {
-	// CustomerID the customer id for the model instance
-	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the calendar
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
-	// ID the primary key for the model instance
-	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// Name the name of the calendar
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
-	// RefID the source system id for the model instance
+	// RefID the calendar ID
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// RefType the source system identifier for the model instance
+	// RefType the record type
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 }
 
@@ -138,17 +130,13 @@ func toCalendarResponseCalendarsObject(o interface{}, isoptional bool) interface
 func (o *CalendarResponseCalendars) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// CustomerID the customer id for the model instance
-		"customer_id": toCalendarResponseCalendarsObject(o.CustomerID, false),
 		// Description the description of the calendar
 		"description": toCalendarResponseCalendarsObject(o.Description, false),
-		// ID the primary key for the model instance
-		"id": toCalendarResponseCalendarsObject(o.ID, false),
 		// Name the name of the calendar
 		"name": toCalendarResponseCalendarsObject(o.Name, false),
-		// RefID the source system id for the model instance
+		// RefID the calendar ID
 		"ref_id": toCalendarResponseCalendarsObject(o.RefID, false),
-		// RefType the source system identifier for the model instance
+		// RefType the record type
 		"ref_type": toCalendarResponseCalendarsObject(o.RefType, false),
 	}
 }
@@ -168,26 +156,6 @@ func (o *CalendarResponseCalendars) FromMap(kv map[string]interface{}) {
 		kv["id"] = id
 	}
 
-	if val, ok := kv["customer_id"].(string); ok {
-		o.CustomerID = val
-	} else {
-		if val, ok := kv["customer_id"]; ok {
-			if val == nil {
-				o.CustomerID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.CustomerID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
 	if val, ok := kv["description"].(string); ok {
 		o.Description = val
 	} else {
@@ -204,26 +172,6 @@ func (o *CalendarResponseCalendars) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Description = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
