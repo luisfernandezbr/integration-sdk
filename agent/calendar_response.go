@@ -35,6 +35,8 @@ const (
 	CalendarResponseModelArchitectureColumn = "architecture"
 	// CalendarResponseModelCalendarsColumn is the column json value calendars
 	CalendarResponseModelCalendarsColumn = "calendars"
+	// CalendarResponseModelCalendarsActiveColumn is the column json value active
+	CalendarResponseModelCalendarsActiveColumn = "active"
 	// CalendarResponseModelCalendarsDescriptionColumn is the column json value description
 	CalendarResponseModelCalendarsDescriptionColumn = "description"
 	// CalendarResponseModelCalendarsNameColumn is the column json value name
@@ -107,6 +109,8 @@ const (
 
 // CalendarResponseCalendars represents the object structure for calendars
 type CalendarResponseCalendars struct {
+	// Active the status of the calendar
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Description the description of the calendar
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// Name the name of the calendar
@@ -130,6 +134,8 @@ func toCalendarResponseCalendarsObject(o interface{}, isoptional bool) interface
 func (o *CalendarResponseCalendars) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
+		// Active the status of the calendar
+		"active": toCalendarResponseCalendarsObject(o.Active, false),
 		// Description the description of the calendar
 		"description": toCalendarResponseCalendarsObject(o.Description, false),
 		// Name the name of the calendar
@@ -154,6 +160,18 @@ func (o *CalendarResponseCalendars) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 
 	if val, ok := kv["description"].(string); ok {

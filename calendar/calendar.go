@@ -12,6 +12,7 @@ import (
 	"github.com/pinpt/go-common/datamodel"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 )
 
@@ -25,6 +26,8 @@ const (
 )
 
 const (
+	// CalendarModelActiveColumn is the column json value active
+	CalendarModelActiveColumn = "active"
 	// CalendarModelCustomerIDColumn is the column json value customer_id
 	CalendarModelCustomerIDColumn = "customer_id"
 	// CalendarModelDescriptionColumn is the column json value description
@@ -41,6 +44,8 @@ const (
 
 // Calendar details for the given integration calendarsitory
 type Calendar struct {
+	// Active the status of the calendar
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the calendar
@@ -231,6 +236,7 @@ func (o *Calendar) IsEqual(other *Calendar) bool {
 func (o *Calendar) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":      toCalendarObject(o.Active, false),
 		"customer_id": toCalendarObject(o.CustomerID, false),
 		"description": toCalendarObject(o.Description, false),
 		"id":          toCalendarObject(o.ID, false),
@@ -249,6 +255,18 @@ func (o *Calendar) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 
 	if val, ok := kv["customer_id"].(string); ok {
@@ -376,6 +394,7 @@ func (o *Calendar) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Calendar) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
