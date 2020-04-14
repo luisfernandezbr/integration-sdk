@@ -31,6 +31,14 @@ const (
 const (
 	// IntegrationMutationRequestModelActionColumn is the column json value action
 	IntegrationMutationRequestModelActionColumn = "action"
+	// IntegrationMutationRequestModelAgentRequestSentDateColumn is the column json value agent_request_sent_date
+	IntegrationMutationRequestModelAgentRequestSentDateColumn = "agent_request_sent_date"
+	// IntegrationMutationRequestModelAgentRequestSentDateEpochColumn is the column json value epoch
+	IntegrationMutationRequestModelAgentRequestSentDateEpochColumn = "epoch"
+	// IntegrationMutationRequestModelAgentRequestSentDateOffsetColumn is the column json value offset
+	IntegrationMutationRequestModelAgentRequestSentDateOffsetColumn = "offset"
+	// IntegrationMutationRequestModelAgentRequestSentDateRfc3339Column is the column json value rfc3339
+	IntegrationMutationRequestModelAgentRequestSentDateRfc3339Column = "rfc3339"
 	// IntegrationMutationRequestModelAuthorizationColumn is the column json value authorization
 	IntegrationMutationRequestModelAuthorizationColumn = "authorization"
 	// IntegrationMutationRequestModelAuthorizationRefreshTokenColumn is the column json value refresh_token
@@ -63,6 +71,14 @@ const (
 	IntegrationMutationRequestModelSystemTypeColumn = "system_type"
 	// IntegrationMutationRequestModelUUIDColumn is the column json value uuid
 	IntegrationMutationRequestModelUUIDColumn = "uuid"
+	// IntegrationMutationRequestModelWebappRequestDateColumn is the column json value webapp_request_date
+	IntegrationMutationRequestModelWebappRequestDateColumn = "webapp_request_date"
+	// IntegrationMutationRequestModelWebappRequestDateEpochColumn is the column json value epoch
+	IntegrationMutationRequestModelWebappRequestDateEpochColumn = "epoch"
+	// IntegrationMutationRequestModelWebappRequestDateOffsetColumn is the column json value offset
+	IntegrationMutationRequestModelWebappRequestDateOffsetColumn = "offset"
+	// IntegrationMutationRequestModelWebappRequestDateRfc3339Column is the column json value rfc3339
+	IntegrationMutationRequestModelWebappRequestDateRfc3339Column = "rfc3339"
 )
 
 // IntegrationMutationRequestAction is the enumeration type for action
@@ -184,6 +200,105 @@ const (
 	// IntegrationMutationRequestActionPrSetDescription is the enumeration value for pr_set_description
 	IntegrationMutationRequestActionPrSetDescription IntegrationMutationRequestAction = 7
 )
+
+// IntegrationMutationRequestAgentRequestSentDate represents the object structure for agent_request_sent_date
+type IntegrationMutationRequestAgentRequestSentDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toIntegrationMutationRequestAgentRequestSentDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IntegrationMutationRequestAgentRequestSentDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *IntegrationMutationRequestAgentRequestSentDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toIntegrationMutationRequestAgentRequestSentDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toIntegrationMutationRequestAgentRequestSentDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toIntegrationMutationRequestAgentRequestSentDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *IntegrationMutationRequestAgentRequestSentDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntegrationMutationRequestAgentRequestSentDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
 
 // IntegrationMutationRequestAuthorization represents the object structure for authorization
 type IntegrationMutationRequestAuthorization struct {
@@ -447,10 +562,111 @@ const (
 	IntegrationMutationRequestSystemTypeUser IntegrationMutationRequestSystemType = 3
 )
 
+// IntegrationMutationRequestWebappRequestDate represents the object structure for webapp_request_date
+type IntegrationMutationRequestWebappRequestDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toIntegrationMutationRequestWebappRequestDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IntegrationMutationRequestWebappRequestDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *IntegrationMutationRequestWebappRequestDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toIntegrationMutationRequestWebappRequestDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toIntegrationMutationRequestWebappRequestDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toIntegrationMutationRequestWebappRequestDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *IntegrationMutationRequestWebappRequestDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntegrationMutationRequestWebappRequestDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // IntegrationMutationRequest request to change data in integration going from agent service to agent
 type IntegrationMutationRequest struct {
 	// Action Action to perform
 	Action IntegrationMutationRequestAction `json:"action" codec:"action" bson:"action" yaml:"action" faker:"-"`
+	// AgentRequestSentDate set by agent operator when sending event to agent
+	AgentRequestSentDate IntegrationMutationRequestAgentRequestSentDate `json:"agent_request_sent_date" codec:"agent_request_sent_date" bson:"agent_request_sent_date" yaml:"agent_request_sent_date" faker:"-"`
 	// Authorization Authorization information
 	Authorization IntegrationMutationRequestAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -473,6 +689,8 @@ type IntegrationMutationRequest struct {
 	SystemType IntegrationMutationRequestSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// UUID the agent unique identifier
 	UUID string `json:"uuid" codec:"uuid" bson:"uuid" yaml:"uuid" faker:"-"`
+	// WebappRequestDate set by webapp using browser time
+	WebappRequestDate IntegrationMutationRequestWebappRequestDate `json:"webapp_request_date" codec:"webapp_request_date" bson:"webapp_request_date" yaml:"webapp_request_date" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -491,6 +709,9 @@ func toIntegrationMutationRequestObject(o interface{}, isoptional bool) interfac
 	case IntegrationMutationRequestAction:
 		return v.String()
 
+	case IntegrationMutationRequestAgentRequestSentDate:
+		return v.ToMap()
+
 	case IntegrationMutationRequestAuthorization:
 		return v.ToMap()
 
@@ -500,6 +721,8 @@ func toIntegrationMutationRequestObject(o interface{}, isoptional bool) interfac
 	case IntegrationMutationRequestSystemType:
 		return v.String()
 
+	case IntegrationMutationRequestWebappRequestDate:
+		return v.ToMap()
 	default:
 		return o
 	}
@@ -664,20 +887,22 @@ func (o *IntegrationMutationRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 
-		"action":           o.Action.String(),
-		"authorization":    toIntegrationMutationRequestObject(o.Authorization, false),
-		"customer_id":      toIntegrationMutationRequestObject(o.CustomerID, false),
-		"data":             toIntegrationMutationRequestObject(o.Data, false),
-		"id":               toIntegrationMutationRequestObject(o.ID, false),
-		"integration_name": toIntegrationMutationRequestObject(o.IntegrationName, false),
-		"job_id":           toIntegrationMutationRequestObject(o.JobID, false),
-		"ref_id":           toIntegrationMutationRequestObject(o.RefID, false),
-		"ref_type":         toIntegrationMutationRequestObject(o.RefType, false),
-		"request_date":     toIntegrationMutationRequestObject(o.RequestDate, false),
+		"action":                  o.Action.String(),
+		"agent_request_sent_date": toIntegrationMutationRequestObject(o.AgentRequestSentDate, false),
+		"authorization":           toIntegrationMutationRequestObject(o.Authorization, false),
+		"customer_id":             toIntegrationMutationRequestObject(o.CustomerID, false),
+		"data":                    toIntegrationMutationRequestObject(o.Data, false),
+		"id":                      toIntegrationMutationRequestObject(o.ID, false),
+		"integration_name":        toIntegrationMutationRequestObject(o.IntegrationName, false),
+		"job_id":                  toIntegrationMutationRequestObject(o.JobID, false),
+		"ref_id":                  toIntegrationMutationRequestObject(o.RefID, false),
+		"ref_type":                toIntegrationMutationRequestObject(o.RefType, false),
+		"request_date":            toIntegrationMutationRequestObject(o.RequestDate, false),
 
-		"system_type": o.SystemType.String(),
-		"uuid":        toIntegrationMutationRequestObject(o.UUID, false),
-		"hashcode":    toIntegrationMutationRequestObject(o.Hashcode, false),
+		"system_type":         o.SystemType.String(),
+		"uuid":                toIntegrationMutationRequestObject(o.UUID, false),
+		"webapp_request_date": toIntegrationMutationRequestObject(o.WebappRequestDate, false),
+		"hashcode":            toIntegrationMutationRequestObject(o.Hashcode, false),
 	}
 }
 
@@ -735,6 +960,39 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 				o.Action = 7
 			}
 		}
+	}
+
+	if val, ok := kv["agent_request_sent_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.AgentRequestSentDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationMutationRequestAgentRequestSentDate); ok {
+			// struct
+			o.AgentRequestSentDate = sv
+		} else if sp, ok := val.(*IntegrationMutationRequestAgentRequestSentDate); ok {
+			// struct pointer
+			o.AgentRequestSentDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.AgentRequestSentDate.Epoch = dt.Epoch
+			o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
+			o.AgentRequestSentDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.AgentRequestSentDate.Epoch = dt.Epoch
+			o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
+			o.AgentRequestSentDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.AgentRequestSentDate.Epoch = dt.Epoch
+				o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
+				o.AgentRequestSentDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.AgentRequestSentDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["authorization"]; ok {
@@ -900,25 +1158,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -973,6 +1212,40 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["webapp_request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.WebappRequestDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationMutationRequestWebappRequestDate); ok {
+			// struct
+			o.WebappRequestDate = sv
+		} else if sp, ok := val.(*IntegrationMutationRequestWebappRequestDate); ok {
+			// struct pointer
+			o.WebappRequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.WebappRequestDate.Epoch = dt.Epoch
+			o.WebappRequestDate.Rfc3339 = dt.Rfc3339
+			o.WebappRequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.WebappRequestDate.Epoch = dt.Epoch
+			o.WebappRequestDate.Rfc3339 = dt.Rfc3339
+			o.WebappRequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.WebappRequestDate.Epoch = dt.Epoch
+				o.WebappRequestDate.Rfc3339 = dt.Rfc3339
+				o.WebappRequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.WebappRequestDate.FromMap(map[string]interface{}{})
+	}
+
 	o.setDefaults(false)
 }
 
@@ -980,6 +1253,7 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 func (o *IntegrationMutationRequest) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Action)
+	args = append(args, o.AgentRequestSentDate)
 	args = append(args, o.Authorization)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
@@ -991,6 +1265,7 @@ func (o *IntegrationMutationRequest) Hash() string {
 	args = append(args, o.RequestDate)
 	args = append(args, o.SystemType)
 	args = append(args, o.UUID)
+	args = append(args, o.WebappRequestDate)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

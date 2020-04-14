@@ -10,8 +10,10 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
@@ -43,6 +45,14 @@ const (
 	WebappIntegrationMutationRequestModelRefIDColumn = "ref_id"
 	// WebappIntegrationMutationRequestModelRefTypeColumn is the column json value ref_type
 	WebappIntegrationMutationRequestModelRefTypeColumn = "ref_type"
+	// WebappIntegrationMutationRequestModelRequestDateColumn is the column json value request_date
+	WebappIntegrationMutationRequestModelRequestDateColumn = "request_date"
+	// WebappIntegrationMutationRequestModelRequestDateEpochColumn is the column json value epoch
+	WebappIntegrationMutationRequestModelRequestDateEpochColumn = "epoch"
+	// WebappIntegrationMutationRequestModelRequestDateOffsetColumn is the column json value offset
+	WebappIntegrationMutationRequestModelRequestDateOffsetColumn = "offset"
+	// WebappIntegrationMutationRequestModelRequestDateRfc3339Column is the column json value rfc3339
+	WebappIntegrationMutationRequestModelRequestDateRfc3339Column = "rfc3339"
 	// WebappIntegrationMutationRequestModelSystemTypeColumn is the column json value system_type
 	WebappIntegrationMutationRequestModelSystemTypeColumn = "system_type"
 )
@@ -167,6 +177,105 @@ const (
 	WebappIntegrationMutationRequestActionPrSetDescription WebappIntegrationMutationRequestAction = 7
 )
 
+// WebappIntegrationMutationRequestRequestDate represents the object structure for request_date
+type WebappIntegrationMutationRequestRequestDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toWebappIntegrationMutationRequestRequestDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *WebappIntegrationMutationRequestRequestDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+func (o *WebappIntegrationMutationRequestRequestDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toWebappIntegrationMutationRequestRequestDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toWebappIntegrationMutationRequestRequestDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toWebappIntegrationMutationRequestRequestDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *WebappIntegrationMutationRequestRequestDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *WebappIntegrationMutationRequestRequestDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // WebappIntegrationMutationRequestSystemType is the enumeration type for system_type
 type WebappIntegrationMutationRequestSystemType int32
 
@@ -265,6 +374,8 @@ type WebappIntegrationMutationRequest struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RequestDate set by webapp using browser time
+	RequestDate WebappIntegrationMutationRequestRequestDate `json:"request_date" codec:"request_date" bson:"request_date" yaml:"request_date" faker:"-"`
 	// SystemType The system type of the integration
 	SystemType WebappIntegrationMutationRequestSystemType `json:"system_type" codec:"system_type" bson:"system_type" yaml:"system_type" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -284,6 +395,9 @@ func toWebappIntegrationMutationRequestObject(o interface{}, isoptional bool) in
 
 	case WebappIntegrationMutationRequestAction:
 		return v.String()
+
+	case WebappIntegrationMutationRequestRequestDate:
+		return v.ToMap()
 
 	case WebappIntegrationMutationRequestSystemType:
 		return v.String()
@@ -459,6 +573,7 @@ func (o *WebappIntegrationMutationRequest) ToMap() map[string]interface{} {
 		"job_id":           toWebappIntegrationMutationRequestObject(o.JobID, false),
 		"ref_id":           toWebappIntegrationMutationRequestObject(o.RefID, false),
 		"ref_type":         toWebappIntegrationMutationRequestObject(o.RefType, false),
+		"request_date":     toWebappIntegrationMutationRequestObject(o.RequestDate, false),
 
 		"system_type": o.SystemType.String(),
 		"hashcode":    toWebappIntegrationMutationRequestObject(o.Hashcode, false),
@@ -661,6 +776,39 @@ func (o *WebappIntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(WebappIntegrationMutationRequestRequestDate); ok {
+			// struct
+			o.RequestDate = sv
+		} else if sp, ok := val.(*WebappIntegrationMutationRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["system_type"].(WebappIntegrationMutationRequestSystemType); ok {
 		o.SystemType = val
 	} else {
@@ -704,6 +852,7 @@ func (o *WebappIntegrationMutationRequest) Hash() string {
 	args = append(args, o.JobID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.RequestDate)
 	args = append(args, o.SystemType)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
