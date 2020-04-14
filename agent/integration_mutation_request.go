@@ -41,6 +41,8 @@ const (
 	IntegrationMutationRequestModelAgentRequestSentDateRfc3339Column = "rfc3339"
 	// IntegrationMutationRequestModelAuthorizationColumn is the column json value authorization
 	IntegrationMutationRequestModelAuthorizationColumn = "authorization"
+	// IntegrationMutationRequestModelAuthorizationAccessTokenColumn is the column json value access_token
+	IntegrationMutationRequestModelAuthorizationAccessTokenColumn = "access_token"
 	// IntegrationMutationRequestModelAuthorizationRefreshTokenColumn is the column json value refresh_token
 	IntegrationMutationRequestModelAuthorizationRefreshTokenColumn = "refresh_token"
 	// IntegrationMutationRequestModelAuthorizationURLColumn is the column json value url
@@ -302,6 +304,8 @@ func (o *IntegrationMutationRequestAgentRequestSentDate) FromMap(kv map[string]i
 
 // IntegrationMutationRequestAuthorization represents the object structure for authorization
 type IntegrationMutationRequestAuthorization struct {
+	// AccessToken Access token
+	AccessToken string `json:"access_token" codec:"access_token" bson:"access_token" yaml:"access_token" faker:"-"`
 	// RefreshToken Refresh token
 	RefreshToken string `json:"refresh_token" codec:"refresh_token" bson:"refresh_token" yaml:"refresh_token" faker:"-"`
 	// URL URL of instance if relevant
@@ -321,6 +325,8 @@ func toIntegrationMutationRequestAuthorizationObject(o interface{}, isoptional b
 func (o *IntegrationMutationRequestAuthorization) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
+		// AccessToken Access token
+		"access_token": toIntegrationMutationRequestAuthorizationObject(o.AccessToken, false),
 		// RefreshToken Refresh token
 		"refresh_token": toIntegrationMutationRequestAuthorizationObject(o.RefreshToken, false),
 		// URL URL of instance if relevant
@@ -341,6 +347,26 @@ func (o *IntegrationMutationRequestAuthorization) FromMap(kv map[string]interfac
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["access_token"].(string); ok {
+		o.AccessToken = val
+	} else {
+		if val, ok := kv["access_token"]; ok {
+			if val == nil {
+				o.AccessToken = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.AccessToken = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 
 	if val, ok := kv["refresh_token"].(string); ok {
