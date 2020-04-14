@@ -678,7 +678,7 @@ func (o *Team) GetModelName() datamodel.ModelNameType {
 
 // NewTeamID provides a template for generating an ID field for Team
 func NewTeamID(Name string, customerID string) string {
-	return hash.Values(Name, customerID)
+	return hash.Values(Name, customerID, datetime.EpochNow(), randomString(64))
 }
 
 func (o *Team) setDefaults(frommap bool) {
@@ -700,7 +700,7 @@ func (o *Team) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// set the id from the spec provided in the model
-		o.ID = hash.Values(o.Name, o.CustomerID)
+		o.ID = hash.Values(o.Name, o.CustomerID, datetime.EpochNow(), randomString(64))
 	}
 
 	if frommap {
