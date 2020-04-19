@@ -580,6 +580,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
+
 			ev := em["sourcecode.type"].(string)
 			switch ev {
 			case "human", "HUMAN":

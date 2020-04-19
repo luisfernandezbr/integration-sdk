@@ -466,6 +466,7 @@ func (o *IssueType) FromMap(kv map[string]interface{}) {
 		o.MappedType = val
 	} else {
 		if em, ok := kv["mapped_type"].(map[string]interface{}); ok {
+
 			ev := em["work.mapped_type"].(string)
 			switch ev {
 			case "unknown", "UNKNOWN":

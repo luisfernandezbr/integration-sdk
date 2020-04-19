@@ -948,6 +948,7 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 		o.Status = val
 	} else {
 		if em, ok := kv["status"].(map[string]interface{}); ok {
+
 			ev := em["work.status"].(string)
 			switch ev {
 			case "active", "ACTIVE":

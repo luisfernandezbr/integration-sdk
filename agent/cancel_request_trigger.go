@@ -103,12 +103,12 @@ func (v CancelRequestTriggerCommand) String() string {
 }
 
 const (
-	// CancelRequestTriggerCommandEXPORT is the enumeration value for EXPORT
-	CancelRequestTriggerCommandEXPORT CancelRequestTriggerCommand = 0
-	// CancelRequestTriggerCommandONBOARD is the enumeration value for ONBOARD
-	CancelRequestTriggerCommandONBOARD CancelRequestTriggerCommand = 1
-	// CancelRequestTriggerCommandINTEGRATION is the enumeration value for INTEGRATION
-	CancelRequestTriggerCommandINTEGRATION CancelRequestTriggerCommand = 2
+	// CancelRequestTriggerCommandExport is the enumeration value for export
+	CancelRequestTriggerCommandExport CancelRequestTriggerCommand = 0
+	// CancelRequestTriggerCommandOnboard is the enumeration value for onboard
+	CancelRequestTriggerCommandOnboard CancelRequestTriggerCommand = 1
+	// CancelRequestTriggerCommandIntegration is the enumeration value for integration
+	CancelRequestTriggerCommandIntegration CancelRequestTriggerCommand = 2
 )
 
 // CancelRequestTrigger used to trigger agent.CancelRequest
@@ -331,6 +331,7 @@ func (o *CancelRequestTrigger) FromMap(kv map[string]interface{}) {
 		o.Command = val
 	} else {
 		if em, ok := kv["command"].(map[string]interface{}); ok {
+
 			ev := em["agent.command"].(string)
 			switch ev {
 			case "export", "EXPORT":

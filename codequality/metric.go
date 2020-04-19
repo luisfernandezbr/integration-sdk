@@ -747,6 +747,7 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 		o.Status = val
 	} else {
 		if em, ok := kv["status"].(map[string]interface{}); ok {
+
 			ev := em["codequality.status"].(string)
 			switch ev {
 			case "unsupported", "UNSUPPORTED":

@@ -2308,6 +2308,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.Location = val
 	} else {
 		if em, ok := kv["location"].(map[string]interface{}); ok {
+
 			ev := em["agent.location"].(string)
 			switch ev {
 			case "private", "PRIVATE":
@@ -2522,6 +2523,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.State = val
 	} else {
 		if em, ok := kv["state"].(map[string]interface{}); ok {
+
 			ev := em["agent.state"].(string)
 			switch ev {
 			case "idle", "IDLE":
@@ -2548,6 +2550,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.SystemType = val
 	} else {
 		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+
 			ev := em["agent.system_type"].(string)
 			switch ev {
 			case "work", "WORK":

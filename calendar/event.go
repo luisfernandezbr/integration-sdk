@@ -555,6 +555,7 @@ func (o *EventParticipants) FromMap(kv map[string]interface{}) {
 		o.Status = val
 	} else {
 		if em, ok := kv["status"].(map[string]interface{}); ok {
+
 			ev := em["calendar.status"].(string)
 			switch ev {
 			case "unknown", "UNKNOWN":
@@ -1326,6 +1327,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 		o.Status = val
 	} else {
 		if em, ok := kv["status"].(map[string]interface{}); ok {
+
 			ev := em["calendar.status"].(string)
 			switch ev {
 			case "confirmed", "CONFIRMED":

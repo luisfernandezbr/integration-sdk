@@ -1218,6 +1218,7 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
+
 			ev := em["agent.type"].(string)
 			switch ev {
 			case "enroll", "ENROLL":

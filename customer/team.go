@@ -295,22 +295,22 @@ func (v TeamUsersType) String() string {
 }
 
 const (
-	// TeamUsersTypeNONE is the enumeration value for NONE
-	TeamUsersTypeNONE TeamUsersType = 0
-	// TeamUsersTypeTRACKABLE is the enumeration value for TRACKABLE
-	TeamUsersTypeTRACKABLE TeamUsersType = 1
-	// TeamUsersTypeBOT is the enumeration value for BOT
-	TeamUsersTypeBOT TeamUsersType = 2
-	// TeamUsersTypeUNTRACKABLE is the enumeration value for UNTRACKABLE
-	TeamUsersTypeUNTRACKABLE TeamUsersType = 3
-	// TeamUsersTypeUNMAPPED is the enumeration value for UNMAPPED
-	TeamUsersTypeUNMAPPED TeamUsersType = 4
-	// TeamUsersTypeTERMINATED is the enumeration value for TERMINATED
-	TeamUsersTypeTERMINATED TeamUsersType = 5
-	// TeamUsersTypeDELETED is the enumeration value for DELETED
-	TeamUsersTypeDELETED TeamUsersType = 6
-	// TeamUsersTypeINVITED is the enumeration value for INVITED
-	TeamUsersTypeINVITED TeamUsersType = 7
+	// TeamUsersTypeNone is the enumeration value for none
+	TeamUsersTypeNone TeamUsersType = 0
+	// TeamUsersTypeTrackable is the enumeration value for trackable
+	TeamUsersTypeTrackable TeamUsersType = 1
+	// TeamUsersTypeBot is the enumeration value for bot
+	TeamUsersTypeBot TeamUsersType = 2
+	// TeamUsersTypeUntrackable is the enumeration value for untrackable
+	TeamUsersTypeUntrackable TeamUsersType = 3
+	// TeamUsersTypeUnmapped is the enumeration value for unmapped
+	TeamUsersTypeUnmapped TeamUsersType = 4
+	// TeamUsersTypeTerminated is the enumeration value for terminated
+	TeamUsersTypeTerminated TeamUsersType = 5
+	// TeamUsersTypeDeleted is the enumeration value for deleted
+	TeamUsersTypeDeleted TeamUsersType = 6
+	// TeamUsersTypeInvited is the enumeration value for invited
+	TeamUsersTypeInvited TeamUsersType = 7
 )
 
 // TeamUsers represents the object structure for users
@@ -523,6 +523,7 @@ func (o *TeamUsers) FromMap(kv map[string]interface{}) {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
+
 			ev := em["customer.type"].(string)
 			switch ev {
 			case "none", "NONE":

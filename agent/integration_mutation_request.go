@@ -946,6 +946,7 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		o.Action = val
 	} else {
 		if em, ok := kv["action"].(map[string]interface{}); ok {
+
 			ev := em["agent.action"].(string)
 			switch ev {
 			case "issue_add_comment", "ISSUE_ADD_COMMENT":
@@ -1212,6 +1213,7 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		o.SystemType = val
 	} else {
 		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+
 			ev := em["agent.system_type"].(string)
 			switch ev {
 			case "work", "WORK":

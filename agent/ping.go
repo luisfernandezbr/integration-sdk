@@ -1221,6 +1221,7 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		o.State = val
 	} else {
 		if em, ok := kv["state"].(map[string]interface{}); ok {
+
 			ev := em["agent.state"].(string)
 			switch ev {
 			case "idle", "IDLE":
@@ -1283,6 +1284,7 @@ func (o *Ping) FromMap(kv map[string]interface{}) {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
+
 			ev := em["agent.type"].(string)
 			switch ev {
 			case "enroll", "ENROLL":

@@ -917,6 +917,7 @@ func (o *IssueChangeLog) FromMap(kv map[string]interface{}) {
 		o.Field = val
 	} else {
 		if em, ok := kv["field"].(map[string]interface{}); ok {
+
 			ev := em["work.field"].(string)
 			switch ev {
 			case "assignee_ref_id", "ASSIGNEE_REF_ID":
@@ -1534,6 +1535,7 @@ func (o *IssueLinkedIssues) FromMap(kv map[string]interface{}) {
 		o.LinkType = val
 	} else {
 		if em, ok := kv["link_type"].(map[string]interface{}); ok {
+
 			ev := em["work.link_type"].(string)
 			switch ev {
 			case "blocks", "BLOCKS":

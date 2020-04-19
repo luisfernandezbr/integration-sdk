@@ -673,6 +673,7 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 		o.State = val
 	} else {
 		if em, ok := kv["state"].(map[string]interface{}); ok {
+
 			ev := em["sourcecode.state"].(string)
 			switch ev {
 			case "approved", "APPROVED":

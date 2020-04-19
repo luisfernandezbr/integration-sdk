@@ -113,12 +113,12 @@ func (v CancelRequestCommand) String() string {
 }
 
 const (
-	// CancelRequestCommandEXPORT is the enumeration value for EXPORT
-	CancelRequestCommandEXPORT CancelRequestCommand = 0
-	// CancelRequestCommandONBOARD is the enumeration value for ONBOARD
-	CancelRequestCommandONBOARD CancelRequestCommand = 1
-	// CancelRequestCommandINTEGRATION is the enumeration value for INTEGRATION
-	CancelRequestCommandINTEGRATION CancelRequestCommand = 2
+	// CancelRequestCommandExport is the enumeration value for export
+	CancelRequestCommandExport CancelRequestCommand = 0
+	// CancelRequestCommandOnboard is the enumeration value for onboard
+	CancelRequestCommandOnboard CancelRequestCommand = 1
+	// CancelRequestCommandIntegration is the enumeration value for integration
+	CancelRequestCommandIntegration CancelRequestCommand = 2
 )
 
 // CancelRequestRequestDate represents the object structure for request_date
@@ -446,6 +446,7 @@ func (o *CancelRequest) FromMap(kv map[string]interface{}) {
 		o.Command = val
 	} else {
 		if em, ok := kv["command"].(map[string]interface{}); ok {
+
 			ev := em["agent.command"].(string)
 			switch ev {
 			case "export", "EXPORT":

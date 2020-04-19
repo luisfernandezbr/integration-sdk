@@ -744,6 +744,7 @@ func (o *ExportResponseIntegrations) FromMap(kv map[string]interface{}) {
 		o.ExportType = val
 	} else {
 		if em, ok := kv["export_type"].(map[string]interface{}); ok {
+
 			ev := em["agent.export_type"].(string)
 			switch ev {
 			case "historical", "HISTORICAL":
@@ -806,6 +807,7 @@ func (o *ExportResponseIntegrations) FromMap(kv map[string]interface{}) {
 		o.SystemType = val
 	} else {
 		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+
 			ev := em["agent.system_type"].(string)
 			switch ev {
 			case "work", "WORK":
@@ -2119,6 +2121,7 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		o.State = val
 	} else {
 		if em, ok := kv["state"].(map[string]interface{}); ok {
+
 			ev := em["agent.state"].(string)
 			switch ev {
 			case "starting", "STARTING":
@@ -2177,6 +2180,7 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
+
 			ev := em["agent.type"].(string)
 			switch ev {
 			case "enroll", "ENROLL":

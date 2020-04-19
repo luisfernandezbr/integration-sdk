@@ -367,10 +367,10 @@ func (v ProjectResponseProjectsError) String() string {
 }
 
 const (
-	// ProjectResponseProjectsErrorNONE is the enumeration value for NONE
-	ProjectResponseProjectsErrorNONE ProjectResponseProjectsError = 0
-	// ProjectResponseProjectsErrorPERMISSIONS is the enumeration value for PERMISSIONS
-	ProjectResponseProjectsErrorPERMISSIONS ProjectResponseProjectsError = 1
+	// ProjectResponseProjectsErrorNone is the enumeration value for none
+	ProjectResponseProjectsErrorNone ProjectResponseProjectsError = 0
+	// ProjectResponseProjectsErrorPermissions is the enumeration value for permissions
+	ProjectResponseProjectsErrorPermissions ProjectResponseProjectsError = 1
 )
 
 // ProjectResponseProjects represents the object structure for projects
@@ -499,6 +499,7 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 		o.Error = val
 	} else {
 		if em, ok := kv["error"].(map[string]interface{}); ok {
+
 			ev := em["agent.error"].(string)
 			switch ev {
 			case "none", "NONE":
@@ -1597,6 +1598,7 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
+
 			ev := em["agent.type"].(string)
 			switch ev {
 			case "enroll", "ENROLL":

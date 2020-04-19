@@ -470,10 +470,10 @@ func (v RepoResponseReposError) String() string {
 }
 
 const (
-	// RepoResponseReposErrorNONE is the enumeration value for NONE
-	RepoResponseReposErrorNONE RepoResponseReposError = 0
-	// RepoResponseReposErrorPERMISSIONS is the enumeration value for PERMISSIONS
-	RepoResponseReposErrorPERMISSIONS RepoResponseReposError = 1
+	// RepoResponseReposErrorNone is the enumeration value for none
+	RepoResponseReposErrorNone RepoResponseReposError = 0
+	// RepoResponseReposErrorPermissions is the enumeration value for permissions
+	RepoResponseReposErrorPermissions RepoResponseReposError = 1
 )
 
 // RepoResponseRepos represents the object structure for repos
@@ -618,6 +618,7 @@ func (o *RepoResponseRepos) FromMap(kv map[string]interface{}) {
 		o.Error = val
 	} else {
 		if em, ok := kv["error"].(map[string]interface{}); ok {
+
 			ev := em["agent.error"].(string)
 			switch ev {
 			case "none", "NONE":
@@ -1658,6 +1659,7 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		o.Type = val
 	} else {
 		if em, ok := kv["type"].(map[string]interface{}); ok {
+
 			ev := em["agent.type"].(string)
 			switch ev {
 			case "enroll", "ENROLL":

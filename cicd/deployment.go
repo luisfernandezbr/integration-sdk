@@ -793,6 +793,7 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 		o.Environment = val
 	} else {
 		if em, ok := kv["environment"].(map[string]interface{}); ok {
+
 			ev := em["cicd.environment"].(string)
 			switch ev {
 			case "production", "PRODUCTION":
@@ -944,6 +945,7 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 		o.Status = val
 	} else {
 		if em, ok := kv["status"].(map[string]interface{}); ok {
+
 			ev := em["cicd.status"].(string)
 			switch ev {
 			case "pass", "PASS":
