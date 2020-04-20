@@ -109,6 +109,7 @@ func toEventEndDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *EventEndDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -208,6 +209,7 @@ func toEventLocationObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *EventLocation) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -315,6 +317,7 @@ func toEventOwnerObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *EventOwner) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -484,6 +487,7 @@ func toEventParticipantsObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *EventParticipants) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -604,6 +608,7 @@ func toEventStartDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *EventStartDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

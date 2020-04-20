@@ -197,6 +197,7 @@ func toWebappIntegrationMutationRequestRequestDateObject(o interface{}, isoption
 	}
 }
 
+// ToMap returns the object as a map
 func (o *WebappIntegrationMutationRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

@@ -141,6 +141,7 @@ func toCancelRequestRequestDateObject(o interface{}, isoptional bool) interface{
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CancelRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

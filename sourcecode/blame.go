@@ -113,6 +113,7 @@ func toBlameChangeDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *BlameChangeDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -218,6 +219,7 @@ func toBlameLinesObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *BlameLines) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

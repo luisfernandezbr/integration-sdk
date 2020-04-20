@@ -85,6 +85,7 @@ func toPullRequestCommitCreatedDateObject(o interface{}, isoptional bool) interf
 	}
 }
 
+// ToMap returns the object as a map
 func (o *PullRequestCommitCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

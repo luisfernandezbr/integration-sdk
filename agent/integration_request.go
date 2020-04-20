@@ -239,6 +239,7 @@ func toIntegrationRequestIntegrationAuthorizationObject(o interface{}, isoptiona
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -522,6 +523,7 @@ func toIntegrationRequestIntegrationEntityErrorsObject(o interface{}, isoptional
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationEntityErrors) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -631,6 +633,7 @@ func toIntegrationRequestIntegrationLastExportCompletedDateObject(o interface{},
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationLastExportCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -730,6 +733,7 @@ func toIntegrationRequestIntegrationLastExportRequestedDateObject(o interface{},
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationLastExportRequestedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -829,6 +833,7 @@ func toIntegrationRequestIntegrationLastProcessingCompletedDateObject(o interfac
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationLastProcessingCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -928,6 +933,7 @@ func toIntegrationRequestIntegrationLastProcessingStartedDateObject(o interface{
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationLastProcessingStartedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1087,6 +1093,7 @@ func toIntegrationRequestIntegrationOnboardCompletedDateObject(o interface{}, is
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationOnboardCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1186,6 +1193,7 @@ func toIntegrationRequestIntegrationOnboardRequestedDateObject(o interface{}, is
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationOnboardRequestedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1445,6 +1453,7 @@ func toIntegrationRequestIntegrationThrottledUntilObject(o interface{}, isoption
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationThrottledUntil) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1544,6 +1553,7 @@ func toIntegrationRequestIntegrationValidatedDateObject(o interface{}, isoptiona
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1748,6 +1758,7 @@ func toIntegrationRequestIntegrationObject(o interface{}, isoptional bool) inter
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -2745,6 +2756,7 @@ func toIntegrationRequestRequestDateObject(o interface{}, isoptional bool) inter
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -3154,25 +3166,6 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

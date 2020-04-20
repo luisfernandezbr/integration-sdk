@@ -115,6 +115,7 @@ func toIntegrationResponseEventDateObject(o interface{}, isoptional bool) interf
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -214,6 +215,7 @@ func toIntegrationResponseLastExportDateObject(o interface{}, isoptional bool) i
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

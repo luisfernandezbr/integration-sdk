@@ -125,6 +125,7 @@ func toPullRequestClosedDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *PullRequestClosedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -224,6 +225,7 @@ func toPullRequestCreatedDateObject(o interface{}, isoptional bool) interface{} 
 	}
 }
 
+// ToMap returns the object as a map
 func (o *PullRequestCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -323,6 +325,7 @@ func toPullRequestMergedDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *PullRequestMergedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -512,6 +515,7 @@ func toPullRequestUpdatedDateObject(o interface{}, isoptional bool) interface{} 
 	}
 }
 
+// ToMap returns the object as a map
 func (o *PullRequestUpdatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

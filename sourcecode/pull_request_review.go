@@ -77,6 +77,7 @@ func toPullRequestReviewCreatedDateObject(o interface{}, isoptional bool) interf
 	}
 }
 
+// ToMap returns the object as a map
 func (o *PullRequestReviewCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

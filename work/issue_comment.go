@@ -83,6 +83,7 @@ func toIssueCommentCreatedDateObject(o interface{}, isoptional bool) interface{}
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueCommentCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -182,6 +183,7 @@ func toIssueCommentUpdatedDateObject(o interface{}, isoptional bool) interface{}
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueCommentUpdatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

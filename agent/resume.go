@@ -115,6 +115,7 @@ func toResumeEventDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *ResumeEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -214,6 +215,7 @@ func toResumeLastExportDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *ResumeLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

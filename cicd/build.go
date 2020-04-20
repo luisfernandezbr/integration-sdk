@@ -87,6 +87,7 @@ func toBuildEndDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *BuildEndDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -286,6 +287,7 @@ func toBuildStartDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *BuildStartDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

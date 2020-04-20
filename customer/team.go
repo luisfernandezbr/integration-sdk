@@ -114,6 +114,7 @@ func toTeamDeletedDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *TeamDeletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -348,6 +349,7 @@ func toTeamUsersObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *TeamUsers) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1584,7 +1586,7 @@ func FindTeams(client graphql.Client, input *TeamQueryInput) (*TeamConnection, e
 // FindTeamsPaginatedCallback is a callback function for handling each page
 type FindTeamsPaginatedCallback func(conn *TeamConnection) (bool, error)
 
-// FindTeams will query for any Teams matching the query and return each page callback
+// FindTeamsPaginated will query for any Teams matching the query and return each page callback
 func FindTeamsPaginated(client graphql.Client, query *TeamQuery, pageSize int64, callback FindTeamsPaginatedCallback) error {
 	input := &TeamQueryInput{
 		First: &pageSize,

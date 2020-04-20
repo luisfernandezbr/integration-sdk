@@ -113,6 +113,7 @@ func toEnrollResponseEventDateObject(o interface{}, isoptional bool) interface{}
 	}
 }
 
+// ToMap returns the object as a map
 func (o *EnrollResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -212,6 +213,7 @@ func toEnrollResponseLastExportDateObject(o interface{}, isoptional bool) interf
 	}
 }
 
+// ToMap returns the object as a map
 func (o *EnrollResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

@@ -239,6 +239,7 @@ func toRepoRequestIntegrationAuthorizationObject(o interface{}, isoptional bool)
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -522,6 +523,7 @@ func toRepoRequestIntegrationEntityErrorsObject(o interface{}, isoptional bool) 
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationEntityErrors) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -631,6 +633,7 @@ func toRepoRequestIntegrationLastExportCompletedDateObject(o interface{}, isopti
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationLastExportCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -730,6 +733,7 @@ func toRepoRequestIntegrationLastExportRequestedDateObject(o interface{}, isopti
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationLastExportRequestedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -829,6 +833,7 @@ func toRepoRequestIntegrationLastProcessingCompletedDateObject(o interface{}, is
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationLastProcessingCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -928,6 +933,7 @@ func toRepoRequestIntegrationLastProcessingStartedDateObject(o interface{}, isop
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationLastProcessingStartedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1087,6 +1093,7 @@ func toRepoRequestIntegrationOnboardCompletedDateObject(o interface{}, isoptiona
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationOnboardCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1186,6 +1193,7 @@ func toRepoRequestIntegrationOnboardRequestedDateObject(o interface{}, isoptiona
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationOnboardRequestedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1445,6 +1453,7 @@ func toRepoRequestIntegrationThrottledUntilObject(o interface{}, isoptional bool
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationThrottledUntil) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1544,6 +1553,7 @@ func toRepoRequestIntegrationValidatedDateObject(o interface{}, isoptional bool)
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1748,6 +1758,7 @@ func toRepoRequestIntegrationObject(o interface{}, isoptional bool) interface{} 
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestIntegration) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -2745,6 +2756,7 @@ func toRepoRequestRequestDateObject(o interface{}, isoptional bool) interface{} 
 	}
 }
 
+// ToMap returns the object as a map
 func (o *RepoRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -3154,25 +3166,6 @@ func (o *RepoRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

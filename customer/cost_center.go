@@ -641,7 +641,7 @@ func FindCostCenters(client graphql.Client, input *CostCenterQueryInput) (*CostC
 // FindCostCentersPaginatedCallback is a callback function for handling each page
 type FindCostCentersPaginatedCallback func(conn *CostCenterConnection) (bool, error)
 
-// FindCostCenters will query for any CostCenters matching the query and return each page callback
+// FindCostCentersPaginated will query for any CostCenters matching the query and return each page callback
 func FindCostCentersPaginated(client graphql.Client, query *CostCenterQuery, pageSize int64, callback FindCostCentersPaginatedCallback) error {
 	input := &CostCenterQueryInput{
 		First: &pageSize,

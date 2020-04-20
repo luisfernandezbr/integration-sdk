@@ -135,6 +135,7 @@ func toProjectResponseEventDateObject(o interface{}, isoptional bool) interface{
 	}
 }
 
+// ToMap returns the object as a map
 func (o *ProjectResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -234,6 +235,7 @@ func toProjectResponseLastExportDateObject(o interface{}, isoptional bool) inter
 	}
 }
 
+// ToMap returns the object as a map
 func (o *ProjectResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -408,6 +410,7 @@ func toProjectResponseProjectsObject(o interface{}, isoptional bool) interface{}
 	}
 }
 
+// ToMap returns the object as a map
 func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

@@ -205,6 +205,7 @@ func toIssueAttachmentsCreatedDateObject(o interface{}, isoptional bool) interfa
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueAttachmentsCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -317,6 +318,7 @@ func toIssueAttachmentsObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueAttachments) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -544,6 +546,7 @@ func toIssueChangeLogCreatedDateObject(o interface{}, isoptional bool) interface
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueChangeLogCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -841,6 +844,7 @@ func toIssueChangeLogObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueChangeLog) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1141,6 +1145,7 @@ func toIssueCreatedDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1240,6 +1245,7 @@ func toIssueDueDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueDueDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1438,6 +1444,7 @@ func toIssueLinkedIssuesObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueLinkedIssues) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1620,6 +1627,7 @@ func toIssuePlannedEndDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssuePlannedEndDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1719,6 +1727,7 @@ func toIssuePlannedStartDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssuePlannedStartDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1818,6 +1827,7 @@ func toIssueUpdatedDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IssueUpdatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

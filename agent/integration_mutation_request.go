@@ -223,6 +223,7 @@ func toIntegrationMutationRequestAgentRequestSentDateObject(o interface{}, isopt
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationRequestAgentRequestSentDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -322,6 +323,7 @@ func toIntegrationMutationRequestAuthorizationObject(o interface{}, isoptional b
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationRequestAuthorization) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -429,6 +431,7 @@ func toIntegrationMutationRequestRequestDateObject(o interface{}, isoptional boo
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -608,6 +611,7 @@ func toIntegrationMutationRequestWebappRequestDateObject(o interface{}, isoption
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationRequestWebappRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1185,25 +1189,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

@@ -239,6 +239,7 @@ func toCodequalityRequestIntegrationAuthorizationObject(o interface{}, isoptiona
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationAuthorization) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -522,6 +523,7 @@ func toCodequalityRequestIntegrationEntityErrorsObject(o interface{}, isoptional
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationEntityErrors) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -631,6 +633,7 @@ func toCodequalityRequestIntegrationLastExportCompletedDateObject(o interface{},
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationLastExportCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -730,6 +733,7 @@ func toCodequalityRequestIntegrationLastExportRequestedDateObject(o interface{},
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationLastExportRequestedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -829,6 +833,7 @@ func toCodequalityRequestIntegrationLastProcessingCompletedDateObject(o interfac
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationLastProcessingCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -928,6 +933,7 @@ func toCodequalityRequestIntegrationLastProcessingStartedDateObject(o interface{
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationLastProcessingStartedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1087,6 +1093,7 @@ func toCodequalityRequestIntegrationOnboardCompletedDateObject(o interface{}, is
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationOnboardCompletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1186,6 +1193,7 @@ func toCodequalityRequestIntegrationOnboardRequestedDateObject(o interface{}, is
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationOnboardRequestedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1445,6 +1453,7 @@ func toCodequalityRequestIntegrationThrottledUntilObject(o interface{}, isoption
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationThrottledUntil) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1544,6 +1553,7 @@ func toCodequalityRequestIntegrationValidatedDateObject(o interface{}, isoptiona
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegrationValidatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1748,6 +1758,7 @@ func toCodequalityRequestIntegrationObject(o interface{}, isoptional bool) inter
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestIntegration) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -2745,6 +2756,7 @@ func toCodequalityRequestRequestDateObject(o interface{}, isoptional bool) inter
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityRequestRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

@@ -83,6 +83,7 @@ func toPullRequestCommentCreatedDateObject(o interface{}, isoptional bool) inter
 	}
 }
 
+// ToMap returns the object as a map
 func (o *PullRequestCommentCreatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -182,6 +183,7 @@ func toPullRequestCommentUpdatedDateObject(o interface{}, isoptional bool) inter
 	}
 }
 
+// ToMap returns the object as a map
 func (o *PullRequestCommentUpdatedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

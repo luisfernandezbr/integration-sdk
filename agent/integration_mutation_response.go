@@ -151,6 +151,7 @@ func toIntegrationMutationResponseAgentReceivedRequestDateObject(o interface{}, 
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationResponseAgentReceivedRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -250,6 +251,7 @@ func toIntegrationMutationResponseAgentRequestSentDateObject(o interface{}, isop
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationResponseAgentRequestSentDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -349,6 +351,7 @@ func toIntegrationMutationResponseAgentResponseSentDateObject(o interface{}, iso
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationResponseAgentResponseSentDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -518,6 +521,7 @@ func toIntegrationMutationResponseEventDateObject(o interface{}, isoptional bool
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -617,6 +621,7 @@ func toIntegrationMutationResponseLastExportDateObject(o interface{}, isoptional
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -916,6 +921,7 @@ func toIntegrationMutationResponseWebappRequestDateObject(o interface{}, isoptio
 	}
 }
 
+// ToMap returns the object as a map
 func (o *IntegrationMutationResponseWebappRequestDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

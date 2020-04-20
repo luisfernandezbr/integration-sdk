@@ -129,6 +129,7 @@ func toCodequalityResponseEventDateObject(o interface{}, isoptional bool) interf
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -228,6 +229,7 @@ func toCodequalityResponseLastExportDateObject(o interface{}, isoptional bool) i
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -333,6 +335,7 @@ func toCodequalityResponseProjectsObject(o interface{}, isoptional bool) interfa
 	}
 }
 
+// ToMap returns the object as a map
 func (o *CodequalityResponseProjects) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

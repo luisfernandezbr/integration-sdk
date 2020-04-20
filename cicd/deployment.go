@@ -89,6 +89,7 @@ func toDeploymentEndDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *DeploymentEndDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -288,6 +289,7 @@ func toDeploymentStartDateObject(o interface{}, isoptional bool) interface{} {
 	}
 }
 
+// ToMap returns the object as a map
 func (o *DeploymentStartDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{

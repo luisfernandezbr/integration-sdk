@@ -149,6 +149,7 @@ func toWorkStatusResponseEventDateObject(o interface{}, isoptional bool) interfa
 	}
 }
 
+// ToMap returns the object as a map
 func (o *WorkStatusResponseEventDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -248,6 +249,7 @@ func toWorkStatusResponseLastExportDateObject(o interface{}, isoptional bool) in
 	}
 }
 
+// ToMap returns the object as a map
 func (o *WorkStatusResponseLastExportDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -553,6 +555,7 @@ func toWorkStatusResponseWorkConfigStatusesObject(o interface{}, isoptional bool
 	}
 }
 
+// ToMap returns the object as a map
 func (o *WorkStatusResponseWorkConfigStatuses) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -912,6 +915,7 @@ func toWorkStatusResponseWorkConfigTopLevelIssueObject(o interface{}, isoptional
 	}
 }
 
+// ToMap returns the object as a map
 func (o *WorkStatusResponseWorkConfigTopLevelIssue) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
@@ -1012,6 +1016,7 @@ func toWorkStatusResponseWorkConfigObject(o interface{}, isoptional bool) interf
 	}
 }
 
+// ToMap returns the object as a map
 func (o *WorkStatusResponseWorkConfig) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
