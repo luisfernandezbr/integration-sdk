@@ -10,6 +10,7 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
@@ -17,6 +18,8 @@ import (
 )
 
 const (
+	// CalendarTopic is the default topic name
+	CalendarTopic datamodel.TopicNameType = "calendar_Calendar"
 
 	// CalendarTable is the default table name
 	CalendarTable datamodel.ModelNameType = "calendar_calendar"
@@ -40,6 +43,8 @@ const (
 	CalendarModelRefIDColumn = "ref_id"
 	// CalendarModelRefTypeColumn is the column json value ref_type
 	CalendarModelRefTypeColumn = "ref_type"
+	// CalendarModelUpdatedAtColumn is the column json value updated_ts
+	CalendarModelUpdatedAtColumn = "updated_ts"
 	// CalendarModelUserRefIDColumn is the column json value user_ref_id
 	CalendarModelUserRefIDColumn = "user_ref_id"
 )
@@ -60,6 +65,8 @@ type Calendar struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the record type
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// UserRefID the user ref_id that owns the calendar
 	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -89,7 +96,7 @@ func (o *Calendar) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Calendar) GetTopicName() datamodel.TopicNameType {
-	return ""
+	return CalendarTopic
 }
 
 // GetStreamName returns the name of the stream
@@ -133,12 +140,29 @@ func (o *Calendar) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Calendar) GetTopicKey() string {
-	return ""
+	var i interface{} = o.ID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Calendar) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.CustomerID
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Calendar")
 }
 
 // GetRefID returns the RefID for the object
@@ -163,12 +187,39 @@ func (o *Calendar) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Calendar) IsEvented() bool {
-	return false
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Calendar) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CalendarModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Calendar) GetTopicConfig() *datamodel.ModelTopicConfig {
-	return nil
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "id",
+		Timestamp:         "customer_id",
+		NumPartitions:     128,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -247,6 +298,7 @@ func (o *Calendar) ToMap() map[string]interface{} {
 		"name":        toCalendarObject(o.Name, false),
 		"ref_id":      toCalendarObject(o.RefID, false),
 		"ref_type":    toCalendarObject(o.RefType, false),
+		"updated_ts":  toCalendarObject(o.UpdatedAt, false),
 		"user_ref_id": toCalendarObject(o.UserRefID, false),
 		"hashcode":    toCalendarObject(o.Hashcode, false),
 	}
@@ -394,6 +446,21 @@ func (o *Calendar) FromMap(kv map[string]interface{}) {
 		}
 	}
 
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
+
 	if val, ok := kv["user_ref_id"].(string); ok {
 		o.UserRefID = val
 	} else {
@@ -426,6 +493,7 @@ func (o *Calendar) Hash() string {
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.UpdatedAt)
 	args = append(args, o.UserRefID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode

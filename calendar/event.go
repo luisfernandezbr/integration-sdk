@@ -22,6 +22,8 @@ import (
 )
 
 const (
+	// EventTopic is the default topic name
+	EventTopic datamodel.TopicNameType = "calendar_Event"
 
 	// EventTable is the default table name
 	EventTable datamodel.ModelNameType = "calendar_event"
@@ -81,6 +83,8 @@ const (
 	EventModelStartDateRfc3339Column = "rfc3339"
 	// EventModelStatusColumn is the column json value status
 	EventModelStatusColumn = "status"
+	// EventModelUpdatedAtColumn is the column json value updated_ts
+	EventModelUpdatedAtColumn = "updated_ts"
 )
 
 // EventEndDate represents the object structure for end_date
@@ -673,6 +677,8 @@ type Event struct {
 	StartDate EventStartDate `json:"start_date" codec:"start_date" bson:"start_date" yaml:"start_date" faker:"-"`
 	// Status the status of the user in this event
 	Status EventStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -706,6 +712,7 @@ func toEventObject(o interface{}, isoptional bool) interface{} {
 
 	case EventStatus:
 		return v.String()
+
 	default:
 		return o
 	}
@@ -718,7 +725,7 @@ func (o *Event) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Event) GetTopicName() datamodel.TopicNameType {
-	return ""
+	return EventTopic
 }
 
 // GetStreamName returns the name of the stream
@@ -765,12 +772,29 @@ func (o *Event) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Event) GetTopicKey() string {
-	return ""
+	var i interface{} = o.ID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Event) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.CustomerID
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Event")
 }
 
 // GetRefID returns the RefID for the object
@@ -795,12 +819,39 @@ func (o *Event) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Event) IsEvented() bool {
-	return false
+	return true
+}
+
+// SetEventHeaders will set any event headers for the object instance
+func (o *Event) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = EventModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
 func (o *Event) GetTopicConfig() *datamodel.ModelTopicConfig {
-	return nil
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "id",
+		Timestamp:         "customer_id",
+		NumPartitions:     128,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -886,8 +937,9 @@ func (o *Event) ToMap() map[string]interface{} {
 		"ref_type":     toEventObject(o.RefType, false),
 		"start_date":   toEventObject(o.StartDate, false),
 
-		"status":   o.Status.String(),
-		"hashcode": toEventObject(o.Hashcode, false),
+		"status":     o.Status.String(),
+		"updated_ts": toEventObject(o.UpdatedAt, false),
+		"hashcode":   toEventObject(o.Hashcode, false),
 	}
 }
 
@@ -1242,6 +1294,21 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1262,6 +1329,7 @@ func (o *Event) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.StartDate)
 	args = append(args, o.Status)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

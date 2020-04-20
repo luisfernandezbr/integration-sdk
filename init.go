@@ -300,6 +300,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
+	case "calendar_Calendar":
+		o := new(dm_calendar.Calendar)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "calendar_Event":
+		o := new(dm_calendar.Event)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "calendar_User":
 		o := new(dm_calendar.User)
 		o.FromMap(map[string]interface{}{})
@@ -336,6 +344,8 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured to be evented
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
+		datamodel.TopicNameType("calendar_Calendar"),
+		datamodel.TopicNameType("calendar_Event"),
 		datamodel.TopicNameType("calendar_User"),
 		datamodel.TopicNameType("sourcecode_Repo"),
 		datamodel.TopicNameType("sourcecode_User"),
