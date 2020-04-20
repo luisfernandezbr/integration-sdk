@@ -149,7 +149,7 @@ func (o *Calendar) GetTopicKey() string {
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Calendar) GetTimestamp() time.Time {
-	var dt interface{} = o.CustomerID
+	var dt interface{} = o.UpdatedAt
 	switch v := dt.(type) {
 	case int64:
 		return datetime.DateFromEpoch(v).UTC()
@@ -212,7 +212,7 @@ func (o *Calendar) GetTopicConfig() *datamodel.ModelTopicConfig {
 	}
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
-		Timestamp:         "customer_id",
+		Timestamp:         "updated_ts",
 		NumPartitions:     128,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
