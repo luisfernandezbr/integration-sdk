@@ -197,6 +197,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_calendar.Event)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "calendar.User":
+		o := new(dm_calendar.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "cicd.Build":
 		o := new(dm_cicd.Build)
 		o.FromMap(map[string]interface{}{})
@@ -296,6 +300,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
+	case "calendar_User":
+		o := new(dm_calendar.User)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_Repo":
 		o := new(dm_sourcecode.Repo)
 		o.FromMap(map[string]interface{}{})
@@ -328,6 +336,7 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured to be evented
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
+		datamodel.TopicNameType("calendar_User"),
 		datamodel.TopicNameType("sourcecode_Repo"),
 		datamodel.TopicNameType("sourcecode_User"),
 		datamodel.TopicNameType("work_Project"),
@@ -384,6 +393,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.WorkStatusTrigger"),
 		datamodel.ModelNameType("calendar.Calendar"),
 		datamodel.ModelNameType("calendar.Event"),
+		datamodel.ModelNameType("calendar.User"),
 		datamodel.ModelNameType("cicd.Build"),
 		datamodel.ModelNameType("cicd.Deployment"),
 		datamodel.ModelNameType("codequality.Metric"),

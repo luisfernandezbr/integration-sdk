@@ -59,20 +59,14 @@ const (
 	EventModelLocationURLColumn = "url"
 	// EventModelNameColumn is the column json value name
 	EventModelNameColumn = "name"
-	// EventModelOwnerColumn is the column json value owner
-	EventModelOwnerColumn = "owner"
-	// EventModelOwnerEmailColumn is the column json value email
-	EventModelOwnerEmailColumn = "email"
-	// EventModelOwnerNameColumn is the column json value name
-	EventModelOwnerNameColumn = "name"
+	// EventModelOwnerRefIDColumn is the column json value owner_ref_id
+	EventModelOwnerRefIDColumn = "owner_ref_id"
 	// EventModelParticipantsColumn is the column json value participants
 	EventModelParticipantsColumn = "participants"
-	// EventModelParticipantsEmailColumn is the column json value email
-	EventModelParticipantsEmailColumn = "email"
-	// EventModelParticipantsNameColumn is the column json value name
-	EventModelParticipantsNameColumn = "name"
 	// EventModelParticipantsStatusColumn is the column json value status
 	EventModelParticipantsStatusColumn = "status"
+	// EventModelParticipantsUserRefIDColumn is the column json value user_ref_id
+	EventModelParticipantsUserRefIDColumn = "user_ref_id"
 	// EventModelRefIDColumn is the column json value ref_id
 	EventModelRefIDColumn = "ref_id"
 	// EventModelRefTypeColumn is the column json value ref_type
@@ -191,7 +185,7 @@ func (o *EventEndDate) FromMap(kv map[string]interface{}) {
 
 // EventLocation represents the object structure for location
 type EventLocation struct {
-	// Details raw data from the location property of the event api
+	// Details raw data from the location property the calendar
 	Details string `json:"details" codec:"details" bson:"details" yaml:"details" faker:"-"`
 	// Name the name of the place
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
@@ -213,7 +207,7 @@ func toEventLocationObject(o interface{}, isoptional bool) interface{} {
 func (o *EventLocation) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// Details raw data from the location property of the event api
+		// Details raw data from the location property the calendar
 		"details": toEventLocationObject(o.Details, false),
 		// Name the name of the place
 		"name": toEventLocationObject(o.Name, false),
@@ -293,92 +287,6 @@ func (o *EventLocation) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.URL = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// EventOwner represents the object structure for owner
-type EventOwner struct {
-	// Email email of the owner
-	Email string `json:"email" codec:"email" bson:"email" yaml:"email" faker:"-"`
-	// Name the name of the owner
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
-}
-
-func toEventOwnerObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *EventOwner:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *EventOwner) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Email email of the owner
-		"email": toEventOwnerObject(o.Email, false),
-		// Name the name of the owner
-		"name": toEventOwnerObject(o.Name, false),
-	}
-}
-
-func (o *EventOwner) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *EventOwner) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["email"].(string); ok {
-		o.Email = val
-	} else {
-		if val, ok := kv["email"]; ok {
-			if val == nil {
-				o.Email = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Email = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Name = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -467,12 +375,10 @@ const (
 
 // EventParticipants represents the object structure for participants
 type EventParticipants struct {
-	// Email email of the participant
-	Email string `json:"email" codec:"email" bson:"email" yaml:"email" faker:"-"`
-	// Name the name of the participant
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// Status the status of the participant
 	Status EventParticipantsStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
+	// UserRefID the user ref_id of the participant
+	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 }
 
 func toEventParticipantsObject(o interface{}, isoptional bool) interface{} {
@@ -482,6 +388,7 @@ func toEventParticipantsObject(o interface{}, isoptional bool) interface{} {
 
 	case EventParticipantsStatus:
 		return v.String()
+
 	default:
 		return o
 	}
@@ -491,12 +398,10 @@ func toEventParticipantsObject(o interface{}, isoptional bool) interface{} {
 func (o *EventParticipants) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// Email email of the participant
-		"email": toEventParticipantsObject(o.Email, false),
-		// Name the name of the participant
-		"name": toEventParticipantsObject(o.Name, false),
 		// Status the status of the participant
 		"status": toEventParticipantsObject(o.Status, false),
+		// UserRefID the user ref_id of the participant
+		"user_ref_id": toEventParticipantsObject(o.UserRefID, false),
 	}
 }
 
@@ -513,46 +418,6 @@ func (o *EventParticipants) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["email"].(string); ok {
-		o.Email = val
-	} else {
-		if val, ok := kv["email"]; ok {
-			if val == nil {
-				o.Email = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Email = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Name = fmt.Sprintf("%v", val)
-			}
-		}
 	}
 
 	if val, ok := kv["status"].(EventParticipantsStatus); ok {
@@ -582,6 +447,26 @@ func (o *EventParticipants) FromMap(kv map[string]interface{}) {
 				o.Status = 2
 			case "not_going", "NOT_GOING":
 				o.Status = 3
+			}
+		}
+	}
+
+	if val, ok := kv["user_ref_id"].(string); ok {
+		o.UserRefID = val
+	} else {
+		if val, ok := kv["user_ref_id"]; ok {
+			if val == nil {
+				o.UserRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.UserRefID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -776,8 +661,8 @@ type Event struct {
 	Location EventLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name the name of the event
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
-	// Owner owner of the event
-	Owner EventOwner `json:"owner" codec:"owner" bson:"owner" yaml:"owner" faker:"-"`
+	// OwnerRefID owner ref_id of the event
+	OwnerRefID string `json:"owner_ref_id" codec:"owner_ref_id" bson:"owner_ref_id" yaml:"owner_ref_id" faker:"-"`
 	// Participants participants of the event
 	Participants []EventParticipants `json:"participants" codec:"participants" bson:"participants" yaml:"participants" faker:"-"`
 	// RefID the calendar ID
@@ -807,9 +692,6 @@ func toEventObject(o interface{}, isoptional bool) interface{} {
 		return v.ToMap()
 
 	case EventLocation:
-		return v.ToMap()
-
-	case EventOwner:
 		return v.ToMap()
 
 	case []EventParticipants:
@@ -998,7 +880,7 @@ func (o *Event) ToMap() map[string]interface{} {
 		"id":           toEventObject(o.ID, false),
 		"location":     toEventObject(o.Location, false),
 		"name":         toEventObject(o.Name, false),
-		"owner":        toEventObject(o.Owner, false),
+		"owner_ref_id": toEventObject(o.OwnerRefID, false),
 		"participants": toEventObject(o.Participants, false),
 		"ref_id":       toEventObject(o.RefID, false),
 		"ref_type":     toEventObject(o.RefType, false),
@@ -1178,18 +1060,24 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["owner"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.Owner.FromMap(kv)
-		} else if sv, ok := val.(EventOwner); ok {
-			// struct
-			o.Owner = sv
-		} else if sp, ok := val.(*EventOwner); ok {
-			// struct pointer
-			o.Owner = *sp
-		}
+	if val, ok := kv["owner_ref_id"].(string); ok {
+		o.OwnerRefID = val
 	} else {
-		o.Owner.FromMap(map[string]interface{}{})
+		if val, ok := kv["owner_ref_id"]; ok {
+			if val == nil {
+				o.OwnerRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.OwnerRefID = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 
 	if o == nil {
@@ -1368,7 +1256,7 @@ func (o *Event) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.Location)
 	args = append(args, o.Name)
-	args = append(args, o.Owner)
+	args = append(args, o.OwnerRefID)
 	args = append(args, o.Participants)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

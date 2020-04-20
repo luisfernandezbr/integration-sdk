@@ -45,6 +45,8 @@ const (
 	CalendarResponseModelCalendarsRefIDColumn = "ref_id"
 	// CalendarResponseModelCalendarsRefTypeColumn is the column json value ref_type
 	CalendarResponseModelCalendarsRefTypeColumn = "ref_type"
+	// CalendarResponseModelCalendarsUserRefIDColumn is the column json value user_ref_id
+	CalendarResponseModelCalendarsUserRefIDColumn = "user_ref_id"
 	// CalendarResponseModelCustomerIDColumn is the column json value customer_id
 	CalendarResponseModelCustomerIDColumn = "customer_id"
 	// CalendarResponseModelDataColumn is the column json value data
@@ -119,6 +121,8 @@ type CalendarResponseCalendars struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the record type
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// UserRefID the user ref_id that owns the calendar
+	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
 }
 
 func toCalendarResponseCalendarsObject(o interface{}, isoptional bool) interface{} {
@@ -145,6 +149,8 @@ func (o *CalendarResponseCalendars) ToMap() map[string]interface{} {
 		"ref_id": toCalendarResponseCalendarsObject(o.RefID, false),
 		// RefType the record type
 		"ref_type": toCalendarResponseCalendarsObject(o.RefType, false),
+		// UserRefID the user ref_id that owns the calendar
+		"user_ref_id": toCalendarResponseCalendarsObject(o.UserRefID, false),
 	}
 }
 
@@ -251,6 +257,26 @@ func (o *CalendarResponseCalendars) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["user_ref_id"].(string); ok {
+		o.UserRefID = val
+	} else {
+		if val, ok := kv["user_ref_id"]; ok {
+			if val == nil {
+				o.UserRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.UserRefID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1117,6 +1143,25 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CalendarResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1226,6 +1271,25 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CalendarResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
