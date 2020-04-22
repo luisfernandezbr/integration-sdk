@@ -35,6 +35,8 @@ const (
 	CalendarModelCustomerIDColumn = "customer_id"
 	// CalendarModelDescriptionColumn is the column json value description
 	CalendarModelDescriptionColumn = "description"
+	// CalendarModelEnabledColumn is the column json value enabled
+	CalendarModelEnabledColumn = "enabled"
 	// CalendarModelIDColumn is the column json value id
 	CalendarModelIDColumn = "id"
 	// CalendarModelNameColumn is the column json value name
@@ -57,6 +59,8 @@ type Calendar struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the calendar
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
+	// Enabled Wether this user's calendar can be exported or not
+	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the calendar
@@ -294,6 +298,7 @@ func (o *Calendar) ToMap() map[string]interface{} {
 		"active":      toCalendarObject(o.Active, false),
 		"customer_id": toCalendarObject(o.CustomerID, false),
 		"description": toCalendarObject(o.Description, false),
+		"enabled":     toCalendarObject(o.Enabled, false),
 		"id":          toCalendarObject(o.ID, false),
 		"name":        toCalendarObject(o.Name, false),
 		"ref_id":      toCalendarObject(o.RefID, false),
@@ -362,6 +367,18 @@ func (o *Calendar) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["enabled"].(bool); ok {
+		o.Enabled = val
+	} else {
+		if val, ok := kv["enabled"]; ok {
+			if val == nil {
+				o.Enabled = false
+			} else {
+				o.Enabled = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -489,6 +506,7 @@ func (o *Calendar) Hash() string {
 	args = append(args, o.Active)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
+	args = append(args, o.Enabled)
 	args = append(args, o.ID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)

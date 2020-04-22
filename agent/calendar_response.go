@@ -39,6 +39,8 @@ const (
 	CalendarResponseModelCalendarsActiveColumn = "active"
 	// CalendarResponseModelCalendarsDescriptionColumn is the column json value description
 	CalendarResponseModelCalendarsDescriptionColumn = "description"
+	// CalendarResponseModelCalendarsEnabledColumn is the column json value enabled
+	CalendarResponseModelCalendarsEnabledColumn = "enabled"
 	// CalendarResponseModelCalendarsNameColumn is the column json value name
 	CalendarResponseModelCalendarsNameColumn = "name"
 	// CalendarResponseModelCalendarsRefIDColumn is the column json value ref_id
@@ -115,6 +117,8 @@ type CalendarResponseCalendars struct {
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Description the description of the calendar
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
+	// Enabled Wether this user's calendar can be exported or not
+	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
 	// Name the name of the calendar
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the calendar ID
@@ -143,6 +147,8 @@ func (o *CalendarResponseCalendars) ToMap() map[string]interface{} {
 		"active": toCalendarResponseCalendarsObject(o.Active, false),
 		// Description the description of the calendar
 		"description": toCalendarResponseCalendarsObject(o.Description, false),
+		// Enabled Wether this user's calendar can be exported or not
+		"enabled": toCalendarResponseCalendarsObject(o.Enabled, false),
 		// Name the name of the calendar
 		"name": toCalendarResponseCalendarsObject(o.Name, false),
 		// RefID the calendar ID
@@ -197,6 +203,18 @@ func (o *CalendarResponseCalendars) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["enabled"].(bool); ok {
+		o.Enabled = val
+	} else {
+		if val, ok := kv["enabled"]; ok {
+			if val == nil {
+				o.Enabled = false
+			} else {
+				o.Enabled = number.ToBoolAny(val)
 			}
 		}
 	}
