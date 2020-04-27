@@ -392,6 +392,24 @@ func (v ExportResponseIntegrationsExportType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *ExportResponseIntegrationsExportType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = ExportResponseIntegrationsExportType(int32(val))
+	case int:
+		*v = ExportResponseIntegrationsExportType(int32(val))
+	case string:
+		switch val {
+		case "HISTORICAL":
+			*v = ExportResponseIntegrationsExportType(0)
+		case "INCREMENTAL":
+			*v = ExportResponseIntegrationsExportType(1)
+		}
+	}
+	return nil
+}
+
 const (
 	// ExportResponseIntegrationsExportTypeHistorical is the enumeration value for historical
 	ExportResponseIntegrationsExportTypeHistorical ExportResponseIntegrationsExportType = 0
@@ -576,6 +594,28 @@ func (v ExportResponseIntegrationsSystemType) String() string {
 		return "USER"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *ExportResponseIntegrationsSystemType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = ExportResponseIntegrationsSystemType(int32(val))
+	case int:
+		*v = ExportResponseIntegrationsSystemType(int32(val))
+	case string:
+		switch val {
+		case "WORK":
+			*v = ExportResponseIntegrationsSystemType(0)
+		case "SOURCECODE":
+			*v = ExportResponseIntegrationsSystemType(1)
+		case "CODEQUALITY":
+			*v = ExportResponseIntegrationsSystemType(2)
+		case "USER":
+			*v = ExportResponseIntegrationsSystemType(3)
+		}
+	}
+	return nil
 }
 
 const (
@@ -1101,6 +1141,26 @@ func (v ExportResponseState) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *ExportResponseState) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = ExportResponseState(int32(val))
+	case int:
+		*v = ExportResponseState(int32(val))
+	case string:
+		switch val {
+		case "STARTING":
+			*v = ExportResponseState(0)
+		case "PROGRESS":
+			*v = ExportResponseState(1)
+		case "COMPLETED":
+			*v = ExportResponseState(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// ExportResponseStateStarting is the enumeration value for starting
 	ExportResponseStateStarting ExportResponseState = 0
@@ -1273,6 +1333,52 @@ func (v ExportResponseType) String() string {
 		return "RESUME"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *ExportResponseType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = ExportResponseType(int32(val))
+	case int:
+		*v = ExportResponseType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = ExportResponseType(0)
+		case "PING":
+			*v = ExportResponseType(1)
+		case "CRASH":
+			*v = ExportResponseType(2)
+		case "LOG":
+			*v = ExportResponseType(3)
+		case "INTEGRATION":
+			*v = ExportResponseType(4)
+		case "EXPORT":
+			*v = ExportResponseType(5)
+		case "PROJECT":
+			*v = ExportResponseType(6)
+		case "REPO":
+			*v = ExportResponseType(7)
+		case "USER":
+			*v = ExportResponseType(8)
+		case "CALENDAR":
+			*v = ExportResponseType(9)
+		case "UNINSTALL":
+			*v = ExportResponseType(10)
+		case "UPGRADE":
+			*v = ExportResponseType(11)
+		case "START":
+			*v = ExportResponseType(12)
+		case "STOP":
+			*v = ExportResponseType(13)
+		case "PAUSE":
+			*v = ExportResponseType(14)
+		case "RESUME":
+			*v = ExportResponseType(15)
+		}
+	}
+	return nil
 }
 
 const (
@@ -1768,6 +1874,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1940,6 +2065,25 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

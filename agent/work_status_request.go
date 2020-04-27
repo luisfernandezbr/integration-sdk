@@ -1066,6 +1066,24 @@ func (v WorkStatusRequestIntegrationLocation) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *WorkStatusRequestIntegrationLocation) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = WorkStatusRequestIntegrationLocation(int32(val))
+	case int:
+		*v = WorkStatusRequestIntegrationLocation(int32(val))
+	case string:
+		switch val {
+		case "PRIVATE":
+			*v = WorkStatusRequestIntegrationLocation(0)
+		case "CLOUD":
+			*v = WorkStatusRequestIntegrationLocation(1)
+		}
+	}
+	return nil
+}
+
 const (
 	// WorkStatusRequestIntegrationLocationPrivate is the enumeration value for private
 	WorkStatusRequestIntegrationLocationPrivate WorkStatusRequestIntegrationLocation = 0
@@ -1334,6 +1352,26 @@ func (v WorkStatusRequestIntegrationState) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *WorkStatusRequestIntegrationState) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = WorkStatusRequestIntegrationState(int32(val))
+	case int:
+		*v = WorkStatusRequestIntegrationState(int32(val))
+	case string:
+		switch val {
+		case "IDLE":
+			*v = WorkStatusRequestIntegrationState(0)
+		case "EXPORTING":
+			*v = WorkStatusRequestIntegrationState(1)
+		case "PROCESSING":
+			*v = WorkStatusRequestIntegrationState(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// WorkStatusRequestIntegrationStateIdle is the enumeration value for idle
 	WorkStatusRequestIntegrationStateIdle WorkStatusRequestIntegrationState = 0
@@ -1418,6 +1456,30 @@ func (v WorkStatusRequestIntegrationSystemType) String() string {
 		return "USER"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *WorkStatusRequestIntegrationSystemType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = WorkStatusRequestIntegrationSystemType(int32(val))
+	case int:
+		*v = WorkStatusRequestIntegrationSystemType(int32(val))
+	case string:
+		switch val {
+		case "WORK":
+			*v = WorkStatusRequestIntegrationSystemType(0)
+		case "SOURCECODE":
+			*v = WorkStatusRequestIntegrationSystemType(1)
+		case "CODEQUALITY":
+			*v = WorkStatusRequestIntegrationSystemType(2)
+		case "CALENDAR":
+			*v = WorkStatusRequestIntegrationSystemType(3)
+		case "USER":
+			*v = WorkStatusRequestIntegrationSystemType(4)
+		}
+	}
+	return nil
 }
 
 const (
@@ -3166,25 +3228,6 @@ func (o *WorkStatusRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

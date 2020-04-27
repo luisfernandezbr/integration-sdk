@@ -1066,6 +1066,24 @@ func (v IntegrationRequestIntegrationLocation) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *IntegrationRequestIntegrationLocation) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IntegrationRequestIntegrationLocation(int32(val))
+	case int:
+		*v = IntegrationRequestIntegrationLocation(int32(val))
+	case string:
+		switch val {
+		case "PRIVATE":
+			*v = IntegrationRequestIntegrationLocation(0)
+		case "CLOUD":
+			*v = IntegrationRequestIntegrationLocation(1)
+		}
+	}
+	return nil
+}
+
 const (
 	// IntegrationRequestIntegrationLocationPrivate is the enumeration value for private
 	IntegrationRequestIntegrationLocationPrivate IntegrationRequestIntegrationLocation = 0
@@ -1334,6 +1352,26 @@ func (v IntegrationRequestIntegrationState) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *IntegrationRequestIntegrationState) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IntegrationRequestIntegrationState(int32(val))
+	case int:
+		*v = IntegrationRequestIntegrationState(int32(val))
+	case string:
+		switch val {
+		case "IDLE":
+			*v = IntegrationRequestIntegrationState(0)
+		case "EXPORTING":
+			*v = IntegrationRequestIntegrationState(1)
+		case "PROCESSING":
+			*v = IntegrationRequestIntegrationState(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// IntegrationRequestIntegrationStateIdle is the enumeration value for idle
 	IntegrationRequestIntegrationStateIdle IntegrationRequestIntegrationState = 0
@@ -1418,6 +1456,30 @@ func (v IntegrationRequestIntegrationSystemType) String() string {
 		return "USER"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *IntegrationRequestIntegrationSystemType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IntegrationRequestIntegrationSystemType(int32(val))
+	case int:
+		*v = IntegrationRequestIntegrationSystemType(int32(val))
+	case string:
+		switch val {
+		case "WORK":
+			*v = IntegrationRequestIntegrationSystemType(0)
+		case "SOURCECODE":
+			*v = IntegrationRequestIntegrationSystemType(1)
+		case "CODEQUALITY":
+			*v = IntegrationRequestIntegrationSystemType(2)
+		case "CALENDAR":
+			*v = IntegrationRequestIntegrationSystemType(3)
+		case "USER":
+			*v = IntegrationRequestIntegrationSystemType(4)
+		}
+	}
+	return nil
 }
 
 const (

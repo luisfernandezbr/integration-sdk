@@ -472,6 +472,24 @@ func (v RepoResponseReposError) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *RepoResponseReposError) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = RepoResponseReposError(int32(val))
+	case int:
+		*v = RepoResponseReposError(int32(val))
+	case string:
+		switch val {
+		case "NONE":
+			*v = RepoResponseReposError(0)
+		case "PERMISSIONS":
+			*v = RepoResponseReposError(1)
+		}
+	}
+	return nil
+}
+
 const (
 	// RepoResponseReposErrorNone is the enumeration value for none
 	RepoResponseReposErrorNone RepoResponseReposError = 0
@@ -886,6 +904,52 @@ func (v RepoResponseType) String() string {
 		return "RESUME"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *RepoResponseType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = RepoResponseType(int32(val))
+	case int:
+		*v = RepoResponseType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = RepoResponseType(0)
+		case "PING":
+			*v = RepoResponseType(1)
+		case "CRASH":
+			*v = RepoResponseType(2)
+		case "LOG":
+			*v = RepoResponseType(3)
+		case "INTEGRATION":
+			*v = RepoResponseType(4)
+		case "EXPORT":
+			*v = RepoResponseType(5)
+		case "PROJECT":
+			*v = RepoResponseType(6)
+		case "REPO":
+			*v = RepoResponseType(7)
+		case "USER":
+			*v = RepoResponseType(8)
+		case "CALENDAR":
+			*v = RepoResponseType(9)
+		case "UNINSTALL":
+			*v = RepoResponseType(10)
+		case "UPGRADE":
+			*v = RepoResponseType(11)
+		case "START":
+			*v = RepoResponseType(12)
+		case "STOP":
+			*v = RepoResponseType(13)
+		case "PAUSE":
+			*v = RepoResponseType(14)
+		case "RESUME":
+			*v = RepoResponseType(15)
+		}
+	}
+	return nil
 }
 
 const (
@@ -1320,25 +1384,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1448,25 +1493,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

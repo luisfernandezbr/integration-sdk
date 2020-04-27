@@ -184,6 +184,36 @@ func (v IntegrationMutationRequestAction) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *IntegrationMutationRequestAction) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IntegrationMutationRequestAction(int32(val))
+	case int:
+		*v = IntegrationMutationRequestAction(int32(val))
+	case string:
+		switch val {
+		case "ISSUE_ADD_COMMENT":
+			*v = IntegrationMutationRequestAction(0)
+		case "ISSUE_SET_TITLE":
+			*v = IntegrationMutationRequestAction(1)
+		case "ISSUE_SET_STATUS":
+			*v = IntegrationMutationRequestAction(2)
+		case "ISSUE_SET_PRIORITY":
+			*v = IntegrationMutationRequestAction(3)
+		case "ISSUE_SET_ASSIGNEE":
+			*v = IntegrationMutationRequestAction(4)
+		case "ISSUE_GET_TRANSITIONS":
+			*v = IntegrationMutationRequestAction(5)
+		case "PR_SET_TITLE":
+			*v = IntegrationMutationRequestAction(6)
+		case "PR_SET_DESCRIPTION":
+			*v = IntegrationMutationRequestAction(7)
+		}
+	}
+	return nil
+}
+
 const (
 	// IntegrationMutationRequestActionIssueAddComment is the enumeration value for issue_add_comment
 	IntegrationMutationRequestActionIssueAddComment IntegrationMutationRequestAction = 0
@@ -578,6 +608,28 @@ func (v IntegrationMutationRequestSystemType) String() string {
 		return "USER"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *IntegrationMutationRequestSystemType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IntegrationMutationRequestSystemType(int32(val))
+	case int:
+		*v = IntegrationMutationRequestSystemType(int32(val))
+	case string:
+		switch val {
+		case "WORK":
+			*v = IntegrationMutationRequestSystemType(0)
+		case "SOURCECODE":
+			*v = IntegrationMutationRequestSystemType(1)
+		case "CODEQUALITY":
+			*v = IntegrationMutationRequestSystemType(2)
+		case "USER":
+			*v = IntegrationMutationRequestSystemType(3)
+		}
+	}
+	return nil
 }
 
 const (
@@ -1189,25 +1241,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

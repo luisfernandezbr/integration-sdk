@@ -666,6 +666,52 @@ func (v CalendarResponseType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *CalendarResponseType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CalendarResponseType(int32(val))
+	case int:
+		*v = CalendarResponseType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = CalendarResponseType(0)
+		case "PING":
+			*v = CalendarResponseType(1)
+		case "CRASH":
+			*v = CalendarResponseType(2)
+		case "LOG":
+			*v = CalendarResponseType(3)
+		case "INTEGRATION":
+			*v = CalendarResponseType(4)
+		case "EXPORT":
+			*v = CalendarResponseType(5)
+		case "PROJECT":
+			*v = CalendarResponseType(6)
+		case "REPO":
+			*v = CalendarResponseType(7)
+		case "USER":
+			*v = CalendarResponseType(8)
+		case "CALENDAR":
+			*v = CalendarResponseType(9)
+		case "UNINSTALL":
+			*v = CalendarResponseType(10)
+		case "UPGRADE":
+			*v = CalendarResponseType(11)
+		case "START":
+			*v = CalendarResponseType(12)
+		case "STOP":
+			*v = CalendarResponseType(13)
+		case "PAUSE":
+			*v = CalendarResponseType(14)
+		case "RESUME":
+			*v = CalendarResponseType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// CalendarResponseTypeEnroll is the enumeration value for enroll
 	CalendarResponseTypeEnroll CalendarResponseType = 0

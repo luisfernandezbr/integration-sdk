@@ -412,6 +412,26 @@ func (v BlameStatus) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *BlameStatus) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = BlameStatus(int32(val))
+	case int:
+		*v = BlameStatus(int32(val))
+	case string:
+		switch val {
+		case "ADDED":
+			*v = BlameStatus(0)
+		case "MODIFIED":
+			*v = BlameStatus(1)
+		case "REMOVED":
+			*v = BlameStatus(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// BlameStatusAdded is the enumeration value for added
 	BlameStatusAdded BlameStatus = 0

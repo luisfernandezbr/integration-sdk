@@ -266,6 +266,38 @@ func (v PullRequestReviewState) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *PullRequestReviewState) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = PullRequestReviewState(int32(val))
+	case int:
+		*v = PullRequestReviewState(int32(val))
+	case string:
+		switch val {
+		case "APPROVED":
+			*v = PullRequestReviewState(0)
+		case "COMMENTED":
+			*v = PullRequestReviewState(1)
+		case "CHANGES_REQUESTED":
+			*v = PullRequestReviewState(2)
+		case "PENDING":
+			*v = PullRequestReviewState(3)
+		case "DISMISSED":
+			*v = PullRequestReviewState(4)
+		case "REQUESTED":
+			*v = PullRequestReviewState(5)
+		case "REQUEST_REMOVED":
+			*v = PullRequestReviewState(6)
+		case "ASSIGNED":
+			*v = PullRequestReviewState(7)
+		case "UNASSIGNED":
+			*v = PullRequestReviewState(8)
+		}
+	}
+	return nil
+}
+
 const (
 	// PullRequestReviewStateApproved is the enumeration value for approved
 	PullRequestReviewStateApproved PullRequestReviewState = 0

@@ -775,6 +775,48 @@ func (v IssueChangeLogField) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *IssueChangeLogField) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IssueChangeLogField(int32(val))
+	case int:
+		*v = IssueChangeLogField(int32(val))
+	case string:
+		switch val {
+		case "ASSIGNEE_REF_ID":
+			*v = IssueChangeLogField(0)
+		case "DUE_DATE":
+			*v = IssueChangeLogField(1)
+		case "EPIC_ID":
+			*v = IssueChangeLogField(2)
+		case "IDENTIFIER":
+			*v = IssueChangeLogField(3)
+		case "PARENT_ID":
+			*v = IssueChangeLogField(4)
+		case "PRIORITY":
+			*v = IssueChangeLogField(5)
+		case "PROJECT_ID":
+			*v = IssueChangeLogField(6)
+		case "REPORTER_REF_ID":
+			*v = IssueChangeLogField(7)
+		case "RESOLUTION":
+			*v = IssueChangeLogField(8)
+		case "SPRINT_IDS":
+			*v = IssueChangeLogField(9)
+		case "STATUS":
+			*v = IssueChangeLogField(10)
+		case "TAGS":
+			*v = IssueChangeLogField(11)
+		case "TITLE":
+			*v = IssueChangeLogField(12)
+		case "TYPE":
+			*v = IssueChangeLogField(13)
+		}
+	}
+	return nil
+}
+
 const (
 	// IssueChangeLogFieldAssigneeRefID is the enumeration value for assignee_ref_id
 	IssueChangeLogFieldAssigneeRefID IssueChangeLogField = 0
@@ -1400,6 +1442,30 @@ func (v IssueLinkedIssuesLinkType) String() string {
 		return "RELATES"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *IssueLinkedIssuesLinkType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IssueLinkedIssuesLinkType(int32(val))
+	case int:
+		*v = IssueLinkedIssuesLinkType(int32(val))
+	case string:
+		switch val {
+		case "BLOCKS":
+			*v = IssueLinkedIssuesLinkType(0)
+		case "CLONES":
+			*v = IssueLinkedIssuesLinkType(1)
+		case "DUPLICATES":
+			*v = IssueLinkedIssuesLinkType(2)
+		case "CAUSES":
+			*v = IssueLinkedIssuesLinkType(3)
+		case "RELATES":
+			*v = IssueLinkedIssuesLinkType(4)
+		}
+	}
+	return nil
 }
 
 const (

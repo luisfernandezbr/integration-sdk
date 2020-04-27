@@ -492,6 +492,26 @@ func (v IntegrationMutationResponseErrorCode) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *IntegrationMutationResponseErrorCode) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IntegrationMutationResponseErrorCode(int32(val))
+	case int:
+		*v = IntegrationMutationResponseErrorCode(int32(val))
+	case string:
+		switch val {
+		case "UNKNOWN":
+			*v = IntegrationMutationResponseErrorCode(0)
+		case "NOT_FOUND":
+			*v = IntegrationMutationResponseErrorCode(1)
+		case "NOT_AUTHORIZED":
+			*v = IntegrationMutationResponseErrorCode(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// IntegrationMutationResponseErrorCodeUnknown is the enumeration value for unknown
 	IntegrationMutationResponseErrorCodeUnknown IntegrationMutationResponseErrorCode = 0
@@ -864,6 +884,52 @@ func (v IntegrationMutationResponseType) String() string {
 		return "RESUME"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *IntegrationMutationResponseType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IntegrationMutationResponseType(int32(val))
+	case int:
+		*v = IntegrationMutationResponseType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = IntegrationMutationResponseType(0)
+		case "PING":
+			*v = IntegrationMutationResponseType(1)
+		case "CRASH":
+			*v = IntegrationMutationResponseType(2)
+		case "LOG":
+			*v = IntegrationMutationResponseType(3)
+		case "INTEGRATION":
+			*v = IntegrationMutationResponseType(4)
+		case "EXPORT":
+			*v = IntegrationMutationResponseType(5)
+		case "PROJECT":
+			*v = IntegrationMutationResponseType(6)
+		case "REPO":
+			*v = IntegrationMutationResponseType(7)
+		case "USER":
+			*v = IntegrationMutationResponseType(8)
+		case "CALENDAR":
+			*v = IntegrationMutationResponseType(9)
+		case "UNINSTALL":
+			*v = IntegrationMutationResponseType(10)
+		case "UPGRADE":
+			*v = IntegrationMutationResponseType(11)
+		case "START":
+			*v = IntegrationMutationResponseType(12)
+		case "STOP":
+			*v = IntegrationMutationResponseType(13)
+		case "PAUSE":
+			*v = IntegrationMutationResponseType(14)
+		case "RESUME":
+			*v = IntegrationMutationResponseType(15)
+		}
+	}
+	return nil
 }
 
 const (

@@ -456,6 +456,52 @@ func (v StopType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *StopType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = StopType(int32(val))
+	case int:
+		*v = StopType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = StopType(0)
+		case "PING":
+			*v = StopType(1)
+		case "CRASH":
+			*v = StopType(2)
+		case "LOG":
+			*v = StopType(3)
+		case "INTEGRATION":
+			*v = StopType(4)
+		case "EXPORT":
+			*v = StopType(5)
+		case "PROJECT":
+			*v = StopType(6)
+		case "REPO":
+			*v = StopType(7)
+		case "USER":
+			*v = StopType(8)
+		case "CALENDAR":
+			*v = StopType(9)
+		case "UNINSTALL":
+			*v = StopType(10)
+		case "UPGRADE":
+			*v = StopType(11)
+		case "START":
+			*v = StopType(12)
+		case "STOP":
+			*v = StopType(13)
+		case "PAUSE":
+			*v = StopType(14)
+		case "RESUME":
+			*v = StopType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// StopTypeEnroll is the enumeration value for enroll
 	StopTypeEnroll StopType = 0
@@ -872,6 +918,25 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -961,6 +1026,25 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

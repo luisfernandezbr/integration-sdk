@@ -458,6 +458,52 @@ func (v EnrollResponseType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *EnrollResponseType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = EnrollResponseType(int32(val))
+	case int:
+		*v = EnrollResponseType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = EnrollResponseType(0)
+		case "PING":
+			*v = EnrollResponseType(1)
+		case "CRASH":
+			*v = EnrollResponseType(2)
+		case "LOG":
+			*v = EnrollResponseType(3)
+		case "INTEGRATION":
+			*v = EnrollResponseType(4)
+		case "EXPORT":
+			*v = EnrollResponseType(5)
+		case "PROJECT":
+			*v = EnrollResponseType(6)
+		case "REPO":
+			*v = EnrollResponseType(7)
+		case "USER":
+			*v = EnrollResponseType(8)
+		case "CALENDAR":
+			*v = EnrollResponseType(9)
+		case "UNINSTALL":
+			*v = EnrollResponseType(10)
+		case "UPGRADE":
+			*v = EnrollResponseType(11)
+		case "START":
+			*v = EnrollResponseType(12)
+		case "STOP":
+			*v = EnrollResponseType(13)
+		case "PAUSE":
+			*v = EnrollResponseType(14)
+		case "RESUME":
+			*v = EnrollResponseType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// EnrollResponseTypeEnroll is the enumeration value for enroll
 	EnrollResponseTypeEnroll EnrollResponseType = 0

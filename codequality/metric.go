@@ -228,6 +228,26 @@ func (v MetricStatus) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *MetricStatus) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = MetricStatus(int32(val))
+	case int:
+		*v = MetricStatus(int32(val))
+	case string:
+		switch val {
+		case "UNSUPPORTED":
+			*v = MetricStatus(0)
+		case "NOT_ANALYSED":
+			*v = MetricStatus(1)
+		case "ANALYSED":
+			*v = MetricStatus(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// MetricStatusUnsupported is the enumeration value for unsupported
 	MetricStatusUnsupported MetricStatus = 0

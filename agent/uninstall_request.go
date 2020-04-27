@@ -456,6 +456,52 @@ func (v UninstallRequestType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *UninstallRequestType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = UninstallRequestType(int32(val))
+	case int:
+		*v = UninstallRequestType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = UninstallRequestType(0)
+		case "PING":
+			*v = UninstallRequestType(1)
+		case "CRASH":
+			*v = UninstallRequestType(2)
+		case "LOG":
+			*v = UninstallRequestType(3)
+		case "INTEGRATION":
+			*v = UninstallRequestType(4)
+		case "EXPORT":
+			*v = UninstallRequestType(5)
+		case "PROJECT":
+			*v = UninstallRequestType(6)
+		case "REPO":
+			*v = UninstallRequestType(7)
+		case "USER":
+			*v = UninstallRequestType(8)
+		case "CALENDAR":
+			*v = UninstallRequestType(9)
+		case "UNINSTALL":
+			*v = UninstallRequestType(10)
+		case "UPGRADE":
+			*v = UninstallRequestType(11)
+		case "START":
+			*v = UninstallRequestType(12)
+		case "STOP":
+			*v = UninstallRequestType(13)
+		case "PAUSE":
+			*v = UninstallRequestType(14)
+		case "RESUME":
+			*v = UninstallRequestType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// UninstallRequestTypeEnroll is the enumeration value for enroll
 	UninstallRequestTypeEnroll UninstallRequestType = 0
@@ -872,25 +918,6 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UninstallRequestEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -980,25 +1007,6 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UninstallRequestLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

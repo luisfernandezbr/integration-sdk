@@ -146,6 +146,36 @@ func (v IssueTypeMappedType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *IssueTypeMappedType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = IssueTypeMappedType(int32(val))
+	case int:
+		*v = IssueTypeMappedType(int32(val))
+	case string:
+		switch val {
+		case "UNKNOWN":
+			*v = IssueTypeMappedType(0)
+		case "FEATURE":
+			*v = IssueTypeMappedType(1)
+		case "BUG":
+			*v = IssueTypeMappedType(2)
+		case "ENHANCEMENT":
+			*v = IssueTypeMappedType(3)
+		case "EPIC":
+			*v = IssueTypeMappedType(4)
+		case "STORY":
+			*v = IssueTypeMappedType(5)
+		case "TASK":
+			*v = IssueTypeMappedType(6)
+		case "SUBTASK":
+			*v = IssueTypeMappedType(7)
+		}
+	}
+	return nil
+}
+
 const (
 	// IssueTypeMappedTypeUnknown is the enumeration value for unknown
 	IssueTypeMappedTypeUnknown IssueTypeMappedType = 0

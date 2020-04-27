@@ -482,6 +482,30 @@ func (v PullRequestStatus) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *PullRequestStatus) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = PullRequestStatus(int32(val))
+	case int:
+		*v = PullRequestStatus(int32(val))
+	case string:
+		switch val {
+		case "OPEN":
+			*v = PullRequestStatus(0)
+		case "CLOSED":
+			*v = PullRequestStatus(1)
+		case "MERGED":
+			*v = PullRequestStatus(2)
+		case "SUPERSEDED":
+			*v = PullRequestStatus(3)
+		case "LOCKED":
+			*v = PullRequestStatus(4)
+		}
+	}
+	return nil
+}
+
 const (
 	// PullRequestStatusOpen is the enumeration value for open
 	PullRequestStatusOpen PullRequestStatus = 0

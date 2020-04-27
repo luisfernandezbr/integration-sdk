@@ -456,6 +456,52 @@ func (v EnabledType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *EnabledType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = EnabledType(int32(val))
+	case int:
+		*v = EnabledType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = EnabledType(0)
+		case "PING":
+			*v = EnabledType(1)
+		case "CRASH":
+			*v = EnabledType(2)
+		case "LOG":
+			*v = EnabledType(3)
+		case "INTEGRATION":
+			*v = EnabledType(4)
+		case "EXPORT":
+			*v = EnabledType(5)
+		case "PROJECT":
+			*v = EnabledType(6)
+		case "REPO":
+			*v = EnabledType(7)
+		case "USER":
+			*v = EnabledType(8)
+		case "CALENDAR":
+			*v = EnabledType(9)
+		case "UNINSTALL":
+			*v = EnabledType(10)
+		case "UPGRADE":
+			*v = EnabledType(11)
+		case "START":
+			*v = EnabledType(12)
+		case "STOP":
+			*v = EnabledType(13)
+		case "PAUSE":
+			*v = EnabledType(14)
+		case "RESUME":
+			*v = EnabledType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// EnabledTypeEnroll is the enumeration value for enroll
 	EnabledTypeEnroll EnabledType = 0
@@ -872,6 +918,25 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -961,6 +1026,25 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*EnabledLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

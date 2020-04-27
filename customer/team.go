@@ -295,6 +295,36 @@ func (v TeamUsersType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *TeamUsersType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = TeamUsersType(int32(val))
+	case int:
+		*v = TeamUsersType(int32(val))
+	case string:
+		switch val {
+		case "NONE":
+			*v = TeamUsersType(0)
+		case "TRACKABLE":
+			*v = TeamUsersType(1)
+		case "BOT":
+			*v = TeamUsersType(2)
+		case "UNTRACKABLE":
+			*v = TeamUsersType(3)
+		case "UNMAPPED":
+			*v = TeamUsersType(4)
+		case "TERMINATED":
+			*v = TeamUsersType(5)
+		case "DELETED":
+			*v = TeamUsersType(6)
+		case "INVITED":
+			*v = TeamUsersType(7)
+		}
+	}
+	return nil
+}
+
 const (
 	// TeamUsersTypeNone is the enumeration value for none
 	TeamUsersTypeNone TeamUsersType = 0

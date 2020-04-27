@@ -656,6 +656,52 @@ func (v CodequalityResponseType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *CodequalityResponseType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CodequalityResponseType(int32(val))
+	case int:
+		*v = CodequalityResponseType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = CodequalityResponseType(0)
+		case "PING":
+			*v = CodequalityResponseType(1)
+		case "CRASH":
+			*v = CodequalityResponseType(2)
+		case "LOG":
+			*v = CodequalityResponseType(3)
+		case "INTEGRATION":
+			*v = CodequalityResponseType(4)
+		case "EXPORT":
+			*v = CodequalityResponseType(5)
+		case "PROJECT":
+			*v = CodequalityResponseType(6)
+		case "REPO":
+			*v = CodequalityResponseType(7)
+		case "USER":
+			*v = CodequalityResponseType(8)
+		case "CALENDAR":
+			*v = CodequalityResponseType(9)
+		case "UNINSTALL":
+			*v = CodequalityResponseType(10)
+		case "UPGRADE":
+			*v = CodequalityResponseType(11)
+		case "START":
+			*v = CodequalityResponseType(12)
+		case "STOP":
+			*v = CodequalityResponseType(13)
+		case "PAUSE":
+			*v = CodequalityResponseType(14)
+		case "RESUME":
+			*v = CodequalityResponseType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// CodequalityResponseTypeEnroll is the enumeration value for enroll
 	CodequalityResponseTypeEnroll CodequalityResponseType = 0

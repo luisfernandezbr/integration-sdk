@@ -452,6 +452,52 @@ func (v EventType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *EventType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = EventType(int32(val))
+	case int:
+		*v = EventType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = EventType(0)
+		case "PING":
+			*v = EventType(1)
+		case "CRASH":
+			*v = EventType(2)
+		case "LOG":
+			*v = EventType(3)
+		case "INTEGRATION":
+			*v = EventType(4)
+		case "EXPORT":
+			*v = EventType(5)
+		case "PROJECT":
+			*v = EventType(6)
+		case "REPO":
+			*v = EventType(7)
+		case "USER":
+			*v = EventType(8)
+		case "CALENDAR":
+			*v = EventType(9)
+		case "UNINSTALL":
+			*v = EventType(10)
+		case "UPGRADE":
+			*v = EventType(11)
+		case "START":
+			*v = EventType(12)
+		case "STOP":
+			*v = EventType(13)
+		case "PAUSE":
+			*v = EventType(14)
+		case "RESUME":
+			*v = EventType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// EventTypeEnroll is the enumeration value for enroll
 	EventTypeEnroll EventType = 0

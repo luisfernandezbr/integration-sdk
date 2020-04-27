@@ -434,6 +434,26 @@ func (v SprintStatus) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *SprintStatus) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = SprintStatus(int32(val))
+	case int:
+		*v = SprintStatus(int32(val))
+	case string:
+		switch val {
+		case "ACTIVE":
+			*v = SprintStatus(0)
+		case "FUTURE":
+			*v = SprintStatus(1)
+		case "CLOSED":
+			*v = SprintStatus(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// SprintStatusActive is the enumeration value for active
 	SprintStatusActive SprintStatus = 0

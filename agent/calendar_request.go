@@ -1066,6 +1066,24 @@ func (v CalendarRequestIntegrationLocation) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *CalendarRequestIntegrationLocation) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CalendarRequestIntegrationLocation(int32(val))
+	case int:
+		*v = CalendarRequestIntegrationLocation(int32(val))
+	case string:
+		switch val {
+		case "PRIVATE":
+			*v = CalendarRequestIntegrationLocation(0)
+		case "CLOUD":
+			*v = CalendarRequestIntegrationLocation(1)
+		}
+	}
+	return nil
+}
+
 const (
 	// CalendarRequestIntegrationLocationPrivate is the enumeration value for private
 	CalendarRequestIntegrationLocationPrivate CalendarRequestIntegrationLocation = 0
@@ -1334,6 +1352,26 @@ func (v CalendarRequestIntegrationState) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *CalendarRequestIntegrationState) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CalendarRequestIntegrationState(int32(val))
+	case int:
+		*v = CalendarRequestIntegrationState(int32(val))
+	case string:
+		switch val {
+		case "IDLE":
+			*v = CalendarRequestIntegrationState(0)
+		case "EXPORTING":
+			*v = CalendarRequestIntegrationState(1)
+		case "PROCESSING":
+			*v = CalendarRequestIntegrationState(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// CalendarRequestIntegrationStateIdle is the enumeration value for idle
 	CalendarRequestIntegrationStateIdle CalendarRequestIntegrationState = 0
@@ -1418,6 +1456,30 @@ func (v CalendarRequestIntegrationSystemType) String() string {
 		return "USER"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *CalendarRequestIntegrationSystemType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CalendarRequestIntegrationSystemType(int32(val))
+	case int:
+		*v = CalendarRequestIntegrationSystemType(int32(val))
+	case string:
+		switch val {
+		case "WORK":
+			*v = CalendarRequestIntegrationSystemType(0)
+		case "SOURCECODE":
+			*v = CalendarRequestIntegrationSystemType(1)
+		case "CODEQUALITY":
+			*v = CalendarRequestIntegrationSystemType(2)
+		case "CALENDAR":
+			*v = CalendarRequestIntegrationSystemType(3)
+		case "USER":
+			*v = CalendarRequestIntegrationSystemType(4)
+		}
+	}
+	return nil
 }
 
 const (

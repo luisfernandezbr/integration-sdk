@@ -158,6 +158,36 @@ func (v WebappIntegrationMutationRequestAction) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *WebappIntegrationMutationRequestAction) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = WebappIntegrationMutationRequestAction(int32(val))
+	case int:
+		*v = WebappIntegrationMutationRequestAction(int32(val))
+	case string:
+		switch val {
+		case "ISSUE_ADD_COMMENT":
+			*v = WebappIntegrationMutationRequestAction(0)
+		case "ISSUE_SET_TITLE":
+			*v = WebappIntegrationMutationRequestAction(1)
+		case "ISSUE_SET_STATUS":
+			*v = WebappIntegrationMutationRequestAction(2)
+		case "ISSUE_SET_PRIORITY":
+			*v = WebappIntegrationMutationRequestAction(3)
+		case "ISSUE_SET_ASSIGNEE":
+			*v = WebappIntegrationMutationRequestAction(4)
+		case "ISSUE_GET_TRANSITIONS":
+			*v = WebappIntegrationMutationRequestAction(5)
+		case "PR_SET_TITLE":
+			*v = WebappIntegrationMutationRequestAction(6)
+		case "PR_SET_DESCRIPTION":
+			*v = WebappIntegrationMutationRequestAction(7)
+		}
+	}
+	return nil
+}
+
 const (
 	// WebappIntegrationMutationRequestActionIssueAddComment is the enumeration value for issue_add_comment
 	WebappIntegrationMutationRequestActionIssueAddComment WebappIntegrationMutationRequestAction = 0
@@ -344,6 +374,28 @@ func (v WebappIntegrationMutationRequestSystemType) String() string {
 		return "USER"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *WebappIntegrationMutationRequestSystemType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = WebappIntegrationMutationRequestSystemType(int32(val))
+	case int:
+		*v = WebappIntegrationMutationRequestSystemType(int32(val))
+	case string:
+		switch val {
+		case "WORK":
+			*v = WebappIntegrationMutationRequestSystemType(0)
+		case "SOURCECODE":
+			*v = WebappIntegrationMutationRequestSystemType(1)
+		case "CODEQUALITY":
+			*v = WebappIntegrationMutationRequestSystemType(2)
+		case "USER":
+			*v = WebappIntegrationMutationRequestSystemType(3)
+		}
+	}
+	return nil
 }
 
 const (

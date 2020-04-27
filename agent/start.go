@@ -456,6 +456,52 @@ func (v StartType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *StartType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = StartType(int32(val))
+	case int:
+		*v = StartType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = StartType(0)
+		case "PING":
+			*v = StartType(1)
+		case "CRASH":
+			*v = StartType(2)
+		case "LOG":
+			*v = StartType(3)
+		case "INTEGRATION":
+			*v = StartType(4)
+		case "EXPORT":
+			*v = StartType(5)
+		case "PROJECT":
+			*v = StartType(6)
+		case "REPO":
+			*v = StartType(7)
+		case "USER":
+			*v = StartType(8)
+		case "CALENDAR":
+			*v = StartType(9)
+		case "UNINSTALL":
+			*v = StartType(10)
+		case "UPGRADE":
+			*v = StartType(11)
+		case "START":
+			*v = StartType(12)
+		case "STOP":
+			*v = StartType(13)
+		case "PAUSE":
+			*v = StartType(14)
+		case "RESUME":
+			*v = StartType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// StartTypeEnroll is the enumeration value for enroll
 	StartTypeEnroll StartType = 0

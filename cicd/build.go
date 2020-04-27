@@ -252,6 +252,32 @@ func (v BuildEnvironment) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *BuildEnvironment) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = BuildEnvironment(int32(val))
+	case int:
+		*v = BuildEnvironment(int32(val))
+	case string:
+		switch val {
+		case "PRODUCTION":
+			*v = BuildEnvironment(0)
+		case "DEVELOPMENT":
+			*v = BuildEnvironment(1)
+		case "BETA":
+			*v = BuildEnvironment(2)
+		case "STAGING":
+			*v = BuildEnvironment(3)
+		case "TEST":
+			*v = BuildEnvironment(4)
+		case "OTHER":
+			*v = BuildEnvironment(5)
+		}
+	}
+	return nil
+}
+
 const (
 	// BuildEnvironmentProduction is the enumeration value for production
 	BuildEnvironmentProduction BuildEnvironment = 0
@@ -426,6 +452,26 @@ func (v BuildStatus) String() string {
 		return "CANCEL"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *BuildStatus) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = BuildStatus(int32(val))
+	case int:
+		*v = BuildStatus(int32(val))
+	case string:
+		switch val {
+		case "PASS":
+			*v = BuildStatus(0)
+		case "FAIL":
+			*v = BuildStatus(1)
+		case "CANCEL":
+			*v = BuildStatus(2)
+		}
+	}
+	return nil
 }
 
 const (

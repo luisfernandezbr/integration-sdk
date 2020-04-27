@@ -254,6 +254,32 @@ func (v DeploymentEnvironment) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *DeploymentEnvironment) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = DeploymentEnvironment(int32(val))
+	case int:
+		*v = DeploymentEnvironment(int32(val))
+	case string:
+		switch val {
+		case "PRODUCTION":
+			*v = DeploymentEnvironment(0)
+		case "DEVELOPMENT":
+			*v = DeploymentEnvironment(1)
+		case "BETA":
+			*v = DeploymentEnvironment(2)
+		case "STAGING":
+			*v = DeploymentEnvironment(3)
+		case "TEST":
+			*v = DeploymentEnvironment(4)
+		case "OTHER":
+			*v = DeploymentEnvironment(5)
+		}
+	}
+	return nil
+}
+
 const (
 	// DeploymentEnvironmentProduction is the enumeration value for production
 	DeploymentEnvironmentProduction DeploymentEnvironment = 0
@@ -428,6 +454,26 @@ func (v DeploymentStatus) String() string {
 		return "CANCEL"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *DeploymentStatus) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = DeploymentStatus(int32(val))
+	case int:
+		*v = DeploymentStatus(int32(val))
+	case string:
+		switch val {
+		case "PASS":
+			*v = DeploymentStatus(0)
+		case "FAIL":
+			*v = DeploymentStatus(1)
+		case "CANCEL":
+			*v = DeploymentStatus(2)
+		}
+	}
+	return nil
 }
 
 const (

@@ -1072,6 +1072,24 @@ func (v ExportRequestIntegrationsLocation) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *ExportRequestIntegrationsLocation) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = ExportRequestIntegrationsLocation(int32(val))
+	case int:
+		*v = ExportRequestIntegrationsLocation(int32(val))
+	case string:
+		switch val {
+		case "PRIVATE":
+			*v = ExportRequestIntegrationsLocation(0)
+		case "CLOUD":
+			*v = ExportRequestIntegrationsLocation(1)
+		}
+	}
+	return nil
+}
+
 const (
 	// ExportRequestIntegrationsLocationPrivate is the enumeration value for private
 	ExportRequestIntegrationsLocationPrivate ExportRequestIntegrationsLocation = 0
@@ -1340,6 +1358,26 @@ func (v ExportRequestIntegrationsState) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *ExportRequestIntegrationsState) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = ExportRequestIntegrationsState(int32(val))
+	case int:
+		*v = ExportRequestIntegrationsState(int32(val))
+	case string:
+		switch val {
+		case "IDLE":
+			*v = ExportRequestIntegrationsState(0)
+		case "EXPORTING":
+			*v = ExportRequestIntegrationsState(1)
+		case "PROCESSING":
+			*v = ExportRequestIntegrationsState(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// ExportRequestIntegrationsStateIdle is the enumeration value for idle
 	ExportRequestIntegrationsStateIdle ExportRequestIntegrationsState = 0
@@ -1424,6 +1462,30 @@ func (v ExportRequestIntegrationsSystemType) String() string {
 		return "USER"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *ExportRequestIntegrationsSystemType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = ExportRequestIntegrationsSystemType(int32(val))
+	case int:
+		*v = ExportRequestIntegrationsSystemType(int32(val))
+	case string:
+		switch val {
+		case "WORK":
+			*v = ExportRequestIntegrationsSystemType(0)
+		case "SOURCECODE":
+			*v = ExportRequestIntegrationsSystemType(1)
+		case "CODEQUALITY":
+			*v = ExportRequestIntegrationsSystemType(2)
+		case "CALENDAR":
+			*v = ExportRequestIntegrationsSystemType(3)
+		case "USER":
+			*v = ExportRequestIntegrationsSystemType(4)
+		}
+	}
+	return nil
 }
 
 const (
@@ -3263,25 +3325,6 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

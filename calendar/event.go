@@ -366,6 +366,28 @@ func (v EventParticipantsStatus) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *EventParticipantsStatus) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = EventParticipantsStatus(int32(val))
+	case int:
+		*v = EventParticipantsStatus(int32(val))
+	case string:
+		switch val {
+		case "UNKNOWN":
+			*v = EventParticipantsStatus(0)
+		case "MAYBE":
+			*v = EventParticipantsStatus(1)
+		case "GOING":
+			*v = EventParticipantsStatus(2)
+		case "NOT_GOING":
+			*v = EventParticipantsStatus(3)
+		}
+	}
+	return nil
+}
+
 const (
 	// EventParticipantsStatusUnknown is the enumeration value for unknown
 	EventParticipantsStatusUnknown EventParticipantsStatus = 0
@@ -636,6 +658,26 @@ func (v EventStatus) String() string {
 		return "CANCELLED"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *EventStatus) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = EventStatus(int32(val))
+	case int:
+		*v = EventStatus(int32(val))
+	case string:
+		switch val {
+		case "CONFIRMED":
+			*v = EventStatus(0)
+		case "TENTATIVE":
+			*v = EventStatus(1)
+		case "CANCELLED":
+			*v = EventStatus(2)
+		}
+	}
+	return nil
 }
 
 const (

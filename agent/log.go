@@ -456,6 +456,52 @@ func (v LogType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *LogType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = LogType(int32(val))
+	case int:
+		*v = LogType(int32(val))
+	case string:
+		switch val {
+		case "ENROLL":
+			*v = LogType(0)
+		case "PING":
+			*v = LogType(1)
+		case "CRASH":
+			*v = LogType(2)
+		case "LOG":
+			*v = LogType(3)
+		case "INTEGRATION":
+			*v = LogType(4)
+		case "EXPORT":
+			*v = LogType(5)
+		case "PROJECT":
+			*v = LogType(6)
+		case "REPO":
+			*v = LogType(7)
+		case "USER":
+			*v = LogType(8)
+		case "CALENDAR":
+			*v = LogType(9)
+		case "UNINSTALL":
+			*v = LogType(10)
+		case "UPGRADE":
+			*v = LogType(11)
+		case "START":
+			*v = LogType(12)
+		case "STOP":
+			*v = LogType(13)
+		case "PAUSE":
+			*v = LogType(14)
+		case "RESUME":
+			*v = LogType(15)
+		}
+	}
+	return nil
+}
+
 const (
 	// LogTypeEnroll is the enumeration value for enroll
 	LogTypeEnroll LogType = 0

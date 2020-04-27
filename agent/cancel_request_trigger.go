@@ -102,6 +102,26 @@ func (v CancelRequestTriggerCommand) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *CancelRequestTriggerCommand) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CancelRequestTriggerCommand(int32(val))
+	case int:
+		*v = CancelRequestTriggerCommand(int32(val))
+	case string:
+		switch val {
+		case "EXPORT":
+			*v = CancelRequestTriggerCommand(0)
+		case "ONBOARD":
+			*v = CancelRequestTriggerCommand(1)
+		case "INTEGRATION":
+			*v = CancelRequestTriggerCommand(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// CancelRequestTriggerCommandExport is the enumeration value for export
 	CancelRequestTriggerCommandExport CancelRequestTriggerCommand = 0

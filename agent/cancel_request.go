@@ -112,6 +112,26 @@ func (v CancelRequestCommand) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *CancelRequestCommand) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CancelRequestCommand(int32(val))
+	case int:
+		*v = CancelRequestCommand(int32(val))
+	case string:
+		switch val {
+		case "EXPORT":
+			*v = CancelRequestCommand(0)
+		case "ONBOARD":
+			*v = CancelRequestCommand(1)
+		case "INTEGRATION":
+			*v = CancelRequestCommand(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// CancelRequestCommandExport is the enumeration value for export
 	CancelRequestCommandExport CancelRequestCommand = 0
@@ -559,25 +579,6 @@ func (o *CancelRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CancelRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

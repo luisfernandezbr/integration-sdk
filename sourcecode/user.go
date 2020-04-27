@@ -120,6 +120,26 @@ func (v UserType) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *UserType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = UserType(int32(val))
+	case int:
+		*v = UserType(int32(val))
+	case string:
+		switch val {
+		case "HUMAN":
+			*v = UserType(0)
+		case "BOT":
+			*v = UserType(1)
+		case "DELETED_SPECIAL_USER":
+			*v = UserType(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// UserTypeHuman is the enumeration value for human
 	UserTypeHuman UserType = 0

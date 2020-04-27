@@ -1066,6 +1066,24 @@ func (v CodequalityRequestIntegrationLocation) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *CodequalityRequestIntegrationLocation) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CodequalityRequestIntegrationLocation(int32(val))
+	case int:
+		*v = CodequalityRequestIntegrationLocation(int32(val))
+	case string:
+		switch val {
+		case "PRIVATE":
+			*v = CodequalityRequestIntegrationLocation(0)
+		case "CLOUD":
+			*v = CodequalityRequestIntegrationLocation(1)
+		}
+	}
+	return nil
+}
+
 const (
 	// CodequalityRequestIntegrationLocationPrivate is the enumeration value for private
 	CodequalityRequestIntegrationLocationPrivate CodequalityRequestIntegrationLocation = 0
@@ -1334,6 +1352,26 @@ func (v CodequalityRequestIntegrationState) String() string {
 	return "unset"
 }
 
+// FromInterface for decoding from an interface
+func (v *CodequalityRequestIntegrationState) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CodequalityRequestIntegrationState(int32(val))
+	case int:
+		*v = CodequalityRequestIntegrationState(int32(val))
+	case string:
+		switch val {
+		case "IDLE":
+			*v = CodequalityRequestIntegrationState(0)
+		case "EXPORTING":
+			*v = CodequalityRequestIntegrationState(1)
+		case "PROCESSING":
+			*v = CodequalityRequestIntegrationState(2)
+		}
+	}
+	return nil
+}
+
 const (
 	// CodequalityRequestIntegrationStateIdle is the enumeration value for idle
 	CodequalityRequestIntegrationStateIdle CodequalityRequestIntegrationState = 0
@@ -1418,6 +1456,30 @@ func (v CodequalityRequestIntegrationSystemType) String() string {
 		return "USER"
 	}
 	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *CodequalityRequestIntegrationSystemType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case int32:
+		*v = CodequalityRequestIntegrationSystemType(int32(val))
+	case int:
+		*v = CodequalityRequestIntegrationSystemType(int32(val))
+	case string:
+		switch val {
+		case "WORK":
+			*v = CodequalityRequestIntegrationSystemType(0)
+		case "SOURCECODE":
+			*v = CodequalityRequestIntegrationSystemType(1)
+		case "CODEQUALITY":
+			*v = CodequalityRequestIntegrationSystemType(2)
+		case "CALENDAR":
+			*v = CodequalityRequestIntegrationSystemType(3)
+		case "USER":
+			*v = CodequalityRequestIntegrationSystemType(4)
+		}
+	}
+	return nil
 }
 
 const (
