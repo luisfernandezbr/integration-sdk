@@ -177,6 +177,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.WebappIntegrationMutationRequest)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.WebhookRequest":
+		o := new(dm_agent.WebhookRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.WebhookResponse":
+		o := new(dm_agent.WebhookResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.WorkStatusRequest":
 		o := new(dm_agent.WorkStatusRequest)
 		o.FromMap(map[string]interface{}{})
@@ -398,6 +406,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.UpdateResponse"),
 		datamodel.ModelNameType("agent.UpdateTrigger"),
 		datamodel.ModelNameType("agent.WebappIntegrationMutationRequest"),
+		datamodel.ModelNameType("agent.WebhookRequest"),
+		datamodel.ModelNameType("agent.WebhookResponse"),
 		datamodel.ModelNameType("agent.WorkStatusRequest"),
 		datamodel.ModelNameType("agent.WorkStatusResponse"),
 		datamodel.ModelNameType("agent.WorkStatusTrigger"),
