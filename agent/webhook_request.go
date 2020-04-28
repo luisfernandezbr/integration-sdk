@@ -48,6 +48,8 @@ const (
 	WebhookRequestModelHeadersColumn = "headers"
 	// WebhookRequestModelIDColumn is the column json value id
 	WebhookRequestModelIDColumn = "id"
+	// WebhookRequestModelIntegrationNameColumn is the column json value integration_name
+	WebhookRequestModelIntegrationNameColumn = "integration_name"
 	// WebhookRequestModelJobIDColumn is the column json value job_id
 	WebhookRequestModelJobIDColumn = "job_id"
 	// WebhookRequestModelOperatorReceivedDateColumn is the column json value operator_received_date
@@ -492,6 +494,8 @@ type WebhookRequest struct {
 	Headers map[string]string `json:"headers" codec:"headers" bson:"headers" yaml:"headers" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationName Name of the integration binary
+	IntegrationName string `json:"integration_name" codec:"integration_name" bson:"integration_name" yaml:"integration_name" faker:"-"`
 	// JobID ID for this webhook
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// OperatorReceivedDate set by operator when it receives webhook data
@@ -702,6 +706,7 @@ func (o *WebhookRequest) ToMap() map[string]interface{} {
 		"event_api_received_date": toWebhookRequestObject(o.EventAPIReceivedDate, false),
 		"headers":                 toWebhookRequestObject(o.Headers, false),
 		"id":                      toWebhookRequestObject(o.ID, false),
+		"integration_name":        toWebhookRequestObject(o.IntegrationName, false),
 		"job_id":                  toWebhookRequestObject(o.JobID, false),
 		"operator_received_date":  toWebhookRequestObject(o.OperatorReceivedDate, false),
 		"ref_id":                  toWebhookRequestObject(o.RefID, false),
@@ -859,6 +864,26 @@ func (o *WebhookRequest) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["integration_name"].(string); ok {
+		o.IntegrationName = val
+	} else {
+		if val, ok := kv["integration_name"]; ok {
+			if val == nil {
+				o.IntegrationName = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IntegrationName = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1032,6 +1057,7 @@ func (o *WebhookRequest) Hash() string {
 	args = append(args, o.EventAPIReceivedDate)
 	args = append(args, o.Headers)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationName)
 	args = append(args, o.JobID)
 	args = append(args, o.OperatorReceivedDate)
 	args = append(args, o.RefID)
