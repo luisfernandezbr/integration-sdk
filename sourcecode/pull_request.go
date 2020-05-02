@@ -65,6 +65,8 @@ const (
 	PullRequestModelCustomerIDColumn = "customer_id"
 	// PullRequestModelDescriptionColumn is the column json value description
 	PullRequestModelDescriptionColumn = "description"
+	// PullRequestModelDraftColumn is the column json value draft
+	PullRequestModelDraftColumn = "draft"
 	// PullRequestModelIDColumn is the column json value id
 	PullRequestModelIDColumn = "id"
 	// PullRequestModelIdentifierColumn is the column json value identifier
@@ -641,6 +643,8 @@ type PullRequest struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// Description the description of the pull request
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
+	// Draft if the pull request is in draft mode or not
+	Draft bool `json:"draft" codec:"draft" bson:"draft" yaml:"draft" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier a human friendly identifier when displaying this pull request
@@ -875,6 +879,7 @@ func (o *PullRequest) ToMap() map[string]interface{} {
 		"created_date":      toPullRequestObject(o.CreatedDate, false),
 		"customer_id":       toPullRequestObject(o.CustomerID, false),
 		"description":       toPullRequestObject(o.Description, false),
+		"draft":             toPullRequestObject(o.Draft, false),
 		"id":                toPullRequestObject(o.ID, false),
 		"identifier":        toPullRequestObject(o.Identifier, false),
 		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, false),
@@ -1187,6 +1192,18 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["draft"].(bool); ok {
+		o.Draft = val
+	} else {
+		if val, ok := kv["draft"]; ok {
+			if val == nil {
+				o.Draft = false
+			} else {
+				o.Draft = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -1507,6 +1524,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
+	args = append(args, o.Draft)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
 	args = append(args, o.MergeCommitID)
