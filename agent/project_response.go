@@ -95,6 +95,8 @@ const (
 	ProjectResponseModelProjectsRefTypeColumn = "ref_type"
 	// ProjectResponseModelProjectsURLColumn is the column json value url
 	ProjectResponseModelProjectsURLColumn = "url"
+	// ProjectResponseModelProjectsWebhookPermissionColumn is the column json value webhook_permission
+	ProjectResponseModelProjectsWebhookPermissionColumn = "webhook_permission"
 	// ProjectResponseModelRefIDColumn is the column json value ref_id
 	ProjectResponseModelRefIDColumn = "ref_id"
 	// ProjectResponseModelRefTypeColumn is the column json value ref_type
@@ -413,6 +415,8 @@ type ProjectResponseProjects struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// URL the url to the project home page
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
+	// WebhookPermission if user has permission to install webhook for this project
+	WebhookPermission bool `json:"webhook_permission" codec:"webhook_permission" bson:"webhook_permission" yaml:"webhook_permission" faker:"-"`
 }
 
 func toProjectResponseProjectsObject(o interface{}, isoptional bool) interface{} {
@@ -450,6 +454,8 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 		"ref_type": toProjectResponseProjectsObject(o.RefType, false),
 		// URL the url to the project home page
 		"url": toProjectResponseProjectsObject(o.URL, false),
+		// WebhookPermission if user has permission to install webhook for this project
+		"webhook_permission": toProjectResponseProjectsObject(o.WebhookPermission, false),
 	}
 }
 
@@ -635,6 +641,18 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["webhook_permission"].(bool); ok {
+		o.WebhookPermission = val
+	} else {
+		if val, ok := kv["webhook_permission"]; ok {
+			if val == nil {
+				o.WebhookPermission = false
+			} else {
+				o.WebhookPermission = number.ToBoolAny(val)
 			}
 		}
 	}

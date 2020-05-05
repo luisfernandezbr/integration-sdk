@@ -77,6 +77,8 @@ const (
 	ExportResponseModelIntegrationsEntityErrorsRefIDColumn = "ref_id"
 	// ExportResponseModelIntegrationsEntityErrorsErrorColumn is the column json value error
 	ExportResponseModelIntegrationsEntityErrorsErrorColumn = "error"
+	// ExportResponseModelIntegrationsEntityErrorsWebhookErrorColumn is the column json value webhook_error
+	ExportResponseModelIntegrationsEntityErrorsWebhookErrorColumn = "webhook_error"
 	// ExportResponseModelIntegrationsErrorColumn is the column json value error
 	ExportResponseModelIntegrationsErrorColumn = "error"
 	// ExportResponseModelIntegrationsIntegrationIDColumn is the column json value integration_id
@@ -423,8 +425,10 @@ type ExportResponseIntegrationsEntityErrors struct {
 	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
 	// RefID entity ref_id
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// Error error message if set integration failed when trying to export
+	// Error error message if set integration failed when trying to export this entity
 	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
+	// WebhookError error message if set integration failed when installing webhook for this entity
+	WebhookError string `json:"webhook_error" codec:"webhook_error" bson:"webhook_error" yaml:"webhook_error" faker:"-"`
 }
 
 func toExportResponseIntegrationsEntityErrorsObject(o interface{}, isoptional bool) interface{} {
@@ -445,8 +449,10 @@ func (o *ExportResponseIntegrationsEntityErrors) ToMap() map[string]interface{} 
 		"id": toExportResponseIntegrationsEntityErrorsObject(o.ID, false),
 		// RefID entity ref_id
 		"ref_id": toExportResponseIntegrationsEntityErrorsObject(o.RefID, false),
-		// Error error message if set integration failed when trying to export
+		// Error error message if set integration failed when trying to export this entity
 		"error": toExportResponseIntegrationsEntityErrorsObject(o.Error, false),
+		// WebhookError error message if set integration failed when installing webhook for this entity
+		"webhook_error": toExportResponseIntegrationsEntityErrorsObject(o.WebhookError, false),
 	}
 }
 
@@ -521,6 +527,26 @@ func (o *ExportResponseIntegrationsEntityErrors) FromMap(kv map[string]interface
 					val = v
 				}
 				o.Error = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["webhook_error"].(string); ok {
+		o.WebhookError = val
+	} else {
+		if val, ok := kv["webhook_error"]; ok {
+			if val == nil {
+				o.WebhookError = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.WebhookError = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1874,25 +1900,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -2065,25 +2072,6 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

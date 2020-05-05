@@ -103,8 +103,8 @@ const (
 	RepoResponseModelReposRefIDColumn = "ref_id"
 	// RepoResponseModelReposRefTypeColumn is the column json value ref_type
 	RepoResponseModelReposRefTypeColumn = "ref_type"
-	// RepoResponseModelReposWebhookEnabledColumn is the column json value webhook_enabled
-	RepoResponseModelReposWebhookEnabledColumn = "webhook_enabled"
+	// RepoResponseModelReposWebhookPermissionColumn is the column json value webhook_permission
+	RepoResponseModelReposWebhookPermissionColumn = "webhook_permission"
 	// RepoResponseModelRequestIDColumn is the column json value request_id
 	RepoResponseModelRequestIDColumn = "request_id"
 	// RepoResponseModelSuccessColumn is the column json value success
@@ -517,8 +517,8 @@ type RepoResponseRepos struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the record type
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// WebhookEnabled if webhooks are enabled for this repo
-	WebhookEnabled bool `json:"webhook_enabled" codec:"webhook_enabled" bson:"webhook_enabled" yaml:"webhook_enabled" faker:"-"`
+	// WebhookPermission if user has permission to install webhook for this repo
+	WebhookPermission bool `json:"webhook_permission" codec:"webhook_permission" bson:"webhook_permission" yaml:"webhook_permission" faker:"-"`
 }
 
 func toRepoResponseReposObject(o interface{}, isoptional bool) interface{} {
@@ -557,8 +557,8 @@ func (o *RepoResponseRepos) ToMap() map[string]interface{} {
 		"ref_id": toRepoResponseReposObject(o.RefID, false),
 		// RefType the record type
 		"ref_type": toRepoResponseReposObject(o.RefType, false),
-		// WebhookEnabled if webhooks are enabled for this repo
-		"webhook_enabled": toRepoResponseReposObject(o.WebhookEnabled, false),
+		// WebhookPermission if user has permission to install webhook for this repo
+		"webhook_permission": toRepoResponseReposObject(o.WebhookPermission, false),
 	}
 }
 
@@ -745,14 +745,14 @@ func (o *RepoResponseRepos) FromMap(kv map[string]interface{}) {
 		}
 	}
 
-	if val, ok := kv["webhook_enabled"].(bool); ok {
-		o.WebhookEnabled = val
+	if val, ok := kv["webhook_permission"].(bool); ok {
+		o.WebhookPermission = val
 	} else {
-		if val, ok := kv["webhook_enabled"]; ok {
+		if val, ok := kv["webhook_permission"]; ok {
 			if val == nil {
-				o.WebhookEnabled = false
+				o.WebhookPermission = false
 			} else {
-				o.WebhookEnabled = number.ToBoolAny(val)
+				o.WebhookPermission = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -1402,6 +1402,25 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1511,6 +1530,25 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
