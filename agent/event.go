@@ -455,6 +455,8 @@ func (v EventType) String() string {
 // FromInterface for decoding from an interface
 func (v *EventType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case EventType:
+		*v = val
 	case int32:
 		*v = EventType(int32(val))
 	case int:

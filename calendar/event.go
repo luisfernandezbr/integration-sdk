@@ -369,6 +369,8 @@ func (v EventParticipantsStatus) String() string {
 // FromInterface for decoding from an interface
 func (v *EventParticipantsStatus) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case EventParticipantsStatus:
+		*v = val
 	case int32:
 		*v = EventParticipantsStatus(int32(val))
 	case int:
@@ -663,6 +665,8 @@ func (v EventStatus) String() string {
 // FromInterface for decoding from an interface
 func (v *EventStatus) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case EventStatus:
+		*v = val
 	case int32:
 		*v = EventStatus(int32(val))
 	case int:

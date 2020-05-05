@@ -105,6 +105,8 @@ func (v CancelRequestTriggerCommand) String() string {
 // FromInterface for decoding from an interface
 func (v *CancelRequestTriggerCommand) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case CancelRequestTriggerCommand:
+		*v = val
 	case int32:
 		*v = CancelRequestTriggerCommand(int32(val))
 	case int:

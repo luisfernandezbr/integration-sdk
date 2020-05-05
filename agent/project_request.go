@@ -1069,6 +1069,8 @@ func (v ProjectRequestIntegrationLocation) String() string {
 // FromInterface for decoding from an interface
 func (v *ProjectRequestIntegrationLocation) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ProjectRequestIntegrationLocation:
+		*v = val
 	case int32:
 		*v = ProjectRequestIntegrationLocation(int32(val))
 	case int:
@@ -1355,6 +1357,8 @@ func (v ProjectRequestIntegrationState) String() string {
 // FromInterface for decoding from an interface
 func (v *ProjectRequestIntegrationState) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ProjectRequestIntegrationState:
+		*v = val
 	case int32:
 		*v = ProjectRequestIntegrationState(int32(val))
 	case int:
@@ -1461,6 +1465,8 @@ func (v ProjectRequestIntegrationSystemType) String() string {
 // FromInterface for decoding from an interface
 func (v *ProjectRequestIntegrationSystemType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ProjectRequestIntegrationSystemType:
+		*v = val
 	case int32:
 		*v = ProjectRequestIntegrationSystemType(int32(val))
 	case int:

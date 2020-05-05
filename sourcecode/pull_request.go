@@ -487,6 +487,8 @@ func (v PullRequestStatus) String() string {
 // FromInterface for decoding from an interface
 func (v *PullRequestStatus) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case PullRequestStatus:
+		*v = val
 	case int32:
 		*v = PullRequestStatus(int32(val))
 	case int:

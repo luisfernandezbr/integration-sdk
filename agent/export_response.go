@@ -397,6 +397,8 @@ func (v ExportResponseIntegrationsExportType) String() string {
 // FromInterface for decoding from an interface
 func (v *ExportResponseIntegrationsExportType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ExportResponseIntegrationsExportType:
+		*v = val
 	case int32:
 		*v = ExportResponseIntegrationsExportType(int32(val))
 	case int:
@@ -625,6 +627,8 @@ func (v ExportResponseIntegrationsSystemType) String() string {
 // FromInterface for decoding from an interface
 func (v *ExportResponseIntegrationsSystemType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ExportResponseIntegrationsSystemType:
+		*v = val
 	case int32:
 		*v = ExportResponseIntegrationsSystemType(int32(val))
 	case int:
@@ -1170,6 +1174,8 @@ func (v ExportResponseState) String() string {
 // FromInterface for decoding from an interface
 func (v *ExportResponseState) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ExportResponseState:
+		*v = val
 	case int32:
 		*v = ExportResponseState(int32(val))
 	case int:
@@ -1364,6 +1370,8 @@ func (v ExportResponseType) String() string {
 // FromInterface for decoding from an interface
 func (v *ExportResponseType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ExportResponseType:
+		*v = val
 	case int32:
 		*v = ExportResponseType(int32(val))
 	case int:

@@ -459,6 +459,8 @@ func (v StopType) String() string {
 // FromInterface for decoding from an interface
 func (v *StopType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case StopType:
+		*v = val
 	case int32:
 		*v = StopType(int32(val))
 	case int:

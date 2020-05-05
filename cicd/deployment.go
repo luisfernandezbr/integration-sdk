@@ -257,6 +257,8 @@ func (v DeploymentEnvironment) String() string {
 // FromInterface for decoding from an interface
 func (v *DeploymentEnvironment) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case DeploymentEnvironment:
+		*v = val
 	case int32:
 		*v = DeploymentEnvironment(int32(val))
 	case int:
@@ -459,6 +461,8 @@ func (v DeploymentStatus) String() string {
 // FromInterface for decoding from an interface
 func (v *DeploymentStatus) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case DeploymentStatus:
+		*v = val
 	case int32:
 		*v = DeploymentStatus(int32(val))
 	case int:

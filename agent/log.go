@@ -459,6 +459,8 @@ func (v LogType) String() string {
 // FromInterface for decoding from an interface
 func (v *LogType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case LogType:
+		*v = val
 	case int32:
 		*v = LogType(int32(val))
 	case int:

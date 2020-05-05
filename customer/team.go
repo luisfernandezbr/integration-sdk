@@ -298,6 +298,8 @@ func (v TeamUsersType) String() string {
 // FromInterface for decoding from an interface
 func (v *TeamUsersType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case TeamUsersType:
+		*v = val
 	case int32:
 		*v = TeamUsersType(int32(val))
 	case int:

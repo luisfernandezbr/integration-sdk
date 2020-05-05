@@ -1069,6 +1069,8 @@ func (v RepoRequestIntegrationLocation) String() string {
 // FromInterface for decoding from an interface
 func (v *RepoRequestIntegrationLocation) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case RepoRequestIntegrationLocation:
+		*v = val
 	case int32:
 		*v = RepoRequestIntegrationLocation(int32(val))
 	case int:
@@ -1355,6 +1357,8 @@ func (v RepoRequestIntegrationState) String() string {
 // FromInterface for decoding from an interface
 func (v *RepoRequestIntegrationState) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case RepoRequestIntegrationState:
+		*v = val
 	case int32:
 		*v = RepoRequestIntegrationState(int32(val))
 	case int:
@@ -1461,6 +1465,8 @@ func (v RepoRequestIntegrationSystemType) String() string {
 // FromInterface for decoding from an interface
 func (v *RepoRequestIntegrationSystemType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case RepoRequestIntegrationSystemType:
+		*v = val
 	case int32:
 		*v = RepoRequestIntegrationSystemType(int32(val))
 	case int:

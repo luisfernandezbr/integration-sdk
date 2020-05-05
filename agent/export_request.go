@@ -1075,6 +1075,8 @@ func (v ExportRequestIntegrationsLocation) String() string {
 // FromInterface for decoding from an interface
 func (v *ExportRequestIntegrationsLocation) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ExportRequestIntegrationsLocation:
+		*v = val
 	case int32:
 		*v = ExportRequestIntegrationsLocation(int32(val))
 	case int:
@@ -1361,6 +1363,8 @@ func (v ExportRequestIntegrationsState) String() string {
 // FromInterface for decoding from an interface
 func (v *ExportRequestIntegrationsState) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ExportRequestIntegrationsState:
+		*v = val
 	case int32:
 		*v = ExportRequestIntegrationsState(int32(val))
 	case int:
@@ -1467,6 +1471,8 @@ func (v ExportRequestIntegrationsSystemType) String() string {
 // FromInterface for decoding from an interface
 func (v *ExportRequestIntegrationsSystemType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case ExportRequestIntegrationsSystemType:
+		*v = val
 	case int32:
 		*v = ExportRequestIntegrationsSystemType(int32(val))
 	case int:

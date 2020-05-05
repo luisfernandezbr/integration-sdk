@@ -459,6 +459,8 @@ func (v EnabledType) String() string {
 // FromInterface for decoding from an interface
 func (v *EnabledType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case EnabledType:
+		*v = val
 	case int32:
 		*v = EnabledType(int32(val))
 	case int:

@@ -895,6 +895,8 @@ func (v WebhookResponseType) String() string {
 // FromInterface for decoding from an interface
 func (v *WebhookResponseType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case WebhookResponseType:
+		*v = val
 	case int32:
 		*v = WebhookResponseType(int32(val))
 	case int:

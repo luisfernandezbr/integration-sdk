@@ -669,6 +669,8 @@ func (v CalendarResponseType) String() string {
 // FromInterface for decoding from an interface
 func (v *CalendarResponseType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case CalendarResponseType:
+		*v = val
 	case int32:
 		*v = CalendarResponseType(int32(val))
 	case int:

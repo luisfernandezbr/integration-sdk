@@ -231,6 +231,8 @@ func (v MetricStatus) String() string {
 // FromInterface for decoding from an interface
 func (v *MetricStatus) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case MetricStatus:
+		*v = val
 	case int32:
 		*v = MetricStatus(int32(val))
 	case int:

@@ -778,6 +778,8 @@ func (v IssueChangeLogField) String() string {
 // FromInterface for decoding from an interface
 func (v *IssueChangeLogField) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case IssueChangeLogField:
+		*v = val
 	case int32:
 		*v = IssueChangeLogField(int32(val))
 	case int:
@@ -1447,6 +1449,8 @@ func (v IssueLinkedIssuesLinkType) String() string {
 // FromInterface for decoding from an interface
 func (v *IssueLinkedIssuesLinkType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case IssueLinkedIssuesLinkType:
+		*v = val
 	case int32:
 		*v = IssueLinkedIssuesLinkType(int32(val))
 	case int:

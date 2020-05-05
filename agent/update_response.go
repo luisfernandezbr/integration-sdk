@@ -463,6 +463,8 @@ func (v UpdateResponseType) String() string {
 // FromInterface for decoding from an interface
 func (v *UpdateResponseType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case UpdateResponseType:
+		*v = val
 	case int32:
 		*v = UpdateResponseType(int32(val))
 	case int:

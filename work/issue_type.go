@@ -149,6 +149,8 @@ func (v IssueTypeMappedType) String() string {
 // FromInterface for decoding from an interface
 func (v *IssueTypeMappedType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case IssueTypeMappedType:
+		*v = val
 	case int32:
 		*v = IssueTypeMappedType(int32(val))
 	case int:

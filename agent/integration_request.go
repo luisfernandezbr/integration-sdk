@@ -1069,6 +1069,8 @@ func (v IntegrationRequestIntegrationLocation) String() string {
 // FromInterface for decoding from an interface
 func (v *IntegrationRequestIntegrationLocation) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case IntegrationRequestIntegrationLocation:
+		*v = val
 	case int32:
 		*v = IntegrationRequestIntegrationLocation(int32(val))
 	case int:
@@ -1355,6 +1357,8 @@ func (v IntegrationRequestIntegrationState) String() string {
 // FromInterface for decoding from an interface
 func (v *IntegrationRequestIntegrationState) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case IntegrationRequestIntegrationState:
+		*v = val
 	case int32:
 		*v = IntegrationRequestIntegrationState(int32(val))
 	case int:
@@ -1461,6 +1465,8 @@ func (v IntegrationRequestIntegrationSystemType) String() string {
 // FromInterface for decoding from an interface
 func (v *IntegrationRequestIntegrationSystemType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case IntegrationRequestIntegrationSystemType:
+		*v = val
 	case int32:
 		*v = IntegrationRequestIntegrationSystemType(int32(val))
 	case int:

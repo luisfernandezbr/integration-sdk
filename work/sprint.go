@@ -437,6 +437,8 @@ func (v SprintStatus) String() string {
 // FromInterface for decoding from an interface
 func (v *SprintStatus) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case SprintStatus:
+		*v = val
 	case int32:
 		*v = SprintStatus(int32(val))
 	case int:

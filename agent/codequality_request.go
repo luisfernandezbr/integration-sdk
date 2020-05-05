@@ -1069,6 +1069,8 @@ func (v CodequalityRequestIntegrationLocation) String() string {
 // FromInterface for decoding from an interface
 func (v *CodequalityRequestIntegrationLocation) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case CodequalityRequestIntegrationLocation:
+		*v = val
 	case int32:
 		*v = CodequalityRequestIntegrationLocation(int32(val))
 	case int:
@@ -1355,6 +1357,8 @@ func (v CodequalityRequestIntegrationState) String() string {
 // FromInterface for decoding from an interface
 func (v *CodequalityRequestIntegrationState) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case CodequalityRequestIntegrationState:
+		*v = val
 	case int32:
 		*v = CodequalityRequestIntegrationState(int32(val))
 	case int:
@@ -1461,6 +1465,8 @@ func (v CodequalityRequestIntegrationSystemType) String() string {
 // FromInterface for decoding from an interface
 func (v *CodequalityRequestIntegrationSystemType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case CodequalityRequestIntegrationSystemType:
+		*v = val
 	case int32:
 		*v = CodequalityRequestIntegrationSystemType(int32(val))
 	case int:

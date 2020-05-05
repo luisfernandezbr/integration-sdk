@@ -255,6 +255,8 @@ func (v BuildEnvironment) String() string {
 // FromInterface for decoding from an interface
 func (v *BuildEnvironment) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case BuildEnvironment:
+		*v = val
 	case int32:
 		*v = BuildEnvironment(int32(val))
 	case int:
@@ -457,6 +459,8 @@ func (v BuildStatus) String() string {
 // FromInterface for decoding from an interface
 func (v *BuildStatus) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case BuildStatus:
+		*v = val
 	case int32:
 		*v = BuildStatus(int32(val))
 	case int:

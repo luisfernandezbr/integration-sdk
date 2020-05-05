@@ -459,6 +459,8 @@ func (v UninstallResponseType) String() string {
 // FromInterface for decoding from an interface
 func (v *UninstallResponseType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case UninstallResponseType:
+		*v = val
 	case int32:
 		*v = UninstallResponseType(int32(val))
 	case int:

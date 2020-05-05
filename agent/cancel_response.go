@@ -567,6 +567,8 @@ func (v CancelResponseType) String() string {
 // FromInterface for decoding from an interface
 func (v *CancelResponseType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case CancelResponseType:
+		*v = val
 	case int32:
 		*v = CancelResponseType(int32(val))
 	case int:

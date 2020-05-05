@@ -123,6 +123,8 @@ func (v UserType) String() string {
 // FromInterface for decoding from an interface
 func (v *UserType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case UserType:
+		*v = val
 	case int32:
 		*v = UserType(int32(val))
 	case int:

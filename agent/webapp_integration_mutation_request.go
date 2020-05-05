@@ -161,6 +161,8 @@ func (v WebappIntegrationMutationRequestAction) String() string {
 // FromInterface for decoding from an interface
 func (v *WebappIntegrationMutationRequestAction) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case WebappIntegrationMutationRequestAction:
+		*v = val
 	case int32:
 		*v = WebappIntegrationMutationRequestAction(int32(val))
 	case int:
@@ -379,6 +381,8 @@ func (v WebappIntegrationMutationRequestSystemType) String() string {
 // FromInterface for decoding from an interface
 func (v *WebappIntegrationMutationRequestSystemType) FromInterface(o interface{}) error {
 	switch val := o.(type) {
+	case WebappIntegrationMutationRequestSystemType:
+		*v = val
 	case int32:
 		*v = WebappIntegrationMutationRequestSystemType(int32(val))
 	case int:
