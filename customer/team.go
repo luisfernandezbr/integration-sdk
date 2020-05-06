@@ -351,7 +351,7 @@ type TeamUsers struct {
 	// AvatarURL the avatar of the user in case there is no relation. this might not be set always if source system doesn't support
 	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"-"`
 	// ID the corporate user id
-	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
+	ID string `json:"-"`
 	// Name the name of the user
 	Name *string `json:"name,omitempty" codec:"name,omitempty" bson:"name" yaml:"name,omitempty" faker:"-"`
 	// Nickname the nick name of the user (usually the first name if they have a profile)
@@ -361,7 +361,7 @@ type TeamUsers struct {
 	// RefID the ref_id of the user in the source system
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// TeamID the corporate team id
-	TeamID string `json:"team_id" codec:"team_id" bson:"team_id" yaml:"team_id" faker:"-"`
+	TeamID string `json:"-"`
 	// Type the type of user
 	Type TeamUsersType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// URL a url to the user in the source system
