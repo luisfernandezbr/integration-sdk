@@ -134,56 +134,6 @@ func (o *EventEndDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
 	o.setDefaults(false)
 }
 
@@ -233,66 +183,6 @@ func (o *EventLocation) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["details"].(string); ok {
-		o.Details = val
-	} else {
-		if val, ok := kv["details"]; ok {
-			if val == nil {
-				o.Details = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Details = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Name = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["url"].(string); ok {
-		o.URL = val
-	} else {
-		if val, ok := kv["url"]; ok {
-			if val == nil {
-				o.URL = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.URL = fmt.Sprintf("%v", val)
-			}
-		}
 	}
 	o.setDefaults(false)
 }
@@ -414,9 +304,6 @@ func toEventParticipantsObject(o interface{}, isoptional bool) interface{} {
 	case *EventParticipants:
 		return v.ToMap()
 
-	case EventParticipantsStatus:
-		return v.String()
-
 	default:
 		return o
 	}
@@ -446,57 +333,6 @@ func (o *EventParticipants) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["status"].(EventParticipantsStatus); ok {
-		o.Status = val
-	} else {
-		if em, ok := kv["status"].(map[string]interface{}); ok {
-
-			ev := em["calendar.status"].(string)
-			switch ev {
-			case "unknown", "UNKNOWN":
-				o.Status = 0
-			case "maybe", "MAYBE":
-				o.Status = 1
-			case "going", "GOING":
-				o.Status = 2
-			case "not_going", "NOT_GOING":
-				o.Status = 3
-			}
-		}
-		if em, ok := kv["status"].(string); ok {
-			switch em {
-			case "unknown", "UNKNOWN":
-				o.Status = 0
-			case "maybe", "MAYBE":
-				o.Status = 1
-			case "going", "GOING":
-				o.Status = 2
-			case "not_going", "NOT_GOING":
-				o.Status = 3
-			}
-		}
-	}
-
-	if val, ok := kv["user_ref_id"].(string); ok {
-		o.UserRefID = val
-	} else {
-		if val, ok := kv["user_ref_id"]; ok {
-			if val == nil {
-				o.UserRefID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.UserRefID = fmt.Sprintf("%v", val)
-			}
-		}
 	}
 	o.setDefaults(false)
 }
@@ -547,56 +383,6 @@ func (o *EventStartDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
 	}
 	o.setDefaults(false)
 }

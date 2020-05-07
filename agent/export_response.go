@@ -57,8 +57,6 @@ const (
 	ExportResponseModelEventDateOffsetColumn = "offset"
 	// ExportResponseModelEventDateRfc3339Column is the column json value rfc3339
 	ExportResponseModelEventDateRfc3339Column = "rfc3339"
-	// ExportResponseModelIntegrationsExportTypeColumn is the column json value export_type
-	ExportResponseModelIntegrationsExportTypeColumn = "export_type"
 	// ExportResponseModelFreeSpaceColumn is the column json value free_space
 	ExportResponseModelFreeSpaceColumn = "free_space"
 	// ExportResponseModelGoVersionColumn is the column json value go_version
@@ -81,6 +79,8 @@ const (
 	ExportResponseModelIntegrationsEntityErrorsWebhookErrorColumn = "webhook_error"
 	// ExportResponseModelIntegrationsErrorColumn is the column json value error
 	ExportResponseModelIntegrationsErrorColumn = "error"
+	// ExportResponseModelIntegrationsExportTypeColumn is the column json value export_type
+	ExportResponseModelIntegrationsExportTypeColumn = "export_type"
 	// ExportResponseModelIntegrationsIntegrationIDColumn is the column json value integration_id
 	ExportResponseModelIntegrationsIntegrationIDColumn = "integration_id"
 	// ExportResponseModelIntegrationsNameColumn is the column json value name
@@ -188,56 +188,6 @@ func (o *ExportResponseEndDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
 	o.setDefaults(false)
 }
 
@@ -288,55 +238,59 @@ func (o *ExportResponseEventDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	o.setDefaults(false)
+}
 
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
+// ExportResponseIntegrationsEntityErrors represents the object structure for entity_errors
+type ExportResponseIntegrationsEntityErrors struct {
+	// ID entity id
+	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// RefID entity ref_id
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// Error error message if set integration failed when trying to export this entity
+	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
+	// WebhookError error message if set integration failed when installing webhook for this entity
+	WebhookError string `json:"webhook_error" codec:"webhook_error" bson:"webhook_error" yaml:"webhook_error" faker:"-"`
+}
+
+func toExportResponseIntegrationsEntityErrorsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ExportResponseIntegrationsEntityErrors:
+		return v.ToMap()
+
+	default:
+		return o
 	}
+}
 
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
+// ToMap returns the object as a map
+func (o *ExportResponseIntegrationsEntityErrors) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// ID entity id
+		"id": toExportResponseIntegrationsEntityErrorsObject(o.ID, false),
+		// RefID entity ref_id
+		"ref_id": toExportResponseIntegrationsEntityErrorsObject(o.RefID, false),
+		// Error error message if set integration failed when trying to export this entity
+		"error": toExportResponseIntegrationsEntityErrorsObject(o.Error, false),
+		// WebhookError error message if set integration failed when installing webhook for this entity
+		"webhook_error": toExportResponseIntegrationsEntityErrorsObject(o.WebhookError, false),
 	}
+}
 
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
+func (o *ExportResponseIntegrationsEntityErrors) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportResponseIntegrationsEntityErrors) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
 	}
 	o.setDefaults(false)
 }
@@ -420,140 +374,6 @@ const (
 	// ExportResponseIntegrationsExportTypeIncremental is the enumeration value for incremental
 	ExportResponseIntegrationsExportTypeIncremental ExportResponseIntegrationsExportType = 1
 )
-
-// ExportResponseIntegrationsEntityErrors represents the object structure for entity_errors
-type ExportResponseIntegrationsEntityErrors struct {
-	// ID entity id
-	ID string `json:"id" codec:"id" bson:"id" yaml:"id" faker:"-"`
-	// RefID entity ref_id
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// Error error message if set integration failed when trying to export this entity
-	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
-	// WebhookError error message if set integration failed when installing webhook for this entity
-	WebhookError string `json:"webhook_error" codec:"webhook_error" bson:"webhook_error" yaml:"webhook_error" faker:"-"`
-}
-
-func toExportResponseIntegrationsEntityErrorsObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ExportResponseIntegrationsEntityErrors:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *ExportResponseIntegrationsEntityErrors) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// ID entity id
-		"id": toExportResponseIntegrationsEntityErrorsObject(o.ID, false),
-		// RefID entity ref_id
-		"ref_id": toExportResponseIntegrationsEntityErrorsObject(o.RefID, false),
-		// Error error message if set integration failed when trying to export this entity
-		"error": toExportResponseIntegrationsEntityErrorsObject(o.Error, false),
-		// WebhookError error message if set integration failed when installing webhook for this entity
-		"webhook_error": toExportResponseIntegrationsEntityErrorsObject(o.WebhookError, false),
-	}
-}
-
-func (o *ExportResponseIntegrationsEntityErrors) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ExportResponseIntegrationsEntityErrors) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	} else {
-		if val, ok := kv["ref_id"]; ok {
-			if val == nil {
-				o.RefID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.RefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["error"].(string); ok {
-		o.Error = val
-	} else {
-		if val, ok := kv["error"]; ok {
-			if val == nil {
-				o.Error = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Error = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["webhook_error"].(string); ok {
-		o.WebhookError = val
-	} else {
-		if val, ok := kv["webhook_error"]; ok {
-			if val == nil {
-				o.WebhookError = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.WebhookError = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
 
 // ExportResponseIntegrationsSystemType is the enumeration type for system_type
 type ExportResponseIntegrationsSystemType int32
@@ -680,18 +500,6 @@ func toExportResponseIntegrationsObject(o interface{}, isoptional bool) interfac
 	case *ExportResponseIntegrations:
 		return v.ToMap()
 
-	case []ExportResponseIntegrationsEntityErrors:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
-
-	case ExportResponseIntegrationsExportType:
-		return v.String()
-
-	case ExportResponseIntegrationsSystemType:
-		return v.String()
 	default:
 		return o
 	}
@@ -729,183 +537,6 @@ func (o *ExportResponseIntegrations) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if o == nil {
-
-		o.EntityErrors = make([]ExportResponseIntegrationsEntityErrors, 0)
-
-	}
-	if val, ok := kv["entity_errors"]; ok {
-		if sv, ok := val.([]ExportResponseIntegrationsEntityErrors); ok {
-			o.EntityErrors = sv
-		} else if sp, ok := val.([]*ExportResponseIntegrationsEntityErrors); ok {
-			o.EntityErrors = o.EntityErrors[:0]
-			for _, e := range sp {
-				o.EntityErrors = append(o.EntityErrors, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(ExportResponseIntegrationsEntityErrors); ok {
-					o.EntityErrors = append(o.EntityErrors, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm ExportResponseIntegrationsEntityErrors
-					fm.FromMap(av)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					bkv := make(map[string]interface{})
-					json.Unmarshal(b, &bkv)
-					var av ExportResponseIntegrationsEntityErrors
-					av.FromMap(bkv)
-					o.EntityErrors = append(o.EntityErrors, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(ExportResponseIntegrationsEntityErrors); ok {
-					o.EntityErrors = append(o.EntityErrors, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm ExportResponseIntegrationsEntityErrors
-					fm.FromMap(r)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := ExportResponseIntegrationsEntityErrors{}
-					fm.FromMap(r)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm ExportResponseIntegrationsEntityErrors
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.EntityErrors = append(o.EntityErrors, fm)
-						}
-					}
-				}
-			}
-		}
-	}
-
-	if val, ok := kv["error"].(string); ok {
-		o.Error = val
-	} else {
-		if val, ok := kv["error"]; ok {
-			if val == nil {
-				o.Error = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Error = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["export_type"].(ExportResponseIntegrationsExportType); ok {
-		o.ExportType = val
-	} else {
-		if em, ok := kv["export_type"].(map[string]interface{}); ok {
-
-			ev := em["agent.export_type"].(string)
-			switch ev {
-			case "historical", "HISTORICAL":
-				o.ExportType = 0
-			case "incremental", "INCREMENTAL":
-				o.ExportType = 1
-			}
-		}
-		if em, ok := kv["export_type"].(string); ok {
-			switch em {
-			case "historical", "HISTORICAL":
-				o.ExportType = 0
-			case "incremental", "INCREMENTAL":
-				o.ExportType = 1
-			}
-		}
-	}
-
-	if val, ok := kv["integration_id"].(string); ok {
-		o.IntegrationID = val
-	} else {
-		if val, ok := kv["integration_id"]; ok {
-			if val == nil {
-				o.IntegrationID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.IntegrationID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Name = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["system_type"].(ExportResponseIntegrationsSystemType); ok {
-		o.SystemType = val
-	} else {
-		if em, ok := kv["system_type"].(map[string]interface{}); ok {
-
-			ev := em["agent.system_type"].(string)
-			switch ev {
-			case "work", "WORK":
-				o.SystemType = 0
-			case "sourcecode", "SOURCECODE":
-				o.SystemType = 1
-			case "codequality", "CODEQUALITY":
-				o.SystemType = 2
-			case "user", "USER":
-				o.SystemType = 3
-			}
-		}
-		if em, ok := kv["system_type"].(string); ok {
-			switch em {
-			case "work", "WORK":
-				o.SystemType = 0
-			case "sourcecode", "SOURCECODE":
-				o.SystemType = 1
-			case "codequality", "CODEQUALITY":
-				o.SystemType = 2
-			case "user", "USER":
-				o.SystemType = 3
-			}
-		}
 	}
 	o.setDefaults(false)
 }
@@ -957,56 +588,6 @@ func (o *ExportResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
 	o.setDefaults(false)
 }
 
@@ -1056,56 +637,6 @@ func (o *ExportResponseStartDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
 	}
 	o.setDefaults(false)
 }

@@ -70,8 +70,6 @@ const (
 	TeamModelRefTypeColumn = "ref_type"
 	// TeamModelRepoIdsColumn is the column json value repo_ids
 	TeamModelRepoIdsColumn = "repo_ids"
-	// TeamModelUsersTypeColumn is the column json value type
-	TeamModelUsersTypeColumn = "type"
 	// TeamModelUpdatedAtColumn is the column json value updated_ts
 	TeamModelUpdatedAtColumn = "updated_ts"
 	// TeamModelUsersColumn is the column json value users
@@ -90,6 +88,8 @@ const (
 	TeamModelUsersRefIDColumn = "ref_id"
 	// TeamModelUsersTeamIDColumn is the column json value team_id
 	TeamModelUsersTeamIDColumn = "team_id"
+	// TeamModelUsersTypeColumn is the column json value type
+	TeamModelUsersTypeColumn = "type"
 	// TeamModelUsersURLColumn is the column json value url
 	TeamModelUsersURLColumn = "url"
 )
@@ -140,56 +140,6 @@ func (o *TeamDeletedDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
 	}
 	o.setDefaults(false)
 }
@@ -373,9 +323,6 @@ func toTeamUsersObject(o interface{}, isoptional bool) interface{} {
 	case *TeamUsers:
 		return v.ToMap()
 
-	case TeamUsersType:
-		return v.String()
-
 	default:
 		return o
 	}
@@ -419,203 +366,6 @@ func (o *TeamUsers) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
-	}
-
-	if val, ok := kv["avatar_url"].(*string); ok {
-		o.AvatarURL = val
-	} else if val, ok := kv["avatar_url"].(string); ok {
-		o.AvatarURL = &val
-	} else {
-		if val, ok := kv["avatar_url"]; ok {
-			if val == nil {
-				o.AvatarURL = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["name"].(*string); ok {
-		o.Name = val
-	} else if val, ok := kv["name"].(string); ok {
-		o.Name = &val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-
-	if val, ok := kv["nickname"].(*string); ok {
-		o.Nickname = val
-	} else if val, ok := kv["nickname"].(string); ok {
-		o.Nickname = &val
-	} else {
-		if val, ok := kv["nickname"]; ok {
-			if val == nil {
-				o.Nickname = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.Nickname = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-
-	if val, ok := kv["profile_id"].(*string); ok {
-		o.ProfileID = val
-	} else if val, ok := kv["profile_id"].(string); ok {
-		o.ProfileID = &val
-	} else {
-		if val, ok := kv["profile_id"]; ok {
-			if val == nil {
-				o.ProfileID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.ProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	} else {
-		if val, ok := kv["ref_id"]; ok {
-			if val == nil {
-				o.RefID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.RefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["team_id"].(string); ok {
-		o.TeamID = val
-	} else {
-		if val, ok := kv["team_id"]; ok {
-			if val == nil {
-				o.TeamID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.TeamID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-
-	if val, ok := kv["type"].(TeamUsersType); ok {
-		o.Type = val
-	} else {
-		if em, ok := kv["type"].(map[string]interface{}); ok {
-
-			ev := em["customer.type"].(string)
-			switch ev {
-			case "none", "NONE":
-				o.Type = 0
-			case "trackable", "TRACKABLE":
-				o.Type = 1
-			case "bot", "BOT":
-				o.Type = 2
-			case "untrackable", "UNTRACKABLE":
-				o.Type = 3
-			case "unmapped", "UNMAPPED":
-				o.Type = 4
-			case "terminated", "TERMINATED":
-				o.Type = 5
-			case "deleted", "DELETED":
-				o.Type = 6
-			case "invited", "INVITED":
-				o.Type = 7
-			}
-		}
-		if em, ok := kv["type"].(string); ok {
-			switch em {
-			case "none", "NONE":
-				o.Type = 0
-			case "trackable", "TRACKABLE":
-				o.Type = 1
-			case "bot", "BOT":
-				o.Type = 2
-			case "untrackable", "UNTRACKABLE":
-				o.Type = 3
-			case "unmapped", "UNMAPPED":
-				o.Type = 4
-			case "terminated", "TERMINATED":
-				o.Type = 5
-			case "deleted", "DELETED":
-				o.Type = 6
-			case "invited", "INVITED":
-				o.Type = 7
-			}
-		}
-	}
-
-	if val, ok := kv["url"].(*string); ok {
-		o.URL = val
-	} else if val, ok := kv["url"].(string); ok {
-		o.URL = &val
-	} else {
-		if val, ok := kv["url"]; ok {
-			if val == nil {
-				o.URL = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
 	}
 	o.setDefaults(false)
 }
@@ -1432,12 +1182,6 @@ func getTeamQueryFields() string {
 	// object with fields
 	sb.WriteString("\t\t\tdeleted_date {\n")
 
-	// scalar
-	sb.WriteString("\t\t\tepoch\n")
-	// scalar
-	sb.WriteString("\t\t\toffset\n")
-	// scalar
-	sb.WriteString("\t\t\trfc3339\n")
 	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\tdescription\n")
@@ -1462,24 +1206,6 @@ func getTeamQueryFields() string {
 	// object with fields
 	sb.WriteString("\t\t\tusers {\n")
 
-	// scalar
-	sb.WriteString("\t\t\tavatar_url\n")
-	// scalar
-	sb.WriteString("\t\t\tid\n")
-	// scalar
-	sb.WriteString("\t\t\tname\n")
-	// scalar
-	sb.WriteString("\t\t\tnickname\n")
-	// scalar
-	sb.WriteString("\t\t\tprofile_id\n")
-	// scalar
-	sb.WriteString("\t\t\tref_id\n")
-	// scalar
-	sb.WriteString("\t\t\tteam_id\n")
-	// scalar
-	sb.WriteString("\t\t\ttype\n")
-	// scalar
-	sb.WriteString("\t\t\turl\n")
 	sb.WriteString("\t\t\t}\n")
 	return sb.String()
 }
