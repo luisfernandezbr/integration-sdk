@@ -13,6 +13,7 @@ import (
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
@@ -112,6 +113,53 @@ func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -453,7 +501,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["branch"].(*string); ok {
 		o.Branch = val
 	} else if val, ok := kv["branch"].(string); ok {
@@ -471,7 +518,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["commit_id"].(*string); ok {
 		o.CommitID = val
 	} else if val, ok := kv["commit_id"].(string); ok {
@@ -489,7 +535,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["commit_sha"].(*string); ok {
 		o.CommitSha = val
 	} else if val, ok := kv["commit_sha"].(string); ok {
@@ -560,7 +605,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -580,7 +624,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -600,7 +643,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["project_id"].(string); ok {
 		o.ProjectID = val
 	} else {
@@ -620,7 +662,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["pull_request_id"].(*string); ok {
 		o.PullRequestID = val
 	} else if val, ok := kv["pull_request_id"].(string); ok {
@@ -638,7 +679,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["pull_request_ref_id"].(*string); ok {
 		o.PullRequestRefID = val
 	} else if val, ok := kv["pull_request_ref_id"].(string); ok {
@@ -656,7 +696,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -676,7 +715,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -696,7 +734,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["repo_id"].(*string); ok {
 		o.RepoID = val
 	} else if val, ok := kv["repo_id"].(string); ok {
@@ -714,7 +751,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["status"].(MetricStatus); ok {
 		o.Status = val
 	} else {
@@ -741,7 +777,6 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["value"].(string); ok {
 		o.Value = val
 	} else {

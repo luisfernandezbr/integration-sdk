@@ -174,6 +174,53 @@ func (o *WebhookResponseAgentReceivedDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -223,6 +270,53 @@ func (o *WebhookResponseAgentResponseSentDate) FromMap(kv map[string]interface{}
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -274,6 +368,53 @@ func (o *WebhookResponseEventAPIReceivedDate) FromMap(kv map[string]interface{})
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -323,6 +464,53 @@ func (o *WebhookResponseEventDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -374,6 +562,53 @@ func (o *WebhookResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -423,6 +658,53 @@ func (o *WebhookResponseOperatorReceivedDate) FromMap(kv map[string]interface{})
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -1066,7 +1348,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -1086,7 +1367,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["data"].(*string); ok {
 		o.Data = val
 	} else if val, ok := kv["data"].(string); ok {
@@ -1104,7 +1384,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -1124,7 +1403,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
 	} else if val, ok := kv["error"].(string); ok {
@@ -1204,7 +1482,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["go_version"].(string); ok {
 		o.GoVersion = val
 	} else {
@@ -1224,7 +1501,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["hostname"].(string); ok {
 		o.Hostname = val
 	} else {
@@ -1244,7 +1520,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1264,7 +1539,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["job_id"].(string); ok {
 		o.JobID = val
 	} else {
@@ -1313,7 +1587,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -1333,7 +1606,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["num_cpu"].(int64); ok {
 		o.NumCPU = val
 	} else {
@@ -1401,7 +1673,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1421,7 +1692,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1441,7 +1711,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["request_id"].(string); ok {
 		o.RequestID = val
 	} else {
@@ -1461,7 +1730,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
@@ -1473,7 +1741,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["system_id"].(string); ok {
 		o.SystemID = val
 	} else {
@@ -1493,7 +1760,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["type"].(WebhookResponseType); ok {
 		o.Type = val
 	} else {
@@ -1572,7 +1838,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["updated_objects"].(string); ok {
 		o.UpdatedObjects = val
 	} else {
@@ -1592,7 +1857,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uptime"].(int64); ok {
 		o.Uptime = val
 	} else {
@@ -1607,7 +1871,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1627,7 +1890,6 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["version"].(string); ok {
 		o.Version = val
 	} else {

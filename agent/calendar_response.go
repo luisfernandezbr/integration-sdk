@@ -174,6 +174,123 @@ func (o *CalendarResponseCalendars) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["enabled"].(bool); ok {
+		o.Enabled = val
+	} else {
+		if val, ok := kv["enabled"]; ok {
+			if val == nil {
+				o.Enabled = false
+			} else {
+				o.Enabled = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["user_ref_id"].(string); ok {
+		o.UserRefID = val
+	} else {
+		if val, ok := kv["user_ref_id"]; ok {
+			if val == nil {
+				o.UserRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.UserRefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -224,6 +341,53 @@ func (o *CalendarResponseEventDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -273,6 +437,53 @@ func (o *CalendarResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -816,7 +1027,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
 	} else {
@@ -919,7 +1129,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["data"].(*string); ok {
 		o.Data = val
 	} else if val, ok := kv["data"].(string); ok {
@@ -937,7 +1146,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -957,7 +1165,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
 	} else if val, ok := kv["error"].(string); ok {
@@ -985,25 +1192,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CalendarResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1023,7 +1211,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["go_version"].(string); ok {
 		o.GoVersion = val
 	} else {
@@ -1043,7 +1230,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["hostname"].(string); ok {
 		o.Hostname = val
 	} else {
@@ -1063,7 +1249,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1083,7 +1268,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["integration_id"].(string); ok {
 		o.IntegrationID = val
 	} else {
@@ -1113,25 +1297,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CalendarResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1151,7 +1316,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -1171,7 +1335,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["num_cpu"].(int64); ok {
 		o.NumCPU = val
 	} else {
@@ -1186,7 +1349,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["os"].(string); ok {
 		o.OS = val
 	} else {
@@ -1206,7 +1368,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1226,7 +1387,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1246,7 +1406,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["request_id"].(string); ok {
 		o.RequestID = val
 	} else {
@@ -1266,7 +1425,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
@@ -1278,7 +1436,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["system_id"].(string); ok {
 		o.SystemID = val
 	} else {
@@ -1298,7 +1455,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["type"].(CalendarResponseType); ok {
 		o.Type = val
 	} else {
@@ -1377,7 +1533,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uptime"].(int64); ok {
 		o.Uptime = val
 	} else {
@@ -1392,7 +1547,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1412,7 +1566,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["version"].(string); ok {
 		o.Version = val
 	} else {

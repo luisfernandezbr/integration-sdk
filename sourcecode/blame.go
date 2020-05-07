@@ -140,6 +140,53 @@ func (o *BlameChangeDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -201,6 +248,96 @@ func (o *BlameLines) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["author_ref_id"].(string); ok {
+		o.AuthorRefID = val
+	} else {
+		if val, ok := kv["author_ref_id"]; ok {
+			if val == nil {
+				o.AuthorRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.AuthorRefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["blank"].(bool); ok {
+		o.Blank = val
+	} else {
+		if val, ok := kv["blank"]; ok {
+			if val == nil {
+				o.Blank = false
+			} else {
+				o.Blank = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["code"].(bool); ok {
+		o.Code = val
+	} else {
+		if val, ok := kv["code"]; ok {
+			if val == nil {
+				o.Code = false
+			} else {
+				o.Code = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["comment"].(bool); ok {
+		o.Comment = val
+	} else {
+		if val, ok := kv["comment"]; ok {
+			if val == nil {
+				o.Comment = false
+			} else {
+				o.Comment = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["date"].(string); ok {
+		o.Date = val
+	} else {
+		if val, ok := kv["date"]; ok {
+			if val == nil {
+				o.Date = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Date = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["sha"].(string); ok {
+		o.Sha = val
+	} else {
+		if val, ok := kv["sha"]; ok {
+			if val == nil {
+				o.Sha = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Sha = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -568,7 +705,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["blanks"].(int64); ok {
 		o.Blanks = val
 	} else {
@@ -631,7 +767,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["commit_id"].(string); ok {
 		o.CommitID = val
 	} else {
@@ -651,7 +786,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["complexity"].(int64); ok {
 		o.Complexity = val
 	} else {
@@ -666,7 +800,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -686,7 +819,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["excluded"].(bool); ok {
 		o.Excluded = val
 	} else {
@@ -698,7 +830,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["excluded_reason"].(string); ok {
 		o.ExcludedReason = val
 	} else {
@@ -718,7 +849,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["filename"].(string); ok {
 		o.Filename = val
 	} else {
@@ -738,7 +868,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -758,7 +887,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["language"].(string); ok {
 		o.Language = val
 	} else {
@@ -778,7 +906,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["license"].(*string); ok {
 		o.License = val
 	} else if val, ok := kv["license"].(string); ok {
@@ -874,7 +1001,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -894,7 +1020,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -914,7 +1039,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["repo_id"].(string); ok {
 		o.RepoID = val
 	} else {
@@ -934,7 +1058,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["sha"].(string); ok {
 		o.Sha = val
 	} else {
@@ -954,7 +1077,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["size"].(int64); ok {
 		o.Size = val
 	} else {
@@ -969,7 +1091,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["sloc"].(int64); ok {
 		o.Sloc = val
 	} else {
@@ -984,7 +1105,6 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["status"].(BlameStatus); ok {
 		o.Status = val
 	} else {

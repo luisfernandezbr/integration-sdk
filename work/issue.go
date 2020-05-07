@@ -232,6 +232,53 @@ func (o *IssueAttachmentsCreatedDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -258,6 +305,9 @@ type IssueAttachments struct {
 func toIssueAttachmentsObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *IssueAttachments:
+		return v.ToMap()
+
+	case IssueAttachmentsCreatedDate:
 		return v.ToMap()
 
 	default:
@@ -301,6 +351,168 @@ func (o *IssueAttachments) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(IssueAttachmentsCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*IssueAttachmentsCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["mime_type"].(string); ok {
+		o.MimeType = val
+	} else {
+		if val, ok := kv["mime_type"]; ok {
+			if val == nil {
+				o.MimeType = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.MimeType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["size"].(int64); ok {
+		o.Size = val
+	} else {
+		if val, ok := kv["size"]; ok {
+			if val == nil {
+				o.Size = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Size = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["thumbnail_url"].(string); ok {
+		o.ThumbnailURL = val
+	} else {
+		if val, ok := kv["thumbnail_url"]; ok {
+			if val == nil {
+				o.ThumbnailURL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ThumbnailURL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["user_ref_id"].(string); ok {
+		o.UserRefID = val
+	} else {
+		if val, ok := kv["user_ref_id"]; ok {
+			if val == nil {
+				o.UserRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.UserRefID = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -351,6 +563,53 @@ func (o *IssueChangeLogCreatedDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -606,6 +865,12 @@ func toIssueChangeLogObject(o interface{}, isoptional bool) interface{} {
 	case *IssueChangeLog:
 		return v.ToMap()
 
+	case IssueChangeLogCreatedDate:
+		return v.ToMap()
+
+	case IssueChangeLogField:
+		return v.String()
+
 	default:
 		return o
 	}
@@ -649,6 +914,238 @@ func (o *IssueChangeLog) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(IssueChangeLogCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*IssueChangeLogCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["field"].(IssueChangeLogField); ok {
+		o.Field = val
+	} else {
+		if em, ok := kv["field"].(map[string]interface{}); ok {
+
+			ev := em["work.field"].(string)
+			switch ev {
+			case "assignee_ref_id", "ASSIGNEE_REF_ID":
+				o.Field = 0
+			case "due_date", "DUE_DATE":
+				o.Field = 1
+			case "epic_id", "EPIC_ID":
+				o.Field = 2
+			case "identifier", "IDENTIFIER":
+				o.Field = 3
+			case "parent_id", "PARENT_ID":
+				o.Field = 4
+			case "priority", "PRIORITY":
+				o.Field = 5
+			case "project_id", "PROJECT_ID":
+				o.Field = 6
+			case "reporter_ref_id", "REPORTER_REF_ID":
+				o.Field = 7
+			case "resolution", "RESOLUTION":
+				o.Field = 8
+			case "sprint_ids", "SPRINT_IDS":
+				o.Field = 9
+			case "status", "STATUS":
+				o.Field = 10
+			case "tags", "TAGS":
+				o.Field = 11
+			case "title", "TITLE":
+				o.Field = 12
+			case "type", "TYPE":
+				o.Field = 13
+			}
+		}
+		if em, ok := kv["field"].(string); ok {
+			switch em {
+			case "assignee_ref_id", "ASSIGNEE_REF_ID":
+				o.Field = 0
+			case "due_date", "DUE_DATE":
+				o.Field = 1
+			case "epic_id", "EPIC_ID":
+				o.Field = 2
+			case "identifier", "IDENTIFIER":
+				o.Field = 3
+			case "parent_id", "PARENT_ID":
+				o.Field = 4
+			case "priority", "PRIORITY":
+				o.Field = 5
+			case "project_id", "PROJECT_ID":
+				o.Field = 6
+			case "reporter_ref_id", "REPORTER_REF_ID":
+				o.Field = 7
+			case "resolution", "RESOLUTION":
+				o.Field = 8
+			case "sprint_ids", "SPRINT_IDS":
+				o.Field = 9
+			case "status", "STATUS":
+				o.Field = 10
+			case "tags", "TAGS":
+				o.Field = 11
+			case "title", "TITLE":
+				o.Field = 12
+			case "type", "TYPE":
+				o.Field = 13
+			}
+		}
+	}
+	if val, ok := kv["from"].(string); ok {
+		o.From = val
+	} else {
+		if val, ok := kv["from"]; ok {
+			if val == nil {
+				o.From = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.From = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["from_string"].(string); ok {
+		o.FromString = val
+	} else {
+		if val, ok := kv["from_string"]; ok {
+			if val == nil {
+				o.FromString = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.FromString = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ordinal"].(int64); ok {
+		o.Ordinal = val
+	} else {
+		if val, ok := kv["ordinal"]; ok {
+			if val == nil {
+				o.Ordinal = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Ordinal = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["to"].(string); ok {
+		o.To = val
+	} else {
+		if val, ok := kv["to"]; ok {
+			if val == nil {
+				o.To = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.To = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["to_string"].(string); ok {
+		o.ToString = val
+	} else {
+		if val, ok := kv["to_string"]; ok {
+			if val == nil {
+				o.ToString = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ToString = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["user_id"].(string); ok {
+		o.UserID = val
+	} else {
+		if val, ok := kv["user_id"]; ok {
+			if val == nil {
+				o.UserID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.UserID = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -700,6 +1197,53 @@ func (o *IssueCreatedDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -749,6 +1293,53 @@ func (o *IssueDueDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -890,6 +1481,9 @@ func toIssueLinkedIssuesObject(o interface{}, isoptional bool) interface{} {
 	case *IssueLinkedIssues:
 		return v.ToMap()
 
+	case IssueLinkedIssuesLinkType:
+		return v.String()
+
 	default:
 		return o
 	}
@@ -927,6 +1521,127 @@ func (o *IssueLinkedIssues) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["issue_id"].(string); ok {
+		o.IssueID = val
+	} else {
+		if val, ok := kv["issue_id"]; ok {
+			if val == nil {
+				o.IssueID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IssueID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["issue_identifier"].(string); ok {
+		o.IssueIdentifier = val
+	} else {
+		if val, ok := kv["issue_identifier"]; ok {
+			if val == nil {
+				o.IssueIdentifier = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IssueIdentifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["issue_ref_id"].(string); ok {
+		o.IssueRefID = val
+	} else {
+		if val, ok := kv["issue_ref_id"]; ok {
+			if val == nil {
+				o.IssueRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IssueRefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["link_type"].(IssueLinkedIssuesLinkType); ok {
+		o.LinkType = val
+	} else {
+		if em, ok := kv["link_type"].(map[string]interface{}); ok {
+
+			ev := em["work.link_type"].(string)
+			switch ev {
+			case "blocks", "BLOCKS":
+				o.LinkType = 0
+			case "clones", "CLONES":
+				o.LinkType = 1
+			case "duplicates", "DUPLICATES":
+				o.LinkType = 2
+			case "causes", "CAUSES":
+				o.LinkType = 3
+			case "relates", "RELATES":
+				o.LinkType = 4
+			}
+		}
+		if em, ok := kv["link_type"].(string); ok {
+			switch em {
+			case "blocks", "BLOCKS":
+				o.LinkType = 0
+			case "clones", "CLONES":
+				o.LinkType = 1
+			case "duplicates", "DUPLICATES":
+				o.LinkType = 2
+			case "causes", "CAUSES":
+				o.LinkType = 3
+			case "relates", "RELATES":
+				o.LinkType = 4
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["reverse_direction"].(bool); ok {
+		o.ReverseDirection = val
+	} else {
+		if val, ok := kv["reverse_direction"]; ok {
+			if val == nil {
+				o.ReverseDirection = false
+			} else {
+				o.ReverseDirection = number.ToBoolAny(val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -978,6 +1693,53 @@ func (o *IssuePlannedEndDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1028,6 +1790,53 @@ func (o *IssuePlannedStartDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1077,6 +1886,53 @@ func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -1417,7 +2273,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["assignee_ref_id"].(string); ok {
 		o.AssigneeRefID = val
 	} else {
@@ -1616,7 +2471,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -1636,7 +2490,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["description"].(string); ok {
 		o.Description = val
 	} else {
@@ -1707,7 +2560,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1727,7 +2579,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["identifier"].(string); ok {
 		o.Identifier = val
 	} else {
@@ -1916,7 +2767,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["priority_id"].(string); ok {
 		o.PriorityID = val
 	} else {
@@ -1936,7 +2786,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["project_id"].(string); ok {
 		o.ProjectID = val
 	} else {
@@ -1956,7 +2805,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1976,7 +2824,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1996,7 +2843,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["reporter_ref_id"].(string); ok {
 		o.ReporterRefID = val
 	} else {
@@ -2016,7 +2862,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["resolution"].(string); ok {
 		o.Resolution = val
 	} else {
@@ -2036,7 +2881,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["sprint_ids"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -2087,7 +2931,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 	if o.SprintIds == nil {
 		o.SprintIds = make([]string, 0)
 	}
-
 	if val, ok := kv["status"].(string); ok {
 		o.Status = val
 	} else {
@@ -2107,7 +2950,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["story_points"].(*float64); ok {
 		o.StoryPoints = val
 	} else if val, ok := kv["story_points"].(float64); ok {
@@ -2125,7 +2967,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["tags"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -2176,7 +3017,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 	if o.Tags == nil {
 		o.Tags = make([]string, 0)
 	}
-
 	if val, ok := kv["title"].(string); ok {
 		o.Title = val
 	} else {
@@ -2196,7 +3036,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["type"].(string); ok {
 		o.Type = val
 	} else {
@@ -2216,7 +3055,6 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["type_id"].(string); ok {
 		o.TypeID = val
 	} else {

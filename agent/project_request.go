@@ -6,6 +6,8 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -13,9 +15,12 @@ import (
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -279,6 +284,210 @@ func (o *ProjectRequestIntegrationAuthorization) FromMap(kv map[string]interface
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["access_token"].(*string); ok {
+		o.AccessToken = val
+	} else if val, ok := kv["access_token"].(string); ok {
+		o.AccessToken = &val
+	} else {
+		if val, ok := kv["access_token"]; ok {
+			if val == nil {
+				o.AccessToken = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AccessToken = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["refresh_token"].(*string); ok {
+		o.RefreshToken = val
+	} else if val, ok := kv["refresh_token"].(string); ok {
+		o.RefreshToken = &val
+	} else {
+		if val, ok := kv["refresh_token"]; ok {
+			if val == nil {
+				o.RefreshToken = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RefreshToken = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["username"].(*string); ok {
+		o.Username = val
+	} else if val, ok := kv["username"].(string); ok {
+		o.Username = &val
+	} else {
+		if val, ok := kv["username"]; ok {
+			if val == nil {
+				o.Username = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Username = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["password"].(*string); ok {
+		o.Password = val
+	} else if val, ok := kv["password"].(string); ok {
+		o.Password = &val
+	} else {
+		if val, ok := kv["password"]; ok {
+			if val == nil {
+				o.Password = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Password = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["api_token"].(*string); ok {
+		o.APIToken = val
+	} else if val, ok := kv["api_token"].(string); ok {
+		o.APIToken = &val
+	} else {
+		if val, ok := kv["api_token"]; ok {
+			if val == nil {
+				o.APIToken = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.APIToken = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["collection_name"].(*string); ok {
+		o.CollectionName = val
+	} else if val, ok := kv["collection_name"].(string); ok {
+		o.CollectionName = &val
+	} else {
+		if val, ok := kv["collection_name"]; ok {
+			if val == nil {
+				o.CollectionName = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CollectionName = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["api_key"].(*string); ok {
+		o.APIKey = val
+	} else if val, ok := kv["api_key"].(string); ok {
+		o.APIKey = &val
+	} else {
+		if val, ok := kv["api_key"]; ok {
+			if val == nil {
+				o.APIKey = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.APIKey = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["authorization"].(*string); ok {
+		o.Authorization = val
+	} else if val, ok := kv["authorization"].(string); ok {
+		o.Authorization = &val
+	} else {
+		if val, ok := kv["authorization"]; ok {
+			if val == nil {
+				o.Authorization = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Authorization = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["hostname"].(*string); ok {
+		o.Hostname = val
+	} else if val, ok := kv["hostname"].(string); ok {
+		o.Hostname = &val
+	} else {
+		if val, ok := kv["hostname"]; ok {
+			if val == nil {
+				o.Hostname = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Hostname = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["api_version"].(*string); ok {
+		o.APIVersion = val
+	} else if val, ok := kv["api_version"].(string); ok {
+		o.APIVersion = &val
+	} else {
+		if val, ok := kv["api_version"]; ok {
+			if val == nil {
+				o.APIVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.APIVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["organization"].(*string); ok {
+		o.Organization = val
+	} else if val, ok := kv["organization"].(string); ok {
+		o.Organization = &val
+	} else {
+		if val, ok := kv["organization"]; ok {
+			if val == nil {
+				o.Organization = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Organization = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -328,6 +537,63 @@ func (o *ProjectRequestIntegrationEntityErrors) FromMap(kv map[string]interface{
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["error"].(string); ok {
+		o.Error = val
+	} else {
+		if val, ok := kv["error"]; ok {
+			if val == nil {
+				o.Error = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Error = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -379,6 +645,53 @@ func (o *ProjectRequestIntegrationLastExportCompletedDate) FromMap(kv map[string
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -428,6 +741,53 @@ func (o *ProjectRequestIntegrationLastExportRequestedDate) FromMap(kv map[string
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -479,6 +839,53 @@ func (o *ProjectRequestIntegrationLastProcessingCompletedDate) FromMap(kv map[st
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -528,6 +935,53 @@ func (o *ProjectRequestIntegrationLastProcessingStartedDate) FromMap(kv map[stri
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -659,6 +1113,53 @@ func (o *ProjectRequestIntegrationOnboardCompletedDate) FromMap(kv map[string]in
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -708,6 +1209,53 @@ func (o *ProjectRequestIntegrationOnboardRequestedDate) FromMap(kv map[string]in
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -967,6 +1515,53 @@ func (o *ProjectRequestIntegrationThrottledUntil) FromMap(kv map[string]interfac
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1016,6 +1611,53 @@ func (o *ProjectRequestIntegrationValidatedDate) FromMap(kv map[string]interface
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -1095,6 +1737,49 @@ type ProjectRequestIntegration struct {
 func toProjectRequestIntegrationObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *ProjectRequestIntegration:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationAuthorization:
+		return v.ToMap()
+
+	case []ProjectRequestIntegrationEntityErrors:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
+	case ProjectRequestIntegrationLastExportCompletedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationLastExportRequestedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationLastProcessingCompletedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationLastProcessingStartedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationLocation:
+		return v.String()
+
+	case ProjectRequestIntegrationOnboardCompletedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationOnboardRequestedDate:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationState:
+		return v.String()
+
+	case ProjectRequestIntegrationSystemType:
+		return v.String()
+
+	case *ProjectRequestIntegrationThrottledUntil:
+		return v.ToMap()
+
+	case ProjectRequestIntegrationValidatedDate:
 		return v.ToMap()
 
 	default:
@@ -1211,6 +1896,854 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["authorization"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Authorization.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationAuthorization); ok {
+			// struct
+			o.Authorization = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationAuthorization); ok {
+			// struct pointer
+			o.Authorization = *sp
+		}
+	} else {
+		o.Authorization.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["created_by_profile_id"].(*string); ok {
+		o.CreatedByProfileID = val
+	} else if val, ok := kv["created_by_profile_id"].(string); ok {
+		o.CreatedByProfileID = &val
+	} else {
+		if val, ok := kv["created_by_profile_id"]; ok {
+			if val == nil {
+				o.CreatedByProfileID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["created_by_user_id"].(*string); ok {
+		o.CreatedByUserID = val
+	} else if val, ok := kv["created_by_user_id"].(string); ok {
+		o.CreatedByUserID = &val
+	} else {
+		if val, ok := kv["created_by_user_id"]; ok {
+			if val == nil {
+				o.CreatedByUserID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByUserID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.EntityErrors = make([]ProjectRequestIntegrationEntityErrors, 0)
+
+	}
+	if val, ok := kv["entity_errors"]; ok {
+		if sv, ok := val.([]ProjectRequestIntegrationEntityErrors); ok {
+			o.EntityErrors = sv
+		} else if sp, ok := val.([]*ProjectRequestIntegrationEntityErrors); ok {
+			o.EntityErrors = o.EntityErrors[:0]
+			for _, e := range sp {
+				o.EntityErrors = append(o.EntityErrors, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectRequestIntegrationEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectRequestIntegrationEntityErrors
+					fm.FromMap(av)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ProjectRequestIntegrationEntityErrors
+					av.FromMap(bkv)
+					o.EntityErrors = append(o.EntityErrors, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectRequestIntegrationEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectRequestIntegrationEntityErrors
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectRequestIntegrationEntityErrors{}
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectRequestIntegrationEntityErrors
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.EntityErrors = append(o.EntityErrors, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if val, ok := kv["error_message"].(*string); ok {
+		o.ErrorMessage = val
+	} else if val, ok := kv["error_message"].(string); ok {
+		o.ErrorMessage = &val
+	} else {
+		if val, ok := kv["error_message"]; ok {
+			if val == nil {
+				o.ErrorMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ErrorMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["errored"].(*bool); ok {
+		o.Errored = val
+	} else if val, ok := kv["errored"].(bool); ok {
+		o.Errored = &val
+	} else {
+		if val, ok := kv["errored"]; ok {
+			if val == nil {
+				o.Errored = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Errored = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["exclusions"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for exclusions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for exclusions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for exclusions field")
+				}
+			}
+			o.Exclusions = na
+		}
+	}
+	if o.Exclusions == nil {
+		o.Exclusions = make([]string, 0)
+	}
+	if val, ok := kv["exportable"].(bool); ok {
+		o.Exportable = val
+	} else {
+		if val, ok := kv["exportable"]; ok {
+			if val == nil {
+				o.Exportable = false
+			} else {
+				o.Exportable = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["inclusions"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for inclusions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for inclusions field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for inclusions field")
+				}
+			}
+			o.Inclusions = na
+		}
+	}
+	if o.Inclusions == nil {
+		o.Inclusions = make([]string, 0)
+	}
+
+	if val, ok := kv["last_export_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationLastExportCompletedDate); ok {
+			// struct
+			o.LastExportCompletedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationLastExportCompletedDate); ok {
+			// struct pointer
+			o.LastExportCompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportCompletedDate.Epoch = dt.Epoch
+			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportCompletedDate.Epoch = dt.Epoch
+			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportCompletedDate.Epoch = dt.Epoch
+				o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+				o.LastExportCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_export_requested_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportRequestedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationLastExportRequestedDate); ok {
+			// struct
+			o.LastExportRequestedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationLastExportRequestedDate); ok {
+			// struct pointer
+			o.LastExportRequestedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportRequestedDate.Epoch = dt.Epoch
+			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportRequestedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportRequestedDate.Epoch = dt.Epoch
+			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportRequestedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportRequestedDate.Epoch = dt.Epoch
+				o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+				o.LastExportRequestedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_processing_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastProcessingCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationLastProcessingCompletedDate); ok {
+			// struct
+			o.LastProcessingCompletedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationLastProcessingCompletedDate); ok {
+			// struct pointer
+			o.LastProcessingCompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastProcessingCompletedDate.Epoch = dt.Epoch
+			o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastProcessingCompletedDate.Epoch = dt.Epoch
+			o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastProcessingCompletedDate.Epoch = dt.Epoch
+				o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
+				o.LastProcessingCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastProcessingCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["last_processing_started_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastProcessingStartedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationLastProcessingStartedDate); ok {
+			// struct
+			o.LastProcessingStartedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationLastProcessingStartedDate); ok {
+			// struct pointer
+			o.LastProcessingStartedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastProcessingStartedDate.Epoch = dt.Epoch
+			o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingStartedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastProcessingStartedDate.Epoch = dt.Epoch
+			o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingStartedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastProcessingStartedDate.Epoch = dt.Epoch
+				o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
+				o.LastProcessingStartedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastProcessingStartedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["location"].(ProjectRequestIntegrationLocation); ok {
+		o.Location = val
+	} else {
+		if em, ok := kv["location"].(map[string]interface{}); ok {
+
+			ev := em["agent.location"].(string)
+			switch ev {
+			case "private", "PRIVATE":
+				o.Location = 0
+			case "cloud", "CLOUD":
+				o.Location = 1
+			}
+		}
+		if em, ok := kv["location"].(string); ok {
+			switch em {
+			case "private", "PRIVATE":
+				o.Location = 0
+			case "cloud", "CLOUD":
+				o.Location = 1
+			}
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["onboard_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.OnboardCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationOnboardCompletedDate); ok {
+			// struct
+			o.OnboardCompletedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationOnboardCompletedDate); ok {
+			// struct pointer
+			o.OnboardCompletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.OnboardCompletedDate.Epoch = dt.Epoch
+			o.OnboardCompletedDate.Rfc3339 = dt.Rfc3339
+			o.OnboardCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.OnboardCompletedDate.Epoch = dt.Epoch
+			o.OnboardCompletedDate.Rfc3339 = dt.Rfc3339
+			o.OnboardCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.OnboardCompletedDate.Epoch = dt.Epoch
+				o.OnboardCompletedDate.Rfc3339 = dt.Rfc3339
+				o.OnboardCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.OnboardCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["onboard_requested_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.OnboardRequestedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationOnboardRequestedDate); ok {
+			// struct
+			o.OnboardRequestedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationOnboardRequestedDate); ok {
+			// struct pointer
+			o.OnboardRequestedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.OnboardRequestedDate.Epoch = dt.Epoch
+			o.OnboardRequestedDate.Rfc3339 = dt.Rfc3339
+			o.OnboardRequestedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.OnboardRequestedDate.Epoch = dt.Epoch
+			o.OnboardRequestedDate.Rfc3339 = dt.Rfc3339
+			o.OnboardRequestedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.OnboardRequestedDate.Epoch = dt.Epoch
+				o.OnboardRequestedDate.Rfc3339 = dt.Rfc3339
+				o.OnboardRequestedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.OnboardRequestedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["onboarding"].(bool); ok {
+		o.Onboarding = val
+	} else {
+		if val, ok := kv["onboarding"]; ok {
+			if val == nil {
+				o.Onboarding = false
+			} else {
+				o.Onboarding = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["organization"].(*string); ok {
+		o.Organization = val
+	} else if val, ok := kv["organization"].(string); ok {
+		o.Organization = &val
+	} else {
+		if val, ok := kv["organization"]; ok {
+			if val == nil {
+				o.Organization = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Organization = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["processed"].(*bool); ok {
+		o.Processed = val
+	} else if val, ok := kv["processed"].(bool); ok {
+		o.Processed = &val
+	} else {
+		if val, ok := kv["processed"]; ok {
+			if val == nil {
+				o.Processed = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Processed = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["server_version"].(*string); ok {
+		o.ServerVersion = val
+	} else if val, ok := kv["server_version"].(string); ok {
+		o.ServerVersion = &val
+	} else {
+		if val, ok := kv["server_version"]; ok {
+			if val == nil {
+				o.ServerVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ServerVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["state"].(ProjectRequestIntegrationState); ok {
+		o.State = val
+	} else {
+		if em, ok := kv["state"].(map[string]interface{}); ok {
+
+			ev := em["agent.state"].(string)
+			switch ev {
+			case "idle", "IDLE":
+				o.State = 0
+			case "exporting", "EXPORTING":
+				o.State = 1
+			case "processing", "PROCESSING":
+				o.State = 2
+			}
+		}
+		if em, ok := kv["state"].(string); ok {
+			switch em {
+			case "idle", "IDLE":
+				o.State = 0
+			case "exporting", "EXPORTING":
+				o.State = 1
+			case "processing", "PROCESSING":
+				o.State = 2
+			}
+		}
+	}
+	if val, ok := kv["system_type"].(ProjectRequestIntegrationSystemType); ok {
+		o.SystemType = val
+	} else {
+		if em, ok := kv["system_type"].(map[string]interface{}); ok {
+
+			ev := em["agent.system_type"].(string)
+			switch ev {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			case "codequality", "CODEQUALITY":
+				o.SystemType = 2
+			case "calendar", "CALENDAR":
+				o.SystemType = 3
+			case "user", "USER":
+				o.SystemType = 4
+			}
+		}
+		if em, ok := kv["system_type"].(string); ok {
+			switch em {
+			case "work", "WORK":
+				o.SystemType = 0
+			case "sourcecode", "SOURCECODE":
+				o.SystemType = 1
+			case "codequality", "CODEQUALITY":
+				o.SystemType = 2
+			case "calendar", "CALENDAR":
+				o.SystemType = 3
+			case "user", "USER":
+				o.SystemType = 4
+			}
+		}
+	}
+	if val, ok := kv["team_id"].(*string); ok {
+		o.TeamID = val
+	} else if val, ok := kv["team_id"].(string); ok {
+		o.TeamID = &val
+	} else {
+		if val, ok := kv["team_id"]; ok {
+			if val == nil {
+				o.TeamID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.TeamID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["throttled"].(*bool); ok {
+		o.Throttled = val
+	} else if val, ok := kv["throttled"].(bool); ok {
+		o.Throttled = &val
+	} else {
+		if val, ok := kv["throttled"]; ok {
+			if val == nil {
+				o.Throttled = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Throttled = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+
+	if o.ThrottledUntil == nil {
+		o.ThrottledUntil = &ProjectRequestIntegrationThrottledUntil{}
+	}
+
+	if val, ok := kv["throttled_until"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ThrottledUntil.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationThrottledUntil); ok {
+			// struct
+			o.ThrottledUntil = &sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationThrottledUntil); ok {
+			// struct pointer
+			o.ThrottledUntil = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ThrottledUntil.Epoch = dt.Epoch
+			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+			o.ThrottledUntil.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ThrottledUntil.Epoch = dt.Epoch
+			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+			o.ThrottledUntil.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ThrottledUntil.Epoch = dt.Epoch
+				o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+				o.ThrottledUntil.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ThrottledUntil.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["validated"].(*bool); ok {
+		o.Validated = val
+	} else if val, ok := kv["validated"].(bool); ok {
+		o.Validated = &val
+	} else {
+		if val, ok := kv["validated"]; ok {
+			if val == nil {
+				o.Validated = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Validated = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+
+	if val, ok := kv["validated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ValidatedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegrationValidatedDate); ok {
+			// struct
+			o.ValidatedDate = sv
+		} else if sp, ok := val.(*ProjectRequestIntegrationValidatedDate); ok {
+			// struct pointer
+			o.ValidatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ValidatedDate.Epoch = dt.Epoch
+			o.ValidatedDate.Rfc3339 = dt.Rfc3339
+			o.ValidatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ValidatedDate.Epoch = dt.Epoch
+			o.ValidatedDate.Rfc3339 = dt.Rfc3339
+			o.ValidatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ValidatedDate.Epoch = dt.Epoch
+				o.ValidatedDate.Rfc3339 = dt.Rfc3339
+				o.ValidatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ValidatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["validation_message"].(*string); ok {
+		o.ValidationMessage = val
+	} else if val, ok := kv["validation_message"].(string); ok {
+		o.ValidationMessage = &val
+	} else {
+		if val, ok := kv["validation_message"]; ok {
+			if val == nil {
+				o.ValidationMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ValidationMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1260,6 +2793,53 @@ func (o *ProjectRequestRequestDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -1496,7 +3076,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -1516,7 +3095,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1570,7 +3148,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1600,25 +3177,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})

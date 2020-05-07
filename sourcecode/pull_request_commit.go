@@ -112,6 +112,53 @@ func (o *PullRequestCommitCreatedDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -356,7 +403,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["additions"].(int64); ok {
 		o.Additions = val
 	} else {
@@ -371,7 +417,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["author_ref_id"].(string); ok {
 		o.AuthorRefID = val
 	} else {
@@ -391,7 +436,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["branch_id"].(string); ok {
 		o.BranchID = val
 	} else {
@@ -411,7 +455,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["committer_ref_id"].(string); ok {
 		o.CommitterRefID = val
 	} else {
@@ -484,7 +527,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["deletions"].(int64); ok {
 		o.Deletions = val
 	} else {
@@ -499,7 +541,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -519,7 +560,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -539,7 +579,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["pull_request_id"].(string); ok {
 		o.PullRequestID = val
 	} else {
@@ -559,7 +598,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -579,7 +617,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -599,7 +636,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["repo_id"].(string); ok {
 		o.RepoID = val
 	} else {
@@ -619,7 +655,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["sha"].(string); ok {
 		o.Sha = val
 	} else {
@@ -639,7 +674,6 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {

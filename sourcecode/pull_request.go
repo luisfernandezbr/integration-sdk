@@ -154,6 +154,53 @@ func (o *PullRequestClosedDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -204,6 +251,53 @@ func (o *PullRequestCreatedDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -253,6 +347,53 @@ func (o *PullRequestMergedDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -419,6 +560,53 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -709,7 +897,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["branch_id"].(string); ok {
 		o.BranchID = val
 	} else {
@@ -729,7 +916,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["branch_name"].(string); ok {
 		o.BranchName = val
 	} else {
@@ -749,7 +935,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["closed_by_ref_id"].(string); ok {
 		o.ClosedByRefID = val
 	} else {
@@ -853,7 +1038,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	if o.CommitIds == nil {
 		o.CommitIds = make([]string, 0)
 	}
-
 	if val, ok := kv["commit_shas"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -904,7 +1088,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	if o.CommitShas == nil {
 		o.CommitShas = make([]string, 0)
 	}
-
 	if val, ok := kv["created_by_ref_id"].(string); ok {
 		o.CreatedByRefID = val
 	} else {
@@ -977,7 +1160,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["description"].(string); ok {
 		o.Description = val
 	} else {
@@ -997,7 +1179,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["draft"].(bool); ok {
 		o.Draft = val
 	} else {
@@ -1009,7 +1190,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1029,7 +1209,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["identifier"].(string); ok {
 		o.Identifier = val
 	} else {
@@ -1049,7 +1228,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -1069,7 +1247,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["merge_sha"].(string); ok {
 		o.MergeSha = val
 	} else {
@@ -1089,7 +1266,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["merged_by_ref_id"].(string); ok {
 		o.MergedByRefID = val
 	} else {
@@ -1162,7 +1338,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1182,7 +1357,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["repo_id"].(string); ok {
 		o.RepoID = val
 	} else {
@@ -1202,7 +1376,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["status"].(PullRequestStatus); ok {
 		o.Status = val
 	} else {
@@ -1237,7 +1410,6 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["title"].(string); ok {
 		o.Title = val
 	} else {

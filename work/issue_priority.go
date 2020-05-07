@@ -270,7 +270,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["color"].(*string); ok {
 		o.Color = val
 	} else if val, ok := kv["color"].(string); ok {
@@ -288,7 +287,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -308,7 +306,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["description"].(*string); ok {
 		o.Description = val
 	} else if val, ok := kv["description"].(string); ok {
@@ -326,7 +323,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["icon_url"].(*string); ok {
 		o.IconURL = val
 	} else if val, ok := kv["icon_url"].(string); ok {
@@ -344,7 +340,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -364,7 +359,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -384,7 +378,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["order"].(int64); ok {
 		o.Order = val
 	} else {
@@ -399,7 +392,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -419,7 +411,6 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {

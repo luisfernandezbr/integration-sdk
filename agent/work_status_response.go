@@ -6,6 +6,8 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -14,9 +16,11 @@ import (
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
 	"github.com/pinpt/go-common/number"
+	"github.com/pinpt/go-common/slice"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -172,6 +176,53 @@ func (o *WorkStatusResponseEventDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -221,6 +272,53 @@ func (o *WorkStatusResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -532,6 +630,306 @@ func (o *WorkStatusResponseWorkConfigStatuses) FromMap(kv map[string]interface{}
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["open_status"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for open_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for open_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for open_status field")
+				}
+			}
+			o.OpenStatus = na
+		}
+	}
+	if o.OpenStatus == nil {
+		o.OpenStatus = make([]string, 0)
+	}
+	if val, ok := kv["in_progress_status"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for in_progress_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for in_progress_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for in_progress_status field")
+				}
+			}
+			o.InProgressStatus = na
+		}
+	}
+	if o.InProgressStatus == nil {
+		o.InProgressStatus = make([]string, 0)
+	}
+	if val, ok := kv["in_review_status"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for in_review_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for in_review_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for in_review_status field")
+				}
+			}
+			o.InReviewStatus = na
+		}
+	}
+	if o.InReviewStatus == nil {
+		o.InReviewStatus = make([]string, 0)
+	}
+	if val, ok := kv["released_status"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for released_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for released_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for released_status field")
+				}
+			}
+			o.ReleasedStatus = na
+		}
+	}
+	if o.ReleasedStatus == nil {
+		o.ReleasedStatus = make([]string, 0)
+	}
+	if val, ok := kv["reopened_status"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for reopened_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for reopened_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for reopened_status field")
+				}
+			}
+			o.ReopenedStatus = na
+		}
+	}
+	if o.ReopenedStatus == nil {
+		o.ReopenedStatus = make([]string, 0)
+	}
+	if val, ok := kv["closed_status"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for closed_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for closed_status field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for closed_status field")
+				}
+			}
+			o.ClosedStatus = na
+		}
+	}
+	if o.ClosedStatus == nil {
+		o.ClosedStatus = make([]string, 0)
+	}
 	o.setDefaults(false)
 }
 
@@ -578,6 +976,44 @@ func (o *WorkStatusResponseWorkConfigTopLevelIssue) FromMap(kv map[string]interf
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["type"].(string); ok {
+		o.Type = val
+	} else {
+		if val, ok := kv["type"]; ok {
+			if val == nil {
+				o.Type = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Type = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -604,6 +1040,11 @@ func toWorkStatusResponseWorkConfigObject(o interface{}, isoptional bool) interf
 	case *WorkStatusResponseWorkConfig:
 		return v.ToMap()
 
+	case WorkStatusResponseWorkConfigStatuses:
+		return v.ToMap()
+
+	case WorkStatusResponseWorkConfigTopLevelIssue:
+		return v.ToMap()
 	default:
 		return o
 	}
@@ -644,6 +1085,130 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = val
+	} else {
+		if val, ok := kv["integration_id"]; ok {
+			if val == nil {
+				o.IntegrationID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if val, ok := kv["statuses"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Statuses.FromMap(kv)
+		} else if sv, ok := val.(WorkStatusResponseWorkConfigStatuses); ok {
+			// struct
+			o.Statuses = sv
+		} else if sp, ok := val.(*WorkStatusResponseWorkConfigStatuses); ok {
+			// struct pointer
+			o.Statuses = *sp
+		}
+	} else {
+		o.Statuses.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["top_level_issue"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.TopLevelIssue.FromMap(kv)
+		} else if sv, ok := val.(WorkStatusResponseWorkConfigTopLevelIssue); ok {
+			// struct
+			o.TopLevelIssue = sv
+		} else if sp, ok := val.(*WorkStatusResponseWorkConfigTopLevelIssue); ok {
+			// struct pointer
+			o.TopLevelIssue = *sp
+		}
+	} else {
+		o.TopLevelIssue.FromMap(map[string]interface{}{})
+	}
+
 	o.setDefaults(false)
 }
 
@@ -948,7 +1513,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
 	} else {
@@ -968,7 +1532,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -988,7 +1551,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["data"].(*string); ok {
 		o.Data = val
 	} else if val, ok := kv["data"].(string); ok {
@@ -1006,7 +1568,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -1026,7 +1587,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
 	} else if val, ok := kv["error"].(string); ok {
@@ -1073,7 +1633,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["go_version"].(string); ok {
 		o.GoVersion = val
 	} else {
@@ -1093,7 +1652,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["hostname"].(string); ok {
 		o.Hostname = val
 	} else {
@@ -1113,7 +1671,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1133,7 +1690,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["integration_id"].(string); ok {
 		o.IntegrationID = val
 	} else {
@@ -1182,7 +1738,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -1202,7 +1757,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["num_cpu"].(int64); ok {
 		o.NumCPU = val
 	} else {
@@ -1217,7 +1771,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["os"].(string); ok {
 		o.OS = val
 	} else {
@@ -1237,7 +1790,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1257,7 +1809,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1277,7 +1828,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["request_id"].(string); ok {
 		o.RequestID = val
 	} else {
@@ -1297,7 +1847,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
@@ -1309,7 +1858,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["system_id"].(string); ok {
 		o.SystemID = val
 	} else {
@@ -1329,7 +1877,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["type"].(WorkStatusResponseType); ok {
 		o.Type = val
 	} else {
@@ -1408,7 +1955,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uptime"].(int64); ok {
 		o.Uptime = val
 	} else {
@@ -1423,7 +1969,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1443,7 +1988,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["version"].(string); ok {
 		o.Version = val
 	} else {

@@ -322,7 +322,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["active"].(bool); ok {
 		o.Active = val
 	} else {
@@ -334,7 +333,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["category"].(*string); ok {
 		o.Category = val
 	} else if val, ok := kv["category"].(string); ok {
@@ -352,7 +350,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -372,7 +369,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["description"].(*string); ok {
 		o.Description = val
 	} else if val, ok := kv["description"].(string); ok {
@@ -390,7 +386,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -410,7 +405,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["identifier"].(string); ok {
 		o.Identifier = val
 	} else {
@@ -430,7 +424,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -450,7 +443,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -470,7 +462,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -490,7 +481,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -505,7 +495,6 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {

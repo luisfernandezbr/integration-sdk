@@ -156,6 +156,53 @@ func (o *CodequalityResponseEventDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -205,6 +252,53 @@ func (o *CodequalityResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -267,6 +361,120 @@ func (o *CodequalityResponseProjects) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["customer_id"].(string); ok {
+		o.CustomerID = val
+	} else {
+		if val, ok := kv["customer_id"]; ok {
+			if val == nil {
+				o.CustomerID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["id"].(string); ok {
+		o.ID = val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = val
+	} else {
+		if val, ok := kv["identifier"]; ok {
+			if val == nil {
+				o.Identifier = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Identifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -810,7 +1018,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
 	} else {
@@ -830,7 +1037,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -850,7 +1056,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["data"].(*string); ok {
 		o.Data = val
 	} else if val, ok := kv["data"].(string); ok {
@@ -868,7 +1073,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -888,7 +1092,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
 	} else if val, ok := kv["error"].(string); ok {
@@ -935,7 +1138,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["go_version"].(string); ok {
 		o.GoVersion = val
 	} else {
@@ -955,7 +1157,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["hostname"].(string); ok {
 		o.Hostname = val
 	} else {
@@ -975,7 +1176,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -995,7 +1195,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["integration_id"].(string); ok {
 		o.IntegrationID = val
 	} else {
@@ -1044,7 +1243,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -1064,7 +1262,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["num_cpu"].(int64); ok {
 		o.NumCPU = val
 	} else {
@@ -1079,7 +1276,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["os"].(string); ok {
 		o.OS = val
 	} else {
@@ -1182,7 +1378,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1202,7 +1397,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["request_id"].(string); ok {
 		o.RequestID = val
 	} else {
@@ -1222,7 +1416,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
@@ -1234,7 +1427,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["system_id"].(string); ok {
 		o.SystemID = val
 	} else {
@@ -1254,7 +1446,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["type"].(CodequalityResponseType); ok {
 		o.Type = val
 	} else {
@@ -1333,7 +1524,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uptime"].(int64); ok {
 		o.Uptime = val
 	} else {
@@ -1348,7 +1538,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1368,7 +1557,6 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["version"].(string); ok {
 		o.Version = val
 	} else {

@@ -245,7 +245,6 @@ func (o *RepoTrigger) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -265,7 +264,6 @@ func (o *RepoTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -285,7 +283,6 @@ func (o *RepoTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["integration_id"].(string); ok {
 		o.IntegrationID = val
 	} else {
@@ -305,7 +302,6 @@ func (o *RepoTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -325,7 +321,6 @@ func (o *RepoTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {

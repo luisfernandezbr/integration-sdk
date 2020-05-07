@@ -250,7 +250,6 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -270,7 +269,6 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -290,7 +288,6 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -310,7 +307,6 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -330,7 +326,6 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uuid"].(*string); ok {
 		o.UUID = val
 	} else if val, ok := kv["uuid"].(string); ok {
@@ -348,7 +343,6 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["version"].(*string); ok {
 		o.Version = val
 	} else if val, ok := kv["version"].(string); ok {

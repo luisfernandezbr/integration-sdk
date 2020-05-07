@@ -13,6 +13,7 @@ import (
 	"github.com/pinpt/go-common/datetime"
 	"github.com/pinpt/go-common/hash"
 	pjson "github.com/pinpt/go-common/json"
+	"github.com/pinpt/go-common/number"
 	pstrings "github.com/pinpt/go-common/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
@@ -281,6 +282,53 @@ func (o *IntegrationMutationRequestAgentRequestSentDate) FromMap(kv map[string]i
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -331,6 +379,61 @@ func (o *IntegrationMutationRequestAuthorization) FromMap(kv map[string]interfac
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["access_token"].(string); ok {
+		o.AccessToken = val
+	} else {
+		if val, ok := kv["access_token"]; ok {
+			if val == nil {
+				o.AccessToken = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.AccessToken = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["refresh_token"].(string); ok {
+		o.RefreshToken = val
+	} else {
+		if val, ok := kv["refresh_token"]; ok {
+			if val == nil {
+				o.RefreshToken = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefreshToken = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -380,6 +483,53 @@ func (o *IntegrationMutationRequestRequestDate) FromMap(kv map[string]interface{
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -534,6 +684,53 @@ func (o *IntegrationMutationRequestWebappRequestDate) FromMap(kv map[string]inte
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -792,7 +989,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["action"].(IntegrationMutationRequestAction); ok {
 		o.Action = val
 	} else {
@@ -906,7 +1102,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["data"].(string); ok {
 		o.Data = val
 	} else {
@@ -926,7 +1121,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -946,7 +1140,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["integration_name"].(string); ok {
 		o.IntegrationName = val
 	} else {
@@ -966,7 +1159,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["job_id"].(string); ok {
 		o.JobID = val
 	} else {
@@ -986,7 +1178,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1006,7 +1197,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1036,6 +1226,25 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1071,7 +1280,6 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {

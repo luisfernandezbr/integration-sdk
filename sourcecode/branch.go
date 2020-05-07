@@ -332,7 +332,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["ahead_default_count"].(int64); ok {
 		o.AheadDefaultCount = val
 	} else {
@@ -347,7 +346,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["behind_default_count"].(int64); ok {
 		o.BehindDefaultCount = val
 	} else {
@@ -362,7 +360,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["branched_from_commit_ids"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -413,7 +410,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	if o.BranchedFromCommitIds == nil {
 		o.BranchedFromCommitIds = make([]string, 0)
 	}
-
 	if val, ok := kv["branched_from_commit_shas"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -464,7 +460,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	if o.BranchedFromCommitShas == nil {
 		o.BranchedFromCommitShas = make([]string, 0)
 	}
-
 	if val, ok := kv["commit_ids"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -515,7 +510,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	if o.CommitIds == nil {
 		o.CommitIds = make([]string, 0)
 	}
-
 	if val, ok := kv["commit_shas"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -566,7 +560,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	if o.CommitShas == nil {
 		o.CommitShas = make([]string, 0)
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -586,7 +579,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["default"].(bool); ok {
 		o.Default = val
 	} else {
@@ -598,7 +590,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["first_commit_id"].(string); ok {
 		o.FirstCommitID = val
 	} else {
@@ -618,7 +609,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["first_commit_sha"].(string); ok {
 		o.FirstCommitSha = val
 	} else {
@@ -638,7 +628,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -658,7 +647,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -678,7 +666,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["merge_commit_sha"].(string); ok {
 		o.MergeCommitSha = val
 	} else {
@@ -698,7 +685,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["merged"].(bool); ok {
 		o.Merged = val
 	} else {
@@ -710,7 +696,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -730,7 +715,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -750,7 +734,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -770,7 +753,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["repo_id"].(string); ok {
 		o.RepoID = val
 	} else {
@@ -790,7 +772,6 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {

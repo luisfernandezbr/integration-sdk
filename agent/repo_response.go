@@ -168,6 +168,53 @@ func (o *RepoResponseEventDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -218,6 +265,53 @@ func (o *RepoResponseLastExportDate) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -267,6 +361,53 @@ func (o *RepoResponseReposCreatedDate) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -378,6 +519,12 @@ func toRepoResponseReposObject(o interface{}, isoptional bool) interface{} {
 	case *RepoResponseRepos:
 		return v.ToMap()
 
+	case RepoResponseReposCreatedDate:
+		return v.ToMap()
+
+	case RepoResponseReposError:
+		return v.String()
+
 	default:
 		return o
 	}
@@ -421,6 +568,179 @@ func (o *RepoResponseRepos) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(RepoResponseReposCreatedDate); ok {
+			// struct
+			o.CreatedDate = sv
+		} else if sp, ok := val.(*RepoResponseReposCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["description"].(string); ok {
+		o.Description = val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Description = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["error"].(RepoResponseReposError); ok {
+		o.Error = val
+	} else {
+		if em, ok := kv["error"].(map[string]interface{}); ok {
+
+			ev := em["agent.error"].(string)
+			switch ev {
+			case "none", "NONE":
+				o.Error = 0
+			case "permissions", "PERMISSIONS":
+				o.Error = 1
+			}
+		}
+		if em, ok := kv["error"].(string); ok {
+			switch em {
+			case "none", "NONE":
+				o.Error = 0
+			case "permissions", "PERMISSIONS":
+				o.Error = 1
+			}
+		}
+	}
+	if val, ok := kv["language"].(string); ok {
+		o.Language = val
+	} else {
+		if val, ok := kv["language"]; ok {
+			if val == nil {
+				o.Language = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Language = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["webhook_permission"].(bool); ok {
+		o.WebhookPermission = val
+	} else {
+		if val, ok := kv["webhook_permission"]; ok {
+			if val == nil {
+				o.WebhookPermission = false
+			} else {
+				o.WebhookPermission = number.ToBoolAny(val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -964,7 +1284,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-
 	if val, ok := kv["architecture"].(string); ok {
 		o.Architecture = val
 	} else {
@@ -984,7 +1303,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
 	} else {
@@ -1004,7 +1322,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["data"].(*string); ok {
 		o.Data = val
 	} else if val, ok := kv["data"].(string); ok {
@@ -1022,7 +1339,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["distro"].(string); ok {
 		o.Distro = val
 	} else {
@@ -1042,7 +1358,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
 	} else if val, ok := kv["error"].(string); ok {
@@ -1070,25 +1385,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1108,7 +1404,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["go_version"].(string); ok {
 		o.GoVersion = val
 	} else {
@@ -1128,7 +1423,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["hostname"].(string); ok {
 		o.Hostname = val
 	} else {
@@ -1148,7 +1442,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1168,7 +1461,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["integration_id"].(string); ok {
 		o.IntegrationID = val
 	} else {
@@ -1198,25 +1490,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1236,7 +1509,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -1256,7 +1528,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["num_cpu"].(int64); ok {
 		o.NumCPU = val
 	} else {
@@ -1271,7 +1542,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["os"].(string); ok {
 		o.OS = val
 	} else {
@@ -1291,7 +1561,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1311,7 +1580,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["ref_type"].(string); ok {
 		o.RefType = val
 	} else {
@@ -1414,7 +1682,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["success"].(bool); ok {
 		o.Success = val
 	} else {
@@ -1426,7 +1693,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["system_id"].(string); ok {
 		o.SystemID = val
 	} else {
@@ -1446,7 +1712,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["type"].(RepoResponseType); ok {
 		o.Type = val
 	} else {
@@ -1525,7 +1790,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uptime"].(int64); ok {
 		o.Uptime = val
 	} else {
@@ -1540,7 +1804,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["uuid"].(string); ok {
 		o.UUID = val
 	} else {
@@ -1560,7 +1823,6 @@ func (o *RepoResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
 	if val, ok := kv["version"].(string); ok {
 		o.Version = val
 	} else {
