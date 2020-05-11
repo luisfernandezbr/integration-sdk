@@ -1406,6 +1406,12 @@ func getTeamQueryFields() string {
 	// object with fields
 	sb.WriteString("\t\t\tdeleted_date {\n")
 
+	// scalar
+	sb.WriteString("\t\t\tepoch\n")
+	// scalar
+	sb.WriteString("\t\t\toffset\n")
+	// scalar
+	sb.WriteString("\t\t\trfc3339\n")
 	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\tdescription\n")
@@ -1430,6 +1436,24 @@ func getTeamQueryFields() string {
 	// object with fields
 	sb.WriteString("\t\t\tusers {\n")
 
+	// scalar
+	sb.WriteString("\t\t\tavatar_url\n")
+	// scalar
+	sb.WriteString("\t\t\tid\n")
+	// scalar
+	sb.WriteString("\t\t\tname\n")
+	// scalar
+	sb.WriteString("\t\t\tnickname\n")
+	// scalar
+	sb.WriteString("\t\t\tprofile_id\n")
+	// scalar
+	sb.WriteString("\t\t\tref_id\n")
+	// scalar
+	sb.WriteString("\t\t\tteam_id\n")
+	// scalar
+	sb.WriteString("\t\t\ttype\n")
+	// scalar
+	sb.WriteString("\t\t\turl\n")
 	sb.WriteString("\t\t\t}\n")
 	return sb.String()
 }
