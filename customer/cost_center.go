@@ -458,19 +458,6 @@ func (o *CostCenter) Hash() string {
 	return o.Hashcode
 }
 
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *CostCenter) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
-}
-
 func getCostCenterQueryFields() string {
 	var sb strings.Builder
 

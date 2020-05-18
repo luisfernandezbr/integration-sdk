@@ -573,25 +573,6 @@ func (o *CancelRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CancelRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -631,17 +612,4 @@ func (o *CancelRequest) Hash() string {
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *CancelRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
 }

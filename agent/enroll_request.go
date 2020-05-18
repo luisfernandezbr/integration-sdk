@@ -423,16 +423,3 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *EnrollRequest) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: true,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
-}

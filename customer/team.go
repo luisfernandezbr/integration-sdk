@@ -1377,19 +1377,6 @@ func (o *Team) Hash() string {
 	return o.Hashcode
 }
 
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *Team) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
-}
-
 func getTeamQueryFields() string {
 	var sb strings.Builder
 

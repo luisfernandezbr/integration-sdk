@@ -1364,16 +1364,3 @@ func (o *IntegrationResponse) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
-
-// GetEventAPIConfig returns the EventAPIConfig
-func (o *IntegrationResponse) GetEventAPIConfig() datamodel.EventAPIConfig {
-	return datamodel.EventAPIConfig{
-		Publish: datamodel.EventAPIPublish{
-			Public: false,
-		},
-		Subscribe: datamodel.EventAPISubscribe{
-			Public: false,
-			Key:    "",
-		},
-	}
-}
