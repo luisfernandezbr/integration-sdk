@@ -285,8 +285,16 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_work.IssuePriority)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "work.IssueStatus":
+		o := new(dm_work.IssueStatus)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.IssueType":
 		o := new(dm_work.IssueType)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "work.KanbanBoard":
+		o := new(dm_work.KanbanBoard)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "work.Project":
@@ -328,6 +336,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "work_KanbanBoard":
+		o := new(dm_work.KanbanBoard)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_Project":
 		o := new(dm_work.Project)
 		o.FromMap(map[string]interface{}{})
@@ -357,6 +369,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("calendar_User"),
 		datamodel.TopicNameType("sourcecode_Repo"),
 		datamodel.TopicNameType("sourcecode_User"),
+		datamodel.TopicNameType("work_KanbanBoard"),
 		datamodel.TopicNameType("work_Project"),
 		datamodel.TopicNameType("work_Sprint"),
 		datamodel.TopicNameType("work_User"),
@@ -433,7 +446,9 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("work.Issue"),
 		datamodel.ModelNameType("work.IssueComment"),
 		datamodel.ModelNameType("work.IssuePriority"),
+		datamodel.ModelNameType("work.IssueStatus"),
 		datamodel.ModelNameType("work.IssueType"),
+		datamodel.ModelNameType("work.KanbanBoard"),
 		datamodel.ModelNameType("work.Project"),
 		datamodel.ModelNameType("work.Sprint"),
 		datamodel.ModelNameType("work.User"),

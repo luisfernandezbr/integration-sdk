@@ -163,6 +163,8 @@ const (
 	IssueModelSprintIdsColumn = "sprint_ids"
 	// IssueModelStatusColumn is the column json value status
 	IssueModelStatusColumn = "status"
+	// IssueModelStatusIDColumn is the column json value status_id
+	IssueModelStatusIDColumn = "status_id"
 	// IssueModelStoryPointsColumn is the column json value story_points
 	IssueModelStoryPointsColumn = "story_points"
 	// IssueModelTagsColumn is the column json value tags
@@ -1987,6 +1989,8 @@ type Issue struct {
 	SprintIds []string `json:"sprint_ids" codec:"sprint_ids" bson:"sprint_ids" yaml:"sprint_ids" faker:"-"`
 	// Status status of the issue
 	Status string `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
+	// StatusID id for status in issue_status
+	StatusID string `json:"status_id" codec:"status_id" bson:"status_id" yaml:"status_id" faker:"-"`
 	// StoryPoints the story points estimation for the issue
 	StoryPoints *float64 `json:"story_points,omitempty" codec:"story_points,omitempty" bson:"story_points" yaml:"story_points,omitempty" faker:"-"`
 	// Tags tags on the issue
@@ -2253,6 +2257,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"resolution":         toIssueObject(o.Resolution, false),
 		"sprint_ids":         toIssueObject(o.SprintIds, false),
 		"status":             toIssueObject(o.Status, false),
+		"status_id":          toIssueObject(o.StatusID, false),
 		"story_points":       toIssueObject(o.StoryPoints, true),
 		"tags":               toIssueObject(o.Tags, false),
 		"title":              toIssueObject(o.Title, false),
@@ -2950,6 +2955,25 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["status_id"].(string); ok {
+		o.StatusID = val
+	} else {
+		if val, ok := kv["status_id"]; ok {
+			if val == nil {
+				o.StatusID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.StatusID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	if val, ok := kv["story_points"].(*float64); ok {
 		o.StoryPoints = val
 	} else if val, ok := kv["story_points"].(float64); ok {
@@ -3157,6 +3181,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.Resolution)
 	args = append(args, o.SprintIds)
 	args = append(args, o.Status)
+	args = append(args, o.StatusID)
 	args = append(args, o.StoryPoints)
 	args = append(args, o.Tags)
 	args = append(args, o.Title)
