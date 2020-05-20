@@ -2982,6 +2982,12 @@ func (o *RepoRequest) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *RepoRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = RepoRequestModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *RepoRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

@@ -222,6 +222,12 @@ func (o *PullRequestBranch) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *PullRequestBranch) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = PullRequestBranchModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *PullRequestBranch) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

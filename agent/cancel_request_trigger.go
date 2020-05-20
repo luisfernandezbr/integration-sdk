@@ -254,6 +254,12 @@ func (o *CancelRequestTrigger) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *CancelRequestTrigger) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CancelRequestTriggerModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *CancelRequestTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

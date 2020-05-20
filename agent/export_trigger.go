@@ -158,6 +158,12 @@ func (o *ExportTrigger) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *ExportTrigger) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = ExportTriggerModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *ExportTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

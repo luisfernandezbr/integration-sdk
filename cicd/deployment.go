@@ -627,6 +627,12 @@ func (o *Deployment) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Deployment) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = DeploymentModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Deployment) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

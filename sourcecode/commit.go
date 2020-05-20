@@ -293,6 +293,12 @@ func (o *Commit) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Commit) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CommitModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Commit) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

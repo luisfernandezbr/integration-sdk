@@ -174,6 +174,12 @@ func (o *IssuePriority) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *IssuePriority) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = IssuePriorityModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *IssuePriority) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

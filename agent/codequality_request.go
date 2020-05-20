@@ -2982,6 +2982,12 @@ func (o *CodequalityRequest) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *CodequalityRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CodequalityRequestModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *CodequalityRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

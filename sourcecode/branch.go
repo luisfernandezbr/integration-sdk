@@ -226,6 +226,12 @@ func (o *Branch) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Branch) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = BranchModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Branch) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

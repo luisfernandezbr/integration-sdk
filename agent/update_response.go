@@ -704,6 +704,12 @@ func (o *UpdateResponse) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *UpdateResponse) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = UpdateResponseModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *UpdateResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

@@ -153,6 +153,12 @@ func (o *WorkStatusTrigger) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *WorkStatusTrigger) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = WorkStatusTriggerModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *WorkStatusTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

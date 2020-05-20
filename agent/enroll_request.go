@@ -249,6 +249,11 @@ func (o *EnrollRequest) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *EnrollRequest) SetEventHeaders(kv map[string]string) {
+	kv["model"] = EnrollRequestModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *EnrollRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

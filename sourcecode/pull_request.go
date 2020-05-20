@@ -785,6 +785,12 @@ func (o *PullRequest) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *PullRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = PullRequestModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

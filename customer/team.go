@@ -773,6 +773,12 @@ func (o *Team) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Team) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = TeamModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Team) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

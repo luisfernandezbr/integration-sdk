@@ -696,6 +696,12 @@ func (o *Log) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *Log) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = LogModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *Log) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

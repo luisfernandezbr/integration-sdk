@@ -390,6 +390,12 @@ func (o *IssueComment) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *IssueComment) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = IssueCommentModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *IssueComment) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

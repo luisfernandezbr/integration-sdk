@@ -1070,6 +1070,12 @@ func (o *ProjectResponse) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *ProjectResponse) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = ProjectResponseModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *ProjectResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

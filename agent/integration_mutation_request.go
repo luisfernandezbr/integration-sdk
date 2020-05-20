@@ -886,6 +886,12 @@ func (o *IntegrationMutationRequest) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *IntegrationMutationRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = IntegrationMutationRequestModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *IntegrationMutationRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

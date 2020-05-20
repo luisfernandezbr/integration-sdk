@@ -619,6 +619,12 @@ func (o *WebhookRequest) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *WebhookRequest) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = WebhookRequestModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *WebhookRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

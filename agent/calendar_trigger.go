@@ -153,6 +153,12 @@ func (o *CalendarTrigger) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *CalendarTrigger) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = CalendarTriggerModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *CalendarTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil

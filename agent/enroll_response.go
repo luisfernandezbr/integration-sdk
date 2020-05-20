@@ -700,6 +700,12 @@ func (o *EnrollResponse) IsEvented() bool {
 	return false
 }
 
+// SetEventHeaders will set any event headers for the object instance
+func (o *EnrollResponse) SetEventHeaders(kv map[string]string) {
+	kv["customer_id"] = o.CustomerID
+	kv["model"] = EnrollResponseModelName.String()
+}
+
 // GetTopicConfig returns the topic config object
 func (o *EnrollResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil
