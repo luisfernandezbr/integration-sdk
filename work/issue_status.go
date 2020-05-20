@@ -35,8 +35,6 @@ const (
 	IssueStatusModelIDColumn = "id"
 	// IssueStatusModelNameColumn is the column json value name
 	IssueStatusModelNameColumn = "name"
-	// IssueStatusModelProjectIDColumn is the column json value project_id
-	IssueStatusModelProjectIDColumn = "project_id"
 	// IssueStatusModelRefIDColumn is the column json value ref_id
 	IssueStatusModelRefIDColumn = "ref_id"
 	// IssueStatusModelRefTypeColumn is the column json value ref_type
@@ -55,8 +53,6 @@ type IssueStatus struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Name the name of the status
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
-	// ProjectID the id of the project for this status
-	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -107,14 +103,14 @@ func (o *IssueStatus) GetModelName() datamodel.ModelNameType {
 }
 
 // NewIssueStatusID provides a template for generating an ID field for IssueStatus
-func NewIssueStatusID(customerID string, refType string, refID string, ProjectID string) string {
-	return hash.Values(customerID, refType, refID, ProjectID)
+func NewIssueStatusID(customerID string, refType string, refID string) string {
+	return hash.Values(customerID, refType, refID)
 }
 
 func (o *IssueStatus) setDefaults(frommap bool) {
 
 	if o.ID == "" {
-		o.ID = hash.Values(o.CustomerID, o.RefType, o.RefID, o.ProjectID)
+		o.ID = hash.Values(o.CustomerID, o.RefType, o.RefID)
 	}
 
 	if frommap {
@@ -249,7 +245,6 @@ func (o *IssueStatus) ToMap() map[string]interface{} {
 		"icon_url":    toIssueStatusObject(o.IconURL, true),
 		"id":          toIssueStatusObject(o.ID, false),
 		"name":        toIssueStatusObject(o.Name, false),
-		"project_id":  toIssueStatusObject(o.ProjectID, false),
 		"ref_id":      toIssueStatusObject(o.RefID, false),
 		"ref_type":    toIssueStatusObject(o.RefType, false),
 		"hashcode":    toIssueStatusObject(o.Hashcode, false),
@@ -358,25 +353,6 @@ func (o *IssueStatus) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["project_id"].(string); ok {
-		o.ProjectID = val
-	} else {
-		if val, ok := kv["project_id"]; ok {
-			if val == nil {
-				o.ProjectID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ProjectID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -426,7 +402,6 @@ func (o *IssueStatus) Hash() string {
 	args = append(args, o.IconURL)
 	args = append(args, o.ID)
 	args = append(args, o.Name)
-	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	o.Hashcode = hash.Values(args...)
