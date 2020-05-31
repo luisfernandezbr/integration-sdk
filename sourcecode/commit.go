@@ -269,7 +269,6 @@ func (o *Commit) GetTimestamp() time.Time {
 
 // GetRefID returns the RefID for the object
 func (o *Commit) GetRefID() string {
-	o.RefID = o.Sha
 	return o.RefID
 }
 

@@ -277,7 +277,6 @@ func (o *PullRequestCommit) GetTimestamp() time.Time {
 
 // GetRefID returns the RefID for the object
 func (o *PullRequestCommit) GetRefID() string {
-	o.RefID = o.Sha
 	return o.RefID
 }
 
