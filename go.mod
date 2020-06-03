@@ -8,5 +8,5 @@ require (
 	github.com/pinpt/go-common/v10 v10.0.0
 	github.com/stretchr/testify v1.6.0 // indirect
 	github.com/tidwall/pretty v1.0.1 // indirect
-	go.mongodb.org/mongo-driver v1.0.4
+	go.mongodb.org/mongo-driver v1.4.0-beta1
 )
