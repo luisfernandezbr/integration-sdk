@@ -3,7 +3,7 @@
 package datamodel
 
 import (
-	"github.com/pinpt/go-common/datamodel"
+	"github.com/pinpt/go-common/v10/datamodel"
 
 	dm_agent "github.com/pinpt/integration-sdk/agent"
 	dm_calendar "github.com/pinpt/integration-sdk/calendar"
