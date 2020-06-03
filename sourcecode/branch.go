@@ -11,13 +11,13 @@ import (
 	"time"
 
 	"github.com/bxcodec/faker"
-	"github.com/pinpt/go-common/datamodel"
-	"github.com/pinpt/go-common/datetime"
-	"github.com/pinpt/go-common/hash"
-	pjson "github.com/pinpt/go-common/json"
-	"github.com/pinpt/go-common/number"
-	"github.com/pinpt/go-common/slice"
-	pstrings "github.com/pinpt/go-common/strings"
+	"github.com/pinpt/go-common/v10/datamodel"
+	"github.com/pinpt/go-common/v10/datetime"
+	"github.com/pinpt/go-common/v10/hash"
+	pjson "github.com/pinpt/go-common/v10/json"
+	"github.com/pinpt/go-common/v10/number"
+	"github.com/pinpt/go-common/v10/slice"
+	pstrings "github.com/pinpt/go-common/v10/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
