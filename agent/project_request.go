@@ -67,6 +67,8 @@ const (
 	ProjectRequestModelIntegrationAuthorizationAPIVersionColumn = "api_version"
 	// ProjectRequestModelIntegrationAuthorizationOrganizationColumn is the column json value organization
 	ProjectRequestModelIntegrationAuthorizationOrganizationColumn = "organization"
+	// ProjectRequestModelIntegrationConfigColumn is the column json value config
+	ProjectRequestModelIntegrationConfigColumn = "config"
 	// ProjectRequestModelIntegrationCreatedByProfileIDColumn is the column json value created_by_profile_id
 	ProjectRequestModelIntegrationCreatedByProfileIDColumn = "created_by_profile_id"
 	// ProjectRequestModelIntegrationCreatedByUserIDColumn is the column json value created_by_user_id
@@ -93,6 +95,8 @@ const (
 	ProjectRequestModelIntegrationIDColumn = "id"
 	// ProjectRequestModelIntegrationInclusionsColumn is the column json value inclusions
 	ProjectRequestModelIntegrationInclusionsColumn = "inclusions"
+	// ProjectRequestModelIntegrationIntervalColumn is the column json value interval
+	ProjectRequestModelIntegrationIntervalColumn = "interval"
 	// ProjectRequestModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
 	ProjectRequestModelIntegrationLastExportCompletedDateColumn = "last_export_completed_date"
 	// ProjectRequestModelIntegrationLastExportCompletedDateEpochColumn is the column json value epoch
@@ -149,6 +153,8 @@ const (
 	ProjectRequestModelIntegrationOnboardingColumn = "onboarding"
 	// ProjectRequestModelIntegrationOrganizationColumn is the column json value organization
 	ProjectRequestModelIntegrationOrganizationColumn = "organization"
+	// ProjectRequestModelIntegrationPausedColumn is the column json value paused
+	ProjectRequestModelIntegrationPausedColumn = "paused"
 	// ProjectRequestModelIntegrationProcessedColumn is the column json value processed
 	ProjectRequestModelIntegrationProcessedColumn = "processed"
 	// ProjectRequestModelIntegrationRefIDColumn is the column json value ref_id
@@ -1668,6 +1674,8 @@ type ProjectRequestIntegration struct {
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Authorization Authorization information
 	Authorization ProjectRequestIntegrationAuthorization `json:"authorization" codec:"authorization" bson:"authorization" yaml:"authorization" faker:"-"`
+	// Config the integration configuration controlled by the integration itself
+	Config *string `json:"config,omitempty" codec:"config,omitempty" bson:"config" yaml:"config,omitempty" faker:"-"`
 	// CreatedByProfileID The id of the profile for the user that created the integration
 	CreatedByProfileID *string `json:"created_by_profile_id,omitempty" codec:"created_by_profile_id,omitempty" bson:"created_by_profile_id" yaml:"created_by_profile_id,omitempty" faker:"-"`
 	// CreatedByUserID The id of the user that created the integration
@@ -1678,7 +1686,7 @@ type ProjectRequestIntegration struct {
 	EntityErrors []ProjectRequestIntegrationEntityErrors `json:"entity_errors" codec:"entity_errors" bson:"entity_errors" yaml:"entity_errors" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
-	// Errored If authorization failed by the agent
+	// Errored If authorization failed by the agent or any other error
 	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
 	// Exclusions The exclusion list for this integration
 	Exclusions []string `json:"exclusions" codec:"exclusions" bson:"exclusions" yaml:"exclusions" faker:"-"`
@@ -1688,6 +1696,8 @@ type ProjectRequestIntegration struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Inclusions The inclusion list for this integration
 	Inclusions []string `json:"inclusions" codec:"inclusions" bson:"inclusions" yaml:"inclusions" faker:"-"`
+	// Interval the interval in milliseconds for how often an export job is scheduled
+	Interval int64 `json:"interval" codec:"interval" bson:"interval" yaml:"interval" faker:"-"`
 	// LastExportCompletedDate when the export response was received (set by the backend)
 	LastExportCompletedDate ProjectRequestIntegrationLastExportCompletedDate `json:"last_export_completed_date" codec:"last_export_completed_date" bson:"last_export_completed_date" yaml:"last_export_completed_date" faker:"-"`
 	// LastExportRequestedDate when the export request was made (set by the backend)
@@ -1708,6 +1718,8 @@ type ProjectRequestIntegration struct {
 	Onboarding bool `json:"onboarding" codec:"onboarding" bson:"onboarding" yaml:"onboarding" faker:"-"`
 	// Organization The origanization authorized. Used for azure integrations
 	Organization *string `json:"organization,omitempty" codec:"organization,omitempty" bson:"organization" yaml:"organization,omitempty" faker:"-"`
+	// Paused true if the agent is paused and should not start new scheduled jobs
+	Paused bool `json:"paused" codec:"paused" bson:"paused" yaml:"paused" faker:"-"`
 	// Processed If the integration has been processed at least once
 	Processed *bool `json:"processed,omitempty" codec:"processed,omitempty" bson:"processed" yaml:"processed,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
@@ -1795,6 +1807,8 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"active": toProjectRequestIntegrationObject(o.Active, false),
 		// Authorization Authorization information
 		"authorization": toProjectRequestIntegrationObject(o.Authorization, false),
+		// Config the integration configuration controlled by the integration itself
+		"config": toProjectRequestIntegrationObject(o.Config, true),
 		// CreatedByProfileID The id of the profile for the user that created the integration
 		"created_by_profile_id": toProjectRequestIntegrationObject(o.CreatedByProfileID, true),
 		// CreatedByUserID The id of the user that created the integration
@@ -1805,7 +1819,7 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"entity_errors": toProjectRequestIntegrationObject(o.EntityErrors, false),
 		// ErrorMessage The error message from an export run
 		"error_message": toProjectRequestIntegrationObject(o.ErrorMessage, true),
-		// Errored If authorization failed by the agent
+		// Errored If authorization failed by the agent or any other error
 		"errored": toProjectRequestIntegrationObject(o.Errored, true),
 		// Exclusions The exclusion list for this integration
 		"exclusions": toProjectRequestIntegrationObject(o.Exclusions, false),
@@ -1815,6 +1829,8 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"id": toProjectRequestIntegrationObject(o.ID, false),
 		// Inclusions The inclusion list for this integration
 		"inclusions": toProjectRequestIntegrationObject(o.Inclusions, false),
+		// Interval the interval in milliseconds for how often an export job is scheduled
+		"interval": toProjectRequestIntegrationObject(o.Interval, false),
 		// LastExportCompletedDate when the export response was received (set by the backend)
 		"last_export_completed_date": toProjectRequestIntegrationObject(o.LastExportCompletedDate, false),
 		// LastExportRequestedDate when the export request was made (set by the backend)
@@ -1835,6 +1851,8 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"onboarding": toProjectRequestIntegrationObject(o.Onboarding, false),
 		// Organization The origanization authorized. Used for azure integrations
 		"organization": toProjectRequestIntegrationObject(o.Organization, true),
+		// Paused true if the agent is paused and should not start new scheduled jobs
+		"paused": toProjectRequestIntegrationObject(o.Paused, false),
 		// Processed If the integration has been processed at least once
 		"processed": toProjectRequestIntegrationObject(o.Processed, true),
 		// RefID the source system id for the model instance
@@ -1922,6 +1940,23 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 		o.Authorization.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["config"].(*string); ok {
+		o.Config = val
+	} else if val, ok := kv["config"].(string); ok {
+		o.Config = &val
+	} else {
+		if val, ok := kv["config"]; ok {
+			if val == nil {
+				o.Config = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Config = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["created_by_profile_id"].(*string); ok {
 		o.CreatedByProfileID = val
 	} else if val, ok := kv["created_by_profile_id"].(string); ok {
@@ -2203,6 +2238,20 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 	if o.Inclusions == nil {
 		o.Inclusions = make([]string, 0)
 	}
+	if val, ok := kv["interval"].(int64); ok {
+		o.Interval = val
+	} else {
+		if val, ok := kv["interval"]; ok {
+			if val == nil {
+				o.Interval = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Interval = number.ToInt64Any(val)
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_completed_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -2469,6 +2518,17 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.Organization = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["paused"].(bool); ok {
+		o.Paused = val
+	} else {
+		if val, ok := kv["paused"]; ok {
+			if val == nil {
+				o.Paused = false
+			} else {
+				o.Paused = number.ToBoolAny(val)
 			}
 		}
 	}
