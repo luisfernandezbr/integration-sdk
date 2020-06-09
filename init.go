@@ -89,6 +89,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.ExportTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.Integration":
+		o := new(dm_agent.Integration)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.IntegrationMutationRequest":
 		o := new(dm_agent.IntegrationMutationRequest)
 		o.FromMap(map[string]interface{}{})
@@ -405,6 +409,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.ExportRequest"),
 		datamodel.ModelNameType("agent.ExportResponse"),
 		datamodel.ModelNameType("agent.ExportTrigger"),
+		datamodel.ModelNameType("agent.Integration"),
 		datamodel.ModelNameType("agent.IntegrationMutationRequest"),
 		datamodel.ModelNameType("agent.IntegrationMutationResponse"),
 		datamodel.ModelNameType("agent.IntegrationRequest"),
