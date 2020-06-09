@@ -23,6 +23,8 @@ import (
 )
 
 const (
+	// ConfigTopic is the default topic name
+	ConfigTopic datamodel.TopicNameType = "work_Config"
 
 	// ConfigTable is the default table name
 	ConfigTable datamodel.ModelNameType = "work_config"
@@ -363,6 +365,8 @@ type Config struct {
 	// Statuses The mapping of statuses for this integration
 	Statuses ConfigStatuses `json:"statuses" codec:"statuses" bson:"statuses" yaml:"statuses" faker:"-"`
 	// TopLevelIssue details about the top level issue
+	//
+	// Deprecated: this is not used internally anymore.
 	TopLevelIssue ConfigTopLevelIssue `json:"top_level_issue" codec:"top_level_issue" bson:"top_level_issue" yaml:"top_level_issue" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
@@ -399,7 +403,7 @@ func (o *Config) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *Config) GetTopicName() datamodel.TopicNameType {
-	return ""
+	return ConfigTopic
 }
 
 // GetStreamName returns the name of the stream
@@ -452,12 +456,29 @@ func (o *Config) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *Config) GetTopicKey() string {
-	return ""
+	var i interface{} = o.ID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *Config) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for Config")
 }
 
 // GetRefID returns the RefID for the object
@@ -482,7 +503,7 @@ func (o *Config) GetModelMaterializeConfig() *datamodel.ModelMaterializeConfig {
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *Config) IsEvented() bool {
-	return false
+	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
@@ -493,7 +514,28 @@ func (o *Config) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *Config) GetTopicConfig() *datamodel.ModelTopicConfig {
-	return nil
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "id",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -710,6 +752,8 @@ func (o *Config) FromMap(kv map[string]interface{}) {
 	} else {
 		o.Statuses.FromMap(map[string]interface{}{})
 	}
+
+	// Deprecated
 
 	if val, ok := kv["top_level_issue"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {

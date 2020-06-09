@@ -348,6 +348,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "work_Config":
+		o := new(dm_work.Config)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_KanbanBoard":
 		o := new(dm_work.KanbanBoard)
 		o.FromMap(map[string]interface{}{})
@@ -381,6 +385,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("calendar_User"),
 		datamodel.TopicNameType("sourcecode_Repo"),
 		datamodel.TopicNameType("sourcecode_User"),
+		datamodel.TopicNameType("work_Config"),
 		datamodel.TopicNameType("work_KanbanBoard"),
 		datamodel.TopicNameType("work_Project"),
 		datamodel.TopicNameType("work_Sprint"),
