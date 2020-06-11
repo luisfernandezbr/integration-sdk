@@ -67,6 +67,8 @@ const (
 	ExportModelIntegrationErrorMessageColumn = "error_message"
 	// ExportModelIntegrationErroredColumn is the column json value errored
 	ExportModelIntegrationErroredColumn = "errored"
+	// ExportModelIntegrationExportAcknowledgedColumn is the column json value export_acknowledged
+	ExportModelIntegrationExportAcknowledgedColumn = "export_acknowledged"
 	// ExportModelIntegrationIDColumn is the column json value id
 	ExportModelIntegrationIDColumn = "id"
 	// ExportModelIntegrationIntervalColumn is the column json value interval
@@ -717,10 +719,8 @@ func (v *ExportIntegrationState) UnmarshalBSONValue(t bsontype.Type, data []byte
 		switch val.StringValue() {
 		case "IDLE":
 			*v = ExportIntegrationState(0)
-		case "REQUESTED":
-			*v = ExportIntegrationState(1)
 		case "EXPORTING":
-			*v = ExportIntegrationState(2)
+			*v = ExportIntegrationState(1)
 		}
 	}
 	return nil
@@ -731,10 +731,8 @@ func (v ExportIntegrationState) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "IDLE":
 		v = 0
-	case "REQUESTED":
-		v = 1
 	case "EXPORTING":
-		v = 2
+		v = 1
 	}
 	return nil
 }
@@ -745,8 +743,6 @@ func (v ExportIntegrationState) MarshalJSON() ([]byte, error) {
 	case 0:
 		return json.Marshal("IDLE")
 	case 1:
-		return json.Marshal("REQUESTED")
-	case 2:
 		return json.Marshal("EXPORTING")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -758,8 +754,6 @@ func (v ExportIntegrationState) String() string {
 	case 0:
 		return "IDLE"
 	case 1:
-		return "REQUESTED"
-	case 2:
 		return "EXPORTING"
 	}
 	return "unset"
@@ -778,10 +772,8 @@ func (v *ExportIntegrationState) FromInterface(o interface{}) error {
 		switch val {
 		case "IDLE":
 			*v = ExportIntegrationState(0)
-		case "REQUESTED":
-			*v = ExportIntegrationState(1)
 		case "EXPORTING":
-			*v = ExportIntegrationState(2)
+			*v = ExportIntegrationState(1)
 		}
 	}
 	return nil
@@ -790,10 +782,8 @@ func (v *ExportIntegrationState) FromInterface(o interface{}) error {
 const (
 	// ExportIntegrationStateIdle is the enumeration value for idle
 	ExportIntegrationStateIdle ExportIntegrationState = 0
-	// ExportIntegrationStateRequested is the enumeration value for requested
-	ExportIntegrationStateRequested ExportIntegrationState = 1
 	// ExportIntegrationStateExporting is the enumeration value for exporting
-	ExportIntegrationStateExporting ExportIntegrationState = 2
+	ExportIntegrationStateExporting ExportIntegrationState = 1
 )
 
 // ExportIntegrationThrottledUntil represents the object structure for throttled_until
@@ -913,6 +903,8 @@ type ExportIntegration struct {
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent or any other error
 	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
+	// ExportAcknowledged Set to true an export has been recieved by the agent.
+	ExportAcknowledged *bool `json:"export_acknowledged,omitempty" codec:"export_acknowledged,omitempty" bson:"export_acknowledged" yaml:"export_acknowledged,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Interval the interval in milliseconds for how often an export job is scheduled
@@ -1002,6 +994,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"error_message": toExportIntegrationObject(o.ErrorMessage, true),
 		// Errored If authorization failed by the agent or any other error
 		"errored": toExportIntegrationObject(o.Errored, true),
+		// ExportAcknowledged Set to true an export has been recieved by the agent.
+		"export_acknowledged": toExportIntegrationObject(o.ExportAcknowledged, true),
 		// ID the primary key for the model instance
 		"id": toExportIntegrationObject(o.ID, false),
 		// Interval the interval in milliseconds for how often an export job is scheduled
@@ -1038,6 +1032,11 @@ func (o *ExportIntegration) setDefaults(frommap bool) {
 	if o.Errored == nil {
 		var v bool
 		o.Errored = &v
+	}
+
+	if o.ExportAcknowledged == nil {
+		var v bool
+		o.ExportAcknowledged = &v
 	}
 
 	if o.Processed == nil {
@@ -1134,25 +1133,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationCreatedDate); ok {
 			// struct pointer
 			o.CreatedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.CreatedDate.Epoch = dt.Epoch
-			o.CreatedDate.Rfc3339 = dt.Rfc3339
-			o.CreatedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.CreatedDate.Epoch = dt.Epoch
-			o.CreatedDate.Rfc3339 = dt.Rfc3339
-			o.CreatedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.CreatedDate.Epoch = dt.Epoch
-				o.CreatedDate.Rfc3339 = dt.Rfc3339
-				o.CreatedDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.CreatedDate.FromMap(map[string]interface{}{})
@@ -1275,6 +1255,23 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["export_acknowledged"].(*bool); ok {
+		o.ExportAcknowledged = val
+	} else if val, ok := kv["export_acknowledged"].(bool); ok {
+		o.ExportAcknowledged = &val
+	} else {
+		if val, ok := kv["export_acknowledged"]; ok {
+			if val == nil {
+				o.ExportAcknowledged = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.ExportAcknowledged = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1318,25 +1315,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationLastExportCompletedDate); ok {
 			// struct pointer
 			o.LastExportCompletedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportCompletedDate.Epoch = dt.Epoch
-			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportCompletedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportCompletedDate.Epoch = dt.Epoch
-			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportCompletedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportCompletedDate.Epoch = dt.Epoch
-				o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-				o.LastExportCompletedDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportCompletedDate.FromMap(map[string]interface{}{})
@@ -1351,25 +1329,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationLastExportRequestedDate); ok {
 			// struct pointer
 			o.LastExportRequestedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportRequestedDate.Epoch = dt.Epoch
-			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportRequestedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportRequestedDate.Epoch = dt.Epoch
-			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportRequestedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportRequestedDate.Epoch = dt.Epoch
-				o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-				o.LastExportRequestedDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
@@ -1384,25 +1343,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationLastProcessingDate); ok {
 			// struct pointer
 			o.LastProcessingDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastProcessingDate.Epoch = dt.Epoch
-			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessingDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastProcessingDate.Epoch = dt.Epoch
-			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessingDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastProcessingDate.Epoch = dt.Epoch
-				o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-				o.LastProcessingDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastProcessingDate.FromMap(map[string]interface{}{})
@@ -1524,20 +1464,16 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			switch ev {
 			case "idle", "IDLE":
 				o.State = 0
-			case "requested", "REQUESTED":
-				o.State = 1
 			case "exporting", "EXPORTING":
-				o.State = 2
+				o.State = 1
 			}
 		}
 		if em, ok := kv["state"].(string); ok {
 			switch em {
 			case "idle", "IDLE":
 				o.State = 0
-			case "requested", "REQUESTED":
-				o.State = 1
 			case "exporting", "EXPORTING":
-				o.State = 2
+				o.State = 1
 			}
 		}
 	}
@@ -1572,25 +1508,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationThrottledUntil); ok {
 			// struct pointer
 			o.ThrottledUntil = sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.ThrottledUntil.Epoch = dt.Epoch
-			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
-			o.ThrottledUntil.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.ThrottledUntil.Epoch = dt.Epoch
-			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
-			o.ThrottledUntil.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.ThrottledUntil.Epoch = dt.Epoch
-				o.ThrottledUntil.Rfc3339 = dt.Rfc3339
-				o.ThrottledUntil.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.ThrottledUntil.FromMap(map[string]interface{}{})

@@ -65,6 +65,8 @@ const (
 	IntegrationInstanceModelErrorMessageColumn = "error_message"
 	// IntegrationInstanceModelErroredColumn is the column json value errored
 	IntegrationInstanceModelErroredColumn = "errored"
+	// IntegrationInstanceModelExportAcknowledgedColumn is the column json value export_acknowledged
+	IntegrationInstanceModelExportAcknowledgedColumn = "export_acknowledged"
 	// IntegrationInstanceModelIDColumn is the column json value id
 	IntegrationInstanceModelIDColumn = "id"
 	// IntegrationInstanceModelIntervalColumn is the column json value interval
@@ -709,10 +711,8 @@ func (v *IntegrationInstanceState) UnmarshalBSONValue(t bsontype.Type, data []by
 		switch val.StringValue() {
 		case "IDLE":
 			*v = IntegrationInstanceState(0)
-		case "REQUESTED":
-			*v = IntegrationInstanceState(1)
 		case "EXPORTING":
-			*v = IntegrationInstanceState(2)
+			*v = IntegrationInstanceState(1)
 		}
 	}
 	return nil
@@ -723,10 +723,8 @@ func (v IntegrationInstanceState) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "IDLE":
 		v = 0
-	case "REQUESTED":
-		v = 1
 	case "EXPORTING":
-		v = 2
+		v = 1
 	}
 	return nil
 }
@@ -737,8 +735,6 @@ func (v IntegrationInstanceState) MarshalJSON() ([]byte, error) {
 	case 0:
 		return json.Marshal("IDLE")
 	case 1:
-		return json.Marshal("REQUESTED")
-	case 2:
 		return json.Marshal("EXPORTING")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -750,8 +746,6 @@ func (v IntegrationInstanceState) String() string {
 	case 0:
 		return "IDLE"
 	case 1:
-		return "REQUESTED"
-	case 2:
 		return "EXPORTING"
 	}
 	return "unset"
@@ -770,10 +764,8 @@ func (v *IntegrationInstanceState) FromInterface(o interface{}) error {
 		switch val {
 		case "IDLE":
 			*v = IntegrationInstanceState(0)
-		case "REQUESTED":
-			*v = IntegrationInstanceState(1)
 		case "EXPORTING":
-			*v = IntegrationInstanceState(2)
+			*v = IntegrationInstanceState(1)
 		}
 	}
 	return nil
@@ -782,10 +774,8 @@ func (v *IntegrationInstanceState) FromInterface(o interface{}) error {
 const (
 	// IntegrationInstanceStateIdle is the enumeration value for idle
 	IntegrationInstanceStateIdle IntegrationInstanceState = 0
-	// IntegrationInstanceStateRequested is the enumeration value for requested
-	IntegrationInstanceStateRequested IntegrationInstanceState = 1
 	// IntegrationInstanceStateExporting is the enumeration value for exporting
-	IntegrationInstanceStateExporting IntegrationInstanceState = 2
+	IntegrationInstanceStateExporting IntegrationInstanceState = 1
 )
 
 // IntegrationInstanceThrottledUntil represents the object structure for throttled_until
@@ -907,6 +897,8 @@ type IntegrationInstance struct {
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent or any other error
 	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
+	// ExportAcknowledged Set to true an export has been recieved by the agent.
+	ExportAcknowledged *bool `json:"export_acknowledged,omitempty" codec:"export_acknowledged,omitempty" bson:"export_acknowledged" yaml:"export_acknowledged,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Interval the interval in milliseconds for how often an export job is scheduled
@@ -1031,6 +1023,11 @@ func (o *IntegrationInstance) setDefaults(frommap bool) {
 	if o.Errored == nil {
 		var v bool
 		o.Errored = &v
+	}
+
+	if o.ExportAcknowledged == nil {
+		var v bool
+		o.ExportAcknowledged = &v
 	}
 
 	{
@@ -1184,6 +1181,7 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 		"entity_errors":              toIntegrationInstanceObject(o.EntityErrors, false),
 		"error_message":              toIntegrationInstanceObject(o.ErrorMessage, true),
 		"errored":                    toIntegrationInstanceObject(o.Errored, true),
+		"export_acknowledged":        toIntegrationInstanceObject(o.ExportAcknowledged, true),
 		"id":                         toIntegrationInstanceObject(o.ID, false),
 		"interval":                   toIntegrationInstanceObject(o.Interval, false),
 		"last_export_completed_date": toIntegrationInstanceObject(o.LastExportCompletedDate, false),
@@ -1441,6 +1439,23 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["export_acknowledged"].(*bool); ok {
+		o.ExportAcknowledged = val
+	} else if val, ok := kv["export_acknowledged"].(bool); ok {
+		o.ExportAcknowledged = &val
+	} else {
+		if val, ok := kv["export_acknowledged"]; ok {
+			if val == nil {
+				o.ExportAcknowledged = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.ExportAcknowledged = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["id"].(string); ok {
 		o.ID = val
 	} else {
@@ -1690,20 +1705,16 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			switch ev {
 			case "idle", "IDLE":
 				o.State = 0
-			case "requested", "REQUESTED":
-				o.State = 1
 			case "exporting", "EXPORTING":
-				o.State = 2
+				o.State = 1
 			}
 		}
 		if em, ok := kv["state"].(string); ok {
 			switch em {
 			case "idle", "IDLE":
 				o.State = 0
-			case "requested", "REQUESTED":
-				o.State = 1
 			case "exporting", "EXPORTING":
-				o.State = 2
+				o.State = 1
 			}
 		}
 	}
@@ -1792,6 +1803,7 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.EntityErrors)
 	args = append(args, o.ErrorMessage)
 	args = append(args, o.Errored)
+	args = append(args, o.ExportAcknowledged)
 	args = append(args, o.ID)
 	args = append(args, o.Interval)
 	args = append(args, o.LastExportCompletedDate)
@@ -1850,6 +1862,8 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\terror_message\n")
 	// scalar
 	sb.WriteString("\t\t\terrored\n")
+	// scalar
+	sb.WriteString("\t\t\texport_acknowledged\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")
 	// scalar
