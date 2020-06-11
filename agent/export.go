@@ -717,8 +717,10 @@ func (v *ExportIntegrationState) UnmarshalBSONValue(t bsontype.Type, data []byte
 		switch val.StringValue() {
 		case "IDLE":
 			*v = ExportIntegrationState(0)
-		case "EXPORTING":
+		case "REQUESTED":
 			*v = ExportIntegrationState(1)
+		case "EXPORTING":
+			*v = ExportIntegrationState(2)
 		}
 	}
 	return nil
@@ -729,8 +731,10 @@ func (v ExportIntegrationState) UnmarshalJSON(buf []byte) error {
 	switch string(buf) {
 	case "IDLE":
 		v = 0
-	case "EXPORTING":
+	case "REQUESTED":
 		v = 1
+	case "EXPORTING":
+		v = 2
 	}
 	return nil
 }
@@ -741,6 +745,8 @@ func (v ExportIntegrationState) MarshalJSON() ([]byte, error) {
 	case 0:
 		return json.Marshal("IDLE")
 	case 1:
+		return json.Marshal("REQUESTED")
+	case 2:
 		return json.Marshal("EXPORTING")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -752,6 +758,8 @@ func (v ExportIntegrationState) String() string {
 	case 0:
 		return "IDLE"
 	case 1:
+		return "REQUESTED"
+	case 2:
 		return "EXPORTING"
 	}
 	return "unset"
@@ -770,8 +778,10 @@ func (v *ExportIntegrationState) FromInterface(o interface{}) error {
 		switch val {
 		case "IDLE":
 			*v = ExportIntegrationState(0)
-		case "EXPORTING":
+		case "REQUESTED":
 			*v = ExportIntegrationState(1)
+		case "EXPORTING":
+			*v = ExportIntegrationState(2)
 		}
 	}
 	return nil
@@ -780,8 +790,10 @@ func (v *ExportIntegrationState) FromInterface(o interface{}) error {
 const (
 	// ExportIntegrationStateIdle is the enumeration value for idle
 	ExportIntegrationStateIdle ExportIntegrationState = 0
+	// ExportIntegrationStateRequested is the enumeration value for requested
+	ExportIntegrationStateRequested ExportIntegrationState = 1
 	// ExportIntegrationStateExporting is the enumeration value for exporting
-	ExportIntegrationStateExporting ExportIntegrationState = 1
+	ExportIntegrationStateExporting ExportIntegrationState = 2
 )
 
 // ExportIntegrationThrottledUntil represents the object structure for throttled_until
@@ -1512,16 +1524,20 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			switch ev {
 			case "idle", "IDLE":
 				o.State = 0
-			case "exporting", "EXPORTING":
+			case "requested", "REQUESTED":
 				o.State = 1
+			case "exporting", "EXPORTING":
+				o.State = 2
 			}
 		}
 		if em, ok := kv["state"].(string); ok {
 			switch em {
 			case "idle", "IDLE":
 				o.State = 0
-			case "exporting", "EXPORTING":
+			case "requested", "REQUESTED":
 				o.State = 1
+			case "exporting", "EXPORTING":
+				o.State = 2
 			}
 		}
 	}
