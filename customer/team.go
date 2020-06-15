@@ -1666,3 +1666,24 @@ func ExecTeamUpdateMutation(client graphql.Client, id string, input graphql.Vari
 	}
 	return res.Data.Object, nil
 }
+
+// ExecTeamSilentUpdateMutation returns a graphql update mutation result for Team
+func ExecTeamSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["upsert"] = upsert
+	variables["input"] = input
+	var sb strings.Builder
+	sb.WriteString("mutation TeamUpdateMutation($id: String, $input: UpdateCustomerTeamInput, $upsert: Boolean) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tupdateTeam(_id: $id, input: $input, upsert: $upsert) {\n")
+	sb.WriteString("\t\t\t_id")
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res UpdateTeamData
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}

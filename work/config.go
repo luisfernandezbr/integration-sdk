@@ -1030,3 +1030,24 @@ func ExecConfigUpdateMutation(client graphql.Client, id string, input graphql.Va
 	}
 	return res.Data.Object, nil
 }
+
+// ExecConfigSilentUpdateMutation returns a graphql update mutation result for Config
+func ExecConfigSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["upsert"] = upsert
+	variables["input"] = input
+	var sb strings.Builder
+	sb.WriteString("mutation ConfigUpdateMutation($id: String, $input: UpdateWorkConfigInput, $upsert: Boolean) {\n")
+	sb.WriteString("\twork {\n")
+	sb.WriteString("\t\tupdateConfig(_id: $id, input: $input, upsert: $upsert) {\n")
+	sb.WriteString("\t\t\t_id")
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res UpdateConfigData
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
