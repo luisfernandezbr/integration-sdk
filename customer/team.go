@@ -86,6 +86,8 @@ const (
 	TeamModelUsersProfileIDColumn = "profile_id"
 	// TeamModelUsersRefIDColumn is the column json value ref_id
 	TeamModelUsersRefIDColumn = "ref_id"
+	// TeamModelUsersRefTypeColumn is the column json value ref_type
+	TeamModelUsersRefTypeColumn = "ref_type"
 	// TeamModelUsersTeamIDColumn is the column json value team_id
 	TeamModelUsersTeamIDColumn = "team_id"
 	// TeamModelUsersTypeColumn is the column json value type
@@ -357,6 +359,8 @@ type TeamUsers struct {
 	ProfileID *string `json:"profile_id,omitempty" codec:"profile_id,omitempty" bson:"profile_id" yaml:"profile_id,omitempty" faker:"-"`
 	// RefID the ref_id of the user in the source system
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RefType the name of the source system
+	RefType *string `json:"ref_type,omitempty" codec:"ref_type,omitempty" bson:"ref_type" yaml:"ref_type,omitempty" faker:"-"`
 	// TeamID the corporate team id
 	TeamID string `json:"-"`
 	// Type the type of user
@@ -394,6 +398,8 @@ func (o *TeamUsers) ToMap() map[string]interface{} {
 		"profile_id": toTeamUsersObject(o.ProfileID, true),
 		// RefID the ref_id of the user in the source system
 		"ref_id": toTeamUsersObject(o.RefID, false),
+		// RefType the name of the source system
+		"ref_type": toTeamUsersObject(o.RefType, true),
 		// TeamID the corporate team id
 		"team_id": toTeamUsersObject(o.TeamID, false),
 		// Type the type of user
@@ -520,6 +526,23 @@ func (o *TeamUsers) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_type"].(*string); ok {
+		o.RefType = val
+	} else if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = &val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RefType = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1441,6 +1464,8 @@ func getTeamQueryFields() string {
 	sb.WriteString("\t\t\tprofile_id\n")
 	// scalar
 	sb.WriteString("\t\t\tref_id\n")
+	// scalar
+	sb.WriteString("\t\t\tref_type\n")
 	// scalar
 	sb.WriteString("\t\t\tteam_id\n")
 	// scalar
