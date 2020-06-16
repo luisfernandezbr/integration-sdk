@@ -71,6 +71,8 @@ const (
 	ExportModelIntegrationExportAcknowledgedColumn = "export_acknowledged"
 	// ExportModelIntegrationIDColumn is the column json value id
 	ExportModelIntegrationIDColumn = "id"
+	// ExportModelIntegrationIntegrationIDColumn is the column json value integration_id
+	ExportModelIntegrationIntegrationIDColumn = "integration_id"
 	// ExportModelIntegrationIntervalColumn is the column json value interval
 	ExportModelIntegrationIntervalColumn = "interval"
 	// ExportModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
@@ -907,6 +909,8 @@ type ExportIntegration struct {
 	ExportAcknowledged *bool `json:"export_acknowledged,omitempty" codec:"export_acknowledged,omitempty" bson:"export_acknowledged" yaml:"export_acknowledged,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationID The unique id for the integration
+	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// Interval the interval in milliseconds for how often an export job is scheduled
 	Interval int64 `json:"interval" codec:"interval" bson:"interval" yaml:"interval" faker:"-"`
 	// LastExportCompletedDate when the export response was received
@@ -998,6 +1002,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"export_acknowledged": toExportIntegrationObject(o.ExportAcknowledged, true),
 		// ID the primary key for the model instance
 		"id": toExportIntegrationObject(o.ID, false),
+		// IntegrationID The unique id for the integration
+		"integration_id": toExportIntegrationObject(o.IntegrationID, false),
 		// Interval the interval in milliseconds for how often an export job is scheduled
 		"interval": toExportIntegrationObject(o.Interval, false),
 		// LastExportCompletedDate when the export response was received
@@ -1133,25 +1139,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationCreatedDate); ok {
 			// struct pointer
 			o.CreatedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.CreatedDate.Epoch = dt.Epoch
-			o.CreatedDate.Rfc3339 = dt.Rfc3339
-			o.CreatedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.CreatedDate.Epoch = dt.Epoch
-			o.CreatedDate.Rfc3339 = dt.Rfc3339
-			o.CreatedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.CreatedDate.Epoch = dt.Epoch
-				o.CreatedDate.Rfc3339 = dt.Rfc3339
-				o.CreatedDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.CreatedDate.FromMap(map[string]interface{}{})
@@ -1310,6 +1297,25 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = val
+	} else {
+		if val, ok := kv["integration_id"]; ok {
+			if val == nil {
+				o.IntegrationID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	if val, ok := kv["interval"].(int64); ok {
 		o.Interval = val
 	} else {
@@ -1334,25 +1340,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationLastExportCompletedDate); ok {
 			// struct pointer
 			o.LastExportCompletedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportCompletedDate.Epoch = dt.Epoch
-			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportCompletedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportCompletedDate.Epoch = dt.Epoch
-			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportCompletedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportCompletedDate.Epoch = dt.Epoch
-				o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-				o.LastExportCompletedDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportCompletedDate.FromMap(map[string]interface{}{})
@@ -1367,25 +1354,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationLastExportRequestedDate); ok {
 			// struct pointer
 			o.LastExportRequestedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportRequestedDate.Epoch = dt.Epoch
-			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportRequestedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportRequestedDate.Epoch = dt.Epoch
-			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportRequestedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportRequestedDate.Epoch = dt.Epoch
-				o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-				o.LastExportRequestedDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
@@ -1400,25 +1368,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationLastProcessingDate); ok {
 			// struct pointer
 			o.LastProcessingDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastProcessingDate.Epoch = dt.Epoch
-			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessingDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastProcessingDate.Epoch = dt.Epoch
-			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessingDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastProcessingDate.Epoch = dt.Epoch
-				o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-				o.LastProcessingDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastProcessingDate.FromMap(map[string]interface{}{})
@@ -1584,25 +1533,6 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportIntegrationThrottledUntil); ok {
 			// struct pointer
 			o.ThrottledUntil = sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.ThrottledUntil.Epoch = dt.Epoch
-			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
-			o.ThrottledUntil.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.ThrottledUntil.Epoch = dt.Epoch
-			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
-			o.ThrottledUntil.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.ThrottledUntil.Epoch = dt.Epoch
-				o.ThrottledUntil.Rfc3339 = dt.Rfc3339
-				o.ThrottledUntil.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.ThrottledUntil.FromMap(map[string]interface{}{})
