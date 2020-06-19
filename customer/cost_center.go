@@ -536,13 +536,25 @@ type CostCenterQuery struct {
 	Params  []interface{} `json:"params,omitempty"`
 }
 
+// CostCenterOrder is the order direction
+type CostCenterOrder *string
+
+var (
+	// CostCenterOrderDesc is descending
+	CostCenterOrderDesc CostCenterOrder = pstrings.Pointer("DESC")
+	// CostCenterOrderAsc is ascending
+	CostCenterOrderAsc CostCenterOrder = pstrings.Pointer("ASC")
+)
+
 // CostCenterQueryInput is query input struct
 type CostCenterQueryInput struct {
-	First  *int64           `json:"first,omitempty"`
-	Last   *int64           `json:"last,omitempty"`
-	Before *string          `json:"before,omitempty"`
-	After  *string          `json:"after,omitempty"`
-	Query  *CostCenterQuery `json:"query,omitempty"`
+	First   *int64           `json:"first,omitempty"`
+	Last    *int64           `json:"last,omitempty"`
+	Before  *string          `json:"before,omitempty"`
+	After   *string          `json:"after,omitempty"`
+	Query   *CostCenterQuery `json:"query,omitempty"`
+	OrderBy *string          `json:"orderBy,omitempty"`
+	Order   CostCenterOrder  `json:"order,omitempty"`
 }
 
 // NewCostCenterQuery is a convenience for building a *CostCenterQuery

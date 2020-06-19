@@ -886,13 +886,25 @@ type ConfigQuery struct {
 	Params  []interface{} `json:"params,omitempty"`
 }
 
+// ConfigOrder is the order direction
+type ConfigOrder *string
+
+var (
+	// ConfigOrderDesc is descending
+	ConfigOrderDesc ConfigOrder = pstrings.Pointer("DESC")
+	// ConfigOrderAsc is ascending
+	ConfigOrderAsc ConfigOrder = pstrings.Pointer("ASC")
+)
+
 // ConfigQueryInput is query input struct
 type ConfigQueryInput struct {
-	First  *int64       `json:"first,omitempty"`
-	Last   *int64       `json:"last,omitempty"`
-	Before *string      `json:"before,omitempty"`
-	After  *string      `json:"after,omitempty"`
-	Query  *ConfigQuery `json:"query,omitempty"`
+	First   *int64       `json:"first,omitempty"`
+	Last    *int64       `json:"last,omitempty"`
+	Before  *string      `json:"before,omitempty"`
+	After   *string      `json:"after,omitempty"`
+	Query   *ConfigQuery `json:"query,omitempty"`
+	OrderBy *string      `json:"orderBy,omitempty"`
+	Order   ConfigOrder  `json:"order,omitempty"`
 }
 
 // NewConfigQuery is a convenience for building a *ConfigQuery

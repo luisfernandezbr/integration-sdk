@@ -2002,13 +2002,25 @@ type IntegrationInstanceQuery struct {
 	Params  []interface{} `json:"params,omitempty"`
 }
 
+// IntegrationInstanceOrder is the order direction
+type IntegrationInstanceOrder *string
+
+var (
+	// IntegrationInstanceOrderDesc is descending
+	IntegrationInstanceOrderDesc IntegrationInstanceOrder = pstrings.Pointer("DESC")
+	// IntegrationInstanceOrderAsc is ascending
+	IntegrationInstanceOrderAsc IntegrationInstanceOrder = pstrings.Pointer("ASC")
+)
+
 // IntegrationInstanceQueryInput is query input struct
 type IntegrationInstanceQueryInput struct {
-	First  *int64                    `json:"first,omitempty"`
-	Last   *int64                    `json:"last,omitempty"`
-	Before *string                   `json:"before,omitempty"`
-	After  *string                   `json:"after,omitempty"`
-	Query  *IntegrationInstanceQuery `json:"query,omitempty"`
+	First   *int64                    `json:"first,omitempty"`
+	Last    *int64                    `json:"last,omitempty"`
+	Before  *string                   `json:"before,omitempty"`
+	After   *string                   `json:"after,omitempty"`
+	Query   *IntegrationInstanceQuery `json:"query,omitempty"`
+	OrderBy *string                   `json:"orderBy,omitempty"`
+	Order   IntegrationInstanceOrder  `json:"order,omitempty"`
 }
 
 // NewIntegrationInstanceQuery is a convenience for building a *IntegrationInstanceQuery

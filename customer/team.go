@@ -1522,13 +1522,25 @@ type TeamQuery struct {
 	Params  []interface{} `json:"params,omitempty"`
 }
 
+// TeamOrder is the order direction
+type TeamOrder *string
+
+var (
+	// TeamOrderDesc is descending
+	TeamOrderDesc TeamOrder = pstrings.Pointer("DESC")
+	// TeamOrderAsc is ascending
+	TeamOrderAsc TeamOrder = pstrings.Pointer("ASC")
+)
+
 // TeamQueryInput is query input struct
 type TeamQueryInput struct {
-	First  *int64     `json:"first,omitempty"`
-	Last   *int64     `json:"last,omitempty"`
-	Before *string    `json:"before,omitempty"`
-	After  *string    `json:"after,omitempty"`
-	Query  *TeamQuery `json:"query,omitempty"`
+	First   *int64     `json:"first,omitempty"`
+	Last    *int64     `json:"last,omitempty"`
+	Before  *string    `json:"before,omitempty"`
+	After   *string    `json:"after,omitempty"`
+	Query   *TeamQuery `json:"query,omitempty"`
+	OrderBy *string    `json:"orderBy,omitempty"`
+	Order   TeamOrder  `json:"order,omitempty"`
 }
 
 // NewTeamQuery is a convenience for building a *TeamQuery
