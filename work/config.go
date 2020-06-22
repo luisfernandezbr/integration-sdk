@@ -54,12 +54,6 @@ const (
 	ConfigModelStatusesInProgressStatusColumn = "in_progress_status"
 	// ConfigModelStatusesOpenStatusColumn is the column json value open_status
 	ConfigModelStatusesOpenStatusColumn = "open_status"
-	// ConfigModelTopLevelIssueColumn is the column json value top_level_issue
-	ConfigModelTopLevelIssueColumn = "top_level_issue"
-	// ConfigModelTopLevelIssueNameColumn is the column json value name
-	ConfigModelTopLevelIssueNameColumn = "name"
-	// ConfigModelTopLevelIssueTypeColumn is the column json value type
-	ConfigModelTopLevelIssueTypeColumn = "type"
 	// ConfigModelUpdatedAtColumn is the column json value updated_ts
 	ConfigModelUpdatedAtColumn = "updated_ts"
 )
@@ -264,90 +258,6 @@ func (o *ConfigStatuses) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// ConfigTopLevelIssue represents the object structure for top_level_issue
-type ConfigTopLevelIssue struct {
-	// Name name of the top level issue
-	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
-	// Type type of the top level issue
-	Type string `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
-}
-
-func toConfigTopLevelIssueObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *ConfigTopLevelIssue:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *ConfigTopLevelIssue) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Name name of the top level issue
-		"name": toConfigTopLevelIssueObject(o.Name, false),
-		// Type type of the top level issue
-		"type": toConfigTopLevelIssueObject(o.Type, false),
-	}
-}
-
-func (o *ConfigTopLevelIssue) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *ConfigTopLevelIssue) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-	if val, ok := kv["name"].(string); ok {
-		o.Name = val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Name = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	if val, ok := kv["type"].(string); ok {
-		o.Type = val
-	} else {
-		if val, ok := kv["type"]; ok {
-			if val == nil {
-				o.Type = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Type = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // Config Configuration for work management systems
 type Config struct {
 	// CreatedAt the date the record was created in Epoch time
@@ -364,10 +274,6 @@ type Config struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Statuses The mapping of statuses for this integration
 	Statuses ConfigStatuses `json:"statuses" codec:"statuses" bson:"statuses" yaml:"statuses" faker:"-"`
-	// TopLevelIssue details about the top level issue
-	//
-	// Deprecated: this is not used internally anymore.
-	TopLevelIssue ConfigTopLevelIssue `json:"top_level_issue" codec:"top_level_issue" bson:"top_level_issue" yaml:"top_level_issue" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -386,9 +292,6 @@ func toConfigObject(o interface{}, isoptional bool) interface{} {
 		return v.ToMap()
 
 	case ConfigStatuses:
-		return v.ToMap()
-
-	case ConfigTopLevelIssue:
 		return v.ToMap()
 
 	default:
@@ -607,16 +510,15 @@ func (o *Config) IsEqual(other *Config) bool {
 func (o *Config) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"created_ts":      toConfigObject(o.CreatedAt, false),
-		"customer_id":     toConfigObject(o.CustomerID, false),
-		"id":              toConfigObject(o.ID, false),
-		"integration_id":  toConfigObject(o.IntegrationID, false),
-		"ref_id":          toConfigObject(o.RefID, false),
-		"ref_type":        toConfigObject(o.RefType, false),
-		"statuses":        toConfigObject(o.Statuses, false),
-		"top_level_issue": toConfigObject(o.TopLevelIssue, false),
-		"updated_ts":      toConfigObject(o.UpdatedAt, false),
-		"hashcode":        toConfigObject(o.Hashcode, false),
+		"created_ts":     toConfigObject(o.CreatedAt, false),
+		"customer_id":    toConfigObject(o.CustomerID, false),
+		"id":             toConfigObject(o.ID, false),
+		"integration_id": toConfigObject(o.IntegrationID, false),
+		"ref_id":         toConfigObject(o.RefID, false),
+		"ref_type":       toConfigObject(o.RefType, false),
+		"statuses":       toConfigObject(o.Statuses, false),
+		"updated_ts":     toConfigObject(o.UpdatedAt, false),
+		"hashcode":       toConfigObject(o.Hashcode, false),
 	}
 }
 
@@ -753,22 +655,6 @@ func (o *Config) FromMap(kv map[string]interface{}) {
 		o.Statuses.FromMap(map[string]interface{}{})
 	}
 
-	// Deprecated
-
-	if val, ok := kv["top_level_issue"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.TopLevelIssue.FromMap(kv)
-		} else if sv, ok := val.(ConfigTopLevelIssue); ok {
-			// struct
-			o.TopLevelIssue = sv
-		} else if sp, ok := val.(*ConfigTopLevelIssue); ok {
-			// struct pointer
-			o.TopLevelIssue = *sp
-		}
-	} else {
-		o.TopLevelIssue.FromMap(map[string]interface{}{})
-	}
-
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -796,7 +682,6 @@ func (o *Config) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.Statuses)
-	args = append(args, o.TopLevelIssue)
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -826,14 +711,6 @@ func getConfigQueryFields() string {
 	sb.WriteString("\t\t\tin_progress_status\n")
 	// scalar
 	sb.WriteString("\t\t\topen_status\n")
-	sb.WriteString("\t\t\t}\n")
-	// object with fields
-	sb.WriteString("\t\t\ttop_level_issue {\n")
-
-	// scalar
-	sb.WriteString("\t\t\tname\n")
-	// scalar
-	sb.WriteString("\t\t\ttype\n")
 	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\tupdated_ts\n")
