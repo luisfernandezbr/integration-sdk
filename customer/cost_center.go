@@ -606,11 +606,17 @@ func FindCostCenters(client graphql.Client, input *CostCenterQueryInput) (*CostC
 		variables["before"] = input.Before
 		variables["after"] = input.After
 		variables["query"] = input.Query
+		if input.OrderBy != nil {
+			variables["orderBy"] = *input.OrderBy
+		}
+		if input.Order != nil {
+			variables["order"] = *input.Order
+		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query CostCenterQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput) {\n")
+	sb.WriteString("query CostCenterQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerCostCenterColumnEnum) {\n")
 	sb.WriteString("\tcustomer {\n")
-	sb.WriteString("\t\tCostCenters(first: $first last: $last before: $before after: $after query: $query) {\n")
+	sb.WriteString("\t\tCostCenters(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")

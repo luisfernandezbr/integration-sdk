@@ -2072,11 +2072,17 @@ func FindIntegrationInstances(client graphql.Client, input *IntegrationInstanceQ
 		variables["before"] = input.Before
 		variables["after"] = input.After
 		variables["query"] = input.Query
+		if input.OrderBy != nil {
+			variables["orderBy"] = *input.OrderBy
+		}
+		if input.Order != nil {
+			variables["order"] = *input.Order
+		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query IntegrationInstanceQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput) {\n")
+	sb.WriteString("query IntegrationInstanceQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentIntegrationInstanceColumnEnum) {\n")
 	sb.WriteString("\tagent {\n")
-	sb.WriteString("\t\tIntegrationInstances(first: $first last: $last before: $before after: $after query: $query) {\n")
+	sb.WriteString("\t\tIntegrationInstances(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
