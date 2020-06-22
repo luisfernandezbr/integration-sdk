@@ -1479,3 +1479,27 @@ func ExecEnrollmentSilentUpdateMutation(client graphql.Client, id string, input 
 	}
 	return nil
 }
+
+func CreateEnrollment(client graphql.Client, model Enrollment) error {
+	variables := make(graphql.Variables)
+	input := model.ToMap()
+	delete(input, "hashcode")
+	delete(input, "customer_id")
+	delete(input, "created_ts")
+	delete(input, "id")
+	input["_id"] = model.GetID()
+	variables["input"] = input
+	var sb strings.Builder
+	sb.WriteString("mutation CreateEnrollment($input: CreateAgentEnrollmentInput!) {\n")
+	sb.WriteString("\tagent {\n")
+	sb.WriteString("\t\tcreateEnrollment(input: $input) {\n")
+	sb.WriteString("\t\t\t_id")
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res UpdateEnrollmentData
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}

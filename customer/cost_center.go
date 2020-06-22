@@ -719,3 +719,27 @@ func ExecCostCenterSilentUpdateMutation(client graphql.Client, id string, input 
 	}
 	return nil
 }
+
+func CreateCostCenter(client graphql.Client, model CostCenter) error {
+	variables := make(graphql.Variables)
+	input := model.ToMap()
+	delete(input, "hashcode")
+	delete(input, "customer_id")
+	delete(input, "created_ts")
+	delete(input, "id")
+	input["_id"] = model.GetID()
+	variables["input"] = input
+	var sb strings.Builder
+	sb.WriteString("mutation CreateCostCenter($input: CreateCustomerCostCenterInput!) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tcreateCostCenter(input: $input) {\n")
+	sb.WriteString("\t\t\t_id")
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res UpdateCostCenterData
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
