@@ -33,6 +33,8 @@ const (
 	IssueStatusModelIconURLColumn = "icon_url"
 	// IssueStatusModelIDColumn is the column json value id
 	IssueStatusModelIDColumn = "id"
+	// IssueStatusModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IssueStatusModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IssueStatusModelNameColumn is the column json value name
 	IssueStatusModelNameColumn = "name"
 	// IssueStatusModelRefIDColumn is the column json value ref_id
@@ -51,6 +53,8 @@ type IssueStatus struct {
 	IconURL *string `json:"icon_url,omitempty" codec:"icon_url,omitempty" bson:"icon_url" yaml:"icon_url,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the status
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
@@ -240,14 +244,15 @@ func (o *IssueStatus) IsEqual(other *IssueStatus) bool {
 func (o *IssueStatus) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id": toIssueStatusObject(o.CustomerID, false),
-		"description": toIssueStatusObject(o.Description, false),
-		"icon_url":    toIssueStatusObject(o.IconURL, true),
-		"id":          toIssueStatusObject(o.ID, false),
-		"name":        toIssueStatusObject(o.Name, false),
-		"ref_id":      toIssueStatusObject(o.RefID, false),
-		"ref_type":    toIssueStatusObject(o.RefType, false),
-		"hashcode":    toIssueStatusObject(o.Hashcode, false),
+		"customer_id":             toIssueStatusObject(o.CustomerID, false),
+		"description":             toIssueStatusObject(o.Description, false),
+		"icon_url":                toIssueStatusObject(o.IconURL, true),
+		"id":                      toIssueStatusObject(o.ID, false),
+		"integration_instance_id": toIssueStatusObject(o.IntegrationInstanceID, true),
+		"name":                    toIssueStatusObject(o.Name, false),
+		"ref_id":                  toIssueStatusObject(o.RefID, false),
+		"ref_type":                toIssueStatusObject(o.RefType, false),
+		"hashcode":                toIssueStatusObject(o.Hashcode, false),
 	}
 }
 
@@ -334,6 +339,23 @@ func (o *IssueStatus) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -401,6 +423,7 @@ func (o *IssueStatus) Hash() string {
 	args = append(args, o.Description)
 	args = append(args, o.IconURL)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

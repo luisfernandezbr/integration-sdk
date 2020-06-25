@@ -31,6 +31,8 @@ const (
 	ProjectModelIDColumn = "id"
 	// ProjectModelIdentifierColumn is the column json value identifier
 	ProjectModelIdentifierColumn = "identifier"
+	// ProjectModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ProjectModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ProjectModelNameColumn is the column json value name
 	ProjectModelNameColumn = "name"
 	// ProjectModelRefIDColumn is the column json value ref_id
@@ -47,6 +49,8 @@ type Project struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier of the project
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the project
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
@@ -237,13 +241,14 @@ func (o *Project) IsEqual(other *Project) bool {
 func (o *Project) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id": toProjectObject(o.CustomerID, false),
-		"id":          toProjectObject(o.ID, false),
-		"identifier":  toProjectObject(o.Identifier, false),
-		"name":        toProjectObject(o.Name, false),
-		"ref_id":      toProjectObject(o.RefID, false),
-		"ref_type":    toProjectObject(o.RefType, false),
-		"hashcode":    toProjectObject(o.Hashcode, false),
+		"customer_id":             toProjectObject(o.CustomerID, false),
+		"id":                      toProjectObject(o.ID, false),
+		"identifier":              toProjectObject(o.Identifier, false),
+		"integration_instance_id": toProjectObject(o.IntegrationInstanceID, true),
+		"name":                    toProjectObject(o.Name, false),
+		"ref_id":                  toProjectObject(o.RefID, false),
+		"ref_type":                toProjectObject(o.RefType, false),
+		"hashcode":                toProjectObject(o.Hashcode, false),
 	}
 }
 
@@ -313,6 +318,23 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -379,6 +401,7 @@ func (o *Project) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

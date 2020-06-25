@@ -53,6 +53,8 @@ const (
 	IntegrationMutationRequestModelDataColumn = "data"
 	// IntegrationMutationRequestModelIDColumn is the column json value id
 	IntegrationMutationRequestModelIDColumn = "id"
+	// IntegrationMutationRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IntegrationMutationRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IntegrationMutationRequestModelIntegrationNameColumn is the column json value integration_name
 	IntegrationMutationRequestModelIntegrationNameColumn = "integration_name"
 	// IntegrationMutationRequestModelJobIDColumn is the column json value job_id
@@ -749,6 +751,8 @@ type IntegrationMutationRequest struct {
 	Data string `json:"data" codec:"data" bson:"data" yaml:"data" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// IntegrationName Name of the integration binary
 	IntegrationName string `json:"integration_name" codec:"integration_name" bson:"integration_name" yaml:"integration_name" faker:"-"`
 	// JobID The job ID
@@ -973,6 +977,7 @@ func (o *IntegrationMutationRequest) ToMap() map[string]interface{} {
 		"customer_id":             toIntegrationMutationRequestObject(o.CustomerID, false),
 		"data":                    toIntegrationMutationRequestObject(o.Data, false),
 		"id":                      toIntegrationMutationRequestObject(o.ID, false),
+		"integration_instance_id": toIntegrationMutationRequestObject(o.IntegrationInstanceID, true),
 		"integration_name":        toIntegrationMutationRequestObject(o.IntegrationName, false),
 		"job_id":                  toIntegrationMutationRequestObject(o.JobID, false),
 		"ref_id":                  toIntegrationMutationRequestObject(o.RefID, false),
@@ -1143,6 +1148,23 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1332,6 +1354,7 @@ func (o *IntegrationMutationRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.IntegrationName)
 	args = append(args, o.JobID)
 	args = append(args, o.RefID)

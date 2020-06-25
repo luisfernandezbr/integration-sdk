@@ -42,6 +42,8 @@ const (
 	ConfigModelIDColumn = "id"
 	// ConfigModelIntegrationIDColumn is the column json value integration_id
 	ConfigModelIntegrationIDColumn = "integration_id"
+	// ConfigModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ConfigModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ConfigModelRefIDColumn is the column json value ref_id
 	ConfigModelRefIDColumn = "ref_id"
 	// ConfigModelRefTypeColumn is the column json value ref_type
@@ -268,6 +270,8 @@ type Config struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID The ID reference to the integration instance
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -510,15 +514,16 @@ func (o *Config) IsEqual(other *Config) bool {
 func (o *Config) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"created_ts":     toConfigObject(o.CreatedAt, false),
-		"customer_id":    toConfigObject(o.CustomerID, false),
-		"id":             toConfigObject(o.ID, false),
-		"integration_id": toConfigObject(o.IntegrationID, false),
-		"ref_id":         toConfigObject(o.RefID, false),
-		"ref_type":       toConfigObject(o.RefType, false),
-		"statuses":       toConfigObject(o.Statuses, false),
-		"updated_ts":     toConfigObject(o.UpdatedAt, false),
-		"hashcode":       toConfigObject(o.Hashcode, false),
+		"created_ts":              toConfigObject(o.CreatedAt, false),
+		"customer_id":             toConfigObject(o.CustomerID, false),
+		"id":                      toConfigObject(o.ID, false),
+		"integration_id":          toConfigObject(o.IntegrationID, false),
+		"integration_instance_id": toConfigObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toConfigObject(o.RefID, false),
+		"ref_type":                toConfigObject(o.RefType, false),
+		"statuses":                toConfigObject(o.Statuses, false),
+		"updated_ts":              toConfigObject(o.UpdatedAt, false),
+		"hashcode":                toConfigObject(o.Hashcode, false),
 	}
 }
 
@@ -602,6 +607,23 @@ func (o *Config) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -679,6 +701,7 @@ func (o *Config) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.Statuses)
@@ -698,6 +721,8 @@ func getConfigQueryFields() string {
 	sb.WriteString("\t\t\t_id\n")
 	// scalar
 	sb.WriteString("\t\t\tintegration_id\n")
+	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
 	// scalar
 	sb.WriteString("\t\t\tref_id\n")
 	// scalar

@@ -53,6 +53,8 @@ const (
 	BranchModelFirstCommitShaColumn = "first_commit_sha"
 	// BranchModelIDColumn is the column json value id
 	BranchModelIDColumn = "id"
+	// BranchModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	BranchModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// BranchModelMergeCommitIDColumn is the column json value merge_commit_id
 	BranchModelMergeCommitIDColumn = "merge_commit_id"
 	// BranchModelMergeCommitShaColumn is the column json value merge_commit_sha
@@ -95,6 +97,8 @@ type Branch struct {
 	FirstCommitSha string `json:"first_commit_sha" codec:"first_commit_sha" bson:"first_commit_sha" yaml:"first_commit_sha" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// MergeCommitID commit id in which the branch was merged
 	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeCommitSha commit sha in which the branch was merged
@@ -317,6 +321,7 @@ func (o *Branch) ToMap() map[string]interface{} {
 		"first_commit_id":           toBranchObject(o.FirstCommitID, false),
 		"first_commit_sha":          toBranchObject(o.FirstCommitSha, false),
 		"id":                        toBranchObject(o.ID, false),
+		"integration_instance_id":   toBranchObject(o.IntegrationInstanceID, true),
 		"merge_commit_id":           toBranchObject(o.MergeCommitID, false),
 		"merge_commit_sha":          toBranchObject(o.MergeCommitSha, false),
 		"merged":                    toBranchObject(o.Merged, false),
@@ -653,6 +658,23 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -814,6 +836,7 @@ func (o *Branch) Hash() string {
 	args = append(args, o.FirstCommitID)
 	args = append(args, o.FirstCommitSha)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeCommitSha)
 	args = append(args, o.Merged)

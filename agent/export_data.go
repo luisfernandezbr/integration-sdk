@@ -31,6 +31,8 @@ const (
 	ExportDataModelIDColumn = "id"
 	// ExportDataModelIntegrationIDColumn is the column json value integration_id
 	ExportDataModelIntegrationIDColumn = "integration_id"
+	// ExportDataModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ExportDataModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ExportDataModelJobIDColumn is the column json value job_id
 	ExportDataModelJobIDColumn = "job_id"
 	// ExportDataModelObjectsColumn is the column json value objects
@@ -49,6 +51,8 @@ type ExportData struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID The ID of the integration
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// JobID The job ID
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// Objects Objects as JSON map[type][]object for use in pipeline
@@ -241,14 +245,15 @@ func (o *ExportData) IsEqual(other *ExportData) bool {
 func (o *ExportData) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":    toExportDataObject(o.CustomerID, false),
-		"id":             toExportDataObject(o.ID, false),
-		"integration_id": toExportDataObject(o.IntegrationID, false),
-		"job_id":         toExportDataObject(o.JobID, false),
-		"objects":        toExportDataObject(o.Objects, false),
-		"ref_id":         toExportDataObject(o.RefID, false),
-		"ref_type":       toExportDataObject(o.RefType, false),
-		"hashcode":       toExportDataObject(o.Hashcode, false),
+		"customer_id":             toExportDataObject(o.CustomerID, false),
+		"id":                      toExportDataObject(o.ID, false),
+		"integration_id":          toExportDataObject(o.IntegrationID, false),
+		"integration_instance_id": toExportDataObject(o.IntegrationInstanceID, true),
+		"job_id":                  toExportDataObject(o.JobID, false),
+		"objects":                 toExportDataObject(o.Objects, false),
+		"ref_id":                  toExportDataObject(o.RefID, false),
+		"ref_type":                toExportDataObject(o.RefType, false),
+		"hashcode":                toExportDataObject(o.Hashcode, false),
 	}
 }
 
@@ -315,6 +320,23 @@ func (o *ExportData) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -403,6 +425,7 @@ func (o *ExportData) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.JobID)
 	args = append(args, o.Objects)
 	args = append(args, o.RefID)

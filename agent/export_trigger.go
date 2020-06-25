@@ -30,6 +30,8 @@ const (
 	ExportTriggerModelCustomerIDColumn = "customer_id"
 	// ExportTriggerModelIDColumn is the column json value id
 	ExportTriggerModelIDColumn = "id"
+	// ExportTriggerModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ExportTriggerModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ExportTriggerModelRefIDColumn is the column json value ref_id
 	ExportTriggerModelRefIDColumn = "ref_id"
 	// ExportTriggerModelRefTypeColumn is the column json value ref_type
@@ -46,6 +48,8 @@ type ExportTrigger struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -238,13 +242,14 @@ func (o *ExportTrigger) IsEqual(other *ExportTrigger) bool {
 func (o *ExportTrigger) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":          toExportTriggerObject(o.CustomerID, false),
-		"id":                   toExportTriggerObject(o.ID, false),
-		"ref_id":               toExportTriggerObject(o.RefID, false),
-		"ref_type":             toExportTriggerObject(o.RefType, false),
-		"reprocess_historical": toExportTriggerObject(o.ReprocessHistorical, false),
-		"uuid":                 toExportTriggerObject(o.UUID, true),
-		"hashcode":             toExportTriggerObject(o.Hashcode, false),
+		"customer_id":             toExportTriggerObject(o.CustomerID, false),
+		"id":                      toExportTriggerObject(o.ID, false),
+		"integration_instance_id": toExportTriggerObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toExportTriggerObject(o.RefID, false),
+		"ref_type":                toExportTriggerObject(o.RefType, false),
+		"reprocess_historical":    toExportTriggerObject(o.ReprocessHistorical, false),
+		"uuid":                    toExportTriggerObject(o.UUID, true),
+		"hashcode":                toExportTriggerObject(o.Hashcode, false),
 	}
 }
 
@@ -292,6 +297,23 @@ func (o *ExportTrigger) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -369,6 +391,7 @@ func (o *ExportTrigger) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.ReprocessHistorical)

@@ -55,6 +55,8 @@ const (
 	EnabledModelHostnameColumn = "hostname"
 	// EnabledModelIDColumn is the column json value id
 	EnabledModelIDColumn = "id"
+	// EnabledModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	EnabledModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// EnabledModelLastExportDateColumn is the column json value last_export_date
 	EnabledModelLastExportDateColumn = "last_export_date"
 	// EnabledModelLastExportDateEpochColumn is the column json value epoch
@@ -555,6 +557,8 @@ type Enabled struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate EnabledLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -776,26 +780,27 @@ func (o *Enabled) IsEqual(other *Enabled) bool {
 func (o *Enabled) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toEnabledObject(o.Architecture, false),
-		"customer_id":      toEnabledObject(o.CustomerID, false),
-		"data":             toEnabledObject(o.Data, true),
-		"distro":           toEnabledObject(o.Distro, false),
-		"error":            toEnabledObject(o.Error, true),
-		"event_date":       toEnabledObject(o.EventDate, false),
-		"free_space":       toEnabledObject(o.FreeSpace, false),
-		"go_version":       toEnabledObject(o.GoVersion, false),
-		"hostname":         toEnabledObject(o.Hostname, false),
-		"id":               toEnabledObject(o.ID, false),
-		"last_export_date": toEnabledObject(o.LastExportDate, false),
-		"memory":           toEnabledObject(o.Memory, false),
-		"message":          toEnabledObject(o.Message, false),
-		"num_cpu":          toEnabledObject(o.NumCPU, false),
-		"os":               toEnabledObject(o.OS, false),
-		"ref_id":           toEnabledObject(o.RefID, false),
-		"ref_type":         toEnabledObject(o.RefType, false),
-		"request_id":       toEnabledObject(o.RequestID, false),
-		"success":          toEnabledObject(o.Success, false),
-		"system_id":        toEnabledObject(o.SystemID, false),
+		"architecture":            toEnabledObject(o.Architecture, false),
+		"customer_id":             toEnabledObject(o.CustomerID, false),
+		"data":                    toEnabledObject(o.Data, true),
+		"distro":                  toEnabledObject(o.Distro, false),
+		"error":                   toEnabledObject(o.Error, true),
+		"event_date":              toEnabledObject(o.EventDate, false),
+		"free_space":              toEnabledObject(o.FreeSpace, false),
+		"go_version":              toEnabledObject(o.GoVersion, false),
+		"hostname":                toEnabledObject(o.Hostname, false),
+		"id":                      toEnabledObject(o.ID, false),
+		"integration_instance_id": toEnabledObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toEnabledObject(o.LastExportDate, false),
+		"memory":                  toEnabledObject(o.Memory, false),
+		"message":                 toEnabledObject(o.Message, false),
+		"num_cpu":                 toEnabledObject(o.NumCPU, false),
+		"os":                      toEnabledObject(o.OS, false),
+		"ref_id":                  toEnabledObject(o.RefID, false),
+		"ref_type":                toEnabledObject(o.RefType, false),
+		"request_id":              toEnabledObject(o.RequestID, false),
+		"success":                 toEnabledObject(o.Success, false),
+		"system_id":               toEnabledObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toEnabledObject(o.Uptime, false),
@@ -1007,6 +1012,23 @@ func (o *Enabled) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1343,6 +1365,7 @@ func (o *Enabled) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

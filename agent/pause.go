@@ -57,6 +57,8 @@ const (
 	PauseModelIDColumn = "id"
 	// PauseModelIntegrationColumn is the column json value integration
 	PauseModelIntegrationColumn = "integration"
+	// PauseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	PauseModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// PauseModelJobIDColumn is the column json value job_id
 	PauseModelJobIDColumn = "job_id"
 	// PauseModelLastExportDateColumn is the column json value last_export_date
@@ -666,6 +668,8 @@ type Pause struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the name of the integration that was paused
 	Integration string `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// JobID the job id
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// LastExportDate the last export date
@@ -894,29 +898,30 @@ func (o *Pause) IsEqual(other *Pause) bool {
 func (o *Pause) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toPauseObject(o.Architecture, false),
-		"customer_id":      toPauseObject(o.CustomerID, false),
-		"data":             toPauseObject(o.Data, true),
-		"distro":           toPauseObject(o.Distro, false),
-		"error":            toPauseObject(o.Error, true),
-		"event_date":       toPauseObject(o.EventDate, false),
-		"free_space":       toPauseObject(o.FreeSpace, false),
-		"go_version":       toPauseObject(o.GoVersion, false),
-		"hostname":         toPauseObject(o.Hostname, false),
-		"id":               toPauseObject(o.ID, false),
-		"integration":      toPauseObject(o.Integration, false),
-		"job_id":           toPauseObject(o.JobID, false),
-		"last_export_date": toPauseObject(o.LastExportDate, false),
-		"memory":           toPauseObject(o.Memory, false),
-		"message":          toPauseObject(o.Message, false),
-		"num_cpu":          toPauseObject(o.NumCPU, false),
-		"os":               toPauseObject(o.OS, false),
-		"ref_id":           toPauseObject(o.RefID, false),
-		"ref_type":         toPauseObject(o.RefType, false),
-		"request_id":       toPauseObject(o.RequestID, false),
-		"resume_date":      toPauseObject(o.ResumeDate, false),
-		"success":          toPauseObject(o.Success, false),
-		"system_id":        toPauseObject(o.SystemID, false),
+		"architecture":            toPauseObject(o.Architecture, false),
+		"customer_id":             toPauseObject(o.CustomerID, false),
+		"data":                    toPauseObject(o.Data, true),
+		"distro":                  toPauseObject(o.Distro, false),
+		"error":                   toPauseObject(o.Error, true),
+		"event_date":              toPauseObject(o.EventDate, false),
+		"free_space":              toPauseObject(o.FreeSpace, false),
+		"go_version":              toPauseObject(o.GoVersion, false),
+		"hostname":                toPauseObject(o.Hostname, false),
+		"id":                      toPauseObject(o.ID, false),
+		"integration":             toPauseObject(o.Integration, false),
+		"integration_instance_id": toPauseObject(o.IntegrationInstanceID, true),
+		"job_id":                  toPauseObject(o.JobID, false),
+		"last_export_date":        toPauseObject(o.LastExportDate, false),
+		"memory":                  toPauseObject(o.Memory, false),
+		"message":                 toPauseObject(o.Message, false),
+		"num_cpu":                 toPauseObject(o.NumCPU, false),
+		"os":                      toPauseObject(o.OS, false),
+		"ref_id":                  toPauseObject(o.RefID, false),
+		"ref_type":                toPauseObject(o.RefType, false),
+		"request_id":              toPauseObject(o.RequestID, false),
+		"resume_date":             toPauseObject(o.ResumeDate, false),
+		"success":                 toPauseObject(o.Success, false),
+		"system_id":               toPauseObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toPauseObject(o.Uptime, false),
@@ -1036,25 +1041,6 @@ func (o *Pause) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PauseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1150,6 +1136,23 @@ func (o *Pause) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["job_id"].(string); ok {
 		o.JobID = val
 	} else {
@@ -1179,25 +1182,6 @@ func (o *Pause) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PauseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1537,6 +1521,7 @@ func (o *Pause) Hash() string {
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.JobID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)

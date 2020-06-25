@@ -47,6 +47,8 @@ const (
 	CommitModelIDColumn = "id"
 	// CommitModelIdentifierColumn is the column json value identifier
 	CommitModelIdentifierColumn = "identifier"
+	// CommitModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CommitModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// CommitModelMessageColumn is the column json value message
 	CommitModelMessageColumn = "message"
 	// CommitModelRefIDColumn is the column json value ref_id
@@ -174,6 +176,8 @@ type Commit struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the identifier for the commit
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Message the commit message
 	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"commit_message"`
 	// RefID the source system id for the model instance
@@ -372,20 +376,21 @@ func (o *Commit) IsEqual(other *Commit) bool {
 func (o *Commit) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"author_ref_id":    toCommitObject(o.AuthorRefID, false),
-		"committer_ref_id": toCommitObject(o.CommitterRefID, false),
-		"created_date":     toCommitObject(o.CreatedDate, false),
-		"customer_id":      toCommitObject(o.CustomerID, false),
-		"excluded":         toCommitObject(o.Excluded, false),
-		"id":               toCommitObject(o.ID, false),
-		"identifier":       toCommitObject(o.Identifier, false),
-		"message":          toCommitObject(o.Message, false),
-		"ref_id":           toCommitObject(o.RefID, false),
-		"ref_type":         toCommitObject(o.RefType, false),
-		"repo_id":          toCommitObject(o.RepoID, false),
-		"sha":              toCommitObject(o.Sha, false),
-		"url":              toCommitObject(o.URL, false),
-		"hashcode":         toCommitObject(o.Hashcode, false),
+		"author_ref_id":           toCommitObject(o.AuthorRefID, false),
+		"committer_ref_id":        toCommitObject(o.CommitterRefID, false),
+		"created_date":            toCommitObject(o.CreatedDate, false),
+		"customer_id":             toCommitObject(o.CustomerID, false),
+		"excluded":                toCommitObject(o.Excluded, false),
+		"id":                      toCommitObject(o.ID, false),
+		"identifier":              toCommitObject(o.Identifier, false),
+		"integration_instance_id": toCommitObject(o.IntegrationInstanceID, true),
+		"message":                 toCommitObject(o.Message, false),
+		"ref_id":                  toCommitObject(o.RefID, false),
+		"ref_type":                toCommitObject(o.RefType, false),
+		"repo_id":                 toCommitObject(o.RepoID, false),
+		"sha":                     toCommitObject(o.Sha, false),
+		"url":                     toCommitObject(o.URL, false),
+		"hashcode":                toCommitObject(o.Hashcode, false),
 	}
 }
 
@@ -538,6 +543,23 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -665,6 +687,7 @@ func (o *Commit) Hash() string {
 	args = append(args, o.Excluded)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Message)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

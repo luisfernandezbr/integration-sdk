@@ -29,6 +29,8 @@ const (
 	UpdateTriggerModelCustomerIDColumn = "customer_id"
 	// UpdateTriggerModelIDColumn is the column json value id
 	UpdateTriggerModelIDColumn = "id"
+	// UpdateTriggerModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	UpdateTriggerModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// UpdateTriggerModelRefIDColumn is the column json value ref_id
 	UpdateTriggerModelRefIDColumn = "ref_id"
 	// UpdateTriggerModelRefTypeColumn is the column json value ref_type
@@ -45,6 +47,8 @@ type UpdateTrigger struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -237,13 +241,14 @@ func (o *UpdateTrigger) IsEqual(other *UpdateTrigger) bool {
 func (o *UpdateTrigger) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id": toUpdateTriggerObject(o.CustomerID, false),
-		"id":          toUpdateTriggerObject(o.ID, false),
-		"ref_id":      toUpdateTriggerObject(o.RefID, false),
-		"ref_type":    toUpdateTriggerObject(o.RefType, false),
-		"uuid":        toUpdateTriggerObject(o.UUID, true),
-		"version":     toUpdateTriggerObject(o.Version, true),
-		"hashcode":    toUpdateTriggerObject(o.Hashcode, false),
+		"customer_id":             toUpdateTriggerObject(o.CustomerID, false),
+		"id":                      toUpdateTriggerObject(o.ID, false),
+		"integration_instance_id": toUpdateTriggerObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toUpdateTriggerObject(o.RefID, false),
+		"ref_type":                toUpdateTriggerObject(o.RefType, false),
+		"uuid":                    toUpdateTriggerObject(o.UUID, true),
+		"version":                 toUpdateTriggerObject(o.Version, true),
+		"hashcode":                toUpdateTriggerObject(o.Hashcode, false),
 	}
 }
 
@@ -291,6 +296,23 @@ func (o *UpdateTrigger) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -374,6 +396,7 @@ func (o *UpdateTrigger) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UUID)

@@ -55,6 +55,8 @@ const (
 	StopModelHostnameColumn = "hostname"
 	// StopModelIDColumn is the column json value id
 	StopModelIDColumn = "id"
+	// StopModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	StopModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// StopModelLastExportDateColumn is the column json value last_export_date
 	StopModelLastExportDateColumn = "last_export_date"
 	// StopModelLastExportDateEpochColumn is the column json value epoch
@@ -555,6 +557,8 @@ type Stop struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate StopLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -776,26 +780,27 @@ func (o *Stop) IsEqual(other *Stop) bool {
 func (o *Stop) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toStopObject(o.Architecture, false),
-		"customer_id":      toStopObject(o.CustomerID, false),
-		"data":             toStopObject(o.Data, true),
-		"distro":           toStopObject(o.Distro, false),
-		"error":            toStopObject(o.Error, true),
-		"event_date":       toStopObject(o.EventDate, false),
-		"free_space":       toStopObject(o.FreeSpace, false),
-		"go_version":       toStopObject(o.GoVersion, false),
-		"hostname":         toStopObject(o.Hostname, false),
-		"id":               toStopObject(o.ID, false),
-		"last_export_date": toStopObject(o.LastExportDate, false),
-		"memory":           toStopObject(o.Memory, false),
-		"message":          toStopObject(o.Message, false),
-		"num_cpu":          toStopObject(o.NumCPU, false),
-		"os":               toStopObject(o.OS, false),
-		"ref_id":           toStopObject(o.RefID, false),
-		"ref_type":         toStopObject(o.RefType, false),
-		"request_id":       toStopObject(o.RequestID, false),
-		"success":          toStopObject(o.Success, false),
-		"system_id":        toStopObject(o.SystemID, false),
+		"architecture":            toStopObject(o.Architecture, false),
+		"customer_id":             toStopObject(o.CustomerID, false),
+		"data":                    toStopObject(o.Data, true),
+		"distro":                  toStopObject(o.Distro, false),
+		"error":                   toStopObject(o.Error, true),
+		"event_date":              toStopObject(o.EventDate, false),
+		"free_space":              toStopObject(o.FreeSpace, false),
+		"go_version":              toStopObject(o.GoVersion, false),
+		"hostname":                toStopObject(o.Hostname, false),
+		"id":                      toStopObject(o.ID, false),
+		"integration_instance_id": toStopObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toStopObject(o.LastExportDate, false),
+		"memory":                  toStopObject(o.Memory, false),
+		"message":                 toStopObject(o.Message, false),
+		"num_cpu":                 toStopObject(o.NumCPU, false),
+		"os":                      toStopObject(o.OS, false),
+		"ref_id":                  toStopObject(o.RefID, false),
+		"ref_type":                toStopObject(o.RefType, false),
+		"request_id":              toStopObject(o.RequestID, false),
+		"success":                 toStopObject(o.Success, false),
+		"system_id":               toStopObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toStopObject(o.Uptime, false),
@@ -915,25 +920,6 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1010,6 +996,23 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -1020,25 +1023,6 @@ func (o *Stop) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*StopLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1343,6 +1327,7 @@ func (o *Stop) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

@@ -41,6 +41,8 @@ const (
 	CostCenterModelDescriptionColumn = "description"
 	// CostCenterModelIDColumn is the column json value id
 	CostCenterModelIDColumn = "id"
+	// CostCenterModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CostCenterModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// CostCenterModelNameColumn is the column json value name
 	CostCenterModelNameColumn = "name"
 	// CostCenterModelRefIDColumn is the column json value ref_id
@@ -65,6 +67,8 @@ type CostCenter struct {
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the cost center
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"costcenter"`
 	// RefID the source system id for the model instance
@@ -257,17 +261,18 @@ func (o *CostCenter) IsEqual(other *CostCenter) bool {
 func (o *CostCenter) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":      toCostCenterObject(o.Active, false),
-		"cost":        toCostCenterObject(o.Cost, false),
-		"created_ts":  toCostCenterObject(o.CreatedAt, false),
-		"customer_id": toCostCenterObject(o.CustomerID, false),
-		"description": toCostCenterObject(o.Description, false),
-		"id":          toCostCenterObject(o.ID, false),
-		"name":        toCostCenterObject(o.Name, false),
-		"ref_id":      toCostCenterObject(o.RefID, false),
-		"ref_type":    toCostCenterObject(o.RefType, false),
-		"updated_ts":  toCostCenterObject(o.UpdatedAt, false),
-		"hashcode":    toCostCenterObject(o.Hashcode, false),
+		"active":                  toCostCenterObject(o.Active, false),
+		"cost":                    toCostCenterObject(o.Cost, false),
+		"created_ts":              toCostCenterObject(o.CreatedAt, false),
+		"customer_id":             toCostCenterObject(o.CustomerID, false),
+		"description":             toCostCenterObject(o.Description, false),
+		"id":                      toCostCenterObject(o.ID, false),
+		"integration_instance_id": toCostCenterObject(o.IntegrationInstanceID, true),
+		"name":                    toCostCenterObject(o.Name, false),
+		"ref_id":                  toCostCenterObject(o.RefID, false),
+		"ref_type":                toCostCenterObject(o.RefType, false),
+		"updated_ts":              toCostCenterObject(o.UpdatedAt, false),
+		"hashcode":                toCostCenterObject(o.Hashcode, false),
 	}
 }
 
@@ -373,6 +378,23 @@ func (o *CostCenter) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -456,6 +478,7 @@ func (o *CostCenter) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
@@ -479,6 +502,8 @@ func getCostCenterQueryFields() string {
 	sb.WriteString("\t\t\tdescription\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")
+	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
 	// scalar
 	sb.WriteString("\t\t\tname\n")
 	// scalar

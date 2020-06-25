@@ -95,6 +95,8 @@ const (
 	IntegrationRequestModelIntegrationIDColumn = "id"
 	// IntegrationRequestModelIntegrationInclusionsColumn is the column json value inclusions
 	IntegrationRequestModelIntegrationInclusionsColumn = "inclusions"
+	// IntegrationRequestModelIntegrationIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IntegrationRequestModelIntegrationIntegrationInstanceIDColumn = "integration_instance_id"
 	// IntegrationRequestModelIntegrationIntervalColumn is the column json value interval
 	IntegrationRequestModelIntegrationIntervalColumn = "interval"
 	// IntegrationRequestModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
@@ -191,6 +193,8 @@ const (
 	IntegrationRequestModelIntegrationValidatedDateRfc3339Column = "rfc3339"
 	// IntegrationRequestModelIntegrationValidationMessageColumn is the column json value validation_message
 	IntegrationRequestModelIntegrationValidationMessageColumn = "validation_message"
+	// IntegrationRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IntegrationRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IntegrationRequestModelRefIDColumn is the column json value ref_id
 	IntegrationRequestModelRefIDColumn = "ref_id"
 	// IntegrationRequestModelRefTypeColumn is the column json value ref_type
@@ -1696,6 +1700,8 @@ type IntegrationRequestIntegration struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Inclusions The inclusion list for this integration
 	Inclusions []string `json:"inclusions" codec:"inclusions" bson:"inclusions" yaml:"inclusions" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Interval the interval in milliseconds for how often an export job is scheduled
 	Interval int64 `json:"interval" codec:"interval" bson:"interval" yaml:"interval" faker:"-"`
 	// LastExportCompletedDate when the export response was received (set by the backend)
@@ -1829,6 +1835,8 @@ func (o *IntegrationRequestIntegration) ToMap() map[string]interface{} {
 		"id": toIntegrationRequestIntegrationObject(o.ID, false),
 		// Inclusions The inclusion list for this integration
 		"inclusions": toIntegrationRequestIntegrationObject(o.Inclusions, false),
+		// IntegrationInstanceID the integration instance id
+		"integration_instance_id": toIntegrationRequestIntegrationObject(o.IntegrationInstanceID, true),
 		// Interval the interval in milliseconds for how often an export job is scheduled
 		"interval": toIntegrationRequestIntegrationObject(o.Interval, false),
 		// LastExportCompletedDate when the export response was received (set by the backend)
@@ -2237,6 +2245,23 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 	}
 	if o.Inclusions == nil {
 		o.Inclusions = make([]string, 0)
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
 	}
 	if val, ok := kv["interval"].(int64); ok {
 		o.Interval = val
@@ -2912,6 +2937,8 @@ type IntegrationRequest struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to add
 	Integration IntegrationRequestIntegration `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -3122,14 +3149,15 @@ func (o *IntegrationRequest) IsEqual(other *IntegrationRequest) bool {
 func (o *IntegrationRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":  toIntegrationRequestObject(o.CustomerID, false),
-		"id":           toIntegrationRequestObject(o.ID, false),
-		"integration":  toIntegrationRequestObject(o.Integration, false),
-		"ref_id":       toIntegrationRequestObject(o.RefID, false),
-		"ref_type":     toIntegrationRequestObject(o.RefType, false),
-		"request_date": toIntegrationRequestObject(o.RequestDate, false),
-		"uuid":         toIntegrationRequestObject(o.UUID, false),
-		"hashcode":     toIntegrationRequestObject(o.Hashcode, false),
+		"customer_id":             toIntegrationRequestObject(o.CustomerID, false),
+		"id":                      toIntegrationRequestObject(o.ID, false),
+		"integration":             toIntegrationRequestObject(o.Integration, false),
+		"integration_instance_id": toIntegrationRequestObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toIntegrationRequestObject(o.RefID, false),
+		"ref_type":                toIntegrationRequestObject(o.RefType, false),
+		"request_date":            toIntegrationRequestObject(o.RequestDate, false),
+		"uuid":                    toIntegrationRequestObject(o.UUID, false),
+		"hashcode":                toIntegrationRequestObject(o.Hashcode, false),
 	}
 }
 
@@ -3195,6 +3223,23 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		o.Integration.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -3276,6 +3321,7 @@ func (o *IntegrationRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)

@@ -61,6 +61,8 @@ const (
 	WorkStatusResponseModelIDColumn = "id"
 	// WorkStatusResponseModelIntegrationIDColumn is the column json value integration_id
 	WorkStatusResponseModelIntegrationIDColumn = "integration_id"
+	// WorkStatusResponseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	WorkStatusResponseModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// WorkStatusResponseModelLastExportDateColumn is the column json value last_export_date
 	WorkStatusResponseModelLastExportDateColumn = "last_export_date"
 	// WorkStatusResponseModelLastExportDateEpochColumn is the column json value epoch
@@ -103,6 +105,8 @@ const (
 	WorkStatusResponseModelWorkConfigIDColumn = "id"
 	// WorkStatusResponseModelWorkConfigIntegrationIDColumn is the column json value integration_id
 	WorkStatusResponseModelWorkConfigIntegrationIDColumn = "integration_id"
+	// WorkStatusResponseModelWorkConfigIntegrationInstanceIDColumn is the column json value integration_instance_id
+	WorkStatusResponseModelWorkConfigIntegrationInstanceIDColumn = "integration_instance_id"
 	// WorkStatusResponseModelWorkConfigRefIDColumn is the column json value ref_id
 	WorkStatusResponseModelWorkConfigRefIDColumn = "ref_id"
 	// WorkStatusResponseModelWorkConfigRefTypeColumn is the column json value ref_type
@@ -1025,6 +1029,8 @@ type WorkStatusResponseWorkConfig struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID The ID reference to the integration instance
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -1060,6 +1066,8 @@ func (o *WorkStatusResponseWorkConfig) ToMap() map[string]interface{} {
 		"id": toWorkStatusResponseWorkConfigObject(o.ID, false),
 		// IntegrationID The ID reference to the integration instance
 		"integration_id": toWorkStatusResponseWorkConfigObject(o.IntegrationID, false),
+		// IntegrationInstanceID the integration instance id
+		"integration_instance_id": toWorkStatusResponseWorkConfigObject(o.IntegrationInstanceID, true),
 		// RefID the source system id for the model instance
 		"ref_id": toWorkStatusResponseWorkConfigObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
@@ -1139,6 +1147,23 @@ func (o *WorkStatusResponseWorkConfig) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1236,6 +1261,8 @@ type WorkStatusResponse struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate WorkStatusResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -1479,27 +1506,28 @@ func (o *WorkStatusResponse) IsEqual(other *WorkStatusResponse) bool {
 func (o *WorkStatusResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toWorkStatusResponseObject(o.Architecture, false),
-		"customer_id":      toWorkStatusResponseObject(o.CustomerID, false),
-		"data":             toWorkStatusResponseObject(o.Data, true),
-		"distro":           toWorkStatusResponseObject(o.Distro, false),
-		"error":            toWorkStatusResponseObject(o.Error, true),
-		"event_date":       toWorkStatusResponseObject(o.EventDate, false),
-		"free_space":       toWorkStatusResponseObject(o.FreeSpace, false),
-		"go_version":       toWorkStatusResponseObject(o.GoVersion, false),
-		"hostname":         toWorkStatusResponseObject(o.Hostname, false),
-		"id":               toWorkStatusResponseObject(o.ID, false),
-		"integration_id":   toWorkStatusResponseObject(o.IntegrationID, false),
-		"last_export_date": toWorkStatusResponseObject(o.LastExportDate, false),
-		"memory":           toWorkStatusResponseObject(o.Memory, false),
-		"message":          toWorkStatusResponseObject(o.Message, false),
-		"num_cpu":          toWorkStatusResponseObject(o.NumCPU, false),
-		"os":               toWorkStatusResponseObject(o.OS, false),
-		"ref_id":           toWorkStatusResponseObject(o.RefID, false),
-		"ref_type":         toWorkStatusResponseObject(o.RefType, false),
-		"request_id":       toWorkStatusResponseObject(o.RequestID, false),
-		"success":          toWorkStatusResponseObject(o.Success, false),
-		"system_id":        toWorkStatusResponseObject(o.SystemID, false),
+		"architecture":            toWorkStatusResponseObject(o.Architecture, false),
+		"customer_id":             toWorkStatusResponseObject(o.CustomerID, false),
+		"data":                    toWorkStatusResponseObject(o.Data, true),
+		"distro":                  toWorkStatusResponseObject(o.Distro, false),
+		"error":                   toWorkStatusResponseObject(o.Error, true),
+		"event_date":              toWorkStatusResponseObject(o.EventDate, false),
+		"free_space":              toWorkStatusResponseObject(o.FreeSpace, false),
+		"go_version":              toWorkStatusResponseObject(o.GoVersion, false),
+		"hostname":                toWorkStatusResponseObject(o.Hostname, false),
+		"id":                      toWorkStatusResponseObject(o.ID, false),
+		"integration_id":          toWorkStatusResponseObject(o.IntegrationID, false),
+		"integration_instance_id": toWorkStatusResponseObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toWorkStatusResponseObject(o.LastExportDate, false),
+		"memory":                  toWorkStatusResponseObject(o.Memory, false),
+		"message":                 toWorkStatusResponseObject(o.Message, false),
+		"num_cpu":                 toWorkStatusResponseObject(o.NumCPU, false),
+		"os":                      toWorkStatusResponseObject(o.OS, false),
+		"ref_id":                  toWorkStatusResponseObject(o.RefID, false),
+		"ref_type":                toWorkStatusResponseObject(o.RefType, false),
+		"request_id":              toWorkStatusResponseObject(o.RequestID, false),
+		"success":                 toWorkStatusResponseObject(o.Success, false),
+		"system_id":               toWorkStatusResponseObject(o.SystemID, false),
 
 		"type":        o.Type.String(),
 		"uptime":      toWorkStatusResponseObject(o.Uptime, false),
@@ -1620,25 +1648,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1734,6 +1743,23 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -1744,25 +1770,6 @@ func (o *WorkStatusResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*WorkStatusResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -2083,6 +2090,7 @@ func (o *WorkStatusResponse) Hash() string {
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

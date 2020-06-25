@@ -55,6 +55,8 @@ const (
 	EventModelHostnameColumn = "hostname"
 	// EventModelIDColumn is the column json value id
 	EventModelIDColumn = "id"
+	// EventModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	EventModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// EventModelLastExportDateColumn is the column json value last_export_date
 	EventModelLastExportDateColumn = "last_export_date"
 	// EventModelLastExportDateEpochColumn is the column json value epoch
@@ -551,6 +553,8 @@ type Event struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate EventLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -768,24 +772,25 @@ func (o *Event) IsEqual(other *Event) bool {
 func (o *Event) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toEventObject(o.Architecture, false),
-		"customer_id":      toEventObject(o.CustomerID, false),
-		"data":             toEventObject(o.Data, true),
-		"distro":           toEventObject(o.Distro, false),
-		"error":            toEventObject(o.Error, true),
-		"event_date":       toEventObject(o.EventDate, false),
-		"free_space":       toEventObject(o.FreeSpace, false),
-		"go_version":       toEventObject(o.GoVersion, false),
-		"hostname":         toEventObject(o.Hostname, false),
-		"id":               toEventObject(o.ID, false),
-		"last_export_date": toEventObject(o.LastExportDate, false),
-		"memory":           toEventObject(o.Memory, false),
-		"message":          toEventObject(o.Message, false),
-		"num_cpu":          toEventObject(o.NumCPU, false),
-		"os":               toEventObject(o.OS, false),
-		"ref_id":           toEventObject(o.RefID, false),
-		"ref_type":         toEventObject(o.RefType, false),
-		"system_id":        toEventObject(o.SystemID, false),
+		"architecture":            toEventObject(o.Architecture, false),
+		"customer_id":             toEventObject(o.CustomerID, false),
+		"data":                    toEventObject(o.Data, true),
+		"distro":                  toEventObject(o.Distro, false),
+		"error":                   toEventObject(o.Error, true),
+		"event_date":              toEventObject(o.EventDate, false),
+		"free_space":              toEventObject(o.FreeSpace, false),
+		"go_version":              toEventObject(o.GoVersion, false),
+		"hostname":                toEventObject(o.Hostname, false),
+		"id":                      toEventObject(o.ID, false),
+		"integration_instance_id": toEventObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toEventObject(o.LastExportDate, false),
+		"memory":                  toEventObject(o.Memory, false),
+		"message":                 toEventObject(o.Message, false),
+		"num_cpu":                 toEventObject(o.NumCPU, false),
+		"os":                      toEventObject(o.OS, false),
+		"ref_id":                  toEventObject(o.RefID, false),
+		"ref_type":                toEventObject(o.RefType, false),
+		"system_id":               toEventObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toEventObject(o.Uptime, false),
@@ -997,6 +1002,23 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1303,6 +1325,7 @@ func (o *Event) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

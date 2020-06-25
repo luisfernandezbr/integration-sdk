@@ -15,6 +15,8 @@ import (
 	pjson "github.com/pinpt/go-common/v10/json"
 	"github.com/pinpt/go-common/v10/number"
 	pstrings "github.com/pinpt/go-common/v10/strings"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -31,6 +33,8 @@ const (
 const (
 	// ProjectModelActiveColumn is the column json value active
 	ProjectModelActiveColumn = "active"
+	// ProjectModelAffiliationColumn is the column json value affiliation
+	ProjectModelAffiliationColumn = "affiliation"
 	// ProjectModelCategoryColumn is the column json value category
 	ProjectModelCategoryColumn = "category"
 	// ProjectModelCustomerIDColumn is the column json value customer_id
@@ -41,6 +45,8 @@ const (
 	ProjectModelIDColumn = "id"
 	// ProjectModelIdentifierColumn is the column json value identifier
 	ProjectModelIdentifierColumn = "identifier"
+	// ProjectModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ProjectModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ProjectModelNameColumn is the column json value name
 	ProjectModelNameColumn = "name"
 	// ProjectModelRefIDColumn is the column json value ref_id
@@ -51,12 +57,188 @@ const (
 	ProjectModelUpdatedAtColumn = "updated_ts"
 	// ProjectModelURLColumn is the column json value url
 	ProjectModelURLColumn = "url"
+	// ProjectModelVisibilityColumn is the column json value visibility
+	ProjectModelVisibilityColumn = "visibility"
+)
+
+// ProjectAffiliation is the enumeration type for affiliation
+type ProjectAffiliation int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ProjectAffiliation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = ProjectAffiliation(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ORGANIZATION":
+			*v = ProjectAffiliation(0)
+		case "USER":
+			*v = ProjectAffiliation(1)
+		case "THIRDPARTY":
+			*v = ProjectAffiliation(2)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v ProjectAffiliation) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "ORGANIZATION":
+		v = 0
+	case "USER":
+		v = 1
+	case "THIRDPARTY":
+		v = 2
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v ProjectAffiliation) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("ORGANIZATION")
+	case 1:
+		return json.Marshal("USER")
+	case 2:
+		return json.Marshal("THIRDPARTY")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for Affiliation
+func (v ProjectAffiliation) String() string {
+	switch int32(v) {
+	case 0:
+		return "ORGANIZATION"
+	case 1:
+		return "USER"
+	case 2:
+		return "THIRDPARTY"
+	}
+	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *ProjectAffiliation) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case ProjectAffiliation:
+		*v = val
+	case int32:
+		*v = ProjectAffiliation(int32(val))
+	case int:
+		*v = ProjectAffiliation(int32(val))
+	case string:
+		switch val {
+		case "ORGANIZATION":
+			*v = ProjectAffiliation(0)
+		case "USER":
+			*v = ProjectAffiliation(1)
+		case "THIRDPARTY":
+			*v = ProjectAffiliation(2)
+		}
+	}
+	return nil
+}
+
+const (
+	// ProjectAffiliationOrganization is the enumeration value for organization
+	ProjectAffiliationOrganization ProjectAffiliation = 0
+	// ProjectAffiliationUser is the enumeration value for user
+	ProjectAffiliationUser ProjectAffiliation = 1
+	// ProjectAffiliationThirdparty is the enumeration value for thirdparty
+	ProjectAffiliationThirdparty ProjectAffiliation = 2
+)
+
+// ProjectVisibility is the enumeration type for visibility
+type ProjectVisibility int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ProjectVisibility) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = ProjectVisibility(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRIVATE":
+			*v = ProjectVisibility(0)
+		case "PUBLIC":
+			*v = ProjectVisibility(1)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v ProjectVisibility) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "PRIVATE":
+		v = 0
+	case "PUBLIC":
+		v = 1
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v ProjectVisibility) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("PRIVATE")
+	case 1:
+		return json.Marshal("PUBLIC")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for Visibility
+func (v ProjectVisibility) String() string {
+	switch int32(v) {
+	case 0:
+		return "PRIVATE"
+	case 1:
+		return "PUBLIC"
+	}
+	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *ProjectVisibility) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case ProjectVisibility:
+		*v = val
+	case int32:
+		*v = ProjectVisibility(int32(val))
+	case int:
+		*v = ProjectVisibility(int32(val))
+	case string:
+		switch val {
+		case "PRIVATE":
+			*v = ProjectVisibility(0)
+		case "PUBLIC":
+			*v = ProjectVisibility(1)
+		}
+	}
+	return nil
+}
+
+const (
+	// ProjectVisibilityPrivate is the enumeration value for private
+	ProjectVisibilityPrivate ProjectVisibility = 0
+	// ProjectVisibilityPublic is the enumeration value for public
+	ProjectVisibilityPublic ProjectVisibility = 1
 )
 
 // Project the project holds work
 type Project struct {
 	// Active the status of the project
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
+	// Affiliation the affiliation to the project owner
+	Affiliation ProjectAffiliation `json:"affiliation" codec:"affiliation" bson:"affiliation" yaml:"affiliation" faker:"-"`
 	// Category the project category
 	Category *string `json:"category,omitempty" codec:"category,omitempty" bson:"category" yaml:"category,omitempty" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -67,6 +249,8 @@ type Project struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the project
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the project
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"project"`
 	// RefID the source system id for the model instance
@@ -77,6 +261,8 @@ type Project struct {
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the project home page
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
+	// Visibility the visibility of the project
+	Visibility ProjectVisibility `json:"visibility" codec:"visibility" bson:"visibility" yaml:"visibility" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -92,6 +278,11 @@ func toProjectObject(o interface{}, isoptional bool) interface{} {
 	case *Project:
 		return v.ToMap()
 
+	case ProjectAffiliation:
+		return v.String()
+
+	case ProjectVisibility:
+		return v.String()
 	default:
 		return o
 	}
@@ -298,18 +489,23 @@ func (o *Project) IsEqual(other *Project) bool {
 func (o *Project) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":      toProjectObject(o.Active, false),
-		"category":    toProjectObject(o.Category, true),
-		"customer_id": toProjectObject(o.CustomerID, false),
-		"description": toProjectObject(o.Description, true),
-		"id":          toProjectObject(o.ID, false),
-		"identifier":  toProjectObject(o.Identifier, false),
-		"name":        toProjectObject(o.Name, false),
-		"ref_id":      toProjectObject(o.RefID, false),
-		"ref_type":    toProjectObject(o.RefType, false),
-		"updated_ts":  toProjectObject(o.UpdatedAt, false),
-		"url":         toProjectObject(o.URL, false),
-		"hashcode":    toProjectObject(o.Hashcode, false),
+		"active": toProjectObject(o.Active, false),
+
+		"affiliation":             o.Affiliation.String(),
+		"category":                toProjectObject(o.Category, true),
+		"customer_id":             toProjectObject(o.CustomerID, false),
+		"description":             toProjectObject(o.Description, true),
+		"id":                      toProjectObject(o.ID, false),
+		"identifier":              toProjectObject(o.Identifier, false),
+		"integration_instance_id": toProjectObject(o.IntegrationInstanceID, true),
+		"name":                    toProjectObject(o.Name, false),
+		"ref_id":                  toProjectObject(o.RefID, false),
+		"ref_type":                toProjectObject(o.RefType, false),
+		"updated_ts":              toProjectObject(o.UpdatedAt, false),
+		"url":                     toProjectObject(o.URL, false),
+
+		"visibility": o.Visibility.String(),
+		"hashcode":   toProjectObject(o.Hashcode, false),
 	}
 }
 
@@ -330,6 +526,32 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["affiliation"].(ProjectAffiliation); ok {
+		o.Affiliation = val
+	} else {
+		if em, ok := kv["affiliation"].(map[string]interface{}); ok {
+
+			ev := em["work.affiliation"].(string)
+			switch ev {
+			case "organization", "ORGANIZATION":
+				o.Affiliation = 0
+			case "user", "USER":
+				o.Affiliation = 1
+			case "thirdparty", "THIRDPARTY":
+				o.Affiliation = 2
+			}
+		}
+		if em, ok := kv["affiliation"].(string); ok {
+			switch em {
+			case "organization", "ORGANIZATION":
+				o.Affiliation = 0
+			case "user", "USER":
+				o.Affiliation = 1
+			case "thirdparty", "THIRDPARTY":
+				o.Affiliation = 2
 			}
 		}
 	}
@@ -424,6 +646,23 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -514,6 +753,28 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["visibility"].(ProjectVisibility); ok {
+		o.Visibility = val
+	} else {
+		if em, ok := kv["visibility"].(map[string]interface{}); ok {
+
+			ev := em["work.visibility"].(string)
+			switch ev {
+			case "private", "PRIVATE":
+				o.Visibility = 0
+			case "public", "PUBLIC":
+				o.Visibility = 1
+			}
+		}
+		if em, ok := kv["visibility"].(string); ok {
+			switch em {
+			case "private", "PRIVATE":
+				o.Visibility = 0
+			case "public", "PUBLIC":
+				o.Visibility = 1
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -521,16 +782,19 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 func (o *Project) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Active)
+	args = append(args, o.Affiliation)
 	args = append(args, o.Category)
 	args = append(args, o.CustomerID)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
+	args = append(args, o.Visibility)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

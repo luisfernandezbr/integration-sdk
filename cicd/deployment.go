@@ -49,6 +49,8 @@ const (
 	DeploymentModelEnvironmentColumn = "environment"
 	// DeploymentModelIDColumn is the column json value id
 	DeploymentModelIDColumn = "id"
+	// DeploymentModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	DeploymentModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// DeploymentModelRefIDColumn is the column json value ref_id
 	DeploymentModelRefIDColumn = "ref_id"
 	// DeploymentModelRefTypeColumn is the column json value ref_type
@@ -499,6 +501,8 @@ type Deployment struct {
 	Environment DeploymentEnvironment `json:"environment" codec:"environment" bson:"environment" yaml:"environment" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -713,12 +717,13 @@ func (o *Deployment) ToMap() map[string]interface{} {
 		"customer_id":  toDeploymentObject(o.CustomerID, false),
 		"end_date":     toDeploymentObject(o.EndDate, false),
 
-		"environment": o.Environment.String(),
-		"id":          toDeploymentObject(o.ID, false),
-		"ref_id":      toDeploymentObject(o.RefID, false),
-		"ref_type":    toDeploymentObject(o.RefType, false),
-		"repo_name":   toDeploymentObject(o.RepoName, false),
-		"start_date":  toDeploymentObject(o.StartDate, false),
+		"environment":             o.Environment.String(),
+		"id":                      toDeploymentObject(o.ID, false),
+		"integration_instance_id": toDeploymentObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toDeploymentObject(o.RefID, false),
+		"ref_type":                toDeploymentObject(o.RefType, false),
+		"repo_name":               toDeploymentObject(o.RepoName, false),
+		"start_date":              toDeploymentObject(o.StartDate, false),
 
 		"status":   o.Status.String(),
 		"url":      toDeploymentObject(o.URL, true),
@@ -894,6 +899,23 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1041,6 +1063,7 @@ func (o *Deployment) Hash() string {
 	args = append(args, o.EndDate)
 	args = append(args, o.Environment)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoName)

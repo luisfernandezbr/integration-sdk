@@ -55,6 +55,8 @@ const (
 	UninstallRequestModelHostnameColumn = "hostname"
 	// UninstallRequestModelIDColumn is the column json value id
 	UninstallRequestModelIDColumn = "id"
+	// UninstallRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	UninstallRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// UninstallRequestModelLastExportDateColumn is the column json value last_export_date
 	UninstallRequestModelLastExportDateColumn = "last_export_date"
 	// UninstallRequestModelLastExportDateEpochColumn is the column json value epoch
@@ -555,6 +557,8 @@ type UninstallRequest struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate UninstallRequestLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -776,26 +780,27 @@ func (o *UninstallRequest) IsEqual(other *UninstallRequest) bool {
 func (o *UninstallRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toUninstallRequestObject(o.Architecture, false),
-		"customer_id":      toUninstallRequestObject(o.CustomerID, false),
-		"data":             toUninstallRequestObject(o.Data, true),
-		"distro":           toUninstallRequestObject(o.Distro, false),
-		"error":            toUninstallRequestObject(o.Error, true),
-		"event_date":       toUninstallRequestObject(o.EventDate, false),
-		"free_space":       toUninstallRequestObject(o.FreeSpace, false),
-		"go_version":       toUninstallRequestObject(o.GoVersion, false),
-		"hostname":         toUninstallRequestObject(o.Hostname, false),
-		"id":               toUninstallRequestObject(o.ID, false),
-		"last_export_date": toUninstallRequestObject(o.LastExportDate, false),
-		"memory":           toUninstallRequestObject(o.Memory, false),
-		"message":          toUninstallRequestObject(o.Message, false),
-		"num_cpu":          toUninstallRequestObject(o.NumCPU, false),
-		"os":               toUninstallRequestObject(o.OS, false),
-		"ref_id":           toUninstallRequestObject(o.RefID, false),
-		"ref_type":         toUninstallRequestObject(o.RefType, false),
-		"request_id":       toUninstallRequestObject(o.RequestID, false),
-		"success":          toUninstallRequestObject(o.Success, false),
-		"system_id":        toUninstallRequestObject(o.SystemID, false),
+		"architecture":            toUninstallRequestObject(o.Architecture, false),
+		"customer_id":             toUninstallRequestObject(o.CustomerID, false),
+		"data":                    toUninstallRequestObject(o.Data, true),
+		"distro":                  toUninstallRequestObject(o.Distro, false),
+		"error":                   toUninstallRequestObject(o.Error, true),
+		"event_date":              toUninstallRequestObject(o.EventDate, false),
+		"free_space":              toUninstallRequestObject(o.FreeSpace, false),
+		"go_version":              toUninstallRequestObject(o.GoVersion, false),
+		"hostname":                toUninstallRequestObject(o.Hostname, false),
+		"id":                      toUninstallRequestObject(o.ID, false),
+		"integration_instance_id": toUninstallRequestObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toUninstallRequestObject(o.LastExportDate, false),
+		"memory":                  toUninstallRequestObject(o.Memory, false),
+		"message":                 toUninstallRequestObject(o.Message, false),
+		"num_cpu":                 toUninstallRequestObject(o.NumCPU, false),
+		"os":                      toUninstallRequestObject(o.OS, false),
+		"ref_id":                  toUninstallRequestObject(o.RefID, false),
+		"ref_type":                toUninstallRequestObject(o.RefType, false),
+		"request_id":              toUninstallRequestObject(o.RequestID, false),
+		"success":                 toUninstallRequestObject(o.Success, false),
+		"system_id":               toUninstallRequestObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toUninstallRequestObject(o.Uptime, false),
@@ -915,25 +920,6 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UninstallRequestEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1010,6 +996,23 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -1020,25 +1023,6 @@ func (o *UninstallRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UninstallRequestLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1343,6 +1327,7 @@ func (o *UninstallRequest) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

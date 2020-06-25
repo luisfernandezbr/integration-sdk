@@ -31,6 +31,8 @@ const (
 	ProjectTriggerModelIDColumn = "id"
 	// ProjectTriggerModelIntegrationIDColumn is the column json value integration_id
 	ProjectTriggerModelIntegrationIDColumn = "integration_id"
+	// ProjectTriggerModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ProjectTriggerModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ProjectTriggerModelRefIDColumn is the column json value ref_id
 	ProjectTriggerModelRefIDColumn = "ref_id"
 	// ProjectTriggerModelRefTypeColumn is the column json value ref_type
@@ -45,6 +47,8 @@ type ProjectTrigger struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -233,12 +237,13 @@ func (o *ProjectTrigger) IsEqual(other *ProjectTrigger) bool {
 func (o *ProjectTrigger) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":    toProjectTriggerObject(o.CustomerID, false),
-		"id":             toProjectTriggerObject(o.ID, false),
-		"integration_id": toProjectTriggerObject(o.IntegrationID, false),
-		"ref_id":         toProjectTriggerObject(o.RefID, false),
-		"ref_type":       toProjectTriggerObject(o.RefType, false),
-		"hashcode":       toProjectTriggerObject(o.Hashcode, false),
+		"customer_id":             toProjectTriggerObject(o.CustomerID, false),
+		"id":                      toProjectTriggerObject(o.ID, false),
+		"integration_id":          toProjectTriggerObject(o.IntegrationID, false),
+		"integration_instance_id": toProjectTriggerObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toProjectTriggerObject(o.RefID, false),
+		"ref_type":                toProjectTriggerObject(o.RefType, false),
+		"hashcode":                toProjectTriggerObject(o.Hashcode, false),
 	}
 }
 
@@ -308,6 +313,23 @@ func (o *ProjectTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -355,6 +377,7 @@ func (o *ProjectTrigger) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	o.Hashcode = hash.Values(args...)

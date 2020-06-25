@@ -73,6 +73,8 @@ const (
 	ExportModelIntegrationIDColumn = "id"
 	// ExportModelIntegrationIntegrationIDColumn is the column json value integration_id
 	ExportModelIntegrationIntegrationIDColumn = "integration_id"
+	// ExportModelIntegrationIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ExportModelIntegrationIntegrationInstanceIDColumn = "integration_instance_id"
 	// ExportModelIntegrationIntervalColumn is the column json value interval
 	ExportModelIntegrationIntervalColumn = "interval"
 	// ExportModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
@@ -123,6 +125,8 @@ const (
 	ExportModelIntegrationThrottledUntilOffsetColumn = "offset"
 	// ExportModelIntegrationThrottledUntilRfc3339Column is the column json value rfc3339
 	ExportModelIntegrationThrottledUntilRfc3339Column = "rfc3339"
+	// ExportModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ExportModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ExportModelJobIDColumn is the column json value job_id
 	ExportModelJobIDColumn = "job_id"
 	// ExportModelRefIDColumn is the column json value ref_id
@@ -911,6 +915,8 @@ type ExportIntegration struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID The unique id for the integration
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Interval the interval in milliseconds for how often an export job is scheduled
 	Interval int64 `json:"interval" codec:"interval" bson:"interval" yaml:"interval" faker:"-"`
 	// LastExportCompletedDate when the export response was received
@@ -1004,6 +1010,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"id": toExportIntegrationObject(o.ID, false),
 		// IntegrationID The unique id for the integration
 		"integration_id": toExportIntegrationObject(o.IntegrationID, false),
+		// IntegrationInstanceID the integration instance id
+		"integration_instance_id": toExportIntegrationObject(o.IntegrationInstanceID, true),
 		// Interval the interval in milliseconds for how often an export job is scheduled
 		"interval": toExportIntegrationObject(o.Interval, false),
 		// LastExportCompletedDate when the export response was received
@@ -1335,6 +1343,23 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["interval"].(int64); ok {
 		o.Interval = val
 	} else {
@@ -1644,6 +1669,8 @@ type Export struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration The integrations that should be exported and their current configuration
 	Integration ExportIntegration `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// JobID The job ID
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// RefID the source system id for the model instance
@@ -1845,14 +1872,15 @@ func (o *Export) IsEqual(other *Export) bool {
 func (o *Export) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":          toExportObject(o.CustomerID, false),
-		"id":                   toExportObject(o.ID, false),
-		"integration":          toExportObject(o.Integration, false),
-		"job_id":               toExportObject(o.JobID, false),
-		"ref_id":               toExportObject(o.RefID, false),
-		"ref_type":             toExportObject(o.RefType, false),
-		"reprocess_historical": toExportObject(o.ReprocessHistorical, false),
-		"hashcode":             toExportObject(o.Hashcode, false),
+		"customer_id":             toExportObject(o.CustomerID, false),
+		"id":                      toExportObject(o.ID, false),
+		"integration":             toExportObject(o.Integration, false),
+		"integration_instance_id": toExportObject(o.IntegrationInstanceID, true),
+		"job_id":                  toExportObject(o.JobID, false),
+		"ref_id":                  toExportObject(o.RefID, false),
+		"ref_type":                toExportObject(o.RefType, false),
+		"reprocess_historical":    toExportObject(o.ReprocessHistorical, false),
+		"hashcode":                toExportObject(o.Hashcode, false),
 	}
 }
 
@@ -1918,6 +1946,23 @@ func (o *Export) FromMap(kv map[string]interface{}) {
 		o.Integration.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["job_id"].(string); ok {
 		o.JobID = val
 	} else {
@@ -1995,6 +2040,7 @@ func (o *Export) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.JobID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

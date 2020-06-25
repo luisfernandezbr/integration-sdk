@@ -113,6 +113,8 @@ const (
 	IssueModelIDColumn = "id"
 	// IssueModelIdentifierColumn is the column json value identifier
 	IssueModelIdentifierColumn = "identifier"
+	// IssueModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IssueModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IssueModelLinkedIssuesColumn is the column json value linked_issues
 	IssueModelLinkedIssuesColumn = "linked_issues"
 	// IssueModelLinkedIssuesIssueIDColumn is the column json value issue_id
@@ -1963,6 +1965,8 @@ type Issue struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the issue (for example EXM-1 instead of 1000 for jira)
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"issue_id"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LinkedIssues links between issues
 	LinkedIssues []IssueLinkedIssues `json:"linked_issues" codec:"linked_issues" bson:"linked_issues" yaml:"linked_issues" faker:"-"`
 	// ParentID parent issue id, if any
@@ -2239,39 +2243,40 @@ func (o *Issue) IsEqual(other *Issue) bool {
 func (o *Issue) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"assignee_ref_id":    toIssueObject(o.AssigneeRefID, false),
-		"attachments":        toIssueObject(o.Attachments, false),
-		"change_log":         toIssueObject(o.ChangeLog, false),
-		"created_date":       toIssueObject(o.CreatedDate, false),
-		"creator_ref_id":     toIssueObject(o.CreatorRefID, false),
-		"customer_id":        toIssueObject(o.CustomerID, false),
-		"description":        toIssueObject(o.Description, false),
-		"due_date":           toIssueObject(o.DueDate, false),
-		"epic_id":            toIssueObject(o.EpicID, true),
-		"id":                 toIssueObject(o.ID, false),
-		"identifier":         toIssueObject(o.Identifier, false),
-		"linked_issues":      toIssueObject(o.LinkedIssues, false),
-		"parent_id":          toIssueObject(o.ParentID, false),
-		"planned_end_date":   toIssueObject(o.PlannedEndDate, false),
-		"planned_start_date": toIssueObject(o.PlannedStartDate, false),
-		"priority":           toIssueObject(o.Priority, false),
-		"priority_id":        toIssueObject(o.PriorityID, false),
-		"project_id":         toIssueObject(o.ProjectID, false),
-		"ref_id":             toIssueObject(o.RefID, false),
-		"ref_type":           toIssueObject(o.RefType, false),
-		"reporter_ref_id":    toIssueObject(o.ReporterRefID, false),
-		"resolution":         toIssueObject(o.Resolution, false),
-		"sprint_ids":         toIssueObject(o.SprintIds, false),
-		"status":             toIssueObject(o.Status, false),
-		"status_id":          toIssueObject(o.StatusID, false),
-		"story_points":       toIssueObject(o.StoryPoints, true),
-		"tags":               toIssueObject(o.Tags, false),
-		"title":              toIssueObject(o.Title, false),
-		"type":               toIssueObject(o.Type, false),
-		"type_id":            toIssueObject(o.TypeID, false),
-		"updated_date":       toIssueObject(o.UpdatedDate, false),
-		"url":                toIssueObject(o.URL, false),
-		"hashcode":           toIssueObject(o.Hashcode, false),
+		"assignee_ref_id":         toIssueObject(o.AssigneeRefID, false),
+		"attachments":             toIssueObject(o.Attachments, false),
+		"change_log":              toIssueObject(o.ChangeLog, false),
+		"created_date":            toIssueObject(o.CreatedDate, false),
+		"creator_ref_id":          toIssueObject(o.CreatorRefID, false),
+		"customer_id":             toIssueObject(o.CustomerID, false),
+		"description":             toIssueObject(o.Description, false),
+		"due_date":                toIssueObject(o.DueDate, false),
+		"epic_id":                 toIssueObject(o.EpicID, true),
+		"id":                      toIssueObject(o.ID, false),
+		"identifier":              toIssueObject(o.Identifier, false),
+		"integration_instance_id": toIssueObject(o.IntegrationInstanceID, true),
+		"linked_issues":           toIssueObject(o.LinkedIssues, false),
+		"parent_id":               toIssueObject(o.ParentID, false),
+		"planned_end_date":        toIssueObject(o.PlannedEndDate, false),
+		"planned_start_date":      toIssueObject(o.PlannedStartDate, false),
+		"priority":                toIssueObject(o.Priority, false),
+		"priority_id":             toIssueObject(o.PriorityID, false),
+		"project_id":              toIssueObject(o.ProjectID, false),
+		"ref_id":                  toIssueObject(o.RefID, false),
+		"ref_type":                toIssueObject(o.RefType, false),
+		"reporter_ref_id":         toIssueObject(o.ReporterRefID, false),
+		"resolution":              toIssueObject(o.Resolution, false),
+		"sprint_ids":              toIssueObject(o.SprintIds, false),
+		"status":                  toIssueObject(o.Status, false),
+		"status_id":               toIssueObject(o.StatusID, false),
+		"story_points":            toIssueObject(o.StoryPoints, true),
+		"tags":                    toIssueObject(o.Tags, false),
+		"title":                   toIssueObject(o.Title, false),
+		"type":                    toIssueObject(o.Type, false),
+		"type_id":                 toIssueObject(o.TypeID, false),
+		"updated_date":            toIssueObject(o.UpdatedDate, false),
+		"url":                     toIssueObject(o.URL, false),
+		"hashcode":                toIssueObject(o.Hashcode, false),
 	}
 }
 
@@ -2606,6 +2611,23 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Identifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -3174,6 +3196,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.EpicID)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LinkedIssues)
 	args = append(args, o.ParentID)
 	args = append(args, o.PlannedEndDate)

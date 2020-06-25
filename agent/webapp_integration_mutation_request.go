@@ -37,6 +37,8 @@ const (
 	WebappIntegrationMutationRequestModelDataColumn = "data"
 	// WebappIntegrationMutationRequestModelIDColumn is the column json value id
 	WebappIntegrationMutationRequestModelIDColumn = "id"
+	// WebappIntegrationMutationRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	WebappIntegrationMutationRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// WebappIntegrationMutationRequestModelIntegrationNameColumn is the column json value integration_name
 	WebappIntegrationMutationRequestModelIntegrationNameColumn = "integration_name"
 	// WebappIntegrationMutationRequestModelJobIDColumn is the column json value job_id
@@ -420,6 +422,8 @@ type WebappIntegrationMutationRequest struct {
 	Data string `json:"data" codec:"data" bson:"data" yaml:"data" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// IntegrationName Name of the integration binary
 	IntegrationName string `json:"integration_name" codec:"integration_name" bson:"integration_name" yaml:"integration_name" faker:"-"`
 	// JobID The job ID
@@ -625,15 +629,16 @@ func (o *WebappIntegrationMutationRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 
-		"action":           o.Action.String(),
-		"customer_id":      toWebappIntegrationMutationRequestObject(o.CustomerID, false),
-		"data":             toWebappIntegrationMutationRequestObject(o.Data, false),
-		"id":               toWebappIntegrationMutationRequestObject(o.ID, false),
-		"integration_name": toWebappIntegrationMutationRequestObject(o.IntegrationName, false),
-		"job_id":           toWebappIntegrationMutationRequestObject(o.JobID, false),
-		"ref_id":           toWebappIntegrationMutationRequestObject(o.RefID, false),
-		"ref_type":         toWebappIntegrationMutationRequestObject(o.RefType, false),
-		"request_date":     toWebappIntegrationMutationRequestObject(o.RequestDate, false),
+		"action":                  o.Action.String(),
+		"customer_id":             toWebappIntegrationMutationRequestObject(o.CustomerID, false),
+		"data":                    toWebappIntegrationMutationRequestObject(o.Data, false),
+		"id":                      toWebappIntegrationMutationRequestObject(o.ID, false),
+		"integration_instance_id": toWebappIntegrationMutationRequestObject(o.IntegrationInstanceID, true),
+		"integration_name":        toWebappIntegrationMutationRequestObject(o.IntegrationName, false),
+		"job_id":                  toWebappIntegrationMutationRequestObject(o.JobID, false),
+		"ref_id":                  toWebappIntegrationMutationRequestObject(o.RefID, false),
+		"ref_type":                toWebappIntegrationMutationRequestObject(o.RefType, false),
+		"request_date":            toWebappIntegrationMutationRequestObject(o.RequestDate, false),
 
 		"system_type": o.SystemType.String(),
 		"hashcode":    toWebappIntegrationMutationRequestObject(o.Hashcode, false),
@@ -749,6 +754,23 @@ func (o *WebappIntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -902,6 +924,7 @@ func (o *WebappIntegrationMutationRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Data)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.IntegrationName)
 	args = append(args, o.JobID)
 	args = append(args, o.RefID)

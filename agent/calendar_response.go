@@ -75,6 +75,8 @@ const (
 	CalendarResponseModelIDColumn = "id"
 	// CalendarResponseModelIntegrationIDColumn is the column json value integration_id
 	CalendarResponseModelIntegrationIDColumn = "integration_id"
+	// CalendarResponseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CalendarResponseModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// CalendarResponseModelLastExportDateColumn is the column json value last_export_date
 	CalendarResponseModelLastExportDateColumn = "last_export_date"
 	// CalendarResponseModelLastExportDateEpochColumn is the column json value epoch
@@ -762,6 +764,8 @@ type CalendarResponse struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate CalendarResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -993,28 +997,29 @@ func (o *CalendarResponse) IsEqual(other *CalendarResponse) bool {
 func (o *CalendarResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toCalendarResponseObject(o.Architecture, false),
-		"calendars":        toCalendarResponseObject(o.Calendars, false),
-		"customer_id":      toCalendarResponseObject(o.CustomerID, false),
-		"data":             toCalendarResponseObject(o.Data, true),
-		"distro":           toCalendarResponseObject(o.Distro, false),
-		"error":            toCalendarResponseObject(o.Error, true),
-		"event_date":       toCalendarResponseObject(o.EventDate, false),
-		"free_space":       toCalendarResponseObject(o.FreeSpace, false),
-		"go_version":       toCalendarResponseObject(o.GoVersion, false),
-		"hostname":         toCalendarResponseObject(o.Hostname, false),
-		"id":               toCalendarResponseObject(o.ID, false),
-		"integration_id":   toCalendarResponseObject(o.IntegrationID, false),
-		"last_export_date": toCalendarResponseObject(o.LastExportDate, false),
-		"memory":           toCalendarResponseObject(o.Memory, false),
-		"message":          toCalendarResponseObject(o.Message, false),
-		"num_cpu":          toCalendarResponseObject(o.NumCPU, false),
-		"os":               toCalendarResponseObject(o.OS, false),
-		"ref_id":           toCalendarResponseObject(o.RefID, false),
-		"ref_type":         toCalendarResponseObject(o.RefType, false),
-		"request_id":       toCalendarResponseObject(o.RequestID, false),
-		"success":          toCalendarResponseObject(o.Success, false),
-		"system_id":        toCalendarResponseObject(o.SystemID, false),
+		"architecture":            toCalendarResponseObject(o.Architecture, false),
+		"calendars":               toCalendarResponseObject(o.Calendars, false),
+		"customer_id":             toCalendarResponseObject(o.CustomerID, false),
+		"data":                    toCalendarResponseObject(o.Data, true),
+		"distro":                  toCalendarResponseObject(o.Distro, false),
+		"error":                   toCalendarResponseObject(o.Error, true),
+		"event_date":              toCalendarResponseObject(o.EventDate, false),
+		"free_space":              toCalendarResponseObject(o.FreeSpace, false),
+		"go_version":              toCalendarResponseObject(o.GoVersion, false),
+		"hostname":                toCalendarResponseObject(o.Hostname, false),
+		"id":                      toCalendarResponseObject(o.ID, false),
+		"integration_id":          toCalendarResponseObject(o.IntegrationID, false),
+		"integration_instance_id": toCalendarResponseObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toCalendarResponseObject(o.LastExportDate, false),
+		"memory":                  toCalendarResponseObject(o.Memory, false),
+		"message":                 toCalendarResponseObject(o.Message, false),
+		"num_cpu":                 toCalendarResponseObject(o.NumCPU, false),
+		"os":                      toCalendarResponseObject(o.OS, false),
+		"ref_id":                  toCalendarResponseObject(o.RefID, false),
+		"ref_type":                toCalendarResponseObject(o.RefType, false),
+		"request_id":              toCalendarResponseObject(o.RequestID, false),
+		"success":                 toCalendarResponseObject(o.Success, false),
+		"system_id":               toCalendarResponseObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toCalendarResponseObject(o.Uptime, false),
@@ -1198,25 +1203,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CalendarResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1312,6 +1298,23 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -1322,25 +1325,6 @@ func (o *CalendarResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CalendarResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1647,6 +1631,7 @@ func (o *CalendarResponse) Hash() string {
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

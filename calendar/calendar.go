@@ -39,6 +39,8 @@ const (
 	CalendarModelEnabledColumn = "enabled"
 	// CalendarModelIDColumn is the column json value id
 	CalendarModelIDColumn = "id"
+	// CalendarModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CalendarModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// CalendarModelNameColumn is the column json value name
 	CalendarModelNameColumn = "name"
 	// CalendarModelRefIDColumn is the column json value ref_id
@@ -63,6 +65,8 @@ type Calendar struct {
 	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the calendar
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the calendar ID
@@ -295,17 +299,18 @@ func (o *Calendar) IsEqual(other *Calendar) bool {
 func (o *Calendar) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":      toCalendarObject(o.Active, false),
-		"customer_id": toCalendarObject(o.CustomerID, false),
-		"description": toCalendarObject(o.Description, false),
-		"enabled":     toCalendarObject(o.Enabled, false),
-		"id":          toCalendarObject(o.ID, false),
-		"name":        toCalendarObject(o.Name, false),
-		"ref_id":      toCalendarObject(o.RefID, false),
-		"ref_type":    toCalendarObject(o.RefType, false),
-		"updated_ts":  toCalendarObject(o.UpdatedAt, false),
-		"user_ref_id": toCalendarObject(o.UserRefID, false),
-		"hashcode":    toCalendarObject(o.Hashcode, false),
+		"active":                  toCalendarObject(o.Active, false),
+		"customer_id":             toCalendarObject(o.CustomerID, false),
+		"description":             toCalendarObject(o.Description, false),
+		"enabled":                 toCalendarObject(o.Enabled, false),
+		"id":                      toCalendarObject(o.ID, false),
+		"integration_instance_id": toCalendarObject(o.IntegrationInstanceID, true),
+		"name":                    toCalendarObject(o.Name, false),
+		"ref_id":                  toCalendarObject(o.RefID, false),
+		"ref_type":                toCalendarObject(o.RefType, false),
+		"updated_ts":              toCalendarObject(o.UpdatedAt, false),
+		"user_ref_id":             toCalendarObject(o.UserRefID, false),
+		"hashcode":                toCalendarObject(o.Hashcode, false),
 	}
 }
 
@@ -394,6 +399,23 @@ func (o *Calendar) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -498,6 +520,7 @@ func (o *Calendar) Hash() string {
 	args = append(args, o.Description)
 	args = append(args, o.Enabled)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

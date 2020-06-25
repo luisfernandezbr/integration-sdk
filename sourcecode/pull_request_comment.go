@@ -41,6 +41,8 @@ const (
 	PullRequestCommentModelCustomerIDColumn = "customer_id"
 	// PullRequestCommentModelIDColumn is the column json value id
 	PullRequestCommentModelIDColumn = "id"
+	// PullRequestCommentModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	PullRequestCommentModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// PullRequestCommentModelPullRequestIDColumn is the column json value pull_request_id
 	PullRequestCommentModelPullRequestIDColumn = "pull_request_id"
 	// PullRequestCommentModelRefIDColumn is the column json value ref_id
@@ -267,6 +269,8 @@ type PullRequestComment struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// PullRequestID the pull request this comment is associated with
 	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
@@ -470,18 +474,19 @@ func (o *PullRequestComment) IsEqual(other *PullRequestComment) bool {
 func (o *PullRequestComment) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"body":            toPullRequestCommentObject(o.Body, false),
-		"created_date":    toPullRequestCommentObject(o.CreatedDate, false),
-		"customer_id":     toPullRequestCommentObject(o.CustomerID, false),
-		"id":              toPullRequestCommentObject(o.ID, false),
-		"pull_request_id": toPullRequestCommentObject(o.PullRequestID, false),
-		"ref_id":          toPullRequestCommentObject(o.RefID, false),
-		"ref_type":        toPullRequestCommentObject(o.RefType, false),
-		"repo_id":         toPullRequestCommentObject(o.RepoID, false),
-		"updated_date":    toPullRequestCommentObject(o.UpdatedDate, false),
-		"url":             toPullRequestCommentObject(o.URL, false),
-		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, false),
-		"hashcode":        toPullRequestCommentObject(o.Hashcode, false),
+		"body":                    toPullRequestCommentObject(o.Body, false),
+		"created_date":            toPullRequestCommentObject(o.CreatedDate, false),
+		"customer_id":             toPullRequestCommentObject(o.CustomerID, false),
+		"id":                      toPullRequestCommentObject(o.ID, false),
+		"integration_instance_id": toPullRequestCommentObject(o.IntegrationInstanceID, true),
+		"pull_request_id":         toPullRequestCommentObject(o.PullRequestID, false),
+		"ref_id":                  toPullRequestCommentObject(o.RefID, false),
+		"ref_type":                toPullRequestCommentObject(o.RefType, false),
+		"repo_id":                 toPullRequestCommentObject(o.RepoID, false),
+		"updated_date":            toPullRequestCommentObject(o.UpdatedDate, false),
+		"url":                     toPullRequestCommentObject(o.URL, false),
+		"user_ref_id":             toPullRequestCommentObject(o.UserRefID, false),
+		"hashcode":                toPullRequestCommentObject(o.Hashcode, false),
 	}
 }
 
@@ -582,6 +587,23 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -743,6 +765,7 @@ func (o *PullRequestComment) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

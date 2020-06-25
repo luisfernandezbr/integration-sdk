@@ -95,6 +95,8 @@ const (
 	ProjectRequestModelIntegrationIDColumn = "id"
 	// ProjectRequestModelIntegrationInclusionsColumn is the column json value inclusions
 	ProjectRequestModelIntegrationInclusionsColumn = "inclusions"
+	// ProjectRequestModelIntegrationIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ProjectRequestModelIntegrationIntegrationInstanceIDColumn = "integration_instance_id"
 	// ProjectRequestModelIntegrationIntervalColumn is the column json value interval
 	ProjectRequestModelIntegrationIntervalColumn = "interval"
 	// ProjectRequestModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
@@ -191,6 +193,8 @@ const (
 	ProjectRequestModelIntegrationValidatedDateRfc3339Column = "rfc3339"
 	// ProjectRequestModelIntegrationValidationMessageColumn is the column json value validation_message
 	ProjectRequestModelIntegrationValidationMessageColumn = "validation_message"
+	// ProjectRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ProjectRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ProjectRequestModelRefIDColumn is the column json value ref_id
 	ProjectRequestModelRefIDColumn = "ref_id"
 	// ProjectRequestModelRefTypeColumn is the column json value ref_type
@@ -1696,6 +1700,8 @@ type ProjectRequestIntegration struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Inclusions The inclusion list for this integration
 	Inclusions []string `json:"inclusions" codec:"inclusions" bson:"inclusions" yaml:"inclusions" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Interval the interval in milliseconds for how often an export job is scheduled
 	Interval int64 `json:"interval" codec:"interval" bson:"interval" yaml:"interval" faker:"-"`
 	// LastExportCompletedDate when the export response was received (set by the backend)
@@ -1829,6 +1835,8 @@ func (o *ProjectRequestIntegration) ToMap() map[string]interface{} {
 		"id": toProjectRequestIntegrationObject(o.ID, false),
 		// Inclusions The inclusion list for this integration
 		"inclusions": toProjectRequestIntegrationObject(o.Inclusions, false),
+		// IntegrationInstanceID the integration instance id
+		"integration_instance_id": toProjectRequestIntegrationObject(o.IntegrationInstanceID, true),
 		// Interval the interval in milliseconds for how often an export job is scheduled
 		"interval": toProjectRequestIntegrationObject(o.Interval, false),
 		// LastExportCompletedDate when the export response was received (set by the backend)
@@ -2237,6 +2245,23 @@ func (o *ProjectRequestIntegration) FromMap(kv map[string]interface{}) {
 	}
 	if o.Inclusions == nil {
 		o.Inclusions = make([]string, 0)
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
 	}
 	if val, ok := kv["interval"].(int64); ok {
 		o.Interval = val
@@ -2912,6 +2937,8 @@ type ProjectRequest struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the integration details to use
 	Integration ProjectRequestIntegration `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -3122,14 +3149,15 @@ func (o *ProjectRequest) IsEqual(other *ProjectRequest) bool {
 func (o *ProjectRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":  toProjectRequestObject(o.CustomerID, false),
-		"id":           toProjectRequestObject(o.ID, false),
-		"integration":  toProjectRequestObject(o.Integration, false),
-		"ref_id":       toProjectRequestObject(o.RefID, false),
-		"ref_type":     toProjectRequestObject(o.RefType, false),
-		"request_date": toProjectRequestObject(o.RequestDate, false),
-		"uuid":         toProjectRequestObject(o.UUID, false),
-		"hashcode":     toProjectRequestObject(o.Hashcode, false),
+		"customer_id":             toProjectRequestObject(o.CustomerID, false),
+		"id":                      toProjectRequestObject(o.ID, false),
+		"integration":             toProjectRequestObject(o.Integration, false),
+		"integration_instance_id": toProjectRequestObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toProjectRequestObject(o.RefID, false),
+		"ref_type":                toProjectRequestObject(o.RefType, false),
+		"request_date":            toProjectRequestObject(o.RequestDate, false),
+		"uuid":                    toProjectRequestObject(o.UUID, false),
+		"hashcode":                toProjectRequestObject(o.Hashcode, false),
 	}
 }
 
@@ -3195,6 +3223,23 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		o.Integration.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -3243,25 +3288,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -3295,6 +3321,7 @@ func (o *ProjectRequest) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)

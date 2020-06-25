@@ -53,6 +53,8 @@ const (
 	SprintModelGoalColumn = "goal"
 	// SprintModelIDColumn is the column json value id
 	SprintModelIDColumn = "id"
+	// SprintModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	SprintModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// SprintModelNameColumn is the column json value name
 	SprintModelNameColumn = "name"
 	// SprintModelRefIDColumn is the column json value ref_id
@@ -468,6 +470,8 @@ type Sprint struct {
 	Goal string `json:"goal" codec:"goal" bson:"goal" yaml:"goal" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the field
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
@@ -715,15 +719,16 @@ func (o *Sprint) IsEqual(other *Sprint) bool {
 func (o *Sprint) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"completed_date": toSprintObject(o.CompletedDate, false),
-		"customer_id":    toSprintObject(o.CustomerID, false),
-		"ended_date":     toSprintObject(o.EndedDate, false),
-		"goal":           toSprintObject(o.Goal, false),
-		"id":             toSprintObject(o.ID, false),
-		"name":           toSprintObject(o.Name, false),
-		"ref_id":         toSprintObject(o.RefID, false),
-		"ref_type":       toSprintObject(o.RefType, false),
-		"started_date":   toSprintObject(o.StartedDate, false),
+		"completed_date":          toSprintObject(o.CompletedDate, false),
+		"customer_id":             toSprintObject(o.CustomerID, false),
+		"ended_date":              toSprintObject(o.EndedDate, false),
+		"goal":                    toSprintObject(o.Goal, false),
+		"id":                      toSprintObject(o.ID, false),
+		"integration_instance_id": toSprintObject(o.IntegrationInstanceID, true),
+		"name":                    toSprintObject(o.Name, false),
+		"ref_id":                  toSprintObject(o.RefID, false),
+		"ref_type":                toSprintObject(o.RefType, false),
+		"started_date":            toSprintObject(o.StartedDate, false),
 
 		"status":     o.Status.String(),
 		"updated_ts": toSprintObject(o.UpdatedAt, false),
@@ -862,6 +867,23 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1007,6 +1029,7 @@ func (o *Sprint) Hash() string {
 	args = append(args, o.EndedDate)
 	args = append(args, o.Goal)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

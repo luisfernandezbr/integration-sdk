@@ -57,6 +57,8 @@ const (
 	IntegrationResponseModelHostnameColumn = "hostname"
 	// IntegrationResponseModelIDColumn is the column json value id
 	IntegrationResponseModelIDColumn = "id"
+	// IntegrationResponseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IntegrationResponseModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IntegrationResponseModelLastExportDateColumn is the column json value last_export_date
 	IntegrationResponseModelLastExportDateColumn = "last_export_date"
 	// IntegrationResponseModelLastExportDateEpochColumn is the column json value epoch
@@ -561,6 +563,8 @@ type IntegrationResponse struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate IntegrationResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -784,28 +788,29 @@ func (o *IntegrationResponse) IsEqual(other *IntegrationResponse) bool {
 func (o *IntegrationResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toIntegrationResponseObject(o.Architecture, false),
-		"authorization":    toIntegrationResponseObject(o.Authorization, false),
-		"customer_id":      toIntegrationResponseObject(o.CustomerID, false),
-		"data":             toIntegrationResponseObject(o.Data, true),
-		"distro":           toIntegrationResponseObject(o.Distro, false),
-		"error":            toIntegrationResponseObject(o.Error, true),
-		"event_date":       toIntegrationResponseObject(o.EventDate, false),
-		"free_space":       toIntegrationResponseObject(o.FreeSpace, false),
-		"go_version":       toIntegrationResponseObject(o.GoVersion, false),
-		"hostname":         toIntegrationResponseObject(o.Hostname, false),
-		"id":               toIntegrationResponseObject(o.ID, false),
-		"last_export_date": toIntegrationResponseObject(o.LastExportDate, false),
-		"memory":           toIntegrationResponseObject(o.Memory, false),
-		"message":          toIntegrationResponseObject(o.Message, false),
-		"num_cpu":          toIntegrationResponseObject(o.NumCPU, false),
-		"os":               toIntegrationResponseObject(o.OS, false),
-		"ref_id":           toIntegrationResponseObject(o.RefID, false),
-		"ref_type":         toIntegrationResponseObject(o.RefType, false),
-		"request_id":       toIntegrationResponseObject(o.RequestID, false),
-		"server_version":   toIntegrationResponseObject(o.ServerVersion, true),
-		"success":          toIntegrationResponseObject(o.Success, false),
-		"system_id":        toIntegrationResponseObject(o.SystemID, false),
+		"architecture":            toIntegrationResponseObject(o.Architecture, false),
+		"authorization":           toIntegrationResponseObject(o.Authorization, false),
+		"customer_id":             toIntegrationResponseObject(o.CustomerID, false),
+		"data":                    toIntegrationResponseObject(o.Data, true),
+		"distro":                  toIntegrationResponseObject(o.Distro, false),
+		"error":                   toIntegrationResponseObject(o.Error, true),
+		"event_date":              toIntegrationResponseObject(o.EventDate, false),
+		"free_space":              toIntegrationResponseObject(o.FreeSpace, false),
+		"go_version":              toIntegrationResponseObject(o.GoVersion, false),
+		"hostname":                toIntegrationResponseObject(o.Hostname, false),
+		"id":                      toIntegrationResponseObject(o.ID, false),
+		"integration_instance_id": toIntegrationResponseObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toIntegrationResponseObject(o.LastExportDate, false),
+		"memory":                  toIntegrationResponseObject(o.Memory, false),
+		"message":                 toIntegrationResponseObject(o.Message, false),
+		"num_cpu":                 toIntegrationResponseObject(o.NumCPU, false),
+		"os":                      toIntegrationResponseObject(o.OS, false),
+		"ref_id":                  toIntegrationResponseObject(o.RefID, false),
+		"ref_type":                toIntegrationResponseObject(o.RefType, false),
+		"request_id":              toIntegrationResponseObject(o.RequestID, false),
+		"server_version":          toIntegrationResponseObject(o.ServerVersion, true),
+		"success":                 toIntegrationResponseObject(o.Success, false),
+		"system_id":               toIntegrationResponseObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toIntegrationResponseObject(o.Uptime, false),
@@ -944,6 +949,25 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1020,6 +1044,23 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -1030,6 +1071,25 @@ func (o *IntegrationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1352,6 +1412,7 @@ func (o *IntegrationResponse) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

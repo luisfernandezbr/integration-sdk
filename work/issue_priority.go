@@ -37,6 +37,8 @@ const (
 	IssuePriorityModelIconURLColumn = "icon_url"
 	// IssuePriorityModelIDColumn is the column json value id
 	IssuePriorityModelIDColumn = "id"
+	// IssuePriorityModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IssuePriorityModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IssuePriorityModelNameColumn is the column json value name
 	IssuePriorityModelNameColumn = "name"
 	// IssuePriorityModelOrderColumn is the column json value order
@@ -59,6 +61,8 @@ type IssuePriority struct {
 	IconURL *string `json:"icon_url,omitempty" codec:"icon_url,omitempty" bson:"icon_url" yaml:"icon_url,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the priority
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// Order a rank order
@@ -254,16 +258,17 @@ func (o *IssuePriority) IsEqual(other *IssuePriority) bool {
 func (o *IssuePriority) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"color":       toIssuePriorityObject(o.Color, true),
-		"customer_id": toIssuePriorityObject(o.CustomerID, false),
-		"description": toIssuePriorityObject(o.Description, true),
-		"icon_url":    toIssuePriorityObject(o.IconURL, true),
-		"id":          toIssuePriorityObject(o.ID, false),
-		"name":        toIssuePriorityObject(o.Name, false),
-		"order":       toIssuePriorityObject(o.Order, false),
-		"ref_id":      toIssuePriorityObject(o.RefID, false),
-		"ref_type":    toIssuePriorityObject(o.RefType, false),
-		"hashcode":    toIssuePriorityObject(o.Hashcode, false),
+		"color":                   toIssuePriorityObject(o.Color, true),
+		"customer_id":             toIssuePriorityObject(o.CustomerID, false),
+		"description":             toIssuePriorityObject(o.Description, true),
+		"icon_url":                toIssuePriorityObject(o.IconURL, true),
+		"id":                      toIssuePriorityObject(o.ID, false),
+		"integration_instance_id": toIssuePriorityObject(o.IntegrationInstanceID, true),
+		"name":                    toIssuePriorityObject(o.Name, false),
+		"order":                   toIssuePriorityObject(o.Order, false),
+		"ref_id":                  toIssuePriorityObject(o.RefID, false),
+		"ref_type":                toIssuePriorityObject(o.RefType, false),
+		"hashcode":                toIssuePriorityObject(o.Hashcode, false),
 	}
 }
 
@@ -365,6 +370,23 @@ func (o *IssuePriority) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -447,6 +469,7 @@ func (o *IssuePriority) Hash() string {
 	args = append(args, o.Description)
 	args = append(args, o.IconURL)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.Order)
 	args = append(args, o.RefID)

@@ -56,6 +56,8 @@ const (
 	TeamModelDescriptionColumn = "description"
 	// TeamModelIDColumn is the column json value id
 	TeamModelIDColumn = "id"
+	// TeamModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	TeamModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// TeamModelLeafColumn is the column json value leaf
 	TeamModelLeafColumn = "leaf"
 	// TeamModelNameColumn is the column json value name
@@ -649,6 +651,8 @@ type Team struct {
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Leaf True when team has no children_ids
 	Leaf bool `json:"leaf" codec:"leaf" bson:"leaf" yaml:"leaf" faker:"-"`
 	// Name the name of the team
@@ -876,24 +880,25 @@ func (o *Team) IsEqual(other *Team) bool {
 func (o *Team) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":       toTeamObject(o.Active, false),
-		"children_ids": toTeamObject(o.ChildrenIds, false),
-		"created_ts":   toTeamObject(o.CreatedAt, false),
-		"customer_id":  toTeamObject(o.CustomerID, false),
-		"deleted":      toTeamObject(o.Deleted, false),
-		"deleted_date": toTeamObject(o.DeletedDate, false),
-		"description":  toTeamObject(o.Description, false),
-		"id":           toTeamObject(o.ID, false),
-		"leaf":         toTeamObject(o.Leaf, false),
-		"name":         toTeamObject(o.Name, false),
-		"parent_ids":   toTeamObject(o.ParentIds, false),
-		"project_ids":  toTeamObject(o.ProjectIds, false),
-		"ref_id":       toTeamObject(o.RefID, false),
-		"ref_type":     toTeamObject(o.RefType, false),
-		"repo_ids":     toTeamObject(o.RepoIds, false),
-		"updated_ts":   toTeamObject(o.UpdatedAt, false),
-		"users":        toTeamObject(o.Users, false),
-		"hashcode":     toTeamObject(o.Hashcode, false),
+		"active":                  toTeamObject(o.Active, false),
+		"children_ids":            toTeamObject(o.ChildrenIds, false),
+		"created_ts":              toTeamObject(o.CreatedAt, false),
+		"customer_id":             toTeamObject(o.CustomerID, false),
+		"deleted":                 toTeamObject(o.Deleted, false),
+		"deleted_date":            toTeamObject(o.DeletedDate, false),
+		"description":             toTeamObject(o.Description, false),
+		"id":                      toTeamObject(o.ID, false),
+		"integration_instance_id": toTeamObject(o.IntegrationInstanceID, true),
+		"leaf":                    toTeamObject(o.Leaf, false),
+		"name":                    toTeamObject(o.Name, false),
+		"parent_ids":              toTeamObject(o.ParentIds, false),
+		"project_ids":             toTeamObject(o.ProjectIds, false),
+		"ref_id":                  toTeamObject(o.RefID, false),
+		"ref_type":                toTeamObject(o.RefType, false),
+		"repo_ids":                toTeamObject(o.RepoIds, false),
+		"updated_ts":              toTeamObject(o.UpdatedAt, false),
+		"users":                   toTeamObject(o.Users, false),
+		"hashcode":                toTeamObject(o.Hashcode, false),
 	}
 }
 
@@ -1080,6 +1085,23 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1393,6 +1415,7 @@ func (o *Team) Hash() string {
 	args = append(args, o.DeletedDate)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Leaf)
 	args = append(args, o.Name)
 	args = append(args, o.ParentIds)
@@ -1433,6 +1456,8 @@ func getTeamQueryFields() string {
 	sb.WriteString("\t\t\tdescription\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")
+	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
 	// scalar
 	sb.WriteString("\t\t\tleaf\n")
 	// scalar

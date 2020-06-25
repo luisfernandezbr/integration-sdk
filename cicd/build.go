@@ -47,6 +47,8 @@ const (
 	BuildModelEnvironmentColumn = "environment"
 	// BuildModelIDColumn is the column json value id
 	BuildModelIDColumn = "id"
+	// BuildModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	BuildModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// BuildModelRefIDColumn is the column json value ref_id
 	BuildModelRefIDColumn = "ref_id"
 	// BuildModelRefTypeColumn is the column json value ref_type
@@ -495,6 +497,8 @@ type Build struct {
 	Environment BuildEnvironment `json:"environment" codec:"environment" bson:"environment" yaml:"environment" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -708,12 +712,13 @@ func (o *Build) ToMap() map[string]interface{} {
 		"customer_id": toBuildObject(o.CustomerID, false),
 		"end_date":    toBuildObject(o.EndDate, false),
 
-		"environment": o.Environment.String(),
-		"id":          toBuildObject(o.ID, false),
-		"ref_id":      toBuildObject(o.RefID, false),
-		"ref_type":    toBuildObject(o.RefType, false),
-		"repo_name":   toBuildObject(o.RepoName, false),
-		"start_date":  toBuildObject(o.StartDate, false),
+		"environment":             o.Environment.String(),
+		"id":                      toBuildObject(o.ID, false),
+		"integration_instance_id": toBuildObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toBuildObject(o.RefID, false),
+		"ref_type":                toBuildObject(o.RefType, false),
+		"repo_name":               toBuildObject(o.RepoName, false),
+		"start_date":              toBuildObject(o.StartDate, false),
 
 		"status":   o.Status.String(),
 		"url":      toBuildObject(o.URL, true),
@@ -870,6 +875,23 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1016,6 +1038,7 @@ func (o *Build) Hash() string {
 	args = append(args, o.EndDate)
 	args = append(args, o.Environment)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RepoName)

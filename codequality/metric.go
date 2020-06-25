@@ -47,6 +47,8 @@ const (
 	MetricModelCustomerIDColumn = "customer_id"
 	// MetricModelIDColumn is the column json value id
 	MetricModelIDColumn = "id"
+	// MetricModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	MetricModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// MetricModelNameColumn is the column json value name
 	MetricModelNameColumn = "name"
 	// MetricModelProjectIDColumn is the column json value project_id
@@ -270,6 +272,8 @@ type Metric struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the metric name
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// ProjectID the project id
@@ -478,19 +482,20 @@ func (o *Metric) IsEqual(other *Metric) bool {
 func (o *Metric) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"branch":              toMetricObject(o.Branch, true),
-		"commit_id":           toMetricObject(o.CommitID, true),
-		"commit_sha":          toMetricObject(o.CommitSha, true),
-		"created_date":        toMetricObject(o.CreatedDate, false),
-		"customer_id":         toMetricObject(o.CustomerID, false),
-		"id":                  toMetricObject(o.ID, false),
-		"name":                toMetricObject(o.Name, false),
-		"project_id":          toMetricObject(o.ProjectID, false),
-		"pull_request_id":     toMetricObject(o.PullRequestID, true),
-		"pull_request_ref_id": toMetricObject(o.PullRequestRefID, true),
-		"ref_id":              toMetricObject(o.RefID, false),
-		"ref_type":            toMetricObject(o.RefType, false),
-		"repo_id":             toMetricObject(o.RepoID, true),
+		"branch":                  toMetricObject(o.Branch, true),
+		"commit_id":               toMetricObject(o.CommitID, true),
+		"commit_sha":              toMetricObject(o.CommitSha, true),
+		"created_date":            toMetricObject(o.CreatedDate, false),
+		"customer_id":             toMetricObject(o.CustomerID, false),
+		"id":                      toMetricObject(o.ID, false),
+		"integration_instance_id": toMetricObject(o.IntegrationInstanceID, true),
+		"name":                    toMetricObject(o.Name, false),
+		"project_id":              toMetricObject(o.ProjectID, false),
+		"pull_request_id":         toMetricObject(o.PullRequestID, true),
+		"pull_request_ref_id":     toMetricObject(o.PullRequestRefID, true),
+		"ref_id":                  toMetricObject(o.RefID, false),
+		"ref_type":                toMetricObject(o.RefType, false),
+		"repo_id":                 toMetricObject(o.RepoID, true),
 
 		"status":   o.Status.String(),
 		"value":    toMetricObject(o.Value, false),
@@ -627,6 +632,23 @@ func (o *Metric) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -814,6 +836,7 @@ func (o *Metric) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.ProjectID)
 	args = append(args, o.PullRequestID)

@@ -57,6 +57,8 @@ const (
 	UpdateResponseModelHostnameColumn = "hostname"
 	// UpdateResponseModelIDColumn is the column json value id
 	UpdateResponseModelIDColumn = "id"
+	// UpdateResponseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	UpdateResponseModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// UpdateResponseModelLastExportDateColumn is the column json value last_export_date
 	UpdateResponseModelLastExportDateColumn = "last_export_date"
 	// UpdateResponseModelLastExportDateEpochColumn is the column json value epoch
@@ -561,6 +563,8 @@ type UpdateResponse struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate UpdateResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -784,28 +788,29 @@ func (o *UpdateResponse) IsEqual(other *UpdateResponse) bool {
 func (o *UpdateResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toUpdateResponseObject(o.Architecture, false),
-		"customer_id":      toUpdateResponseObject(o.CustomerID, false),
-		"data":             toUpdateResponseObject(o.Data, true),
-		"distro":           toUpdateResponseObject(o.Distro, false),
-		"error":            toUpdateResponseObject(o.Error, true),
-		"event_date":       toUpdateResponseObject(o.EventDate, false),
-		"free_space":       toUpdateResponseObject(o.FreeSpace, false),
-		"from_version":     toUpdateResponseObject(o.FromVersion, false),
-		"go_version":       toUpdateResponseObject(o.GoVersion, false),
-		"hostname":         toUpdateResponseObject(o.Hostname, false),
-		"id":               toUpdateResponseObject(o.ID, false),
-		"last_export_date": toUpdateResponseObject(o.LastExportDate, false),
-		"memory":           toUpdateResponseObject(o.Memory, false),
-		"message":          toUpdateResponseObject(o.Message, false),
-		"num_cpu":          toUpdateResponseObject(o.NumCPU, false),
-		"os":               toUpdateResponseObject(o.OS, false),
-		"ref_id":           toUpdateResponseObject(o.RefID, false),
-		"ref_type":         toUpdateResponseObject(o.RefType, false),
-		"request_id":       toUpdateResponseObject(o.RequestID, false),
-		"success":          toUpdateResponseObject(o.Success, false),
-		"system_id":        toUpdateResponseObject(o.SystemID, false),
-		"to_version":       toUpdateResponseObject(o.ToVersion, false),
+		"architecture":            toUpdateResponseObject(o.Architecture, false),
+		"customer_id":             toUpdateResponseObject(o.CustomerID, false),
+		"data":                    toUpdateResponseObject(o.Data, true),
+		"distro":                  toUpdateResponseObject(o.Distro, false),
+		"error":                   toUpdateResponseObject(o.Error, true),
+		"event_date":              toUpdateResponseObject(o.EventDate, false),
+		"free_space":              toUpdateResponseObject(o.FreeSpace, false),
+		"from_version":            toUpdateResponseObject(o.FromVersion, false),
+		"go_version":              toUpdateResponseObject(o.GoVersion, false),
+		"hostname":                toUpdateResponseObject(o.Hostname, false),
+		"id":                      toUpdateResponseObject(o.ID, false),
+		"integration_instance_id": toUpdateResponseObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toUpdateResponseObject(o.LastExportDate, false),
+		"memory":                  toUpdateResponseObject(o.Memory, false),
+		"message":                 toUpdateResponseObject(o.Message, false),
+		"num_cpu":                 toUpdateResponseObject(o.NumCPU, false),
+		"os":                      toUpdateResponseObject(o.OS, false),
+		"ref_id":                  toUpdateResponseObject(o.RefID, false),
+		"ref_type":                toUpdateResponseObject(o.RefType, false),
+		"request_id":              toUpdateResponseObject(o.RequestID, false),
+		"success":                 toUpdateResponseObject(o.Success, false),
+		"system_id":               toUpdateResponseObject(o.SystemID, false),
+		"to_version":              toUpdateResponseObject(o.ToVersion, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toUpdateResponseObject(o.Uptime, false),
@@ -925,25 +930,6 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpdateResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1039,6 +1025,23 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -1049,25 +1052,6 @@ func (o *UpdateResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpdateResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1392,6 +1376,7 @@ func (o *UpdateResponse) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

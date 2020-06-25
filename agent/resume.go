@@ -57,6 +57,8 @@ const (
 	ResumeModelIDColumn = "id"
 	// ResumeModelIntegrationColumn is the column json value integration
 	ResumeModelIntegrationColumn = "integration"
+	// ResumeModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ResumeModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ResumeModelJobIDColumn is the column json value job_id
 	ResumeModelJobIDColumn = "job_id"
 	// ResumeModelLastExportDateColumn is the column json value last_export_date
@@ -561,6 +563,8 @@ type Resume struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Integration the name of the integration that was resumed
 	Integration string `json:"integration" codec:"integration" bson:"integration" yaml:"integration" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// JobID the job id
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// LastExportDate the last export date
@@ -784,28 +788,29 @@ func (o *Resume) IsEqual(other *Resume) bool {
 func (o *Resume) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toResumeObject(o.Architecture, false),
-		"customer_id":      toResumeObject(o.CustomerID, false),
-		"data":             toResumeObject(o.Data, true),
-		"distro":           toResumeObject(o.Distro, false),
-		"error":            toResumeObject(o.Error, true),
-		"event_date":       toResumeObject(o.EventDate, false),
-		"free_space":       toResumeObject(o.FreeSpace, false),
-		"go_version":       toResumeObject(o.GoVersion, false),
-		"hostname":         toResumeObject(o.Hostname, false),
-		"id":               toResumeObject(o.ID, false),
-		"integration":      toResumeObject(o.Integration, false),
-		"job_id":           toResumeObject(o.JobID, false),
-		"last_export_date": toResumeObject(o.LastExportDate, false),
-		"memory":           toResumeObject(o.Memory, false),
-		"message":          toResumeObject(o.Message, false),
-		"num_cpu":          toResumeObject(o.NumCPU, false),
-		"os":               toResumeObject(o.OS, false),
-		"ref_id":           toResumeObject(o.RefID, false),
-		"ref_type":         toResumeObject(o.RefType, false),
-		"request_id":       toResumeObject(o.RequestID, false),
-		"success":          toResumeObject(o.Success, false),
-		"system_id":        toResumeObject(o.SystemID, false),
+		"architecture":            toResumeObject(o.Architecture, false),
+		"customer_id":             toResumeObject(o.CustomerID, false),
+		"data":                    toResumeObject(o.Data, true),
+		"distro":                  toResumeObject(o.Distro, false),
+		"error":                   toResumeObject(o.Error, true),
+		"event_date":              toResumeObject(o.EventDate, false),
+		"free_space":              toResumeObject(o.FreeSpace, false),
+		"go_version":              toResumeObject(o.GoVersion, false),
+		"hostname":                toResumeObject(o.Hostname, false),
+		"id":                      toResumeObject(o.ID, false),
+		"integration":             toResumeObject(o.Integration, false),
+		"integration_instance_id": toResumeObject(o.IntegrationInstanceID, true),
+		"job_id":                  toResumeObject(o.JobID, false),
+		"last_export_date":        toResumeObject(o.LastExportDate, false),
+		"memory":                  toResumeObject(o.Memory, false),
+		"message":                 toResumeObject(o.Message, false),
+		"num_cpu":                 toResumeObject(o.NumCPU, false),
+		"os":                      toResumeObject(o.OS, false),
+		"ref_id":                  toResumeObject(o.RefID, false),
+		"ref_type":                toResumeObject(o.RefType, false),
+		"request_id":              toResumeObject(o.RequestID, false),
+		"success":                 toResumeObject(o.Success, false),
+		"system_id":               toResumeObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toResumeObject(o.Uptime, false),
@@ -1017,6 +1022,23 @@ func (o *Resume) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Integration = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1354,6 +1376,7 @@ func (o *Resume) Hash() string {
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
 	args = append(args, o.Integration)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.JobID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)

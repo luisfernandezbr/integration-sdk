@@ -65,6 +65,8 @@ const (
 	ExportResponseModelHostnameColumn = "hostname"
 	// ExportResponseModelIDColumn is the column json value id
 	ExportResponseModelIDColumn = "id"
+	// ExportResponseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ExportResponseModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ExportResponseModelIntegrationsColumn is the column json value integrations
 	ExportResponseModelIntegrationsColumn = "integrations"
 	// ExportResponseModelIntegrationsEntityErrorsColumn is the column json value entity_errors
@@ -1454,6 +1456,8 @@ type ExportResponse struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Integrations the integrations that were exported
 	Integrations []ExportResponseIntegrations `json:"integrations" codec:"integrations" bson:"integrations" yaml:"integrations" faker:"-"`
 	// JobID The job ID
@@ -1708,29 +1712,30 @@ func (o *ExportResponse) IsEqual(other *ExportResponse) bool {
 func (o *ExportResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toExportResponseObject(o.Architecture, false),
-		"customer_id":      toExportResponseObject(o.CustomerID, false),
-		"data":             toExportResponseObject(o.Data, true),
-		"distro":           toExportResponseObject(o.Distro, false),
-		"end_date":         toExportResponseObject(o.EndDate, false),
-		"error":            toExportResponseObject(o.Error, true),
-		"event_date":       toExportResponseObject(o.EventDate, false),
-		"free_space":       toExportResponseObject(o.FreeSpace, false),
-		"go_version":       toExportResponseObject(o.GoVersion, false),
-		"hostname":         toExportResponseObject(o.Hostname, false),
-		"id":               toExportResponseObject(o.ID, false),
-		"integrations":     toExportResponseObject(o.Integrations, false),
-		"job_id":           toExportResponseObject(o.JobID, false),
-		"last_export_date": toExportResponseObject(o.LastExportDate, false),
-		"memory":           toExportResponseObject(o.Memory, false),
-		"message":          toExportResponseObject(o.Message, false),
-		"num_cpu":          toExportResponseObject(o.NumCPU, false),
-		"os":               toExportResponseObject(o.OS, false),
-		"ref_id":           toExportResponseObject(o.RefID, false),
-		"ref_type":         toExportResponseObject(o.RefType, false),
-		"request_id":       toExportResponseObject(o.RequestID, false),
-		"size":             toExportResponseObject(o.Size, false),
-		"start_date":       toExportResponseObject(o.StartDate, false),
+		"architecture":            toExportResponseObject(o.Architecture, false),
+		"customer_id":             toExportResponseObject(o.CustomerID, false),
+		"data":                    toExportResponseObject(o.Data, true),
+		"distro":                  toExportResponseObject(o.Distro, false),
+		"end_date":                toExportResponseObject(o.EndDate, false),
+		"error":                   toExportResponseObject(o.Error, true),
+		"event_date":              toExportResponseObject(o.EventDate, false),
+		"free_space":              toExportResponseObject(o.FreeSpace, false),
+		"go_version":              toExportResponseObject(o.GoVersion, false),
+		"hostname":                toExportResponseObject(o.Hostname, false),
+		"id":                      toExportResponseObject(o.ID, false),
+		"integration_instance_id": toExportResponseObject(o.IntegrationInstanceID, true),
+		"integrations":            toExportResponseObject(o.Integrations, false),
+		"job_id":                  toExportResponseObject(o.JobID, false),
+		"last_export_date":        toExportResponseObject(o.LastExportDate, false),
+		"memory":                  toExportResponseObject(o.Memory, false),
+		"message":                 toExportResponseObject(o.Message, false),
+		"num_cpu":                 toExportResponseObject(o.NumCPU, false),
+		"os":                      toExportResponseObject(o.OS, false),
+		"ref_id":                  toExportResponseObject(o.RefID, false),
+		"ref_type":                toExportResponseObject(o.RefType, false),
+		"request_id":              toExportResponseObject(o.RequestID, false),
+		"size":                    toExportResponseObject(o.Size, false),
+		"start_date":              toExportResponseObject(o.StartDate, false),
 
 		"state":     o.State.String(),
 		"success":   toExportResponseObject(o.Success, false),
@@ -1963,6 +1968,23 @@ func (o *ExportResponse) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -2469,6 +2491,7 @@ func (o *ExportResponse) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Integrations)
 	args = append(args, o.JobID)
 	args = append(args, o.LastExportDate)

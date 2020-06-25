@@ -65,6 +65,8 @@ const (
 	CrashModelHostnameColumn = "hostname"
 	// CrashModelIDColumn is the column json value id
 	CrashModelIDColumn = "id"
+	// CrashModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CrashModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// CrashModelLastExportDateColumn is the column json value last_export_date
 	CrashModelLastExportDateColumn = "last_export_date"
 	// CrashModelLastExportDateEpochColumn is the column json value epoch
@@ -666,6 +668,8 @@ type Crash struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate CrashLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -890,28 +894,29 @@ func (o *Crash) IsEqual(other *Crash) bool {
 func (o *Crash) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toCrashObject(o.Architecture, false),
-		"component":        toCrashObject(o.Component, false),
-		"crash_date":       toCrashObject(o.CrashDate, false),
-		"customer_id":      toCrashObject(o.CustomerID, false),
-		"data":             toCrashObject(o.Data, true),
-		"distro":           toCrashObject(o.Distro, false),
-		"error":            toCrashObject(o.Error, true),
-		"event_date":       toCrashObject(o.EventDate, false),
-		"free_space":       toCrashObject(o.FreeSpace, false),
-		"go_version":       toCrashObject(o.GoVersion, false),
-		"hostname":         toCrashObject(o.Hostname, false),
-		"id":               toCrashObject(o.ID, false),
-		"last_export_date": toCrashObject(o.LastExportDate, false),
-		"memory":           toCrashObject(o.Memory, false),
-		"message":          toCrashObject(o.Message, false),
-		"num_cpu":          toCrashObject(o.NumCPU, false),
-		"os":               toCrashObject(o.OS, false),
-		"ref_id":           toCrashObject(o.RefID, false),
-		"ref_type":         toCrashObject(o.RefType, false),
-		"request_id":       toCrashObject(o.RequestID, false),
-		"success":          toCrashObject(o.Success, false),
-		"system_id":        toCrashObject(o.SystemID, false),
+		"architecture":            toCrashObject(o.Architecture, false),
+		"component":               toCrashObject(o.Component, false),
+		"crash_date":              toCrashObject(o.CrashDate, false),
+		"customer_id":             toCrashObject(o.CustomerID, false),
+		"data":                    toCrashObject(o.Data, true),
+		"distro":                  toCrashObject(o.Distro, false),
+		"error":                   toCrashObject(o.Error, true),
+		"event_date":              toCrashObject(o.EventDate, false),
+		"free_space":              toCrashObject(o.FreeSpace, false),
+		"go_version":              toCrashObject(o.GoVersion, false),
+		"hostname":                toCrashObject(o.Hostname, false),
+		"id":                      toCrashObject(o.ID, false),
+		"integration_instance_id": toCrashObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toCrashObject(o.LastExportDate, false),
+		"memory":                  toCrashObject(o.Memory, false),
+		"message":                 toCrashObject(o.Message, false),
+		"num_cpu":                 toCrashObject(o.NumCPU, false),
+		"os":                      toCrashObject(o.OS, false),
+		"ref_id":                  toCrashObject(o.RefID, false),
+		"ref_type":                toCrashObject(o.RefType, false),
+		"request_id":              toCrashObject(o.RequestID, false),
+		"success":                 toCrashObject(o.Success, false),
+		"system_id":               toCrashObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toCrashObject(o.Uptime, false),
@@ -1084,25 +1089,6 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CrashEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1179,6 +1165,23 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -1189,25 +1192,6 @@ func (o *Crash) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CrashLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1514,6 +1498,7 @@ func (o *Crash) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

@@ -57,6 +57,8 @@ const (
 	BlameModelFilenameColumn = "filename"
 	// BlameModelIDColumn is the column json value id
 	BlameModelIDColumn = "id"
+	// BlameModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	BlameModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// BlameModelLanguageColumn is the column json value language
 	BlameModelLanguageColumn = "language"
 	// BlameModelLicenseColumn is the column json value license
@@ -456,6 +458,8 @@ type Blame struct {
 	Filename string `json:"filename" codec:"filename" bson:"filename" yaml:"filename" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Language the detected language
 	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// License if a license was detected in the file, what was the license SPDX
@@ -676,26 +680,27 @@ func (o *Blame) IsEqual(other *Blame) bool {
 func (o *Blame) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"blanks":          toBlameObject(o.Blanks, false),
-		"change_date":     toBlameObject(o.ChangeDate, false),
-		"comments":        toBlameObject(o.Comments, false),
-		"commit_id":       toBlameObject(o.CommitID, false),
-		"complexity":      toBlameObject(o.Complexity, false),
-		"customer_id":     toBlameObject(o.CustomerID, false),
-		"excluded":        toBlameObject(o.Excluded, false),
-		"excluded_reason": toBlameObject(o.ExcludedReason, false),
-		"filename":        toBlameObject(o.Filename, false),
-		"id":              toBlameObject(o.ID, false),
-		"language":        toBlameObject(o.Language, false),
-		"license":         toBlameObject(o.License, true),
-		"lines":           toBlameObject(o.Lines, false),
-		"loc":             toBlameObject(o.Loc, false),
-		"ref_id":          toBlameObject(o.RefID, false),
-		"ref_type":        toBlameObject(o.RefType, false),
-		"repo_id":         toBlameObject(o.RepoID, false),
-		"sha":             toBlameObject(o.Sha, false),
-		"size":            toBlameObject(o.Size, false),
-		"sloc":            toBlameObject(o.Sloc, false),
+		"blanks":                  toBlameObject(o.Blanks, false),
+		"change_date":             toBlameObject(o.ChangeDate, false),
+		"comments":                toBlameObject(o.Comments, false),
+		"commit_id":               toBlameObject(o.CommitID, false),
+		"complexity":              toBlameObject(o.Complexity, false),
+		"customer_id":             toBlameObject(o.CustomerID, false),
+		"excluded":                toBlameObject(o.Excluded, false),
+		"excluded_reason":         toBlameObject(o.ExcludedReason, false),
+		"filename":                toBlameObject(o.Filename, false),
+		"id":                      toBlameObject(o.ID, false),
+		"integration_instance_id": toBlameObject(o.IntegrationInstanceID, true),
+		"language":                toBlameObject(o.Language, false),
+		"license":                 toBlameObject(o.License, true),
+		"lines":                   toBlameObject(o.Lines, false),
+		"loc":                     toBlameObject(o.Loc, false),
+		"ref_id":                  toBlameObject(o.RefID, false),
+		"ref_type":                toBlameObject(o.RefType, false),
+		"repo_id":                 toBlameObject(o.RepoID, false),
+		"sha":                     toBlameObject(o.Sha, false),
+		"size":                    toBlameObject(o.Size, false),
+		"sloc":                    toBlameObject(o.Sloc, false),
 
 		"status":   o.Status.String(),
 		"hashcode": toBlameObject(o.Hashcode, false),
@@ -890,6 +895,23 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1153,6 +1175,7 @@ func (o *Blame) Hash() string {
 	args = append(args, o.ExcludedReason)
 	args = append(args, o.Filename)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Language)
 	args = append(args, o.License)
 	args = append(args, o.Lines)

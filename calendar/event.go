@@ -51,6 +51,8 @@ const (
 	EventModelEndDateRfc3339Column = "rfc3339"
 	// EventModelIDColumn is the column json value id
 	EventModelIDColumn = "id"
+	// EventModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	EventModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// EventModelLocationColumn is the column json value location
 	EventModelLocationColumn = "location"
 	// EventModelLocationDetailsColumn is the column json value details
@@ -696,6 +698,8 @@ type Event struct {
 	EndDate EventEndDate `json:"end_date" codec:"end_date" bson:"end_date" yaml:"end_date" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Location location of the event, could be a place or a link to a meeting
 	Location EventLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name the name of the event
@@ -958,19 +962,20 @@ func (o *Event) IsEqual(other *Event) bool {
 func (o *Event) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"busy":         toEventObject(o.Busy, false),
-		"calendar_id":  toEventObject(o.CalendarID, false),
-		"customer_id":  toEventObject(o.CustomerID, false),
-		"description":  toEventObject(o.Description, false),
-		"end_date":     toEventObject(o.EndDate, false),
-		"id":           toEventObject(o.ID, false),
-		"location":     toEventObject(o.Location, false),
-		"name":         toEventObject(o.Name, false),
-		"owner_ref_id": toEventObject(o.OwnerRefID, false),
-		"participants": toEventObject(o.Participants, false),
-		"ref_id":       toEventObject(o.RefID, false),
-		"ref_type":     toEventObject(o.RefType, false),
-		"start_date":   toEventObject(o.StartDate, false),
+		"busy":                    toEventObject(o.Busy, false),
+		"calendar_id":             toEventObject(o.CalendarID, false),
+		"customer_id":             toEventObject(o.CustomerID, false),
+		"description":             toEventObject(o.Description, false),
+		"end_date":                toEventObject(o.EndDate, false),
+		"id":                      toEventObject(o.ID, false),
+		"integration_instance_id": toEventObject(o.IntegrationInstanceID, true),
+		"location":                toEventObject(o.Location, false),
+		"name":                    toEventObject(o.Name, false),
+		"owner_ref_id":            toEventObject(o.OwnerRefID, false),
+		"participants":            toEventObject(o.Participants, false),
+		"ref_id":                  toEventObject(o.RefID, false),
+		"ref_type":                toEventObject(o.RefType, false),
+		"start_date":              toEventObject(o.StartDate, false),
 
 		"status":     o.Status.String(),
 		"updated_ts": toEventObject(o.UpdatedAt, false),
@@ -1105,6 +1110,23 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1349,6 +1371,7 @@ func (o *Event) Hash() string {
 	args = append(args, o.Description)
 	args = append(args, o.EndDate)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Location)
 	args = append(args, o.Name)
 	args = append(args, o.OwnerRefID)

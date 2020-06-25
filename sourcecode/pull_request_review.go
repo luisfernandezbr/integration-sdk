@@ -41,6 +41,8 @@ const (
 	PullRequestReviewModelCustomerIDColumn = "customer_id"
 	// PullRequestReviewModelIDColumn is the column json value id
 	PullRequestReviewModelIDColumn = "id"
+	// PullRequestReviewModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	PullRequestReviewModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// PullRequestReviewModelPullRequestIDColumn is the column json value pull_request_id
 	PullRequestReviewModelPullRequestIDColumn = "pull_request_id"
 	// PullRequestReviewModelRefIDColumn is the column json value ref_id
@@ -326,6 +328,8 @@ type PullRequestReview struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// PullRequestID the pull request this review is associated with
 	PullRequestID string `json:"pull_request_id" codec:"pull_request_id" bson:"pull_request_id" yaml:"pull_request_id" faker:"-"`
 	// RefID the source system id for the model instance
@@ -529,13 +533,14 @@ func (o *PullRequestReview) IsEqual(other *PullRequestReview) bool {
 func (o *PullRequestReview) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"created_date":    toPullRequestReviewObject(o.CreatedDate, false),
-		"customer_id":     toPullRequestReviewObject(o.CustomerID, false),
-		"id":              toPullRequestReviewObject(o.ID, false),
-		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, false),
-		"ref_id":          toPullRequestReviewObject(o.RefID, false),
-		"ref_type":        toPullRequestReviewObject(o.RefType, false),
-		"repo_id":         toPullRequestReviewObject(o.RepoID, false),
+		"created_date":            toPullRequestReviewObject(o.CreatedDate, false),
+		"customer_id":             toPullRequestReviewObject(o.CustomerID, false),
+		"id":                      toPullRequestReviewObject(o.ID, false),
+		"integration_instance_id": toPullRequestReviewObject(o.IntegrationInstanceID, true),
+		"pull_request_id":         toPullRequestReviewObject(o.PullRequestID, false),
+		"ref_id":                  toPullRequestReviewObject(o.RefID, false),
+		"ref_type":                toPullRequestReviewObject(o.RefType, false),
+		"repo_id":                 toPullRequestReviewObject(o.RepoID, false),
 
 		"state":       o.State.String(),
 		"url":         toPullRequestReviewObject(o.URL, false),
@@ -622,6 +627,23 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -798,6 +820,7 @@ func (o *PullRequestReview) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)

@@ -35,6 +35,8 @@ const (
 	IssueTypeModelIconURLColumn = "icon_url"
 	// IssueTypeModelIDColumn is the column json value id
 	IssueTypeModelIDColumn = "id"
+	// IssueTypeModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IssueTypeModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IssueTypeModelMappedTypeColumn is the column json value mapped_type
 	IssueTypeModelMappedTypeColumn = "mapped_type"
 	// IssueTypeModelNameColumn is the column json value name
@@ -207,6 +209,8 @@ type IssueType struct {
 	IconURL *string `json:"icon_url,omitempty" codec:"icon_url,omitempty" bson:"icon_url" yaml:"icon_url,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// MappedType a default mapped type is known by the integration
 	MappedType IssueTypeMappedType `json:"mapped_type" codec:"mapped_type" bson:"mapped_type" yaml:"mapped_type" faker:"-"`
 	// Name the name of the issue
@@ -401,10 +405,11 @@ func (o *IssueType) IsEqual(other *IssueType) bool {
 func (o *IssueType) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id": toIssueTypeObject(o.CustomerID, false),
-		"description": toIssueTypeObject(o.Description, true),
-		"icon_url":    toIssueTypeObject(o.IconURL, true),
-		"id":          toIssueTypeObject(o.ID, false),
+		"customer_id":             toIssueTypeObject(o.CustomerID, false),
+		"description":             toIssueTypeObject(o.Description, true),
+		"icon_url":                toIssueTypeObject(o.IconURL, true),
+		"id":                      toIssueTypeObject(o.ID, false),
+		"integration_instance_id": toIssueTypeObject(o.IntegrationInstanceID, true),
 
 		"mapped_type": o.MappedType.String(),
 		"name":        toIssueTypeObject(o.Name, false),
@@ -492,6 +497,23 @@ func (o *IssueType) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -608,6 +630,7 @@ func (o *IssueType) Hash() string {
 	args = append(args, o.Description)
 	args = append(args, o.IconURL)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.MappedType)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)

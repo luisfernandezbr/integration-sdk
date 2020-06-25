@@ -59,6 +59,8 @@ const (
 	CodequalityResponseModelIDColumn = "id"
 	// CodequalityResponseModelIntegrationIDColumn is the column json value integration_id
 	CodequalityResponseModelIntegrationIDColumn = "integration_id"
+	// CodequalityResponseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CodequalityResponseModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// CodequalityResponseModelLastExportDateColumn is the column json value last_export_date
 	CodequalityResponseModelLastExportDateColumn = "last_export_date"
 	// CodequalityResponseModelLastExportDateEpochColumn is the column json value epoch
@@ -83,6 +85,8 @@ const (
 	CodequalityResponseModelProjectsIDColumn = "id"
 	// CodequalityResponseModelProjectsIdentifierColumn is the column json value identifier
 	CodequalityResponseModelProjectsIdentifierColumn = "identifier"
+	// CodequalityResponseModelProjectsIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CodequalityResponseModelProjectsIntegrationInstanceIDColumn = "integration_instance_id"
 	// CodequalityResponseModelProjectsNameColumn is the column json value name
 	CodequalityResponseModelProjectsNameColumn = "name"
 	// CodequalityResponseModelProjectsRefIDColumn is the column json value ref_id
@@ -311,6 +315,8 @@ type CodequalityResponseProjects struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier of the project
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the project
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
@@ -339,6 +345,8 @@ func (o *CodequalityResponseProjects) ToMap() map[string]interface{} {
 		"id": toCodequalityResponseProjectsObject(o.ID, false),
 		// Identifier the common identifier of the project
 		"identifier": toCodequalityResponseProjectsObject(o.Identifier, false),
+		// IntegrationInstanceID the integration instance id
+		"integration_instance_id": toCodequalityResponseProjectsObject(o.IntegrationInstanceID, true),
 		// Name the name of the project
 		"name": toCodequalityResponseProjectsObject(o.Name, false),
 		// RefID the source system id for the model instance
@@ -416,6 +424,23 @@ func (o *CodequalityResponseProjects) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Identifier = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -751,6 +776,8 @@ type CodequalityResponse struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate CodequalityResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -984,28 +1011,29 @@ func (o *CodequalityResponse) IsEqual(other *CodequalityResponse) bool {
 func (o *CodequalityResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toCodequalityResponseObject(o.Architecture, false),
-		"customer_id":      toCodequalityResponseObject(o.CustomerID, false),
-		"data":             toCodequalityResponseObject(o.Data, true),
-		"distro":           toCodequalityResponseObject(o.Distro, false),
-		"error":            toCodequalityResponseObject(o.Error, true),
-		"event_date":       toCodequalityResponseObject(o.EventDate, false),
-		"free_space":       toCodequalityResponseObject(o.FreeSpace, false),
-		"go_version":       toCodequalityResponseObject(o.GoVersion, false),
-		"hostname":         toCodequalityResponseObject(o.Hostname, false),
-		"id":               toCodequalityResponseObject(o.ID, false),
-		"integration_id":   toCodequalityResponseObject(o.IntegrationID, false),
-		"last_export_date": toCodequalityResponseObject(o.LastExportDate, false),
-		"memory":           toCodequalityResponseObject(o.Memory, false),
-		"message":          toCodequalityResponseObject(o.Message, false),
-		"num_cpu":          toCodequalityResponseObject(o.NumCPU, false),
-		"os":               toCodequalityResponseObject(o.OS, false),
-		"projects":         toCodequalityResponseObject(o.Projects, false),
-		"ref_id":           toCodequalityResponseObject(o.RefID, false),
-		"ref_type":         toCodequalityResponseObject(o.RefType, false),
-		"request_id":       toCodequalityResponseObject(o.RequestID, false),
-		"success":          toCodequalityResponseObject(o.Success, false),
-		"system_id":        toCodequalityResponseObject(o.SystemID, false),
+		"architecture":            toCodequalityResponseObject(o.Architecture, false),
+		"customer_id":             toCodequalityResponseObject(o.CustomerID, false),
+		"data":                    toCodequalityResponseObject(o.Data, true),
+		"distro":                  toCodequalityResponseObject(o.Distro, false),
+		"error":                   toCodequalityResponseObject(o.Error, true),
+		"event_date":              toCodequalityResponseObject(o.EventDate, false),
+		"free_space":              toCodequalityResponseObject(o.FreeSpace, false),
+		"go_version":              toCodequalityResponseObject(o.GoVersion, false),
+		"hostname":                toCodequalityResponseObject(o.Hostname, false),
+		"id":                      toCodequalityResponseObject(o.ID, false),
+		"integration_id":          toCodequalityResponseObject(o.IntegrationID, false),
+		"integration_instance_id": toCodequalityResponseObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toCodequalityResponseObject(o.LastExportDate, false),
+		"memory":                  toCodequalityResponseObject(o.Memory, false),
+		"message":                 toCodequalityResponseObject(o.Message, false),
+		"num_cpu":                 toCodequalityResponseObject(o.NumCPU, false),
+		"os":                      toCodequalityResponseObject(o.OS, false),
+		"projects":                toCodequalityResponseObject(o.Projects, false),
+		"ref_id":                  toCodequalityResponseObject(o.RefID, false),
+		"ref_type":                toCodequalityResponseObject(o.RefType, false),
+		"request_id":              toCodequalityResponseObject(o.RequestID, false),
+		"success":                 toCodequalityResponseObject(o.Success, false),
+		"system_id":               toCodequalityResponseObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toCodequalityResponseObject(o.Uptime, false),
@@ -1217,6 +1245,23 @@ func (o *CodequalityResponse) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1599,6 +1644,7 @@ func (o *CodequalityResponse) Hash() string {
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

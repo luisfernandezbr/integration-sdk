@@ -15,6 +15,8 @@ import (
 	pjson "github.com/pinpt/go-common/v10/json"
 	"github.com/pinpt/go-common/v10/number"
 	pstrings "github.com/pinpt/go-common/v10/strings"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
 )
 
 const (
@@ -31,6 +33,8 @@ const (
 const (
 	// RepoModelActiveColumn is the column json value active
 	RepoModelActiveColumn = "active"
+	// RepoModelAffiliationColumn is the column json value affiliation
+	RepoModelAffiliationColumn = "affiliation"
 	// RepoModelCustomerIDColumn is the column json value customer_id
 	RepoModelCustomerIDColumn = "customer_id"
 	// RepoModelDefaultBranchColumn is the column json value default_branch
@@ -39,6 +43,8 @@ const (
 	RepoModelDescriptionColumn = "description"
 	// RepoModelIDColumn is the column json value id
 	RepoModelIDColumn = "id"
+	// RepoModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	RepoModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// RepoModelLanguageColumn is the column json value language
 	RepoModelLanguageColumn = "language"
 	// RepoModelNameColumn is the column json value name
@@ -51,12 +57,188 @@ const (
 	RepoModelUpdatedAtColumn = "updated_ts"
 	// RepoModelURLColumn is the column json value url
 	RepoModelURLColumn = "url"
+	// RepoModelVisibilityColumn is the column json value visibility
+	RepoModelVisibilityColumn = "visibility"
+)
+
+// RepoAffiliation is the enumeration type for affiliation
+type RepoAffiliation int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *RepoAffiliation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = RepoAffiliation(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "ORGANIZATION":
+			*v = RepoAffiliation(0)
+		case "USER":
+			*v = RepoAffiliation(1)
+		case "THIRDPARTY":
+			*v = RepoAffiliation(2)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v RepoAffiliation) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "ORGANIZATION":
+		v = 0
+	case "USER":
+		v = 1
+	case "THIRDPARTY":
+		v = 2
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v RepoAffiliation) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("ORGANIZATION")
+	case 1:
+		return json.Marshal("USER")
+	case 2:
+		return json.Marshal("THIRDPARTY")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for Affiliation
+func (v RepoAffiliation) String() string {
+	switch int32(v) {
+	case 0:
+		return "ORGANIZATION"
+	case 1:
+		return "USER"
+	case 2:
+		return "THIRDPARTY"
+	}
+	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *RepoAffiliation) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case RepoAffiliation:
+		*v = val
+	case int32:
+		*v = RepoAffiliation(int32(val))
+	case int:
+		*v = RepoAffiliation(int32(val))
+	case string:
+		switch val {
+		case "ORGANIZATION":
+			*v = RepoAffiliation(0)
+		case "USER":
+			*v = RepoAffiliation(1)
+		case "THIRDPARTY":
+			*v = RepoAffiliation(2)
+		}
+	}
+	return nil
+}
+
+const (
+	// RepoAffiliationOrganization is the enumeration value for organization
+	RepoAffiliationOrganization RepoAffiliation = 0
+	// RepoAffiliationUser is the enumeration value for user
+	RepoAffiliationUser RepoAffiliation = 1
+	// RepoAffiliationThirdparty is the enumeration value for thirdparty
+	RepoAffiliationThirdparty RepoAffiliation = 2
+)
+
+// RepoVisibility is the enumeration type for visibility
+type RepoVisibility int32
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *RepoVisibility) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = RepoVisibility(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "PRIVATE":
+			*v = RepoVisibility(0)
+		case "PUBLIC":
+			*v = RepoVisibility(1)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v RepoVisibility) UnmarshalJSON(buf []byte) error {
+	switch string(buf) {
+	case "PRIVATE":
+		v = 0
+	case "PUBLIC":
+		v = 1
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v RepoVisibility) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("PRIVATE")
+	case 1:
+		return json.Marshal("PUBLIC")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for Visibility
+func (v RepoVisibility) String() string {
+	switch int32(v) {
+	case 0:
+		return "PRIVATE"
+	case 1:
+		return "PUBLIC"
+	}
+	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *RepoVisibility) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case RepoVisibility:
+		*v = val
+	case int32:
+		*v = RepoVisibility(int32(val))
+	case int:
+		*v = RepoVisibility(int32(val))
+	case string:
+		switch val {
+		case "PRIVATE":
+			*v = RepoVisibility(0)
+		case "PUBLIC":
+			*v = RepoVisibility(1)
+		}
+	}
+	return nil
+}
+
+const (
+	// RepoVisibilityPrivate is the enumeration value for private
+	RepoVisibilityPrivate RepoVisibility = 0
+	// RepoVisibilityPublic is the enumeration value for public
+	RepoVisibilityPublic RepoVisibility = 1
 )
 
 // Repo the repo holds source code
 type Repo struct {
 	// Active the status of the repo
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
+	// Affiliation the affiliation to the repo owner
+	Affiliation RepoAffiliation `json:"affiliation" codec:"affiliation" bson:"affiliation" yaml:"affiliation" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DefaultBranch the repo default branch
@@ -65,6 +247,8 @@ type Repo struct {
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"sentence"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Language the programming language the source code is primarily written in
 	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// Name the name of the repo
@@ -77,6 +261,8 @@ type Repo struct {
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the repo home page
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
+	// Visibility the visibility of the repo
+	Visibility RepoVisibility `json:"visibility" codec:"visibility" bson:"visibility" yaml:"visibility" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -92,6 +278,11 @@ func toRepoObject(o interface{}, isoptional bool) interface{} {
 	case *Repo:
 		return v.ToMap()
 
+	case RepoAffiliation:
+		return v.String()
+
+	case RepoVisibility:
+		return v.String()
 	default:
 		return o
 	}
@@ -306,18 +497,23 @@ func (o *Repo) IsEqual(other *Repo) bool {
 func (o *Repo) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":         toRepoObject(o.Active, false),
-		"customer_id":    toRepoObject(o.CustomerID, false),
-		"default_branch": toRepoObject(o.DefaultBranch, false),
-		"description":    toRepoObject(o.Description, false),
-		"id":             toRepoObject(o.ID, false),
-		"language":       toRepoObject(o.Language, false),
-		"name":           toRepoObject(o.Name, false),
-		"ref_id":         toRepoObject(o.RefID, false),
-		"ref_type":       toRepoObject(o.RefType, false),
-		"updated_ts":     toRepoObject(o.UpdatedAt, false),
-		"url":            toRepoObject(o.URL, false),
-		"hashcode":       toRepoObject(o.Hashcode, false),
+		"active": toRepoObject(o.Active, false),
+
+		"affiliation":             o.Affiliation.String(),
+		"customer_id":             toRepoObject(o.CustomerID, false),
+		"default_branch":          toRepoObject(o.DefaultBranch, false),
+		"description":             toRepoObject(o.Description, false),
+		"id":                      toRepoObject(o.ID, false),
+		"integration_instance_id": toRepoObject(o.IntegrationInstanceID, true),
+		"language":                toRepoObject(o.Language, false),
+		"name":                    toRepoObject(o.Name, false),
+		"ref_id":                  toRepoObject(o.RefID, false),
+		"ref_type":                toRepoObject(o.RefType, false),
+		"updated_ts":              toRepoObject(o.UpdatedAt, false),
+		"url":                     toRepoObject(o.URL, false),
+
+		"visibility": o.Visibility.String(),
+		"hashcode":   toRepoObject(o.Hashcode, false),
 	}
 }
 
@@ -338,6 +534,32 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["affiliation"].(RepoAffiliation); ok {
+		o.Affiliation = val
+	} else {
+		if em, ok := kv["affiliation"].(map[string]interface{}); ok {
+
+			ev := em["sourcecode.affiliation"].(string)
+			switch ev {
+			case "organization", "ORGANIZATION":
+				o.Affiliation = 0
+			case "user", "USER":
+				o.Affiliation = 1
+			case "thirdparty", "THIRDPARTY":
+				o.Affiliation = 2
+			}
+		}
+		if em, ok := kv["affiliation"].(string); ok {
+			switch em {
+			case "organization", "ORGANIZATION":
+				o.Affiliation = 0
+			case "user", "USER":
+				o.Affiliation = 1
+			case "thirdparty", "THIRDPARTY":
+				o.Affiliation = 2
 			}
 		}
 	}
@@ -414,6 +636,23 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -526,6 +765,28 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["visibility"].(RepoVisibility); ok {
+		o.Visibility = val
+	} else {
+		if em, ok := kv["visibility"].(map[string]interface{}); ok {
+
+			ev := em["sourcecode.visibility"].(string)
+			switch ev {
+			case "private", "PRIVATE":
+				o.Visibility = 0
+			case "public", "PUBLIC":
+				o.Visibility = 1
+			}
+		}
+		if em, ok := kv["visibility"].(string); ok {
+			switch em {
+			case "private", "PRIVATE":
+				o.Visibility = 0
+			case "public", "PUBLIC":
+				o.Visibility = 1
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -533,16 +794,19 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 func (o *Repo) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Active)
+	args = append(args, o.Affiliation)
 	args = append(args, o.CustomerID)
 	args = append(args, o.DefaultBranch)
 	args = append(args, o.Description)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Language)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
+	args = append(args, o.Visibility)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

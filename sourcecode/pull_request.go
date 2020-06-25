@@ -71,6 +71,8 @@ const (
 	PullRequestModelIDColumn = "id"
 	// PullRequestModelIdentifierColumn is the column json value identifier
 	PullRequestModelIdentifierColumn = "identifier"
+	// PullRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	PullRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// PullRequestModelMergeCommitIDColumn is the column json value merge_commit_id
 	PullRequestModelMergeCommitIDColumn = "merge_commit_id"
 	// PullRequestModelMergeShaColumn is the column json value merge_sha
@@ -639,6 +641,8 @@ type PullRequest struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier a human friendly identifier when displaying this pull request
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// MergeCommitID the id of the merge commit
 	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeSha the sha of the merge commit
@@ -865,26 +869,27 @@ func (o *PullRequest) IsEqual(other *PullRequest) bool {
 func (o *PullRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"branch_id":         toPullRequestObject(o.BranchID, false),
-		"branch_name":       toPullRequestObject(o.BranchName, false),
-		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, false),
-		"closed_date":       toPullRequestObject(o.ClosedDate, false),
-		"commit_ids":        toPullRequestObject(o.CommitIds, false),
-		"commit_shas":       toPullRequestObject(o.CommitShas, false),
-		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, false),
-		"created_date":      toPullRequestObject(o.CreatedDate, false),
-		"customer_id":       toPullRequestObject(o.CustomerID, false),
-		"description":       toPullRequestObject(o.Description, false),
-		"draft":             toPullRequestObject(o.Draft, false),
-		"id":                toPullRequestObject(o.ID, false),
-		"identifier":        toPullRequestObject(o.Identifier, false),
-		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, false),
-		"merge_sha":         toPullRequestObject(o.MergeSha, false),
-		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, false),
-		"merged_date":       toPullRequestObject(o.MergedDate, false),
-		"ref_id":            toPullRequestObject(o.RefID, false),
-		"ref_type":          toPullRequestObject(o.RefType, false),
-		"repo_id":           toPullRequestObject(o.RepoID, false),
+		"branch_id":               toPullRequestObject(o.BranchID, false),
+		"branch_name":             toPullRequestObject(o.BranchName, false),
+		"closed_by_ref_id":        toPullRequestObject(o.ClosedByRefID, false),
+		"closed_date":             toPullRequestObject(o.ClosedDate, false),
+		"commit_ids":              toPullRequestObject(o.CommitIds, false),
+		"commit_shas":             toPullRequestObject(o.CommitShas, false),
+		"created_by_ref_id":       toPullRequestObject(o.CreatedByRefID, false),
+		"created_date":            toPullRequestObject(o.CreatedDate, false),
+		"customer_id":             toPullRequestObject(o.CustomerID, false),
+		"description":             toPullRequestObject(o.Description, false),
+		"draft":                   toPullRequestObject(o.Draft, false),
+		"id":                      toPullRequestObject(o.ID, false),
+		"identifier":              toPullRequestObject(o.Identifier, false),
+		"integration_instance_id": toPullRequestObject(o.IntegrationInstanceID, true),
+		"merge_commit_id":         toPullRequestObject(o.MergeCommitID, false),
+		"merge_sha":               toPullRequestObject(o.MergeSha, false),
+		"merged_by_ref_id":        toPullRequestObject(o.MergedByRefID, false),
+		"merged_date":             toPullRequestObject(o.MergedDate, false),
+		"ref_id":                  toPullRequestObject(o.RefID, false),
+		"ref_type":                toPullRequestObject(o.RefType, false),
+		"repo_id":                 toPullRequestObject(o.RepoID, false),
 
 		"status":       o.Status.String(),
 		"title":        toPullRequestObject(o.Title, false),
@@ -1234,6 +1239,23 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -1507,6 +1529,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.Draft)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeSha)
 	args = append(args, o.MergedByRefID)

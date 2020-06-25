@@ -31,6 +31,8 @@ const (
 	CalendarTriggerModelIDColumn = "id"
 	// CalendarTriggerModelIntegrationIDColumn is the column json value integration_id
 	CalendarTriggerModelIntegrationIDColumn = "integration_id"
+	// CalendarTriggerModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CalendarTriggerModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// CalendarTriggerModelRefIDColumn is the column json value ref_id
 	CalendarTriggerModelRefIDColumn = "ref_id"
 	// CalendarTriggerModelRefTypeColumn is the column json value ref_type
@@ -45,6 +47,8 @@ type CalendarTrigger struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -233,12 +237,13 @@ func (o *CalendarTrigger) IsEqual(other *CalendarTrigger) bool {
 func (o *CalendarTrigger) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":    toCalendarTriggerObject(o.CustomerID, false),
-		"id":             toCalendarTriggerObject(o.ID, false),
-		"integration_id": toCalendarTriggerObject(o.IntegrationID, false),
-		"ref_id":         toCalendarTriggerObject(o.RefID, false),
-		"ref_type":       toCalendarTriggerObject(o.RefType, false),
-		"hashcode":       toCalendarTriggerObject(o.Hashcode, false),
+		"customer_id":             toCalendarTriggerObject(o.CustomerID, false),
+		"id":                      toCalendarTriggerObject(o.ID, false),
+		"integration_id":          toCalendarTriggerObject(o.IntegrationID, false),
+		"integration_instance_id": toCalendarTriggerObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toCalendarTriggerObject(o.RefID, false),
+		"ref_type":                toCalendarTriggerObject(o.RefType, false),
+		"hashcode":                toCalendarTriggerObject(o.Hashcode, false),
 	}
 }
 
@@ -308,6 +313,23 @@ func (o *CalendarTrigger) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -355,6 +377,7 @@ func (o *CalendarTrigger) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	o.Hashcode = hash.Values(args...)

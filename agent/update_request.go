@@ -31,6 +31,8 @@ const (
 	UpdateRequestModelCustomerIDColumn = "customer_id"
 	// UpdateRequestModelIDColumn is the column json value id
 	UpdateRequestModelIDColumn = "id"
+	// UpdateRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	UpdateRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// UpdateRequestModelRefIDColumn is the column json value ref_id
 	UpdateRequestModelRefIDColumn = "ref_id"
 	// UpdateRequestModelRefTypeColumn is the column json value ref_type
@@ -152,6 +154,8 @@ type UpdateRequest struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -349,14 +353,15 @@ func (o *UpdateRequest) IsEqual(other *UpdateRequest) bool {
 func (o *UpdateRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"customer_id":  toUpdateRequestObject(o.CustomerID, false),
-		"id":           toUpdateRequestObject(o.ID, false),
-		"ref_id":       toUpdateRequestObject(o.RefID, false),
-		"ref_type":     toUpdateRequestObject(o.RefType, false),
-		"request_date": toUpdateRequestObject(o.RequestDate, false),
-		"to_version":   toUpdateRequestObject(o.ToVersion, false),
-		"uuid":         toUpdateRequestObject(o.UUID, false),
-		"hashcode":     toUpdateRequestObject(o.Hashcode, false),
+		"customer_id":             toUpdateRequestObject(o.CustomerID, false),
+		"id":                      toUpdateRequestObject(o.ID, false),
+		"integration_instance_id": toUpdateRequestObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toUpdateRequestObject(o.RefID, false),
+		"ref_type":                toUpdateRequestObject(o.RefType, false),
+		"request_date":            toUpdateRequestObject(o.RequestDate, false),
+		"to_version":              toUpdateRequestObject(o.ToVersion, false),
+		"uuid":                    toUpdateRequestObject(o.UUID, false),
+		"hashcode":                toUpdateRequestObject(o.Hashcode, false),
 	}
 }
 
@@ -404,6 +409,23 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -455,25 +477,6 @@ func (o *UpdateRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*UpdateRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -525,6 +528,7 @@ func (o *UpdateRequest) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)

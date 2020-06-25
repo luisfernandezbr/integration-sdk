@@ -43,6 +43,8 @@ const (
 	KanbanBoardModelCustomerIDColumn = "customer_id"
 	// KanbanBoardModelIDColumn is the column json value id
 	KanbanBoardModelIDColumn = "id"
+	// KanbanBoardModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	KanbanBoardModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// KanbanBoardModelNameColumn is the column json value name
 	KanbanBoardModelNameColumn = "name"
 	// KanbanBoardModelProjectIdsColumn is the column json value project_ids
@@ -178,6 +180,8 @@ type KanbanBoard struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the board
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// ProjectIds ids of the projects used in this board
@@ -422,15 +426,16 @@ func (o *KanbanBoard) IsEqual(other *KanbanBoard) bool {
 func (o *KanbanBoard) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"columns":     toKanbanBoardObject(o.Columns, false),
-		"customer_id": toKanbanBoardObject(o.CustomerID, false),
-		"id":          toKanbanBoardObject(o.ID, false),
-		"name":        toKanbanBoardObject(o.Name, false),
-		"project_ids": toKanbanBoardObject(o.ProjectIds, false),
-		"ref_id":      toKanbanBoardObject(o.RefID, false),
-		"ref_type":    toKanbanBoardObject(o.RefType, false),
-		"updated_ts":  toKanbanBoardObject(o.UpdatedAt, false),
-		"hashcode":    toKanbanBoardObject(o.Hashcode, false),
+		"columns":                 toKanbanBoardObject(o.Columns, false),
+		"customer_id":             toKanbanBoardObject(o.CustomerID, false),
+		"id":                      toKanbanBoardObject(o.ID, false),
+		"integration_instance_id": toKanbanBoardObject(o.IntegrationInstanceID, true),
+		"name":                    toKanbanBoardObject(o.Name, false),
+		"project_ids":             toKanbanBoardObject(o.ProjectIds, false),
+		"ref_id":                  toKanbanBoardObject(o.RefID, false),
+		"ref_type":                toKanbanBoardObject(o.RefType, false),
+		"updated_ts":              toKanbanBoardObject(o.UpdatedAt, false),
+		"hashcode":                toKanbanBoardObject(o.Hashcode, false),
 	}
 }
 
@@ -542,6 +547,23 @@ func (o *KanbanBoard) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -675,6 +697,7 @@ func (o *KanbanBoard) Hash() string {
 	args = append(args, o.Columns)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Name)
 	args = append(args, o.ProjectIds)
 	args = append(args, o.RefID)

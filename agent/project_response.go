@@ -59,6 +59,8 @@ const (
 	ProjectResponseModelIDColumn = "id"
 	// ProjectResponseModelIntegrationIDColumn is the column json value integration_id
 	ProjectResponseModelIntegrationIDColumn = "integration_id"
+	// ProjectResponseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	ProjectResponseModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ProjectResponseModelLastExportDateColumn is the column json value last_export_date
 	ProjectResponseModelLastExportDateColumn = "last_export_date"
 	// ProjectResponseModelLastExportDateEpochColumn is the column json value epoch
@@ -917,6 +919,8 @@ type ProjectResponse struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID the integration id
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate ProjectResponseLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -1150,28 +1154,29 @@ func (o *ProjectResponse) IsEqual(other *ProjectResponse) bool {
 func (o *ProjectResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toProjectResponseObject(o.Architecture, false),
-		"customer_id":      toProjectResponseObject(o.CustomerID, false),
-		"data":             toProjectResponseObject(o.Data, true),
-		"distro":           toProjectResponseObject(o.Distro, false),
-		"error":            toProjectResponseObject(o.Error, true),
-		"event_date":       toProjectResponseObject(o.EventDate, false),
-		"free_space":       toProjectResponseObject(o.FreeSpace, false),
-		"go_version":       toProjectResponseObject(o.GoVersion, false),
-		"hostname":         toProjectResponseObject(o.Hostname, false),
-		"id":               toProjectResponseObject(o.ID, false),
-		"integration_id":   toProjectResponseObject(o.IntegrationID, false),
-		"last_export_date": toProjectResponseObject(o.LastExportDate, false),
-		"memory":           toProjectResponseObject(o.Memory, false),
-		"message":          toProjectResponseObject(o.Message, false),
-		"num_cpu":          toProjectResponseObject(o.NumCPU, false),
-		"os":               toProjectResponseObject(o.OS, false),
-		"projects":         toProjectResponseObject(o.Projects, false),
-		"ref_id":           toProjectResponseObject(o.RefID, false),
-		"ref_type":         toProjectResponseObject(o.RefType, false),
-		"request_id":       toProjectResponseObject(o.RequestID, false),
-		"success":          toProjectResponseObject(o.Success, false),
-		"system_id":        toProjectResponseObject(o.SystemID, false),
+		"architecture":            toProjectResponseObject(o.Architecture, false),
+		"customer_id":             toProjectResponseObject(o.CustomerID, false),
+		"data":                    toProjectResponseObject(o.Data, true),
+		"distro":                  toProjectResponseObject(o.Distro, false),
+		"error":                   toProjectResponseObject(o.Error, true),
+		"event_date":              toProjectResponseObject(o.EventDate, false),
+		"free_space":              toProjectResponseObject(o.FreeSpace, false),
+		"go_version":              toProjectResponseObject(o.GoVersion, false),
+		"hostname":                toProjectResponseObject(o.Hostname, false),
+		"id":                      toProjectResponseObject(o.ID, false),
+		"integration_id":          toProjectResponseObject(o.IntegrationID, false),
+		"integration_instance_id": toProjectResponseObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toProjectResponseObject(o.LastExportDate, false),
+		"memory":                  toProjectResponseObject(o.Memory, false),
+		"message":                 toProjectResponseObject(o.Message, false),
+		"num_cpu":                 toProjectResponseObject(o.NumCPU, false),
+		"os":                      toProjectResponseObject(o.OS, false),
+		"projects":                toProjectResponseObject(o.Projects, false),
+		"ref_id":                  toProjectResponseObject(o.RefID, false),
+		"ref_type":                toProjectResponseObject(o.RefType, false),
+		"request_id":              toProjectResponseObject(o.RequestID, false),
+		"success":                 toProjectResponseObject(o.Success, false),
+		"system_id":               toProjectResponseObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toProjectResponseObject(o.Uptime, false),
@@ -1402,6 +1407,23 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1803,6 +1825,7 @@ func (o *ProjectResponse) Hash() string {
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)

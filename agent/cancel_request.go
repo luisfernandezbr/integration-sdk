@@ -35,6 +35,8 @@ const (
 	CancelRequestModelCustomerIDColumn = "customer_id"
 	// CancelRequestModelIDColumn is the column json value id
 	CancelRequestModelIDColumn = "id"
+	// CancelRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	CancelRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// CancelRequestModelRefIDColumn is the column json value ref_id
 	CancelRequestModelRefIDColumn = "ref_id"
 	// CancelRequestModelRefTypeColumn is the column json value ref_type
@@ -248,6 +250,8 @@ type CancelRequest struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -447,14 +451,15 @@ func (o *CancelRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 
-		"command":      o.Command.String(),
-		"customer_id":  toCancelRequestObject(o.CustomerID, false),
-		"id":           toCancelRequestObject(o.ID, false),
-		"ref_id":       toCancelRequestObject(o.RefID, false),
-		"ref_type":     toCancelRequestObject(o.RefType, false),
-		"request_date": toCancelRequestObject(o.RequestDate, false),
-		"uuid":         toCancelRequestObject(o.UUID, false),
-		"hashcode":     toCancelRequestObject(o.Hashcode, false),
+		"command":                 o.Command.String(),
+		"customer_id":             toCancelRequestObject(o.CustomerID, false),
+		"id":                      toCancelRequestObject(o.ID, false),
+		"integration_instance_id": toCancelRequestObject(o.IntegrationInstanceID, true),
+		"ref_id":                  toCancelRequestObject(o.RefID, false),
+		"ref_type":                toCancelRequestObject(o.RefType, false),
+		"request_date":            toCancelRequestObject(o.RequestDate, false),
+		"uuid":                    toCancelRequestObject(o.UUID, false),
+		"hashcode":                toCancelRequestObject(o.Hashcode, false),
 	}
 }
 
@@ -528,6 +533,23 @@ func (o *CancelRequest) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -612,6 +634,7 @@ func (o *CancelRequest) Hash() string {
 	args = append(args, o.Command)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequestDate)

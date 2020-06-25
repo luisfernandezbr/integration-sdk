@@ -39,6 +39,8 @@ const (
 	UserModelEmailColumn = "email"
 	// UserModelIDColumn is the column json value id
 	UserModelIDColumn = "id"
+	// UserModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	UserModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// UserModelMemberColumn is the column json value member
 	UserModelMemberColumn = "member"
 	// UserModelNameColumn is the column json value name
@@ -67,6 +69,8 @@ type User struct {
 	Email *string `json:"email,omitempty" codec:"email,omitempty" bson:"email" yaml:"email,omitempty" faker:"email"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Member if the user is a member of organization
 	Member bool `json:"member" codec:"member" bson:"member" yaml:"member" faker:"-"`
 	// Name the name of the user
@@ -302,19 +306,20 @@ func (o *User) IsEqual(other *User) bool {
 func (o *User) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"associated_ref_id": toUserObject(o.AssociatedRefID, true),
-		"avatar_url":        toUserObject(o.AvatarURL, true),
-		"customer_id":       toUserObject(o.CustomerID, false),
-		"email":             toUserObject(o.Email, true),
-		"id":                toUserObject(o.ID, false),
-		"member":            toUserObject(o.Member, false),
-		"name":              toUserObject(o.Name, false),
-		"ref_id":            toUserObject(o.RefID, false),
-		"ref_type":          toUserObject(o.RefType, false),
-		"updated_ts":        toUserObject(o.UpdatedAt, false),
-		"url":               toUserObject(o.URL, true),
-		"username":          toUserObject(o.Username, false),
-		"hashcode":          toUserObject(o.Hashcode, false),
+		"associated_ref_id":       toUserObject(o.AssociatedRefID, true),
+		"avatar_url":              toUserObject(o.AvatarURL, true),
+		"customer_id":             toUserObject(o.CustomerID, false),
+		"email":                   toUserObject(o.Email, true),
+		"id":                      toUserObject(o.ID, false),
+		"integration_instance_id": toUserObject(o.IntegrationInstanceID, true),
+		"member":                  toUserObject(o.Member, false),
+		"name":                    toUserObject(o.Name, false),
+		"ref_id":                  toUserObject(o.RefID, false),
+		"ref_type":                toUserObject(o.RefType, false),
+		"updated_ts":              toUserObject(o.UpdatedAt, false),
+		"url":                     toUserObject(o.URL, true),
+		"username":                toUserObject(o.Username, false),
+		"hashcode":                toUserObject(o.Hashcode, false),
 	}
 }
 
@@ -413,6 +418,23 @@ func (o *User) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -545,6 +567,7 @@ func (o *User) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Email)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Member)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)

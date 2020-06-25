@@ -41,6 +41,8 @@ const (
 	IssueCommentModelCustomerIDColumn = "customer_id"
 	// IssueCommentModelIDColumn is the column json value id
 	IssueCommentModelIDColumn = "id"
+	// IssueCommentModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IssueCommentModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IssueCommentModelIssueIDColumn is the column json value issue_id
 	IssueCommentModelIssueIDColumn = "issue_id"
 	// IssueCommentModelProjectIDColumn is the column json value project_id
@@ -267,6 +269,8 @@ type IssueComment struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// IssueID the issue this comment is associated with
 	IssueID string `json:"issue_id" codec:"issue_id" bson:"issue_id" yaml:"issue_id" faker:"-"`
 	// ProjectID unique project id
@@ -470,18 +474,19 @@ func (o *IssueComment) IsEqual(other *IssueComment) bool {
 func (o *IssueComment) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"body":         toIssueCommentObject(o.Body, false),
-		"created_date": toIssueCommentObject(o.CreatedDate, false),
-		"customer_id":  toIssueCommentObject(o.CustomerID, false),
-		"id":           toIssueCommentObject(o.ID, false),
-		"issue_id":     toIssueCommentObject(o.IssueID, false),
-		"project_id":   toIssueCommentObject(o.ProjectID, false),
-		"ref_id":       toIssueCommentObject(o.RefID, false),
-		"ref_type":     toIssueCommentObject(o.RefType, false),
-		"updated_date": toIssueCommentObject(o.UpdatedDate, false),
-		"url":          toIssueCommentObject(o.URL, false),
-		"user_ref_id":  toIssueCommentObject(o.UserRefID, false),
-		"hashcode":     toIssueCommentObject(o.Hashcode, false),
+		"body":                    toIssueCommentObject(o.Body, false),
+		"created_date":            toIssueCommentObject(o.CreatedDate, false),
+		"customer_id":             toIssueCommentObject(o.CustomerID, false),
+		"id":                      toIssueCommentObject(o.ID, false),
+		"integration_instance_id": toIssueCommentObject(o.IntegrationInstanceID, true),
+		"issue_id":                toIssueCommentObject(o.IssueID, false),
+		"project_id":              toIssueCommentObject(o.ProjectID, false),
+		"ref_id":                  toIssueCommentObject(o.RefID, false),
+		"ref_type":                toIssueCommentObject(o.RefType, false),
+		"updated_date":            toIssueCommentObject(o.UpdatedDate, false),
+		"url":                     toIssueCommentObject(o.URL, false),
+		"user_ref_id":             toIssueCommentObject(o.UserRefID, false),
+		"hashcode":                toIssueCommentObject(o.Hashcode, false),
 	}
 }
 
@@ -582,6 +587,23 @@ func (o *IssueComment) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -743,6 +765,7 @@ func (o *IssueComment) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.IssueID)
 	args = append(args, o.ProjectID)
 	args = append(args, o.RefID)

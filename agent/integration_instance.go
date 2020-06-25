@@ -71,6 +71,8 @@ const (
 	IntegrationInstanceModelIDColumn = "id"
 	// IntegrationInstanceModelIntegrationIDColumn is the column json value integration_id
 	IntegrationInstanceModelIntegrationIDColumn = "integration_id"
+	// IntegrationInstanceModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	IntegrationInstanceModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// IntegrationInstanceModelIntervalColumn is the column json value interval
 	IntegrationInstanceModelIntervalColumn = "interval"
 	// IntegrationInstanceModelLastExportCompletedDateColumn is the column json value last_export_completed_date
@@ -905,6 +907,8 @@ type IntegrationInstance struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID The unique id for the integration
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Interval the interval in milliseconds for how often an export job is scheduled
 	Interval int64 `json:"interval" codec:"interval" bson:"interval" yaml:"interval" faker:"-"`
 	// LastExportCompletedDate when the export response was received
@@ -1188,6 +1192,7 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 		"export_acknowledged":        toIntegrationInstanceObject(o.ExportAcknowledged, true),
 		"id":                         toIntegrationInstanceObject(o.ID, false),
 		"integration_id":             toIntegrationInstanceObject(o.IntegrationID, false),
+		"integration_instance_id":    toIntegrationInstanceObject(o.IntegrationInstanceID, true),
 		"interval":                   toIntegrationInstanceObject(o.Interval, false),
 		"last_export_completed_date": toIntegrationInstanceObject(o.LastExportCompletedDate, false),
 		"last_export_requested_date": toIntegrationInstanceObject(o.LastExportRequestedDate, false),
@@ -1496,6 +1501,23 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.IntegrationID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1830,6 +1852,7 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.ExportAcknowledged)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Interval)
 	args = append(args, o.LastExportCompletedDate)
 	args = append(args, o.LastExportRequestedDate)
@@ -1893,6 +1916,8 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\t_id\n")
 	// scalar
 	sb.WriteString("\t\t\tintegration_id\n")
+	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
 	// scalar
 	sb.WriteString("\t\t\tinterval\n")
 	// object with fields

@@ -49,6 +49,8 @@ const (
 	PullRequestCommitModelDeletionsColumn = "deletions"
 	// PullRequestCommitModelIDColumn is the column json value id
 	PullRequestCommitModelIDColumn = "id"
+	// PullRequestCommitModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	PullRequestCommitModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// PullRequestCommitModelMessageColumn is the column json value message
 	PullRequestCommitModelMessageColumn = "message"
 	// PullRequestCommitModelPullRequestIDColumn is the column json value pull_request_id
@@ -180,6 +182,8 @@ type PullRequestCommit struct {
 	Deletions int64 `json:"deletions" codec:"deletions" bson:"deletions" yaml:"deletions" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Message the commit message
 	Message string `json:"message" codec:"message" bson:"message" yaml:"message" faker:"commit_message"`
 	// PullRequestID the pull request this commit was taken from
@@ -380,22 +384,23 @@ func (o *PullRequestCommit) IsEqual(other *PullRequestCommit) bool {
 func (o *PullRequestCommit) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"additions":        toPullRequestCommitObject(o.Additions, false),
-		"author_ref_id":    toPullRequestCommitObject(o.AuthorRefID, false),
-		"branch_id":        toPullRequestCommitObject(o.BranchID, false),
-		"committer_ref_id": toPullRequestCommitObject(o.CommitterRefID, false),
-		"created_date":     toPullRequestCommitObject(o.CreatedDate, false),
-		"customer_id":      toPullRequestCommitObject(o.CustomerID, false),
-		"deletions":        toPullRequestCommitObject(o.Deletions, false),
-		"id":               toPullRequestCommitObject(o.ID, false),
-		"message":          toPullRequestCommitObject(o.Message, false),
-		"pull_request_id":  toPullRequestCommitObject(o.PullRequestID, false),
-		"ref_id":           toPullRequestCommitObject(o.RefID, false),
-		"ref_type":         toPullRequestCommitObject(o.RefType, false),
-		"repo_id":          toPullRequestCommitObject(o.RepoID, false),
-		"sha":              toPullRequestCommitObject(o.Sha, false),
-		"url":              toPullRequestCommitObject(o.URL, false),
-		"hashcode":         toPullRequestCommitObject(o.Hashcode, false),
+		"additions":               toPullRequestCommitObject(o.Additions, false),
+		"author_ref_id":           toPullRequestCommitObject(o.AuthorRefID, false),
+		"branch_id":               toPullRequestCommitObject(o.BranchID, false),
+		"committer_ref_id":        toPullRequestCommitObject(o.CommitterRefID, false),
+		"created_date":            toPullRequestCommitObject(o.CreatedDate, false),
+		"customer_id":             toPullRequestCommitObject(o.CustomerID, false),
+		"deletions":               toPullRequestCommitObject(o.Deletions, false),
+		"id":                      toPullRequestCommitObject(o.ID, false),
+		"integration_instance_id": toPullRequestCommitObject(o.IntegrationInstanceID, true),
+		"message":                 toPullRequestCommitObject(o.Message, false),
+		"pull_request_id":         toPullRequestCommitObject(o.PullRequestID, false),
+		"ref_id":                  toPullRequestCommitObject(o.RefID, false),
+		"ref_type":                toPullRequestCommitObject(o.RefType, false),
+		"repo_id":                 toPullRequestCommitObject(o.RepoID, false),
+		"sha":                     toPullRequestCommitObject(o.Sha, false),
+		"url":                     toPullRequestCommitObject(o.URL, false),
+		"hashcode":                toPullRequestCommitObject(o.Hashcode, false),
 	}
 }
 
@@ -565,6 +570,23 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["message"].(string); ok {
 		o.Message = val
 	} else {
@@ -712,6 +734,7 @@ func (o *PullRequestCommit) Hash() string {
 	args = append(args, o.CustomerID)
 	args = append(args, o.Deletions)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Message)
 	args = append(args, o.PullRequestID)
 	args = append(args, o.RefID)

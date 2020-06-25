@@ -51,6 +51,8 @@ const (
 	EnrollmentModelHostnameColumn = "hostname"
 	// EnrollmentModelIDColumn is the column json value id
 	EnrollmentModelIDColumn = "id"
+	// EnrollmentModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	EnrollmentModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// EnrollmentModelLastPingDateColumn is the column json value last_ping_date
 	EnrollmentModelLastPingDateColumn = "last_ping_date"
 	// EnrollmentModelLastPingDateEpochColumn is the column json value epoch
@@ -499,6 +501,8 @@ type Enrollment struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastPingDate last time the agent pinged
 	LastPingDate EnrollmentLastPingDate `json:"last_ping_date" codec:"last_ping_date" bson:"last_ping_date" yaml:"last_ping_date" faker:"-"`
 	// LastShutdownDate last time the agent shut down
@@ -717,26 +721,27 @@ func (o *Enrollment) IsEqual(other *Enrollment) bool {
 func (o *Enrollment) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"agent_version":      toEnrollmentObject(o.AgentVersion, false),
-		"architecture":       toEnrollmentObject(o.Architecture, false),
-		"created_date":       toEnrollmentObject(o.CreatedDate, false),
-		"created_ts":         toEnrollmentObject(o.CreatedAt, false),
-		"customer_id":        toEnrollmentObject(o.CustomerID, false),
-		"go_version":         toEnrollmentObject(o.GoVersion, false),
-		"hostname":           toEnrollmentObject(o.Hostname, false),
-		"id":                 toEnrollmentObject(o.ID, false),
-		"last_ping_date":     toEnrollmentObject(o.LastPingDate, false),
-		"last_shutdown_date": toEnrollmentObject(o.LastShutdownDate, false),
-		"last_startup_date":  toEnrollmentObject(o.LastStartupDate, false),
-		"num_cpu":            toEnrollmentObject(o.NumCPU, false),
-		"os":                 toEnrollmentObject(o.OS, false),
-		"ref_id":             toEnrollmentObject(o.RefID, false),
-		"ref_type":           toEnrollmentObject(o.RefType, false),
-		"running":            toEnrollmentObject(o.Running, false),
-		"system_id":          toEnrollmentObject(o.SystemID, false),
-		"updated_ts":         toEnrollmentObject(o.UpdatedAt, false),
-		"user_id":            toEnrollmentObject(o.UserID, false),
-		"hashcode":           toEnrollmentObject(o.Hashcode, false),
+		"agent_version":           toEnrollmentObject(o.AgentVersion, false),
+		"architecture":            toEnrollmentObject(o.Architecture, false),
+		"created_date":            toEnrollmentObject(o.CreatedDate, false),
+		"created_ts":              toEnrollmentObject(o.CreatedAt, false),
+		"customer_id":             toEnrollmentObject(o.CustomerID, false),
+		"go_version":              toEnrollmentObject(o.GoVersion, false),
+		"hostname":                toEnrollmentObject(o.Hostname, false),
+		"id":                      toEnrollmentObject(o.ID, false),
+		"integration_instance_id": toEnrollmentObject(o.IntegrationInstanceID, true),
+		"last_ping_date":          toEnrollmentObject(o.LastPingDate, false),
+		"last_shutdown_date":      toEnrollmentObject(o.LastShutdownDate, false),
+		"last_startup_date":       toEnrollmentObject(o.LastStartupDate, false),
+		"num_cpu":                 toEnrollmentObject(o.NumCPU, false),
+		"os":                      toEnrollmentObject(o.OS, false),
+		"ref_id":                  toEnrollmentObject(o.RefID, false),
+		"ref_type":                toEnrollmentObject(o.RefType, false),
+		"running":                 toEnrollmentObject(o.Running, false),
+		"system_id":               toEnrollmentObject(o.SystemID, false),
+		"updated_ts":              toEnrollmentObject(o.UpdatedAt, false),
+		"user_id":                 toEnrollmentObject(o.UserID, false),
+		"hashcode":                toEnrollmentObject(o.Hashcode, false),
 	}
 }
 
@@ -908,6 +913,23 @@ func (o *Enrollment) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1159,6 +1181,7 @@ func (o *Enrollment) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastPingDate)
 	args = append(args, o.LastShutdownDate)
 	args = append(args, o.LastStartupDate)
@@ -1201,6 +1224,8 @@ func getEnrollmentQueryFields() string {
 	sb.WriteString("\t\t\thostname\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")
+	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
 	// object with fields
 	sb.WriteString("\t\t\tlast_ping_date {\n")
 

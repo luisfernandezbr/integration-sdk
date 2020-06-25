@@ -55,6 +55,8 @@ const (
 	LogModelHostnameColumn = "hostname"
 	// LogModelIDColumn is the column json value id
 	LogModelIDColumn = "id"
+	// LogModelIntegrationInstanceIDColumn is the column json value integration_instance_id
+	LogModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// LogModelLastExportDateColumn is the column json value last_export_date
 	LogModelLastExportDateColumn = "last_export_date"
 	// LogModelLastExportDateEpochColumn is the column json value epoch
@@ -555,6 +557,8 @@ type Log struct {
 	Hostname string `json:"hostname" codec:"hostname" bson:"hostname" yaml:"hostname" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// LastExportDate the last export date
 	LastExportDate LogLastExportDate `json:"last_export_date" codec:"last_export_date" bson:"last_export_date" yaml:"last_export_date" faker:"-"`
 	// Memory the amount of memory in bytes for the agent machine
@@ -776,26 +780,27 @@ func (o *Log) IsEqual(other *Log) bool {
 func (o *Log) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"architecture":     toLogObject(o.Architecture, false),
-		"customer_id":      toLogObject(o.CustomerID, false),
-		"data":             toLogObject(o.Data, true),
-		"distro":           toLogObject(o.Distro, false),
-		"error":            toLogObject(o.Error, true),
-		"event_date":       toLogObject(o.EventDate, false),
-		"free_space":       toLogObject(o.FreeSpace, false),
-		"go_version":       toLogObject(o.GoVersion, false),
-		"hostname":         toLogObject(o.Hostname, false),
-		"id":               toLogObject(o.ID, false),
-		"last_export_date": toLogObject(o.LastExportDate, false),
-		"memory":           toLogObject(o.Memory, false),
-		"message":          toLogObject(o.Message, false),
-		"num_cpu":          toLogObject(o.NumCPU, false),
-		"os":               toLogObject(o.OS, false),
-		"ref_id":           toLogObject(o.RefID, false),
-		"ref_type":         toLogObject(o.RefType, false),
-		"request_id":       toLogObject(o.RequestID, false),
-		"success":          toLogObject(o.Success, false),
-		"system_id":        toLogObject(o.SystemID, false),
+		"architecture":            toLogObject(o.Architecture, false),
+		"customer_id":             toLogObject(o.CustomerID, false),
+		"data":                    toLogObject(o.Data, true),
+		"distro":                  toLogObject(o.Distro, false),
+		"error":                   toLogObject(o.Error, true),
+		"event_date":              toLogObject(o.EventDate, false),
+		"free_space":              toLogObject(o.FreeSpace, false),
+		"go_version":              toLogObject(o.GoVersion, false),
+		"hostname":                toLogObject(o.Hostname, false),
+		"id":                      toLogObject(o.ID, false),
+		"integration_instance_id": toLogObject(o.IntegrationInstanceID, true),
+		"last_export_date":        toLogObject(o.LastExportDate, false),
+		"memory":                  toLogObject(o.Memory, false),
+		"message":                 toLogObject(o.Message, false),
+		"num_cpu":                 toLogObject(o.NumCPU, false),
+		"os":                      toLogObject(o.OS, false),
+		"ref_id":                  toLogObject(o.RefID, false),
+		"ref_type":                toLogObject(o.RefType, false),
+		"request_id":              toLogObject(o.RequestID, false),
+		"success":                 toLogObject(o.Success, false),
+		"system_id":               toLogObject(o.SystemID, false),
 
 		"type":     o.Type.String(),
 		"uptime":   toLogObject(o.Uptime, false),
@@ -988,6 +993,23 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1305,6 +1327,7 @@ func (o *Log) Hash() string {
 	args = append(args, o.GoVersion)
 	args = append(args, o.Hostname)
 	args = append(args, o.ID)
+	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.LastExportDate)
 	args = append(args, o.Memory)
 	args = append(args, o.Message)
