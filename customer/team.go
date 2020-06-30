@@ -1457,6 +1457,8 @@ func getTeamQueryFields() string {
 	// id
 	sb.WriteString("\t\t\t_id\n")
 	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
+	// scalar
 	sb.WriteString("\t\t\tleaf\n")
 	// scalar
 	sb.WriteString("\t\t\tname\n")

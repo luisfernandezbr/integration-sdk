@@ -1917,6 +1917,8 @@ func getIntegrationInstanceQueryFields() string {
 	// scalar
 	sb.WriteString("\t\t\tintegration_id\n")
 	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
+	// scalar
 	sb.WriteString("\t\t\tinterval\n")
 	// object with fields
 	sb.WriteString("\t\t\tlast_export_completed_date {\n")

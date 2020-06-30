@@ -1224,6 +1224,8 @@ func getEnrollmentQueryFields() string {
 	sb.WriteString("\t\t\thostname\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")
+	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
 	// object with fields
 	sb.WriteString("\t\t\tlast_ping_date {\n")
 
