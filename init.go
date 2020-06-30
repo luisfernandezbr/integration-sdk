@@ -11,6 +11,7 @@ import (
 	dm_codequality "github.com/pinpt/integration-sdk/codequality"
 	dm_customer "github.com/pinpt/integration-sdk/customer"
 	dm_sourcecode "github.com/pinpt/integration-sdk/sourcecode"
+	dm_web "github.com/pinpt/integration-sdk/web"
 	dm_work "github.com/pinpt/integration-sdk/work"
 )
 
@@ -289,6 +290,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "web.Hook":
+		o := new(dm_web.Hook)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.Config":
 		o := new(dm_work.Config)
 		o.FromMap(map[string]interface{}{})
@@ -472,6 +477,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("sourcecode.PullRequestReview"),
 		datamodel.ModelNameType("sourcecode.Repo"),
 		datamodel.ModelNameType("sourcecode.User"),
+		datamodel.ModelNameType("web.Hook"),
 		datamodel.ModelNameType("work.Config"),
 		datamodel.ModelNameType("work.Issue"),
 		datamodel.ModelNameType("work.IssueComment"),
