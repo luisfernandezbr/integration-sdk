@@ -503,8 +503,6 @@ func getCostCenterQueryFields() string {
 	// id
 	sb.WriteString("\t\t\t_id\n")
 	// scalar
-	sb.WriteString("\t\t\tintegration_instance_id\n")
-	// scalar
 	sb.WriteString("\t\t\tname\n")
 	// scalar
 	sb.WriteString("\t\t\tref_id\n")

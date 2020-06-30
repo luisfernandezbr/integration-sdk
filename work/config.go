@@ -722,8 +722,6 @@ func getConfigQueryFields() string {
 	// scalar
 	sb.WriteString("\t\t\tintegration_id\n")
 	// scalar
-	sb.WriteString("\t\t\tintegration_instance_id\n")
-	// scalar
 	sb.WriteString("\t\t\tref_id\n")
 	// scalar
 	sb.WriteString("\t\t\tref_type\n")
