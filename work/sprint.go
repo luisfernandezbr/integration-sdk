@@ -65,6 +65,8 @@ const (
 	SprintModelIssueIdsColumn = "issue_ids"
 	// SprintModelNameColumn is the column json value name
 	SprintModelNameColumn = "name"
+	// SprintModelProjectIdsColumn is the column json value project_ids
+	SprintModelProjectIdsColumn = "project_ids"
 	// SprintModelRefIDColumn is the column json value ref_id
 	SprintModelRefIDColumn = "ref_id"
 	// SprintModelRefTypeColumn is the column json value ref_type
@@ -81,6 +83,8 @@ const (
 	SprintModelStatusColumn = "status"
 	// SprintModelUpdatedAtColumn is the column json value updated_ts
 	SprintModelUpdatedAtColumn = "updated_ts"
+	// SprintModelURLColumn is the column json value url
+	SprintModelURLColumn = "url"
 )
 
 // SprintCompletedDate represents the object structure for completed_date
@@ -486,6 +490,8 @@ type Sprint struct {
 	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
 	// Name the name of the field
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// ProjectIds ids of the projects used in this board
+	ProjectIds []string `json:"project_ids" codec:"project_ids" bson:"project_ids" yaml:"project_ids" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -496,6 +502,8 @@ type Sprint struct {
 	Status SprintStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// URL the url to the sprint board
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -564,6 +572,9 @@ func (o *Sprint) setDefaults(frommap bool) {
 	}
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
 	}
 
 	if o.ID == "" {
@@ -746,12 +757,14 @@ func (o *Sprint) ToMap() map[string]interface{} {
 		"integration_instance_id": toSprintObject(o.IntegrationInstanceID, true),
 		"issue_ids":               toSprintObject(o.IssueIds, false),
 		"name":                    toSprintObject(o.Name, false),
+		"project_ids":             toSprintObject(o.ProjectIds, false),
 		"ref_id":                  toSprintObject(o.RefID, false),
 		"ref_type":                toSprintObject(o.RefType, false),
 		"started_date":            toSprintObject(o.StartedDate, false),
 
 		"status":     o.Status.String(),
 		"updated_ts": toSprintObject(o.UpdatedAt, false),
+		"url":        toSprintObject(o.URL, false),
 		"hashcode":   toSprintObject(o.Hashcode, false),
 	}
 }
@@ -1026,6 +1039,56 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["project_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for project_ids field")
+				}
+			}
+			o.ProjectIds = na
+		}
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1138,6 +1201,25 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1153,11 +1235,13 @@ func (o *Sprint) Hash() string {
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.IssueIds)
 	args = append(args, o.Name)
+	args = append(args, o.ProjectIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.StartedDate)
 	args = append(args, o.Status)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

@@ -61,6 +61,8 @@ const (
 	KanbanBoardModelRefTypeColumn = "ref_type"
 	// KanbanBoardModelUpdatedAtColumn is the column json value updated_ts
 	KanbanBoardModelUpdatedAtColumn = "updated_ts"
+	// KanbanBoardModelURLColumn is the column json value url
+	KanbanBoardModelURLColumn = "url"
 )
 
 // KanbanBoardColumns represents the object structure for columns
@@ -257,6 +259,8 @@ type KanbanBoard struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// URL the url to the kanban board
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -508,6 +512,7 @@ func (o *KanbanBoard) ToMap() map[string]interface{} {
 		"ref_id":                  toKanbanBoardObject(o.RefID, false),
 		"ref_type":                toKanbanBoardObject(o.RefType, false),
 		"updated_ts":              toKanbanBoardObject(o.UpdatedAt, false),
+		"url":                     toKanbanBoardObject(o.URL, false),
 		"hashcode":                toKanbanBoardObject(o.Hashcode, false),
 	}
 }
@@ -861,6 +866,25 @@ func (o *KanbanBoard) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -878,6 +902,7 @@ func (o *KanbanBoard) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
