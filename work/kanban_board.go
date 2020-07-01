@@ -33,8 +33,12 @@ const (
 )
 
 const (
+	// KanbanBoardModelBacklogIssueIdsColumn is the column json value backlog_issue_ids
+	KanbanBoardModelBacklogIssueIdsColumn = "backlog_issue_ids"
 	// KanbanBoardModelColumnsColumn is the column json value columns
 	KanbanBoardModelColumnsColumn = "columns"
+	// KanbanBoardModelColumnsIssueIdsColumn is the column json value issue_ids
+	KanbanBoardModelColumnsIssueIdsColumn = "issue_ids"
 	// KanbanBoardModelColumnsNameColumn is the column json value name
 	KanbanBoardModelColumnsNameColumn = "name"
 	// KanbanBoardModelColumnsStatusIdsColumn is the column json value status_ids
@@ -45,6 +49,8 @@ const (
 	KanbanBoardModelIDColumn = "id"
 	// KanbanBoardModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	KanbanBoardModelIntegrationInstanceIDColumn = "integration_instance_id"
+	// KanbanBoardModelIssueIdsColumn is the column json value issue_ids
+	KanbanBoardModelIssueIdsColumn = "issue_ids"
 	// KanbanBoardModelNameColumn is the column json value name
 	KanbanBoardModelNameColumn = "name"
 	// KanbanBoardModelProjectIdsColumn is the column json value project_ids
@@ -59,6 +65,8 @@ const (
 
 // KanbanBoardColumns represents the object structure for columns
 type KanbanBoardColumns struct {
+	// IssueIds ids of the issues on the board in rank order
+	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
 	// Name name of the column
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// StatusIds ids of the statuses for this column
@@ -79,6 +87,8 @@ func toKanbanBoardColumnsObject(o interface{}, isoptional bool) interface{} {
 func (o *KanbanBoardColumns) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
+		// IssueIds ids of the issues on the board in rank order
+		"issue_ids": toKanbanBoardColumnsObject(o.IssueIds, false),
 		// Name name of the column
 		"name": toKanbanBoardColumnsObject(o.Name, false),
 		// StatusIds ids of the statuses for this column
@@ -100,6 +110,56 @@ func (o *KanbanBoardColumns) FromMap(kv map[string]interface{}) {
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
+	if val, ok := kv["issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for issue_ids field")
+				}
+			}
+			o.IssueIds = na
+		}
+	}
+	if o.IssueIds == nil {
+		o.IssueIds = make([]string, 0)
+	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -119,6 +179,7 @@ func (o *KanbanBoardColumns) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["status_ids"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -174,6 +235,8 @@ func (o *KanbanBoardColumns) FromMap(kv map[string]interface{}) {
 
 // KanbanBoard kanban board details
 type KanbanBoard struct {
+	// BacklogIssueIds ids of the all issues on the board backlog in rank order
+	BacklogIssueIds []string `json:"backlog_issue_ids" codec:"backlog_issue_ids" bson:"backlog_issue_ids" yaml:"backlog_issue_ids" faker:"-"`
 	// Columns the columns for this board
 	Columns []KanbanBoardColumns `json:"columns" codec:"columns" bson:"columns" yaml:"columns" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -182,6 +245,8 @@ type KanbanBoard struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// IssueIds ids of the all issues on the board in rank order
+	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
 	// Name the name of the board
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// ProjectIds ids of the projects used in this board
@@ -250,8 +315,14 @@ func NewKanbanBoardID(customerID string, refID string, refType string) string {
 }
 
 func (o *KanbanBoard) setDefaults(frommap bool) {
+	if o.BacklogIssueIds == nil {
+		o.BacklogIssueIds = make([]string, 0)
+	}
 	if o.Columns == nil {
 		o.Columns = make([]KanbanBoardColumns, 0)
+	}
+	if o.IssueIds == nil {
+		o.IssueIds = make([]string, 0)
 	}
 	if o.ProjectIds == nil {
 		o.ProjectIds = make([]string, 0)
@@ -426,10 +497,12 @@ func (o *KanbanBoard) IsEqual(other *KanbanBoard) bool {
 func (o *KanbanBoard) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"backlog_issue_ids":       toKanbanBoardObject(o.BacklogIssueIds, false),
 		"columns":                 toKanbanBoardObject(o.Columns, false),
 		"customer_id":             toKanbanBoardObject(o.CustomerID, false),
 		"id":                      toKanbanBoardObject(o.ID, false),
 		"integration_instance_id": toKanbanBoardObject(o.IntegrationInstanceID, true),
+		"issue_ids":               toKanbanBoardObject(o.IssueIds, false),
 		"name":                    toKanbanBoardObject(o.Name, false),
 		"project_ids":             toKanbanBoardObject(o.ProjectIds, false),
 		"ref_id":                  toKanbanBoardObject(o.RefID, false),
@@ -447,6 +520,56 @@ func (o *KanbanBoard) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["backlog_issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for backlog_issue_ids field")
+				}
+			}
+			o.BacklogIssueIds = na
+		}
+	}
+	if o.BacklogIssueIds == nil {
+		o.BacklogIssueIds = make([]string, 0)
 	}
 
 	if o == nil {
@@ -566,6 +689,56 @@ func (o *KanbanBoard) FromMap(kv map[string]interface{}) {
 				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for issue_ids field")
+				}
+			}
+			o.IssueIds = na
+		}
+	}
+	if o.IssueIds == nil {
+		o.IssueIds = make([]string, 0)
 	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
@@ -694,10 +867,12 @@ func (o *KanbanBoard) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *KanbanBoard) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.BacklogIssueIds)
 	args = append(args, o.Columns)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationInstanceID)
+	args = append(args, o.IssueIds)
 	args = append(args, o.Name)
 	args = append(args, o.ProjectIds)
 	args = append(args, o.RefID)

@@ -6,6 +6,8 @@ package work
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -14,9 +16,11 @@ import (
 	"github.com/pinpt/go-common/v10/hash"
 	pjson "github.com/pinpt/go-common/v10/json"
 	"github.com/pinpt/go-common/v10/number"
+	"github.com/pinpt/go-common/v10/slice"
 	pstrings "github.com/pinpt/go-common/v10/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -31,6 +35,8 @@ const (
 )
 
 const (
+	// SprintModelBacklogIssueIdsColumn is the column json value backlog_issue_ids
+	SprintModelBacklogIssueIdsColumn = "backlog_issue_ids"
 	// SprintModelCompletedDateColumn is the column json value completed_date
 	SprintModelCompletedDateColumn = "completed_date"
 	// SprintModelCompletedDateEpochColumn is the column json value epoch
@@ -55,6 +61,8 @@ const (
 	SprintModelIDColumn = "id"
 	// SprintModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	SprintModelIntegrationInstanceIDColumn = "integration_instance_id"
+	// SprintModelIssueIdsColumn is the column json value issue_ids
+	SprintModelIssueIdsColumn = "issue_ids"
 	// SprintModelNameColumn is the column json value name
 	SprintModelNameColumn = "name"
 	// SprintModelRefIDColumn is the column json value ref_id
@@ -460,6 +468,8 @@ const (
 
 // Sprint sprint details
 type Sprint struct {
+	// BacklogIssueIds ids of the all issues in the sprint backlog in rank order
+	BacklogIssueIds []string `json:"backlog_issue_ids" codec:"backlog_issue_ids" bson:"backlog_issue_ids" yaml:"backlog_issue_ids" faker:"-"`
 	// CompletedDate the date that the sprint was completed
 	CompletedDate SprintCompletedDate `json:"completed_date" codec:"completed_date" bson:"completed_date" yaml:"completed_date" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -472,6 +482,8 @@ type Sprint struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// IssueIds ids of the all issues in the sprint in rank order
+	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
 	// Name the name of the field
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source system id for the model instance
@@ -547,6 +559,12 @@ func NewSprintID(customerID string, refID string, refType string) string {
 }
 
 func (o *Sprint) setDefaults(frommap bool) {
+	if o.BacklogIssueIds == nil {
+		o.BacklogIssueIds = make([]string, 0)
+	}
+	if o.IssueIds == nil {
+		o.IssueIds = make([]string, 0)
+	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
@@ -719,12 +737,14 @@ func (o *Sprint) IsEqual(other *Sprint) bool {
 func (o *Sprint) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"backlog_issue_ids":       toSprintObject(o.BacklogIssueIds, false),
 		"completed_date":          toSprintObject(o.CompletedDate, false),
 		"customer_id":             toSprintObject(o.CustomerID, false),
 		"ended_date":              toSprintObject(o.EndedDate, false),
 		"goal":                    toSprintObject(o.Goal, false),
 		"id":                      toSprintObject(o.ID, false),
 		"integration_instance_id": toSprintObject(o.IntegrationInstanceID, true),
+		"issue_ids":               toSprintObject(o.IssueIds, false),
 		"name":                    toSprintObject(o.Name, false),
 		"ref_id":                  toSprintObject(o.RefID, false),
 		"ref_type":                toSprintObject(o.RefType, false),
@@ -744,6 +764,56 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["backlog_issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for backlog_issue_ids field")
+				}
+			}
+			o.BacklogIssueIds = na
+		}
+	}
+	if o.BacklogIssueIds == nil {
+		o.BacklogIssueIds = make([]string, 0)
 	}
 
 	if val, ok := kv["completed_date"]; ok {
@@ -887,6 +957,56 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for issue_ids field")
+				}
+			}
+			o.IssueIds = na
+		}
+	}
+	if o.IssueIds == nil {
+		o.IssueIds = make([]string, 0)
+	}
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -1024,12 +1144,14 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Sprint) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.BacklogIssueIds)
 	args = append(args, o.CompletedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.EndedDate)
 	args = append(args, o.Goal)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationInstanceID)
+	args = append(args, o.IssueIds)
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
