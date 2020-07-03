@@ -126,6 +126,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.Mutation)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.MutationResponse":
+		o := new(dm_agent.MutationResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Pause":
 		o := new(dm_agent.Pause)
 		o.FromMap(map[string]interface{}{})
@@ -440,6 +444,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.IntegrationResponse"),
 		datamodel.ModelNameType("agent.Log"),
 		datamodel.ModelNameType("agent.Mutation"),
+		datamodel.ModelNameType("agent.MutationResponse"),
 		datamodel.ModelNameType("agent.Pause"),
 		datamodel.ModelNameType("agent.Ping"),
 		datamodel.ModelNameType("agent.ProjectRequest"),
