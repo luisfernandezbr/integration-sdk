@@ -72,6 +72,8 @@ type User struct {
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Member if the user is a member of organization
+	//
+	// Deprecated: no longer used
 	Member bool `json:"member" codec:"member" bson:"member" yaml:"member" faker:"-"`
 	// Name the name of the user
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"person"`
@@ -438,6 +440,7 @@ func (o *User) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["member"].(bool); ok {
 		o.Member = val
 	} else {

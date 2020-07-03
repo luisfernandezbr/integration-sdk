@@ -80,6 +80,8 @@ const (
 	TeamModelUsersAvatarURLColumn = "avatar_url"
 	// TeamModelUsersIDColumn is the column json value id
 	TeamModelUsersIDColumn = "id"
+	// TeamModelUsersIntegrationInstanceIDColumn is the column json value integration_instance_id
+	TeamModelUsersIntegrationInstanceIDColumn = "integration_instance_id"
 	// TeamModelUsersNameColumn is the column json value name
 	TeamModelUsersNameColumn = "name"
 	// TeamModelUsersNicknameColumn is the column json value nickname
@@ -353,6 +355,8 @@ type TeamUsers struct {
 	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"-"`
 	// ID the corporate user id
 	ID string `json:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the user
 	Name *string `json:"name,omitempty" codec:"name,omitempty" bson:"name" yaml:"name,omitempty" faker:"-"`
 	// Nickname the nick name of the user (usually the first name if they have a profile)
@@ -392,6 +396,8 @@ func (o *TeamUsers) ToMap() map[string]interface{} {
 		"avatar_url": toTeamUsersObject(o.AvatarURL, true),
 		// ID the corporate user id
 		"id": toTeamUsersObject(o.ID, false),
+		// IntegrationInstanceID the integration instance id
+		"integration_instance_id": toTeamUsersObject(o.IntegrationInstanceID, true),
 		// Name the name of the user
 		"name": toTeamUsersObject(o.Name, true),
 		// Nickname the nick name of the user (usually the first name if they have a profile)
@@ -458,6 +464,23 @@ func (o *TeamUsers) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1481,6 +1504,8 @@ func getTeamQueryFields() string {
 	sb.WriteString("\t\t\tavatar_url\n")
 	// scalar
 	sb.WriteString("\t\t\tid\n")
+	// scalar
+	sb.WriteString("\t\t\tintegration_instance_id\n")
 	// scalar
 	sb.WriteString("\t\t\tname\n")
 	// scalar

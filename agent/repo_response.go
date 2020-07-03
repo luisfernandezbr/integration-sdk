@@ -97,6 +97,8 @@ const (
 	RepoResponseModelReposDescriptionColumn = "description"
 	// RepoResponseModelReposErrorColumn is the column json value error
 	RepoResponseModelReposErrorColumn = "error"
+	// RepoResponseModelReposIntegrationInstanceIDColumn is the column json value integration_instance_id
+	RepoResponseModelReposIntegrationInstanceIDColumn = "integration_instance_id"
 	// RepoResponseModelReposLanguageColumn is the column json value language
 	RepoResponseModelReposLanguageColumn = "language"
 	// RepoResponseModelReposNameColumn is the column json value name
@@ -504,6 +506,8 @@ type RepoResponseRepos struct {
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"sentence"`
 	// Error reason why the repo is being set to inactive
 	Error RepoResponseReposError `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
+	// IntegrationInstanceID the integration instance id
+	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Language the programming language defined for the repository
 	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// Name the name of the repository
@@ -544,6 +548,8 @@ func (o *RepoResponseRepos) ToMap() map[string]interface{} {
 		"description": toRepoResponseReposObject(o.Description, false),
 		// Error reason why the repo is being set to inactive
 		"error": toRepoResponseReposObject(o.Error, false),
+		// IntegrationInstanceID the integration instance id
+		"integration_instance_id": toRepoResponseReposObject(o.IntegrationInstanceID, true),
 		// Language the programming language defined for the repository
 		"language": toRepoResponseReposObject(o.Language, false),
 		// Name the name of the repository
@@ -654,6 +660,23 @@ func (o *RepoResponseRepos) FromMap(kv map[string]interface{}) {
 				o.Error = 0
 			case "permissions", "PERMISSIONS":
 				o.Error = 1
+			}
+		}
+	}
+	if val, ok := kv["integration_instance_id"].(*string); ok {
+		o.IntegrationInstanceID = val
+	} else if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = &val
+	} else {
+		if val, ok := kv["integration_instance_id"]; ok {
+			if val == nil {
+				o.IntegrationInstanceID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
