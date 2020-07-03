@@ -768,3 +768,37 @@ func CreateCostCenter(client graphql.Client, model CostCenter) error {
 	}
 	return nil
 }
+
+// CostCenterPartial is a partial struct for upsert mutations for CostCenter
+type CostCenterPartial struct {
+	// Active whether the cost center is tracked in pinpoint
+	Active *bool `json:"active,omitempty"`
+	// Cost the cost value of the cost center
+	Cost *float64 `json:"cost,omitempty"`
+	// Description the description for the cost center
+	Description *string `json:"description,omitempty"`
+	// Name the name of the cost center
+	Name *string `json:"name,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CostCenterPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CostCenterPartial) GetModelName() datamodel.ModelNameType {
+	return CostCenterModelName
+}
+
+// ToMap returns the object as a map
+func (o *CostCenterPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"active":      toCostCenterObject(o.Active, true),
+		"cost":        toCostCenterObject(o.Cost, true),
+		"description": toCostCenterObject(o.Description, true),
+		"name":        toCostCenterObject(o.Name, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CostCenterPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

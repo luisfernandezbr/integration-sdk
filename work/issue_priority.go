@@ -477,3 +477,40 @@ func (o *IssuePriority) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// IssuePriorityPartial is a partial struct for upsert mutations for IssuePriority
+type IssuePriorityPartial struct {
+	// Color an optional color in hex for display
+	Color *string `json:"color,omitempty"`
+	// Description the description of the priority
+	Description *string `json:"description,omitempty"`
+	// IconURL an optional url for the icon for the priority
+	IconURL *string `json:"icon_url,omitempty"`
+	// Name the name of the priority
+	Name *string `json:"name,omitempty"`
+	// Order a rank order
+	Order *int64 `json:"order,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IssuePriorityPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IssuePriorityPartial) GetModelName() datamodel.ModelNameType {
+	return IssuePriorityModelName
+}
+
+// ToMap returns the object as a map
+func (o *IssuePriorityPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"color":       toIssuePriorityObject(o.Color, true),
+		"description": toIssuePriorityObject(o.Description, true),
+		"icon_url":    toIssuePriorityObject(o.IconURL, true),
+		"name":        toIssuePriorityObject(o.Name, true),
+		"order":       toIssuePriorityObject(o.Order, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IssuePriorityPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -408,3 +408,31 @@ func (o *Project) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// ProjectPartial is a partial struct for upsert mutations for Project
+type ProjectPartial struct {
+	// Identifier the common identifier of the project
+	Identifier *string `json:"identifier,omitempty"`
+	// Name the name of the project
+	Name *string `json:"name,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ProjectPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ProjectPartial) GetModelName() datamodel.ModelNameType {
+	return ProjectModelName
+}
+
+// ToMap returns the object as a map
+func (o *ProjectPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"identifier": toProjectObject(o.Identifier, true),
+		"name":       toProjectObject(o.Name, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ProjectPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

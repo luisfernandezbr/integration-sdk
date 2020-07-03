@@ -1041,6 +1041,25 @@ func (o *Pause) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PauseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1182,6 +1201,25 @@ func (o *Pause) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*PauseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1540,4 +1578,95 @@ func (o *Pause) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// PausePartial is a partial struct for upsert mutations for Pause
+type PausePartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *PauseEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// Integration the name of the integration that was paused
+	Integration *string `json:"integration,omitempty"`
+	// JobID the job id
+	JobID *string `json:"job_id,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *PauseLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// ResumeDate the date the integration will resume
+	ResumeDate *PauseResumeDate `json:"resume_date,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *PauseType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*PausePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *PausePartial) GetModelName() datamodel.ModelNameType {
+	return PauseModelName
+}
+
+// ToMap returns the object as a map
+func (o *PausePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toPauseObject(o.Architecture, true),
+		"data":             toPauseObject(o.Data, true),
+		"distro":           toPauseObject(o.Distro, true),
+		"error":            toPauseObject(o.Error, true),
+		"event_date":       toPauseObject(o.EventDate, true),
+		"free_space":       toPauseObject(o.FreeSpace, true),
+		"go_version":       toPauseObject(o.GoVersion, true),
+		"hostname":         toPauseObject(o.Hostname, true),
+		"integration":      toPauseObject(o.Integration, true),
+		"job_id":           toPauseObject(o.JobID, true),
+		"last_export_date": toPauseObject(o.LastExportDate, true),
+		"memory":           toPauseObject(o.Memory, true),
+		"message":          toPauseObject(o.Message, true),
+		"num_cpu":          toPauseObject(o.NumCPU, true),
+		"os":               toPauseObject(o.OS, true),
+		"request_id":       toPauseObject(o.RequestID, true),
+		"resume_date":      toPauseObject(o.ResumeDate, true),
+		"success":          toPauseObject(o.Success, true),
+		"system_id":        toPauseObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toPauseObject(o.Uptime, true),
+		"uuid":             toPauseObject(o.UUID, true),
+		"version":          toPauseObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *PausePartial) Stringify() string {
+	return pjson.Stringify(o)
 }

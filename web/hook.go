@@ -483,3 +483,43 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
+
+// HookPartial is a partial struct for upsert mutations for Hook
+type HookPartial struct {
+	// Data the webhook data payload base64 encoded
+	Data *string `json:"data,omitempty"`
+	// Headers the headers of the incoming webhook
+	Headers map[string]string `json:"headers,omitempty"`
+	// ID the primary key for this model instance
+	ID *string `json:"id,omitempty"`
+	// ReceivedDate the date when the hook was received
+	ReceivedDate *HookReceivedDate `json:"received_date,omitempty"`
+	// System the name of the system sending the hook
+	System *string `json:"system,omitempty"`
+	// Token the token part of the url
+	Token *string `json:"token,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*HookPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *HookPartial) GetModelName() datamodel.ModelNameType {
+	return HookModelName
+}
+
+// ToMap returns the object as a map
+func (o *HookPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"data":          toHookObject(o.Data, true),
+		"headers":       toHookObject(o.Headers, true),
+		"id":            toHookObject(o.ID, true),
+		"received_date": toHookObject(o.ReceivedDate, true),
+		"system":        toHookObject(o.System, true),
+		"token":         toHookObject(o.Token, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *HookPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

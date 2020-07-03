@@ -1345,3 +1345,85 @@ func (o *Start) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// StartPartial is a partial struct for upsert mutations for Start
+type StartPartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *StartEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *StartLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *StartType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*StartPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *StartPartial) GetModelName() datamodel.ModelNameType {
+	return StartModelName
+}
+
+// ToMap returns the object as a map
+func (o *StartPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toStartObject(o.Architecture, true),
+		"data":             toStartObject(o.Data, true),
+		"distro":           toStartObject(o.Distro, true),
+		"error":            toStartObject(o.Error, true),
+		"event_date":       toStartObject(o.EventDate, true),
+		"free_space":       toStartObject(o.FreeSpace, true),
+		"go_version":       toStartObject(o.GoVersion, true),
+		"hostname":         toStartObject(o.Hostname, true),
+		"last_export_date": toStartObject(o.LastExportDate, true),
+		"memory":           toStartObject(o.Memory, true),
+		"message":          toStartObject(o.Message, true),
+		"num_cpu":          toStartObject(o.NumCPU, true),
+		"os":               toStartObject(o.OS, true),
+		"request_id":       toStartObject(o.RequestID, true),
+		"success":          toStartObject(o.Success, true),
+		"system_id":        toStartObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toStartObject(o.Uptime, true),
+		"uuid":             toStartObject(o.UUID, true),
+		"version":          toStartObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *StartPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

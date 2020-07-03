@@ -1523,3 +1523,94 @@ func (o *Ping) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// PingPartial is a partial struct for upsert mutations for Ping
+type PingPartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *PingEventDate `json:"event_date,omitempty"`
+	// Exporting flag to specify if export is in progress
+	Exporting *bool `json:"exporting,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *PingLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// Onboarding flag to specify if onboarding events are in progress. could be multiple at once
+	Onboarding *bool `json:"onboarding,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// State the state of the agent
+	State *PingState `json:"state,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *PingType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*PingPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *PingPartial) GetModelName() datamodel.ModelNameType {
+	return PingModelName
+}
+
+// ToMap returns the object as a map
+func (o *PingPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toPingObject(o.Architecture, true),
+		"data":             toPingObject(o.Data, true),
+		"distro":           toPingObject(o.Distro, true),
+		"error":            toPingObject(o.Error, true),
+		"event_date":       toPingObject(o.EventDate, true),
+		"exporting":        toPingObject(o.Exporting, true),
+		"free_space":       toPingObject(o.FreeSpace, true),
+		"go_version":       toPingObject(o.GoVersion, true),
+		"hostname":         toPingObject(o.Hostname, true),
+		"last_export_date": toPingObject(o.LastExportDate, true),
+		"memory":           toPingObject(o.Memory, true),
+		"message":          toPingObject(o.Message, true),
+		"num_cpu":          toPingObject(o.NumCPU, true),
+		"onboarding":       toPingObject(o.Onboarding, true),
+		"os":               toPingObject(o.OS, true),
+		"request_id":       toPingObject(o.RequestID, true),
+		"state":            o.State.String(),
+		"success":          toPingObject(o.Success, true),
+		"system_id":        toPingObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toPingObject(o.Uptime, true),
+		"uuid":             toPingObject(o.UUID, true),
+		"version":          toPingObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *PingPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

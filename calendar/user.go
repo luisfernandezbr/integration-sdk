@@ -469,3 +469,31 @@ func (o *User) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// UserPartial is a partial struct for upsert mutations for User
+type UserPartial struct {
+	// Email the email for the user
+	Email *string `json:"email,omitempty"`
+	// Name the name of the user
+	Name *string `json:"name,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*UserPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *UserPartial) GetModelName() datamodel.ModelNameType {
+	return UserModelName
+}
+
+// ToMap returns the object as a map
+func (o *UserPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"email": toUserObject(o.Email, true),
+		"name":  toUserObject(o.Name, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *UserPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

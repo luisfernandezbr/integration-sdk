@@ -995,3 +995,31 @@ func CreateConfig(client graphql.Client, model Config) error {
 	}
 	return nil
 }
+
+// ConfigPartial is a partial struct for upsert mutations for Config
+type ConfigPartial struct {
+	// IntegrationID The ID reference to the integration instance
+	IntegrationID *string `json:"integration_id,omitempty"`
+	// Statuses The mapping of statuses for this integration
+	Statuses *ConfigStatuses `json:"statuses,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ConfigPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ConfigPartial) GetModelName() datamodel.ModelNameType {
+	return ConfigModelName
+}
+
+// ToMap returns the object as a map
+func (o *ConfigPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration_id": toConfigObject(o.IntegrationID, true),
+		"statuses":       toConfigObject(o.Statuses, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ConfigPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

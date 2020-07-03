@@ -383,3 +383,28 @@ func (o *RepoTrigger) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// RepoTriggerPartial is a partial struct for upsert mutations for RepoTrigger
+type RepoTriggerPartial struct {
+	// IntegrationID the integration id
+	IntegrationID *string `json:"integration_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*RepoTriggerPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *RepoTriggerPartial) GetModelName() datamodel.ModelNameType {
+	return RepoTriggerModelName
+}
+
+// ToMap returns the object as a map
+func (o *RepoTriggerPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration_id": toRepoTriggerObject(o.IntegrationID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *RepoTriggerPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

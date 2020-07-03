@@ -529,3 +529,46 @@ func (o *Calendar) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// CalendarPartial is a partial struct for upsert mutations for Calendar
+type CalendarPartial struct {
+	// Active the status of the calendar
+	Active *bool `json:"active,omitempty"`
+	// Description the description of the calendar
+	Description *string `json:"description,omitempty"`
+	// Enabled Wether this user's calendar can be exported or not
+	Enabled *bool `json:"enabled,omitempty"`
+	// Name the name of the calendar
+	Name *string `json:"name,omitempty"`
+	// RefID the calendar ID
+	RefID *string `json:"ref_id,omitempty"`
+	// RefType the record type
+	RefType *string `json:"ref_type,omitempty"`
+	// UserRefID the user ref_id that owns the calendar
+	UserRefID *string `json:"user_ref_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CalendarPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CalendarPartial) GetModelName() datamodel.ModelNameType {
+	return CalendarModelName
+}
+
+// ToMap returns the object as a map
+func (o *CalendarPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"active":      toCalendarObject(o.Active, true),
+		"description": toCalendarObject(o.Description, true),
+		"enabled":     toCalendarObject(o.Enabled, true),
+		"name":        toCalendarObject(o.Name, true),
+		"ref_id":      toCalendarObject(o.RefID, true),
+		"ref_type":    toCalendarObject(o.RefType, true),
+		"user_ref_id": toCalendarObject(o.UserRefID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CalendarPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

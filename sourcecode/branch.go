@@ -848,3 +848,70 @@ func (o *Branch) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// BranchPartial is a partial struct for upsert mutations for Branch
+type BranchPartial struct {
+	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
+	AheadDefaultCount *int64 `json:"ahead_default_count,omitempty"`
+	// BehindDefaultCount the number of commits that this branch is behind from the default branch
+	BehindDefaultCount *int64 `json:"behind_default_count,omitempty"`
+	// BranchedFromCommitIds the commit ids from which the branch was created
+	BranchedFromCommitIds []string `json:"branched_from_commit_ids,omitempty"`
+	// BranchedFromCommitShas the commit shas from which the branch was created
+	BranchedFromCommitShas []string `json:"branched_from_commit_shas,omitempty"`
+	// CommitIds list of commit ids contained on this branch
+	CommitIds []string `json:"commit_ids,omitempty"`
+	// CommitShas list of commit shas contained on this branch
+	CommitShas []string `json:"commit_shas,omitempty"`
+	// Default true if the branch is the default branch
+	Default *bool `json:"default,omitempty"`
+	// FirstCommitID the first commit id on the branch
+	FirstCommitID *string `json:"first_commit_id,omitempty"`
+	// FirstCommitSha the first commit sha on the branch
+	FirstCommitSha *string `json:"first_commit_sha,omitempty"`
+	// MergeCommitID commit id in which the branch was merged
+	MergeCommitID *string `json:"merge_commit_id,omitempty"`
+	// MergeCommitSha commit sha in which the branch was merged
+	MergeCommitSha *string `json:"merge_commit_sha,omitempty"`
+	// Merged true if the branch has been merged into the default branch
+	Merged *bool `json:"merged,omitempty"`
+	// Name name of the branch
+	Name *string `json:"name,omitempty"`
+	// RepoID the unique id for the repo
+	RepoID *string `json:"repo_id,omitempty"`
+	// URL the URL to the source system for this branch
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*BranchPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *BranchPartial) GetModelName() datamodel.ModelNameType {
+	return BranchModelName
+}
+
+// ToMap returns the object as a map
+func (o *BranchPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"ahead_default_count":       toBranchObject(o.AheadDefaultCount, true),
+		"behind_default_count":      toBranchObject(o.BehindDefaultCount, true),
+		"branched_from_commit_ids":  toBranchObject(o.BranchedFromCommitIds, true),
+		"branched_from_commit_shas": toBranchObject(o.BranchedFromCommitShas, true),
+		"commit_ids":                toBranchObject(o.CommitIds, true),
+		"commit_shas":               toBranchObject(o.CommitShas, true),
+		"default":                   toBranchObject(o.Default, true),
+		"first_commit_id":           toBranchObject(o.FirstCommitID, true),
+		"first_commit_sha":          toBranchObject(o.FirstCommitSha, true),
+		"merge_commit_id":           toBranchObject(o.MergeCommitID, true),
+		"merge_commit_sha":          toBranchObject(o.MergeCommitSha, true),
+		"merged":                    toBranchObject(o.Merged, true),
+		"name":                      toBranchObject(o.Name, true),
+		"repo_id":                   toBranchObject(o.RepoID, true),
+		"url":                       toBranchObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *BranchPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

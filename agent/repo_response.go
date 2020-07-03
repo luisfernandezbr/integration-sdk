@@ -1929,3 +1929,91 @@ func (o *RepoResponse) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// RepoResponsePartial is a partial struct for upsert mutations for RepoResponse
+type RepoResponsePartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *RepoResponseEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// IntegrationID the integration id
+	IntegrationID *string `json:"integration_id,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *RepoResponseLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// Repos the repos exported
+	Repos []RepoResponseRepos `json:"repos,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *RepoResponseType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*RepoResponsePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *RepoResponsePartial) GetModelName() datamodel.ModelNameType {
+	return RepoResponseModelName
+}
+
+// ToMap returns the object as a map
+func (o *RepoResponsePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toRepoResponseObject(o.Architecture, true),
+		"data":             toRepoResponseObject(o.Data, true),
+		"distro":           toRepoResponseObject(o.Distro, true),
+		"error":            toRepoResponseObject(o.Error, true),
+		"event_date":       toRepoResponseObject(o.EventDate, true),
+		"free_space":       toRepoResponseObject(o.FreeSpace, true),
+		"go_version":       toRepoResponseObject(o.GoVersion, true),
+		"hostname":         toRepoResponseObject(o.Hostname, true),
+		"integration_id":   toRepoResponseObject(o.IntegrationID, true),
+		"last_export_date": toRepoResponseObject(o.LastExportDate, true),
+		"memory":           toRepoResponseObject(o.Memory, true),
+		"message":          toRepoResponseObject(o.Message, true),
+		"num_cpu":          toRepoResponseObject(o.NumCPU, true),
+		"os":               toRepoResponseObject(o.OS, true),
+		"repos":            toRepoResponseObject(o.Repos, true),
+		"request_id":       toRepoResponseObject(o.RequestID, true),
+		"success":          toRepoResponseObject(o.Success, true),
+		"system_id":        toRepoResponseObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toRepoResponseObject(o.Uptime, true),
+		"uuid":             toRepoResponseObject(o.UUID, true),
+		"version":          toRepoResponseObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *RepoResponsePartial) Stringify() string {
+	return pjson.Stringify(o)
+}

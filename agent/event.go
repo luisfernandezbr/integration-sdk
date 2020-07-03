@@ -1341,3 +1341,79 @@ func (o *Event) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// EventPartial is a partial struct for upsert mutations for Event
+type EventPartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *EventEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *EventLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *EventType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*EventPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *EventPartial) GetModelName() datamodel.ModelNameType {
+	return EventModelName
+}
+
+// ToMap returns the object as a map
+func (o *EventPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toEventObject(o.Architecture, true),
+		"data":             toEventObject(o.Data, true),
+		"distro":           toEventObject(o.Distro, true),
+		"error":            toEventObject(o.Error, true),
+		"event_date":       toEventObject(o.EventDate, true),
+		"free_space":       toEventObject(o.FreeSpace, true),
+		"go_version":       toEventObject(o.GoVersion, true),
+		"hostname":         toEventObject(o.Hostname, true),
+		"last_export_date": toEventObject(o.LastExportDate, true),
+		"memory":           toEventObject(o.Memory, true),
+		"message":          toEventObject(o.Message, true),
+		"num_cpu":          toEventObject(o.NumCPU, true),
+		"os":               toEventObject(o.OS, true),
+		"system_id":        toEventObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toEventObject(o.Uptime, true),
+		"uuid":             toEventObject(o.UUID, true),
+		"version":          toEventObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *EventPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -3438,3 +3438,43 @@ func (o *ExportRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// ExportRequestPartial is a partial struct for upsert mutations for ExportRequest
+type ExportRequestPartial struct {
+	// Integrations The integrations that should be exported and their current configuration
+	Integrations []ExportRequestIntegrations `json:"integrations,omitempty"`
+	// JobID The job ID
+	JobID *string `json:"job_id,omitempty"`
+	// ReprocessHistorical This field is to differentiate between historical and incrementals
+	ReprocessHistorical *bool `json:"reprocess_historical,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *ExportRequestRequestDate `json:"request_date,omitempty"`
+	// UploadURL The one time upload URL to use for uploading a job to the Pinpoint cloud
+	UploadURL *string `json:"upload_url,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ExportRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ExportRequestPartial) GetModelName() datamodel.ModelNameType {
+	return ExportRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *ExportRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integrations":         toExportRequestObject(o.Integrations, true),
+		"job_id":               toExportRequestObject(o.JobID, true),
+		"reprocess_historical": toExportRequestObject(o.ReprocessHistorical, true),
+		"request_date":         toExportRequestObject(o.RequestDate, true),
+		"upload_url":           toExportRequestObject(o.UploadURL, true),
+		"uuid":                 toExportRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ExportRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

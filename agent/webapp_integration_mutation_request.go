@@ -934,3 +934,43 @@ func (o *WebappIntegrationMutationRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// WebappIntegrationMutationRequestPartial is a partial struct for upsert mutations for WebappIntegrationMutationRequest
+type WebappIntegrationMutationRequestPartial struct {
+	// Action Action to perform
+	Action *WebappIntegrationMutationRequestAction `json:"action,omitempty"`
+	// Data Mutation parameters that vary based on action as JSON string.
+	Data *string `json:"data,omitempty"`
+	// IntegrationName Name of the integration binary
+	IntegrationName *string `json:"integration_name,omitempty"`
+	// JobID The job ID
+	JobID *string `json:"job_id,omitempty"`
+	// RequestDate set by webapp using browser time
+	RequestDate *WebappIntegrationMutationRequestRequestDate `json:"request_date,omitempty"`
+	// SystemType The system type of the integration
+	SystemType *WebappIntegrationMutationRequestSystemType `json:"system_type,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*WebappIntegrationMutationRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *WebappIntegrationMutationRequestPartial) GetModelName() datamodel.ModelNameType {
+	return WebappIntegrationMutationRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *WebappIntegrationMutationRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"action":           o.Action.String(),
+		"data":             toWebappIntegrationMutationRequestObject(o.Data, true),
+		"integration_name": toWebappIntegrationMutationRequestObject(o.IntegrationName, true),
+		"job_id":           toWebappIntegrationMutationRequestObject(o.JobID, true),
+		"request_date":     toWebappIntegrationMutationRequestObject(o.RequestDate, true),
+		"system_type":      o.SystemType.String(),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *WebappIntegrationMutationRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

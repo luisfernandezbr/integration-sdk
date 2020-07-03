@@ -3288,25 +3288,6 @@ func (o *ProjectRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -3347,4 +3328,35 @@ func (o *ProjectRequest) Hash() string {
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// ProjectRequestPartial is a partial struct for upsert mutations for ProjectRequest
+type ProjectRequestPartial struct {
+	// Integration the integration details to use
+	Integration *ProjectRequestIntegration `json:"integration,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *ProjectRequestRequestDate `json:"request_date,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ProjectRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ProjectRequestPartial) GetModelName() datamodel.ModelNameType {
+	return ProjectRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *ProjectRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration":  toProjectRequestObject(o.Integration, true),
+		"request_date": toProjectRequestObject(o.RequestDate, true),
+		"uuid":         toProjectRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ProjectRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
 }

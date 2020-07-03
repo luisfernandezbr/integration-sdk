@@ -383,3 +383,28 @@ func (o *CalendarTrigger) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// CalendarTriggerPartial is a partial struct for upsert mutations for CalendarTrigger
+type CalendarTriggerPartial struct {
+	// IntegrationID the integration id
+	IntegrationID *string `json:"integration_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CalendarTriggerPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CalendarTriggerPartial) GetModelName() datamodel.ModelNameType {
+	return CalendarTriggerModelName
+}
+
+// ToMap returns the object as a map
+func (o *CalendarTriggerPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration_id": toCalendarTriggerObject(o.IntegrationID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CalendarTriggerPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

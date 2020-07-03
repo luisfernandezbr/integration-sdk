@@ -1082,3 +1082,55 @@ func (o *WebhookRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// WebhookRequestPartial is a partial struct for upsert mutations for WebhookRequest
+type WebhookRequestPartial struct {
+	// Data Webhook data
+	Data *string `json:"data,omitempty"`
+	// EncryptedAuthorization Auth information encrypted by agent
+	EncryptedAuthorization *string `json:"encrypted_authorization,omitempty"`
+	// EventAPIReceivedDate set by event api when it receives webhook data
+	EventAPIReceivedDate *WebhookRequestEventAPIReceivedDate `json:"event_api_received_date,omitempty"`
+	// Headers the headers of the incoming webhook
+	Headers map[string]string `json:"headers,omitempty"`
+	// IntegrationName Name of the integration binary
+	IntegrationName *string `json:"integration_name,omitempty"`
+	// JobID ID for this webhook
+	JobID *string `json:"job_id,omitempty"`
+	// OperatorReceivedDate set by operator when it receives webhook data
+	OperatorReceivedDate *WebhookRequestOperatorReceivedDate `json:"operator_received_date,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *WebhookRequestRequestDate `json:"request_date,omitempty"`
+	// SystemType The system type of the integration
+	SystemType *WebhookRequestSystemType `json:"system_type,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*WebhookRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *WebhookRequestPartial) GetModelName() datamodel.ModelNameType {
+	return WebhookRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *WebhookRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"data":                    toWebhookRequestObject(o.Data, true),
+		"encrypted_authorization": toWebhookRequestObject(o.EncryptedAuthorization, true),
+		"event_api_received_date": toWebhookRequestObject(o.EventAPIReceivedDate, true),
+		"headers":                 toWebhookRequestObject(o.Headers, true),
+		"integration_name":        toWebhookRequestObject(o.IntegrationName, true),
+		"job_id":                  toWebhookRequestObject(o.JobID, true),
+		"operator_received_date":  toWebhookRequestObject(o.OperatorReceivedDate, true),
+		"request_date":            toWebhookRequestObject(o.RequestDate, true),
+		"system_type":             o.SystemType.String(),
+		"uuid":                    toWebhookRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *WebhookRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

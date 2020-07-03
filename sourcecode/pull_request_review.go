@@ -831,3 +831,43 @@ func (o *PullRequestReview) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// PullRequestReviewPartial is a partial struct for upsert mutations for PullRequestReview
+type PullRequestReviewPartial struct {
+	// CreatedDate the timestamp in UTC that the review was created
+	CreatedDate *PullRequestReviewCreatedDate `json:"created_date,omitempty"`
+	// PullRequestID the pull request this review is associated with
+	PullRequestID *string `json:"pull_request_id,omitempty"`
+	// RepoID the unique id for the repo
+	RepoID *string `json:"repo_id,omitempty"`
+	// State the state of the review
+	State *PullRequestReviewState `json:"state,omitempty"`
+	// URL the URL to the source system for this review
+	URL *string `json:"url,omitempty"`
+	// UserRefID the user ref_id in the source system
+	UserRefID *string `json:"user_ref_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*PullRequestReviewPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *PullRequestReviewPartial) GetModelName() datamodel.ModelNameType {
+	return PullRequestReviewModelName
+}
+
+// ToMap returns the object as a map
+func (o *PullRequestReviewPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"created_date":    toPullRequestReviewObject(o.CreatedDate, true),
+		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, true),
+		"repo_id":         toPullRequestReviewObject(o.RepoID, true),
+		"state":           o.State.String(),
+		"url":             toPullRequestReviewObject(o.URL, true),
+		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *PullRequestReviewPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

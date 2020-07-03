@@ -3329,3 +3329,34 @@ func (o *WorkStatusRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// WorkStatusRequestPartial is a partial struct for upsert mutations for WorkStatusRequest
+type WorkStatusRequestPartial struct {
+	// Integration the integration details to use
+	Integration *WorkStatusRequestIntegration `json:"integration,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *WorkStatusRequestRequestDate `json:"request_date,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*WorkStatusRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *WorkStatusRequestPartial) GetModelName() datamodel.ModelNameType {
+	return WorkStatusRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *WorkStatusRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration":  toWorkStatusRequestObject(o.Integration, true),
+		"request_date": toWorkStatusRequestObject(o.RequestDate, true),
+		"uuid":         toWorkStatusRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *WorkStatusRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

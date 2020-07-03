@@ -1190,3 +1190,76 @@ func (o *Blame) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// BlamePartial is a partial struct for upsert mutations for Blame
+type BlamePartial struct {
+	// Blanks the count of blank lines in the file
+	Blanks *int64 `json:"blanks,omitempty"`
+	// ChangeDate the date of the change
+	ChangeDate *BlameChangeDate `json:"change_date,omitempty"`
+	// Comments the count of comment lines in the file based on language rules
+	Comments *int64 `json:"comments,omitempty"`
+	// CommitID the commit ID
+	CommitID *string `json:"commit_id,omitempty"`
+	// Complexity the cyclomatic complexity for the change
+	Complexity *int64 `json:"complexity,omitempty"`
+	// Excluded if the result was excluded
+	Excluded *bool `json:"excluded,omitempty"`
+	// ExcludedReason why the result was excluded
+	ExcludedReason *string `json:"excluded_reason,omitempty"`
+	// Filename the filename
+	Filename *string `json:"filename,omitempty"`
+	// Language the detected language
+	Language *string `json:"language,omitempty"`
+	// License if a license was detected in the file, what was the license SPDX
+	License *string `json:"license,omitempty"`
+	// Lines the individual line attributions
+	Lines []BlameLines `json:"lines,omitempty"`
+	// Loc the count of lines in the file
+	Loc *int64 `json:"loc,omitempty"`
+	// RepoID the unique id for the repo
+	RepoID *string `json:"repo_id,omitempty"`
+	// Sha the commit SHA
+	Sha *string `json:"sha,omitempty"`
+	// Size the size of the file
+	Size *int64 `json:"size,omitempty"`
+	// Sloc the count of source lines in the file based on language rules
+	Sloc *int64 `json:"sloc,omitempty"`
+	// Status the status of the change
+	Status *BlameStatus `json:"status,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*BlamePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *BlamePartial) GetModelName() datamodel.ModelNameType {
+	return BlameModelName
+}
+
+// ToMap returns the object as a map
+func (o *BlamePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"blanks":          toBlameObject(o.Blanks, true),
+		"change_date":     toBlameObject(o.ChangeDate, true),
+		"comments":        toBlameObject(o.Comments, true),
+		"commit_id":       toBlameObject(o.CommitID, true),
+		"complexity":      toBlameObject(o.Complexity, true),
+		"excluded":        toBlameObject(o.Excluded, true),
+		"excluded_reason": toBlameObject(o.ExcludedReason, true),
+		"filename":        toBlameObject(o.Filename, true),
+		"language":        toBlameObject(o.Language, true),
+		"license":         toBlameObject(o.License, true),
+		"lines":           toBlameObject(o.Lines, true),
+		"loc":             toBlameObject(o.Loc, true),
+		"repo_id":         toBlameObject(o.RepoID, true),
+		"sha":             toBlameObject(o.Sha, true),
+		"size":            toBlameObject(o.Size, true),
+		"sloc":            toBlameObject(o.Sloc, true),
+		"status":          o.Status.String(),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *BlamePartial) Stringify() string {
+	return pjson.Stringify(o)
+}

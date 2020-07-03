@@ -1345,3 +1345,85 @@ func (o *UninstallRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// UninstallRequestPartial is a partial struct for upsert mutations for UninstallRequest
+type UninstallRequestPartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *UninstallRequestEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *UninstallRequestLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *UninstallRequestType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*UninstallRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *UninstallRequestPartial) GetModelName() datamodel.ModelNameType {
+	return UninstallRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *UninstallRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toUninstallRequestObject(o.Architecture, true),
+		"data":             toUninstallRequestObject(o.Data, true),
+		"distro":           toUninstallRequestObject(o.Distro, true),
+		"error":            toUninstallRequestObject(o.Error, true),
+		"event_date":       toUninstallRequestObject(o.EventDate, true),
+		"free_space":       toUninstallRequestObject(o.FreeSpace, true),
+		"go_version":       toUninstallRequestObject(o.GoVersion, true),
+		"hostname":         toUninstallRequestObject(o.Hostname, true),
+		"last_export_date": toUninstallRequestObject(o.LastExportDate, true),
+		"memory":           toUninstallRequestObject(o.Memory, true),
+		"message":          toUninstallRequestObject(o.Message, true),
+		"num_cpu":          toUninstallRequestObject(o.NumCPU, true),
+		"os":               toUninstallRequestObject(o.OS, true),
+		"request_id":       toUninstallRequestObject(o.RequestID, true),
+		"success":          toUninstallRequestObject(o.Success, true),
+		"system_id":        toUninstallRequestObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toUninstallRequestObject(o.Uptime, true),
+		"uuid":             toUninstallRequestObject(o.UUID, true),
+		"version":          toUninstallRequestObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *UninstallRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -1606,6 +1606,25 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1728,6 +1747,25 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -2129,4 +2167,110 @@ func (o *IntegrationMutationResponse) Hash() string {
 	args = append(args, o.WebappResponse)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// IntegrationMutationResponsePartial is a partial struct for upsert mutations for IntegrationMutationResponse
+type IntegrationMutationResponsePartial struct {
+	// AgentReceivedRequestDate set by agent when event is received
+	AgentReceivedRequestDate *IntegrationMutationResponseAgentReceivedRequestDate `json:"agent_received_request_date,omitempty"`
+	// AgentRequestSentDate set by agent operator
+	AgentRequestSentDate *IntegrationMutationResponseAgentRequestSentDate `json:"agent_request_sent_date,omitempty"`
+	// AgentResponseSentDate set by agent after completing processing
+	AgentResponseSentDate *IntegrationMutationResponseAgentResponseSentDate `json:"agent_response_sent_date,omitempty"`
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// ErrorCode Error code
+	ErrorCode *IntegrationMutationResponseErrorCode `json:"error_code,omitempty"`
+	// EventDate the date of the event
+	EventDate *IntegrationMutationResponseEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// JobID The job ID
+	JobID *string `json:"job_id,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *IntegrationMutationResponseLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *IntegrationMutationResponseType `json:"type,omitempty"`
+	// UpdatedObjects Updated objects as JSON map[type][]object for use in pipeline
+	UpdatedObjects *string `json:"updated_objects,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+	// WebappRequestDate set by webapp using browser time
+	WebappRequestDate *IntegrationMutationResponseWebappRequestDate `json:"webapp_request_date,omitempty"`
+	// WebappResponse Arbitrary response to be used in webapp
+	WebappResponse *string `json:"webapp_response,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IntegrationMutationResponsePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IntegrationMutationResponsePartial) GetModelName() datamodel.ModelNameType {
+	return IntegrationMutationResponseModelName
+}
+
+// ToMap returns the object as a map
+func (o *IntegrationMutationResponsePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"agent_received_request_date": toIntegrationMutationResponseObject(o.AgentReceivedRequestDate, true),
+		"agent_request_sent_date":     toIntegrationMutationResponseObject(o.AgentRequestSentDate, true),
+		"agent_response_sent_date":    toIntegrationMutationResponseObject(o.AgentResponseSentDate, true),
+		"architecture":                toIntegrationMutationResponseObject(o.Architecture, true),
+		"data":                        toIntegrationMutationResponseObject(o.Data, true),
+		"distro":                      toIntegrationMutationResponseObject(o.Distro, true),
+		"error":                       toIntegrationMutationResponseObject(o.Error, true),
+		"error_code":                  o.ErrorCode.String(),
+		"event_date":                  toIntegrationMutationResponseObject(o.EventDate, true),
+		"free_space":                  toIntegrationMutationResponseObject(o.FreeSpace, true),
+		"go_version":                  toIntegrationMutationResponseObject(o.GoVersion, true),
+		"hostname":                    toIntegrationMutationResponseObject(o.Hostname, true),
+		"job_id":                      toIntegrationMutationResponseObject(o.JobID, true),
+		"last_export_date":            toIntegrationMutationResponseObject(o.LastExportDate, true),
+		"memory":                      toIntegrationMutationResponseObject(o.Memory, true),
+		"message":                     toIntegrationMutationResponseObject(o.Message, true),
+		"num_cpu":                     toIntegrationMutationResponseObject(o.NumCPU, true),
+		"os":                          toIntegrationMutationResponseObject(o.OS, true),
+		"request_id":                  toIntegrationMutationResponseObject(o.RequestID, true),
+		"success":                     toIntegrationMutationResponseObject(o.Success, true),
+		"system_id":                   toIntegrationMutationResponseObject(o.SystemID, true),
+		"type":                        o.Type.String(),
+		"updated_objects":             toIntegrationMutationResponseObject(o.UpdatedObjects, true),
+		"uptime":                      toIntegrationMutationResponseObject(o.Uptime, true),
+		"uuid":                        toIntegrationMutationResponseObject(o.UUID, true),
+		"version":                     toIntegrationMutationResponseObject(o.Version, true),
+		"webapp_request_date":         toIntegrationMutationResponseObject(o.WebappRequestDate, true),
+		"webapp_response":             toIntegrationMutationResponseObject(o.WebappResponse, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IntegrationMutationResponsePartial) Stringify() string {
+	return pjson.Stringify(o)
 }

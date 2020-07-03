@@ -3221,3 +3221,106 @@ func (o *Issue) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// IssuePartial is a partial struct for upsert mutations for Issue
+type IssuePartial struct {
+	// AssigneeRefID user id of the assignee
+	AssigneeRefID *string `json:"assignee_ref_id,omitempty"`
+	// Attachments file attachments
+	Attachments []IssueAttachments `json:"attachments,omitempty"`
+	// ChangeLog the change history of this issue
+	ChangeLog []IssueChangeLog `json:"change_log,omitempty"`
+	// CreatedDate the date that the issue was created
+	CreatedDate *IssueCreatedDate `json:"created_date,omitempty"`
+	// CreatorRefID user id of the creator
+	CreatorRefID *string `json:"creator_ref_id,omitempty"`
+	// Description the issue description
+	Description *string `json:"description,omitempty"`
+	// EpicID epic issue id, if any
+	EpicID *string `json:"epic_id,omitempty"`
+	// Identifier the common identifier for the issue (for example EXM-1 instead of 1000 for jira)
+	Identifier *string `json:"identifier,omitempty"`
+	// LinkedIssues links between issues
+	LinkedIssues []IssueLinkedIssues `json:"linked_issues,omitempty"`
+	// ParentID parent issue id, if any
+	ParentID *string `json:"parent_id,omitempty"`
+	// PlannedEndDate the date that the issue was planned to end
+	PlannedEndDate *IssuePlannedEndDate `json:"planned_end_date,omitempty"`
+	// PlannedStartDate the date that the issue was planned to start
+	PlannedStartDate *IssuePlannedStartDate `json:"planned_start_date,omitempty"`
+	// Priority priority of the issue
+	Priority *string `json:"priority,omitempty"`
+	// PriorityID priority id for the issue
+	PriorityID *string `json:"priority_id,omitempty"`
+	// ProjectID unique project id
+	ProjectID *string `json:"project_id,omitempty"`
+	// ReporterRefID user id of the reporter
+	ReporterRefID *string `json:"reporter_ref_id,omitempty"`
+	// Resolution resolution of the issue
+	Resolution *string `json:"resolution,omitempty"`
+	// SprintIds an array of the sprint ids that this issue is currently a member of
+	SprintIds []string `json:"sprint_ids,omitempty"`
+	// Status status of the issue
+	Status *string `json:"status,omitempty"`
+	// StatusID id for status in issue_status
+	StatusID *string `json:"status_id,omitempty"`
+	// StoryPoints the story points estimation for the issue
+	StoryPoints *float64 `json:"story_points,omitempty"`
+	// Tags tags on the issue
+	Tags []string `json:"tags,omitempty"`
+	// Title the issue title
+	Title *string `json:"title,omitempty"`
+	// Type type of issue
+	Type *string `json:"type,omitempty"`
+	// TypeID the issue type id
+	TypeID *string `json:"type_id,omitempty"`
+	// UpdatedDate the date that the issue was updated
+	UpdatedDate *IssueUpdatedDate `json:"updated_date,omitempty"`
+	// URL the url to the sprint page
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IssuePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IssuePartial) GetModelName() datamodel.ModelNameType {
+	return IssueModelName
+}
+
+// ToMap returns the object as a map
+func (o *IssuePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"assignee_ref_id":    toIssueObject(o.AssigneeRefID, true),
+		"attachments":        toIssueObject(o.Attachments, true),
+		"change_log":         toIssueObject(o.ChangeLog, true),
+		"created_date":       toIssueObject(o.CreatedDate, true),
+		"creator_ref_id":     toIssueObject(o.CreatorRefID, true),
+		"description":        toIssueObject(o.Description, true),
+		"epic_id":            toIssueObject(o.EpicID, true),
+		"identifier":         toIssueObject(o.Identifier, true),
+		"linked_issues":      toIssueObject(o.LinkedIssues, true),
+		"parent_id":          toIssueObject(o.ParentID, true),
+		"planned_end_date":   toIssueObject(o.PlannedEndDate, true),
+		"planned_start_date": toIssueObject(o.PlannedStartDate, true),
+		"priority":           toIssueObject(o.Priority, true),
+		"priority_id":        toIssueObject(o.PriorityID, true),
+		"project_id":         toIssueObject(o.ProjectID, true),
+		"reporter_ref_id":    toIssueObject(o.ReporterRefID, true),
+		"resolution":         toIssueObject(o.Resolution, true),
+		"sprint_ids":         toIssueObject(o.SprintIds, true),
+		"status":             toIssueObject(o.Status, true),
+		"status_id":          toIssueObject(o.StatusID, true),
+		"story_points":       toIssueObject(o.StoryPoints, true),
+		"tags":               toIssueObject(o.Tags, true),
+		"title":              toIssueObject(o.Title, true),
+		"type":               toIssueObject(o.Type, true),
+		"type_id":            toIssueObject(o.TypeID, true),
+		"updated_date":       toIssueObject(o.UpdatedDate, true),
+		"url":                toIssueObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IssuePartial) Stringify() string {
+	return pjson.Stringify(o)
+}

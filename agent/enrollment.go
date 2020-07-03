@@ -1528,3 +1528,64 @@ func CreateEnrollment(client graphql.Client, model Enrollment) error {
 	}
 	return nil
 }
+
+// EnrollmentPartial is a partial struct for upsert mutations for Enrollment
+type EnrollmentPartial struct {
+	// AgentVersion the version of the agent
+	AgentVersion *string `json:"agent_version,omitempty"`
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// CreatedDate when the agent was created
+	CreatedDate *EnrollmentCreatedDate `json:"created_date,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// LastPingDate last time the agent pinged
+	LastPingDate *EnrollmentLastPingDate `json:"last_ping_date,omitempty"`
+	// LastShutdownDate last time the agent shut down
+	LastShutdownDate *EnrollmentLastShutdownDate `json:"last_shutdown_date,omitempty"`
+	// LastStartupDate last time the agent started up
+	LastStartupDate *EnrollmentLastStartupDate `json:"last_startup_date,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// Running if the agent is alive
+	Running *bool `json:"running,omitempty"`
+	// SystemID the system id
+	SystemID *string `json:"system_id,omitempty"`
+	// UserID the user that created this enrollment
+	UserID *string `json:"user_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*EnrollmentPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *EnrollmentPartial) GetModelName() datamodel.ModelNameType {
+	return EnrollmentModelName
+}
+
+// ToMap returns the object as a map
+func (o *EnrollmentPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"agent_version":      toEnrollmentObject(o.AgentVersion, true),
+		"architecture":       toEnrollmentObject(o.Architecture, true),
+		"created_date":       toEnrollmentObject(o.CreatedDate, true),
+		"go_version":         toEnrollmentObject(o.GoVersion, true),
+		"hostname":           toEnrollmentObject(o.Hostname, true),
+		"last_ping_date":     toEnrollmentObject(o.LastPingDate, true),
+		"last_shutdown_date": toEnrollmentObject(o.LastShutdownDate, true),
+		"last_startup_date":  toEnrollmentObject(o.LastStartupDate, true),
+		"num_cpu":            toEnrollmentObject(o.NumCPU, true),
+		"os":                 toEnrollmentObject(o.OS, true),
+		"running":            toEnrollmentObject(o.Running, true),
+		"system_id":          toEnrollmentObject(o.SystemID, true),
+		"user_id":            toEnrollmentObject(o.UserID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *EnrollmentPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

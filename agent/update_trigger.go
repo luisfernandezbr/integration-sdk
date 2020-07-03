@@ -404,3 +404,31 @@ func (o *UpdateTrigger) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// UpdateTriggerPartial is a partial struct for upsert mutations for UpdateTrigger
+type UpdateTriggerPartial struct {
+	// UUID UUID of the agent to update
+	UUID *string `json:"uuid,omitempty"`
+	// Version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*UpdateTriggerPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *UpdateTriggerPartial) GetModelName() datamodel.ModelNameType {
+	return UpdateTriggerModelName
+}
+
+// ToMap returns the object as a map
+func (o *UpdateTriggerPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"uuid":    toUpdateTriggerObject(o.UUID, true),
+		"version": toUpdateTriggerObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *UpdateTriggerPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

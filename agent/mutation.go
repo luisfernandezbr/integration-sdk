@@ -399,3 +399,31 @@ func (o *Mutation) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// MutationPartial is a partial struct for upsert mutations for Mutation
+type MutationPartial struct {
+	// Error the error message if success is false
+	Error *string `json:"error,omitempty"`
+	// Success if the mutation was successful.
+	Success *bool `json:"success,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*MutationPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *MutationPartial) GetModelName() datamodel.ModelNameType {
+	return MutationModelName
+}
+
+// ToMap returns the object as a map
+func (o *MutationPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"error":   toMutationObject(o.Error, true),
+		"success": toMutationObject(o.Success, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *MutationPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -1544,3 +1544,85 @@ func (o *PullRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// PullRequestPartial is a partial struct for upsert mutations for PullRequest
+type PullRequestPartial struct {
+	// BranchID id for the branch based on branch_name, could be already deleted
+	BranchID *string `json:"branch_id,omitempty"`
+	// BranchName branch name of the pull request
+	BranchName *string `json:"branch_name,omitempty"`
+	// ClosedByRefID the id of user who closed the pull request
+	ClosedByRefID *string `json:"closed_by_ref_id,omitempty"`
+	// ClosedDate the timestamp in UTC that the pull request was closed
+	ClosedDate *PullRequestClosedDate `json:"closed_date,omitempty"`
+	// CommitIds list of commit ids added in this pull request
+	CommitIds []string `json:"commit_ids,omitempty"`
+	// CommitShas list of commit shas added in this pull request
+	CommitShas []string `json:"commit_shas,omitempty"`
+	// CreatedByRefID the user ref_id in the source system
+	CreatedByRefID *string `json:"created_by_ref_id,omitempty"`
+	// CreatedDate the timestamp in UTC that the pull request was created
+	CreatedDate *PullRequestCreatedDate `json:"created_date,omitempty"`
+	// Description the description of the pull request
+	Description *string `json:"description,omitempty"`
+	// Draft if the pull request is in draft mode or not
+	Draft *bool `json:"draft,omitempty"`
+	// Identifier a human friendly identifier when displaying this pull request
+	Identifier *string `json:"identifier,omitempty"`
+	// MergeCommitID the id of the merge commit
+	MergeCommitID *string `json:"merge_commit_id,omitempty"`
+	// MergeSha the sha of the merge commit
+	MergeSha *string `json:"merge_sha,omitempty"`
+	// MergedByRefID the id of user who merged the pull request
+	MergedByRefID *string `json:"merged_by_ref_id,omitempty"`
+	// MergedDate the timestamp in UTC that the pull request was merged
+	MergedDate *PullRequestMergedDate `json:"merged_date,omitempty"`
+	// RepoID the unique id for the repo
+	RepoID *string `json:"repo_id,omitempty"`
+	// Status the status of the pull request
+	Status *PullRequestStatus `json:"status,omitempty"`
+	// Title the title of the pull request
+	Title *string `json:"title,omitempty"`
+	// UpdatedDate the timestamp in UTC that the pull request was closed
+	UpdatedDate *PullRequestUpdatedDate `json:"updated_date,omitempty"`
+	// URL the url to the pull request home page
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*PullRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *PullRequestPartial) GetModelName() datamodel.ModelNameType {
+	return PullRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *PullRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"branch_id":         toPullRequestObject(o.BranchID, true),
+		"branch_name":       toPullRequestObject(o.BranchName, true),
+		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, true),
+		"closed_date":       toPullRequestObject(o.ClosedDate, true),
+		"commit_ids":        toPullRequestObject(o.CommitIds, true),
+		"commit_shas":       toPullRequestObject(o.CommitShas, true),
+		"created_by_ref_id": toPullRequestObject(o.CreatedByRefID, true),
+		"created_date":      toPullRequestObject(o.CreatedDate, true),
+		"description":       toPullRequestObject(o.Description, true),
+		"draft":             toPullRequestObject(o.Draft, true),
+		"identifier":        toPullRequestObject(o.Identifier, true),
+		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, true),
+		"merge_sha":         toPullRequestObject(o.MergeSha, true),
+		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, true),
+		"merged_date":       toPullRequestObject(o.MergedDate, true),
+		"repo_id":           toPullRequestObject(o.RepoID, true),
+		"status":            o.Status.String(),
+		"title":             toPullRequestObject(o.Title, true),
+		"updated_date":      toPullRequestObject(o.UpdatedDate, true),
+		"url":               toPullRequestObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *PullRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -638,3 +638,37 @@ func (o *IssueType) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// IssueTypePartial is a partial struct for upsert mutations for IssueType
+type IssueTypePartial struct {
+	// Description the description of the issue
+	Description *string `json:"description,omitempty"`
+	// IconURL an optional url for the icon for the issue
+	IconURL *string `json:"icon_url,omitempty"`
+	// MappedType a default mapped type is known by the integration
+	MappedType *IssueTypeMappedType `json:"mapped_type,omitempty"`
+	// Name the name of the issue
+	Name *string `json:"name,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IssueTypePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IssueTypePartial) GetModelName() datamodel.ModelNameType {
+	return IssueTypeModelName
+}
+
+// ToMap returns the object as a map
+func (o *IssueTypePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"description": toIssueTypeObject(o.Description, true),
+		"icon_url":    toIssueTypeObject(o.IconURL, true),
+		"mapped_type": o.MappedType.String(),
+		"name":        toIssueTypeObject(o.Name, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IssueTypePartial) Stringify() string {
+	return pjson.Stringify(o)
+}

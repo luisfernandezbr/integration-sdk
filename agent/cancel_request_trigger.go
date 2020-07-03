@@ -513,3 +513,31 @@ func (o *CancelRequestTrigger) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// CancelRequestTriggerPartial is a partial struct for upsert mutations for CancelRequestTrigger
+type CancelRequestTriggerPartial struct {
+	// Command The command to cancel
+	Command *CancelRequestTriggerCommand `json:"command,omitempty"`
+	// UUID The agent UUID
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CancelRequestTriggerPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CancelRequestTriggerPartial) GetModelName() datamodel.ModelNameType {
+	return CancelRequestTriggerModelName
+}
+
+// ToMap returns the object as a map
+func (o *CancelRequestTriggerPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"command": o.Command.String(),
+		"uuid":    toCancelRequestTriggerObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CancelRequestTriggerPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

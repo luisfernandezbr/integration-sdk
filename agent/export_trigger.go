@@ -399,3 +399,31 @@ func (o *ExportTrigger) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// ExportTriggerPartial is a partial struct for upsert mutations for ExportTrigger
+type ExportTriggerPartial struct {
+	// ReprocessHistorical This field is to differentiate between historical and incrementals
+	ReprocessHistorical *bool `json:"reprocess_historical,omitempty"`
+	// UUID This UUID of the agent to trigger
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ExportTriggerPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ExportTriggerPartial) GetModelName() datamodel.ModelNameType {
+	return ExportTriggerModelName
+}
+
+// ToMap returns the object as a map
+func (o *ExportTriggerPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"reprocess_historical": toExportTriggerObject(o.ReprocessHistorical, true),
+		"uuid":                 toExportTriggerObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ExportTriggerPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

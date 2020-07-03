@@ -3329,3 +3329,34 @@ func (o *CalendarRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// CalendarRequestPartial is a partial struct for upsert mutations for CalendarRequest
+type CalendarRequestPartial struct {
+	// Integration the integration details to use
+	Integration *CalendarRequestIntegration `json:"integration,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *CalendarRequestRequestDate `json:"request_date,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CalendarRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CalendarRequestPartial) GetModelName() datamodel.ModelNameType {
+	return CalendarRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *CalendarRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration":  toCalendarRequestObject(o.Integration, true),
+		"request_date": toCalendarRequestObject(o.RequestDate, true),
+		"uuid":         toCalendarRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CalendarRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

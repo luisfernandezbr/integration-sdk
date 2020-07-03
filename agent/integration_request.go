@@ -3288,25 +3288,6 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.RequestDate.Epoch = dt.Epoch
-			o.RequestDate.Rfc3339 = dt.Rfc3339
-			o.RequestDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.RequestDate.Epoch = dt.Epoch
-				o.RequestDate.Rfc3339 = dt.Rfc3339
-				o.RequestDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -3347,4 +3328,35 @@ func (o *IntegrationRequest) Hash() string {
 	args = append(args, o.UUID)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// IntegrationRequestPartial is a partial struct for upsert mutations for IntegrationRequest
+type IntegrationRequestPartial struct {
+	// Integration the integration details to add
+	Integration *IntegrationRequestIntegration `json:"integration,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *IntegrationRequestRequestDate `json:"request_date,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IntegrationRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IntegrationRequestPartial) GetModelName() datamodel.ModelNameType {
+	return IntegrationRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *IntegrationRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration":  toIntegrationRequestObject(o.Integration, true),
+		"request_date": toIntegrationRequestObject(o.RequestDate, true),
+		"uuid":         toIntegrationRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IntegrationRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
 }

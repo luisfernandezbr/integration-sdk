@@ -810,3 +810,49 @@ func (o *Repo) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// RepoPartial is a partial struct for upsert mutations for Repo
+type RepoPartial struct {
+	// Active the status of the repo
+	Active *bool `json:"active,omitempty"`
+	// Affiliation the affiliation to the repo owner
+	Affiliation *RepoAffiliation `json:"affiliation,omitempty"`
+	// DefaultBranch the repo default branch
+	DefaultBranch *string `json:"default_branch,omitempty"`
+	// Description brief explanation of the repo
+	Description *string `json:"description,omitempty"`
+	// Language the programming language the source code is primarily written in
+	Language *string `json:"language,omitempty"`
+	// Name the name of the repo
+	Name *string `json:"name,omitempty"`
+	// URL the url to the repo home page
+	URL *string `json:"url,omitempty"`
+	// Visibility the visibility of the repo
+	Visibility *RepoVisibility `json:"visibility,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*RepoPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *RepoPartial) GetModelName() datamodel.ModelNameType {
+	return RepoModelName
+}
+
+// ToMap returns the object as a map
+func (o *RepoPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"active":         toRepoObject(o.Active, true),
+		"affiliation":    o.Affiliation.String(),
+		"default_branch": toRepoObject(o.DefaultBranch, true),
+		"description":    toRepoObject(o.Description, true),
+		"language":       toRepoObject(o.Language, true),
+		"name":           toRepoObject(o.Name, true),
+		"url":            toRepoObject(o.URL, true),
+		"visibility":     o.Visibility.String(),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *RepoPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

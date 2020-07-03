@@ -642,3 +642,34 @@ func (o *CancelRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// CancelRequestPartial is a partial struct for upsert mutations for CancelRequest
+type CancelRequestPartial struct {
+	// Command The command to cancel
+	Command *CancelRequestCommand `json:"command,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *CancelRequestRequestDate `json:"request_date,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CancelRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CancelRequestPartial) GetModelName() datamodel.ModelNameType {
+	return CancelRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *CancelRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"command":      o.Command.String(),
+		"request_date": toCancelRequestObject(o.RequestDate, true),
+		"uuid":         toCancelRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CancelRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

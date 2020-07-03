@@ -383,3 +383,28 @@ func (o *CodequalityTrigger) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// CodequalityTriggerPartial is a partial struct for upsert mutations for CodequalityTrigger
+type CodequalityTriggerPartial struct {
+	// IntegrationID the integration id
+	IntegrationID *string `json:"integration_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CodequalityTriggerPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CodequalityTriggerPartial) GetModelName() datamodel.ModelNameType {
+	return CodequalityTriggerModelName
+}
+
+// ToMap returns the object as a map
+func (o *CodequalityTriggerPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration_id": toCodequalityTriggerObject(o.IntegrationID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CodequalityTriggerPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

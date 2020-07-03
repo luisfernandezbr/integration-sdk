@@ -1953,3 +1953,34 @@ func (o *Export) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// ExportPartial is a partial struct for upsert mutations for Export
+type ExportPartial struct {
+	// Integration The integrations that should be exported and their current configuration
+	Integration *ExportIntegration `json:"integration,omitempty"`
+	// JobID The job ID
+	JobID *string `json:"job_id,omitempty"`
+	// ReprocessHistorical This field is to differentiate between historical and incrementals
+	ReprocessHistorical *bool `json:"reprocess_historical,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ExportPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ExportPartial) GetModelName() datamodel.ModelNameType {
+	return ExportModelName
+}
+
+// ToMap returns the object as a map
+func (o *ExportPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration":          toExportObject(o.Integration, true),
+		"job_id":               toExportObject(o.JobID, true),
+		"reprocess_historical": toExportObject(o.ReprocessHistorical, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ExportPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

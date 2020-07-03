@@ -1977,3 +1977,103 @@ func (o *WebhookResponse) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// WebhookResponsePartial is a partial struct for upsert mutations for WebhookResponse
+type WebhookResponsePartial struct {
+	// AgentReceivedDate set by agent when event is received
+	AgentReceivedDate *WebhookResponseAgentReceivedDate `json:"agent_received_date,omitempty"`
+	// AgentResponseSentDate set by agent after completing processing
+	AgentResponseSentDate *WebhookResponseAgentResponseSentDate `json:"agent_response_sent_date,omitempty"`
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventAPIReceivedDate set by event api when it receives webhook data
+	EventAPIReceivedDate *WebhookResponseEventAPIReceivedDate `json:"event_api_received_date,omitempty"`
+	// EventDate the date of the event
+	EventDate *WebhookResponseEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// JobID The job ID
+	JobID *string `json:"job_id,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *WebhookResponseLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OperatorReceivedDate set by operator when it receives webhook data
+	OperatorReceivedDate *WebhookResponseOperatorReceivedDate `json:"operator_received_date,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *WebhookResponseType `json:"type,omitempty"`
+	// UpdatedObjects Updated objects as JSON map[type][]object for use in pipeline
+	UpdatedObjects *string `json:"updated_objects,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*WebhookResponsePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *WebhookResponsePartial) GetModelName() datamodel.ModelNameType {
+	return WebhookResponseModelName
+}
+
+// ToMap returns the object as a map
+func (o *WebhookResponsePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"agent_received_date":      toWebhookResponseObject(o.AgentReceivedDate, true),
+		"agent_response_sent_date": toWebhookResponseObject(o.AgentResponseSentDate, true),
+		"architecture":             toWebhookResponseObject(o.Architecture, true),
+		"data":                     toWebhookResponseObject(o.Data, true),
+		"distro":                   toWebhookResponseObject(o.Distro, true),
+		"error":                    toWebhookResponseObject(o.Error, true),
+		"event_api_received_date":  toWebhookResponseObject(o.EventAPIReceivedDate, true),
+		"event_date":               toWebhookResponseObject(o.EventDate, true),
+		"free_space":               toWebhookResponseObject(o.FreeSpace, true),
+		"go_version":               toWebhookResponseObject(o.GoVersion, true),
+		"hostname":                 toWebhookResponseObject(o.Hostname, true),
+		"job_id":                   toWebhookResponseObject(o.JobID, true),
+		"last_export_date":         toWebhookResponseObject(o.LastExportDate, true),
+		"memory":                   toWebhookResponseObject(o.Memory, true),
+		"message":                  toWebhookResponseObject(o.Message, true),
+		"num_cpu":                  toWebhookResponseObject(o.NumCPU, true),
+		"operator_received_date":   toWebhookResponseObject(o.OperatorReceivedDate, true),
+		"os":                       toWebhookResponseObject(o.OS, true),
+		"request_id":               toWebhookResponseObject(o.RequestID, true),
+		"success":                  toWebhookResponseObject(o.Success, true),
+		"system_id":                toWebhookResponseObject(o.SystemID, true),
+		"type":                     o.Type.String(),
+		"updated_objects":          toWebhookResponseObject(o.UpdatedObjects, true),
+		"uptime":                   toWebhookResponseObject(o.Uptime, true),
+		"uuid":                     toWebhookResponseObject(o.UUID, true),
+		"version":                  toWebhookResponseObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *WebhookResponsePartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -1779,3 +1779,49 @@ func CreateTeam(client graphql.Client, model Team) error {
 	}
 	return nil
 }
+
+// TeamPartial is a partial struct for upsert mutations for Team
+type TeamPartial struct {
+	// Active whether the team is tracked in pinpoint
+	Active *bool `json:"active,omitempty"`
+	// ChildrenIds the children_ids for this team
+	ChildrenIds []string `json:"children_ids,omitempty"`
+	// Deleted delete flag for a team. true === deleted
+	Deleted *bool `json:"deleted,omitempty"`
+	// DeletedDate when the user profile was soft deleted
+	DeletedDate *TeamDeletedDate `json:"deleted_date,omitempty"`
+	// Description the description of the team
+	Description *string `json:"description,omitempty"`
+	// Leaf True when team has no children_ids
+	Leaf *bool `json:"leaf,omitempty"`
+	// Name the name of the team
+	Name *string `json:"name,omitempty"`
+	// ParentIds the parent_ids for this team
+	ParentIds []string `json:"parent_ids,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*TeamPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *TeamPartial) GetModelName() datamodel.ModelNameType {
+	return TeamModelName
+}
+
+// ToMap returns the object as a map
+func (o *TeamPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"active":       toTeamObject(o.Active, true),
+		"children_ids": toTeamObject(o.ChildrenIds, true),
+		"deleted":      toTeamObject(o.Deleted, true),
+		"deleted_date": toTeamObject(o.DeletedDate, true),
+		"description":  toTeamObject(o.Description, true),
+		"leaf":         toTeamObject(o.Leaf, true),
+		"name":         toTeamObject(o.Name, true),
+		"parent_ids":   toTeamObject(o.ParentIds, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *TeamPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -745,3 +745,58 @@ func (o *PullRequestCommit) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// PullRequestCommitPartial is a partial struct for upsert mutations for PullRequestCommit
+type PullRequestCommitPartial struct {
+	// Additions the number of additions for the commit
+	Additions *int64 `json:"additions,omitempty"`
+	// AuthorRefID the author ref_id in the source system
+	AuthorRefID *string `json:"author_ref_id,omitempty"`
+	// BranchID the branch that the commit was a part of
+	BranchID *string `json:"branch_id,omitempty"`
+	// CommitterRefID the committer ref_id in the source system
+	CommitterRefID *string `json:"committer_ref_id,omitempty"`
+	// CreatedDate date when the commit was created
+	CreatedDate *PullRequestCommitCreatedDate `json:"created_date,omitempty"`
+	// Deletions the number of deletions for the commit
+	Deletions *int64 `json:"deletions,omitempty"`
+	// Message the commit message
+	Message *string `json:"message,omitempty"`
+	// PullRequestID the pull request this commit was taken from
+	PullRequestID *string `json:"pull_request_id,omitempty"`
+	// RepoID the unique id for the repo
+	RepoID *string `json:"repo_id,omitempty"`
+	// Sha the unique sha for the commit
+	Sha *string `json:"sha,omitempty"`
+	// URL the url to the commit detail
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*PullRequestCommitPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *PullRequestCommitPartial) GetModelName() datamodel.ModelNameType {
+	return PullRequestCommitModelName
+}
+
+// ToMap returns the object as a map
+func (o *PullRequestCommitPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"additions":        toPullRequestCommitObject(o.Additions, true),
+		"author_ref_id":    toPullRequestCommitObject(o.AuthorRefID, true),
+		"branch_id":        toPullRequestCommitObject(o.BranchID, true),
+		"committer_ref_id": toPullRequestCommitObject(o.CommitterRefID, true),
+		"created_date":     toPullRequestCommitObject(o.CreatedDate, true),
+		"deletions":        toPullRequestCommitObject(o.Deletions, true),
+		"message":          toPullRequestCommitObject(o.Message, true),
+		"pull_request_id":  toPullRequestCommitObject(o.PullRequestID, true),
+		"repo_id":          toPullRequestCommitObject(o.RepoID, true),
+		"sha":              toPullRequestCommitObject(o.Sha, true),
+		"url":              toPullRequestCommitObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *PullRequestCommitPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

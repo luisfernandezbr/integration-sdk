@@ -2234,3 +2234,88 @@ func CreateIntegrationInstance(client graphql.Client, model IntegrationInstance)
 	}
 	return nil
 }
+
+// IntegrationInstancePartial is a partial struct for upsert mutations for IntegrationInstance
+type IntegrationInstancePartial struct {
+	// Active If true, the integration is still active
+	Active *bool `json:"active,omitempty"`
+	// Config the integration configuration controlled by the integration itself
+	Config *string `json:"config,omitempty"`
+	// CreatedByProfileID The id of the profile for the user that created the integration
+	CreatedByProfileID *string `json:"created_by_profile_id,omitempty"`
+	// CreatedByUserID The id of the user that created the integration
+	CreatedByUserID *string `json:"created_by_user_id,omitempty"`
+	// CreatedDate when the integration was created
+	CreatedDate *IntegrationInstanceCreatedDate `json:"created_date,omitempty"`
+	// EntityErrors export status and error per entity in the integration
+	EntityErrors []IntegrationInstanceEntityErrors `json:"entity_errors,omitempty"`
+	// ErrorMessage The error message from an export run
+	ErrorMessage *string `json:"error_message,omitempty"`
+	// Errored If authorization failed by the agent or any other error
+	Errored *bool `json:"errored,omitempty"`
+	// ExportAcknowledged Set to true an export has been recieved by the agent.
+	ExportAcknowledged *bool `json:"export_acknowledged,omitempty"`
+	// IntegrationID The unique id for the integration
+	IntegrationID *string `json:"integration_id,omitempty"`
+	// Interval the interval in milliseconds for how often an export job is scheduled
+	Interval *int64 `json:"interval,omitempty"`
+	// LastExportCompletedDate when the export response was received
+	LastExportCompletedDate *IntegrationInstanceLastExportCompletedDate `json:"last_export_completed_date,omitempty"`
+	// LastExportRequestedDate when the export request was made
+	LastExportRequestedDate *IntegrationInstanceLastExportRequestedDate `json:"last_export_requested_date,omitempty"`
+	// LastProcessingDate when the data was last processed
+	LastProcessingDate *IntegrationInstanceLastProcessingDate `json:"last_processing_date,omitempty"`
+	// Location The location of this integration (on-premise / private or cloud)
+	Location *IntegrationInstanceLocation `json:"location,omitempty"`
+	// Name The user friendly name of the integration
+	Name *string `json:"name,omitempty"`
+	// Paused true if the agent is paused and should not start new scheduled jobs
+	Paused *bool `json:"paused,omitempty"`
+	// Processed If the integration has been processed at least once
+	Processed *bool `json:"processed,omitempty"`
+	// State the current state of the integration
+	State *IntegrationInstanceState `json:"state,omitempty"`
+	// Throttled Set to true when integration is throttled.
+	Throttled *bool `json:"throttled,omitempty"`
+	// ThrottledUntil After throttling integration, we set this field for estimated resume date.
+	ThrottledUntil *IntegrationInstanceThrottledUntil `json:"throttled_until,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IntegrationInstancePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IntegrationInstancePartial) GetModelName() datamodel.ModelNameType {
+	return IntegrationInstanceModelName
+}
+
+// ToMap returns the object as a map
+func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"active":                     toIntegrationInstanceObject(o.Active, true),
+		"config":                     toIntegrationInstanceObject(o.Config, true),
+		"created_by_profile_id":      toIntegrationInstanceObject(o.CreatedByProfileID, true),
+		"created_by_user_id":         toIntegrationInstanceObject(o.CreatedByUserID, true),
+		"created_date":               toIntegrationInstanceObject(o.CreatedDate, true),
+		"entity_errors":              toIntegrationInstanceObject(o.EntityErrors, true),
+		"error_message":              toIntegrationInstanceObject(o.ErrorMessage, true),
+		"errored":                    toIntegrationInstanceObject(o.Errored, true),
+		"export_acknowledged":        toIntegrationInstanceObject(o.ExportAcknowledged, true),
+		"integration_id":             toIntegrationInstanceObject(o.IntegrationID, true),
+		"interval":                   toIntegrationInstanceObject(o.Interval, true),
+		"last_export_completed_date": toIntegrationInstanceObject(o.LastExportCompletedDate, true),
+		"last_export_requested_date": toIntegrationInstanceObject(o.LastExportRequestedDate, true),
+		"last_processing_date":       toIntegrationInstanceObject(o.LastProcessingDate, true),
+		"location":                   o.Location.String(),
+		"name":                       toIntegrationInstanceObject(o.Name, true),
+		"paused":                     toIntegrationInstanceObject(o.Paused, true),
+		"processed":                  toIntegrationInstanceObject(o.Processed, true),
+		"state":                      o.State.String(),
+		"throttled":                  toIntegrationInstanceObject(o.Throttled, true),
+		"throttled_until":            toIntegrationInstanceObject(o.ThrottledUntil, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IntegrationInstancePartial) Stringify() string {
+	return pjson.Stringify(o)
+}

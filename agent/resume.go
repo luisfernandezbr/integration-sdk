@@ -1395,3 +1395,91 @@ func (o *Resume) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// ResumePartial is a partial struct for upsert mutations for Resume
+type ResumePartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *ResumeEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// Integration the name of the integration that was resumed
+	Integration *string `json:"integration,omitempty"`
+	// JobID the job id
+	JobID *string `json:"job_id,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *ResumeLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *ResumeType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ResumePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ResumePartial) GetModelName() datamodel.ModelNameType {
+	return ResumeModelName
+}
+
+// ToMap returns the object as a map
+func (o *ResumePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toResumeObject(o.Architecture, true),
+		"data":             toResumeObject(o.Data, true),
+		"distro":           toResumeObject(o.Distro, true),
+		"error":            toResumeObject(o.Error, true),
+		"event_date":       toResumeObject(o.EventDate, true),
+		"free_space":       toResumeObject(o.FreeSpace, true),
+		"go_version":       toResumeObject(o.GoVersion, true),
+		"hostname":         toResumeObject(o.Hostname, true),
+		"integration":      toResumeObject(o.Integration, true),
+		"job_id":           toResumeObject(o.JobID, true),
+		"last_export_date": toResumeObject(o.LastExportDate, true),
+		"memory":           toResumeObject(o.Memory, true),
+		"message":          toResumeObject(o.Message, true),
+		"num_cpu":          toResumeObject(o.NumCPU, true),
+		"os":               toResumeObject(o.OS, true),
+		"request_id":       toResumeObject(o.RequestID, true),
+		"success":          toResumeObject(o.Success, true),
+		"system_id":        toResumeObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toResumeObject(o.Uptime, true),
+		"uuid":             toResumeObject(o.UUID, true),
+		"version":          toResumeObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ResumePartial) Stringify() string {
+	return pjson.Stringify(o)
+}

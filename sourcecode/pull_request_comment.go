@@ -776,3 +776,46 @@ func (o *PullRequestComment) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// PullRequestCommentPartial is a partial struct for upsert mutations for PullRequestComment
+type PullRequestCommentPartial struct {
+	// Body the body of the comment
+	Body *string `json:"body,omitempty"`
+	// CreatedDate the timestamp in UTC that the comment was created
+	CreatedDate *PullRequestCommentCreatedDate `json:"created_date,omitempty"`
+	// PullRequestID the pull request this comment is associated with
+	PullRequestID *string `json:"pull_request_id,omitempty"`
+	// RepoID the unique id for the repo
+	RepoID *string `json:"repo_id,omitempty"`
+	// UpdatedDate the timestamp in UTC that the comment was closed
+	UpdatedDate *PullRequestCommentUpdatedDate `json:"updated_date,omitempty"`
+	// URL the URL to the source system for this comment
+	URL *string `json:"url,omitempty"`
+	// UserRefID the user ref_id in the source system
+	UserRefID *string `json:"user_ref_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*PullRequestCommentPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *PullRequestCommentPartial) GetModelName() datamodel.ModelNameType {
+	return PullRequestCommentModelName
+}
+
+// ToMap returns the object as a map
+func (o *PullRequestCommentPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"body":            toPullRequestCommentObject(o.Body, true),
+		"created_date":    toPullRequestCommentObject(o.CreatedDate, true),
+		"pull_request_id": toPullRequestCommentObject(o.PullRequestID, true),
+		"repo_id":         toPullRequestCommentObject(o.RepoID, true),
+		"updated_date":    toPullRequestCommentObject(o.UpdatedDate, true),
+		"url":             toPullRequestCommentObject(o.URL, true),
+		"user_ref_id":     toPullRequestCommentObject(o.UserRefID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *PullRequestCommentPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

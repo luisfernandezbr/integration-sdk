@@ -798,3 +798,49 @@ func (o *Project) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// ProjectPartial is a partial struct for upsert mutations for Project
+type ProjectPartial struct {
+	// Active the status of the project
+	Active *bool `json:"active,omitempty"`
+	// Affiliation the affiliation to the project owner
+	Affiliation *ProjectAffiliation `json:"affiliation,omitempty"`
+	// Category the project category
+	Category *string `json:"category,omitempty"`
+	// Description the description of the project
+	Description *string `json:"description,omitempty"`
+	// Identifier the common identifier for the project
+	Identifier *string `json:"identifier,omitempty"`
+	// Name the name of the project
+	Name *string `json:"name,omitempty"`
+	// URL the url to the project home page
+	URL *string `json:"url,omitempty"`
+	// Visibility the visibility of the project
+	Visibility *ProjectVisibility `json:"visibility,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ProjectPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ProjectPartial) GetModelName() datamodel.ModelNameType {
+	return ProjectModelName
+}
+
+// ToMap returns the object as a map
+func (o *ProjectPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"active":      toProjectObject(o.Active, true),
+		"affiliation": o.Affiliation.String(),
+		"category":    toProjectObject(o.Category, true),
+		"description": toProjectObject(o.Description, true),
+		"identifier":  toProjectObject(o.Identifier, true),
+		"name":        toProjectObject(o.Name, true),
+		"url":         toProjectObject(o.URL, true),
+		"visibility":  o.Visibility.String(),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ProjectPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

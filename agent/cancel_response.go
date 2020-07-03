@@ -1065,6 +1065,25 @@ func (o *CancelResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CancelResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventDate.Epoch = dt.Epoch
+			o.EventDate.Rfc3339 = dt.Rfc3339
+			o.EventDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventDate.Epoch = dt.Epoch
+				o.EventDate.Rfc3339 = dt.Rfc3339
+				o.EventDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1168,6 +1187,25 @@ func (o *CancelResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*CancelResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportDate.Epoch = dt.Epoch
+			o.LastExportDate.Rfc3339 = dt.Rfc3339
+			o.LastExportDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportDate.Epoch = dt.Epoch
+				o.LastExportDate.Rfc3339 = dt.Rfc3339
+				o.LastExportDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1490,4 +1528,89 @@ func (o *CancelResponse) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// CancelResponsePartial is a partial struct for upsert mutations for CancelResponse
+type CancelResponsePartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// CancelDate the cancel date
+	CancelDate *CancelResponseCancelDate `json:"cancel_date,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *CancelResponseEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *CancelResponseLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *CancelResponseType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CancelResponsePartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CancelResponsePartial) GetModelName() datamodel.ModelNameType {
+	return CancelResponseModelName
+}
+
+// ToMap returns the object as a map
+func (o *CancelResponsePartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toCancelResponseObject(o.Architecture, true),
+		"cancel_date":      toCancelResponseObject(o.CancelDate, true),
+		"data":             toCancelResponseObject(o.Data, true),
+		"distro":           toCancelResponseObject(o.Distro, true),
+		"error":            toCancelResponseObject(o.Error, true),
+		"event_date":       toCancelResponseObject(o.EventDate, true),
+		"free_space":       toCancelResponseObject(o.FreeSpace, true),
+		"go_version":       toCancelResponseObject(o.GoVersion, true),
+		"hostname":         toCancelResponseObject(o.Hostname, true),
+		"last_export_date": toCancelResponseObject(o.LastExportDate, true),
+		"memory":           toCancelResponseObject(o.Memory, true),
+		"message":          toCancelResponseObject(o.Message, true),
+		"num_cpu":          toCancelResponseObject(o.NumCPU, true),
+		"os":               toCancelResponseObject(o.OS, true),
+		"request_id":       toCancelResponseObject(o.RequestID, true),
+		"success":          toCancelResponseObject(o.Success, true),
+		"system_id":        toCancelResponseObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toCancelResponseObject(o.Uptime, true),
+		"uuid":             toCancelResponseObject(o.UUID, true),
+		"version":          toCancelResponseObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CancelResponsePartial) Stringify() string {
+	return pjson.Stringify(o)
 }

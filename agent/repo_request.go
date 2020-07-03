@@ -3329,3 +3329,34 @@ func (o *RepoRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// RepoRequestPartial is a partial struct for upsert mutations for RepoRequest
+type RepoRequestPartial struct {
+	// Integration the integration details to use
+	Integration *RepoRequestIntegration `json:"integration,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *RepoRequestRequestDate `json:"request_date,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*RepoRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *RepoRequestPartial) GetModelName() datamodel.ModelNameType {
+	return RepoRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *RepoRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration":  toRepoRequestObject(o.Integration, true),
+		"request_date": toRepoRequestObject(o.RequestDate, true),
+		"uuid":         toRepoRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *RepoRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

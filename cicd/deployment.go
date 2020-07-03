@@ -1073,3 +1073,52 @@ func (o *Deployment) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// DeploymentPartial is a partial struct for upsert mutations for Deployment
+type DeploymentPartial struct {
+	// Automated if the deployment was automated or manual
+	Automated *bool `json:"automated,omitempty"`
+	// BuildRefID the build id that is associated with the deployment (if any)
+	BuildRefID *string `json:"build_ref_id,omitempty"`
+	// CommitSha the commit sha for the commit that triggered the deployment
+	CommitSha *string `json:"commit_sha,omitempty"`
+	// EndDate the date when the deployment finished
+	EndDate *DeploymentEndDate `json:"end_date,omitempty"`
+	// Environment the environment for the deployment
+	Environment *DeploymentEnvironment `json:"environment,omitempty"`
+	// RepoName the name of the repo
+	RepoName *string `json:"repo_name,omitempty"`
+	// StartDate the date when the deployment started
+	StartDate *DeploymentStartDate `json:"start_date,omitempty"`
+	// Status the status of the deployment
+	Status *DeploymentStatus `json:"status,omitempty"`
+	// URL the url to the deployment status page
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*DeploymentPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *DeploymentPartial) GetModelName() datamodel.ModelNameType {
+	return DeploymentModelName
+}
+
+// ToMap returns the object as a map
+func (o *DeploymentPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"automated":    toDeploymentObject(o.Automated, true),
+		"build_ref_id": toDeploymentObject(o.BuildRefID, true),
+		"commit_sha":   toDeploymentObject(o.CommitSha, true),
+		"end_date":     toDeploymentObject(o.EndDate, true),
+		"environment":  o.Environment.String(),
+		"repo_name":    toDeploymentObject(o.RepoName, true),
+		"start_date":   toDeploymentObject(o.StartDate, true),
+		"status":       o.Status.String(),
+		"url":          toDeploymentObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *DeploymentPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

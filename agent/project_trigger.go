@@ -383,3 +383,28 @@ func (o *ProjectTrigger) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// ProjectTriggerPartial is a partial struct for upsert mutations for ProjectTrigger
+type ProjectTriggerPartial struct {
+	// IntegrationID the integration id
+	IntegrationID *string `json:"integration_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ProjectTriggerPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ProjectTriggerPartial) GetModelName() datamodel.ModelNameType {
+	return ProjectTriggerModelName
+}
+
+// ToMap returns the object as a map
+func (o *ProjectTriggerPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration_id": toProjectTriggerObject(o.IntegrationID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ProjectTriggerPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

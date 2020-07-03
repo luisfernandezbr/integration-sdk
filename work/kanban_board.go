@@ -906,3 +906,43 @@ func (o *KanbanBoard) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// KanbanBoardPartial is a partial struct for upsert mutations for KanbanBoard
+type KanbanBoardPartial struct {
+	// BacklogIssueIds ids of the all issues on the board backlog in rank order
+	BacklogIssueIds []string `json:"backlog_issue_ids,omitempty"`
+	// Columns the columns for this board
+	Columns []KanbanBoardColumns `json:"columns,omitempty"`
+	// IssueIds ids of the all issues on the board in rank order
+	IssueIds []string `json:"issue_ids,omitempty"`
+	// Name the name of the board
+	Name *string `json:"name,omitempty"`
+	// ProjectIds ids of the projects used in this board
+	ProjectIds []string `json:"project_ids,omitempty"`
+	// URL the url to the kanban board
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*KanbanBoardPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *KanbanBoardPartial) GetModelName() datamodel.ModelNameType {
+	return KanbanBoardModelName
+}
+
+// ToMap returns the object as a map
+func (o *KanbanBoardPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"backlog_issue_ids": toKanbanBoardObject(o.BacklogIssueIds, true),
+		"columns":           toKanbanBoardObject(o.Columns, true),
+		"issue_ids":         toKanbanBoardObject(o.IssueIds, true),
+		"name":              toKanbanBoardObject(o.Name, true),
+		"project_ids":       toKanbanBoardObject(o.ProjectIds, true),
+		"url":               toKanbanBoardObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *KanbanBoardPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -823,3 +823,67 @@ func (o *PullRequestBranch) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// PullRequestBranchPartial is a partial struct for upsert mutations for PullRequestBranch
+type PullRequestBranchPartial struct {
+	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
+	AheadDefaultCount *int64 `json:"ahead_default_count,omitempty"`
+	// BehindDefaultCount the number of commits that this branch is behind from the default branch
+	BehindDefaultCount *int64 `json:"behind_default_count,omitempty"`
+	// BranchedFromCommitIds the commit ids from which the branch was created
+	BranchedFromCommitIds []string `json:"branched_from_commit_ids,omitempty"`
+	// BranchedFromCommitShas the commit shas from which the branch was created
+	BranchedFromCommitShas []string `json:"branched_from_commit_shas,omitempty"`
+	// CommitIds list of commit ids contained on this branch
+	CommitIds []string `json:"commit_ids,omitempty"`
+	// CommitShas list of commit shas contained on this branch
+	CommitShas []string `json:"commit_shas,omitempty"`
+	// Default true if the branch is the default branch
+	Default *bool `json:"default,omitempty"`
+	// MergeCommitID commit id in which the branch was merged
+	MergeCommitID *string `json:"merge_commit_id,omitempty"`
+	// MergeCommitSha commit sha in which the branch was merged
+	MergeCommitSha *string `json:"merge_commit_sha,omitempty"`
+	// Merged true if the branch has been merged into the default branch
+	Merged *bool `json:"merged,omitempty"`
+	// Name name of the branch
+	Name *string `json:"name,omitempty"`
+	// PullRequestID pull request that provided sha for this branch
+	PullRequestID *string `json:"pull_request_id,omitempty"`
+	// RepoID the unique id for the repo
+	RepoID *string `json:"repo_id,omitempty"`
+	// URL the URL to the source system for this branch
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*PullRequestBranchPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *PullRequestBranchPartial) GetModelName() datamodel.ModelNameType {
+	return PullRequestBranchModelName
+}
+
+// ToMap returns the object as a map
+func (o *PullRequestBranchPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"ahead_default_count":       toPullRequestBranchObject(o.AheadDefaultCount, true),
+		"behind_default_count":      toPullRequestBranchObject(o.BehindDefaultCount, true),
+		"branched_from_commit_ids":  toPullRequestBranchObject(o.BranchedFromCommitIds, true),
+		"branched_from_commit_shas": toPullRequestBranchObject(o.BranchedFromCommitShas, true),
+		"commit_ids":                toPullRequestBranchObject(o.CommitIds, true),
+		"commit_shas":               toPullRequestBranchObject(o.CommitShas, true),
+		"default":                   toPullRequestBranchObject(o.Default, true),
+		"merge_commit_id":           toPullRequestBranchObject(o.MergeCommitID, true),
+		"merge_commit_sha":          toPullRequestBranchObject(o.MergeCommitSha, true),
+		"merged":                    toPullRequestBranchObject(o.Merged, true),
+		"name":                      toPullRequestBranchObject(o.Name, true),
+		"pull_request_id":           toPullRequestBranchObject(o.PullRequestID, true),
+		"repo_id":                   toPullRequestBranchObject(o.RepoID, true),
+		"url":                       toPullRequestBranchObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *PullRequestBranchPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

@@ -1048,3 +1048,49 @@ func (o *Build) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// BuildPartial is a partial struct for upsert mutations for Build
+type BuildPartial struct {
+	// Automated if the build was automated or manual
+	Automated *bool `json:"automated,omitempty"`
+	// CommitSha the commit sha for the commit that triggered the build
+	CommitSha *string `json:"commit_sha,omitempty"`
+	// EndDate the date when the build finished
+	EndDate *BuildEndDate `json:"end_date,omitempty"`
+	// Environment the environment for the build
+	Environment *BuildEnvironment `json:"environment,omitempty"`
+	// RepoName the name of the repo
+	RepoName *string `json:"repo_name,omitempty"`
+	// StartDate the date when the build started
+	StartDate *BuildStartDate `json:"start_date,omitempty"`
+	// Status the status of the build
+	Status *BuildStatus `json:"status,omitempty"`
+	// URL the url to the build status page
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*BuildPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *BuildPartial) GetModelName() datamodel.ModelNameType {
+	return BuildModelName
+}
+
+// ToMap returns the object as a map
+func (o *BuildPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"automated":   toBuildObject(o.Automated, true),
+		"commit_sha":  toBuildObject(o.CommitSha, true),
+		"end_date":    toBuildObject(o.EndDate, true),
+		"environment": o.Environment.String(),
+		"repo_name":   toBuildObject(o.RepoName, true),
+		"start_date":  toBuildObject(o.StartDate, true),
+		"status":      o.Status.String(),
+		"url":         toBuildObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *BuildPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

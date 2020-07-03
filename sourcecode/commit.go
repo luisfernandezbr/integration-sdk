@@ -697,3 +697,52 @@ func (o *Commit) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// CommitPartial is a partial struct for upsert mutations for Commit
+type CommitPartial struct {
+	// AuthorRefID the author ref_id in the source system
+	AuthorRefID *string `json:"author_ref_id,omitempty"`
+	// CommitterRefID the committer ref_id in the source system
+	CommitterRefID *string `json:"committer_ref_id,omitempty"`
+	// CreatedDate date when the commit was created
+	CreatedDate *CommitCreatedDate `json:"created_date,omitempty"`
+	// Excluded if the commit was excluded
+	Excluded *bool `json:"excluded,omitempty"`
+	// Identifier the identifier for the commit
+	Identifier *string `json:"identifier,omitempty"`
+	// Message the commit message
+	Message *string `json:"message,omitempty"`
+	// RepoID the unique id for the repo
+	RepoID *string `json:"repo_id,omitempty"`
+	// Sha the unique sha for the commit
+	Sha *string `json:"sha,omitempty"`
+	// URL the url to the commit detail
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*CommitPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *CommitPartial) GetModelName() datamodel.ModelNameType {
+	return CommitModelName
+}
+
+// ToMap returns the object as a map
+func (o *CommitPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"author_ref_id":    toCommitObject(o.AuthorRefID, true),
+		"committer_ref_id": toCommitObject(o.CommitterRefID, true),
+		"created_date":     toCommitObject(o.CreatedDate, true),
+		"excluded":         toCommitObject(o.Excluded, true),
+		"identifier":       toCommitObject(o.Identifier, true),
+		"message":          toCommitObject(o.Message, true),
+		"repo_id":          toCommitObject(o.RepoID, true),
+		"sha":              toCommitObject(o.Sha, true),
+		"url":              toCommitObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *CommitPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

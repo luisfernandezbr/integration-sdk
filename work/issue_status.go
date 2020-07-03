@@ -430,3 +430,34 @@ func (o *IssueStatus) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// IssueStatusPartial is a partial struct for upsert mutations for IssueStatus
+type IssueStatusPartial struct {
+	// Description the description of the status
+	Description *string `json:"description,omitempty"`
+	// IconURL an optional url for the icon for the status
+	IconURL *string `json:"icon_url,omitempty"`
+	// Name the name of the status
+	Name *string `json:"name,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IssueStatusPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IssueStatusPartial) GetModelName() datamodel.ModelNameType {
+	return IssueStatusModelName
+}
+
+// ToMap returns the object as a map
+func (o *IssueStatusPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"description": toIssueStatusObject(o.Description, true),
+		"icon_url":    toIssueStatusObject(o.IconURL, true),
+		"name":        toIssueStatusObject(o.Name, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IssueStatusPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

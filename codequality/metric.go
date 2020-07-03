@@ -849,3 +849,58 @@ func (o *Metric) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// MetricPartial is a partial struct for upsert mutations for Metric
+type MetricPartial struct {
+	// Branch branch name
+	Branch *string `json:"branch,omitempty"`
+	// CommitID the commit id
+	CommitID *string `json:"commit_id,omitempty"`
+	// CommitSha commit sha
+	CommitSha *string `json:"commit_sha,omitempty"`
+	// CreatedDate the date when the metric was created
+	CreatedDate *MetricCreatedDate `json:"created_date,omitempty"`
+	// Name the metric name
+	Name *string `json:"name,omitempty"`
+	// ProjectID the project id
+	ProjectID *string `json:"project_id,omitempty"`
+	// PullRequestID the pull request this commit is associated with
+	PullRequestID *string `json:"pull_request_id,omitempty"`
+	// PullRequestRefID the original pull request id this commit is associated with
+	PullRequestRefID *string `json:"pull_request_ref_id,omitempty"`
+	// RepoID repo id
+	RepoID *string `json:"repo_id,omitempty"`
+	// Status status of the analysis for this commit
+	Status *MetricStatus `json:"status,omitempty"`
+	// Value the value of the metric
+	Value *string `json:"value,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*MetricPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *MetricPartial) GetModelName() datamodel.ModelNameType {
+	return MetricModelName
+}
+
+// ToMap returns the object as a map
+func (o *MetricPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"branch":              toMetricObject(o.Branch, true),
+		"commit_id":           toMetricObject(o.CommitID, true),
+		"commit_sha":          toMetricObject(o.CommitSha, true),
+		"created_date":        toMetricObject(o.CreatedDate, true),
+		"name":                toMetricObject(o.Name, true),
+		"project_id":          toMetricObject(o.ProjectID, true),
+		"pull_request_id":     toMetricObject(o.PullRequestID, true),
+		"pull_request_ref_id": toMetricObject(o.PullRequestRefID, true),
+		"repo_id":             toMetricObject(o.RepoID, true),
+		"status":              o.Status.String(),
+		"value":               toMetricObject(o.Value, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *MetricPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

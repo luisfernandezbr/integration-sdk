@@ -1245,3 +1245,55 @@ func (o *Sprint) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// SprintPartial is a partial struct for upsert mutations for Sprint
+type SprintPartial struct {
+	// BacklogIssueIds ids of the all issues in the sprint backlog in rank order
+	BacklogIssueIds []string `json:"backlog_issue_ids,omitempty"`
+	// CompletedDate the date that the sprint was completed
+	CompletedDate *SprintCompletedDate `json:"completed_date,omitempty"`
+	// EndedDate the date that the sprint was ended
+	EndedDate *SprintEndedDate `json:"ended_date,omitempty"`
+	// Goal the goal for the sprint
+	Goal *string `json:"goal,omitempty"`
+	// IssueIds ids of the all issues in the sprint in rank order
+	IssueIds []string `json:"issue_ids,omitempty"`
+	// Name the name of the field
+	Name *string `json:"name,omitempty"`
+	// ProjectIds ids of the projects used in this board
+	ProjectIds []string `json:"project_ids,omitempty"`
+	// StartedDate the date that the sprint was started
+	StartedDate *SprintStartedDate `json:"started_date,omitempty"`
+	// Status status of the sprint
+	Status *SprintStatus `json:"status,omitempty"`
+	// URL the url to the sprint board
+	URL *string `json:"url,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*SprintPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *SprintPartial) GetModelName() datamodel.ModelNameType {
+	return SprintModelName
+}
+
+// ToMap returns the object as a map
+func (o *SprintPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"backlog_issue_ids": toSprintObject(o.BacklogIssueIds, true),
+		"completed_date":    toSprintObject(o.CompletedDate, true),
+		"ended_date":        toSprintObject(o.EndedDate, true),
+		"goal":              toSprintObject(o.Goal, true),
+		"issue_ids":         toSprintObject(o.IssueIds, true),
+		"name":              toSprintObject(o.Name, true),
+		"project_ids":       toSprintObject(o.ProjectIds, true),
+		"started_date":      toSprintObject(o.StartedDate, true),
+		"status":            o.Status.String(),
+		"url":               toSprintObject(o.URL, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *SprintPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

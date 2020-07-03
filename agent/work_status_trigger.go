@@ -383,3 +383,28 @@ func (o *WorkStatusTrigger) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// WorkStatusTriggerPartial is a partial struct for upsert mutations for WorkStatusTrigger
+type WorkStatusTriggerPartial struct {
+	// IntegrationID the integration id
+	IntegrationID *string `json:"integration_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*WorkStatusTriggerPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *WorkStatusTriggerPartial) GetModelName() datamodel.ModelNameType {
+	return WorkStatusTriggerModelName
+}
+
+// ToMap returns the object as a map
+func (o *WorkStatusTriggerPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration_id": toWorkStatusTriggerObject(o.IntegrationID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *WorkStatusTriggerPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

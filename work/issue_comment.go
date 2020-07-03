@@ -776,3 +776,46 @@ func (o *IssueComment) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// IssueCommentPartial is a partial struct for upsert mutations for IssueComment
+type IssueCommentPartial struct {
+	// Body the body of the comment
+	Body *string `json:"body,omitempty"`
+	// CreatedDate the timestamp in UTC that the comment was created
+	CreatedDate *IssueCommentCreatedDate `json:"created_date,omitempty"`
+	// IssueID the issue this comment is associated with
+	IssueID *string `json:"issue_id,omitempty"`
+	// ProjectID unique project id
+	ProjectID *string `json:"project_id,omitempty"`
+	// UpdatedDate the timestamp in UTC that the comment was closed
+	UpdatedDate *IssueCommentUpdatedDate `json:"updated_date,omitempty"`
+	// URL the URL to the source system for this comment
+	URL *string `json:"url,omitempty"`
+	// UserRefID the user ref_id in the source system of the user that made the comment
+	UserRefID *string `json:"user_ref_id,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IssueCommentPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IssueCommentPartial) GetModelName() datamodel.ModelNameType {
+	return IssueCommentModelName
+}
+
+// ToMap returns the object as a map
+func (o *IssueCommentPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"body":         toIssueCommentObject(o.Body, true),
+		"created_date": toIssueCommentObject(o.CreatedDate, true),
+		"issue_id":     toIssueCommentObject(o.IssueID, true),
+		"project_id":   toIssueCommentObject(o.ProjectID, true),
+		"updated_date": toIssueCommentObject(o.UpdatedDate, true),
+		"url":          toIssueCommentObject(o.URL, true),
+		"user_ref_id":  toIssueCommentObject(o.UserRefID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IssueCommentPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

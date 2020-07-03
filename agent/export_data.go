@@ -433,3 +433,34 @@ func (o *ExportData) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// ExportDataPartial is a partial struct for upsert mutations for ExportData
+type ExportDataPartial struct {
+	// IntegrationID The ID of the integration
+	IntegrationID *string `json:"integration_id,omitempty"`
+	// JobID The job ID
+	JobID *string `json:"job_id,omitempty"`
+	// Objects Objects as JSON map[type][]object for use in pipeline
+	Objects *string `json:"objects,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*ExportDataPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *ExportDataPartial) GetModelName() datamodel.ModelNameType {
+	return ExportDataModelName
+}
+
+// ToMap returns the object as a map
+func (o *ExportDataPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"integration_id": toExportDataObject(o.IntegrationID, true),
+		"job_id":         toExportDataObject(o.JobID, true),
+		"objects":        toExportDataObject(o.Objects, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *ExportDataPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

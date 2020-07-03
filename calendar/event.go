@@ -1384,3 +1384,61 @@ func (o *Event) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// EventPartial is a partial struct for upsert mutations for Event
+type EventPartial struct {
+	// Busy true if the user is marked as busy in this event
+	Busy *bool `json:"busy,omitempty"`
+	// CalendarID unique project id this event belongs to
+	CalendarID *string `json:"calendar_id,omitempty"`
+	// Description the description of the event
+	Description *string `json:"description,omitempty"`
+	// EndDate the event end date
+	EndDate *EventEndDate `json:"end_date,omitempty"`
+	// Location location of the event, could be a place or a link to a meeting
+	Location *EventLocation `json:"location,omitempty"`
+	// Name the name of the event
+	Name *string `json:"name,omitempty"`
+	// OwnerRefID owner ref_id of the event
+	OwnerRefID *string `json:"owner_ref_id,omitempty"`
+	// Participants participants of the event
+	Participants []EventParticipants `json:"participants,omitempty"`
+	// RefID the calendar ID
+	RefID *string `json:"ref_id,omitempty"`
+	// RefType the record type
+	RefType *string `json:"ref_type,omitempty"`
+	// StartDate the event start date
+	StartDate *EventStartDate `json:"start_date,omitempty"`
+	// Status the status of the user in this event
+	Status *EventStatus `json:"status,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*EventPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *EventPartial) GetModelName() datamodel.ModelNameType {
+	return EventModelName
+}
+
+// ToMap returns the object as a map
+func (o *EventPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"busy":         toEventObject(o.Busy, true),
+		"calendar_id":  toEventObject(o.CalendarID, true),
+		"description":  toEventObject(o.Description, true),
+		"end_date":     toEventObject(o.EndDate, true),
+		"location":     toEventObject(o.Location, true),
+		"name":         toEventObject(o.Name, true),
+		"owner_ref_id": toEventObject(o.OwnerRefID, true),
+		"participants": toEventObject(o.Participants, true),
+		"ref_id":       toEventObject(o.RefID, true),
+		"ref_type":     toEventObject(o.RefType, true),
+		"start_date":   toEventObject(o.StartDate, true),
+		"status":       o.Status.String(),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *EventPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

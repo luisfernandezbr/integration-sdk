@@ -428,3 +428,37 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 	}
 	o.setDefaults(false)
 }
+
+// EnrollRequestPartial is a partial struct for upsert mutations for EnrollRequest
+type EnrollRequestPartial struct {
+	// Code The agent enrollment code
+	Code *string `json:"code,omitempty"`
+	// ID the primary key for this model instance
+	ID *string `json:"id,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *EnrollRequestRequestDate `json:"request_date,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*EnrollRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *EnrollRequestPartial) GetModelName() datamodel.ModelNameType {
+	return EnrollRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *EnrollRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"code":         toEnrollRequestObject(o.Code, true),
+		"id":           toEnrollRequestObject(o.ID, true),
+		"request_date": toEnrollRequestObject(o.RequestDate, true),
+		"uuid":         toEnrollRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *EnrollRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

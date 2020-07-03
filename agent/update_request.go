@@ -537,3 +537,34 @@ func (o *UpdateRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// UpdateRequestPartial is a partial struct for upsert mutations for UpdateRequest
+type UpdateRequestPartial struct {
+	// RequestDate the date when the request was made
+	RequestDate *UpdateRequestRequestDate `json:"request_date,omitempty"`
+	// ToVersion the version we're installing
+	ToVersion *string `json:"to_version,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*UpdateRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *UpdateRequestPartial) GetModelName() datamodel.ModelNameType {
+	return UpdateRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *UpdateRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"request_date": toUpdateRequestObject(o.RequestDate, true),
+		"to_version":   toUpdateRequestObject(o.ToVersion, true),
+		"uuid":         toUpdateRequestObject(o.UUID, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *UpdateRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}

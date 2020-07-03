@@ -920,25 +920,6 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*LogEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1042,25 +1023,6 @@ func (o *Log) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*LogLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})
@@ -1382,4 +1344,86 @@ func (o *Log) Hash() string {
 	args = append(args, o.Version)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// LogPartial is a partial struct for upsert mutations for Log
+type LogPartial struct {
+	// Architecture the architecture of the agent machine
+	Architecture *string `json:"architecture,omitempty"`
+	// Data extra data that is specific about this event
+	Data *string `json:"data,omitempty"`
+	// Distro the agent os distribution
+	Distro *string `json:"distro,omitempty"`
+	// Error an error message related to this event
+	Error *string `json:"error,omitempty"`
+	// EventDate the date of the event
+	EventDate *LogEventDate `json:"event_date,omitempty"`
+	// FreeSpace the amount of free space in bytes for the agent machine
+	FreeSpace *int64 `json:"free_space,omitempty"`
+	// GoVersion the go version that the agent build was built with
+	GoVersion *string `json:"go_version,omitempty"`
+	// Hostname the agent hostname
+	Hostname *string `json:"hostname,omitempty"`
+	// LastExportDate the last export date
+	LastExportDate *LogLastExportDate `json:"last_export_date,omitempty"`
+	// Memory the amount of memory in bytes for the agent machine
+	Memory *int64 `json:"memory,omitempty"`
+	// Message a message related to this event
+	Message *string `json:"message,omitempty"`
+	// NumCPU the number of CPU the agent is running
+	NumCPU *int64 `json:"num_cpu,omitempty"`
+	// OS the agent operating system
+	OS *string `json:"os,omitempty"`
+	// RequestID the request id that this response is correlated to
+	RequestID *string `json:"request_id,omitempty"`
+	// Success if the response was successful
+	Success *bool `json:"success,omitempty"`
+	// SystemID system unique device ID
+	SystemID *string `json:"system_id,omitempty"`
+	// Type the type of event
+	Type *LogType `json:"type,omitempty"`
+	// Uptime the uptime in milliseconds since the agent started
+	Uptime *int64 `json:"uptime,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// Version the agent version
+	Version *string `json:"version,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*LogPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *LogPartial) GetModelName() datamodel.ModelNameType {
+	return LogModelName
+}
+
+// ToMap returns the object as a map
+func (o *LogPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"architecture":     toLogObject(o.Architecture, true),
+		"data":             toLogObject(o.Data, true),
+		"distro":           toLogObject(o.Distro, true),
+		"error":            toLogObject(o.Error, true),
+		"event_date":       toLogObject(o.EventDate, true),
+		"free_space":       toLogObject(o.FreeSpace, true),
+		"go_version":       toLogObject(o.GoVersion, true),
+		"hostname":         toLogObject(o.Hostname, true),
+		"last_export_date": toLogObject(o.LastExportDate, true),
+		"memory":           toLogObject(o.Memory, true),
+		"message":          toLogObject(o.Message, true),
+		"num_cpu":          toLogObject(o.NumCPU, true),
+		"os":               toLogObject(o.OS, true),
+		"request_id":       toLogObject(o.RequestID, true),
+		"success":          toLogObject(o.Success, true),
+		"system_id":        toLogObject(o.SystemID, true),
+		"type":             o.Type.String(),
+		"uptime":           toLogObject(o.Uptime, true),
+		"uuid":             toLogObject(o.UUID, true),
+		"version":          toLogObject(o.Version, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *LogPartial) Stringify() string {
+	return pjson.Stringify(o)
 }

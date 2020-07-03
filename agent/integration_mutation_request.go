@@ -1366,3 +1366,55 @@ func (o *IntegrationMutationRequest) Hash() string {
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
+
+// IntegrationMutationRequestPartial is a partial struct for upsert mutations for IntegrationMutationRequest
+type IntegrationMutationRequestPartial struct {
+	// Action Action to perform
+	Action *IntegrationMutationRequestAction `json:"action,omitempty"`
+	// AgentRequestSentDate set by agent operator when sending event to agent
+	AgentRequestSentDate *IntegrationMutationRequestAgentRequestSentDate `json:"agent_request_sent_date,omitempty"`
+	// Authorization Authorization information
+	Authorization *IntegrationMutationRequestAuthorization `json:"authorization,omitempty"`
+	// Data Mutation parameters that vary based on action as JSON string.
+	Data *string `json:"data,omitempty"`
+	// IntegrationName Name of the integration binary
+	IntegrationName *string `json:"integration_name,omitempty"`
+	// JobID The job ID
+	JobID *string `json:"job_id,omitempty"`
+	// RequestDate the date when the request was made
+	RequestDate *IntegrationMutationRequestRequestDate `json:"request_date,omitempty"`
+	// SystemType The system type of the integration
+	SystemType *IntegrationMutationRequestSystemType `json:"system_type,omitempty"`
+	// UUID the agent unique identifier
+	UUID *string `json:"uuid,omitempty"`
+	// WebappRequestDate set by webapp using browser time
+	WebappRequestDate *IntegrationMutationRequestWebappRequestDate `json:"webapp_request_date,omitempty"`
+}
+
+var _ datamodel.PartialModel = (*IntegrationMutationRequestPartial)(nil)
+
+// GetModelName returns the name of the model
+func (o *IntegrationMutationRequestPartial) GetModelName() datamodel.ModelNameType {
+	return IntegrationMutationRequestModelName
+}
+
+// ToMap returns the object as a map
+func (o *IntegrationMutationRequestPartial) ToMap() map[string]interface{} {
+	return map[string]interface{}{
+		"action":                  o.Action.String(),
+		"agent_request_sent_date": toIntegrationMutationRequestObject(o.AgentRequestSentDate, true),
+		"authorization":           toIntegrationMutationRequestObject(o.Authorization, true),
+		"data":                    toIntegrationMutationRequestObject(o.Data, true),
+		"integration_name":        toIntegrationMutationRequestObject(o.IntegrationName, true),
+		"job_id":                  toIntegrationMutationRequestObject(o.JobID, true),
+		"request_date":            toIntegrationMutationRequestObject(o.RequestDate, true),
+		"system_type":             o.SystemType.String(),
+		"uuid":                    toIntegrationMutationRequestObject(o.UUID, true),
+		"webapp_request_date":     toIntegrationMutationRequestObject(o.WebappRequestDate, true),
+	}
+}
+
+// Stringify returns the object in JSON format as a string
+func (o *IntegrationMutationRequestPartial) Stringify() string {
+	return pjson.Stringify(o)
+}
