@@ -89,8 +89,6 @@ const (
 	ProjectResponseModelProjectsErrorColumn = "error"
 	// ProjectResponseModelProjectsIdentifierColumn is the column json value identifier
 	ProjectResponseModelProjectsIdentifierColumn = "identifier"
-	// ProjectResponseModelProjectsIntegrationInstanceIDColumn is the column json value integration_instance_id
-	ProjectResponseModelProjectsIntegrationInstanceIDColumn = "integration_instance_id"
 	// ProjectResponseModelProjectsNameColumn is the column json value name
 	ProjectResponseModelProjectsNameColumn = "name"
 	// ProjectResponseModelProjectsRefIDColumn is the column json value ref_id
@@ -407,8 +405,6 @@ type ProjectResponseProjects struct {
 	Error ProjectResponseProjectsError `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
 	// Identifier the common identifier for the project
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
-	// IntegrationInstanceID the integration instance id
-	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the project
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the id of the project
@@ -448,8 +444,6 @@ func (o *ProjectResponseProjects) ToMap() map[string]interface{} {
 		"error": toProjectResponseProjectsObject(o.Error, false),
 		// Identifier the common identifier for the project
 		"identifier": toProjectResponseProjectsObject(o.Identifier, false),
-		// IntegrationInstanceID the integration instance id
-		"integration_instance_id": toProjectResponseProjectsObject(o.IntegrationInstanceID, true),
 		// Name the name of the project
 		"name": toProjectResponseProjectsObject(o.Name, false),
 		// RefID the id of the project
@@ -560,23 +554,6 @@ func (o *ProjectResponseProjects) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Identifier = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	if val, ok := kv["integration_instance_id"].(*string); ok {
-		o.IntegrationInstanceID = val
-	} else if val, ok := kv["integration_instance_id"].(string); ok {
-		o.IntegrationInstanceID = &val
-	} else {
-		if val, ok := kv["integration_instance_id"]; ok {
-			if val == nil {
-				o.IntegrationInstanceID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1319,25 +1296,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseEventDate); ok {
 			// struct pointer
 			o.EventDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.EventDate.Epoch = dt.Epoch
-			o.EventDate.Rfc3339 = dt.Rfc3339
-			o.EventDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.EventDate.Epoch = dt.Epoch
-				o.EventDate.Rfc3339 = dt.Rfc3339
-				o.EventDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.EventDate.FromMap(map[string]interface{}{})
@@ -1460,25 +1418,6 @@ func (o *ProjectResponse) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ProjectResponseLastExportDate); ok {
 			// struct pointer
 			o.LastExportDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
-			o.LastExportDate.Epoch = dt.Epoch
-			o.LastExportDate.Rfc3339 = dt.Rfc3339
-			o.LastExportDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportDate.Epoch = dt.Epoch
-				o.LastExportDate.Rfc3339 = dt.Rfc3339
-				o.LastExportDate.Offset = dt.Offset
-			}
 		}
 	} else {
 		o.LastExportDate.FromMap(map[string]interface{}{})

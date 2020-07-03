@@ -41,8 +41,6 @@ const (
 	CalendarResponseModelCalendarsDescriptionColumn = "description"
 	// CalendarResponseModelCalendarsEnabledColumn is the column json value enabled
 	CalendarResponseModelCalendarsEnabledColumn = "enabled"
-	// CalendarResponseModelCalendarsIntegrationInstanceIDColumn is the column json value integration_instance_id
-	CalendarResponseModelCalendarsIntegrationInstanceIDColumn = "integration_instance_id"
 	// CalendarResponseModelCalendarsNameColumn is the column json value name
 	CalendarResponseModelCalendarsNameColumn = "name"
 	// CalendarResponseModelCalendarsRefIDColumn is the column json value ref_id
@@ -123,8 +121,6 @@ type CalendarResponseCalendars struct {
 	Description string `json:"description" codec:"description" bson:"description" yaml:"description" faker:"-"`
 	// Enabled Wether this user's calendar can be exported or not
 	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
-	// IntegrationInstanceID the integration instance id
-	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Name the name of the calendar
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the calendar ID
@@ -155,8 +151,6 @@ func (o *CalendarResponseCalendars) ToMap() map[string]interface{} {
 		"description": toCalendarResponseCalendarsObject(o.Description, false),
 		// Enabled Wether this user's calendar can be exported or not
 		"enabled": toCalendarResponseCalendarsObject(o.Enabled, false),
-		// IntegrationInstanceID the integration instance id
-		"integration_instance_id": toCalendarResponseCalendarsObject(o.IntegrationInstanceID, true),
 		// Name the name of the calendar
 		"name": toCalendarResponseCalendarsObject(o.Name, false),
 		// RefID the calendar ID
@@ -220,23 +214,6 @@ func (o *CalendarResponseCalendars) FromMap(kv map[string]interface{}) {
 				o.Enabled = false
 			} else {
 				o.Enabled = number.ToBoolAny(val)
-			}
-		}
-	}
-	if val, ok := kv["integration_instance_id"].(*string); ok {
-		o.IntegrationInstanceID = val
-	} else if val, ok := kv["integration_instance_id"].(string); ok {
-		o.IntegrationInstanceID = &val
-	} else {
-		if val, ok := kv["integration_instance_id"]; ok {
-			if val == nil {
-				o.IntegrationInstanceID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
