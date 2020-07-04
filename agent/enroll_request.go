@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -450,15 +451,141 @@ func (o *EnrollRequestPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *EnrollRequestPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"code":         toEnrollRequestObject(o.Code, true),
 		"id":           toEnrollRequestObject(o.ID, true),
 		"request_date": toEnrollRequestObject(o.RequestDate, true),
 		"uuid":         toEnrollRequestObject(o.UUID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "request_date" {
+				if dt, ok := v.(*EnrollRequestRequestDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *EnrollRequestPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *EnrollRequestPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *EnrollRequestPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *EnrollRequestPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *EnrollRequestPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["code"].(*string); ok {
+		o.Code = val
+	} else if val, ok := kv["code"].(string); ok {
+		o.Code = &val
+	} else {
+		if val, ok := kv["code"]; ok {
+			if val == nil {
+				o.Code = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Code = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["id"].(*string); ok {
+		o.ID = val
+	} else if val, ok := kv["id"].(string); ok {
+		o.ID = &val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.RequestDate == nil {
+		o.RequestDate = &EnrollRequestRequestDate{}
+	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(EnrollRequestRequestDate); ok {
+			// struct
+			o.RequestDate = &sv
+		} else if sp, ok := val.(*EnrollRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["uuid"].(*string); ok {
+		o.UUID = val
+	} else if val, ok := kv["uuid"].(string); ok {
+		o.UUID = &val
+	} else {
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UUID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

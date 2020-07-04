@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
@@ -1568,7 +1569,7 @@ func (o *EnrollmentPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *EnrollmentPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"agent_version":      toEnrollmentObject(o.AgentVersion, true),
 		"architecture":       toEnrollmentObject(o.Architecture, true),
 		"created_date":       toEnrollmentObject(o.CreatedDate, true),
@@ -1583,9 +1584,370 @@ func (o *EnrollmentPartial) ToMap() map[string]interface{} {
 		"system_id":          toEnrollmentObject(o.SystemID, true),
 		"user_id":            toEnrollmentObject(o.UserID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "created_date" {
+				if dt, ok := v.(*EnrollmentCreatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "last_ping_date" {
+				if dt, ok := v.(*EnrollmentLastPingDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "last_shutdown_date" {
+				if dt, ok := v.(*EnrollmentLastShutdownDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "last_startup_date" {
+				if dt, ok := v.(*EnrollmentLastStartupDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *EnrollmentPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *EnrollmentPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *EnrollmentPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *EnrollmentPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *EnrollmentPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["agent_version"].(*string); ok {
+		o.AgentVersion = val
+	} else if val, ok := kv["agent_version"].(string); ok {
+		o.AgentVersion = &val
+	} else {
+		if val, ok := kv["agent_version"]; ok {
+			if val == nil {
+				o.AgentVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AgentVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["architecture"].(*string); ok {
+		o.Architecture = val
+	} else if val, ok := kv["architecture"].(string); ok {
+		o.Architecture = &val
+	} else {
+		if val, ok := kv["architecture"]; ok {
+			if val == nil {
+				o.Architecture = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Architecture = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.CreatedDate == nil {
+		o.CreatedDate = &EnrollmentCreatedDate{}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(EnrollmentCreatedDate); ok {
+			// struct
+			o.CreatedDate = &sv
+		} else if sp, ok := val.(*EnrollmentCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["go_version"].(*string); ok {
+		o.GoVersion = val
+	} else if val, ok := kv["go_version"].(string); ok {
+		o.GoVersion = &val
+	} else {
+		if val, ok := kv["go_version"]; ok {
+			if val == nil {
+				o.GoVersion = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.GoVersion = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["hostname"].(*string); ok {
+		o.Hostname = val
+	} else if val, ok := kv["hostname"].(string); ok {
+		o.Hostname = &val
+	} else {
+		if val, ok := kv["hostname"]; ok {
+			if val == nil {
+				o.Hostname = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Hostname = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.LastPingDate == nil {
+		o.LastPingDate = &EnrollmentLastPingDate{}
+	}
+
+	if val, ok := kv["last_ping_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastPingDate.FromMap(kv)
+		} else if sv, ok := val.(EnrollmentLastPingDate); ok {
+			// struct
+			o.LastPingDate = &sv
+		} else if sp, ok := val.(*EnrollmentLastPingDate); ok {
+			// struct pointer
+			o.LastPingDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastPingDate.Epoch = dt.Epoch
+			o.LastPingDate.Rfc3339 = dt.Rfc3339
+			o.LastPingDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastPingDate.Epoch = dt.Epoch
+			o.LastPingDate.Rfc3339 = dt.Rfc3339
+			o.LastPingDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastPingDate.Epoch = dt.Epoch
+				o.LastPingDate.Rfc3339 = dt.Rfc3339
+				o.LastPingDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastPingDate.FromMap(map[string]interface{}{})
+	}
+
+	if o.LastShutdownDate == nil {
+		o.LastShutdownDate = &EnrollmentLastShutdownDate{}
+	}
+
+	if val, ok := kv["last_shutdown_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastShutdownDate.FromMap(kv)
+		} else if sv, ok := val.(EnrollmentLastShutdownDate); ok {
+			// struct
+			o.LastShutdownDate = &sv
+		} else if sp, ok := val.(*EnrollmentLastShutdownDate); ok {
+			// struct pointer
+			o.LastShutdownDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastShutdownDate.Epoch = dt.Epoch
+			o.LastShutdownDate.Rfc3339 = dt.Rfc3339
+			o.LastShutdownDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastShutdownDate.Epoch = dt.Epoch
+			o.LastShutdownDate.Rfc3339 = dt.Rfc3339
+			o.LastShutdownDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastShutdownDate.Epoch = dt.Epoch
+				o.LastShutdownDate.Rfc3339 = dt.Rfc3339
+				o.LastShutdownDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastShutdownDate.FromMap(map[string]interface{}{})
+	}
+
+	if o.LastStartupDate == nil {
+		o.LastStartupDate = &EnrollmentLastStartupDate{}
+	}
+
+	if val, ok := kv["last_startup_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastStartupDate.FromMap(kv)
+		} else if sv, ok := val.(EnrollmentLastStartupDate); ok {
+			// struct
+			o.LastStartupDate = &sv
+		} else if sp, ok := val.(*EnrollmentLastStartupDate); ok {
+			// struct pointer
+			o.LastStartupDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastStartupDate.Epoch = dt.Epoch
+			o.LastStartupDate.Rfc3339 = dt.Rfc3339
+			o.LastStartupDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastStartupDate.Epoch = dt.Epoch
+			o.LastStartupDate.Rfc3339 = dt.Rfc3339
+			o.LastStartupDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastStartupDate.Epoch = dt.Epoch
+				o.LastStartupDate.Rfc3339 = dt.Rfc3339
+				o.LastStartupDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastStartupDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["num_cpu"].(*int64); ok {
+		o.NumCPU = val
+	} else if val, ok := kv["num_cpu"].(int64); ok {
+		o.NumCPU = &val
+	} else {
+		if val, ok := kv["num_cpu"]; ok {
+			if val == nil {
+				o.NumCPU = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.NumCPU = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["os"].(*string); ok {
+		o.OS = val
+	} else if val, ok := kv["os"].(string); ok {
+		o.OS = &val
+	} else {
+		if val, ok := kv["os"]; ok {
+			if val == nil {
+				o.OS = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.OS = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["running"].(*bool); ok {
+		o.Running = val
+	} else if val, ok := kv["running"].(bool); ok {
+		o.Running = &val
+	} else {
+		if val, ok := kv["running"]; ok {
+			if val == nil {
+				o.Running = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Running = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["system_id"].(*string); ok {
+		o.SystemID = val
+	} else if val, ok := kv["system_id"].(string); ok {
+		o.SystemID = &val
+	} else {
+		if val, ok := kv["system_id"]; ok {
+			if val == nil {
+				o.SystemID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.SystemID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["user_id"].(*string); ok {
+		o.UserID = val
+	} else if val, ok := kv["user_id"].(string); ok {
+		o.UserID = &val
+	} else {
+		if val, ok := kv["user_id"]; ok {
+			if val == nil {
+				o.UserID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UserID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

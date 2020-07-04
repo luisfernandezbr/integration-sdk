@@ -403,6 +403,20 @@ func (o *PullRequestMergedDate) FromMap(kv map[string]interface{}) {
 // PullRequestStatus is the enumeration type for status
 type PullRequestStatus int32
 
+// toPullRequestStatusPointer is the enumeration pointer type for status
+func toPullRequestStatusPointer(v int32) *PullRequestStatus {
+	nv := PullRequestStatus(v)
+	return &nv
+}
+
+// toPullRequestStatusEnum is the enumeration pointer wrapper for status
+func toPullRequestStatusEnum(v *PullRequestStatus) string {
+	if v == nil {
+		return toPullRequestStatusPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *PullRequestStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1598,7 +1612,7 @@ func (o *PullRequestPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *PullRequestPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"branch_id":         toPullRequestObject(o.BranchID, true),
 		"branch_name":       toPullRequestObject(o.BranchName, true),
 		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, true),
@@ -1615,14 +1629,593 @@ func (o *PullRequestPartial) ToMap() map[string]interface{} {
 		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, true),
 		"merged_date":       toPullRequestObject(o.MergedDate, true),
 		"repo_id":           toPullRequestObject(o.RepoID, true),
-		"status":            o.Status.String(),
-		"title":             toPullRequestObject(o.Title, true),
-		"updated_date":      toPullRequestObject(o.UpdatedDate, true),
-		"url":               toPullRequestObject(o.URL, true),
+
+		"status":       toPullRequestStatusEnum(o.Status),
+		"title":        toPullRequestObject(o.Title, true),
+		"updated_date": toPullRequestObject(o.UpdatedDate, true),
+		"url":          toPullRequestObject(o.URL, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "closed_date" {
+				if dt, ok := v.(*PullRequestClosedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "commit_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "commit_shas" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "created_date" {
+				if dt, ok := v.(*PullRequestCreatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "merged_date" {
+				if dt, ok := v.(*PullRequestMergedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "updated_date" {
+				if dt, ok := v.(*PullRequestUpdatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *PullRequestPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *PullRequestPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *PullRequestPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *PullRequestPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *PullRequestPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["branch_id"].(*string); ok {
+		o.BranchID = val
+	} else if val, ok := kv["branch_id"].(string); ok {
+		o.BranchID = &val
+	} else {
+		if val, ok := kv["branch_id"]; ok {
+			if val == nil {
+				o.BranchID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.BranchID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["branch_name"].(*string); ok {
+		o.BranchName = val
+	} else if val, ok := kv["branch_name"].(string); ok {
+		o.BranchName = &val
+	} else {
+		if val, ok := kv["branch_name"]; ok {
+			if val == nil {
+				o.BranchName = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.BranchName = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["closed_by_ref_id"].(*string); ok {
+		o.ClosedByRefID = val
+	} else if val, ok := kv["closed_by_ref_id"].(string); ok {
+		o.ClosedByRefID = &val
+	} else {
+		if val, ok := kv["closed_by_ref_id"]; ok {
+			if val == nil {
+				o.ClosedByRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ClosedByRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.ClosedDate == nil {
+		o.ClosedDate = &PullRequestClosedDate{}
+	}
+
+	if val, ok := kv["closed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ClosedDate.FromMap(kv)
+		} else if sv, ok := val.(PullRequestClosedDate); ok {
+			// struct
+			o.ClosedDate = &sv
+		} else if sp, ok := val.(*PullRequestClosedDate); ok {
+			// struct pointer
+			o.ClosedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ClosedDate.Epoch = dt.Epoch
+			o.ClosedDate.Rfc3339 = dt.Rfc3339
+			o.ClosedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ClosedDate.Epoch = dt.Epoch
+			o.ClosedDate.Rfc3339 = dt.Rfc3339
+			o.ClosedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ClosedDate.Epoch = dt.Epoch
+				o.ClosedDate.Rfc3339 = dt.Rfc3339
+				o.ClosedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ClosedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["commit_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for commit_ids field")
+				}
+			}
+			o.CommitIds = na
+		}
+	}
+	if o.CommitIds == nil {
+		o.CommitIds = make([]string, 0)
+	}
+	if val, ok := kv["commit_shas"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for commit_shas field")
+				}
+			}
+			o.CommitShas = na
+		}
+	}
+	if o.CommitShas == nil {
+		o.CommitShas = make([]string, 0)
+	}
+	if val, ok := kv["created_by_ref_id"].(*string); ok {
+		o.CreatedByRefID = val
+	} else if val, ok := kv["created_by_ref_id"].(string); ok {
+		o.CreatedByRefID = &val
+	} else {
+		if val, ok := kv["created_by_ref_id"]; ok {
+			if val == nil {
+				o.CreatedByRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.CreatedDate == nil {
+		o.CreatedDate = &PullRequestCreatedDate{}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(PullRequestCreatedDate); ok {
+			// struct
+			o.CreatedDate = &sv
+		} else if sp, ok := val.(*PullRequestCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["draft"].(*bool); ok {
+		o.Draft = val
+	} else if val, ok := kv["draft"].(bool); ok {
+		o.Draft = &val
+	} else {
+		if val, ok := kv["draft"]; ok {
+			if val == nil {
+				o.Draft = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Draft = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["identifier"].(*string); ok {
+		o.Identifier = val
+	} else if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = &val
+	} else {
+		if val, ok := kv["identifier"]; ok {
+			if val == nil {
+				o.Identifier = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Identifier = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["merge_commit_id"].(*string); ok {
+		o.MergeCommitID = val
+	} else if val, ok := kv["merge_commit_id"].(string); ok {
+		o.MergeCommitID = &val
+	} else {
+		if val, ok := kv["merge_commit_id"]; ok {
+			if val == nil {
+				o.MergeCommitID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.MergeCommitID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["merge_sha"].(*string); ok {
+		o.MergeSha = val
+	} else if val, ok := kv["merge_sha"].(string); ok {
+		o.MergeSha = &val
+	} else {
+		if val, ok := kv["merge_sha"]; ok {
+			if val == nil {
+				o.MergeSha = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.MergeSha = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["merged_by_ref_id"].(*string); ok {
+		o.MergedByRefID = val
+	} else if val, ok := kv["merged_by_ref_id"].(string); ok {
+		o.MergedByRefID = &val
+	} else {
+		if val, ok := kv["merged_by_ref_id"]; ok {
+			if val == nil {
+				o.MergedByRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.MergedByRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.MergedDate == nil {
+		o.MergedDate = &PullRequestMergedDate{}
+	}
+
+	if val, ok := kv["merged_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.MergedDate.FromMap(kv)
+		} else if sv, ok := val.(PullRequestMergedDate); ok {
+			// struct
+			o.MergedDate = &sv
+		} else if sp, ok := val.(*PullRequestMergedDate); ok {
+			// struct pointer
+			o.MergedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.MergedDate.Epoch = dt.Epoch
+			o.MergedDate.Rfc3339 = dt.Rfc3339
+			o.MergedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.MergedDate.Epoch = dt.Epoch
+			o.MergedDate.Rfc3339 = dt.Rfc3339
+			o.MergedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.MergedDate.Epoch = dt.Epoch
+				o.MergedDate.Rfc3339 = dt.Rfc3339
+				o.MergedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.MergedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["repo_id"].(*string); ok {
+		o.RepoID = val
+	} else if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = &val
+	} else {
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RepoID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["status"].(*PullRequestStatus); ok {
+		o.Status = val
+	} else if val, ok := kv["status"].(PullRequestStatus); ok {
+		o.Status = &val
+	} else {
+		if val, ok := kv["status"]; ok {
+			if val == nil {
+				o.Status = toPullRequestStatusPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["PullRequestStatus"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "open", "OPEN":
+						o.Status = toPullRequestStatusPointer(0)
+					case "closed", "CLOSED":
+						o.Status = toPullRequestStatusPointer(1)
+					case "merged", "MERGED":
+						o.Status = toPullRequestStatusPointer(2)
+					case "superseded", "SUPERSEDED":
+						o.Status = toPullRequestStatusPointer(3)
+					case "locked", "LOCKED":
+						o.Status = toPullRequestStatusPointer(4)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["title"].(*string); ok {
+		o.Title = val
+	} else if val, ok := kv["title"].(string); ok {
+		o.Title = &val
+	} else {
+		if val, ok := kv["title"]; ok {
+			if val == nil {
+				o.Title = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Title = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.UpdatedDate == nil {
+		o.UpdatedDate = &PullRequestUpdatedDate{}
+	}
+
+	if val, ok := kv["updated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.UpdatedDate.FromMap(kv)
+		} else if sv, ok := val.(PullRequestUpdatedDate); ok {
+			// struct
+			o.UpdatedDate = &sv
+		} else if sp, ok := val.(*PullRequestUpdatedDate); ok {
+			// struct pointer
+			o.UpdatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.UpdatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

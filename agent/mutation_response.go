@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -417,13 +418,77 @@ func (o *MutationResponsePartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *MutationResponsePartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"error":   toMutationResponseObject(o.Error, true),
 		"success": toMutationResponseObject(o.Success, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *MutationResponsePartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *MutationResponsePartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *MutationResponsePartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *MutationResponsePartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *MutationResponsePartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["error"].(*string); ok {
+		o.Error = val
+	} else if val, ok := kv["error"].(string); ok {
+		o.Error = &val
+	} else {
+		if val, ok := kv["error"]; ok {
+			if val == nil {
+				o.Error = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["success"].(*bool); ok {
+		o.Success = val
+	} else if val, ok := kv["success"].(bool); ok {
+		o.Success = &val
+	} else {
+		if val, ok := kv["success"]; ok {
+			if val == nil {
+				o.Success = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Success = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

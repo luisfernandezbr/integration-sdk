@@ -6,6 +6,7 @@ package work
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -63,6 +64,20 @@ const (
 
 // ProjectAffiliation is the enumeration type for affiliation
 type ProjectAffiliation int32
+
+// toProjectAffiliationPointer is the enumeration pointer type for affiliation
+func toProjectAffiliationPointer(v int32) *ProjectAffiliation {
+	nv := ProjectAffiliation(v)
+	return &nv
+}
+
+// toProjectAffiliationEnum is the enumeration pointer wrapper for affiliation
+func toProjectAffiliationEnum(v *ProjectAffiliation) string {
+	if v == nil {
+		return toProjectAffiliationPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *ProjectAffiliation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -155,6 +170,20 @@ const (
 
 // ProjectVisibility is the enumeration type for visibility
 type ProjectVisibility int32
+
+// toProjectVisibilityPointer is the enumeration pointer type for visibility
+func toProjectVisibilityPointer(v int32) *ProjectVisibility {
+	nv := ProjectVisibility(v)
+	return &nv
+}
+
+// toProjectVisibilityEnum is the enumeration pointer wrapper for visibility
+func toProjectVisibilityEnum(v *ProjectVisibility) string {
+	if v == nil {
+		return toProjectVisibilityPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *ProjectVisibility) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -828,19 +857,205 @@ func (o *ProjectPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *ProjectPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		"active":      toProjectObject(o.Active, true),
-		"affiliation": o.Affiliation.String(),
+	kv := map[string]interface{}{
+		"active": toProjectObject(o.Active, true),
+
+		"affiliation": toProjectAffiliationEnum(o.Affiliation),
 		"category":    toProjectObject(o.Category, true),
 		"description": toProjectObject(o.Description, true),
 		"identifier":  toProjectObject(o.Identifier, true),
 		"name":        toProjectObject(o.Name, true),
 		"url":         toProjectObject(o.URL, true),
-		"visibility":  o.Visibility.String(),
+
+		"visibility": toProjectVisibilityEnum(o.Visibility),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *ProjectPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *ProjectPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *ProjectPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *ProjectPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["affiliation"].(*ProjectAffiliation); ok {
+		o.Affiliation = val
+	} else if val, ok := kv["affiliation"].(ProjectAffiliation); ok {
+		o.Affiliation = &val
+	} else {
+		if val, ok := kv["affiliation"]; ok {
+			if val == nil {
+				o.Affiliation = toProjectAffiliationPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["ProjectAffiliation"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "organization", "ORGANIZATION":
+						o.Affiliation = toProjectAffiliationPointer(0)
+					case "user", "USER":
+						o.Affiliation = toProjectAffiliationPointer(1)
+					case "thirdparty", "THIRDPARTY":
+						o.Affiliation = toProjectAffiliationPointer(2)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["category"].(*string); ok {
+		o.Category = val
+	} else if val, ok := kv["category"].(string); ok {
+		o.Category = &val
+	} else {
+		if val, ok := kv["category"]; ok {
+			if val == nil {
+				o.Category = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Category = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["identifier"].(*string); ok {
+		o.Identifier = val
+	} else if val, ok := kv["identifier"].(string); ok {
+		o.Identifier = &val
+	} else {
+		if val, ok := kv["identifier"]; ok {
+			if val == nil {
+				o.Identifier = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Identifier = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["visibility"].(*ProjectVisibility); ok {
+		o.Visibility = val
+	} else if val, ok := kv["visibility"].(ProjectVisibility); ok {
+		o.Visibility = &val
+	} else {
+		if val, ok := kv["visibility"]; ok {
+			if val == nil {
+				o.Visibility = toProjectVisibilityPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["ProjectVisibility"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "private", "PRIVATE":
+						o.Visibility = toProjectVisibilityPointer(0)
+					case "public", "PUBLIC":
+						o.Visibility = toProjectVisibilityPointer(1)
+					}
+				}
+			}
+		}
+	}
+	o.setDefaults(false)
 }

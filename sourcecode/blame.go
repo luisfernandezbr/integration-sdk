@@ -347,6 +347,20 @@ func (o *BlameLines) FromMap(kv map[string]interface{}) {
 // BlameStatus is the enumeration type for status
 type BlameStatus int32
 
+// toBlameStatusPointer is the enumeration pointer type for status
+func toBlameStatusPointer(v int32) *BlameStatus {
+	nv := BlameStatus(v)
+	return &nv
+}
+
+// toBlameStatusEnum is the enumeration pointer wrapper for status
+func toBlameStatusEnum(v *BlameStatus) string {
+	if v == nil {
+		return toBlameStatusPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *BlameStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1238,7 +1252,7 @@ func (o *BlamePartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *BlamePartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"blanks":          toBlameObject(o.Blanks, true),
 		"change_date":     toBlameObject(o.ChangeDate, true),
 		"comments":        toBlameObject(o.Comments, true),
@@ -1255,11 +1269,424 @@ func (o *BlamePartial) ToMap() map[string]interface{} {
 		"sha":             toBlameObject(o.Sha, true),
 		"size":            toBlameObject(o.Size, true),
 		"sloc":            toBlameObject(o.Sloc, true),
-		"status":          o.Status.String(),
+
+		"status": toBlameStatusEnum(o.Status),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "change_date" {
+				if dt, ok := v.(*BlameChangeDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "lines" {
+				if arr, ok := v.([]BlameLines); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *BlamePartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *BlamePartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *BlamePartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *BlamePartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *BlamePartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["blanks"].(*int64); ok {
+		o.Blanks = val
+	} else if val, ok := kv["blanks"].(int64); ok {
+		o.Blanks = &val
+	} else {
+		if val, ok := kv["blanks"]; ok {
+			if val == nil {
+				o.Blanks = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.Blanks = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+
+	if o.ChangeDate == nil {
+		o.ChangeDate = &BlameChangeDate{}
+	}
+
+	if val, ok := kv["change_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ChangeDate.FromMap(kv)
+		} else if sv, ok := val.(BlameChangeDate); ok {
+			// struct
+			o.ChangeDate = &sv
+		} else if sp, ok := val.(*BlameChangeDate); ok {
+			// struct pointer
+			o.ChangeDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ChangeDate.Epoch = dt.Epoch
+			o.ChangeDate.Rfc3339 = dt.Rfc3339
+			o.ChangeDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ChangeDate.Epoch = dt.Epoch
+			o.ChangeDate.Rfc3339 = dt.Rfc3339
+			o.ChangeDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ChangeDate.Epoch = dt.Epoch
+				o.ChangeDate.Rfc3339 = dt.Rfc3339
+				o.ChangeDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ChangeDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["comments"].(*int64); ok {
+		o.Comments = val
+	} else if val, ok := kv["comments"].(int64); ok {
+		o.Comments = &val
+	} else {
+		if val, ok := kv["comments"]; ok {
+			if val == nil {
+				o.Comments = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.Comments = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["commit_id"].(*string); ok {
+		o.CommitID = val
+	} else if val, ok := kv["commit_id"].(string); ok {
+		o.CommitID = &val
+	} else {
+		if val, ok := kv["commit_id"]; ok {
+			if val == nil {
+				o.CommitID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CommitID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["complexity"].(*int64); ok {
+		o.Complexity = val
+	} else if val, ok := kv["complexity"].(int64); ok {
+		o.Complexity = &val
+	} else {
+		if val, ok := kv["complexity"]; ok {
+			if val == nil {
+				o.Complexity = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.Complexity = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["excluded"].(*bool); ok {
+		o.Excluded = val
+	} else if val, ok := kv["excluded"].(bool); ok {
+		o.Excluded = &val
+	} else {
+		if val, ok := kv["excluded"]; ok {
+			if val == nil {
+				o.Excluded = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Excluded = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["excluded_reason"].(*string); ok {
+		o.ExcludedReason = val
+	} else if val, ok := kv["excluded_reason"].(string); ok {
+		o.ExcludedReason = &val
+	} else {
+		if val, ok := kv["excluded_reason"]; ok {
+			if val == nil {
+				o.ExcludedReason = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ExcludedReason = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["filename"].(*string); ok {
+		o.Filename = val
+	} else if val, ok := kv["filename"].(string); ok {
+		o.Filename = &val
+	} else {
+		if val, ok := kv["filename"]; ok {
+			if val == nil {
+				o.Filename = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Filename = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["language"].(*string); ok {
+		o.Language = val
+	} else if val, ok := kv["language"].(string); ok {
+		o.Language = &val
+	} else {
+		if val, ok := kv["language"]; ok {
+			if val == nil {
+				o.Language = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Language = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["license"].(*string); ok {
+		o.License = val
+	} else if val, ok := kv["license"].(string); ok {
+		o.License = &val
+	} else {
+		if val, ok := kv["license"]; ok {
+			if val == nil {
+				o.License = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.License = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.Lines = make([]BlameLines, 0)
+
+	}
+	if val, ok := kv["lines"]; ok {
+		if sv, ok := val.([]BlameLines); ok {
+			o.Lines = sv
+		} else if sp, ok := val.([]*BlameLines); ok {
+			o.Lines = o.Lines[:0]
+			for _, e := range sp {
+				o.Lines = append(o.Lines, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(BlameLines); ok {
+					o.Lines = append(o.Lines, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm BlameLines
+					fm.FromMap(av)
+					o.Lines = append(o.Lines, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av BlameLines
+					av.FromMap(bkv)
+					o.Lines = append(o.Lines, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(BlameLines); ok {
+					o.Lines = append(o.Lines, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm BlameLines
+					fm.FromMap(r)
+					o.Lines = append(o.Lines, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := BlameLines{}
+					fm.FromMap(r)
+					o.Lines = append(o.Lines, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm BlameLines
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Lines = append(o.Lines, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if val, ok := kv["loc"].(*int64); ok {
+		o.Loc = val
+	} else if val, ok := kv["loc"].(int64); ok {
+		o.Loc = &val
+	} else {
+		if val, ok := kv["loc"]; ok {
+			if val == nil {
+				o.Loc = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.Loc = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["repo_id"].(*string); ok {
+		o.RepoID = val
+	} else if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = &val
+	} else {
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RepoID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["sha"].(*string); ok {
+		o.Sha = val
+	} else if val, ok := kv["sha"].(string); ok {
+		o.Sha = &val
+	} else {
+		if val, ok := kv["sha"]; ok {
+			if val == nil {
+				o.Sha = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Sha = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["size"].(*int64); ok {
+		o.Size = val
+	} else if val, ok := kv["size"].(int64); ok {
+		o.Size = &val
+	} else {
+		if val, ok := kv["size"]; ok {
+			if val == nil {
+				o.Size = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.Size = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["sloc"].(*int64); ok {
+		o.Sloc = val
+	} else if val, ok := kv["sloc"].(int64); ok {
+		o.Sloc = &val
+	} else {
+		if val, ok := kv["sloc"]; ok {
+			if val == nil {
+				o.Sloc = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.Sloc = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["status"].(*BlameStatus); ok {
+		o.Status = val
+	} else if val, ok := kv["status"].(BlameStatus); ok {
+		o.Status = &val
+	} else {
+		if val, ok := kv["status"]; ok {
+			if val == nil {
+				o.Status = toBlameStatusPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["BlameStatus"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "added", "ADDED":
+						o.Status = toBlameStatusPointer(0)
+					case "modified", "MODIFIED":
+						o.Status = toBlameStatusPointer(1)
+					case "removed", "REMOVED":
+						o.Status = toBlameStatusPointer(2)
+					}
+				}
+			}
+		}
+	}
+	o.setDefaults(false)
 }

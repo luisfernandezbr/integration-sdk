@@ -6,6 +6,7 @@ package work
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -804,7 +805,7 @@ func (o *IssueCommentPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *IssueCommentPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"body":         toIssueCommentObject(o.Body, true),
 		"created_date": toIssueCommentObject(o.CreatedDate, true),
 		"issue_id":     toIssueCommentObject(o.IssueID, true),
@@ -813,9 +814,214 @@ func (o *IssueCommentPartial) ToMap() map[string]interface{} {
 		"url":          toIssueCommentObject(o.URL, true),
 		"user_ref_id":  toIssueCommentObject(o.UserRefID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "created_date" {
+				if dt, ok := v.(*IssueCommentCreatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "updated_date" {
+				if dt, ok := v.(*IssueCommentUpdatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *IssueCommentPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *IssueCommentPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *IssueCommentPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *IssueCommentPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueCommentPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["body"].(*string); ok {
+		o.Body = val
+	} else if val, ok := kv["body"].(string); ok {
+		o.Body = &val
+	} else {
+		if val, ok := kv["body"]; ok {
+			if val == nil {
+				o.Body = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Body = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.CreatedDate == nil {
+		o.CreatedDate = &IssueCommentCreatedDate{}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(IssueCommentCreatedDate); ok {
+			// struct
+			o.CreatedDate = &sv
+		} else if sp, ok := val.(*IssueCommentCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["issue_id"].(*string); ok {
+		o.IssueID = val
+	} else if val, ok := kv["issue_id"].(string); ok {
+		o.IssueID = &val
+	} else {
+		if val, ok := kv["issue_id"]; ok {
+			if val == nil {
+				o.IssueID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IssueID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["project_id"].(*string); ok {
+		o.ProjectID = val
+	} else if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = &val
+	} else {
+		if val, ok := kv["project_id"]; ok {
+			if val == nil {
+				o.ProjectID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ProjectID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.UpdatedDate == nil {
+		o.UpdatedDate = &IssueCommentUpdatedDate{}
+	}
+
+	if val, ok := kv["updated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.UpdatedDate.FromMap(kv)
+		} else if sv, ok := val.(IssueCommentUpdatedDate); ok {
+			// struct
+			o.UpdatedDate = &sv
+		} else if sp, ok := val.(*IssueCommentUpdatedDate); ok {
+			// struct pointer
+			o.UpdatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.UpdatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["user_ref_id"].(*string); ok {
+		o.UserRefID = val
+	} else if val, ok := kv["user_ref_id"].(string); ok {
+		o.UserRefID = &val
+	} else {
+		if val, ok := kv["user_ref_id"]; ok {
+			if val == nil {
+				o.UserRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UserRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -453,14 +454,95 @@ func (o *ExportDataPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *ExportDataPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"integration_id": toExportDataObject(o.IntegrationID, true),
 		"job_id":         toExportDataObject(o.JobID, true),
 		"objects":        toExportDataObject(o.Objects, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *ExportDataPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *ExportDataPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *ExportDataPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *ExportDataPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportDataPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["integration_id"].(*string); ok {
+		o.IntegrationID = val
+	} else if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = &val
+	} else {
+		if val, ok := kv["integration_id"]; ok {
+			if val == nil {
+				o.IntegrationID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["job_id"].(*string); ok {
+		o.JobID = val
+	} else if val, ok := kv["job_id"].(string); ok {
+		o.JobID = &val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.JobID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["objects"].(*string); ok {
+		o.Objects = val
+	} else if val, ok := kv["objects"].(string); ok {
+		o.Objects = &val
+	} else {
+		if val, ok := kv["objects"]; ok {
+			if val == nil {
+				o.Objects = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Objects = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

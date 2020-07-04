@@ -625,6 +625,20 @@ func (o *IntegrationInstanceLastProcessingDate) FromMap(kv map[string]interface{
 // IntegrationInstanceLocation is the enumeration type for location
 type IntegrationInstanceLocation int32
 
+// toIntegrationInstanceLocationPointer is the enumeration pointer type for location
+func toIntegrationInstanceLocationPointer(v int32) *IntegrationInstanceLocation {
+	nv := IntegrationInstanceLocation(v)
+	return &nv
+}
+
+// toIntegrationInstanceLocationEnum is the enumeration pointer wrapper for location
+func toIntegrationInstanceLocationEnum(v *IntegrationInstanceLocation) string {
+	if v == nil {
+		return toIntegrationInstanceLocationPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *IntegrationInstanceLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -704,6 +718,20 @@ const (
 
 // IntegrationInstanceState is the enumeration type for state
 type IntegrationInstanceState int32
+
+// toIntegrationInstanceStatePointer is the enumeration pointer type for state
+func toIntegrationInstanceStatePointer(v int32) *IntegrationInstanceState {
+	nv := IntegrationInstanceState(v)
+	return &nv
+}
+
+// toIntegrationInstanceStateEnum is the enumeration pointer wrapper for state
+func toIntegrationInstanceStateEnum(v *IntegrationInstanceState) string {
+	if v == nil {
+		return toIntegrationInstanceStatePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *IntegrationInstanceState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -2290,7 +2318,7 @@ func (o *IntegrationInstancePartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"active":                     toIntegrationInstanceObject(o.Active, true),
 		"config":                     toIntegrationInstanceObject(o.Config, true),
 		"created_by_profile_id":      toIntegrationInstanceObject(o.CreatedByProfileID, true),
@@ -2305,17 +2333,614 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 		"last_export_completed_date": toIntegrationInstanceObject(o.LastExportCompletedDate, true),
 		"last_export_requested_date": toIntegrationInstanceObject(o.LastExportRequestedDate, true),
 		"last_processing_date":       toIntegrationInstanceObject(o.LastProcessingDate, true),
-		"location":                   o.Location.String(),
-		"name":                       toIntegrationInstanceObject(o.Name, true),
-		"paused":                     toIntegrationInstanceObject(o.Paused, true),
-		"processed":                  toIntegrationInstanceObject(o.Processed, true),
-		"state":                      o.State.String(),
-		"throttled":                  toIntegrationInstanceObject(o.Throttled, true),
-		"throttled_until":            toIntegrationInstanceObject(o.ThrottledUntil, true),
+
+		"location":  toIntegrationInstanceLocationEnum(o.Location),
+		"name":      toIntegrationInstanceObject(o.Name, true),
+		"paused":    toIntegrationInstanceObject(o.Paused, true),
+		"processed": toIntegrationInstanceObject(o.Processed, true),
+
+		"state":           toIntegrationInstanceStateEnum(o.State),
+		"throttled":       toIntegrationInstanceObject(o.Throttled, true),
+		"throttled_until": toIntegrationInstanceObject(o.ThrottledUntil, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "created_date" {
+				if dt, ok := v.(*IntegrationInstanceCreatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "entity_errors" {
+				if arr, ok := v.([]IntegrationInstanceEntityErrors); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "last_export_completed_date" {
+				if dt, ok := v.(*IntegrationInstanceLastExportCompletedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "last_export_requested_date" {
+				if dt, ok := v.(*IntegrationInstanceLastExportRequestedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "last_processing_date" {
+				if dt, ok := v.(*IntegrationInstanceLastProcessingDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "throttled_until" {
+				if dt, ok := v.(*IntegrationInstanceThrottledUntil); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *IntegrationInstancePartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *IntegrationInstancePartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *IntegrationInstancePartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *IntegrationInstancePartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["config"].(*string); ok {
+		o.Config = val
+	} else if val, ok := kv["config"].(string); ok {
+		o.Config = &val
+	} else {
+		if val, ok := kv["config"]; ok {
+			if val == nil {
+				o.Config = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Config = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["created_by_profile_id"].(*string); ok {
+		o.CreatedByProfileID = val
+	} else if val, ok := kv["created_by_profile_id"].(string); ok {
+		o.CreatedByProfileID = &val
+	} else {
+		if val, ok := kv["created_by_profile_id"]; ok {
+			if val == nil {
+				o.CreatedByProfileID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["created_by_user_id"].(*string); ok {
+		o.CreatedByUserID = val
+	} else if val, ok := kv["created_by_user_id"].(string); ok {
+		o.CreatedByUserID = &val
+	} else {
+		if val, ok := kv["created_by_user_id"]; ok {
+			if val == nil {
+				o.CreatedByUserID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CreatedByUserID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.CreatedDate == nil {
+		o.CreatedDate = &IntegrationInstanceCreatedDate{}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceCreatedDate); ok {
+			// struct
+			o.CreatedDate = &sv
+		} else if sp, ok := val.(*IntegrationInstanceCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if o == nil {
+
+		o.EntityErrors = make([]IntegrationInstanceEntityErrors, 0)
+
+	}
+	if val, ok := kv["entity_errors"]; ok {
+		if sv, ok := val.([]IntegrationInstanceEntityErrors); ok {
+			o.EntityErrors = sv
+		} else if sp, ok := val.([]*IntegrationInstanceEntityErrors); ok {
+			o.EntityErrors = o.EntityErrors[:0]
+			for _, e := range sp {
+				o.EntityErrors = append(o.EntityErrors, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IntegrationInstanceEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IntegrationInstanceEntityErrors
+					fm.FromMap(av)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av IntegrationInstanceEntityErrors
+					av.FromMap(bkv)
+					o.EntityErrors = append(o.EntityErrors, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IntegrationInstanceEntityErrors); ok {
+					o.EntityErrors = append(o.EntityErrors, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IntegrationInstanceEntityErrors
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IntegrationInstanceEntityErrors{}
+					fm.FromMap(r)
+					o.EntityErrors = append(o.EntityErrors, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IntegrationInstanceEntityErrors
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.EntityErrors = append(o.EntityErrors, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if val, ok := kv["error_message"].(*string); ok {
+		o.ErrorMessage = val
+	} else if val, ok := kv["error_message"].(string); ok {
+		o.ErrorMessage = &val
+	} else {
+		if val, ok := kv["error_message"]; ok {
+			if val == nil {
+				o.ErrorMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ErrorMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["errored"].(*bool); ok {
+		o.Errored = val
+	} else if val, ok := kv["errored"].(bool); ok {
+		o.Errored = &val
+	} else {
+		if val, ok := kv["errored"]; ok {
+			if val == nil {
+				o.Errored = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Errored = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["export_acknowledged"].(*bool); ok {
+		o.ExportAcknowledged = val
+	} else if val, ok := kv["export_acknowledged"].(bool); ok {
+		o.ExportAcknowledged = &val
+	} else {
+		if val, ok := kv["export_acknowledged"]; ok {
+			if val == nil {
+				o.ExportAcknowledged = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.ExportAcknowledged = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["integration_id"].(*string); ok {
+		o.IntegrationID = val
+	} else if val, ok := kv["integration_id"].(string); ok {
+		o.IntegrationID = &val
+	} else {
+		if val, ok := kv["integration_id"]; ok {
+			if val == nil {
+				o.IntegrationID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["interval"].(*int64); ok {
+		o.Interval = val
+	} else if val, ok := kv["interval"].(int64); ok {
+		o.Interval = &val
+	} else {
+		if val, ok := kv["interval"]; ok {
+			if val == nil {
+				o.Interval = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.Interval = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+
+	if o.LastExportCompletedDate == nil {
+		o.LastExportCompletedDate = &IntegrationInstanceLastExportCompletedDate{}
+	}
+
+	if val, ok := kv["last_export_completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportCompletedDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceLastExportCompletedDate); ok {
+			// struct
+			o.LastExportCompletedDate = &sv
+		} else if sp, ok := val.(*IntegrationInstanceLastExportCompletedDate); ok {
+			// struct pointer
+			o.LastExportCompletedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportCompletedDate.Epoch = dt.Epoch
+			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportCompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportCompletedDate.Epoch = dt.Epoch
+			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportCompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportCompletedDate.Epoch = dt.Epoch
+				o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
+				o.LastExportCompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportCompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if o.LastExportRequestedDate == nil {
+		o.LastExportRequestedDate = &IntegrationInstanceLastExportRequestedDate{}
+	}
+
+	if val, ok := kv["last_export_requested_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastExportRequestedDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceLastExportRequestedDate); ok {
+			// struct
+			o.LastExportRequestedDate = &sv
+		} else if sp, ok := val.(*IntegrationInstanceLastExportRequestedDate); ok {
+			// struct pointer
+			o.LastExportRequestedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastExportRequestedDate.Epoch = dt.Epoch
+			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportRequestedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastExportRequestedDate.Epoch = dt.Epoch
+			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+			o.LastExportRequestedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastExportRequestedDate.Epoch = dt.Epoch
+				o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
+				o.LastExportRequestedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
+	}
+
+	if o.LastProcessingDate == nil {
+		o.LastProcessingDate = &IntegrationInstanceLastProcessingDate{}
+	}
+
+	if val, ok := kv["last_processing_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.LastProcessingDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceLastProcessingDate); ok {
+			// struct
+			o.LastProcessingDate = &sv
+		} else if sp, ok := val.(*IntegrationInstanceLastProcessingDate); ok {
+			// struct pointer
+			o.LastProcessingDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.LastProcessingDate.Epoch = dt.Epoch
+			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.LastProcessingDate.Epoch = dt.Epoch
+			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
+			o.LastProcessingDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.LastProcessingDate.Epoch = dt.Epoch
+				o.LastProcessingDate.Rfc3339 = dt.Rfc3339
+				o.LastProcessingDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.LastProcessingDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["location"].(*IntegrationInstanceLocation); ok {
+		o.Location = val
+	} else if val, ok := kv["location"].(IntegrationInstanceLocation); ok {
+		o.Location = &val
+	} else {
+		if val, ok := kv["location"]; ok {
+			if val == nil {
+				o.Location = toIntegrationInstanceLocationPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["IntegrationInstanceLocation"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "private", "PRIVATE":
+						o.Location = toIntegrationInstanceLocationPointer(0)
+					case "cloud", "CLOUD":
+						o.Location = toIntegrationInstanceLocationPointer(1)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["paused"].(*bool); ok {
+		o.Paused = val
+	} else if val, ok := kv["paused"].(bool); ok {
+		o.Paused = &val
+	} else {
+		if val, ok := kv["paused"]; ok {
+			if val == nil {
+				o.Paused = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Paused = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["processed"].(*bool); ok {
+		o.Processed = val
+	} else if val, ok := kv["processed"].(bool); ok {
+		o.Processed = &val
+	} else {
+		if val, ok := kv["processed"]; ok {
+			if val == nil {
+				o.Processed = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Processed = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["state"].(*IntegrationInstanceState); ok {
+		o.State = val
+	} else if val, ok := kv["state"].(IntegrationInstanceState); ok {
+		o.State = &val
+	} else {
+		if val, ok := kv["state"]; ok {
+			if val == nil {
+				o.State = toIntegrationInstanceStatePointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["IntegrationInstanceState"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "idle", "IDLE":
+						o.State = toIntegrationInstanceStatePointer(0)
+					case "exporting", "EXPORTING":
+						o.State = toIntegrationInstanceStatePointer(1)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["throttled"].(*bool); ok {
+		o.Throttled = val
+	} else if val, ok := kv["throttled"].(bool); ok {
+		o.Throttled = &val
+	} else {
+		if val, ok := kv["throttled"]; ok {
+			if val == nil {
+				o.Throttled = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Throttled = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+
+	if o.ThrottledUntil == nil {
+		o.ThrottledUntil = &IntegrationInstanceThrottledUntil{}
+	}
+
+	if val, ok := kv["throttled_until"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ThrottledUntil.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceThrottledUntil); ok {
+			// struct
+			o.ThrottledUntil = &sv
+		} else if sp, ok := val.(*IntegrationInstanceThrottledUntil); ok {
+			// struct pointer
+			o.ThrottledUntil = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ThrottledUntil.Epoch = dt.Epoch
+			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+			o.ThrottledUntil.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ThrottledUntil.Epoch = dt.Epoch
+			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+			o.ThrottledUntil.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ThrottledUntil.Epoch = dt.Epoch
+				o.ThrottledUntil.Rfc3339 = dt.Rfc3339
+				o.ThrottledUntil.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ThrottledUntil.FromMap(map[string]interface{}{})
+	}
+
+	o.setDefaults(false)
 }

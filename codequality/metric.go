@@ -6,6 +6,7 @@ package codequality
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -168,6 +169,20 @@ func (o *MetricCreatedDate) FromMap(kv map[string]interface{}) {
 
 // MetricStatus is the enumeration type for status
 type MetricStatus int32
+
+// toMetricStatusPointer is the enumeration pointer type for status
+func toMetricStatusPointer(v int32) *MetricStatus {
+	nv := MetricStatus(v)
+	return &nv
+}
+
+// toMetricStatusEnum is the enumeration pointer wrapper for status
+func toMetricStatusEnum(v *MetricStatus) string {
+	if v == nil {
+		return toMetricStatusPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *MetricStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -885,7 +900,7 @@ func (o *MetricPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *MetricPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"branch":              toMetricObject(o.Branch, true),
 		"commit_id":           toMetricObject(o.CommitID, true),
 		"commit_sha":          toMetricObject(o.CommitSha, true),
@@ -895,12 +910,268 @@ func (o *MetricPartial) ToMap() map[string]interface{} {
 		"pull_request_id":     toMetricObject(o.PullRequestID, true),
 		"pull_request_ref_id": toMetricObject(o.PullRequestRefID, true),
 		"repo_id":             toMetricObject(o.RepoID, true),
-		"status":              o.Status.String(),
-		"value":               toMetricObject(o.Value, true),
+
+		"status": toMetricStatusEnum(o.Status),
+		"value":  toMetricObject(o.Value, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "created_date" {
+				if dt, ok := v.(*MetricCreatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *MetricPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *MetricPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *MetricPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *MetricPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *MetricPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["branch"].(*string); ok {
+		o.Branch = val
+	} else if val, ok := kv["branch"].(string); ok {
+		o.Branch = &val
+	} else {
+		if val, ok := kv["branch"]; ok {
+			if val == nil {
+				o.Branch = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Branch = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["commit_id"].(*string); ok {
+		o.CommitID = val
+	} else if val, ok := kv["commit_id"].(string); ok {
+		o.CommitID = &val
+	} else {
+		if val, ok := kv["commit_id"]; ok {
+			if val == nil {
+				o.CommitID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CommitID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["commit_sha"].(*string); ok {
+		o.CommitSha = val
+	} else if val, ok := kv["commit_sha"].(string); ok {
+		o.CommitSha = &val
+	} else {
+		if val, ok := kv["commit_sha"]; ok {
+			if val == nil {
+				o.CommitSha = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CommitSha = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.CreatedDate == nil {
+		o.CreatedDate = &MetricCreatedDate{}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(MetricCreatedDate); ok {
+			// struct
+			o.CreatedDate = &sv
+		} else if sp, ok := val.(*MetricCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["project_id"].(*string); ok {
+		o.ProjectID = val
+	} else if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = &val
+	} else {
+		if val, ok := kv["project_id"]; ok {
+			if val == nil {
+				o.ProjectID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ProjectID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["pull_request_id"].(*string); ok {
+		o.PullRequestID = val
+	} else if val, ok := kv["pull_request_id"].(string); ok {
+		o.PullRequestID = &val
+	} else {
+		if val, ok := kv["pull_request_id"]; ok {
+			if val == nil {
+				o.PullRequestID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PullRequestID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["pull_request_ref_id"].(*string); ok {
+		o.PullRequestRefID = val
+	} else if val, ok := kv["pull_request_ref_id"].(string); ok {
+		o.PullRequestRefID = &val
+	} else {
+		if val, ok := kv["pull_request_ref_id"]; ok {
+			if val == nil {
+				o.PullRequestRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PullRequestRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["repo_id"].(*string); ok {
+		o.RepoID = val
+	} else if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = &val
+	} else {
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RepoID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["status"].(*MetricStatus); ok {
+		o.Status = val
+	} else if val, ok := kv["status"].(MetricStatus); ok {
+		o.Status = &val
+	} else {
+		if val, ok := kv["status"]; ok {
+			if val == nil {
+				o.Status = toMetricStatusPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["MetricStatus"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "unsupported", "UNSUPPORTED":
+						o.Status = toMetricStatusPointer(0)
+					case "not_analysed", "NOT_ANALYSED":
+						o.Status = toMetricStatusPointer(1)
+					case "analysed", "ANALYSED":
+						o.Status = toMetricStatusPointer(2)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["value"].(*string); ok {
+		o.Value = val
+	} else if val, ok := kv["value"].(string); ok {
+		o.Value = &val
+	} else {
+		if val, ok := kv["value"]; ok {
+			if val == nil {
+				o.Value = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Value = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

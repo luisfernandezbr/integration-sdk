@@ -6,6 +6,7 @@ package cicd
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -170,6 +171,20 @@ func (o *DeploymentEndDate) FromMap(kv map[string]interface{}) {
 
 // DeploymentEnvironment is the enumeration type for environment
 type DeploymentEnvironment int32
+
+// toDeploymentEnvironmentPointer is the enumeration pointer type for environment
+func toDeploymentEnvironmentPointer(v int32) *DeploymentEnvironment {
+	nv := DeploymentEnvironment(v)
+	return &nv
+}
+
+// toDeploymentEnvironmentEnum is the enumeration pointer wrapper for environment
+func toDeploymentEnvironmentEnum(v *DeploymentEnvironment) string {
+	if v == nil {
+		return toDeploymentEnvironmentPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *DeploymentEnvironment) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -395,6 +410,20 @@ func (o *DeploymentStartDate) FromMap(kv map[string]interface{}) {
 
 // DeploymentStatus is the enumeration type for status
 type DeploymentStatus int32
+
+// toDeploymentStatusPointer is the enumeration pointer type for status
+func toDeploymentStatusPointer(v int32) *DeploymentStatus {
+	nv := DeploymentStatus(v)
+	return &nv
+}
+
+// toDeploymentStatusEnum is the enumeration pointer wrapper for status
+func toDeploymentStatusEnum(v *DeploymentStatus) string {
+	if v == nil {
+		return toDeploymentStatusPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *DeploymentStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -1105,20 +1134,287 @@ func (o *DeploymentPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *DeploymentPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"automated":    toDeploymentObject(o.Automated, true),
 		"build_ref_id": toDeploymentObject(o.BuildRefID, true),
 		"commit_sha":   toDeploymentObject(o.CommitSha, true),
 		"end_date":     toDeploymentObject(o.EndDate, true),
-		"environment":  o.Environment.String(),
-		"repo_name":    toDeploymentObject(o.RepoName, true),
-		"start_date":   toDeploymentObject(o.StartDate, true),
-		"status":       o.Status.String(),
-		"url":          toDeploymentObject(o.URL, true),
+
+		"environment": toDeploymentEnvironmentEnum(o.Environment),
+		"repo_name":   toDeploymentObject(o.RepoName, true),
+		"start_date":  toDeploymentObject(o.StartDate, true),
+
+		"status": toDeploymentStatusEnum(o.Status),
+		"url":    toDeploymentObject(o.URL, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "end_date" {
+				if dt, ok := v.(*DeploymentEndDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "start_date" {
+				if dt, ok := v.(*DeploymentStartDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *DeploymentPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *DeploymentPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *DeploymentPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *DeploymentPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *DeploymentPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["automated"].(*bool); ok {
+		o.Automated = val
+	} else if val, ok := kv["automated"].(bool); ok {
+		o.Automated = &val
+	} else {
+		if val, ok := kv["automated"]; ok {
+			if val == nil {
+				o.Automated = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Automated = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["build_ref_id"].(*string); ok {
+		o.BuildRefID = val
+	} else if val, ok := kv["build_ref_id"].(string); ok {
+		o.BuildRefID = &val
+	} else {
+		if val, ok := kv["build_ref_id"]; ok {
+			if val == nil {
+				o.BuildRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.BuildRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["commit_sha"].(*string); ok {
+		o.CommitSha = val
+	} else if val, ok := kv["commit_sha"].(string); ok {
+		o.CommitSha = &val
+	} else {
+		if val, ok := kv["commit_sha"]; ok {
+			if val == nil {
+				o.CommitSha = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CommitSha = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.EndDate == nil {
+		o.EndDate = &DeploymentEndDate{}
+	}
+
+	if val, ok := kv["end_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.EndDate.FromMap(kv)
+		} else if sv, ok := val.(DeploymentEndDate); ok {
+			// struct
+			o.EndDate = &sv
+		} else if sp, ok := val.(*DeploymentEndDate); ok {
+			// struct pointer
+			o.EndDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EndDate.Epoch = dt.Epoch
+			o.EndDate.Rfc3339 = dt.Rfc3339
+			o.EndDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EndDate.Epoch = dt.Epoch
+			o.EndDate.Rfc3339 = dt.Rfc3339
+			o.EndDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EndDate.Epoch = dt.Epoch
+				o.EndDate.Rfc3339 = dt.Rfc3339
+				o.EndDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.EndDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["environment"].(*DeploymentEnvironment); ok {
+		o.Environment = val
+	} else if val, ok := kv["environment"].(DeploymentEnvironment); ok {
+		o.Environment = &val
+	} else {
+		if val, ok := kv["environment"]; ok {
+			if val == nil {
+				o.Environment = toDeploymentEnvironmentPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["DeploymentEnvironment"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "production", "PRODUCTION":
+						o.Environment = toDeploymentEnvironmentPointer(0)
+					case "development", "DEVELOPMENT":
+						o.Environment = toDeploymentEnvironmentPointer(1)
+					case "beta", "BETA":
+						o.Environment = toDeploymentEnvironmentPointer(2)
+					case "staging", "STAGING":
+						o.Environment = toDeploymentEnvironmentPointer(3)
+					case "test", "TEST":
+						o.Environment = toDeploymentEnvironmentPointer(4)
+					case "other", "OTHER":
+						o.Environment = toDeploymentEnvironmentPointer(5)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["repo_name"].(*string); ok {
+		o.RepoName = val
+	} else if val, ok := kv["repo_name"].(string); ok {
+		o.RepoName = &val
+	} else {
+		if val, ok := kv["repo_name"]; ok {
+			if val == nil {
+				o.RepoName = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RepoName = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.StartDate == nil {
+		o.StartDate = &DeploymentStartDate{}
+	}
+
+	if val, ok := kv["start_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.StartDate.FromMap(kv)
+		} else if sv, ok := val.(DeploymentStartDate); ok {
+			// struct
+			o.StartDate = &sv
+		} else if sp, ok := val.(*DeploymentStartDate); ok {
+			// struct pointer
+			o.StartDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.StartDate.Epoch = dt.Epoch
+			o.StartDate.Rfc3339 = dt.Rfc3339
+			o.StartDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.StartDate.Epoch = dt.Epoch
+			o.StartDate.Rfc3339 = dt.Rfc3339
+			o.StartDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.StartDate.Epoch = dt.Epoch
+				o.StartDate.Rfc3339 = dt.Rfc3339
+				o.StartDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.StartDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["status"].(*DeploymentStatus); ok {
+		o.Status = val
+	} else if val, ok := kv["status"].(DeploymentStatus); ok {
+		o.Status = &val
+	} else {
+		if val, ok := kv["status"]; ok {
+			if val == nil {
+				o.Status = toDeploymentStatusPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["DeploymentStatus"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "pass", "PASS":
+						o.Status = toDeploymentStatusPointer(0)
+					case "fail", "FAIL":
+						o.Status = toDeploymentStatusPointer(1)
+					case "cancel", "CANCEL":
+						o.Status = toDeploymentStatusPointer(2)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

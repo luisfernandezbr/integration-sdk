@@ -6,6 +6,7 @@ package work
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -501,16 +502,131 @@ func (o *IssuePriorityPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *IssuePriorityPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"color":       toIssuePriorityObject(o.Color, true),
 		"description": toIssuePriorityObject(o.Description, true),
 		"icon_url":    toIssuePriorityObject(o.IconURL, true),
 		"name":        toIssuePriorityObject(o.Name, true),
 		"order":       toIssuePriorityObject(o.Order, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *IssuePriorityPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *IssuePriorityPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *IssuePriorityPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *IssuePriorityPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssuePriorityPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["color"].(*string); ok {
+		o.Color = val
+	} else if val, ok := kv["color"].(string); ok {
+		o.Color = &val
+	} else {
+		if val, ok := kv["color"]; ok {
+			if val == nil {
+				o.Color = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Color = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["icon_url"].(*string); ok {
+		o.IconURL = val
+	} else if val, ok := kv["icon_url"].(string); ok {
+		o.IconURL = &val
+	} else {
+		if val, ok := kv["icon_url"]; ok {
+			if val == nil {
+				o.IconURL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IconURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["order"].(*int64); ok {
+		o.Order = val
+	} else if val, ok := kv["order"].(int64); ok {
+		o.Order = &val
+	} else {
+		if val, ok := kv["order"]; ok {
+			if val == nil {
+				o.Order = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.Order = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

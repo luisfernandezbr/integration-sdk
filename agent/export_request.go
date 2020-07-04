@@ -1005,6 +1005,20 @@ func (o *ExportRequestIntegrationsLastProcessingStartedDate) FromMap(kv map[stri
 // ExportRequestIntegrationsLocation is the enumeration type for location
 type ExportRequestIntegrationsLocation int32
 
+// toExportRequestIntegrationsLocationPointer is the enumeration pointer type for location
+func toExportRequestIntegrationsLocationPointer(v int32) *ExportRequestIntegrationsLocation {
+	nv := ExportRequestIntegrationsLocation(v)
+	return &nv
+}
+
+// toExportRequestIntegrationsLocationEnum is the enumeration pointer wrapper for location
+func toExportRequestIntegrationsLocationEnum(v *ExportRequestIntegrationsLocation) string {
+	if v == nil {
+		return toExportRequestIntegrationsLocationPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportRequestIntegrationsLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1279,6 +1293,20 @@ func (o *ExportRequestIntegrationsOnboardRequestedDate) FromMap(kv map[string]in
 // ExportRequestIntegrationsState is the enumeration type for state
 type ExportRequestIntegrationsState int32
 
+// toExportRequestIntegrationsStatePointer is the enumeration pointer type for state
+func toExportRequestIntegrationsStatePointer(v int32) *ExportRequestIntegrationsState {
+	nv := ExportRequestIntegrationsState(v)
+	return &nv
+}
+
+// toExportRequestIntegrationsStateEnum is the enumeration pointer wrapper for state
+func toExportRequestIntegrationsStateEnum(v *ExportRequestIntegrationsState) string {
+	if v == nil {
+		return toExportRequestIntegrationsStatePointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportRequestIntegrationsState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1370,6 +1398,20 @@ const (
 
 // ExportRequestIntegrationsSystemType is the enumeration type for system_type
 type ExportRequestIntegrationsSystemType int32
+
+// toExportRequestIntegrationsSystemTypePointer is the enumeration pointer type for system_type
+func toExportRequestIntegrationsSystemTypePointer(v int32) *ExportRequestIntegrationsSystemType {
+	nv := ExportRequestIntegrationsSystemType(v)
+	return &nv
+}
+
+// toExportRequestIntegrationsSystemTypeEnum is the enumeration pointer wrapper for system_type
+func toExportRequestIntegrationsSystemTypeEnum(v *ExportRequestIntegrationsSystemType) string {
+	if v == nil {
+		return toExportRequestIntegrationsSystemTypePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportRequestIntegrationsSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -3377,6 +3419,25 @@ func (o *ExportRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -3464,7 +3525,7 @@ func (o *ExportRequestPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *ExportRequestPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"integrations":         toExportRequestObject(o.Integrations, true),
 		"job_id":               toExportRequestObject(o.JobID, true),
 		"reprocess_historical": toExportRequestObject(o.ReprocessHistorical, true),
@@ -3472,9 +3533,224 @@ func (o *ExportRequestPartial) ToMap() map[string]interface{} {
 		"upload_url":           toExportRequestObject(o.UploadURL, true),
 		"uuid":                 toExportRequestObject(o.UUID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+
+			if k == "integrations" {
+				if arr, ok := v.([]ExportRequestIntegrations); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "request_date" {
+				if dt, ok := v.(*ExportRequestRequestDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *ExportRequestPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *ExportRequestPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *ExportRequestPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *ExportRequestPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportRequestPartial) FromMap(kv map[string]interface{}) {
+
+	if o == nil {
+
+		o.Integrations = make([]ExportRequestIntegrations, 0)
+
+	}
+	if val, ok := kv["integrations"]; ok {
+		if sv, ok := val.([]ExportRequestIntegrations); ok {
+			o.Integrations = sv
+		} else if sp, ok := val.([]*ExportRequestIntegrations); ok {
+			o.Integrations = o.Integrations[:0]
+			for _, e := range sp {
+				o.Integrations = append(o.Integrations, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ExportRequestIntegrations); ok {
+					o.Integrations = append(o.Integrations, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ExportRequestIntegrations
+					fm.FromMap(av)
+					o.Integrations = append(o.Integrations, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ExportRequestIntegrations
+					av.FromMap(bkv)
+					o.Integrations = append(o.Integrations, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ExportRequestIntegrations); ok {
+					o.Integrations = append(o.Integrations, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ExportRequestIntegrations
+					fm.FromMap(r)
+					o.Integrations = append(o.Integrations, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ExportRequestIntegrations{}
+					fm.FromMap(r)
+					o.Integrations = append(o.Integrations, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ExportRequestIntegrations
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Integrations = append(o.Integrations, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if val, ok := kv["job_id"].(*string); ok {
+		o.JobID = val
+	} else if val, ok := kv["job_id"].(string); ok {
+		o.JobID = &val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.JobID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["reprocess_historical"].(*bool); ok {
+		o.ReprocessHistorical = val
+	} else if val, ok := kv["reprocess_historical"].(bool); ok {
+		o.ReprocessHistorical = &val
+	} else {
+		if val, ok := kv["reprocess_historical"]; ok {
+			if val == nil {
+				o.ReprocessHistorical = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.ReprocessHistorical = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+
+	if o.RequestDate == nil {
+		o.RequestDate = &ExportRequestRequestDate{}
+	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(ExportRequestRequestDate); ok {
+			// struct
+			o.RequestDate = &sv
+		} else if sp, ok := val.(*ExportRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["upload_url"].(*string); ok {
+		o.UploadURL = val
+	} else if val, ok := kv["upload_url"].(string); ok {
+		o.UploadURL = &val
+	} else {
+		if val, ok := kv["upload_url"]; ok {
+			if val == nil {
+				o.UploadURL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UploadURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["uuid"].(*string); ok {
+		o.UUID = val
+	} else if val, ok := kv["uuid"].(string); ok {
+		o.UUID = &val
+	} else {
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UUID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

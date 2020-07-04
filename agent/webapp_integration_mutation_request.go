@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -61,6 +62,20 @@ const (
 
 // WebappIntegrationMutationRequestAction is the enumeration type for action
 type WebappIntegrationMutationRequestAction int32
+
+// toWebappIntegrationMutationRequestActionPointer is the enumeration pointer type for action
+func toWebappIntegrationMutationRequestActionPointer(v int32) *WebappIntegrationMutationRequestAction {
+	nv := WebappIntegrationMutationRequestAction(v)
+	return &nv
+}
+
+// toWebappIntegrationMutationRequestActionEnum is the enumeration pointer wrapper for action
+func toWebappIntegrationMutationRequestActionEnum(v *WebappIntegrationMutationRequestAction) string {
+	if v == nil {
+		return toWebappIntegrationMutationRequestActionPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *WebappIntegrationMutationRequestAction) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -310,6 +325,20 @@ func (o *WebappIntegrationMutationRequestRequestDate) FromMap(kv map[string]inte
 
 // WebappIntegrationMutationRequestSystemType is the enumeration type for system_type
 type WebappIntegrationMutationRequestSystemType int32
+
+// toWebappIntegrationMutationRequestSystemTypePointer is the enumeration pointer type for system_type
+func toWebappIntegrationMutationRequestSystemTypePointer(v int32) *WebappIntegrationMutationRequestSystemType {
+	nv := WebappIntegrationMutationRequestSystemType(v)
+	return &nv
+}
+
+// toWebappIntegrationMutationRequestSystemTypeEnum is the enumeration pointer wrapper for system_type
+func toWebappIntegrationMutationRequestSystemTypeEnum(v *WebappIntegrationMutationRequestSystemType) string {
+	if v == nil {
+		return toWebappIntegrationMutationRequestSystemTypePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *WebappIntegrationMutationRequestSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -960,17 +989,211 @@ func (o *WebappIntegrationMutationRequestPartial) GetModelName() datamodel.Model
 
 // ToMap returns the object as a map
 func (o *WebappIntegrationMutationRequestPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		"action":           o.Action.String(),
+	kv := map[string]interface{}{
+
+		"action":           toWebappIntegrationMutationRequestActionEnum(o.Action),
 		"data":             toWebappIntegrationMutationRequestObject(o.Data, true),
 		"integration_name": toWebappIntegrationMutationRequestObject(o.IntegrationName, true),
 		"job_id":           toWebappIntegrationMutationRequestObject(o.JobID, true),
 		"request_date":     toWebappIntegrationMutationRequestObject(o.RequestDate, true),
-		"system_type":      o.SystemType.String(),
+
+		"system_type": toWebappIntegrationMutationRequestSystemTypeEnum(o.SystemType),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "request_date" {
+				if dt, ok := v.(*WebappIntegrationMutationRequestRequestDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *WebappIntegrationMutationRequestPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *WebappIntegrationMutationRequestPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *WebappIntegrationMutationRequestPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *WebappIntegrationMutationRequestPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *WebappIntegrationMutationRequestPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["action"].(*WebappIntegrationMutationRequestAction); ok {
+		o.Action = val
+	} else if val, ok := kv["action"].(WebappIntegrationMutationRequestAction); ok {
+		o.Action = &val
+	} else {
+		if val, ok := kv["action"]; ok {
+			if val == nil {
+				o.Action = toWebappIntegrationMutationRequestActionPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["WebappIntegrationMutationRequestAction"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "issue_add_comment", "ISSUE_ADD_COMMENT":
+						o.Action = toWebappIntegrationMutationRequestActionPointer(0)
+					case "issue_set_title", "ISSUE_SET_TITLE":
+						o.Action = toWebappIntegrationMutationRequestActionPointer(1)
+					case "issue_set_status", "ISSUE_SET_STATUS":
+						o.Action = toWebappIntegrationMutationRequestActionPointer(2)
+					case "issue_set_priority", "ISSUE_SET_PRIORITY":
+						o.Action = toWebappIntegrationMutationRequestActionPointer(3)
+					case "issue_set_assignee", "ISSUE_SET_ASSIGNEE":
+						o.Action = toWebappIntegrationMutationRequestActionPointer(4)
+					case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
+						o.Action = toWebappIntegrationMutationRequestActionPointer(5)
+					case "pr_set_title", "PR_SET_TITLE":
+						o.Action = toWebappIntegrationMutationRequestActionPointer(6)
+					case "pr_set_description", "PR_SET_DESCRIPTION":
+						o.Action = toWebappIntegrationMutationRequestActionPointer(7)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["data"].(*string); ok {
+		o.Data = val
+	} else if val, ok := kv["data"].(string); ok {
+		o.Data = &val
+	} else {
+		if val, ok := kv["data"]; ok {
+			if val == nil {
+				o.Data = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["integration_name"].(*string); ok {
+		o.IntegrationName = val
+	} else if val, ok := kv["integration_name"].(string); ok {
+		o.IntegrationName = &val
+	} else {
+		if val, ok := kv["integration_name"]; ok {
+			if val == nil {
+				o.IntegrationName = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationName = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["job_id"].(*string); ok {
+		o.JobID = val
+	} else if val, ok := kv["job_id"].(string); ok {
+		o.JobID = &val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.JobID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.RequestDate == nil {
+		o.RequestDate = &WebappIntegrationMutationRequestRequestDate{}
+	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(WebappIntegrationMutationRequestRequestDate); ok {
+			// struct
+			o.RequestDate = &sv
+		} else if sp, ok := val.(*WebappIntegrationMutationRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["system_type"].(*WebappIntegrationMutationRequestSystemType); ok {
+		o.SystemType = val
+	} else if val, ok := kv["system_type"].(WebappIntegrationMutationRequestSystemType); ok {
+		o.SystemType = &val
+	} else {
+		if val, ok := kv["system_type"]; ok {
+			if val == nil {
+				o.SystemType = toWebappIntegrationMutationRequestSystemTypePointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["WebappIntegrationMutationRequestSystemType"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "work", "WORK":
+						o.SystemType = toWebappIntegrationMutationRequestSystemTypePointer(0)
+					case "sourcecode", "SOURCECODE":
+						o.SystemType = toWebappIntegrationMutationRequestSystemTypePointer(1)
+					case "codequality", "CODEQUALITY":
+						o.SystemType = toWebappIntegrationMutationRequestSystemTypePointer(2)
+					case "user", "USER":
+						o.SystemType = toWebappIntegrationMutationRequestSystemTypePointer(3)
+					}
+				}
+			}
+		}
+	}
+	o.setDefaults(false)
 }

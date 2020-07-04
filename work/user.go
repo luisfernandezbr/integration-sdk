@@ -6,6 +6,7 @@ package work
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -591,8 +592,6 @@ type UserPartial struct {
 	// Email the email for the user
 	Email *string `json:"email,omitempty"`
 	// Member if the user is a member of organization
-	//
-	// Deprecated: no longer used
 	Member *bool `json:"member,omitempty"`
 	// Name the name of the user
 	Name *string `json:"name,omitempty"`
@@ -611,7 +610,7 @@ func (o *UserPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *UserPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"associated_ref_id": toUserObject(o.AssociatedRefID, true),
 		"avatar_url":        toUserObject(o.AvatarURL, true),
 		"email":             toUserObject(o.Email, true),
@@ -620,9 +619,158 @@ func (o *UserPartial) ToMap() map[string]interface{} {
 		"url":               toUserObject(o.URL, true),
 		"username":          toUserObject(o.Username, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *UserPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *UserPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *UserPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *UserPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *UserPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["associated_ref_id"].(*string); ok {
+		o.AssociatedRefID = val
+	} else if val, ok := kv["associated_ref_id"].(string); ok {
+		o.AssociatedRefID = &val
+	} else {
+		if val, ok := kv["associated_ref_id"]; ok {
+			if val == nil {
+				o.AssociatedRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AssociatedRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["avatar_url"].(*string); ok {
+		o.AvatarURL = val
+	} else if val, ok := kv["avatar_url"].(string); ok {
+		o.AvatarURL = &val
+	} else {
+		if val, ok := kv["avatar_url"]; ok {
+			if val == nil {
+				o.AvatarURL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["email"].(*string); ok {
+		o.Email = val
+	} else if val, ok := kv["email"].(string); ok {
+		o.Email = &val
+	} else {
+		if val, ok := kv["email"]; ok {
+			if val == nil {
+				o.Email = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Email = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["member"].(*bool); ok {
+		o.Member = val
+	} else if val, ok := kv["member"].(bool); ok {
+		o.Member = &val
+	} else {
+		if val, ok := kv["member"]; ok {
+			if val == nil {
+				o.Member = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Member = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["username"].(*string); ok {
+		o.Username = val
+	} else if val, ok := kv["username"].(string); ok {
+		o.Username = &val
+	} else {
+		if val, ok := kv["username"]; ok {
+			if val == nil {
+				o.Username = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Username = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

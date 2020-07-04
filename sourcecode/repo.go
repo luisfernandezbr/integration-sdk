@@ -6,6 +6,7 @@ package sourcecode
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -63,6 +64,20 @@ const (
 
 // RepoAffiliation is the enumeration type for affiliation
 type RepoAffiliation int32
+
+// toRepoAffiliationPointer is the enumeration pointer type for affiliation
+func toRepoAffiliationPointer(v int32) *RepoAffiliation {
+	nv := RepoAffiliation(v)
+	return &nv
+}
+
+// toRepoAffiliationEnum is the enumeration pointer wrapper for affiliation
+func toRepoAffiliationEnum(v *RepoAffiliation) string {
+	if v == nil {
+		return toRepoAffiliationPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *RepoAffiliation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -155,6 +170,20 @@ const (
 
 // RepoVisibility is the enumeration type for visibility
 type RepoVisibility int32
+
+// toRepoVisibilityPointer is the enumeration pointer type for visibility
+func toRepoVisibilityPointer(v int32) *RepoVisibility {
+	nv := RepoVisibility(v)
+	return &nv
+}
+
+// toRepoVisibilityEnum is the enumeration pointer wrapper for visibility
+func toRepoVisibilityEnum(v *RepoVisibility) string {
+	if v == nil {
+		return toRepoVisibilityPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *RepoVisibility) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -840,19 +869,205 @@ func (o *RepoPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *RepoPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		"active":         toRepoObject(o.Active, true),
-		"affiliation":    o.Affiliation.String(),
+	kv := map[string]interface{}{
+		"active": toRepoObject(o.Active, true),
+
+		"affiliation":    toRepoAffiliationEnum(o.Affiliation),
 		"default_branch": toRepoObject(o.DefaultBranch, true),
 		"description":    toRepoObject(o.Description, true),
 		"language":       toRepoObject(o.Language, true),
 		"name":           toRepoObject(o.Name, true),
 		"url":            toRepoObject(o.URL, true),
-		"visibility":     o.Visibility.String(),
+
+		"visibility": toRepoVisibilityEnum(o.Visibility),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *RepoPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *RepoPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *RepoPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *RepoPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["affiliation"].(*RepoAffiliation); ok {
+		o.Affiliation = val
+	} else if val, ok := kv["affiliation"].(RepoAffiliation); ok {
+		o.Affiliation = &val
+	} else {
+		if val, ok := kv["affiliation"]; ok {
+			if val == nil {
+				o.Affiliation = toRepoAffiliationPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["RepoAffiliation"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "organization", "ORGANIZATION":
+						o.Affiliation = toRepoAffiliationPointer(0)
+					case "user", "USER":
+						o.Affiliation = toRepoAffiliationPointer(1)
+					case "thirdparty", "THIRDPARTY":
+						o.Affiliation = toRepoAffiliationPointer(2)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["default_branch"].(*string); ok {
+		o.DefaultBranch = val
+	} else if val, ok := kv["default_branch"].(string); ok {
+		o.DefaultBranch = &val
+	} else {
+		if val, ok := kv["default_branch"]; ok {
+			if val == nil {
+				o.DefaultBranch = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.DefaultBranch = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["language"].(*string); ok {
+		o.Language = val
+	} else if val, ok := kv["language"].(string); ok {
+		o.Language = &val
+	} else {
+		if val, ok := kv["language"]; ok {
+			if val == nil {
+				o.Language = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Language = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["visibility"].(*RepoVisibility); ok {
+		o.Visibility = val
+	} else if val, ok := kv["visibility"].(RepoVisibility); ok {
+		o.Visibility = &val
+	} else {
+		if val, ok := kv["visibility"]; ok {
+			if val == nil {
+				o.Visibility = toRepoVisibilityPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["RepoVisibility"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "private", "PRIVATE":
+						o.Visibility = toRepoVisibilityPointer(0)
+					case "public", "PUBLIC":
+						o.Visibility = toRepoVisibilityPointer(1)
+					}
+				}
+			}
+		}
+	}
+	o.setDefaults(false)
 }

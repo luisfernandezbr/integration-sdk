@@ -374,7 +374,9 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 				if m, ok := val.(map[string]interface{}); ok {
 					for k, v := range m {
 						if mv, ok := v.(string); ok {
+
 							kv[k] = mv
+
 						} else {
 							kv[k] = pjson.Stringify(v)
 						}
@@ -509,7 +511,7 @@ func (o *HookPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *HookPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"data":          toHookObject(o.Data, true),
 		"headers":       toHookObject(o.Headers, true),
 		"id":            toHookObject(o.ID, true),
@@ -517,9 +519,179 @@ func (o *HookPartial) ToMap() map[string]interface{} {
 		"system":        toHookObject(o.System, true),
 		"token":         toHookObject(o.Token, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "received_date" {
+				if dt, ok := v.(*HookReceivedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *HookPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *HookPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *HookPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *HookPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *HookPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["data"].(*string); ok {
+		o.Data = val
+	} else if val, ok := kv["data"].(string); ok {
+		o.Data = &val
+	} else {
+		if val, ok := kv["data"]; ok {
+			if val == nil {
+				o.Data = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["headers"]; ok {
+		if val != nil {
+			kv := make(map[string]string)
+			if m, ok := val.(map[string]string); ok {
+				kv = m
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					for k, v := range m {
+						if mv, ok := v.(*string); ok {
+
+							kv[k] = *mv
+
+						} else {
+							panic("unsupported type for headers key:" + k + " field entry types: " + reflect.TypeOf(v).String())
+						}
+					}
+				} else {
+					panic("unsupported type for headers field entry: " + reflect.TypeOf(val).String())
+				}
+			}
+			o.Headers = kv
+		}
+	}
+	if o.Headers == nil {
+		// here
+		o.Headers = make(map[string]string)
+	}
+	if val, ok := kv["id"].(*string); ok {
+		o.ID = val
+	} else if val, ok := kv["id"].(string); ok {
+		o.ID = &val
+	} else {
+		if val, ok := kv["id"]; ok {
+			if val == nil {
+				o.ID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.ReceivedDate == nil {
+		o.ReceivedDate = &HookReceivedDate{}
+	}
+
+	if val, ok := kv["received_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ReceivedDate.FromMap(kv)
+		} else if sv, ok := val.(HookReceivedDate); ok {
+			// struct
+			o.ReceivedDate = &sv
+		} else if sp, ok := val.(*HookReceivedDate); ok {
+			// struct pointer
+			o.ReceivedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ReceivedDate.Epoch = dt.Epoch
+			o.ReceivedDate.Rfc3339 = dt.Rfc3339
+			o.ReceivedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.ReceivedDate.Epoch = dt.Epoch
+			o.ReceivedDate.Rfc3339 = dt.Rfc3339
+			o.ReceivedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ReceivedDate.Epoch = dt.Epoch
+				o.ReceivedDate.Rfc3339 = dt.Rfc3339
+				o.ReceivedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ReceivedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["system"].(*string); ok {
+		o.System = val
+	} else if val, ok := kv["system"].(string); ok {
+		o.System = &val
+	} else {
+		if val, ok := kv["system"]; ok {
+			if val == nil {
+				o.System = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.System = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["token"].(*string); ok {
+		o.Token = val
+	} else if val, ok := kv["token"].(string); ok {
+		o.Token = &val
+	} else {
+		if val, ok := kv["token"]; ok {
+			if val == nil {
+				o.Token = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Token = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

@@ -374,6 +374,20 @@ func (o *WebhookRequestRequestDate) FromMap(kv map[string]interface{}) {
 // WebhookRequestSystemType is the enumeration type for system_type
 type WebhookRequestSystemType int32
 
+// toWebhookRequestSystemTypePointer is the enumeration pointer type for system_type
+func toWebhookRequestSystemTypePointer(v int32) *WebhookRequestSystemType {
+	nv := WebhookRequestSystemType(v)
+	return &nv
+}
+
+// toWebhookRequestSystemTypeEnum is the enumeration pointer wrapper for system_type
+func toWebhookRequestSystemTypeEnum(v *WebhookRequestSystemType) string {
+	if v == nil {
+		return toWebhookRequestSystemTypePointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *WebhookRequestSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -832,7 +846,9 @@ func (o *WebhookRequest) FromMap(kv map[string]interface{}) {
 				if m, ok := val.(map[string]interface{}); ok {
 					for k, v := range m {
 						if mv, ok := v.(string); ok {
+
 							kv[k] = mv
+
 						} else {
 							kv[k] = pjson.Stringify(v)
 						}
@@ -1135,7 +1151,7 @@ func (o *WebhookRequestPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *WebhookRequestPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"data":                    toWebhookRequestObject(o.Data, true),
 		"encrypted_authorization": toWebhookRequestObject(o.EncryptedAuthorization, true),
 		"event_api_received_date": toWebhookRequestObject(o.EventAPIReceivedDate, true),
@@ -1144,12 +1160,318 @@ func (o *WebhookRequestPartial) ToMap() map[string]interface{} {
 		"job_id":                  toWebhookRequestObject(o.JobID, true),
 		"operator_received_date":  toWebhookRequestObject(o.OperatorReceivedDate, true),
 		"request_date":            toWebhookRequestObject(o.RequestDate, true),
-		"system_type":             o.SystemType.String(),
-		"uuid":                    toWebhookRequestObject(o.UUID, true),
+
+		"system_type": toWebhookRequestSystemTypeEnum(o.SystemType),
+		"uuid":        toWebhookRequestObject(o.UUID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "event_api_received_date" {
+				if dt, ok := v.(*WebhookRequestEventAPIReceivedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "operator_received_date" {
+				if dt, ok := v.(*WebhookRequestOperatorReceivedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "request_date" {
+				if dt, ok := v.(*WebhookRequestRequestDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *WebhookRequestPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *WebhookRequestPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *WebhookRequestPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *WebhookRequestPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *WebhookRequestPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["data"].(*string); ok {
+		o.Data = val
+	} else if val, ok := kv["data"].(string); ok {
+		o.Data = &val
+	} else {
+		if val, ok := kv["data"]; ok {
+			if val == nil {
+				o.Data = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["encrypted_authorization"].(*string); ok {
+		o.EncryptedAuthorization = val
+	} else if val, ok := kv["encrypted_authorization"].(string); ok {
+		o.EncryptedAuthorization = &val
+	} else {
+		if val, ok := kv["encrypted_authorization"]; ok {
+			if val == nil {
+				o.EncryptedAuthorization = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EncryptedAuthorization = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.EventAPIReceivedDate == nil {
+		o.EventAPIReceivedDate = &WebhookRequestEventAPIReceivedDate{}
+	}
+
+	if val, ok := kv["event_api_received_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.EventAPIReceivedDate.FromMap(kv)
+		} else if sv, ok := val.(WebhookRequestEventAPIReceivedDate); ok {
+			// struct
+			o.EventAPIReceivedDate = &sv
+		} else if sp, ok := val.(*WebhookRequestEventAPIReceivedDate); ok {
+			// struct pointer
+			o.EventAPIReceivedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EventAPIReceivedDate.Epoch = dt.Epoch
+			o.EventAPIReceivedDate.Rfc3339 = dt.Rfc3339
+			o.EventAPIReceivedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EventAPIReceivedDate.Epoch = dt.Epoch
+			o.EventAPIReceivedDate.Rfc3339 = dt.Rfc3339
+			o.EventAPIReceivedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EventAPIReceivedDate.Epoch = dt.Epoch
+				o.EventAPIReceivedDate.Rfc3339 = dt.Rfc3339
+				o.EventAPIReceivedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.EventAPIReceivedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["headers"]; ok {
+		if val != nil {
+			kv := make(map[string]string)
+			if m, ok := val.(map[string]string); ok {
+				kv = m
+			} else {
+				if m, ok := val.(map[string]interface{}); ok {
+					for k, v := range m {
+						if mv, ok := v.(*string); ok {
+
+							kv[k] = *mv
+
+						} else {
+							panic("unsupported type for headers key:" + k + " field entry types: " + reflect.TypeOf(v).String())
+						}
+					}
+				} else {
+					panic("unsupported type for headers field entry: " + reflect.TypeOf(val).String())
+				}
+			}
+			o.Headers = kv
+		}
+	}
+	if o.Headers == nil {
+		// here
+		o.Headers = make(map[string]string)
+	}
+	if val, ok := kv["integration_name"].(*string); ok {
+		o.IntegrationName = val
+	} else if val, ok := kv["integration_name"].(string); ok {
+		o.IntegrationName = &val
+	} else {
+		if val, ok := kv["integration_name"]; ok {
+			if val == nil {
+				o.IntegrationName = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationName = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["job_id"].(*string); ok {
+		o.JobID = val
+	} else if val, ok := kv["job_id"].(string); ok {
+		o.JobID = &val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.JobID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.OperatorReceivedDate == nil {
+		o.OperatorReceivedDate = &WebhookRequestOperatorReceivedDate{}
+	}
+
+	if val, ok := kv["operator_received_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.OperatorReceivedDate.FromMap(kv)
+		} else if sv, ok := val.(WebhookRequestOperatorReceivedDate); ok {
+			// struct
+			o.OperatorReceivedDate = &sv
+		} else if sp, ok := val.(*WebhookRequestOperatorReceivedDate); ok {
+			// struct pointer
+			o.OperatorReceivedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.OperatorReceivedDate.Epoch = dt.Epoch
+			o.OperatorReceivedDate.Rfc3339 = dt.Rfc3339
+			o.OperatorReceivedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.OperatorReceivedDate.Epoch = dt.Epoch
+			o.OperatorReceivedDate.Rfc3339 = dt.Rfc3339
+			o.OperatorReceivedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.OperatorReceivedDate.Epoch = dt.Epoch
+				o.OperatorReceivedDate.Rfc3339 = dt.Rfc3339
+				o.OperatorReceivedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.OperatorReceivedDate.FromMap(map[string]interface{}{})
+	}
+
+	if o.RequestDate == nil {
+		o.RequestDate = &WebhookRequestRequestDate{}
+	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(WebhookRequestRequestDate); ok {
+			// struct
+			o.RequestDate = &sv
+		} else if sp, ok := val.(*WebhookRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["system_type"].(*WebhookRequestSystemType); ok {
+		o.SystemType = val
+	} else if val, ok := kv["system_type"].(WebhookRequestSystemType); ok {
+		o.SystemType = &val
+	} else {
+		if val, ok := kv["system_type"]; ok {
+			if val == nil {
+				o.SystemType = toWebhookRequestSystemTypePointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["WebhookRequestSystemType"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "work", "WORK":
+						o.SystemType = toWebhookRequestSystemTypePointer(0)
+					case "sourcecode", "SOURCECODE":
+						o.SystemType = toWebhookRequestSystemTypePointer(1)
+					case "codequality", "CODEQUALITY":
+						o.SystemType = toWebhookRequestSystemTypePointer(2)
+					case "user", "USER":
+						o.SystemType = toWebhookRequestSystemTypePointer(3)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["uuid"].(*string); ok {
+		o.UUID = val
+	} else if val, ok := kv["uuid"].(string); ok {
+		o.UUID = &val
+	} else {
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UUID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

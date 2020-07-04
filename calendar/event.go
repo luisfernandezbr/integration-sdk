@@ -296,6 +296,20 @@ func (o *EventLocation) FromMap(kv map[string]interface{}) {
 // EventParticipantsStatus is the enumeration type for status
 type EventParticipantsStatus int32
 
+// toEventParticipantsStatusPointer is the enumeration pointer type for status
+func toEventParticipantsStatusPointer(v int32) *EventParticipantsStatus {
+	nv := EventParticipantsStatus(v)
+	return &nv
+}
+
+// toEventParticipantsStatusEnum is the enumeration pointer wrapper for status
+func toEventParticipantsStatusEnum(v *EventParticipantsStatus) string {
+	if v == nil {
+		return toEventParticipantsStatusPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *EventParticipantsStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -594,6 +608,20 @@ func (o *EventStartDate) FromMap(kv map[string]interface{}) {
 
 // EventStatus is the enumeration type for status
 type EventStatus int32
+
+// toEventStatusPointer is the enumeration pointer type for status
+func toEventStatusPointer(v int32) *EventStatus {
+	nv := EventStatus(v)
+	return &nv
+}
+
+// toEventStatusEnum is the enumeration pointer wrapper for status
+func toEventStatusEnum(v *EventStatus) string {
+	if v == nil {
+		return toEventStatusPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *EventStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -1422,7 +1450,7 @@ func (o *EventPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *EventPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"busy":         toEventObject(o.Busy, true),
 		"calendar_id":  toEventObject(o.CalendarID, true),
 		"description":  toEventObject(o.Description, true),
@@ -1434,11 +1462,368 @@ func (o *EventPartial) ToMap() map[string]interface{} {
 		"ref_id":       toEventObject(o.RefID, true),
 		"ref_type":     toEventObject(o.RefType, true),
 		"start_date":   toEventObject(o.StartDate, true),
-		"status":       o.Status.String(),
+
+		"status": toEventStatusEnum(o.Status),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "end_date" {
+				if dt, ok := v.(*EventEndDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "participants" {
+				if arr, ok := v.([]EventParticipants); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "start_date" {
+				if dt, ok := v.(*EventStartDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *EventPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *EventPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *EventPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *EventPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *EventPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["busy"].(*bool); ok {
+		o.Busy = val
+	} else if val, ok := kv["busy"].(bool); ok {
+		o.Busy = &val
+	} else {
+		if val, ok := kv["busy"]; ok {
+			if val == nil {
+				o.Busy = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Busy = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["calendar_id"].(*string); ok {
+		o.CalendarID = val
+	} else if val, ok := kv["calendar_id"].(string); ok {
+		o.CalendarID = &val
+	} else {
+		if val, ok := kv["calendar_id"]; ok {
+			if val == nil {
+				o.CalendarID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CalendarID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.EndDate == nil {
+		o.EndDate = &EventEndDate{}
+	}
+
+	if val, ok := kv["end_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.EndDate.FromMap(kv)
+		} else if sv, ok := val.(EventEndDate); ok {
+			// struct
+			o.EndDate = &sv
+		} else if sp, ok := val.(*EventEndDate); ok {
+			// struct pointer
+			o.EndDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EndDate.Epoch = dt.Epoch
+			o.EndDate.Rfc3339 = dt.Rfc3339
+			o.EndDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EndDate.Epoch = dt.Epoch
+			o.EndDate.Rfc3339 = dt.Rfc3339
+			o.EndDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EndDate.Epoch = dt.Epoch
+				o.EndDate.Rfc3339 = dt.Rfc3339
+				o.EndDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.EndDate.FromMap(map[string]interface{}{})
+	}
+
+	if o.Location == nil {
+		o.Location = &EventLocation{}
+	}
+
+	if val, ok := kv["location"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Location.FromMap(kv)
+		} else if sv, ok := val.(EventLocation); ok {
+			// struct
+			o.Location = &sv
+		} else if sp, ok := val.(*EventLocation); ok {
+			// struct pointer
+			o.Location = sp
+		}
+	} else {
+		o.Location.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["owner_ref_id"].(*string); ok {
+		o.OwnerRefID = val
+	} else if val, ok := kv["owner_ref_id"].(string); ok {
+		o.OwnerRefID = &val
+	} else {
+		if val, ok := kv["owner_ref_id"]; ok {
+			if val == nil {
+				o.OwnerRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.OwnerRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.Participants = make([]EventParticipants, 0)
+
+	}
+	if val, ok := kv["participants"]; ok {
+		if sv, ok := val.([]EventParticipants); ok {
+			o.Participants = sv
+		} else if sp, ok := val.([]*EventParticipants); ok {
+			o.Participants = o.Participants[:0]
+			for _, e := range sp {
+				o.Participants = append(o.Participants, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(EventParticipants); ok {
+					o.Participants = append(o.Participants, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm EventParticipants
+					fm.FromMap(av)
+					o.Participants = append(o.Participants, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av EventParticipants
+					av.FromMap(bkv)
+					o.Participants = append(o.Participants, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(EventParticipants); ok {
+					o.Participants = append(o.Participants, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm EventParticipants
+					fm.FromMap(r)
+					o.Participants = append(o.Participants, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := EventParticipants{}
+					fm.FromMap(r)
+					o.Participants = append(o.Participants, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm EventParticipants
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Participants = append(o.Participants, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if val, ok := kv["ref_id"].(*string); ok {
+		o.RefID = val
+	} else if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = &val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["ref_type"].(*string); ok {
+		o.RefType = val
+	} else if val, ok := kv["ref_type"].(string); ok {
+		o.RefType = &val
+	} else {
+		if val, ok := kv["ref_type"]; ok {
+			if val == nil {
+				o.RefType = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RefType = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.StartDate == nil {
+		o.StartDate = &EventStartDate{}
+	}
+
+	if val, ok := kv["start_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.StartDate.FromMap(kv)
+		} else if sv, ok := val.(EventStartDate); ok {
+			// struct
+			o.StartDate = &sv
+		} else if sp, ok := val.(*EventStartDate); ok {
+			// struct pointer
+			o.StartDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.StartDate.Epoch = dt.Epoch
+			o.StartDate.Rfc3339 = dt.Rfc3339
+			o.StartDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.StartDate.Epoch = dt.Epoch
+			o.StartDate.Rfc3339 = dt.Rfc3339
+			o.StartDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.StartDate.Epoch = dt.Epoch
+				o.StartDate.Rfc3339 = dt.Rfc3339
+				o.StartDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.StartDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["status"].(*EventStatus); ok {
+		o.Status = val
+	} else if val, ok := kv["status"].(EventStatus); ok {
+		o.Status = &val
+	} else {
+		if val, ok := kv["status"]; ok {
+			if val == nil {
+				o.Status = toEventStatusPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["EventStatus"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "confirmed", "CONFIRMED":
+						o.Status = toEventStatusPointer(0)
+					case "tentative", "TENTATIVE":
+						o.Status = toEventStatusPointer(1)
+					case "cancelled", "CANCELLED":
+						o.Status = toEventStatusPointer(2)
+					}
+				}
+			}
+		}
+	}
+	o.setDefaults(false)
 }

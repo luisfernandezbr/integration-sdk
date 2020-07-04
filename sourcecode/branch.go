@@ -892,7 +892,7 @@ func (o *BranchPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *BranchPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"ahead_default_count":       toBranchObject(o.AheadDefaultCount, true),
 		"behind_default_count":      toBranchObject(o.BehindDefaultCount, true),
 		"branched_from_commit_ids":  toBranchObject(o.BranchedFromCommitIds, true),
@@ -909,9 +909,458 @@ func (o *BranchPartial) ToMap() map[string]interface{} {
 		"repo_id":                   toBranchObject(o.RepoID, true),
 		"url":                       toBranchObject(o.URL, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+
+			if k == "branched_from_commit_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "branched_from_commit_shas" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "commit_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "commit_shas" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *BranchPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *BranchPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *BranchPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *BranchPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *BranchPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["ahead_default_count"].(*int64); ok {
+		o.AheadDefaultCount = val
+	} else if val, ok := kv["ahead_default_count"].(int64); ok {
+		o.AheadDefaultCount = &val
+	} else {
+		if val, ok := kv["ahead_default_count"]; ok {
+			if val == nil {
+				o.AheadDefaultCount = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.AheadDefaultCount = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["behind_default_count"].(*int64); ok {
+		o.BehindDefaultCount = val
+	} else if val, ok := kv["behind_default_count"].(int64); ok {
+		o.BehindDefaultCount = &val
+	} else {
+		if val, ok := kv["behind_default_count"]; ok {
+			if val == nil {
+				o.BehindDefaultCount = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.BehindDefaultCount = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["branched_from_commit_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for branched_from_commit_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for branched_from_commit_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for branched_from_commit_ids field")
+				}
+			}
+			o.BranchedFromCommitIds = na
+		}
+	}
+	if o.BranchedFromCommitIds == nil {
+		o.BranchedFromCommitIds = make([]string, 0)
+	}
+	if val, ok := kv["branched_from_commit_shas"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for branched_from_commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for branched_from_commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for branched_from_commit_shas field")
+				}
+			}
+			o.BranchedFromCommitShas = na
+		}
+	}
+	if o.BranchedFromCommitShas == nil {
+		o.BranchedFromCommitShas = make([]string, 0)
+	}
+	if val, ok := kv["commit_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for commit_ids field")
+				}
+			}
+			o.CommitIds = na
+		}
+	}
+	if o.CommitIds == nil {
+		o.CommitIds = make([]string, 0)
+	}
+	if val, ok := kv["commit_shas"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for commit_shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for commit_shas field")
+				}
+			}
+			o.CommitShas = na
+		}
+	}
+	if o.CommitShas == nil {
+		o.CommitShas = make([]string, 0)
+	}
+	if val, ok := kv["default"].(*bool); ok {
+		o.Default = val
+	} else if val, ok := kv["default"].(bool); ok {
+		o.Default = &val
+	} else {
+		if val, ok := kv["default"]; ok {
+			if val == nil {
+				o.Default = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Default = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["first_commit_id"].(*string); ok {
+		o.FirstCommitID = val
+	} else if val, ok := kv["first_commit_id"].(string); ok {
+		o.FirstCommitID = &val
+	} else {
+		if val, ok := kv["first_commit_id"]; ok {
+			if val == nil {
+				o.FirstCommitID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.FirstCommitID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["first_commit_sha"].(*string); ok {
+		o.FirstCommitSha = val
+	} else if val, ok := kv["first_commit_sha"].(string); ok {
+		o.FirstCommitSha = &val
+	} else {
+		if val, ok := kv["first_commit_sha"]; ok {
+			if val == nil {
+				o.FirstCommitSha = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.FirstCommitSha = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["merge_commit_id"].(*string); ok {
+		o.MergeCommitID = val
+	} else if val, ok := kv["merge_commit_id"].(string); ok {
+		o.MergeCommitID = &val
+	} else {
+		if val, ok := kv["merge_commit_id"]; ok {
+			if val == nil {
+				o.MergeCommitID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.MergeCommitID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["merge_commit_sha"].(*string); ok {
+		o.MergeCommitSha = val
+	} else if val, ok := kv["merge_commit_sha"].(string); ok {
+		o.MergeCommitSha = &val
+	} else {
+		if val, ok := kv["merge_commit_sha"]; ok {
+			if val == nil {
+				o.MergeCommitSha = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.MergeCommitSha = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["merged"].(*bool); ok {
+		o.Merged = val
+	} else if val, ok := kv["merged"].(bool); ok {
+		o.Merged = &val
+	} else {
+		if val, ok := kv["merged"]; ok {
+			if val == nil {
+				o.Merged = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Merged = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["repo_id"].(*string); ok {
+		o.RepoID = val
+	} else if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = &val
+	} else {
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RepoID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

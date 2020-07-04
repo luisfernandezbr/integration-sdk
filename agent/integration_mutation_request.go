@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -87,6 +88,20 @@ const (
 
 // IntegrationMutationRequestAction is the enumeration type for action
 type IntegrationMutationRequestAction int32
+
+// toIntegrationMutationRequestActionPointer is the enumeration pointer type for action
+func toIntegrationMutationRequestActionPointer(v int32) *IntegrationMutationRequestAction {
+	nv := IntegrationMutationRequestAction(v)
+	return &nv
+}
+
+// toIntegrationMutationRequestActionEnum is the enumeration pointer wrapper for action
+func toIntegrationMutationRequestActionEnum(v *IntegrationMutationRequestAction) string {
+	if v == nil {
+		return toIntegrationMutationRequestActionPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *IntegrationMutationRequestAction) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -538,6 +553,20 @@ func (o *IntegrationMutationRequestRequestDate) FromMap(kv map[string]interface{
 
 // IntegrationMutationRequestSystemType is the enumeration type for system_type
 type IntegrationMutationRequestSystemType int32
+
+// toIntegrationMutationRequestSystemTypePointer is the enumeration pointer type for system_type
+func toIntegrationMutationRequestSystemTypePointer(v int32) *IntegrationMutationRequestSystemType {
+	nv := IntegrationMutationRequestSystemType(v)
+	return &nv
+}
+
+// toIntegrationMutationRequestSystemTypeEnum is the enumeration pointer wrapper for system_type
+func toIntegrationMutationRequestSystemTypeEnum(v *IntegrationMutationRequestSystemType) string {
+	if v == nil {
+		return toIntegrationMutationRequestSystemTypePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *IntegrationMutationRequestSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -1254,6 +1283,25 @@ func (o *IntegrationMutationRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -1400,21 +1448,340 @@ func (o *IntegrationMutationRequestPartial) GetModelName() datamodel.ModelNameTy
 
 // ToMap returns the object as a map
 func (o *IntegrationMutationRequestPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		"action":                  o.Action.String(),
+	kv := map[string]interface{}{
+
+		"action":                  toIntegrationMutationRequestActionEnum(o.Action),
 		"agent_request_sent_date": toIntegrationMutationRequestObject(o.AgentRequestSentDate, true),
 		"authorization":           toIntegrationMutationRequestObject(o.Authorization, true),
 		"data":                    toIntegrationMutationRequestObject(o.Data, true),
 		"integration_name":        toIntegrationMutationRequestObject(o.IntegrationName, true),
 		"job_id":                  toIntegrationMutationRequestObject(o.JobID, true),
 		"request_date":            toIntegrationMutationRequestObject(o.RequestDate, true),
-		"system_type":             o.SystemType.String(),
-		"uuid":                    toIntegrationMutationRequestObject(o.UUID, true),
-		"webapp_request_date":     toIntegrationMutationRequestObject(o.WebappRequestDate, true),
+
+		"system_type":         toIntegrationMutationRequestSystemTypeEnum(o.SystemType),
+		"uuid":                toIntegrationMutationRequestObject(o.UUID, true),
+		"webapp_request_date": toIntegrationMutationRequestObject(o.WebappRequestDate, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "agent_request_sent_date" {
+				if dt, ok := v.(*IntegrationMutationRequestAgentRequestSentDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "request_date" {
+				if dt, ok := v.(*IntegrationMutationRequestRequestDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "webapp_request_date" {
+				if dt, ok := v.(*IntegrationMutationRequestWebappRequestDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *IntegrationMutationRequestPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *IntegrationMutationRequestPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *IntegrationMutationRequestPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *IntegrationMutationRequestPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntegrationMutationRequestPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["action"].(*IntegrationMutationRequestAction); ok {
+		o.Action = val
+	} else if val, ok := kv["action"].(IntegrationMutationRequestAction); ok {
+		o.Action = &val
+	} else {
+		if val, ok := kv["action"]; ok {
+			if val == nil {
+				o.Action = toIntegrationMutationRequestActionPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["IntegrationMutationRequestAction"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "issue_add_comment", "ISSUE_ADD_COMMENT":
+						o.Action = toIntegrationMutationRequestActionPointer(0)
+					case "issue_set_title", "ISSUE_SET_TITLE":
+						o.Action = toIntegrationMutationRequestActionPointer(1)
+					case "issue_set_status", "ISSUE_SET_STATUS":
+						o.Action = toIntegrationMutationRequestActionPointer(2)
+					case "issue_set_priority", "ISSUE_SET_PRIORITY":
+						o.Action = toIntegrationMutationRequestActionPointer(3)
+					case "issue_set_assignee", "ISSUE_SET_ASSIGNEE":
+						o.Action = toIntegrationMutationRequestActionPointer(4)
+					case "issue_get_transitions", "ISSUE_GET_TRANSITIONS":
+						o.Action = toIntegrationMutationRequestActionPointer(5)
+					case "pr_set_title", "PR_SET_TITLE":
+						o.Action = toIntegrationMutationRequestActionPointer(6)
+					case "pr_set_description", "PR_SET_DESCRIPTION":
+						o.Action = toIntegrationMutationRequestActionPointer(7)
+					}
+				}
+			}
+		}
+	}
+
+	if o.AgentRequestSentDate == nil {
+		o.AgentRequestSentDate = &IntegrationMutationRequestAgentRequestSentDate{}
+	}
+
+	if val, ok := kv["agent_request_sent_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.AgentRequestSentDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationMutationRequestAgentRequestSentDate); ok {
+			// struct
+			o.AgentRequestSentDate = &sv
+		} else if sp, ok := val.(*IntegrationMutationRequestAgentRequestSentDate); ok {
+			// struct pointer
+			o.AgentRequestSentDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.AgentRequestSentDate.Epoch = dt.Epoch
+			o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
+			o.AgentRequestSentDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.AgentRequestSentDate.Epoch = dt.Epoch
+			o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
+			o.AgentRequestSentDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.AgentRequestSentDate.Epoch = dt.Epoch
+				o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
+				o.AgentRequestSentDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.AgentRequestSentDate.FromMap(map[string]interface{}{})
+	}
+
+	if o.Authorization == nil {
+		o.Authorization = &IntegrationMutationRequestAuthorization{}
+	}
+
+	if val, ok := kv["authorization"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Authorization.FromMap(kv)
+		} else if sv, ok := val.(IntegrationMutationRequestAuthorization); ok {
+			// struct
+			o.Authorization = &sv
+		} else if sp, ok := val.(*IntegrationMutationRequestAuthorization); ok {
+			// struct pointer
+			o.Authorization = sp
+		}
+	} else {
+		o.Authorization.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["data"].(*string); ok {
+		o.Data = val
+	} else if val, ok := kv["data"].(string); ok {
+		o.Data = &val
+	} else {
+		if val, ok := kv["data"]; ok {
+			if val == nil {
+				o.Data = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Data = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["integration_name"].(*string); ok {
+		o.IntegrationName = val
+	} else if val, ok := kv["integration_name"].(string); ok {
+		o.IntegrationName = &val
+	} else {
+		if val, ok := kv["integration_name"]; ok {
+			if val == nil {
+				o.IntegrationName = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IntegrationName = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["job_id"].(*string); ok {
+		o.JobID = val
+	} else if val, ok := kv["job_id"].(string); ok {
+		o.JobID = &val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.JobID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.RequestDate == nil {
+		o.RequestDate = &IntegrationMutationRequestRequestDate{}
+	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationMutationRequestRequestDate); ok {
+			// struct
+			o.RequestDate = &sv
+		} else if sp, ok := val.(*IntegrationMutationRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["system_type"].(*IntegrationMutationRequestSystemType); ok {
+		o.SystemType = val
+	} else if val, ok := kv["system_type"].(IntegrationMutationRequestSystemType); ok {
+		o.SystemType = &val
+	} else {
+		if val, ok := kv["system_type"]; ok {
+			if val == nil {
+				o.SystemType = toIntegrationMutationRequestSystemTypePointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["IntegrationMutationRequestSystemType"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "work", "WORK":
+						o.SystemType = toIntegrationMutationRequestSystemTypePointer(0)
+					case "sourcecode", "SOURCECODE":
+						o.SystemType = toIntegrationMutationRequestSystemTypePointer(1)
+					case "codequality", "CODEQUALITY":
+						o.SystemType = toIntegrationMutationRequestSystemTypePointer(2)
+					case "user", "USER":
+						o.SystemType = toIntegrationMutationRequestSystemTypePointer(3)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["uuid"].(*string); ok {
+		o.UUID = val
+	} else if val, ok := kv["uuid"].(string); ok {
+		o.UUID = &val
+	} else {
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UUID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.WebappRequestDate == nil {
+		o.WebappRequestDate = &IntegrationMutationRequestWebappRequestDate{}
+	}
+
+	if val, ok := kv["webapp_request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.WebappRequestDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationMutationRequestWebappRequestDate); ok {
+			// struct
+			o.WebappRequestDate = &sv
+		} else if sp, ok := val.(*IntegrationMutationRequestWebappRequestDate); ok {
+			// struct pointer
+			o.WebappRequestDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.WebappRequestDate.Epoch = dt.Epoch
+			o.WebappRequestDate.Rfc3339 = dt.Rfc3339
+			o.WebappRequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.WebappRequestDate.Epoch = dt.Epoch
+			o.WebappRequestDate.Rfc3339 = dt.Rfc3339
+			o.WebappRequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.WebappRequestDate.Epoch = dt.Epoch
+				o.WebappRequestDate.Rfc3339 = dt.Rfc3339
+				o.WebappRequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.WebappRequestDate.FromMap(map[string]interface{}{})
+	}
+
+	o.setDefaults(false)
 }

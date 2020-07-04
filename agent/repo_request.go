@@ -999,6 +999,20 @@ func (o *RepoRequestIntegrationLastProcessingStartedDate) FromMap(kv map[string]
 // RepoRequestIntegrationLocation is the enumeration type for location
 type RepoRequestIntegrationLocation int32
 
+// toRepoRequestIntegrationLocationPointer is the enumeration pointer type for location
+func toRepoRequestIntegrationLocationPointer(v int32) *RepoRequestIntegrationLocation {
+	nv := RepoRequestIntegrationLocation(v)
+	return &nv
+}
+
+// toRepoRequestIntegrationLocationEnum is the enumeration pointer wrapper for location
+func toRepoRequestIntegrationLocationEnum(v *RepoRequestIntegrationLocation) string {
+	if v == nil {
+		return toRepoRequestIntegrationLocationPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *RepoRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1273,6 +1287,20 @@ func (o *RepoRequestIntegrationOnboardRequestedDate) FromMap(kv map[string]inter
 // RepoRequestIntegrationState is the enumeration type for state
 type RepoRequestIntegrationState int32
 
+// toRepoRequestIntegrationStatePointer is the enumeration pointer type for state
+func toRepoRequestIntegrationStatePointer(v int32) *RepoRequestIntegrationState {
+	nv := RepoRequestIntegrationState(v)
+	return &nv
+}
+
+// toRepoRequestIntegrationStateEnum is the enumeration pointer wrapper for state
+func toRepoRequestIntegrationStateEnum(v *RepoRequestIntegrationState) string {
+	if v == nil {
+		return toRepoRequestIntegrationStatePointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *RepoRequestIntegrationState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1364,6 +1392,20 @@ const (
 
 // RepoRequestIntegrationSystemType is the enumeration type for system_type
 type RepoRequestIntegrationSystemType int32
+
+// toRepoRequestIntegrationSystemTypePointer is the enumeration pointer type for system_type
+func toRepoRequestIntegrationSystemTypePointer(v int32) *RepoRequestIntegrationSystemType {
+	nv := RepoRequestIntegrationSystemType(v)
+	return &nv
+}
+
+// toRepoRequestIntegrationSystemTypeEnum is the enumeration pointer wrapper for system_type
+func toRepoRequestIntegrationSystemTypeEnum(v *RepoRequestIntegrationSystemType) string {
+	if v == nil {
+		return toRepoRequestIntegrationSystemTypePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *RepoRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -3288,6 +3330,25 @@ func (o *RepoRequest) FromMap(kv map[string]interface{}) {
 		} else if sp, ok := val.(*RepoRequestRequestDate); ok {
 			// struct pointer
 			o.RequestDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
 		}
 	} else {
 		o.RequestDate.FromMap(map[string]interface{}{})
@@ -3349,14 +3410,124 @@ func (o *RepoRequestPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *RepoRequestPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"integration":  toRepoRequestObject(o.Integration, true),
 		"request_date": toRepoRequestObject(o.RequestDate, true),
 		"uuid":         toRepoRequestObject(o.UUID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "request_date" {
+				if dt, ok := v.(*RepoRequestRequestDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *RepoRequestPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *RepoRequestPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *RepoRequestPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *RepoRequestPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoRequestPartial) FromMap(kv map[string]interface{}) {
+
+	if o.Integration == nil {
+		o.Integration = &RepoRequestIntegration{}
+	}
+
+	if val, ok := kv["integration"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Integration.FromMap(kv)
+		} else if sv, ok := val.(RepoRequestIntegration); ok {
+			// struct
+			o.Integration = &sv
+		} else if sp, ok := val.(*RepoRequestIntegration); ok {
+			// struct pointer
+			o.Integration = sp
+		}
+	} else {
+		o.Integration.FromMap(map[string]interface{}{})
+	}
+
+	if o.RequestDate == nil {
+		o.RequestDate = &RepoRequestRequestDate{}
+	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(RepoRequestRequestDate); ok {
+			// struct
+			o.RequestDate = &sv
+		} else if sp, ok := val.(*RepoRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["uuid"].(*string); ok {
+		o.UUID = val
+	} else if val, ok := kv["uuid"].(string); ok {
+		o.UUID = &val
+	} else {
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UUID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

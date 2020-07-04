@@ -6,6 +6,7 @@ package agent
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -45,6 +46,20 @@ const (
 
 // CancelRequestTriggerCommand is the enumeration type for command
 type CancelRequestTriggerCommand int32
+
+// toCancelRequestTriggerCommandPointer is the enumeration pointer type for command
+func toCancelRequestTriggerCommandPointer(v int32) *CancelRequestTriggerCommand {
+	nv := CancelRequestTriggerCommand(v)
+	return &nv
+}
+
+// toCancelRequestTriggerCommandEnum is the enumeration pointer wrapper for command
+func toCancelRequestTriggerCommandEnum(v *CancelRequestTriggerCommand) string {
+	if v == nil {
+		return toCancelRequestTriggerCommandPointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *CancelRequestTriggerCommand) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -531,13 +546,88 @@ func (o *CancelRequestTriggerPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *CancelRequestTriggerPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		"command": o.Command.String(),
+	kv := map[string]interface{}{
+
+		"command": toCancelRequestTriggerCommandEnum(o.Command),
 		"uuid":    toCancelRequestTriggerObject(o.UUID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *CancelRequestTriggerPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *CancelRequestTriggerPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *CancelRequestTriggerPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *CancelRequestTriggerPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *CancelRequestTriggerPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["command"].(*CancelRequestTriggerCommand); ok {
+		o.Command = val
+	} else if val, ok := kv["command"].(CancelRequestTriggerCommand); ok {
+		o.Command = &val
+	} else {
+		if val, ok := kv["command"]; ok {
+			if val == nil {
+				o.Command = toCancelRequestTriggerCommandPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["CancelRequestTriggerCommand"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "export", "EXPORT":
+						o.Command = toCancelRequestTriggerCommandPointer(0)
+					case "onboard", "ONBOARD":
+						o.Command = toCancelRequestTriggerCommandPointer(1)
+					case "integration", "INTEGRATION":
+						o.Command = toCancelRequestTriggerCommandPointer(2)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["uuid"].(*string); ok {
+		o.UUID = val
+	} else if val, ok := kv["uuid"].(string); ok {
+		o.UUID = &val
+	} else {
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UUID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

@@ -6,6 +6,7 @@ package sourcecode
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -158,6 +159,20 @@ func (o *PullRequestReviewCreatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequestReviewState is the enumeration type for state
 type PullRequestReviewState int32
+
+// toPullRequestReviewStatePointer is the enumeration pointer type for state
+func toPullRequestReviewStatePointer(v int32) *PullRequestReviewState {
+	nv := PullRequestReviewState(v)
+	return &nv
+}
+
+// toPullRequestReviewStateEnum is the enumeration pointer wrapper for state
+func toPullRequestReviewStateEnum(v *PullRequestReviewState) string {
+	if v == nil {
+		return toPullRequestReviewStatePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *PullRequestReviewState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -857,17 +872,200 @@ func (o *PullRequestReviewPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *PullRequestReviewPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"created_date":    toPullRequestReviewObject(o.CreatedDate, true),
 		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, true),
 		"repo_id":         toPullRequestReviewObject(o.RepoID, true),
-		"state":           o.State.String(),
-		"url":             toPullRequestReviewObject(o.URL, true),
-		"user_ref_id":     toPullRequestReviewObject(o.UserRefID, true),
+
+		"state":       toPullRequestReviewStateEnum(o.State),
+		"url":         toPullRequestReviewObject(o.URL, true),
+		"user_ref_id": toPullRequestReviewObject(o.UserRefID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "created_date" {
+				if dt, ok := v.(*PullRequestReviewCreatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *PullRequestReviewPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *PullRequestReviewPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *PullRequestReviewPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *PullRequestReviewPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *PullRequestReviewPartial) FromMap(kv map[string]interface{}) {
+
+	if o.CreatedDate == nil {
+		o.CreatedDate = &PullRequestReviewCreatedDate{}
+	}
+
+	if val, ok := kv["created_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CreatedDate.FromMap(kv)
+		} else if sv, ok := val.(PullRequestReviewCreatedDate); ok {
+			// struct
+			o.CreatedDate = &sv
+		} else if sp, ok := val.(*PullRequestReviewCreatedDate); ok {
+			// struct pointer
+			o.CreatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CreatedDate.Epoch = dt.Epoch
+			o.CreatedDate.Rfc3339 = dt.Rfc3339
+			o.CreatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CreatedDate.Epoch = dt.Epoch
+				o.CreatedDate.Rfc3339 = dt.Rfc3339
+				o.CreatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CreatedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["pull_request_id"].(*string); ok {
+		o.PullRequestID = val
+	} else if val, ok := kv["pull_request_id"].(string); ok {
+		o.PullRequestID = &val
+	} else {
+		if val, ok := kv["pull_request_id"]; ok {
+			if val == nil {
+				o.PullRequestID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PullRequestID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["repo_id"].(*string); ok {
+		o.RepoID = val
+	} else if val, ok := kv["repo_id"].(string); ok {
+		o.RepoID = &val
+	} else {
+		if val, ok := kv["repo_id"]; ok {
+			if val == nil {
+				o.RepoID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RepoID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["state"].(*PullRequestReviewState); ok {
+		o.State = val
+	} else if val, ok := kv["state"].(PullRequestReviewState); ok {
+		o.State = &val
+	} else {
+		if val, ok := kv["state"]; ok {
+			if val == nil {
+				o.State = toPullRequestReviewStatePointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["PullRequestReviewState"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "approved", "APPROVED":
+						o.State = toPullRequestReviewStatePointer(0)
+					case "commented", "COMMENTED":
+						o.State = toPullRequestReviewStatePointer(1)
+					case "changes_requested", "CHANGES_REQUESTED":
+						o.State = toPullRequestReviewStatePointer(2)
+					case "pending", "PENDING":
+						o.State = toPullRequestReviewStatePointer(3)
+					case "dismissed", "DISMISSED":
+						o.State = toPullRequestReviewStatePointer(4)
+					case "requested", "REQUESTED":
+						o.State = toPullRequestReviewStatePointer(5)
+					case "request_removed", "REQUEST_REMOVED":
+						o.State = toPullRequestReviewStatePointer(6)
+					case "assigned", "ASSIGNED":
+						o.State = toPullRequestReviewStatePointer(7)
+					case "unassigned", "UNASSIGNED":
+						o.State = toPullRequestReviewStatePointer(8)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["user_ref_id"].(*string); ok {
+		o.UserRefID = val
+	} else if val, ok := kv["user_ref_id"].(string); ok {
+		o.UserRefID = &val
+	} else {
+		if val, ok := kv["user_ref_id"]; ok {
+			if val == nil {
+				o.UserRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UserRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

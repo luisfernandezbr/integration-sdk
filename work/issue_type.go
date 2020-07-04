@@ -6,6 +6,7 @@ package work
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -49,6 +50,20 @@ const (
 
 // IssueTypeMappedType is the enumeration type for mapped_type
 type IssueTypeMappedType int32
+
+// toIssueTypeMappedTypePointer is the enumeration pointer type for mapped_type
+func toIssueTypeMappedTypePointer(v int32) *IssueTypeMappedType {
+	nv := IssueTypeMappedType(v)
+	return &nv
+}
+
+// toIssueTypeMappedTypeEnum is the enumeration pointer wrapper for mapped_type
+func toIssueTypeMappedTypeEnum(v *IssueTypeMappedType) string {
+	if v == nil {
+		return toIssueTypeMappedTypePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *IssueTypeMappedType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -660,15 +675,134 @@ func (o *IssueTypePartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *IssueTypePartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"description": toIssueTypeObject(o.Description, true),
 		"icon_url":    toIssueTypeObject(o.IconURL, true),
-		"mapped_type": o.MappedType.String(),
+
+		"mapped_type": toIssueTypeMappedTypeEnum(o.MappedType),
 		"name":        toIssueTypeObject(o.Name, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *IssueTypePartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *IssueTypePartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *IssueTypePartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *IssueTypePartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueTypePartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["icon_url"].(*string); ok {
+		o.IconURL = val
+	} else if val, ok := kv["icon_url"].(string); ok {
+		o.IconURL = &val
+	} else {
+		if val, ok := kv["icon_url"]; ok {
+			if val == nil {
+				o.IconURL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.IconURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["mapped_type"].(*IssueTypeMappedType); ok {
+		o.MappedType = val
+	} else if val, ok := kv["mapped_type"].(IssueTypeMappedType); ok {
+		o.MappedType = &val
+	} else {
+		if val, ok := kv["mapped_type"]; ok {
+			if val == nil {
+				o.MappedType = toIssueTypeMappedTypePointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["IssueTypeMappedType"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "unknown", "UNKNOWN":
+						o.MappedType = toIssueTypeMappedTypePointer(0)
+					case "feature", "FEATURE":
+						o.MappedType = toIssueTypeMappedTypePointer(1)
+					case "bug", "BUG":
+						o.MappedType = toIssueTypeMappedTypePointer(2)
+					case "enhancement", "ENHANCEMENT":
+						o.MappedType = toIssueTypeMappedTypePointer(3)
+					case "epic", "EPIC":
+						o.MappedType = toIssueTypeMappedTypePointer(4)
+					case "story", "STORY":
+						o.MappedType = toIssueTypeMappedTypePointer(5)
+					case "task", "TASK":
+						o.MappedType = toIssueTypeMappedTypePointer(6)
+					case "subtask", "SUBTASK":
+						o.MappedType = toIssueTypeMappedTypePointer(7)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

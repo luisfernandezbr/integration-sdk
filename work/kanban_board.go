@@ -932,7 +932,7 @@ func (o *KanbanBoardPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *KanbanBoardPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"backlog_issue_ids": toKanbanBoardObject(o.BacklogIssueIds, true),
 		"columns":           toKanbanBoardObject(o.Columns, true),
 		"issue_ids":         toKanbanBoardObject(o.IssueIds, true),
@@ -940,9 +940,319 @@ func (o *KanbanBoardPartial) ToMap() map[string]interface{} {
 		"project_ids":       toKanbanBoardObject(o.ProjectIds, true),
 		"url":               toKanbanBoardObject(o.URL, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+
+			if k == "backlog_issue_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "columns" {
+				if arr, ok := v.([]KanbanBoardColumns); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "issue_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "project_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *KanbanBoardPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *KanbanBoardPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *KanbanBoardPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *KanbanBoardPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *KanbanBoardPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["backlog_issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for backlog_issue_ids field")
+				}
+			}
+			o.BacklogIssueIds = na
+		}
+	}
+	if o.BacklogIssueIds == nil {
+		o.BacklogIssueIds = make([]string, 0)
+	}
+
+	if o == nil {
+
+		o.Columns = make([]KanbanBoardColumns, 0)
+
+	}
+	if val, ok := kv["columns"]; ok {
+		if sv, ok := val.([]KanbanBoardColumns); ok {
+			o.Columns = sv
+		} else if sp, ok := val.([]*KanbanBoardColumns); ok {
+			o.Columns = o.Columns[:0]
+			for _, e := range sp {
+				o.Columns = append(o.Columns, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(KanbanBoardColumns); ok {
+					o.Columns = append(o.Columns, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm KanbanBoardColumns
+					fm.FromMap(av)
+					o.Columns = append(o.Columns, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av KanbanBoardColumns
+					av.FromMap(bkv)
+					o.Columns = append(o.Columns, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(KanbanBoardColumns); ok {
+					o.Columns = append(o.Columns, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm KanbanBoardColumns
+					fm.FromMap(r)
+					o.Columns = append(o.Columns, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := KanbanBoardColumns{}
+					fm.FromMap(r)
+					o.Columns = append(o.Columns, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm KanbanBoardColumns
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Columns = append(o.Columns, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if val, ok := kv["issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for issue_ids field")
+				}
+			}
+			o.IssueIds = na
+		}
+	}
+	if o.IssueIds == nil {
+		o.IssueIds = make([]string, 0)
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["project_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for project_ids field")
+				}
+			}
+			o.ProjectIds = na
+		}
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

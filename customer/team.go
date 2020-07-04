@@ -198,6 +198,20 @@ func (o *TeamDeletedDate) FromMap(kv map[string]interface{}) {
 // TeamUsersType is the enumeration type for type
 type TeamUsersType int32
 
+// toTeamUsersTypePointer is the enumeration pointer type for type
+func toTeamUsersTypePointer(v int32) *TeamUsersType {
+	nv := TeamUsersType(v)
+	return &nv
+}
+
+// toTeamUsersTypeEnum is the enumeration pointer wrapper for type
+func toTeamUsersTypeEnum(v *TeamUsersType) string {
+	if v == nil {
+		return toTeamUsersTypePointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *TeamUsersType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1784,7 +1798,7 @@ func (o *TeamPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *TeamPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"active":       toTeamObject(o.Active, true),
 		"children_ids": toTeamObject(o.ChildrenIds, true),
 		"deleted":      toTeamObject(o.Deleted, true),
@@ -1794,9 +1808,285 @@ func (o *TeamPartial) ToMap() map[string]interface{} {
 		"name":         toTeamObject(o.Name, true),
 		"parent_ids":   toTeamObject(o.ParentIds, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+
+			if k == "children_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "deleted_date" {
+				if dt, ok := v.(*TeamDeletedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "parent_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *TeamPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *TeamPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *TeamPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *TeamPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *TeamPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["children_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for children_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for children_ids field")
+				}
+			}
+			o.ChildrenIds = na
+		}
+	}
+	if o.ChildrenIds == nil {
+		o.ChildrenIds = make([]string, 0)
+	}
+	if val, ok := kv["deleted"].(*bool); ok {
+		o.Deleted = val
+	} else if val, ok := kv["deleted"].(bool); ok {
+		o.Deleted = &val
+	} else {
+		if val, ok := kv["deleted"]; ok {
+			if val == nil {
+				o.Deleted = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Deleted = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+
+	if o.DeletedDate == nil {
+		o.DeletedDate = &TeamDeletedDate{}
+	}
+
+	if val, ok := kv["deleted_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.DeletedDate.FromMap(kv)
+		} else if sv, ok := val.(TeamDeletedDate); ok {
+			// struct
+			o.DeletedDate = &sv
+		} else if sp, ok := val.(*TeamDeletedDate); ok {
+			// struct pointer
+			o.DeletedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.DeletedDate.Epoch = dt.Epoch
+				o.DeletedDate.Rfc3339 = dt.Rfc3339
+				o.DeletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.DeletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["leaf"].(*bool); ok {
+		o.Leaf = val
+	} else if val, ok := kv["leaf"].(bool); ok {
+		o.Leaf = &val
+	} else {
+		if val, ok := kv["leaf"]; ok {
+			if val == nil {
+				o.Leaf = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Leaf = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["parent_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for parent_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for parent_ids field")
+				}
+			}
+			o.ParentIds = na
+		}
+	}
+	if o.ParentIds == nil {
+		o.ParentIds = make([]string, 0)
+	}
+	o.setDefaults(false)
 }

@@ -999,6 +999,20 @@ func (o *ProjectRequestIntegrationLastProcessingStartedDate) FromMap(kv map[stri
 // ProjectRequestIntegrationLocation is the enumeration type for location
 type ProjectRequestIntegrationLocation int32
 
+// toProjectRequestIntegrationLocationPointer is the enumeration pointer type for location
+func toProjectRequestIntegrationLocationPointer(v int32) *ProjectRequestIntegrationLocation {
+	nv := ProjectRequestIntegrationLocation(v)
+	return &nv
+}
+
+// toProjectRequestIntegrationLocationEnum is the enumeration pointer wrapper for location
+func toProjectRequestIntegrationLocationEnum(v *ProjectRequestIntegrationLocation) string {
+	if v == nil {
+		return toProjectRequestIntegrationLocationPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *ProjectRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1273,6 +1287,20 @@ func (o *ProjectRequestIntegrationOnboardRequestedDate) FromMap(kv map[string]in
 // ProjectRequestIntegrationState is the enumeration type for state
 type ProjectRequestIntegrationState int32
 
+// toProjectRequestIntegrationStatePointer is the enumeration pointer type for state
+func toProjectRequestIntegrationStatePointer(v int32) *ProjectRequestIntegrationState {
+	nv := ProjectRequestIntegrationState(v)
+	return &nv
+}
+
+// toProjectRequestIntegrationStateEnum is the enumeration pointer wrapper for state
+func toProjectRequestIntegrationStateEnum(v *ProjectRequestIntegrationState) string {
+	if v == nil {
+		return toProjectRequestIntegrationStatePointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *ProjectRequestIntegrationState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1364,6 +1392,20 @@ const (
 
 // ProjectRequestIntegrationSystemType is the enumeration type for system_type
 type ProjectRequestIntegrationSystemType int32
+
+// toProjectRequestIntegrationSystemTypePointer is the enumeration pointer type for system_type
+func toProjectRequestIntegrationSystemTypePointer(v int32) *ProjectRequestIntegrationSystemType {
+	nv := ProjectRequestIntegrationSystemType(v)
+	return &nv
+}
+
+// toProjectRequestIntegrationSystemTypeEnum is the enumeration pointer wrapper for system_type
+func toProjectRequestIntegrationSystemTypeEnum(v *ProjectRequestIntegrationSystemType) string {
+	if v == nil {
+		return toProjectRequestIntegrationSystemTypePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *ProjectRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -3368,14 +3410,124 @@ func (o *ProjectRequestPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *ProjectRequestPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"integration":  toProjectRequestObject(o.Integration, true),
 		"request_date": toProjectRequestObject(o.RequestDate, true),
 		"uuid":         toProjectRequestObject(o.UUID, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+			if k == "request_date" {
+				if dt, ok := v.(*ProjectRequestRequestDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *ProjectRequestPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *ProjectRequestPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *ProjectRequestPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *ProjectRequestPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectRequestPartial) FromMap(kv map[string]interface{}) {
+
+	if o.Integration == nil {
+		o.Integration = &ProjectRequestIntegration{}
+	}
+
+	if val, ok := kv["integration"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Integration.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestIntegration); ok {
+			// struct
+			o.Integration = &sv
+		} else if sp, ok := val.(*ProjectRequestIntegration); ok {
+			// struct pointer
+			o.Integration = sp
+		}
+	} else {
+		o.Integration.FromMap(map[string]interface{}{})
+	}
+
+	if o.RequestDate == nil {
+		o.RequestDate = &ProjectRequestRequestDate{}
+	}
+
+	if val, ok := kv["request_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.RequestDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectRequestRequestDate); ok {
+			// struct
+			o.RequestDate = &sv
+		} else if sp, ok := val.(*ProjectRequestRequestDate); ok {
+			// struct pointer
+			o.RequestDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.RequestDate.Epoch = dt.Epoch
+			o.RequestDate.Rfc3339 = dt.Rfc3339
+			o.RequestDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.RequestDate.Epoch = dt.Epoch
+				o.RequestDate.Rfc3339 = dt.Rfc3339
+				o.RequestDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.RequestDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["uuid"].(*string); ok {
+		o.UUID = val
+	} else if val, ok := kv["uuid"].(string); ok {
+		o.UUID = &val
+	} else {
+		if val, ok := kv["uuid"]; ok {
+			if val == nil {
+				o.UUID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UUID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

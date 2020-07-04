@@ -381,6 +381,20 @@ func (o *SprintStartedDate) FromMap(kv map[string]interface{}) {
 // SprintStatus is the enumeration type for status
 type SprintStatus int32
 
+// toSprintStatusPointer is the enumeration pointer type for status
+func toSprintStatusPointer(v int32) *SprintStatus {
+	nv := SprintStatus(v)
+	return &nv
+}
+
+// toSprintStatusEnum is the enumeration pointer wrapper for status
+func toSprintStatusEnum(v *SprintStatus) string {
+	if v == nil {
+		return toSprintStatusPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *SprintStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -1279,7 +1293,7 @@ func (o *SprintPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *SprintPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"backlog_issue_ids": toSprintObject(o.BacklogIssueIds, true),
 		"completed_date":    toSprintObject(o.CompletedDate, true),
 		"ended_date":        toSprintObject(o.EndedDate, true),
@@ -1288,12 +1302,429 @@ func (o *SprintPartial) ToMap() map[string]interface{} {
 		"name":              toSprintObject(o.Name, true),
 		"project_ids":       toSprintObject(o.ProjectIds, true),
 		"started_date":      toSprintObject(o.StartedDate, true),
-		"status":            o.Status.String(),
-		"url":               toSprintObject(o.URL, true),
+
+		"status": toSprintStatusEnum(o.Status),
+		"url":    toSprintObject(o.URL, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+
+			if k == "backlog_issue_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "completed_date" {
+				if dt, ok := v.(*SprintCompletedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "ended_date" {
+				if dt, ok := v.(*SprintEndedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "issue_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "project_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "started_date" {
+				if dt, ok := v.(*SprintStartedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *SprintPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *SprintPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *SprintPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *SprintPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *SprintPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["backlog_issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for backlog_issue_ids field")
+				}
+			}
+			o.BacklogIssueIds = na
+		}
+	}
+	if o.BacklogIssueIds == nil {
+		o.BacklogIssueIds = make([]string, 0)
+	}
+
+	if o.CompletedDate == nil {
+		o.CompletedDate = &SprintCompletedDate{}
+	}
+
+	if val, ok := kv["completed_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.CompletedDate.FromMap(kv)
+		} else if sv, ok := val.(SprintCompletedDate); ok {
+			// struct
+			o.CompletedDate = &sv
+		} else if sp, ok := val.(*SprintCompletedDate); ok {
+			// struct pointer
+			o.CompletedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.CompletedDate.Epoch = dt.Epoch
+			o.CompletedDate.Rfc3339 = dt.Rfc3339
+			o.CompletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.CompletedDate.Epoch = dt.Epoch
+			o.CompletedDate.Rfc3339 = dt.Rfc3339
+			o.CompletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.CompletedDate.Epoch = dt.Epoch
+				o.CompletedDate.Rfc3339 = dt.Rfc3339
+				o.CompletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.CompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if o.EndedDate == nil {
+		o.EndedDate = &SprintEndedDate{}
+	}
+
+	if val, ok := kv["ended_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.EndedDate.FromMap(kv)
+		} else if sv, ok := val.(SprintEndedDate); ok {
+			// struct
+			o.EndedDate = &sv
+		} else if sp, ok := val.(*SprintEndedDate); ok {
+			// struct pointer
+			o.EndedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.EndedDate.Epoch = dt.Epoch
+			o.EndedDate.Rfc3339 = dt.Rfc3339
+			o.EndedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.EndedDate.Epoch = dt.Epoch
+			o.EndedDate.Rfc3339 = dt.Rfc3339
+			o.EndedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.EndedDate.Epoch = dt.Epoch
+				o.EndedDate.Rfc3339 = dt.Rfc3339
+				o.EndedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.EndedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["goal"].(*string); ok {
+		o.Goal = val
+	} else if val, ok := kv["goal"].(string); ok {
+		o.Goal = &val
+	} else {
+		if val, ok := kv["goal"]; ok {
+			if val == nil {
+				o.Goal = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Goal = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for issue_ids field")
+				}
+			}
+			o.IssueIds = na
+		}
+	}
+	if o.IssueIds == nil {
+		o.IssueIds = make([]string, 0)
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["project_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for project_ids field")
+				}
+			}
+			o.ProjectIds = na
+		}
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
+	}
+
+	if o.StartedDate == nil {
+		o.StartedDate = &SprintStartedDate{}
+	}
+
+	if val, ok := kv["started_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.StartedDate.FromMap(kv)
+		} else if sv, ok := val.(SprintStartedDate); ok {
+			// struct
+			o.StartedDate = &sv
+		} else if sp, ok := val.(*SprintStartedDate); ok {
+			// struct pointer
+			o.StartedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.StartedDate.Epoch = dt.Epoch
+			o.StartedDate.Rfc3339 = dt.Rfc3339
+			o.StartedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.StartedDate.Epoch = dt.Epoch
+			o.StartedDate.Rfc3339 = dt.Rfc3339
+			o.StartedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.StartedDate.Epoch = dt.Epoch
+				o.StartedDate.Rfc3339 = dt.Rfc3339
+				o.StartedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.StartedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["status"].(*SprintStatus); ok {
+		o.Status = val
+	} else if val, ok := kv["status"].(SprintStatus); ok {
+		o.Status = &val
+	} else {
+		if val, ok := kv["status"]; ok {
+			if val == nil {
+				o.Status = toSprintStatusPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["SprintStatus"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "active", "ACTIVE":
+						o.Status = toSprintStatusPointer(0)
+					case "future", "FUTURE":
+						o.Status = toSprintStatusPointer(1)
+					case "closed", "CLOSED":
+						o.Status = toSprintStatusPointer(2)
+					}
+				}
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }

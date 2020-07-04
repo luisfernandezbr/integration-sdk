@@ -635,6 +635,20 @@ func (o *ExportIntegrationLastProcessingDate) FromMap(kv map[string]interface{})
 // ExportIntegrationLocation is the enumeration type for location
 type ExportIntegrationLocation int32
 
+// toExportIntegrationLocationPointer is the enumeration pointer type for location
+func toExportIntegrationLocationPointer(v int32) *ExportIntegrationLocation {
+	nv := ExportIntegrationLocation(v)
+	return &nv
+}
+
+// toExportIntegrationLocationEnum is the enumeration pointer wrapper for location
+func toExportIntegrationLocationEnum(v *ExportIntegrationLocation) string {
+	if v == nil {
+		return toExportIntegrationLocationPointer(0).String()
+	}
+	return v.String()
+}
+
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportIntegrationLocation) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 	val := bson.RawValue{Type: t, Value: data}
@@ -714,6 +728,20 @@ const (
 
 // ExportIntegrationState is the enumeration type for state
 type ExportIntegrationState int32
+
+// toExportIntegrationStatePointer is the enumeration pointer type for state
+func toExportIntegrationStatePointer(v int32) *ExportIntegrationState {
+	nv := ExportIntegrationState(v)
+	return &nv
+}
+
+// toExportIntegrationStateEnum is the enumeration pointer wrapper for state
+func toExportIntegrationStateEnum(v *ExportIntegrationState) string {
+	if v == nil {
+		return toExportIntegrationStatePointer(0).String()
+	}
+	return v.String()
+}
 
 // UnmarshalBSONValue for unmarshaling value
 func (v *ExportIntegrationState) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
@@ -2068,14 +2096,97 @@ func (o *ExportPartial) GetModelName() datamodel.ModelNameType {
 
 // ToMap returns the object as a map
 func (o *ExportPartial) ToMap() map[string]interface{} {
-	return map[string]interface{}{
+	kv := map[string]interface{}{
 		"integration":          toExportObject(o.Integration, true),
 		"job_id":               toExportObject(o.JobID, true),
 		"reprocess_historical": toExportObject(o.ReprocessHistorical, true),
 	}
+	for k, v := range kv {
+		if v == nil || reflect.ValueOf(v).IsZero() {
+			delete(kv, k)
+		} else {
+		}
+	}
+	return kv
 }
 
 // Stringify returns the object in JSON format as a string
 func (o *ExportPartial) Stringify() string {
-	return pjson.Stringify(o)
+	return pjson.Stringify(o.ToMap())
+}
+
+// MarshalJSON returns the bytes for marshaling to json
+func (o *ExportPartial) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.ToMap())
+}
+
+// UnmarshalJSON will unmarshal the json buffer into the object
+func (o *ExportPartial) UnmarshalJSON(data []byte) error {
+	kv := make(map[string]interface{})
+	if err := json.Unmarshal(data, &kv); err != nil {
+		return err
+	}
+	o.FromMap(kv)
+	return nil
+}
+
+func (o *ExportPartial) setDefaults(frommap bool) {
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportPartial) FromMap(kv map[string]interface{}) {
+
+	if o.Integration == nil {
+		o.Integration = &ExportIntegration{}
+	}
+
+	if val, ok := kv["integration"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Integration.FromMap(kv)
+		} else if sv, ok := val.(ExportIntegration); ok {
+			// struct
+			o.Integration = &sv
+		} else if sp, ok := val.(*ExportIntegration); ok {
+			// struct pointer
+			o.Integration = sp
+		}
+	} else {
+		o.Integration.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["job_id"].(*string); ok {
+		o.JobID = val
+	} else if val, ok := kv["job_id"].(string); ok {
+		o.JobID = &val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.JobID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["reprocess_historical"].(*bool); ok {
+		o.ReprocessHistorical = val
+	} else if val, ok := kv["reprocess_historical"].(bool); ok {
+		o.ReprocessHistorical = &val
+	} else {
+		if val, ok := kv["reprocess_historical"]; ok {
+			if val == nil {
+				o.ReprocessHistorical = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.ReprocessHistorical = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	o.setDefaults(false)
 }
