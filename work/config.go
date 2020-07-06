@@ -40,8 +40,6 @@ const (
 	ConfigModelCustomerIDColumn = "customer_id"
 	// ConfigModelIDColumn is the column json value id
 	ConfigModelIDColumn = "id"
-	// ConfigModelIntegrationIDColumn is the column json value integration_id
-	ConfigModelIntegrationIDColumn = "integration_id"
 	// ConfigModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	ConfigModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ConfigModelRefIDColumn is the column json value ref_id
@@ -268,10 +266,8 @@ type Config struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// IntegrationID The ID reference to the integration instance
-	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
-	// IntegrationInstanceID the integration instance id
-	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// IntegrationInstanceID The ID reference to the integration instance
+	IntegrationInstanceID string `json:"integration_instance_id" codec:"integration_instance_id" bson:"integration_instance_id" yaml:"integration_instance_id" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -329,8 +325,8 @@ func (o *Config) GetModelName() datamodel.ModelNameType {
 }
 
 // NewConfigID provides a template for generating an ID field for Config
-func NewConfigID(customerID string, refType string, IntegrationID string) string {
-	return hash.Values(customerID, refType, IntegrationID)
+func NewConfigID(customerID string, refType string, IntegrationInstanceID string) string {
+	return hash.Values(customerID, refType, IntegrationInstanceID)
 }
 
 func (o *Config) setDefaults(frommap bool) {
@@ -346,7 +342,7 @@ func (o *Config) setDefaults(frommap bool) {
 
 	if o.ID == "" {
 		// set the id from the spec provided in the model
-		o.ID = hash.Values(o.CustomerID, o.RefType, o.IntegrationID)
+		o.ID = hash.Values(o.CustomerID, o.RefType, o.IntegrationInstanceID)
 	}
 
 	if frommap {
@@ -517,8 +513,7 @@ func (o *Config) ToMap() map[string]interface{} {
 		"created_ts":              toConfigObject(o.CreatedAt, false),
 		"customer_id":             toConfigObject(o.CustomerID, false),
 		"id":                      toConfigObject(o.ID, false),
-		"integration_id":          toConfigObject(o.IntegrationID, false),
-		"integration_instance_id": toConfigObject(o.IntegrationInstanceID, true),
+		"integration_instance_id": toConfigObject(o.IntegrationInstanceID, false),
 		"ref_id":                  toConfigObject(o.RefID, false),
 		"ref_type":                toConfigObject(o.RefType, false),
 		"statuses":                toConfigObject(o.Statuses, false),
@@ -588,12 +583,12 @@ func (o *Config) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["integration_id"].(string); ok {
-		o.IntegrationID = val
+	if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = val
 	} else {
-		if val, ok := kv["integration_id"]; ok {
+		if val, ok := kv["integration_instance_id"]; ok {
 			if val == nil {
-				o.IntegrationID = ""
+				o.IntegrationInstanceID = ""
 			} else {
 				v := pstrings.Value(val)
 				if v != "" {
@@ -603,24 +598,7 @@ func (o *Config) FromMap(kv map[string]interface{}) {
 				} else {
 					val = v
 				}
-				o.IntegrationID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	if val, ok := kv["integration_instance_id"].(*string); ok {
-		o.IntegrationInstanceID = val
-	} else if val, ok := kv["integration_instance_id"].(string); ok {
-		o.IntegrationInstanceID = &val
-	} else {
-		if val, ok := kv["integration_instance_id"]; ok {
-			if val == nil {
-				o.IntegrationInstanceID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+				o.IntegrationInstanceID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -700,7 +678,6 @@ func (o *Config) Hash() string {
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
-	args = append(args, o.IntegrationID)
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
@@ -719,8 +696,6 @@ func getConfigQueryFields() string {
 	sb.WriteString("\t\t\tcustomer_id\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")
-	// scalar
-	sb.WriteString("\t\t\tintegration_id\n")
 	// scalar
 	sb.WriteString("\t\t\tintegration_instance_id\n")
 	// scalar
@@ -998,8 +973,6 @@ func CreateConfig(client graphql.Client, model Config) error {
 
 // ConfigPartial is a partial struct for upsert mutations for Config
 type ConfigPartial struct {
-	// IntegrationID The ID reference to the integration instance
-	IntegrationID *string `json:"integration_id,omitempty"`
 	// Statuses The mapping of statuses for this integration
 	Statuses *ConfigStatuses `json:"statuses,omitempty"`
 }
@@ -1014,8 +987,7 @@ func (o *ConfigPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *ConfigPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"integration_id": toConfigObject(o.IntegrationID, true),
-		"statuses":       toConfigObject(o.Statuses, true),
+		"statuses": toConfigObject(o.Statuses, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -1051,23 +1023,6 @@ func (o *ConfigPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ConfigPartial) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["integration_id"].(*string); ok {
-		o.IntegrationID = val
-	} else if val, ok := kv["integration_id"].(string); ok {
-		o.IntegrationID = &val
-	} else {
-		if val, ok := kv["integration_id"]; ok {
-			if val == nil {
-				o.IntegrationID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.IntegrationID = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
 
 	if o.Statuses == nil {
 		o.Statuses = &ConfigStatuses{}
