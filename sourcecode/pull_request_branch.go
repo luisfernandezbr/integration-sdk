@@ -31,6 +31,8 @@ const (
 )
 
 const (
+	// PullRequestBranchModelActiveColumn is the column json value active
+	PullRequestBranchModelActiveColumn = "active"
 	// PullRequestBranchModelAheadDefaultCountColumn is the column json value ahead_default_count
 	PullRequestBranchModelAheadDefaultCountColumn = "ahead_default_count"
 	// PullRequestBranchModelBehindDefaultCountColumn is the column json value behind_default_count
@@ -73,6 +75,8 @@ const (
 
 // PullRequestBranch the pull request branch is a branch in a repo that was extracted from a pull request instead of from git
 type PullRequestBranch struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
 	AheadDefaultCount int64 `json:"ahead_default_count" codec:"ahead_default_count" bson:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
 	// BehindDefaultCount the number of commits that this branch is behind from the default branch
@@ -306,6 +310,7 @@ func (o *PullRequestBranch) IsEqual(other *PullRequestBranch) bool {
 func (o *PullRequestBranch) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                    toPullRequestBranchObject(o.Active, false),
 		"ahead_default_count":       toPullRequestBranchObject(o.AheadDefaultCount, false),
 		"behind_default_count":      toPullRequestBranchObject(o.BehindDefaultCount, false),
 		"branched_from_commit_ids":  toPullRequestBranchObject(o.BranchedFromCommitIds, false),
@@ -337,6 +342,17 @@ func (o *PullRequestBranch) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["ahead_default_count"].(int64); ok {
 		o.AheadDefaultCount = val
@@ -801,6 +817,7 @@ func (o *PullRequestBranch) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequestBranch) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.AheadDefaultCount)
 	args = append(args, o.BehindDefaultCount)
 	args = append(args, o.BranchedFromCommitIds)
@@ -826,6 +843,8 @@ func (o *PullRequestBranch) Hash() string {
 
 // PullRequestBranchPartial is a partial struct for upsert mutations for PullRequestBranch
 type PullRequestBranchPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
 	AheadDefaultCount *int64 `json:"ahead_default_count,omitempty"`
 	// BehindDefaultCount the number of commits that this branch is behind from the default branch
@@ -866,6 +885,7 @@ func (o *PullRequestBranchPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *PullRequestBranchPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":                    toPullRequestBranchObject(o.Active, true),
 		"ahead_default_count":       toPullRequestBranchObject(o.AheadDefaultCount, true),
 		"behind_default_count":      toPullRequestBranchObject(o.BehindDefaultCount, true),
 		"branched_from_commit_ids":  toPullRequestBranchObject(o.BranchedFromCommitIds, true),
@@ -947,6 +967,23 @@ func (o *PullRequestBranchPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestBranchPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["ahead_default_count"].(*int64); ok {
 		o.AheadDefaultCount = val
 	} else if val, ok := kv["ahead_default_count"].(int64); ok {

@@ -33,6 +33,8 @@ const (
 )
 
 const (
+	// KanbanBoardModelActiveColumn is the column json value active
+	KanbanBoardModelActiveColumn = "active"
 	// KanbanBoardModelBacklogIssueIdsColumn is the column json value backlog_issue_ids
 	KanbanBoardModelBacklogIssueIdsColumn = "backlog_issue_ids"
 	// KanbanBoardModelColumnsColumn is the column json value columns
@@ -237,6 +239,8 @@ func (o *KanbanBoardColumns) FromMap(kv map[string]interface{}) {
 
 // KanbanBoard kanban board details
 type KanbanBoard struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// BacklogIssueIds ids of the all issues on the board backlog in rank order
 	BacklogIssueIds []string `json:"backlog_issue_ids" codec:"backlog_issue_ids" bson:"backlog_issue_ids" yaml:"backlog_issue_ids" faker:"-"`
 	// Columns the columns for this board
@@ -501,6 +505,7 @@ func (o *KanbanBoard) IsEqual(other *KanbanBoard) bool {
 func (o *KanbanBoard) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toKanbanBoardObject(o.Active, false),
 		"backlog_issue_ids":       toKanbanBoardObject(o.BacklogIssueIds, false),
 		"columns":                 toKanbanBoardObject(o.Columns, false),
 		"customer_id":             toKanbanBoardObject(o.CustomerID, false),
@@ -525,6 +530,17 @@ func (o *KanbanBoard) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["backlog_issue_ids"]; ok {
 		if val != nil {
@@ -891,6 +907,7 @@ func (o *KanbanBoard) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *KanbanBoard) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.BacklogIssueIds)
 	args = append(args, o.Columns)
 	args = append(args, o.CustomerID)
@@ -909,6 +926,8 @@ func (o *KanbanBoard) Hash() string {
 
 // KanbanBoardPartial is a partial struct for upsert mutations for KanbanBoard
 type KanbanBoardPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// BacklogIssueIds ids of the all issues on the board backlog in rank order
 	BacklogIssueIds []string `json:"backlog_issue_ids,omitempty"`
 	// Columns the columns for this board
@@ -933,6 +952,7 @@ func (o *KanbanBoardPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *KanbanBoardPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":            toKanbanBoardObject(o.Active, true),
 		"backlog_issue_ids": toKanbanBoardObject(o.BacklogIssueIds, true),
 		"columns":           toKanbanBoardObject(o.Columns, true),
 		"issue_ids":         toKanbanBoardObject(o.IssueIds, true),
@@ -1006,6 +1026,23 @@ func (o *KanbanBoardPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *KanbanBoardPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["backlog_issue_ids"]; ok {
 		if val != nil {
 			na := make([]string, 0)

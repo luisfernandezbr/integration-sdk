@@ -30,6 +30,8 @@ const (
 )
 
 const (
+	// PullRequestReviewModelActiveColumn is the column json value active
+	PullRequestReviewModelActiveColumn = "active"
 	// PullRequestReviewModelCreatedDateColumn is the column json value created_date
 	PullRequestReviewModelCreatedDateColumn = "created_date"
 	// PullRequestReviewModelCreatedDateEpochColumn is the column json value epoch
@@ -337,6 +339,8 @@ const (
 
 // PullRequestReview the review for a given pull request
 type PullRequestReview struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// CreatedDate the timestamp in UTC that the review was created
 	CreatedDate PullRequestReviewCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
@@ -548,6 +552,7 @@ func (o *PullRequestReview) IsEqual(other *PullRequestReview) bool {
 func (o *PullRequestReview) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toPullRequestReviewObject(o.Active, false),
 		"created_date":            toPullRequestReviewObject(o.CreatedDate, false),
 		"customer_id":             toPullRequestReviewObject(o.CustomerID, false),
 		"id":                      toPullRequestReviewObject(o.ID, false),
@@ -572,6 +577,17 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 
 	if val, ok := kv["created_date"]; ok {
@@ -832,6 +848,7 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequestReview) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
@@ -849,6 +866,8 @@ func (o *PullRequestReview) Hash() string {
 
 // PullRequestReviewPartial is a partial struct for upsert mutations for PullRequestReview
 type PullRequestReviewPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// CreatedDate the timestamp in UTC that the review was created
 	CreatedDate *PullRequestReviewCreatedDate `json:"created_date,omitempty"`
 	// PullRequestID the pull request this review is associated with
@@ -873,6 +892,7 @@ func (o *PullRequestReviewPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *PullRequestReviewPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":          toPullRequestReviewObject(o.Active, true),
 		"created_date":    toPullRequestReviewObject(o.CreatedDate, true),
 		"pull_request_id": toPullRequestReviewObject(o.PullRequestID, true),
 		"repo_id":         toPullRequestReviewObject(o.RepoID, true),
@@ -922,6 +942,23 @@ func (o *PullRequestReviewPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestReviewPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 
 	if o.CreatedDate == nil {
 		o.CreatedDate = &PullRequestReviewCreatedDate{}

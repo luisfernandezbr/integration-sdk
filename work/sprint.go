@@ -35,6 +35,8 @@ const (
 )
 
 const (
+	// SprintModelActiveColumn is the column json value active
+	SprintModelActiveColumn = "active"
 	// SprintModelBacklogIssueIdsColumn is the column json value backlog_issue_ids
 	SprintModelBacklogIssueIdsColumn = "backlog_issue_ids"
 	// SprintModelCompletedDateColumn is the column json value completed_date
@@ -486,6 +488,8 @@ const (
 
 // Sprint sprint details
 type Sprint struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// BacklogIssueIds ids of the all issues in the sprint backlog in rank order
 	BacklogIssueIds []string `json:"backlog_issue_ids" codec:"backlog_issue_ids" bson:"backlog_issue_ids" yaml:"backlog_issue_ids" faker:"-"`
 	// CompletedDate the date that the sprint was completed
@@ -762,6 +766,7 @@ func (o *Sprint) IsEqual(other *Sprint) bool {
 func (o *Sprint) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toSprintObject(o.Active, false),
 		"backlog_issue_ids":       toSprintObject(o.BacklogIssueIds, false),
 		"completed_date":          toSprintObject(o.CompletedDate, false),
 		"customer_id":             toSprintObject(o.CustomerID, false),
@@ -791,6 +796,17 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["backlog_issue_ids"]; ok {
 		if val != nil {
@@ -1240,6 +1256,7 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Sprint) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.BacklogIssueIds)
 	args = append(args, o.CompletedDate)
 	args = append(args, o.CustomerID)
@@ -1262,6 +1279,8 @@ func (o *Sprint) Hash() string {
 
 // SprintPartial is a partial struct for upsert mutations for Sprint
 type SprintPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// BacklogIssueIds ids of the all issues in the sprint backlog in rank order
 	BacklogIssueIds []string `json:"backlog_issue_ids,omitempty"`
 	// CompletedDate the date that the sprint was completed
@@ -1294,6 +1313,7 @@ func (o *SprintPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *SprintPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":            toSprintObject(o.Active, true),
 		"backlog_issue_ids": toSprintObject(o.BacklogIssueIds, true),
 		"completed_date":    toSprintObject(o.CompletedDate, true),
 		"ended_date":        toSprintObject(o.EndedDate, true),
@@ -1385,6 +1405,23 @@ func (o *SprintPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *SprintPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["backlog_issue_ids"]; ok {
 		if val != nil {
 			na := make([]string, 0)

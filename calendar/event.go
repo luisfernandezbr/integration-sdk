@@ -33,6 +33,8 @@ const (
 )
 
 const (
+	// EventModelActiveColumn is the column json value active
+	EventModelActiveColumn = "active"
 	// EventModelBusyColumn is the column json value busy
 	EventModelBusyColumn = "busy"
 	// EventModelCalendarIDColumn is the column json value calendar_id
@@ -714,6 +716,8 @@ const (
 
 // Event event on a calendar
 type Event struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Busy true if the user is marked as busy in this event
 	Busy bool `json:"busy" codec:"busy" bson:"busy" yaml:"busy" faker:"-"`
 	// CalendarID unique project id this event belongs to
@@ -912,7 +916,7 @@ func (o *Event) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
 		Timestamp:         "updated_ts",
-		NumPartitions:     128,
+		NumPartitions:     8,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -990,6 +994,7 @@ func (o *Event) IsEqual(other *Event) bool {
 func (o *Event) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toEventObject(o.Active, false),
 		"busy":                    toEventObject(o.Busy, false),
 		"calendar_id":             toEventObject(o.CalendarID, false),
 		"customer_id":             toEventObject(o.CustomerID, false),
@@ -1019,6 +1024,17 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["busy"].(bool); ok {
 		o.Busy = val
@@ -1393,6 +1409,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Event) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.Busy)
 	args = append(args, o.CalendarID)
 	args = append(args, o.CustomerID)
@@ -1415,6 +1432,8 @@ func (o *Event) Hash() string {
 
 // EventPartial is a partial struct for upsert mutations for Event
 type EventPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// Busy true if the user is marked as busy in this event
 	Busy *bool `json:"busy,omitempty"`
 	// CalendarID unique project id this event belongs to
@@ -1451,6 +1470,7 @@ func (o *EventPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *EventPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":       toEventObject(o.Active, true),
 		"busy":         toEventObject(o.Busy, true),
 		"calendar_id":  toEventObject(o.CalendarID, true),
 		"description":  toEventObject(o.Description, true),
@@ -1521,6 +1541,23 @@ func (o *EventPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *EventPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["busy"].(*bool); ok {
 		o.Busy = val
 	} else if val, ok := kv["busy"].(bool); ok {

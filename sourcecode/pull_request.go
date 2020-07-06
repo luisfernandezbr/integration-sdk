@@ -33,6 +33,8 @@ const (
 )
 
 const (
+	// PullRequestModelActiveColumn is the column json value active
+	PullRequestModelActiveColumn = "active"
 	// PullRequestModelBranchIDColumn is the column json value branch_id
 	PullRequestModelBranchIDColumn = "branch_id"
 	// PullRequestModelBranchNameColumn is the column json value branch_name
@@ -629,6 +631,8 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// BranchID id for the branch based on branch_name, could be already deleted
 	BranchID string `json:"branch_id" codec:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
 	// BranchName branch name of the pull request
@@ -883,6 +887,7 @@ func (o *PullRequest) IsEqual(other *PullRequest) bool {
 func (o *PullRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toPullRequestObject(o.Active, false),
 		"branch_id":               toPullRequestObject(o.BranchID, false),
 		"branch_name":             toPullRequestObject(o.BranchName, false),
 		"closed_by_ref_id":        toPullRequestObject(o.ClosedByRefID, false),
@@ -921,6 +926,17 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["branch_id"].(string); ok {
 		o.BranchID = val
@@ -1530,6 +1546,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequest) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.BranchID)
 	args = append(args, o.BranchName)
 	args = append(args, o.ClosedByRefID)
@@ -1561,6 +1578,8 @@ func (o *PullRequest) Hash() string {
 
 // PullRequestPartial is a partial struct for upsert mutations for PullRequest
 type PullRequestPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// BranchID id for the branch based on branch_name, could be already deleted
 	BranchID *string `json:"branch_id,omitempty"`
 	// BranchName branch name of the pull request
@@ -1613,6 +1632,7 @@ func (o *PullRequestPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *PullRequestPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":            toPullRequestObject(o.Active, true),
 		"branch_id":         toPullRequestObject(o.BranchID, true),
 		"branch_name":       toPullRequestObject(o.BranchName, true),
 		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, true),
@@ -1713,6 +1733,23 @@ func (o *PullRequestPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["branch_id"].(*string); ok {
 		o.BranchID = val
 	} else if val, ok := kv["branch_id"].(string); ok {

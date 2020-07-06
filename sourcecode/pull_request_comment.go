@@ -28,6 +28,8 @@ const (
 )
 
 const (
+	// PullRequestCommentModelActiveColumn is the column json value active
+	PullRequestCommentModelActiveColumn = "active"
 	// PullRequestCommentModelBodyColumn is the column json value body
 	PullRequestCommentModelBodyColumn = "body"
 	// PullRequestCommentModelCreatedDateColumn is the column json value created_date
@@ -262,6 +264,8 @@ func (o *PullRequestCommentUpdatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequestComment the comment for a given pull request
 type PullRequestComment struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Body the body of the comment
 	Body string `json:"body" codec:"body" bson:"body" yaml:"body" faker:"commit_message"`
 	// CreatedDate the timestamp in UTC that the comment was created
@@ -475,6 +479,7 @@ func (o *PullRequestComment) IsEqual(other *PullRequestComment) bool {
 func (o *PullRequestComment) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toPullRequestCommentObject(o.Active, false),
 		"body":                    toPullRequestCommentObject(o.Body, false),
 		"created_date":            toPullRequestCommentObject(o.CreatedDate, false),
 		"customer_id":             toPullRequestCommentObject(o.CustomerID, false),
@@ -499,6 +504,17 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["body"].(string); ok {
 		o.Body = val
@@ -762,6 +778,7 @@ func (o *PullRequestComment) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequestComment) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.Body)
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CustomerID)
@@ -780,6 +797,8 @@ func (o *PullRequestComment) Hash() string {
 
 // PullRequestCommentPartial is a partial struct for upsert mutations for PullRequestComment
 type PullRequestCommentPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// Body the body of the comment
 	Body *string `json:"body,omitempty"`
 	// CreatedDate the timestamp in UTC that the comment was created
@@ -806,6 +825,7 @@ func (o *PullRequestCommentPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *PullRequestCommentPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":          toPullRequestCommentObject(o.Active, true),
 		"body":            toPullRequestCommentObject(o.Body, true),
 		"created_date":    toPullRequestCommentObject(o.CreatedDate, true),
 		"pull_request_id": toPullRequestCommentObject(o.PullRequestID, true),
@@ -862,6 +882,23 @@ func (o *PullRequestCommentPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestCommentPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["body"].(*string); ok {
 		o.Body = val
 	} else if val, ok := kv["body"].(string); ok {

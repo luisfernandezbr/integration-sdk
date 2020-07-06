@@ -33,6 +33,8 @@ const (
 )
 
 const (
+	// IssueModelActiveColumn is the column json value active
+	IssueModelActiveColumn = "active"
 	// IssueModelAssigneeRefIDColumn is the column json value assignee_ref_id
 	IssueModelAssigneeRefIDColumn = "assignee_ref_id"
 	// IssueModelAttachmentsColumn is the column json value attachments
@@ -173,6 +175,12 @@ const (
 	IssueModelTagsColumn = "tags"
 	// IssueModelTitleColumn is the column json value title
 	IssueModelTitleColumn = "title"
+	// IssueModelTransitionsColumn is the column json value transitions
+	IssueModelTransitionsColumn = "transitions"
+	// IssueModelTransitionsNameColumn is the column json value name
+	IssueModelTransitionsNameColumn = "name"
+	// IssueModelTransitionsRefIDColumn is the column json value ref_id
+	IssueModelTransitionsRefIDColumn = "ref_id"
 	// IssueModelTypeColumn is the column json value type
 	IssueModelTypeColumn = "type"
 	// IssueModelTypeIDColumn is the column json value type_id
@@ -1872,6 +1880,90 @@ func (o *IssuePlannedStartDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// IssueTransitions represents the object structure for transitions
+type IssueTransitions struct {
+	// Name the name of the status
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID id of the status
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+}
+
+func toIssueTransitionsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssueTransitions:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *IssueTransitions) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Name the name of the status
+		"name": toIssueTransitionsObject(o.Name, false),
+		// RefID id of the status
+		"ref_id": toIssueTransitionsObject(o.RefID, false),
+	}
+}
+
+func (o *IssueTransitions) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueTransitions) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // IssueUpdatedDate represents the object structure for updated_date
 type IssueUpdatedDate struct {
 	// Epoch the date in epoch format
@@ -1971,6 +2063,8 @@ func (o *IssueUpdatedDate) FromMap(kv map[string]interface{}) {
 
 // Issue the issue is a specific work item for a project
 type Issue struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// AssigneeRefID user id of the assignee
 	AssigneeRefID string `json:"assignee_ref_id" codec:"assignee_ref_id" bson:"assignee_ref_id" yaml:"assignee_ref_id" faker:"-"`
 	// Attachments file attachments
@@ -2029,6 +2123,8 @@ type Issue struct {
 	Tags []string `json:"tags" codec:"tags" bson:"tags" yaml:"tags" faker:"-"`
 	// Title the issue title
 	Title string `json:"title" codec:"title" bson:"title" yaml:"title" faker:"issue_title"`
+	// Transitions the statuses that this issue is able to transition to
+	Transitions []IssueTransitions `json:"transitions" codec:"transitions" bson:"transitions" yaml:"transitions" faker:"-"`
 	// Type type of issue
 	Type string `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
 	// TypeID the issue type id
@@ -2085,6 +2181,13 @@ func toIssueObject(o interface{}, isoptional bool) interface{} {
 	case IssuePlannedStartDate:
 		return v.ToMap()
 
+	case []IssueTransitions:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	case IssueUpdatedDate:
 		return v.ToMap()
 
@@ -2138,6 +2241,9 @@ func (o *Issue) setDefaults(frommap bool) {
 	}
 	if o.Tags == nil {
 		o.Tags = make([]string, 0)
+	}
+	if o.Transitions == nil {
+		o.Transitions = make([]IssueTransitions, 0)
 	}
 
 	if o.ID == "" {
@@ -2271,6 +2377,7 @@ func (o *Issue) IsEqual(other *Issue) bool {
 func (o *Issue) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toIssueObject(o.Active, false),
 		"assignee_ref_id":         toIssueObject(o.AssigneeRefID, false),
 		"attachments":             toIssueObject(o.Attachments, false),
 		"change_log":              toIssueObject(o.ChangeLog, false),
@@ -2300,6 +2407,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"story_points":            toIssueObject(o.StoryPoints, true),
 		"tags":                    toIssueObject(o.Tags, false),
 		"title":                   toIssueObject(o.Title, false),
+		"transitions":             toIssueObject(o.Transitions, false),
 		"type":                    toIssueObject(o.Type, false),
 		"type_id":                 toIssueObject(o.TypeID, false),
 		"updated_date":            toIssueObject(o.UpdatedDate, false),
@@ -2316,6 +2424,17 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["assignee_ref_id"].(string); ok {
 		o.AssigneeRefID = val
@@ -3116,6 +3235,70 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o == nil {
+
+		o.Transitions = make([]IssueTransitions, 0)
+
+	}
+	if val, ok := kv["transitions"]; ok {
+		if sv, ok := val.([]IssueTransitions); ok {
+			o.Transitions = sv
+		} else if sp, ok := val.([]*IssueTransitions); ok {
+			o.Transitions = o.Transitions[:0]
+			for _, e := range sp {
+				o.Transitions = append(o.Transitions, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IssueTransitions); ok {
+					o.Transitions = append(o.Transitions, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IssueTransitions
+					fm.FromMap(av)
+					o.Transitions = append(o.Transitions, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av IssueTransitions
+					av.FromMap(bkv)
+					o.Transitions = append(o.Transitions, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IssueTransitions); ok {
+					o.Transitions = append(o.Transitions, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IssueTransitions
+					fm.FromMap(r)
+					o.Transitions = append(o.Transitions, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IssueTransitions{}
+					fm.FromMap(r)
+					o.Transitions = append(o.Transitions, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IssueTransitions
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Transitions = append(o.Transitions, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if val, ok := kv["type"].(string); ok {
 		o.Type = val
 	} else {
@@ -3213,6 +3396,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Issue) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.AssigneeRefID)
 	args = append(args, o.Attachments)
 	args = append(args, o.ChangeLog)
@@ -3242,6 +3426,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.StoryPoints)
 	args = append(args, o.Tags)
 	args = append(args, o.Title)
+	args = append(args, o.Transitions)
 	args = append(args, o.Type)
 	args = append(args, o.TypeID)
 	args = append(args, o.UpdatedDate)
@@ -3252,6 +3437,8 @@ func (o *Issue) Hash() string {
 
 // IssuePartial is a partial struct for upsert mutations for Issue
 type IssuePartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// AssigneeRefID user id of the assignee
 	AssigneeRefID *string `json:"assignee_ref_id,omitempty"`
 	// Attachments file attachments
@@ -3298,6 +3485,8 @@ type IssuePartial struct {
 	Tags []string `json:"tags,omitempty"`
 	// Title the issue title
 	Title *string `json:"title,omitempty"`
+	// Transitions the statuses that this issue is able to transition to
+	Transitions []IssueTransitions `json:"transitions,omitempty"`
 	// Type type of issue
 	Type *string `json:"type,omitempty"`
 	// TypeID the issue type id
@@ -3318,6 +3507,7 @@ func (o *IssuePartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *IssuePartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":             toIssueObject(o.Active, true),
 		"assignee_ref_id":    toIssueObject(o.AssigneeRefID, true),
 		"attachments":        toIssueObject(o.Attachments, true),
 		"change_log":         toIssueObject(o.ChangeLog, true),
@@ -3341,6 +3531,7 @@ func (o *IssuePartial) ToMap() map[string]interface{} {
 		"story_points":       toIssueObject(o.StoryPoints, true),
 		"tags":               toIssueObject(o.Tags, true),
 		"title":              toIssueObject(o.Title, true),
+		"transitions":        toIssueObject(o.Transitions, true),
 		"type":               toIssueObject(o.Type, true),
 		"type_id":            toIssueObject(o.TypeID, true),
 		"updated_date":       toIssueObject(o.UpdatedDate, true),
@@ -3411,6 +3602,14 @@ func (o *IssuePartial) ToMap() map[string]interface{} {
 					}
 				}
 			}
+
+			if k == "transitions" {
+				if arr, ok := v.([]IssueTransitions); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
 			if k == "updated_date" {
 				if dt, ok := v.(*IssueUpdatedDate); ok {
 					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
@@ -3448,6 +3647,23 @@ func (o *IssuePartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *IssuePartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["assignee_ref_id"].(*string); ok {
 		o.AssigneeRefID = val
 	} else if val, ok := kv["assignee_ref_id"].(string); ok {
@@ -4106,6 +4322,70 @@ func (o *IssuePartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o == nil {
+
+		o.Transitions = make([]IssueTransitions, 0)
+
+	}
+	if val, ok := kv["transitions"]; ok {
+		if sv, ok := val.([]IssueTransitions); ok {
+			o.Transitions = sv
+		} else if sp, ok := val.([]*IssueTransitions); ok {
+			o.Transitions = o.Transitions[:0]
+			for _, e := range sp {
+				o.Transitions = append(o.Transitions, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IssueTransitions); ok {
+					o.Transitions = append(o.Transitions, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IssueTransitions
+					fm.FromMap(av)
+					o.Transitions = append(o.Transitions, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av IssueTransitions
+					av.FromMap(bkv)
+					o.Transitions = append(o.Transitions, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IssueTransitions); ok {
+					o.Transitions = append(o.Transitions, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IssueTransitions
+					fm.FromMap(r)
+					o.Transitions = append(o.Transitions, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IssueTransitions{}
+					fm.FromMap(r)
+					o.Transitions = append(o.Transitions, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IssueTransitions
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Transitions = append(o.Transitions, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if val, ok := kv["type"].(*string); ok {
 		o.Type = val
 	} else if val, ok := kv["type"].(string); ok {

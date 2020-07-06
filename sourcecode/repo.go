@@ -50,6 +50,10 @@ const (
 	RepoModelLanguageColumn = "language"
 	// RepoModelNameColumn is the column json value name
 	RepoModelNameColumn = "name"
+	// RepoModelProcessingErrorColumn is the column json value processing_error
+	RepoModelProcessingErrorColumn = "processing_error"
+	// RepoModelProcessingErrorMessageColumn is the column json value processing_error_message
+	RepoModelProcessingErrorMessageColumn = "processing_error_message"
 	// RepoModelRefIDColumn is the column json value ref_id
 	RepoModelRefIDColumn = "ref_id"
 	// RepoModelRefTypeColumn is the column json value ref_type
@@ -60,6 +64,16 @@ const (
 	RepoModelURLColumn = "url"
 	// RepoModelVisibilityColumn is the column json value visibility
 	RepoModelVisibilityColumn = "visibility"
+	// RepoModelWebhookColumn is the column json value webhook
+	RepoModelWebhookColumn = "webhook"
+	// RepoModelWebhookEnabledColumn is the column json value enabled
+	RepoModelWebhookEnabledColumn = "enabled"
+	// RepoModelWebhookErrorMessageColumn is the column json value error_message
+	RepoModelWebhookErrorMessageColumn = "error_message"
+	// RepoModelWebhookErroredColumn is the column json value errored
+	RepoModelWebhookErroredColumn = "errored"
+	// RepoModelWebhookURLColumn is the column json value url
+	RepoModelWebhookURLColumn = "url"
 )
 
 // RepoAffiliation is the enumeration type for affiliation
@@ -262,6 +276,120 @@ const (
 	RepoVisibilityPublic RepoVisibility = 1
 )
 
+// RepoWebhook represents the object structure for webhook
+type RepoWebhook struct {
+	// Enabled if webhooks are enabled for this repo
+	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
+	// ErrorMessage the error message
+	ErrorMessage string `json:"error_message" codec:"error_message" bson:"error_message" yaml:"error_message" faker:"-"`
+	// Errored if the webhook has an error
+	Errored bool `json:"errored" codec:"errored" bson:"errored" yaml:"errored" faker:"-"`
+	// URL the url the webhook for the webhook
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
+}
+
+func toRepoWebhookObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *RepoWebhook:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *RepoWebhook) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Enabled if webhooks are enabled for this repo
+		"enabled": toRepoWebhookObject(o.Enabled, false),
+		// ErrorMessage the error message
+		"error_message": toRepoWebhookObject(o.ErrorMessage, false),
+		// Errored if the webhook has an error
+		"errored": toRepoWebhookObject(o.Errored, false),
+		// URL the url the webhook for the webhook
+		"url": toRepoWebhookObject(o.URL, false),
+	}
+}
+
+func (o *RepoWebhook) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *RepoWebhook) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["enabled"].(bool); ok {
+		o.Enabled = val
+	} else {
+		if val, ok := kv["enabled"]; ok {
+			if val == nil {
+				o.Enabled = false
+			} else {
+				o.Enabled = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["error_message"].(string); ok {
+		o.ErrorMessage = val
+	} else {
+		if val, ok := kv["error_message"]; ok {
+			if val == nil {
+				o.ErrorMessage = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ErrorMessage = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["errored"].(bool); ok {
+		o.Errored = val
+	} else {
+		if val, ok := kv["errored"]; ok {
+			if val == nil {
+				o.Errored = false
+			} else {
+				o.Errored = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // Repo the repo holds source code
 type Repo struct {
 	// Active the status of the repo
@@ -282,6 +410,10 @@ type Repo struct {
 	Language string `json:"language" codec:"language" bson:"language" yaml:"language" faker:"-"`
 	// Name the name of the repo
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"repo"`
+	// ProcessingError if there was an error related to fetching/processing this repo or it's contents
+	ProcessingError bool `json:"processing_error" codec:"processing_error" bson:"processing_error" yaml:"processing_error" faker:"-"`
+	// ProcessingErrorMessage the processing error message
+	ProcessingErrorMessage string `json:"processing_error_message" codec:"processing_error_message" bson:"processing_error_message" yaml:"processing_error_message" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -292,6 +424,8 @@ type Repo struct {
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Visibility the visibility of the repo
 	Visibility RepoVisibility `json:"visibility" codec:"visibility" bson:"visibility" yaml:"visibility" faker:"-"`
+	// Webhook details about this repo's webhook configuration
+	Webhook RepoWebhook `json:"webhook" codec:"webhook" bson:"webhook" yaml:"webhook" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -312,6 +446,9 @@ func toRepoObject(o interface{}, isoptional bool) interface{} {
 
 	case RepoVisibility:
 		return v.String()
+
+	case RepoWebhook:
+		return v.ToMap()
 	default:
 		return o
 	}
@@ -448,7 +585,7 @@ func (o *Repo) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return &datamodel.ModelTopicConfig{
 		Key:               "id",
 		Timestamp:         "updated_ts",
-		NumPartitions:     128,
+		NumPartitions:     8,
 		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
 		ReplicationFactor: 3,
 		Retention:         retention,
@@ -528,20 +665,23 @@ func (o *Repo) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"active": toRepoObject(o.Active, false),
 
-		"affiliation":             o.Affiliation.String(),
-		"customer_id":             toRepoObject(o.CustomerID, false),
-		"default_branch":          toRepoObject(o.DefaultBranch, false),
-		"description":             toRepoObject(o.Description, false),
-		"id":                      toRepoObject(o.ID, false),
-		"integration_instance_id": toRepoObject(o.IntegrationInstanceID, true),
-		"language":                toRepoObject(o.Language, false),
-		"name":                    toRepoObject(o.Name, false),
-		"ref_id":                  toRepoObject(o.RefID, false),
-		"ref_type":                toRepoObject(o.RefType, false),
-		"updated_ts":              toRepoObject(o.UpdatedAt, false),
-		"url":                     toRepoObject(o.URL, false),
+		"affiliation":              o.Affiliation.String(),
+		"customer_id":              toRepoObject(o.CustomerID, false),
+		"default_branch":           toRepoObject(o.DefaultBranch, false),
+		"description":              toRepoObject(o.Description, false),
+		"id":                       toRepoObject(o.ID, false),
+		"integration_instance_id":  toRepoObject(o.IntegrationInstanceID, true),
+		"language":                 toRepoObject(o.Language, false),
+		"name":                     toRepoObject(o.Name, false),
+		"processing_error":         toRepoObject(o.ProcessingError, false),
+		"processing_error_message": toRepoObject(o.ProcessingErrorMessage, false),
+		"ref_id":                   toRepoObject(o.RefID, false),
+		"ref_type":                 toRepoObject(o.RefType, false),
+		"updated_ts":               toRepoObject(o.UpdatedAt, false),
+		"url":                      toRepoObject(o.URL, false),
 
 		"visibility": o.Visibility.String(),
+		"webhook":    toRepoObject(o.Webhook, false),
 		"hashcode":   toRepoObject(o.Hashcode, false),
 	}
 }
@@ -723,6 +863,36 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["processing_error"].(bool); ok {
+		o.ProcessingError = val
+	} else {
+		if val, ok := kv["processing_error"]; ok {
+			if val == nil {
+				o.ProcessingError = false
+			} else {
+				o.ProcessingError = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["processing_error_message"].(string); ok {
+		o.ProcessingErrorMessage = val
+	} else {
+		if val, ok := kv["processing_error_message"]; ok {
+			if val == nil {
+				o.ProcessingErrorMessage = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ProcessingErrorMessage = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -816,6 +986,21 @@ func (o *Repo) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["webhook"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Webhook.FromMap(kv)
+		} else if sv, ok := val.(RepoWebhook); ok {
+			// struct
+			o.Webhook = sv
+		} else if sp, ok := val.(*RepoWebhook); ok {
+			// struct pointer
+			o.Webhook = *sp
+		}
+	} else {
+		o.Webhook.FromMap(map[string]interface{}{})
+	}
+
 	o.setDefaults(false)
 }
 
@@ -831,11 +1016,14 @@ func (o *Repo) Hash() string {
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Language)
 	args = append(args, o.Name)
+	args = append(args, o.ProcessingError)
+	args = append(args, o.ProcessingErrorMessage)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	args = append(args, o.Visibility)
+	args = append(args, o.Webhook)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -854,10 +1042,16 @@ type RepoPartial struct {
 	Language *string `json:"language,omitempty"`
 	// Name the name of the repo
 	Name *string `json:"name,omitempty"`
+	// ProcessingError if there was an error related to fetching/processing this repo or it's contents
+	ProcessingError *bool `json:"processing_error,omitempty"`
+	// ProcessingErrorMessage the processing error message
+	ProcessingErrorMessage *string `json:"processing_error_message,omitempty"`
 	// URL the url to the repo home page
 	URL *string `json:"url,omitempty"`
 	// Visibility the visibility of the repo
 	Visibility *RepoVisibility `json:"visibility,omitempty"`
+	// Webhook details about this repo's webhook configuration
+	Webhook *RepoWebhook `json:"webhook,omitempty"`
 }
 
 var _ datamodel.PartialModel = (*RepoPartial)(nil)
@@ -872,14 +1066,17 @@ func (o *RepoPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
 		"active": toRepoObject(o.Active, true),
 
-		"affiliation":    toRepoAffiliationEnum(o.Affiliation),
-		"default_branch": toRepoObject(o.DefaultBranch, true),
-		"description":    toRepoObject(o.Description, true),
-		"language":       toRepoObject(o.Language, true),
-		"name":           toRepoObject(o.Name, true),
-		"url":            toRepoObject(o.URL, true),
+		"affiliation":              toRepoAffiliationEnum(o.Affiliation),
+		"default_branch":           toRepoObject(o.DefaultBranch, true),
+		"description":              toRepoObject(o.Description, true),
+		"language":                 toRepoObject(o.Language, true),
+		"name":                     toRepoObject(o.Name, true),
+		"processing_error":         toRepoObject(o.ProcessingError, true),
+		"processing_error_message": toRepoObject(o.ProcessingErrorMessage, true),
+		"url":                      toRepoObject(o.URL, true),
 
 		"visibility": toRepoVisibilityEnum(o.Visibility),
+		"webhook":    toRepoObject(o.Webhook, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -1027,6 +1224,40 @@ func (o *RepoPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["processing_error"].(*bool); ok {
+		o.ProcessingError = val
+	} else if val, ok := kv["processing_error"].(bool); ok {
+		o.ProcessingError = &val
+	} else {
+		if val, ok := kv["processing_error"]; ok {
+			if val == nil {
+				o.ProcessingError = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.ProcessingError = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["processing_error_message"].(*string); ok {
+		o.ProcessingErrorMessage = val
+	} else if val, ok := kv["processing_error_message"].(string); ok {
+		o.ProcessingErrorMessage = &val
+	} else {
+		if val, ok := kv["processing_error_message"]; ok {
+			if val == nil {
+				o.ProcessingErrorMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ProcessingErrorMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["url"].(*string); ok {
 		o.URL = val
 	} else if val, ok := kv["url"].(string); ok {
@@ -1069,5 +1300,24 @@ func (o *RepoPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o.Webhook == nil {
+		o.Webhook = &RepoWebhook{}
+	}
+
+	if val, ok := kv["webhook"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Webhook.FromMap(kv)
+		} else if sv, ok := val.(RepoWebhook); ok {
+			// struct
+			o.Webhook = &sv
+		} else if sp, ok := val.(*RepoWebhook); ok {
+			// struct pointer
+			o.Webhook = sp
+		}
+	} else {
+		o.Webhook.FromMap(map[string]interface{}{})
+	}
+
 	o.setDefaults(false)
 }

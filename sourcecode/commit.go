@@ -28,6 +28,8 @@ const (
 )
 
 const (
+	// CommitModelActiveColumn is the column json value active
+	CommitModelActiveColumn = "active"
 	// CommitModelAuthorRefIDColumn is the column json value author_ref_id
 	CommitModelAuthorRefIDColumn = "author_ref_id"
 	// CommitModelCommitterRefIDColumn is the column json value committer_ref_id
@@ -163,6 +165,8 @@ func (o *CommitCreatedDate) FromMap(kv map[string]interface{}) {
 
 // Commit the commit is a specific change in a repo
 type Commit struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
 	AuthorRefID string `json:"author_ref_id" codec:"author_ref_id" bson:"author_ref_id" yaml:"author_ref_id" faker:"-"`
 	// CommitterRefID the committer ref_id in the source system
@@ -377,6 +381,7 @@ func (o *Commit) IsEqual(other *Commit) bool {
 func (o *Commit) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toCommitObject(o.Active, false),
 		"author_ref_id":           toCommitObject(o.AuthorRefID, false),
 		"committer_ref_id":        toCommitObject(o.CommitterRefID, false),
 		"created_date":            toCommitObject(o.CreatedDate, false),
@@ -403,6 +408,17 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["author_ref_id"].(string); ok {
 		o.AuthorRefID = val
@@ -681,6 +697,7 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Commit) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.AuthorRefID)
 	args = append(args, o.CommitterRefID)
 	args = append(args, o.CreatedDate)
@@ -701,6 +718,8 @@ func (o *Commit) Hash() string {
 
 // CommitPartial is a partial struct for upsert mutations for Commit
 type CommitPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// AuthorRefID the author ref_id in the source system
 	AuthorRefID *string `json:"author_ref_id,omitempty"`
 	// CommitterRefID the committer ref_id in the source system
@@ -731,6 +750,7 @@ func (o *CommitPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *CommitPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":           toCommitObject(o.Active, true),
 		"author_ref_id":    toCommitObject(o.AuthorRefID, true),
 		"committer_ref_id": toCommitObject(o.CommitterRefID, true),
 		"created_date":     toCommitObject(o.CreatedDate, true),
@@ -782,6 +802,23 @@ func (o *CommitPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *CommitPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["author_ref_id"].(*string); ok {
 		o.AuthorRefID = val
 	} else if val, ok := kv["author_ref_id"].(string); ok {

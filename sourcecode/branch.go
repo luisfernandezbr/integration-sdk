@@ -31,6 +31,8 @@ const (
 )
 
 const (
+	// BranchModelActiveColumn is the column json value active
+	BranchModelActiveColumn = "active"
 	// BranchModelAheadDefaultCountColumn is the column json value ahead_default_count
 	BranchModelAheadDefaultCountColumn = "ahead_default_count"
 	// BranchModelBehindDefaultCountColumn is the column json value behind_default_count
@@ -75,6 +77,8 @@ const (
 
 // Branch git branches
 type Branch struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
 	AheadDefaultCount int64 `json:"ahead_default_count" codec:"ahead_default_count" bson:"ahead_default_count" yaml:"ahead_default_count" faker:"-"`
 	// BehindDefaultCount the number of commits that this branch is behind from the default branch
@@ -310,6 +314,7 @@ func (o *Branch) IsEqual(other *Branch) bool {
 func (o *Branch) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                    toBranchObject(o.Active, false),
 		"ahead_default_count":       toBranchObject(o.AheadDefaultCount, false),
 		"behind_default_count":      toBranchObject(o.BehindDefaultCount, false),
 		"branched_from_commit_ids":  toBranchObject(o.BranchedFromCommitIds, false),
@@ -342,6 +347,17 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["ahead_default_count"].(int64); ok {
 		o.AheadDefaultCount = val
@@ -825,6 +841,7 @@ func (o *Branch) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Branch) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.AheadDefaultCount)
 	args = append(args, o.BehindDefaultCount)
 	args = append(args, o.BranchedFromCommitIds)
@@ -851,6 +868,8 @@ func (o *Branch) Hash() string {
 
 // BranchPartial is a partial struct for upsert mutations for Branch
 type BranchPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// AheadDefaultCount the number of commits that this branch is ahead of the default branch
 	AheadDefaultCount *int64 `json:"ahead_default_count,omitempty"`
 	// BehindDefaultCount the number of commits that this branch is behind from the default branch
@@ -893,6 +912,7 @@ func (o *BranchPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *BranchPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":                    toBranchObject(o.Active, true),
 		"ahead_default_count":       toBranchObject(o.AheadDefaultCount, true),
 		"behind_default_count":      toBranchObject(o.BehindDefaultCount, true),
 		"branched_from_commit_ids":  toBranchObject(o.BranchedFromCommitIds, true),
@@ -975,6 +995,23 @@ func (o *BranchPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *BranchPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["ahead_default_count"].(*int64); ok {
 		o.AheadDefaultCount = val
 	} else if val, ok := kv["ahead_default_count"].(int64); ok {

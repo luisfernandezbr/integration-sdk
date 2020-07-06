@@ -28,6 +28,8 @@ const (
 )
 
 const (
+	// PullRequestCommitModelActiveColumn is the column json value active
+	PullRequestCommitModelActiveColumn = "active"
 	// PullRequestCommitModelAdditionsColumn is the column json value additions
 	PullRequestCommitModelAdditionsColumn = "additions"
 	// PullRequestCommitModelAuthorRefIDColumn is the column json value author_ref_id
@@ -167,6 +169,8 @@ func (o *PullRequestCommitCreatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequestCommit the pull request commit is a specific change in a repo that was extracted from a pull request
 type PullRequestCommit struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Additions the number of additions for the commit
 	Additions int64 `json:"additions" codec:"additions" bson:"additions" yaml:"additions" faker:"-"`
 	// AuthorRefID the author ref_id in the source system
@@ -385,6 +389,7 @@ func (o *PullRequestCommit) IsEqual(other *PullRequestCommit) bool {
 func (o *PullRequestCommit) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toPullRequestCommitObject(o.Active, false),
 		"additions":               toPullRequestCommitObject(o.Additions, false),
 		"author_ref_id":           toPullRequestCommitObject(o.AuthorRefID, false),
 		"branch_id":               toPullRequestCommitObject(o.BranchID, false),
@@ -413,6 +418,17 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["additions"].(int64); ok {
 		o.Additions = val
@@ -727,6 +743,7 @@ func (o *PullRequestCommit) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequestCommit) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.Additions)
 	args = append(args, o.AuthorRefID)
 	args = append(args, o.BranchID)
@@ -749,6 +766,8 @@ func (o *PullRequestCommit) Hash() string {
 
 // PullRequestCommitPartial is a partial struct for upsert mutations for PullRequestCommit
 type PullRequestCommitPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// Additions the number of additions for the commit
 	Additions *int64 `json:"additions,omitempty"`
 	// AuthorRefID the author ref_id in the source system
@@ -783,6 +802,7 @@ func (o *PullRequestCommitPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *PullRequestCommitPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":           toPullRequestCommitObject(o.Active, true),
 		"additions":        toPullRequestCommitObject(o.Additions, true),
 		"author_ref_id":    toPullRequestCommitObject(o.AuthorRefID, true),
 		"branch_id":        toPullRequestCommitObject(o.BranchID, true),
@@ -836,6 +856,23 @@ func (o *PullRequestCommitPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *PullRequestCommitPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["additions"].(*int64); ok {
 		o.Additions = val
 	} else if val, ok := kv["additions"].(int64); ok {

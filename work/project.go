@@ -18,6 +18,7 @@ import (
 	pstrings "github.com/pinpt/go-common/v10/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -48,8 +49,24 @@ const (
 	ProjectModelIdentifierColumn = "identifier"
 	// ProjectModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	ProjectModelIntegrationInstanceIDColumn = "integration_instance_id"
+	// ProjectModelIssueResolutionsColumn is the column json value issue_resolutions
+	ProjectModelIssueResolutionsColumn = "issue_resolutions"
+	// ProjectModelIssueResolutionsNameColumn is the column json value name
+	ProjectModelIssueResolutionsNameColumn = "name"
+	// ProjectModelIssueResolutionsRefIDColumn is the column json value ref_id
+	ProjectModelIssueResolutionsRefIDColumn = "ref_id"
+	// ProjectModelIssueTypesColumn is the column json value issue_types
+	ProjectModelIssueTypesColumn = "issue_types"
+	// ProjectModelIssueTypesNameColumn is the column json value name
+	ProjectModelIssueTypesNameColumn = "name"
+	// ProjectModelIssueTypesRefIDColumn is the column json value ref_id
+	ProjectModelIssueTypesRefIDColumn = "ref_id"
 	// ProjectModelNameColumn is the column json value name
 	ProjectModelNameColumn = "name"
+	// ProjectModelProcessingErrorColumn is the column json value processing_error
+	ProjectModelProcessingErrorColumn = "processing_error"
+	// ProjectModelProcessingErrorMessageColumn is the column json value processing_error_message
+	ProjectModelProcessingErrorMessageColumn = "processing_error_message"
 	// ProjectModelRefIDColumn is the column json value ref_id
 	ProjectModelRefIDColumn = "ref_id"
 	// ProjectModelRefTypeColumn is the column json value ref_type
@@ -60,6 +77,16 @@ const (
 	ProjectModelURLColumn = "url"
 	// ProjectModelVisibilityColumn is the column json value visibility
 	ProjectModelVisibilityColumn = "visibility"
+	// ProjectModelWebhookColumn is the column json value webhook
+	ProjectModelWebhookColumn = "webhook"
+	// ProjectModelWebhookEnabledColumn is the column json value enabled
+	ProjectModelWebhookEnabledColumn = "enabled"
+	// ProjectModelWebhookErrorColumn is the column json value error
+	ProjectModelWebhookErrorColumn = "error"
+	// ProjectModelWebhookErrorMessageColumn is the column json value error_message
+	ProjectModelWebhookErrorMessageColumn = "error_message"
+	// ProjectModelWebhookURLColumn is the column json value url
+	ProjectModelWebhookURLColumn = "url"
 )
 
 // ProjectAffiliation is the enumeration type for affiliation
@@ -168,6 +195,174 @@ const (
 	ProjectAffiliationThirdparty ProjectAffiliation = 2
 )
 
+// ProjectIssueResolutions represents the object structure for issue_resolutions
+type ProjectIssueResolutions struct {
+	// Name the name of the resolution
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID id of the resolution
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+}
+
+func toProjectIssueResolutionsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectIssueResolutions:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *ProjectIssueResolutions) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Name the name of the resolution
+		"name": toProjectIssueResolutionsObject(o.Name, false),
+		// RefID id of the resolution
+		"ref_id": toProjectIssueResolutionsObject(o.RefID, false),
+	}
+}
+
+func (o *ProjectIssueResolutions) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectIssueResolutions) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// ProjectIssueTypes represents the object structure for issue_types
+type ProjectIssueTypes struct {
+	// Name the name of the type
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID id of the type
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+}
+
+func toProjectIssueTypesObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectIssueTypes:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *ProjectIssueTypes) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Name the name of the type
+		"name": toProjectIssueTypesObject(o.Name, false),
+		// RefID id of the type
+		"ref_id": toProjectIssueTypesObject(o.RefID, false),
+	}
+}
+
+func (o *ProjectIssueTypes) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectIssueTypes) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // ProjectVisibility is the enumeration type for visibility
 type ProjectVisibility int32
 
@@ -262,9 +457,123 @@ const (
 	ProjectVisibilityPublic ProjectVisibility = 1
 )
 
+// ProjectWebhook represents the object structure for webhook
+type ProjectWebhook struct {
+	// Enabled if webhooks are enabled for this project
+	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
+	// Error if the webhook has an error
+	Error bool `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
+	// ErrorMessage the error message
+	ErrorMessage string `json:"error_message" codec:"error_message" bson:"error_message" yaml:"error_message" faker:"-"`
+	// URL the url the webhook for the webhook
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
+}
+
+func toProjectWebhookObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectWebhook:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *ProjectWebhook) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Enabled if webhooks are enabled for this project
+		"enabled": toProjectWebhookObject(o.Enabled, false),
+		// Error if the webhook has an error
+		"error": toProjectWebhookObject(o.Error, false),
+		// ErrorMessage the error message
+		"error_message": toProjectWebhookObject(o.ErrorMessage, false),
+		// URL the url the webhook for the webhook
+		"url": toProjectWebhookObject(o.URL, false),
+	}
+}
+
+func (o *ProjectWebhook) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectWebhook) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["enabled"].(bool); ok {
+		o.Enabled = val
+	} else {
+		if val, ok := kv["enabled"]; ok {
+			if val == nil {
+				o.Enabled = false
+			} else {
+				o.Enabled = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["error"].(bool); ok {
+		o.Error = val
+	} else {
+		if val, ok := kv["error"]; ok {
+			if val == nil {
+				o.Error = false
+			} else {
+				o.Error = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["error_message"].(string); ok {
+		o.ErrorMessage = val
+	} else {
+		if val, ok := kv["error_message"]; ok {
+			if val == nil {
+				o.ErrorMessage = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ErrorMessage = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // Project the project holds work
 type Project struct {
-	// Active the status of the project
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Affiliation the affiliation to the project owner
 	Affiliation ProjectAffiliation `json:"affiliation" codec:"affiliation" bson:"affiliation" yaml:"affiliation" faker:"-"`
@@ -280,8 +589,16 @@ type Project struct {
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"abbreviation"`
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// IssueResolutions the issue resolutions available in this project
+	IssueResolutions []ProjectIssueResolutions `json:"issue_resolutions" codec:"issue_resolutions" bson:"issue_resolutions" yaml:"issue_resolutions" faker:"-"`
+	// IssueTypes the types of issues available in this project
+	IssueTypes []ProjectIssueTypes `json:"issue_types" codec:"issue_types" bson:"issue_types" yaml:"issue_types" faker:"-"`
 	// Name the name of the project
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"project"`
+	// ProcessingError if there was an error related to fetching/processing this project or it's contents
+	ProcessingError bool `json:"processing_error" codec:"processing_error" bson:"processing_error" yaml:"processing_error" faker:"-"`
+	// ProcessingErrorMessage the processing error message
+	ProcessingErrorMessage string `json:"processing_error_message" codec:"processing_error_message" bson:"processing_error_message" yaml:"processing_error_message" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -292,6 +609,8 @@ type Project struct {
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
 	// Visibility the visibility of the project
 	Visibility ProjectVisibility `json:"visibility" codec:"visibility" bson:"visibility" yaml:"visibility" faker:"-"`
+	// Webhook details about this project's webhook configuration
+	Webhook ProjectWebhook `json:"webhook" codec:"webhook" bson:"webhook" yaml:"webhook" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -310,8 +629,25 @@ func toProjectObject(o interface{}, isoptional bool) interface{} {
 	case ProjectAffiliation:
 		return v.String()
 
+	case []ProjectIssueResolutions:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
+	case []ProjectIssueTypes:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	case ProjectVisibility:
 		return v.String()
+
+	case ProjectWebhook:
+		return v.ToMap()
 	default:
 		return o
 	}
@@ -348,6 +684,12 @@ func NewProjectID(customerID string, refID string, refType string) string {
 }
 
 func (o *Project) setDefaults(frommap bool) {
+	if o.IssueResolutions == nil {
+		o.IssueResolutions = make([]ProjectIssueResolutions, 0)
+	}
+	if o.IssueTypes == nil {
+		o.IssueTypes = make([]ProjectIssueTypes, 0)
+	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
@@ -520,20 +862,25 @@ func (o *Project) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"active": toProjectObject(o.Active, false),
 
-		"affiliation":             o.Affiliation.String(),
-		"category":                toProjectObject(o.Category, true),
-		"customer_id":             toProjectObject(o.CustomerID, false),
-		"description":             toProjectObject(o.Description, true),
-		"id":                      toProjectObject(o.ID, false),
-		"identifier":              toProjectObject(o.Identifier, false),
-		"integration_instance_id": toProjectObject(o.IntegrationInstanceID, true),
-		"name":                    toProjectObject(o.Name, false),
-		"ref_id":                  toProjectObject(o.RefID, false),
-		"ref_type":                toProjectObject(o.RefType, false),
-		"updated_ts":              toProjectObject(o.UpdatedAt, false),
-		"url":                     toProjectObject(o.URL, false),
+		"affiliation":              o.Affiliation.String(),
+		"category":                 toProjectObject(o.Category, true),
+		"customer_id":              toProjectObject(o.CustomerID, false),
+		"description":              toProjectObject(o.Description, true),
+		"id":                       toProjectObject(o.ID, false),
+		"identifier":               toProjectObject(o.Identifier, false),
+		"integration_instance_id":  toProjectObject(o.IntegrationInstanceID, true),
+		"issue_resolutions":        toProjectObject(o.IssueResolutions, false),
+		"issue_types":              toProjectObject(o.IssueTypes, false),
+		"name":                     toProjectObject(o.Name, false),
+		"processing_error":         toProjectObject(o.ProcessingError, false),
+		"processing_error_message": toProjectObject(o.ProcessingErrorMessage, false),
+		"ref_id":                   toProjectObject(o.RefID, false),
+		"ref_type":                 toProjectObject(o.RefType, false),
+		"updated_ts":               toProjectObject(o.UpdatedAt, false),
+		"url":                      toProjectObject(o.URL, false),
 
 		"visibility": o.Visibility.String(),
+		"webhook":    toProjectObject(o.Webhook, false),
 		"hashcode":   toProjectObject(o.Hashcode, false),
 	}
 }
@@ -692,6 +1039,133 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o == nil {
+
+		o.IssueResolutions = make([]ProjectIssueResolutions, 0)
+
+	}
+	if val, ok := kv["issue_resolutions"]; ok {
+		if sv, ok := val.([]ProjectIssueResolutions); ok {
+			o.IssueResolutions = sv
+		} else if sp, ok := val.([]*ProjectIssueResolutions); ok {
+			o.IssueResolutions = o.IssueResolutions[:0]
+			for _, e := range sp {
+				o.IssueResolutions = append(o.IssueResolutions, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectIssueResolutions); ok {
+					o.IssueResolutions = append(o.IssueResolutions, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectIssueResolutions
+					fm.FromMap(av)
+					o.IssueResolutions = append(o.IssueResolutions, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ProjectIssueResolutions
+					av.FromMap(bkv)
+					o.IssueResolutions = append(o.IssueResolutions, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectIssueResolutions); ok {
+					o.IssueResolutions = append(o.IssueResolutions, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectIssueResolutions
+					fm.FromMap(r)
+					o.IssueResolutions = append(o.IssueResolutions, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectIssueResolutions{}
+					fm.FromMap(r)
+					o.IssueResolutions = append(o.IssueResolutions, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectIssueResolutions
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.IssueResolutions = append(o.IssueResolutions, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.IssueTypes = make([]ProjectIssueTypes, 0)
+
+	}
+	if val, ok := kv["issue_types"]; ok {
+		if sv, ok := val.([]ProjectIssueTypes); ok {
+			o.IssueTypes = sv
+		} else if sp, ok := val.([]*ProjectIssueTypes); ok {
+			o.IssueTypes = o.IssueTypes[:0]
+			for _, e := range sp {
+				o.IssueTypes = append(o.IssueTypes, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectIssueTypes); ok {
+					o.IssueTypes = append(o.IssueTypes, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectIssueTypes
+					fm.FromMap(av)
+					o.IssueTypes = append(o.IssueTypes, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ProjectIssueTypes
+					av.FromMap(bkv)
+					o.IssueTypes = append(o.IssueTypes, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectIssueTypes); ok {
+					o.IssueTypes = append(o.IssueTypes, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectIssueTypes
+					fm.FromMap(r)
+					o.IssueTypes = append(o.IssueTypes, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectIssueTypes{}
+					fm.FromMap(r)
+					o.IssueTypes = append(o.IssueTypes, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectIssueTypes
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.IssueTypes = append(o.IssueTypes, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if val, ok := kv["name"].(string); ok {
 		o.Name = val
 	} else {
@@ -708,6 +1182,36 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["processing_error"].(bool); ok {
+		o.ProcessingError = val
+	} else {
+		if val, ok := kv["processing_error"]; ok {
+			if val == nil {
+				o.ProcessingError = false
+			} else {
+				o.ProcessingError = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["processing_error_message"].(string); ok {
+		o.ProcessingErrorMessage = val
+	} else {
+		if val, ok := kv["processing_error_message"]; ok {
+			if val == nil {
+				o.ProcessingErrorMessage = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.ProcessingErrorMessage = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -804,6 +1308,21 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["webhook"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Webhook.FromMap(kv)
+		} else if sv, ok := val.(ProjectWebhook); ok {
+			// struct
+			o.Webhook = sv
+		} else if sp, ok := val.(*ProjectWebhook); ok {
+			// struct pointer
+			o.Webhook = *sp
+		}
+	} else {
+		o.Webhook.FromMap(map[string]interface{}{})
+	}
+
 	o.setDefaults(false)
 }
 
@@ -818,19 +1337,24 @@ func (o *Project) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
 	args = append(args, o.IntegrationInstanceID)
+	args = append(args, o.IssueResolutions)
+	args = append(args, o.IssueTypes)
 	args = append(args, o.Name)
+	args = append(args, o.ProcessingError)
+	args = append(args, o.ProcessingErrorMessage)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	args = append(args, o.Visibility)
+	args = append(args, o.Webhook)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
 
 // ProjectPartial is a partial struct for upsert mutations for Project
 type ProjectPartial struct {
-	// Active the status of the project
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
 	Active *bool `json:"active,omitempty"`
 	// Affiliation the affiliation to the project owner
 	Affiliation *ProjectAffiliation `json:"affiliation,omitempty"`
@@ -840,12 +1364,22 @@ type ProjectPartial struct {
 	Description *string `json:"description,omitempty"`
 	// Identifier the common identifier for the project
 	Identifier *string `json:"identifier,omitempty"`
+	// IssueResolutions the issue resolutions available in this project
+	IssueResolutions []ProjectIssueResolutions `json:"issue_resolutions,omitempty"`
+	// IssueTypes the types of issues available in this project
+	IssueTypes []ProjectIssueTypes `json:"issue_types,omitempty"`
 	// Name the name of the project
 	Name *string `json:"name,omitempty"`
+	// ProcessingError if there was an error related to fetching/processing this project or it's contents
+	ProcessingError *bool `json:"processing_error,omitempty"`
+	// ProcessingErrorMessage the processing error message
+	ProcessingErrorMessage *string `json:"processing_error_message,omitempty"`
 	// URL the url to the project home page
 	URL *string `json:"url,omitempty"`
 	// Visibility the visibility of the project
 	Visibility *ProjectVisibility `json:"visibility,omitempty"`
+	// Webhook details about this project's webhook configuration
+	Webhook *ProjectWebhook `json:"webhook,omitempty"`
 }
 
 var _ datamodel.PartialModel = (*ProjectPartial)(nil)
@@ -860,19 +1394,40 @@ func (o *ProjectPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
 		"active": toProjectObject(o.Active, true),
 
-		"affiliation": toProjectAffiliationEnum(o.Affiliation),
-		"category":    toProjectObject(o.Category, true),
-		"description": toProjectObject(o.Description, true),
-		"identifier":  toProjectObject(o.Identifier, true),
-		"name":        toProjectObject(o.Name, true),
-		"url":         toProjectObject(o.URL, true),
+		"affiliation":              toProjectAffiliationEnum(o.Affiliation),
+		"category":                 toProjectObject(o.Category, true),
+		"description":              toProjectObject(o.Description, true),
+		"identifier":               toProjectObject(o.Identifier, true),
+		"issue_resolutions":        toProjectObject(o.IssueResolutions, true),
+		"issue_types":              toProjectObject(o.IssueTypes, true),
+		"name":                     toProjectObject(o.Name, true),
+		"processing_error":         toProjectObject(o.ProcessingError, true),
+		"processing_error_message": toProjectObject(o.ProcessingErrorMessage, true),
+		"url":                      toProjectObject(o.URL, true),
 
 		"visibility": toProjectVisibilityEnum(o.Visibility),
+		"webhook":    toProjectObject(o.Webhook, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
 			delete(kv, k)
 		} else {
+
+			if k == "issue_resolutions" {
+				if arr, ok := v.([]ProjectIssueResolutions); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "issue_types" {
+				if arr, ok := v.([]ProjectIssueTypes); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
 		}
 	}
 	return kv
@@ -998,6 +1553,133 @@ func (o *ProjectPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o == nil {
+
+		o.IssueResolutions = make([]ProjectIssueResolutions, 0)
+
+	}
+	if val, ok := kv["issue_resolutions"]; ok {
+		if sv, ok := val.([]ProjectIssueResolutions); ok {
+			o.IssueResolutions = sv
+		} else if sp, ok := val.([]*ProjectIssueResolutions); ok {
+			o.IssueResolutions = o.IssueResolutions[:0]
+			for _, e := range sp {
+				o.IssueResolutions = append(o.IssueResolutions, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectIssueResolutions); ok {
+					o.IssueResolutions = append(o.IssueResolutions, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectIssueResolutions
+					fm.FromMap(av)
+					o.IssueResolutions = append(o.IssueResolutions, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ProjectIssueResolutions
+					av.FromMap(bkv)
+					o.IssueResolutions = append(o.IssueResolutions, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectIssueResolutions); ok {
+					o.IssueResolutions = append(o.IssueResolutions, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectIssueResolutions
+					fm.FromMap(r)
+					o.IssueResolutions = append(o.IssueResolutions, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectIssueResolutions{}
+					fm.FromMap(r)
+					o.IssueResolutions = append(o.IssueResolutions, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectIssueResolutions
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.IssueResolutions = append(o.IssueResolutions, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.IssueTypes = make([]ProjectIssueTypes, 0)
+
+	}
+	if val, ok := kv["issue_types"]; ok {
+		if sv, ok := val.([]ProjectIssueTypes); ok {
+			o.IssueTypes = sv
+		} else if sp, ok := val.([]*ProjectIssueTypes); ok {
+			o.IssueTypes = o.IssueTypes[:0]
+			for _, e := range sp {
+				o.IssueTypes = append(o.IssueTypes, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectIssueTypes); ok {
+					o.IssueTypes = append(o.IssueTypes, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectIssueTypes
+					fm.FromMap(av)
+					o.IssueTypes = append(o.IssueTypes, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ProjectIssueTypes
+					av.FromMap(bkv)
+					o.IssueTypes = append(o.IssueTypes, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectIssueTypes); ok {
+					o.IssueTypes = append(o.IssueTypes, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectIssueTypes
+					fm.FromMap(r)
+					o.IssueTypes = append(o.IssueTypes, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectIssueTypes{}
+					fm.FromMap(r)
+					o.IssueTypes = append(o.IssueTypes, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectIssueTypes
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.IssueTypes = append(o.IssueTypes, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if val, ok := kv["name"].(*string); ok {
 		o.Name = val
 	} else if val, ok := kv["name"].(string); ok {
@@ -1012,6 +1694,40 @@ func (o *ProjectPartial) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["processing_error"].(*bool); ok {
+		o.ProcessingError = val
+	} else if val, ok := kv["processing_error"].(bool); ok {
+		o.ProcessingError = &val
+	} else {
+		if val, ok := kv["processing_error"]; ok {
+			if val == nil {
+				o.ProcessingError = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.ProcessingError = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["processing_error_message"].(*string); ok {
+		o.ProcessingErrorMessage = val
+	} else if val, ok := kv["processing_error_message"].(string); ok {
+		o.ProcessingErrorMessage = &val
+	} else {
+		if val, ok := kv["processing_error_message"]; ok {
+			if val == nil {
+				o.ProcessingErrorMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ProcessingErrorMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1057,5 +1773,24 @@ func (o *ProjectPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o.Webhook == nil {
+		o.Webhook = &ProjectWebhook{}
+	}
+
+	if val, ok := kv["webhook"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.Webhook.FromMap(kv)
+		} else if sv, ok := val.(ProjectWebhook); ok {
+			// struct
+			o.Webhook = &sv
+		} else if sp, ok := val.(*ProjectWebhook); ok {
+			// struct pointer
+			o.Webhook = sp
+		}
+	} else {
+		o.Webhook.FromMap(map[string]interface{}{})
+	}
+
 	o.setDefaults(false)
 }
