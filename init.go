@@ -122,6 +122,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.Log)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.MutateData":
+		o := new(dm_agent.MutateData)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Mutation":
 		o := new(dm_agent.Mutation)
 		o.FromMap(map[string]interface{}{})
@@ -401,6 +405,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_agent.IntegrationResponsePartial)
 	case "agent.Log":
 		return new(dm_agent.LogPartial)
+	case "agent.MutateData":
+		return new(dm_agent.MutateDataPartial)
 	case "agent.Mutation":
 		return new(dm_agent.MutationPartial)
 	case "agent.MutationResponse":
@@ -612,6 +618,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.IntegrationRequest"),
 		datamodel.ModelNameType("agent.IntegrationResponse"),
 		datamodel.ModelNameType("agent.Log"),
+		datamodel.ModelNameType("agent.MutateData"),
 		datamodel.ModelNameType("agent.Mutation"),
 		datamodel.ModelNameType("agent.MutationResponse"),
 		datamodel.ModelNameType("agent.Pause"),
