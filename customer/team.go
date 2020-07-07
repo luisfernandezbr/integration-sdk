@@ -19,8 +19,6 @@ import (
 	"github.com/pinpt/go-common/v10/number"
 	"github.com/pinpt/go-common/v10/slice"
 	pstrings "github.com/pinpt/go-common/v10/strings"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -74,28 +72,6 @@ const (
 	TeamModelRepoIdsColumn = "repo_ids"
 	// TeamModelUpdatedAtColumn is the column json value updated_ts
 	TeamModelUpdatedAtColumn = "updated_ts"
-	// TeamModelUsersColumn is the column json value users
-	TeamModelUsersColumn = "users"
-	// TeamModelUsersAvatarURLColumn is the column json value avatar_url
-	TeamModelUsersAvatarURLColumn = "avatar_url"
-	// TeamModelUsersIDColumn is the column json value id
-	TeamModelUsersIDColumn = "id"
-	// TeamModelUsersNameColumn is the column json value name
-	TeamModelUsersNameColumn = "name"
-	// TeamModelUsersNicknameColumn is the column json value nickname
-	TeamModelUsersNicknameColumn = "nickname"
-	// TeamModelUsersProfileIDColumn is the column json value profile_id
-	TeamModelUsersProfileIDColumn = "profile_id"
-	// TeamModelUsersRefIDColumn is the column json value ref_id
-	TeamModelUsersRefIDColumn = "ref_id"
-	// TeamModelUsersRefTypeColumn is the column json value ref_type
-	TeamModelUsersRefTypeColumn = "ref_type"
-	// TeamModelUsersTeamIDColumn is the column json value team_id
-	TeamModelUsersTeamIDColumn = "team_id"
-	// TeamModelUsersTypeColumn is the column json value type
-	TeamModelUsersTypeColumn = "type"
-	// TeamModelUsersURLColumn is the column json value url
-	TeamModelUsersURLColumn = "url"
 )
 
 // TeamDeletedDate represents the object structure for deleted_date
@@ -195,458 +171,6 @@ func (o *TeamDeletedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// TeamUsersType is the enumeration type for type
-type TeamUsersType int32
-
-// toTeamUsersTypePointer is the enumeration pointer type for type
-func toTeamUsersTypePointer(v int32) *TeamUsersType {
-	nv := TeamUsersType(v)
-	return &nv
-}
-
-// toTeamUsersTypeEnum is the enumeration pointer wrapper for type
-func toTeamUsersTypeEnum(v *TeamUsersType) string {
-	if v == nil {
-		return toTeamUsersTypePointer(0).String()
-	}
-	return v.String()
-}
-
-// UnmarshalBSONValue for unmarshaling value
-func (v *TeamUsersType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
-	val := bson.RawValue{Type: t, Value: data}
-	switch t {
-	case bsontype.Int32:
-		*v = TeamUsersType(val.Int32())
-	case bsontype.String:
-		switch val.StringValue() {
-		case "NONE":
-			*v = TeamUsersType(0)
-		case "TRACKABLE":
-			*v = TeamUsersType(1)
-		case "BOT":
-			*v = TeamUsersType(2)
-		case "UNTRACKABLE":
-			*v = TeamUsersType(3)
-		case "UNMAPPED":
-			*v = TeamUsersType(4)
-		case "TERMINATED":
-			*v = TeamUsersType(5)
-		case "DELETED":
-			*v = TeamUsersType(6)
-		case "INVITED":
-			*v = TeamUsersType(7)
-		}
-	}
-	return nil
-}
-
-// UnmarshalJSON unmarshals the enum value
-func (v TeamUsersType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
-	case "NONE":
-		v = 0
-	case "TRACKABLE":
-		v = 1
-	case "BOT":
-		v = 2
-	case "UNTRACKABLE":
-		v = 3
-	case "UNMAPPED":
-		v = 4
-	case "TERMINATED":
-		v = 5
-	case "DELETED":
-		v = 6
-	case "INVITED":
-		v = 7
-	}
-	return nil
-}
-
-// MarshalJSON marshals the enum value
-func (v TeamUsersType) MarshalJSON() ([]byte, error) {
-	switch v {
-	case 0:
-		return json.Marshal("NONE")
-	case 1:
-		return json.Marshal("TRACKABLE")
-	case 2:
-		return json.Marshal("BOT")
-	case 3:
-		return json.Marshal("UNTRACKABLE")
-	case 4:
-		return json.Marshal("UNMAPPED")
-	case 5:
-		return json.Marshal("TERMINATED")
-	case 6:
-		return json.Marshal("DELETED")
-	case 7:
-		return json.Marshal("INVITED")
-	}
-	return nil, fmt.Errorf("unexpected enum value")
-}
-
-// String returns the string value for UsersType
-func (v TeamUsersType) String() string {
-	switch int32(v) {
-	case 0:
-		return "NONE"
-	case 1:
-		return "TRACKABLE"
-	case 2:
-		return "BOT"
-	case 3:
-		return "UNTRACKABLE"
-	case 4:
-		return "UNMAPPED"
-	case 5:
-		return "TERMINATED"
-	case 6:
-		return "DELETED"
-	case 7:
-		return "INVITED"
-	}
-	return "unset"
-}
-
-// FromInterface for decoding from an interface
-func (v *TeamUsersType) FromInterface(o interface{}) error {
-	switch val := o.(type) {
-	case TeamUsersType:
-		*v = val
-	case int32:
-		*v = TeamUsersType(int32(val))
-	case int:
-		*v = TeamUsersType(int32(val))
-	case string:
-		switch val {
-		case "NONE":
-			*v = TeamUsersType(0)
-		case "TRACKABLE":
-			*v = TeamUsersType(1)
-		case "BOT":
-			*v = TeamUsersType(2)
-		case "UNTRACKABLE":
-			*v = TeamUsersType(3)
-		case "UNMAPPED":
-			*v = TeamUsersType(4)
-		case "TERMINATED":
-			*v = TeamUsersType(5)
-		case "DELETED":
-			*v = TeamUsersType(6)
-		case "INVITED":
-			*v = TeamUsersType(7)
-		}
-	}
-	return nil
-}
-
-const (
-	// TeamUsersTypeNone is the enumeration value for none
-	TeamUsersTypeNone TeamUsersType = 0
-	// TeamUsersTypeTrackable is the enumeration value for trackable
-	TeamUsersTypeTrackable TeamUsersType = 1
-	// TeamUsersTypeBot is the enumeration value for bot
-	TeamUsersTypeBot TeamUsersType = 2
-	// TeamUsersTypeUntrackable is the enumeration value for untrackable
-	TeamUsersTypeUntrackable TeamUsersType = 3
-	// TeamUsersTypeUnmapped is the enumeration value for unmapped
-	TeamUsersTypeUnmapped TeamUsersType = 4
-	// TeamUsersTypeTerminated is the enumeration value for terminated
-	TeamUsersTypeTerminated TeamUsersType = 5
-	// TeamUsersTypeDeleted is the enumeration value for deleted
-	TeamUsersTypeDeleted TeamUsersType = 6
-	// TeamUsersTypeInvited is the enumeration value for invited
-	TeamUsersTypeInvited TeamUsersType = 7
-)
-
-// TeamUsers represents the object structure for users
-type TeamUsers struct {
-	// AvatarURL the avatar of the user in case there is no relation. this might not be set always if source system doesn't support
-	AvatarURL *string `json:"avatar_url,omitempty" codec:"avatar_url,omitempty" bson:"avatar_url" yaml:"avatar_url,omitempty" faker:"-"`
-	// ID the corporate user id
-	ID string `json:"-"`
-	// Name the name of the user
-	Name *string `json:"name,omitempty" codec:"name,omitempty" bson:"name" yaml:"name,omitempty" faker:"-"`
-	// Nickname the nick name of the user (usually the first name if they have a profile)
-	Nickname *string `json:"nickname,omitempty" codec:"nickname,omitempty" bson:"nickname" yaml:"nickname,omitempty" faker:"-"`
-	// ProfileID the universal profile id for this user
-	ProfileID *string `json:"profile_id,omitempty" codec:"profile_id,omitempty" bson:"profile_id" yaml:"profile_id,omitempty" faker:"-"`
-	// RefID the ref_id of the user in the source system
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// RefType the name of the source system
-	RefType *string `json:"ref_type,omitempty" codec:"ref_type,omitempty" bson:"ref_type" yaml:"ref_type,omitempty" faker:"-"`
-	// TeamID the corporate team id
-	TeamID string `json:"-"`
-	// Type the type of user
-	Type TeamUsersType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
-	// URL a url to the user in the source system
-	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
-}
-
-func toTeamUsersObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *TeamUsers:
-		return v.ToMap()
-
-	case TeamUsersType:
-		return v.String()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *TeamUsers) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// AvatarURL the avatar of the user in case there is no relation. this might not be set always if source system doesn't support
-		"avatar_url": toTeamUsersObject(o.AvatarURL, true),
-		// ID the corporate user id
-		"id": toTeamUsersObject(o.ID, false),
-		// Name the name of the user
-		"name": toTeamUsersObject(o.Name, true),
-		// Nickname the nick name of the user (usually the first name if they have a profile)
-		"nickname": toTeamUsersObject(o.Nickname, true),
-		// ProfileID the universal profile id for this user
-		"profile_id": toTeamUsersObject(o.ProfileID, true),
-		// RefID the ref_id of the user in the source system
-		"ref_id": toTeamUsersObject(o.RefID, false),
-		// RefType the name of the source system
-		"ref_type": toTeamUsersObject(o.RefType, true),
-		// TeamID the corporate team id
-		"team_id": toTeamUsersObject(o.TeamID, false),
-		// Type the type of user
-		"type": toTeamUsersObject(o.Type, false),
-		// URL a url to the user in the source system
-		"url": toTeamUsersObject(o.URL, true),
-	}
-}
-
-func (o *TeamUsers) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *TeamUsers) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-	if val, ok := kv["avatar_url"].(*string); ok {
-		o.AvatarURL = val
-	} else if val, ok := kv["avatar_url"].(string); ok {
-		o.AvatarURL = &val
-	} else {
-		if val, ok := kv["avatar_url"]; ok {
-			if val == nil {
-				o.AvatarURL = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.AvatarURL = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
-	} else {
-		if val, ok := kv["id"]; ok {
-			if val == nil {
-				o.ID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	if val, ok := kv["name"].(*string); ok {
-		o.Name = val
-	} else if val, ok := kv["name"].(string); ok {
-		o.Name = &val
-	} else {
-		if val, ok := kv["name"]; ok {
-			if val == nil {
-				o.Name = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-	if val, ok := kv["nickname"].(*string); ok {
-		o.Nickname = val
-	} else if val, ok := kv["nickname"].(string); ok {
-		o.Nickname = &val
-	} else {
-		if val, ok := kv["nickname"]; ok {
-			if val == nil {
-				o.Nickname = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.Nickname = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-	if val, ok := kv["profile_id"].(*string); ok {
-		o.ProfileID = val
-	} else if val, ok := kv["profile_id"].(string); ok {
-		o.ProfileID = &val
-	} else {
-		if val, ok := kv["profile_id"]; ok {
-			if val == nil {
-				o.ProfileID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.ProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
-	} else {
-		if val, ok := kv["ref_id"]; ok {
-			if val == nil {
-				o.RefID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.RefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	if val, ok := kv["ref_type"].(*string); ok {
-		o.RefType = val
-	} else if val, ok := kv["ref_type"].(string); ok {
-		o.RefType = &val
-	} else {
-		if val, ok := kv["ref_type"]; ok {
-			if val == nil {
-				o.RefType = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.RefType = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-	if val, ok := kv["team_id"].(string); ok {
-		o.TeamID = val
-	} else {
-		if val, ok := kv["team_id"]; ok {
-			if val == nil {
-				o.TeamID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.TeamID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	if val, ok := kv["type"].(TeamUsersType); ok {
-		o.Type = val
-	} else {
-		if em, ok := kv["type"].(map[string]interface{}); ok {
-
-			ev := em["customer.type"].(string)
-			switch ev {
-			case "none", "NONE":
-				o.Type = 0
-			case "trackable", "TRACKABLE":
-				o.Type = 1
-			case "bot", "BOT":
-				o.Type = 2
-			case "untrackable", "UNTRACKABLE":
-				o.Type = 3
-			case "unmapped", "UNMAPPED":
-				o.Type = 4
-			case "terminated", "TERMINATED":
-				o.Type = 5
-			case "deleted", "DELETED":
-				o.Type = 6
-			case "invited", "INVITED":
-				o.Type = 7
-			}
-		}
-		if em, ok := kv["type"].(string); ok {
-			switch em {
-			case "none", "NONE":
-				o.Type = 0
-			case "trackable", "TRACKABLE":
-				o.Type = 1
-			case "bot", "BOT":
-				o.Type = 2
-			case "untrackable", "UNTRACKABLE":
-				o.Type = 3
-			case "unmapped", "UNMAPPED":
-				o.Type = 4
-			case "terminated", "TERMINATED":
-				o.Type = 5
-			case "deleted", "DELETED":
-				o.Type = 6
-			case "invited", "INVITED":
-				o.Type = 7
-			}
-		}
-	}
-	if val, ok := kv["url"].(*string); ok {
-		o.URL = val
-	} else if val, ok := kv["url"].(string); ok {
-		o.URL = &val
-	} else {
-		if val, ok := kv["url"]; ok {
-			if val == nil {
-				o.URL = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // Team a team is a grouping of one or more users
 type Team struct {
 	// Active whether the team is tracked in pinpoint
@@ -683,8 +207,6 @@ type Team struct {
 	RepoIds []string `json:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
-	// Users users for the team
-	Users []TeamUsers `json:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -702,13 +224,6 @@ func toTeamObject(o interface{}, isoptional bool) interface{} {
 
 	case TeamDeletedDate:
 		return v.ToMap()
-
-	case []TeamUsers:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 
 	default:
 		return o
@@ -757,9 +272,6 @@ func (o *Team) setDefaults(frommap bool) {
 	}
 	if o.RepoIds == nil {
 		o.RepoIds = make([]string, 0)
-	}
-	if o.Users == nil {
-		o.Users = make([]TeamUsers, 0)
 	}
 
 	if o.ID == "" {
@@ -911,7 +423,6 @@ func (o *Team) ToMap() map[string]interface{} {
 		"ref_type":                toTeamObject(o.RefType, false),
 		"repo_ids":                toTeamObject(o.RepoIds, false),
 		"updated_ts":              toTeamObject(o.UpdatedAt, false),
-		"users":                   toTeamObject(o.Users, false),
 		"hashcode":                toTeamObject(o.Hashcode, false),
 	}
 }
@@ -1351,70 +862,6 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if o == nil {
-
-		o.Users = make([]TeamUsers, 0)
-
-	}
-	if val, ok := kv["users"]; ok {
-		if sv, ok := val.([]TeamUsers); ok {
-			o.Users = sv
-		} else if sp, ok := val.([]*TeamUsers); ok {
-			o.Users = o.Users[:0]
-			for _, e := range sp {
-				o.Users = append(o.Users, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(TeamUsers); ok {
-					o.Users = append(o.Users, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm TeamUsers
-					fm.FromMap(av)
-					o.Users = append(o.Users, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					bkv := make(map[string]interface{})
-					json.Unmarshal(b, &bkv)
-					var av TeamUsers
-					av.FromMap(bkv)
-					o.Users = append(o.Users, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(TeamUsers); ok {
-					o.Users = append(o.Users, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm TeamUsers
-					fm.FromMap(r)
-					o.Users = append(o.Users, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := TeamUsers{}
-					fm.FromMap(r)
-					o.Users = append(o.Users, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm TeamUsers
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.Users = append(o.Users, fm)
-						}
-					}
-				}
-			}
-		}
-	}
-
 	o.setDefaults(false)
 }
 
@@ -1438,7 +885,6 @@ func (o *Team) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.RepoIds)
 	args = append(args, o.UpdatedAt)
-	args = append(args, o.Users)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -1488,30 +934,6 @@ func getTeamQueryFields() string {
 	sb.WriteString("\t\t\trepo_ids\n")
 	// scalar
 	sb.WriteString("\t\t\tupdated_ts\n")
-	// object with fields
-	sb.WriteString("\t\t\tusers {\n")
-
-	// scalar
-	sb.WriteString("\t\t\tavatar_url\n")
-	// scalar
-	sb.WriteString("\t\t\tid\n")
-	// scalar
-	sb.WriteString("\t\t\tname\n")
-	// scalar
-	sb.WriteString("\t\t\tnickname\n")
-	// scalar
-	sb.WriteString("\t\t\tprofile_id\n")
-	// scalar
-	sb.WriteString("\t\t\tref_id\n")
-	// scalar
-	sb.WriteString("\t\t\tref_type\n")
-	// scalar
-	sb.WriteString("\t\t\tteam_id\n")
-	// scalar
-	sb.WriteString("\t\t\ttype\n")
-	// scalar
-	sb.WriteString("\t\t\turl\n")
-	sb.WriteString("\t\t\t}\n")
 	return sb.String()
 }
 
