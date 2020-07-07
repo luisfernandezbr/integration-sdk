@@ -125,6 +125,18 @@ const (
 	ExportModelIntegrationThrottledUntilOffsetColumn = "offset"
 	// ExportModelIntegrationThrottledUntilRfc3339Column is the column json value rfc3339
 	ExportModelIntegrationThrottledUntilRfc3339Column = "rfc3339"
+	// ExportModelIntegrationWebhooksColumn is the column json value webhooks
+	ExportModelIntegrationWebhooksColumn = "webhooks"
+	// ExportModelIntegrationWebhooksEnabledColumn is the column json value enabled
+	ExportModelIntegrationWebhooksEnabledColumn = "enabled"
+	// ExportModelIntegrationWebhooksURLColumn is the column json value url
+	ExportModelIntegrationWebhooksURLColumn = "url"
+	// ExportModelIntegrationWebhooksErroredColumn is the column json value errored
+	ExportModelIntegrationWebhooksErroredColumn = "errored"
+	// ExportModelIntegrationWebhooksErrorMessageColumn is the column json value error_message
+	ExportModelIntegrationWebhooksErrorMessageColumn = "error_message"
+	// ExportModelIntegrationWebhooksRefIDColumn is the column json value ref_id
+	ExportModelIntegrationWebhooksRefIDColumn = "ref_id"
 	// ExportModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	ExportModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ExportModelJobIDColumn is the column json value job_id
@@ -917,6 +929,137 @@ func (o *ExportIntegrationThrottledUntil) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// ExportIntegrationWebhooks represents the object structure for webhooks
+type ExportIntegrationWebhooks struct {
+	// Enabled if webhooks are enabled for this instance
+	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
+	// URL the url the webhook for the webhook
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
+	// Errored if the webhook has an error
+	Errored bool `json:"errored" codec:"errored" bson:"errored" yaml:"errored" faker:"-"`
+	// ErrorMessage the error message
+	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
+	// RefID an optional reference id related to the webhook and what its related to
+	RefID *string `json:"ref_id,omitempty" codec:"ref_id,omitempty" bson:"ref_id" yaml:"ref_id,omitempty" faker:"-"`
+}
+
+func toExportIntegrationWebhooksObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ExportIntegrationWebhooks:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *ExportIntegrationWebhooks) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Enabled if webhooks are enabled for this instance
+		"enabled": toExportIntegrationWebhooksObject(o.Enabled, false),
+		// URL the url the webhook for the webhook
+		"url": toExportIntegrationWebhooksObject(o.URL, true),
+		// Errored if the webhook has an error
+		"errored": toExportIntegrationWebhooksObject(o.Errored, false),
+		// ErrorMessage the error message
+		"error_message": toExportIntegrationWebhooksObject(o.ErrorMessage, true),
+		// RefID an optional reference id related to the webhook and what its related to
+		"ref_id": toExportIntegrationWebhooksObject(o.RefID, true),
+	}
+}
+
+func (o *ExportIntegrationWebhooks) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ExportIntegrationWebhooks) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["enabled"].(bool); ok {
+		o.Enabled = val
+	} else {
+		if val, ok := kv["enabled"]; ok {
+			if val == nil {
+				o.Enabled = false
+			} else {
+				o.Enabled = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["errored"].(bool); ok {
+		o.Errored = val
+	} else {
+		if val, ok := kv["errored"]; ok {
+			if val == nil {
+				o.Errored = false
+			} else {
+				o.Errored = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["error_message"].(*string); ok {
+		o.ErrorMessage = val
+	} else if val, ok := kv["error_message"].(string); ok {
+		o.ErrorMessage = &val
+	} else {
+		if val, ok := kv["error_message"]; ok {
+			if val == nil {
+				o.ErrorMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ErrorMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(*string); ok {
+		o.RefID = val
+	} else if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = &val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // ExportIntegration represents the object structure for integration
 type ExportIntegration struct {
 	// Active If true, the integration is still active
@@ -971,6 +1114,8 @@ type ExportIntegration struct {
 	Throttled *bool `json:"throttled,omitempty" codec:"throttled,omitempty" bson:"throttled" yaml:"throttled,omitempty" faker:"-"`
 	// ThrottledUntil After throttling integration, we set this field for estimated resume date.
 	ThrottledUntil *ExportIntegrationThrottledUntil `json:"throttled_until,omitempty" codec:"throttled_until,omitempty" bson:"throttled_until" yaml:"throttled_until,omitempty" faker:"-"`
+	// Webhooks for any webhooks installed at the integration instance
+	Webhooks []ExportIntegrationWebhooks `json:"webhooks" codec:"webhooks" bson:"webhooks" yaml:"webhooks" faker:"-"`
 }
 
 func toExportIntegrationObject(o interface{}, isoptional bool) interface{} {
@@ -1005,6 +1150,14 @@ func toExportIntegrationObject(o interface{}, isoptional bool) interface{} {
 
 	case *ExportIntegrationThrottledUntil:
 		return v.ToMap()
+
+	case []ExportIntegrationWebhooks:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	default:
 		return o
 	}
@@ -1066,6 +1219,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"throttled": toExportIntegrationObject(o.Throttled, true),
 		// ThrottledUntil After throttling integration, we set this field for estimated resume date.
 		"throttled_until": toExportIntegrationObject(o.ThrottledUntil, true),
+		// Webhooks for any webhooks installed at the integration instance
+		"webhooks": toExportIntegrationObject(o.Webhooks, false),
 	}
 }
 
@@ -1686,6 +1841,69 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		o.ThrottledUntil.FromMap(map[string]interface{}{})
 	}
 
+	if o == nil {
+
+		o.Webhooks = make([]ExportIntegrationWebhooks, 0)
+
+	}
+	if val, ok := kv["webhooks"]; ok {
+		if sv, ok := val.([]ExportIntegrationWebhooks); ok {
+			o.Webhooks = sv
+		} else if sp, ok := val.([]*ExportIntegrationWebhooks); ok {
+			o.Webhooks = o.Webhooks[:0]
+			for _, e := range sp {
+				o.Webhooks = append(o.Webhooks, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ExportIntegrationWebhooks); ok {
+					o.Webhooks = append(o.Webhooks, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ExportIntegrationWebhooks
+					fm.FromMap(av)
+					o.Webhooks = append(o.Webhooks, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ExportIntegrationWebhooks
+					av.FromMap(bkv)
+					o.Webhooks = append(o.Webhooks, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ExportIntegrationWebhooks); ok {
+					o.Webhooks = append(o.Webhooks, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ExportIntegrationWebhooks
+					fm.FromMap(r)
+					o.Webhooks = append(o.Webhooks, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ExportIntegrationWebhooks{}
+					fm.FromMap(r)
+					o.Webhooks = append(o.Webhooks, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ExportIntegrationWebhooks
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Webhooks = append(o.Webhooks, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	o.setDefaults(false)
 }
 
@@ -1766,6 +1984,9 @@ func (o *Export) setDefaults(frommap bool) {
 	}
 	if o.Integration.ThrottledUntil == nil {
 		o.Integration.ThrottledUntil = &ExportIntegrationThrottledUntil{}
+	}
+	if o.Integration.Webhooks == nil {
+		o.Integration.Webhooks = make([]ExportIntegrationWebhooks, 0)
 	}
 
 	if o.ID == "" {

@@ -125,6 +125,18 @@ const (
 	IntegrationInstanceModelThrottledUntilRfc3339Column = "rfc3339"
 	// IntegrationInstanceModelUpdatedAtColumn is the column json value updated_ts
 	IntegrationInstanceModelUpdatedAtColumn = "updated_ts"
+	// IntegrationInstanceModelWebhooksColumn is the column json value webhooks
+	IntegrationInstanceModelWebhooksColumn = "webhooks"
+	// IntegrationInstanceModelWebhooksEnabledColumn is the column json value enabled
+	IntegrationInstanceModelWebhooksEnabledColumn = "enabled"
+	// IntegrationInstanceModelWebhooksErrorMessageColumn is the column json value error_message
+	IntegrationInstanceModelWebhooksErrorMessageColumn = "error_message"
+	// IntegrationInstanceModelWebhooksErroredColumn is the column json value errored
+	IntegrationInstanceModelWebhooksErroredColumn = "errored"
+	// IntegrationInstanceModelWebhooksRefIDColumn is the column json value ref_id
+	IntegrationInstanceModelWebhooksRefIDColumn = "ref_id"
+	// IntegrationInstanceModelWebhooksURLColumn is the column json value url
+	IntegrationInstanceModelWebhooksURLColumn = "url"
 )
 
 // IntegrationInstanceCreatedDate represents the object structure for created_date
@@ -907,6 +919,137 @@ func (o *IntegrationInstanceThrottledUntil) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// IntegrationInstanceWebhooks represents the object structure for webhooks
+type IntegrationInstanceWebhooks struct {
+	// Enabled if webhooks are enabled for this instance
+	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
+	// ErrorMessage the error message
+	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
+	// Errored if the webhook has an error
+	Errored bool `json:"errored" codec:"errored" bson:"errored" yaml:"errored" faker:"-"`
+	// RefID an optional reference id related to the webhook and what its related to
+	RefID *string `json:"ref_id,omitempty" codec:"ref_id,omitempty" bson:"ref_id" yaml:"ref_id,omitempty" faker:"-"`
+	// URL the url the webhook for the webhook
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
+}
+
+func toIntegrationInstanceWebhooksObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IntegrationInstanceWebhooks:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *IntegrationInstanceWebhooks) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Enabled if webhooks are enabled for this instance
+		"enabled": toIntegrationInstanceWebhooksObject(o.Enabled, false),
+		// ErrorMessage the error message
+		"error_message": toIntegrationInstanceWebhooksObject(o.ErrorMessage, true),
+		// Errored if the webhook has an error
+		"errored": toIntegrationInstanceWebhooksObject(o.Errored, false),
+		// RefID an optional reference id related to the webhook and what its related to
+		"ref_id": toIntegrationInstanceWebhooksObject(o.RefID, true),
+		// URL the url the webhook for the webhook
+		"url": toIntegrationInstanceWebhooksObject(o.URL, true),
+	}
+}
+
+func (o *IntegrationInstanceWebhooks) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntegrationInstanceWebhooks) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["enabled"].(bool); ok {
+		o.Enabled = val
+	} else {
+		if val, ok := kv["enabled"]; ok {
+			if val == nil {
+				o.Enabled = false
+			} else {
+				o.Enabled = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["error_message"].(*string); ok {
+		o.ErrorMessage = val
+	} else if val, ok := kv["error_message"].(string); ok {
+		o.ErrorMessage = &val
+	} else {
+		if val, ok := kv["error_message"]; ok {
+			if val == nil {
+				o.ErrorMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.ErrorMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["errored"].(bool); ok {
+		o.Errored = val
+	} else {
+		if val, ok := kv["errored"]; ok {
+			if val == nil {
+				o.Errored = false
+			} else {
+				o.Errored = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(*string); ok {
+		o.RefID = val
+	} else if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = &val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // IntegrationInstance The integration instance for a customer
 type IntegrationInstance struct {
 	// Active If true, the integration is still active
@@ -965,6 +1108,8 @@ type IntegrationInstance struct {
 	ThrottledUntil *IntegrationInstanceThrottledUntil `json:"throttled_until,omitempty" codec:"throttled_until,omitempty" bson:"throttled_until" yaml:"throttled_until,omitempty" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// Webhooks for any webhooks installed at the integration instance
+	Webhooks []IntegrationInstanceWebhooks `json:"webhooks" codec:"webhooks" bson:"webhooks" yaml:"webhooks" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -1008,6 +1153,13 @@ func toIntegrationInstanceObject(o interface{}, isoptional bool) interface{} {
 	case *IntegrationInstanceThrottledUntil:
 		return v.ToMap()
 
+	case []IntegrationInstanceWebhooks:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	default:
 		return o
 	}
@@ -1049,6 +1201,9 @@ func (o *IntegrationInstance) setDefaults(frommap bool) {
 	}
 	if o.ThrottledUntil == nil {
 		o.ThrottledUntil = &IntegrationInstanceThrottledUntil{}
+	}
+	if o.Webhooks == nil {
+		o.Webhooks = make([]IntegrationInstanceWebhooks, 0)
 	}
 
 	if o.ID == "" {
@@ -1237,6 +1392,7 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 		"throttled":       toIntegrationInstanceObject(o.Throttled, true),
 		"throttled_until": toIntegrationInstanceObject(o.ThrottledUntil, true),
 		"updated_ts":      toIntegrationInstanceObject(o.UpdatedAt, false),
+		"webhooks":        toIntegrationInstanceObject(o.Webhooks, false),
 		"hashcode":        toIntegrationInstanceObject(o.Hashcode, false),
 	}
 }
@@ -1861,6 +2017,70 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o == nil {
+
+		o.Webhooks = make([]IntegrationInstanceWebhooks, 0)
+
+	}
+	if val, ok := kv["webhooks"]; ok {
+		if sv, ok := val.([]IntegrationInstanceWebhooks); ok {
+			o.Webhooks = sv
+		} else if sp, ok := val.([]*IntegrationInstanceWebhooks); ok {
+			o.Webhooks = o.Webhooks[:0]
+			for _, e := range sp {
+				o.Webhooks = append(o.Webhooks, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IntegrationInstanceWebhooks); ok {
+					o.Webhooks = append(o.Webhooks, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IntegrationInstanceWebhooks
+					fm.FromMap(av)
+					o.Webhooks = append(o.Webhooks, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av IntegrationInstanceWebhooks
+					av.FromMap(bkv)
+					o.Webhooks = append(o.Webhooks, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IntegrationInstanceWebhooks); ok {
+					o.Webhooks = append(o.Webhooks, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IntegrationInstanceWebhooks
+					fm.FromMap(r)
+					o.Webhooks = append(o.Webhooks, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IntegrationInstanceWebhooks{}
+					fm.FromMap(r)
+					o.Webhooks = append(o.Webhooks, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IntegrationInstanceWebhooks
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Webhooks = append(o.Webhooks, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	o.setDefaults(false)
 }
 
@@ -1895,6 +2115,7 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.Throttled)
 	args = append(args, o.ThrottledUntil)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.Webhooks)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -2006,6 +2227,20 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\tupdated_ts\n")
+	// object with fields
+	sb.WriteString("\t\t\twebhooks {\n")
+
+	// scalar
+	sb.WriteString("\t\t\tenabled\n")
+	// scalar
+	sb.WriteString("\t\t\terror_message\n")
+	// scalar
+	sb.WriteString("\t\t\terrored\n")
+	// scalar
+	sb.WriteString("\t\t\tref_id\n")
+	// scalar
+	sb.WriteString("\t\t\turl\n")
+	sb.WriteString("\t\t\t}\n")
 	return sb.String()
 }
 
@@ -2307,6 +2542,8 @@ type IntegrationInstancePartial struct {
 	Throttled *bool `json:"throttled,omitempty"`
 	// ThrottledUntil After throttling integration, we set this field for estimated resume date.
 	ThrottledUntil *IntegrationInstanceThrottledUntil `json:"throttled_until,omitempty"`
+	// Webhooks for any webhooks installed at the integration instance
+	Webhooks []IntegrationInstanceWebhooks `json:"webhooks,omitempty"`
 }
 
 var _ datamodel.PartialModel = (*IntegrationInstancePartial)(nil)
@@ -2342,6 +2579,7 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 		"state":           toIntegrationInstanceStateEnum(o.State),
 		"throttled":       toIntegrationInstanceObject(o.Throttled, true),
 		"throttled_until": toIntegrationInstanceObject(o.ThrottledUntil, true),
+		"webhooks":        toIntegrationInstanceObject(o.Webhooks, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -2386,6 +2624,14 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 			if k == "throttled_until" {
 				if dt, ok := v.(*IntegrationInstanceThrottledUntil); ok {
 					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "webhooks" {
+				if arr, ok := v.([]IntegrationInstanceWebhooks); ok {
+					if len(arr) == 0 {
 						delete(kv, k)
 					}
 				}
@@ -2940,6 +3186,69 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.ThrottledUntil.FromMap(map[string]interface{}{})
+	}
+
+	if o == nil {
+
+		o.Webhooks = make([]IntegrationInstanceWebhooks, 0)
+
+	}
+	if val, ok := kv["webhooks"]; ok {
+		if sv, ok := val.([]IntegrationInstanceWebhooks); ok {
+			o.Webhooks = sv
+		} else if sp, ok := val.([]*IntegrationInstanceWebhooks); ok {
+			o.Webhooks = o.Webhooks[:0]
+			for _, e := range sp {
+				o.Webhooks = append(o.Webhooks, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IntegrationInstanceWebhooks); ok {
+					o.Webhooks = append(o.Webhooks, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IntegrationInstanceWebhooks
+					fm.FromMap(av)
+					o.Webhooks = append(o.Webhooks, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av IntegrationInstanceWebhooks
+					av.FromMap(bkv)
+					o.Webhooks = append(o.Webhooks, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IntegrationInstanceWebhooks); ok {
+					o.Webhooks = append(o.Webhooks, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IntegrationInstanceWebhooks
+					fm.FromMap(r)
+					o.Webhooks = append(o.Webhooks, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IntegrationInstanceWebhooks{}
+					fm.FromMap(r)
+					o.Webhooks = append(o.Webhooks, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IntegrationInstanceWebhooks
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Webhooks = append(o.Webhooks, fm)
+						}
+					}
+				}
+			}
+		}
 	}
 
 	o.setDefaults(false)

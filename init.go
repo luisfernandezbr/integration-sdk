@@ -298,6 +298,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_sourcecode.Repo)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "sourcecode.RepoError":
+		o := new(dm_sourcecode.RepoError)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "sourcecode.RepoWebhook":
+		o := new(dm_sourcecode.RepoWebhook)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.User":
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
@@ -336,6 +344,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "work.Project":
 		o := new(dm_work.Project)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "work.ProjectError":
+		o := new(dm_work.ProjectError)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "work.ProjectWebhook":
+		o := new(dm_work.ProjectWebhook)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "work.Sprint":
@@ -493,6 +509,10 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_sourcecode.PullRequestReviewPartial)
 	case "sourcecode.Repo":
 		return new(dm_sourcecode.RepoPartial)
+	case "sourcecode.RepoError":
+		return new(dm_sourcecode.RepoErrorPartial)
+	case "sourcecode.RepoWebhook":
+		return new(dm_sourcecode.RepoWebhookPartial)
 	case "sourcecode.User":
 		return new(dm_sourcecode.UserPartial)
 	case "web.Hook":
@@ -513,6 +533,10 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_work.KanbanBoardPartial)
 	case "work.Project":
 		return new(dm_work.ProjectPartial)
+	case "work.ProjectError":
+		return new(dm_work.ProjectErrorPartial)
+	case "work.ProjectWebhook":
+		return new(dm_work.ProjectWebhookPartial)
 	case "work.Sprint":
 		return new(dm_work.SprintPartial)
 	case "work.User":
@@ -540,6 +564,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_sourcecode.Repo)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "sourcecode_RepoError":
+		o := new(dm_sourcecode.RepoError)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "sourcecode_RepoWebhook":
+		o := new(dm_sourcecode.RepoWebhook)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode_User":
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
@@ -554,6 +586,14 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		return o
 	case "work_Project":
 		o := new(dm_work.Project)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "work_ProjectError":
+		o := new(dm_work.ProjectError)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "work_ProjectWebhook":
+		o := new(dm_work.ProjectWebhook)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "work_Sprint":
@@ -580,10 +620,14 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("calendar_Event"),
 		datamodel.TopicNameType("calendar_User"),
 		datamodel.TopicNameType("sourcecode_Repo"),
+		datamodel.TopicNameType("sourcecode_RepoError"),
+		datamodel.TopicNameType("sourcecode_RepoWebhook"),
 		datamodel.TopicNameType("sourcecode_User"),
 		datamodel.TopicNameType("work_Config"),
 		datamodel.TopicNameType("work_KanbanBoard"),
 		datamodel.TopicNameType("work_Project"),
+		datamodel.TopicNameType("work_ProjectError"),
+		datamodel.TopicNameType("work_ProjectWebhook"),
 		datamodel.TopicNameType("work_Sprint"),
 		datamodel.TopicNameType("work_User"),
 	}
@@ -662,6 +706,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("sourcecode.PullRequestCommit"),
 		datamodel.ModelNameType("sourcecode.PullRequestReview"),
 		datamodel.ModelNameType("sourcecode.Repo"),
+		datamodel.ModelNameType("sourcecode.RepoError"),
+		datamodel.ModelNameType("sourcecode.RepoWebhook"),
 		datamodel.ModelNameType("sourcecode.User"),
 		datamodel.ModelNameType("web.Hook"),
 		datamodel.ModelNameType("work.Config"),
@@ -672,6 +718,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("work.IssueType"),
 		datamodel.ModelNameType("work.KanbanBoard"),
 		datamodel.ModelNameType("work.Project"),
+		datamodel.ModelNameType("work.ProjectError"),
+		datamodel.ModelNameType("work.ProjectWebhook"),
 		datamodel.ModelNameType("work.Sprint"),
 		datamodel.ModelNameType("work.User"),
 	}
