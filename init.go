@@ -122,10 +122,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.Log)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "agent.MutateData":
-		o := new(dm_agent.MutateData)
-		o.FromMap(map[string]interface{}{})
-		return o
 	case "agent.Mutation":
 		o := new(dm_agent.Mutation)
 		o.FromMap(map[string]interface{}{})
@@ -188,6 +184,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "agent.UninstallResponse":
 		o := new(dm_agent.UninstallResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.UpdateData":
+		o := new(dm_agent.UpdateData)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "agent.UpdateRequest":
@@ -405,8 +405,6 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_agent.IntegrationResponsePartial)
 	case "agent.Log":
 		return new(dm_agent.LogPartial)
-	case "agent.MutateData":
-		return new(dm_agent.MutateDataPartial)
 	case "agent.Mutation":
 		return new(dm_agent.MutationPartial)
 	case "agent.MutationResponse":
@@ -439,6 +437,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_agent.UninstallRequestPartial)
 	case "agent.UninstallResponse":
 		return new(dm_agent.UninstallResponsePartial)
+	case "agent.UpdateData":
+		return new(dm_agent.UpdateDataPartial)
 	case "agent.UpdateRequest":
 		return new(dm_agent.UpdateRequestPartial)
 	case "agent.UpdateResponse":
@@ -618,7 +618,6 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.IntegrationRequest"),
 		datamodel.ModelNameType("agent.IntegrationResponse"),
 		datamodel.ModelNameType("agent.Log"),
-		datamodel.ModelNameType("agent.MutateData"),
 		datamodel.ModelNameType("agent.Mutation"),
 		datamodel.ModelNameType("agent.MutationResponse"),
 		datamodel.ModelNameType("agent.Pause"),
@@ -635,6 +634,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.Uninstall"),
 		datamodel.ModelNameType("agent.UninstallRequest"),
 		datamodel.ModelNameType("agent.UninstallResponse"),
+		datamodel.ModelNameType("agent.UpdateData"),
 		datamodel.ModelNameType("agent.UpdateRequest"),
 		datamodel.ModelNameType("agent.UpdateResponse"),
 		datamodel.ModelNameType("agent.UpdateTrigger"),
