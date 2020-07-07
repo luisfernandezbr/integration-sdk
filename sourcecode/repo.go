@@ -281,11 +281,11 @@ type RepoWebhook struct {
 	// Enabled if webhooks are enabled for this repo
 	Enabled bool `json:"enabled" codec:"enabled" bson:"enabled" yaml:"enabled" faker:"-"`
 	// ErrorMessage the error message
-	ErrorMessage string `json:"error_message" codec:"error_message" bson:"error_message" yaml:"error_message" faker:"-"`
+	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored if the webhook has an error
 	Errored bool `json:"errored" codec:"errored" bson:"errored" yaml:"errored" faker:"-"`
 	// URL the url the webhook for the webhook
-	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
 }
 
 func toRepoWebhookObject(o interface{}, isoptional bool) interface{} {
@@ -305,11 +305,11 @@ func (o *RepoWebhook) ToMap() map[string]interface{} {
 		// Enabled if webhooks are enabled for this repo
 		"enabled": toRepoWebhookObject(o.Enabled, false),
 		// ErrorMessage the error message
-		"error_message": toRepoWebhookObject(o.ErrorMessage, false),
+		"error_message": toRepoWebhookObject(o.ErrorMessage, true),
 		// Errored if the webhook has an error
 		"errored": toRepoWebhookObject(o.Errored, false),
 		// URL the url the webhook for the webhook
-		"url": toRepoWebhookObject(o.URL, false),
+		"url": toRepoWebhookObject(o.URL, true),
 	}
 }
 
@@ -338,22 +338,20 @@ func (o *RepoWebhook) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["error_message"].(string); ok {
+	if val, ok := kv["error_message"].(*string); ok {
 		o.ErrorMessage = val
+	} else if val, ok := kv["error_message"].(string); ok {
+		o.ErrorMessage = &val
 	} else {
 		if val, ok := kv["error_message"]; ok {
 			if val == nil {
-				o.ErrorMessage = ""
+				o.ErrorMessage = pstrings.Pointer("")
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				o.ErrorMessage = fmt.Sprintf("%v", val)
+				o.ErrorMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -368,22 +366,20 @@ func (o *RepoWebhook) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["url"].(string); ok {
+	if val, ok := kv["url"].(*string); ok {
 		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
 	} else {
 		if val, ok := kv["url"]; ok {
 			if val == nil {
-				o.URL = ""
+				o.URL = pstrings.Pointer("")
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				o.URL = fmt.Sprintf("%v", val)
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
