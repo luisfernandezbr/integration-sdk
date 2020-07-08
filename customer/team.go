@@ -1167,6 +1167,23 @@ func ExecTeamSilentUpdateMutation(client graphql.Client, id string, input graphq
 	return nil
 }
 
+// ExecTeamDeleteMutation executes a graphql delete mutation for Team
+func ExecTeamDeleteMutation(client graphql.Client, id string) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("mutation TeamDeleteMutation($id: String!) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tdeleteTeam(_id: $id)\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res interface{}
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateTeam(client graphql.Client, model Team) error {
 	variables := make(graphql.Variables)
 	input := model.ToMap()

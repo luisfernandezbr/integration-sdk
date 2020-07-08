@@ -1506,6 +1506,23 @@ func ExecEnrollmentSilentUpdateMutation(client graphql.Client, id string, input 
 	return nil
 }
 
+// ExecEnrollmentDeleteMutation executes a graphql delete mutation for Enrollment
+func ExecEnrollmentDeleteMutation(client graphql.Client, id string) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("mutation EnrollmentDeleteMutation($id: String!) {\n")
+	sb.WriteString("\tagent {\n")
+	sb.WriteString("\t\tdeleteEnrollment(_id: $id)\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res interface{}
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateEnrollment(client graphql.Client, model Enrollment) error {
 	variables := make(graphql.Variables)
 	input := model.ToMap()

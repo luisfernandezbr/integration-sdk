@@ -746,6 +746,23 @@ func ExecCostCenterSilentUpdateMutation(client graphql.Client, id string, input 
 	return nil
 }
 
+// ExecCostCenterDeleteMutation executes a graphql delete mutation for CostCenter
+func ExecCostCenterDeleteMutation(client graphql.Client, id string) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("mutation CostCenterDeleteMutation($id: String!) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tdeleteCostCenter(_id: $id)\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res interface{}
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateCostCenter(client graphql.Client, model CostCenter) error {
 	variables := make(graphql.Variables)
 	input := model.ToMap()

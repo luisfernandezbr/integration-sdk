@@ -947,6 +947,23 @@ func ExecConfigSilentUpdateMutation(client graphql.Client, id string, input grap
 	return nil
 }
 
+// ExecConfigDeleteMutation executes a graphql delete mutation for Config
+func ExecConfigDeleteMutation(client graphql.Client, id string) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("mutation ConfigDeleteMutation($id: String!) {\n")
+	sb.WriteString("\twork {\n")
+	sb.WriteString("\t\tdeleteConfig(_id: $id)\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res interface{}
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateConfig(client graphql.Client, model Config) error {
 	variables := make(graphql.Variables)
 	input := model.ToMap()

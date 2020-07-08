@@ -765,6 +765,23 @@ func ExecProjectErrorSilentUpdateMutation(client graphql.Client, id string, inpu
 	return nil
 }
 
+// ExecProjectErrorDeleteMutation executes a graphql delete mutation for ProjectError
+func ExecProjectErrorDeleteMutation(client graphql.Client, id string) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("mutation ProjectErrorDeleteMutation($id: String!) {\n")
+	sb.WriteString("\twork {\n")
+	sb.WriteString("\t\tdeleteProjectError(_id: $id)\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res interface{}
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateProjectError(client graphql.Client, model ProjectError) error {
 	variables := make(graphql.Variables)
 	input := model.ToMap()

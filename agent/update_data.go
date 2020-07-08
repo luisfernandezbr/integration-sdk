@@ -12,14 +12,18 @@ import (
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/v10/datamodel"
+	"github.com/pinpt/go-common/v10/datetime"
 	"github.com/pinpt/go-common/v10/hash"
 	pjson "github.com/pinpt/go-common/v10/json"
+	"github.com/pinpt/go-common/v10/number"
 	"github.com/pinpt/go-common/v10/slice"
 	pstrings "github.com/pinpt/go-common/v10/strings"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
+	// UpdateDataTopic is the default topic name
+	UpdateDataTopic datamodel.TopicNameType = "agent_UpdateData"
 
 	// UpdateDataTable is the default table name
 	UpdateDataTable datamodel.ModelNameType = "agent_updatedata"
@@ -49,6 +53,8 @@ const (
 	UpdateDataModelSetColumn = "set"
 	// UpdateDataModelUnsetColumn is the column json value unset
 	UpdateDataModelUnsetColumn = "unset"
+	// UpdateDataModelUpdatedAtColumn is the column json value updated_ts
+	UpdateDataModelUpdatedAtColumn = "updated_ts"
 )
 
 // UpdateData request to update data on a per field basis vs the entire object
@@ -73,6 +79,8 @@ type UpdateData struct {
 	Set map[string]string `json:"set" codec:"set" bson:"set" yaml:"set" faker:"-"`
 	// Unset the field names to unset
 	Unset []string `json:"unset" codec:"unset" bson:"unset" yaml:"unset" faker:"-"`
+	// UpdatedAt the timestamp that the model was last updated fo real
+	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -100,7 +108,7 @@ func (o *UpdateData) String() string {
 
 // GetTopicName returns the name of the topic if evented
 func (o *UpdateData) GetTopicName() datamodel.TopicNameType {
-	return ""
+	return UpdateDataTopic
 }
 
 // GetStreamName returns the name of the stream
@@ -147,12 +155,29 @@ func (o *UpdateData) GetID() string {
 
 // GetTopicKey returns the topic message key when sending this model as a ModelSendEvent
 func (o *UpdateData) GetTopicKey() string {
-	return ""
+	var i interface{} = o.ID
+	if s, ok := i.(string); ok {
+		return s
+	}
+	return fmt.Sprintf("%v", i)
 }
 
 // GetTimestamp returns the timestamp for the model or now if not provided
 func (o *UpdateData) GetTimestamp() time.Time {
-	return time.Now().UTC()
+	var dt interface{} = o.UpdatedAt
+	switch v := dt.(type) {
+	case int64:
+		return datetime.DateFromEpoch(v).UTC()
+	case string:
+		tv, err := datetime.ISODateToTime(v)
+		if err != nil {
+			panic(err)
+		}
+		return tv.UTC()
+	case time.Time:
+		return v.UTC()
+	}
+	panic("not sure how to handle the date time format for UpdateData")
 }
 
 // GetRefID returns the RefID for the object
@@ -177,7 +202,7 @@ func (o *UpdateData) GetModelMaterializeConfig() *datamodel.ModelMaterializeConf
 
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *UpdateData) IsEvented() bool {
-	return false
+	return true
 }
 
 // SetEventHeaders will set any event headers for the object instance
@@ -188,7 +213,28 @@ func (o *UpdateData) SetEventHeaders(kv map[string]string) {
 
 // GetTopicConfig returns the topic config object
 func (o *UpdateData) GetTopicConfig() *datamodel.ModelTopicConfig {
-	return nil
+	retention, err := time.ParseDuration("87360h0m0s")
+	if err != nil {
+		panic("Invalid topic retention duration provided: 87360h0m0s. " + err.Error())
+	}
+
+	ttl, err := time.ParseDuration("0s")
+	if err != nil {
+		ttl = 0
+	}
+	if ttl == 0 && retention != 0 {
+		ttl = retention // they should be the same if not set
+	}
+	return &datamodel.ModelTopicConfig{
+		Key:               "id",
+		Timestamp:         "updated_ts",
+		NumPartitions:     8,
+		CleanupPolicy:     datamodel.CleanupPolicy("compact"),
+		ReplicationFactor: 3,
+		Retention:         retention,
+		MaxSize:           5242880,
+		TTL:               ttl,
+	}
 }
 
 // GetCustomerID will return the customer_id
@@ -270,6 +316,7 @@ func (o *UpdateData) ToMap() map[string]interface{} {
 		"ref_type":                toUpdateDataObject(o.RefType, false),
 		"set":                     toUpdateDataObject(o.Set, false),
 		"unset":                   toUpdateDataObject(o.Unset, false),
+		"updated_ts":              toUpdateDataObject(o.UpdatedAt, false),
 		"hashcode":                toUpdateDataObject(o.Hashcode, false),
 	}
 }
@@ -526,6 +573,20 @@ func (o *UpdateData) FromMap(kv map[string]interface{}) {
 	if o.Unset == nil {
 		o.Unset = make([]string, 0)
 	}
+	if val, ok := kv["updated_ts"].(int64); ok {
+		o.UpdatedAt = val
+	} else {
+		if val, ok := kv["updated_ts"]; ok {
+			if val == nil {
+				o.UpdatedAt = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.UpdatedAt = number.ToInt64Any(val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -542,6 +603,7 @@ func (o *UpdateData) Hash() string {
 	args = append(args, o.RefType)
 	args = append(args, o.Set)
 	args = append(args, o.Unset)
+	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }

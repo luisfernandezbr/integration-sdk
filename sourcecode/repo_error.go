@@ -765,6 +765,23 @@ func ExecRepoErrorSilentUpdateMutation(client graphql.Client, id string, input g
 	return nil
 }
 
+// ExecRepoErrorDeleteMutation executes a graphql delete mutation for RepoError
+func ExecRepoErrorDeleteMutation(client graphql.Client, id string) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("mutation RepoErrorDeleteMutation($id: String!) {\n")
+	sb.WriteString("\tsourcecode {\n")
+	sb.WriteString("\t\tdeleteRepoError(_id: $id)\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res interface{}
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateRepoError(client graphql.Client, model RepoError) error {
 	variables := make(graphql.Variables)
 	input := model.ToMap()

@@ -809,6 +809,23 @@ func ExecRepoWebhookSilentUpdateMutation(client graphql.Client, id string, input
 	return nil
 }
 
+// ExecRepoWebhookDeleteMutation executes a graphql delete mutation for RepoWebhook
+func ExecRepoWebhookDeleteMutation(client graphql.Client, id string) error {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	var sb strings.Builder
+	sb.WriteString("mutation RepoWebhookDeleteMutation($id: String!) {\n")
+	sb.WriteString("\tsourcecode {\n")
+	sb.WriteString("\t\tdeleteRepoWebhook(_id: $id)\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res interface{}
+	if err := client.Mutate(sb.String(), variables, &res); err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateRepoWebhook(client graphql.Client, model RepoWebhook) error {
 	variables := make(graphql.Variables)
 	input := model.ToMap()

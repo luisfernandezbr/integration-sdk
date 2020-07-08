@@ -536,6 +536,10 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 // NewFromTopic returns a new instanceof from a TopicNameType
 func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 	switch name {
+	case "agent_UpdateData":
+		o := new(dm_agent.UpdateData)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "calendar_Calendar":
 		o := new(dm_calendar.Calendar)
 		o.FromMap(map[string]interface{}{})
@@ -604,6 +608,7 @@ func GetMaterializedTopics() []datamodel.TopicNameType {
 // GetTopics returns an array of topics that are configured to be evented
 func GetTopics() []datamodel.TopicNameType {
 	return []datamodel.TopicNameType{
+		datamodel.TopicNameType("agent_UpdateData"),
 		datamodel.TopicNameType("calendar_Calendar"),
 		datamodel.TopicNameType("calendar_Event"),
 		datamodel.TopicNameType("calendar_User"),
