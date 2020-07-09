@@ -7,13 +7,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
 	"github.com/pinpt/go-common/v10/datamodel"
 	"github.com/pinpt/go-common/v10/datetime"
-	"github.com/pinpt/go-common/v10/graphql"
 	"github.com/pinpt/go-common/v10/hash"
 	pjson "github.com/pinpt/go-common/v10/json"
 	"github.com/pinpt/go-common/v10/number"
@@ -36,8 +34,6 @@ const (
 	ProjectCapabilityModelAttachmentsColumn = "attachments"
 	// ProjectCapabilityModelChangeLogsColumn is the column json value change_logs
 	ProjectCapabilityModelChangeLogsColumn = "change_logs"
-	// ProjectCapabilityModelCreatedAtColumn is the column json value created_ts
-	ProjectCapabilityModelCreatedAtColumn = "created_ts"
 	// ProjectCapabilityModelCustomerIDColumn is the column json value customer_id
 	ProjectCapabilityModelCustomerIDColumn = "customer_id"
 	// ProjectCapabilityModelDueDatesColumn is the column json value due_dates
@@ -80,8 +76,6 @@ type ProjectCapability struct {
 	Attachments bool `json:"attachments" codec:"attachments" bson:"attachments" yaml:"attachments" faker:"-"`
 	// ChangeLogs if the project supports issue change logs for issue state transitions
 	ChangeLogs bool `json:"change_logs" codec:"change_logs" bson:"change_logs" yaml:"change_logs" faker:"-"`
-	// CreatedAt the date the record was created in Epoch time
-	CreatedAt int64 `json:"created_ts" codec:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// DueDates if the project supports the notion of due dates for an issue
@@ -114,7 +108,7 @@ type ProjectCapability struct {
 	Sprints bool `json:"sprints" codec:"sprints" bson:"sprints" yaml:"sprints" faker:"-"`
 	// StoryPoints if the project supports the notion of agile story points
 	StoryPoints bool `json:"story_points" codec:"story_points" bson:"story_points" yaml:"story_points" faker:"-"`
-	// UpdatedAt the date the record was updated in Epoch time
+	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
@@ -153,7 +147,7 @@ func (o *ProjectCapability) GetStreamName() string {
 
 // GetTableName returns the name of the table
 func (o *ProjectCapability) GetTableName() string {
-	return ProjectCapabilityTable.String()
+	return ""
 }
 
 // GetModelName returns the name of the model
@@ -169,7 +163,6 @@ func NewProjectCapabilityID(customerID string, ProjectID string) string {
 func (o *ProjectCapability) setDefaults(frommap bool) {
 
 	if o.ID == "" {
-		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.CustomerID, o.ProjectID)
 	}
 
@@ -340,7 +333,6 @@ func (o *ProjectCapability) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"attachments":             toProjectCapabilityObject(o.Attachments, false),
 		"change_logs":             toProjectCapabilityObject(o.ChangeLogs, false),
-		"created_ts":              toProjectCapabilityObject(o.CreatedAt, false),
 		"customer_id":             toProjectCapabilityObject(o.CustomerID, false),
 		"due_dates":               toProjectCapabilityObject(o.DueDates, false),
 		"epics":                   toProjectCapabilityObject(o.Epics, false),
@@ -390,20 +382,6 @@ func (o *ProjectCapability) FromMap(kv map[string]interface{}) {
 				o.ChangeLogs = false
 			} else {
 				o.ChangeLogs = number.ToBoolAny(val)
-			}
-		}
-	}
-	if val, ok := kv["created_ts"].(int64); ok {
-		o.CreatedAt = val
-	} else {
-		if val, ok := kv["created_ts"]; ok {
-			if val == nil {
-				o.CreatedAt = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.CreatedAt = number.ToInt64Any(val)
 			}
 		}
 	}
@@ -651,7 +629,6 @@ func (o *ProjectCapability) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Attachments)
 	args = append(args, o.ChangeLogs)
-	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
 	args = append(args, o.DueDates)
 	args = append(args, o.Epics)
@@ -671,230 +648,6 @@ func (o *ProjectCapability) Hash() string {
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
-}
-
-func getProjectCapabilityQueryFields() string {
-	var sb strings.Builder
-
-	// scalar
-	sb.WriteString("\t\t\tattachments\n")
-	// scalar
-	sb.WriteString("\t\t\tchange_logs\n")
-	// scalar
-	sb.WriteString("\t\t\tcreated_ts\n")
-	// scalar
-	sb.WriteString("\t\t\tcustomer_id\n")
-	// scalar
-	sb.WriteString("\t\t\tdue_dates\n")
-	// scalar
-	sb.WriteString("\t\t\tepics\n")
-	// id
-	sb.WriteString("\t\t\t_id\n")
-	// scalar
-	sb.WriteString("\t\t\tin_progress_states\n")
-	// scalar
-	sb.WriteString("\t\t\tintegration_instance_id\n")
-	// scalar
-	sb.WriteString("\t\t\tkanban_boards\n")
-	// scalar
-	sb.WriteString("\t\t\tlinked_issues\n")
-	// scalar
-	sb.WriteString("\t\t\tparents\n")
-	// scalar
-	sb.WriteString("\t\t\tpriorities\n")
-	// scalar
-	sb.WriteString("\t\t\tproject_id\n")
-	// scalar
-	sb.WriteString("\t\t\tref_id\n")
-	// scalar
-	sb.WriteString("\t\t\tref_type\n")
-	// scalar
-	sb.WriteString("\t\t\tresolutions\n")
-	// scalar
-	sb.WriteString("\t\t\tsprints\n")
-	// scalar
-	sb.WriteString("\t\t\tstory_points\n")
-	// scalar
-	sb.WriteString("\t\t\tupdated_ts\n")
-	return sb.String()
-}
-
-// ProjectCapabilityPageInfo is a grapqhl PageInfo
-type ProjectCapabilityPageInfo struct {
-	StartCursor     string `json:"startCursor,omitempty"`
-	EndCursor       string `json:"endCursor,omitempty"`
-	HasNextPage     bool   `json:"hasNextPage,omitempty"`
-	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
-}
-
-// ProjectCapabilityConnection is a grapqhl connection
-type ProjectCapabilityConnection struct {
-	Edges      []*ProjectCapabilityEdge  `json:"edges,omitempty"`
-	PageInfo   ProjectCapabilityPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64                    `json:"totalCount,omitempty"`
-}
-
-// ProjectCapabilityEdge is a grapqhl edge
-type ProjectCapabilityEdge struct {
-	Node *ProjectCapability `json:"node,omitempty"`
-}
-
-// QueryManyProjectCapabilityNode is a grapqhl query many node
-type QueryManyProjectCapabilityNode struct {
-	Object *ProjectCapabilityConnection `json:"ProjectCapabilities,omitempty"`
-}
-
-// QueryManyProjectCapabilityData is a grapqhl query many data node
-type QueryManyProjectCapabilityData struct {
-	Data *QueryManyProjectCapabilityNode `json:"work,omitempty"`
-}
-
-// QueryOneProjectCapabilityNode is a grapqhl query one node
-type QueryOneProjectCapabilityNode struct {
-	Object *ProjectCapability `json:"ProjectCapability,omitempty"`
-}
-
-// QueryOneProjectCapabilityData is a grapqhl query one data node
-type QueryOneProjectCapabilityData struct {
-	Data *QueryOneProjectCapabilityNode `json:"work,omitempty"`
-}
-
-// ProjectCapabilityQuery is query struct
-type ProjectCapabilityQuery struct {
-	Filters []string      `json:"filters,omitempty"`
-	Params  []interface{} `json:"params,omitempty"`
-}
-
-// ProjectCapabilityOrder is the order direction
-type ProjectCapabilityOrder *string
-
-var (
-	// ProjectCapabilityOrderDesc is descending
-	ProjectCapabilityOrderDesc ProjectCapabilityOrder = pstrings.Pointer("DESC")
-	// ProjectCapabilityOrderAsc is ascending
-	ProjectCapabilityOrderAsc ProjectCapabilityOrder = pstrings.Pointer("ASC")
-)
-
-// ProjectCapabilityQueryInput is query input struct
-type ProjectCapabilityQueryInput struct {
-	First   *int64                  `json:"first,omitempty"`
-	Last    *int64                  `json:"last,omitempty"`
-	Before  *string                 `json:"before,omitempty"`
-	After   *string                 `json:"after,omitempty"`
-	Query   *ProjectCapabilityQuery `json:"query,omitempty"`
-	OrderBy *string                 `json:"orderBy,omitempty"`
-	Order   ProjectCapabilityOrder  `json:"order,omitempty"`
-}
-
-// NewProjectCapabilityQuery is a convenience for building a *ProjectCapabilityQuery
-func NewProjectCapabilityQuery(params ...interface{}) *ProjectCapabilityQueryInput {
-	if len(params)%2 != 0 {
-		panic("incorrect number of arguments passed")
-	}
-	q := &ProjectCapabilityQuery{
-		Filters: make([]string, 0),
-		Params:  make([]interface{}, 0),
-	}
-	for i := 0; i < len(params); i += 2 {
-		q.Filters = append(q.Filters, params[i].(string))
-		q.Params = append(q.Params, params[i+1])
-	}
-	return &ProjectCapabilityQueryInput{
-		Query: q,
-	}
-}
-
-// FindProjectCapability will query an ProjectCapability by id
-func FindProjectCapability(client graphql.Client, id string) (*ProjectCapability, error) {
-	variables := make(graphql.Variables)
-	variables["id"] = id
-	var sb strings.Builder
-	sb.WriteString("query ProjectCapabilityQuery($id: ID) {\n")
-	sb.WriteString("\twork {\n")
-	sb.WriteString("\t\tProjectCapability(_id: $id) {\n")
-	sb.WriteString(getProjectCapabilityQueryFields())
-	sb.WriteString("\t\t}\n")
-	sb.WriteString("\t}\n")
-	sb.WriteString("}\n")
-	var res QueryOneProjectCapabilityData
-	if err := client.Query(sb.String(), variables, &res); err != nil {
-		return nil, err
-	}
-	if res.Data != nil {
-		return res.Data.Object, nil
-	}
-	return nil, nil
-}
-
-// FindProjectCapabilities will query for any ProjectCapabilities matching the query
-func FindProjectCapabilities(client graphql.Client, input *ProjectCapabilityQueryInput) (*ProjectCapabilityConnection, error) {
-	variables := make(graphql.Variables)
-	if input != nil {
-		variables["first"] = input.First
-		variables["last"] = input.Last
-		variables["before"] = input.Before
-		variables["after"] = input.After
-		variables["query"] = input.Query
-		if input.OrderBy != nil {
-			variables["orderBy"] = *input.OrderBy
-		}
-		if input.Order != nil {
-			variables["order"] = *input.Order
-		}
-	}
-	var sb strings.Builder
-	sb.WriteString("query ProjectCapabilityQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectCapabilityColumnEnum) {\n")
-	sb.WriteString("\twork {\n")
-	sb.WriteString("\t\tProjectCapabilities(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
-	sb.WriteString("\t\t\tpageInfo {\n")
-	sb.WriteString("\t\t\t\tstartCursor\n")
-	sb.WriteString("\t\t\t\tendCursor\n")
-	sb.WriteString("\t\t\t\thasNextPage\n")
-	sb.WriteString("\t\t\t\thasPreviousPage\n")
-	sb.WriteString("\t\t\t}\n")
-	sb.WriteString("\t\t\ttotalCount\n")
-	sb.WriteString("\t\t\tedges {\n")
-	sb.WriteString("\t\t\t\tnode {\n")
-	sb.WriteString(getProjectCapabilityQueryFields())
-	sb.WriteString("\t\t\t\t}\n")
-	sb.WriteString("\t\t\t}\n")
-	sb.WriteString("\t\t}\n")
-	sb.WriteString("\t}\n")
-	sb.WriteString("}\n")
-	var res QueryManyProjectCapabilityData
-	if err := client.Query(sb.String(), variables, &res); err != nil {
-		return nil, err
-	}
-	return res.Data.Object, nil
-}
-
-// FindProjectCapabilitiesPaginatedCallback is a callback function for handling each page
-type FindProjectCapabilitiesPaginatedCallback func(conn *ProjectCapabilityConnection) (bool, error)
-
-// FindProjectCapabilitiesPaginated will query for any ProjectCapabilities matching the query and return each page callback
-func FindProjectCapabilitiesPaginated(client graphql.Client, query *ProjectCapabilityQuery, pageSize int64, callback FindProjectCapabilitiesPaginatedCallback) error {
-	input := &ProjectCapabilityQueryInput{
-		First: &pageSize,
-		Query: query,
-	}
-	for {
-		res, err := FindProjectCapabilities(client, input)
-		if err != nil {
-			return err
-		}
-		if res == nil {
-			break
-		}
-		ok, err := callback(res)
-		if err != nil {
-			return err
-		}
-		if !ok || !res.PageInfo.HasNextPage {
-			break
-		}
-		input.After = &res.PageInfo.EndCursor
-	}
-	return nil
 }
 
 // ProjectCapabilityPartial is a partial struct for upsert mutations for ProjectCapability
