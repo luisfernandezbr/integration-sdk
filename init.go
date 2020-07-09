@@ -338,6 +338,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_work.Project)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "work.ProjectCapability":
+		o := new(dm_work.ProjectCapability)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.ProjectError":
 		o := new(dm_work.ProjectError)
 		o.FromMap(map[string]interface{}{})
@@ -521,6 +525,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_work.KanbanBoardPartial)
 	case "work.Project":
 		return new(dm_work.ProjectPartial)
+	case "work.ProjectCapability":
+		return new(dm_work.ProjectCapabilityPartial)
 	case "work.ProjectError":
 		return new(dm_work.ProjectErrorPartial)
 	case "work.ProjectWebhook":
@@ -580,6 +586,10 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_work.Project)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "work_ProjectCapability":
+		o := new(dm_work.ProjectCapability)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_ProjectError":
 		o := new(dm_work.ProjectError)
 		o.FromMap(map[string]interface{}{})
@@ -619,6 +629,7 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("work_Config"),
 		datamodel.TopicNameType("work_KanbanBoard"),
 		datamodel.TopicNameType("work_Project"),
+		datamodel.TopicNameType("work_ProjectCapability"),
 		datamodel.TopicNameType("work_ProjectError"),
 		datamodel.TopicNameType("work_ProjectWebhook"),
 		datamodel.TopicNameType("work_Sprint"),
@@ -709,6 +720,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("work.IssueType"),
 		datamodel.ModelNameType("work.KanbanBoard"),
 		datamodel.ModelNameType("work.Project"),
+		datamodel.ModelNameType("work.ProjectCapability"),
 		datamodel.ModelNameType("work.ProjectError"),
 		datamodel.ModelNameType("work.ProjectWebhook"),
 		datamodel.ModelNameType("work.Sprint"),

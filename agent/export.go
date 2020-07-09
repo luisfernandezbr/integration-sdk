@@ -77,6 +77,8 @@ const (
 	ExportModelIntegrationIntegrationInstanceIDColumn = "integration_instance_id"
 	// ExportModelIntegrationIntervalColumn is the column json value interval
 	ExportModelIntegrationIntervalColumn = "interval"
+	// ExportModelIntegrationJobIDColumn is the column json value job_id
+	ExportModelIntegrationJobIDColumn = "job_id"
 	// ExportModelIntegrationLastExportCompletedDateColumn is the column json value last_export_completed_date
 	ExportModelIntegrationLastExportCompletedDateColumn = "last_export_completed_date"
 	// ExportModelIntegrationLastExportCompletedDateEpochColumn is the column json value epoch
@@ -113,6 +115,8 @@ const (
 	ExportModelIntegrationRefIDColumn = "ref_id"
 	// ExportModelIntegrationRefTypeColumn is the column json value ref_type
 	ExportModelIntegrationRefTypeColumn = "ref_type"
+	// ExportModelIntegrationRequiresHistoricalColumn is the column json value requires_historical
+	ExportModelIntegrationRequiresHistoricalColumn = "requires_historical"
 	// ExportModelIntegrationStateColumn is the column json value state
 	ExportModelIntegrationStateColumn = "state"
 	// ExportModelIntegrationThrottledColumn is the column json value throttled
@@ -1080,7 +1084,7 @@ type ExportIntegration struct {
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent or any other error
 	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
-	// ExportAcknowledged Set to true an export has been recieved by the agent.
+	// ExportAcknowledged Set to true an export has been received by the agent.
 	ExportAcknowledged *bool `json:"export_acknowledged,omitempty" codec:"export_acknowledged,omitempty" bson:"export_acknowledged" yaml:"export_acknowledged,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
@@ -1090,6 +1094,8 @@ type ExportIntegration struct {
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// Interval the interval in milliseconds for how often an export job is scheduled
 	Interval int64 `json:"interval" codec:"interval" bson:"interval" yaml:"interval" faker:"-"`
+	// JobID the current (if EXPORTING) or previous (if IDLE) job id which is useful for debugging
+	JobID *string `json:"job_id,omitempty" codec:"job_id,omitempty" bson:"job_id" yaml:"job_id,omitempty" faker:"-"`
 	// LastExportCompletedDate when the export response was received
 	LastExportCompletedDate ExportIntegrationLastExportCompletedDate `json:"last_export_completed_date" codec:"last_export_completed_date" bson:"last_export_completed_date" yaml:"last_export_completed_date" faker:"-"`
 	// LastExportRequestedDate when the export request was made
@@ -1108,6 +1114,8 @@ type ExportIntegration struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// RequiresHistorical flag which can be set to trigger a historical on the next scheduler visit
+	RequiresHistorical bool `json:"requires_historical" codec:"requires_historical" bson:"requires_historical" yaml:"requires_historical" faker:"-"`
 	// State the current state of the integration
 	State ExportIntegrationState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// Throttled Set to true when integration is throttled.
@@ -1185,7 +1193,7 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"error_message": toExportIntegrationObject(o.ErrorMessage, true),
 		// Errored If authorization failed by the agent or any other error
 		"errored": toExportIntegrationObject(o.Errored, true),
-		// ExportAcknowledged Set to true an export has been recieved by the agent.
+		// ExportAcknowledged Set to true an export has been received by the agent.
 		"export_acknowledged": toExportIntegrationObject(o.ExportAcknowledged, true),
 		// ID the primary key for the model instance
 		"id": toExportIntegrationObject(o.ID, false),
@@ -1195,6 +1203,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"integration_instance_id": toExportIntegrationObject(o.IntegrationInstanceID, true),
 		// Interval the interval in milliseconds for how often an export job is scheduled
 		"interval": toExportIntegrationObject(o.Interval, false),
+		// JobID the current (if EXPORTING) or previous (if IDLE) job id which is useful for debugging
+		"job_id": toExportIntegrationObject(o.JobID, true),
 		// LastExportCompletedDate when the export response was received
 		"last_export_completed_date": toExportIntegrationObject(o.LastExportCompletedDate, false),
 		// LastExportRequestedDate when the export request was made
@@ -1213,6 +1223,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"ref_id": toExportIntegrationObject(o.RefID, false),
 		// RefType the source system identifier for the model instance
 		"ref_type": toExportIntegrationObject(o.RefType, false),
+		// RequiresHistorical flag which can be set to trigger a historical on the next scheduler visit
+		"requires_historical": toExportIntegrationObject(o.RequiresHistorical, false),
 		// State the current state of the integration
 		"state": toExportIntegrationObject(o.State, false),
 		// Throttled Set to true when integration is throttled.
@@ -1557,6 +1569,23 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["job_id"].(*string); ok {
+		o.JobID = val
+	} else if val, ok := kv["job_id"].(string); ok {
+		o.JobID = &val
+	} else {
+		if val, ok := kv["job_id"]; ok {
+			if val == nil {
+				o.JobID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.JobID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 
 	if val, ok := kv["last_export_completed_date"]; ok {
 		if kv, ok := val.(map[string]interface{}); ok {
@@ -1761,6 +1790,17 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.RefType = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["requires_historical"].(bool); ok {
+		o.RequiresHistorical = val
+	} else {
+		if val, ok := kv["requires_historical"]; ok {
+			if val == nil {
+				o.RequiresHistorical = false
+			} else {
+				o.RequiresHistorical = number.ToBoolAny(val)
 			}
 		}
 	}
