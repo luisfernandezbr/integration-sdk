@@ -13,7 +13,6 @@ import (
 	dm_sourcecode "github.com/pinpt/integration-sdk/sourcecode"
 	dm_web "github.com/pinpt/integration-sdk/web"
 	dm_work "github.com/pinpt/integration-sdk/work"
-	dm_work_agile "github.com/pinpt/integration-sdk/work/agile"
 )
 
 // New returns a new instanceof from a ModelNameType
@@ -307,6 +306,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_web.Hook)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "work.Board":
+		o := new(dm_work.Board)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work.Config":
 		o := new(dm_work.Config)
 		o.FromMap(map[string]interface{}{})
@@ -331,8 +334,8 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_work.IssueType)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work.KanbanBoard":
-		o := new(dm_work.KanbanBoard)
+	case "work.Kanban":
+		o := new(dm_work.Kanban)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "work.Project":
@@ -357,18 +360,6 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		return o
 	case "work.User":
 		o := new(dm_work.User)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "work.agile.Board":
-		o := new(dm_work_agile.Board)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "work.agile.Kanban":
-		o := new(dm_work_agile.Kanban)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "work.agile.Sprint":
-		o := new(dm_work_agile.Sprint)
 		o.FromMap(map[string]interface{}{})
 		return o
 	}
@@ -522,6 +513,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_sourcecode.UserPartial)
 	case "web.Hook":
 		return new(dm_web.HookPartial)
+	case "work.Board":
+		return new(dm_work.BoardPartial)
 	case "work.Config":
 		return new(dm_work.ConfigPartial)
 	case "work.Issue":
@@ -534,8 +527,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_work.IssueStatusPartial)
 	case "work.IssueType":
 		return new(dm_work.IssueTypePartial)
-	case "work.KanbanBoard":
-		return new(dm_work.KanbanBoardPartial)
+	case "work.Kanban":
+		return new(dm_work.KanbanPartial)
 	case "work.Project":
 		return new(dm_work.ProjectPartial)
 	case "work.ProjectCapability":
@@ -548,12 +541,6 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_work.SprintPartial)
 	case "work.User":
 		return new(dm_work.UserPartial)
-	case "work.agile.Board":
-		return new(dm_work_agile.BoardPartial)
-	case "work.agile.Kanban":
-		return new(dm_work_agile.KanbanPartial)
-	case "work.agile.Sprint":
-		return new(dm_work_agile.SprintPartial)
 	}
 	return nil
 }
@@ -593,12 +580,16 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_sourcecode.User)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "work_Board":
+		o := new(dm_work.Board)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "work_Config":
 		o := new(dm_work.Config)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_KanbanBoard":
-		o := new(dm_work.KanbanBoard)
+	case "work_Kanban":
+		o := new(dm_work.Kanban)
 		o.FromMap(map[string]interface{}{})
 		return o
 	case "work_Project":
@@ -625,18 +616,6 @@ func NewFromTopic(name datamodel.TopicNameType) datamodel.Model {
 		o := new(dm_work.User)
 		o.FromMap(map[string]interface{}{})
 		return o
-	case "work_agile_Board":
-		o := new(dm_work_agile.Board)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "work_agile_Kanban":
-		o := new(dm_work_agile.Kanban)
-		o.FromMap(map[string]interface{}{})
-		return o
-	case "work_agile_Sprint":
-		o := new(dm_work_agile.Sprint)
-		o.FromMap(map[string]interface{}{})
-		return o
 	}
 	return nil
 }
@@ -657,17 +636,15 @@ func GetTopics() []datamodel.TopicNameType {
 		datamodel.TopicNameType("sourcecode_RepoError"),
 		datamodel.TopicNameType("sourcecode_RepoWebhook"),
 		datamodel.TopicNameType("sourcecode_User"),
+		datamodel.TopicNameType("work_Board"),
 		datamodel.TopicNameType("work_Config"),
-		datamodel.TopicNameType("work_KanbanBoard"),
+		datamodel.TopicNameType("work_Kanban"),
 		datamodel.TopicNameType("work_Project"),
 		datamodel.TopicNameType("work_ProjectCapability"),
 		datamodel.TopicNameType("work_ProjectError"),
 		datamodel.TopicNameType("work_ProjectWebhook"),
 		datamodel.TopicNameType("work_Sprint"),
 		datamodel.TopicNameType("work_User"),
-		datamodel.TopicNameType("work_agile_Board"),
-		datamodel.TopicNameType("work_agile_Kanban"),
-		datamodel.TopicNameType("work_agile_Sprint"),
 	}
 }
 
@@ -746,21 +723,19 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("sourcecode.RepoWebhook"),
 		datamodel.ModelNameType("sourcecode.User"),
 		datamodel.ModelNameType("web.Hook"),
+		datamodel.ModelNameType("work.Board"),
 		datamodel.ModelNameType("work.Config"),
 		datamodel.ModelNameType("work.Issue"),
 		datamodel.ModelNameType("work.IssueComment"),
 		datamodel.ModelNameType("work.IssuePriority"),
 		datamodel.ModelNameType("work.IssueStatus"),
 		datamodel.ModelNameType("work.IssueType"),
-		datamodel.ModelNameType("work.KanbanBoard"),
+		datamodel.ModelNameType("work.Kanban"),
 		datamodel.ModelNameType("work.Project"),
 		datamodel.ModelNameType("work.ProjectCapability"),
 		datamodel.ModelNameType("work.ProjectError"),
 		datamodel.ModelNameType("work.ProjectWebhook"),
 		datamodel.ModelNameType("work.Sprint"),
 		datamodel.ModelNameType("work.User"),
-		datamodel.ModelNameType("work.agile.Board"),
-		datamodel.ModelNameType("work.agile.Kanban"),
-		datamodel.ModelNameType("work.agile.Sprint"),
 	}
 }

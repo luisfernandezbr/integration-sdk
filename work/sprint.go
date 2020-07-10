@@ -37,8 +37,14 @@ const (
 const (
 	// SprintModelActiveColumn is the column json value active
 	SprintModelActiveColumn = "active"
-	// SprintModelBacklogIssueIdsColumn is the column json value backlog_issue_ids
-	SprintModelBacklogIssueIdsColumn = "backlog_issue_ids"
+	// SprintModelBoardIDColumn is the column json value board_id
+	SprintModelBoardIDColumn = "board_id"
+	// SprintModelColumnsColumn is the column json value columns
+	SprintModelColumnsColumn = "columns"
+	// SprintModelColumnsIssueIdsColumn is the column json value issue_ids
+	SprintModelColumnsIssueIdsColumn = "issue_ids"
+	// SprintModelColumnsNameColumn is the column json value name
+	SprintModelColumnsNameColumn = "name"
 	// SprintModelCompletedDateColumn is the column json value completed_date
 	SprintModelCompletedDateColumn = "completed_date"
 	// SprintModelCompletedDateEpochColumn is the column json value epoch
@@ -49,6 +55,8 @@ const (
 	SprintModelCompletedDateRfc3339Column = "rfc3339"
 	// SprintModelCustomerIDColumn is the column json value customer_id
 	SprintModelCustomerIDColumn = "customer_id"
+	// SprintModelDeletedColumn is the column json value deleted
+	SprintModelDeletedColumn = "deleted"
 	// SprintModelEndedDateColumn is the column json value ended_date
 	SprintModelEndedDateColumn = "ended_date"
 	// SprintModelEndedDateEpochColumn is the column json value epoch
@@ -88,6 +96,121 @@ const (
 	// SprintModelURLColumn is the column json value url
 	SprintModelURLColumn = "url"
 )
+
+// SprintColumns represents the object structure for columns
+type SprintColumns struct {
+	// IssueIds the issue ids for the column
+	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
+	// Name the name of the column
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+}
+
+func toSprintColumnsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *SprintColumns:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *SprintColumns) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// IssueIds the issue ids for the column
+		"issue_ids": toSprintColumnsObject(o.IssueIds, false),
+		// Name the name of the column
+		"name": toSprintColumnsObject(o.Name, false),
+	}
+}
+
+func (o *SprintColumns) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *SprintColumns) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["issue_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for issue_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for issue_ids field")
+				}
+			}
+			o.IssueIds = na
+		}
+	}
+	if o.IssueIds == nil {
+		o.IssueIds = make([]string, 0)
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
 
 // SprintCompletedDate represents the object structure for completed_date
 type SprintCompletedDate struct {
@@ -490,12 +613,16 @@ const (
 type Sprint struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
-	// BacklogIssueIds ids of the all issues in the sprint backlog in rank order
-	BacklogIssueIds []string `json:"backlog_issue_ids" codec:"backlog_issue_ids" bson:"backlog_issue_ids" yaml:"backlog_issue_ids" faker:"-"`
+	// BoardID the board that this kanban board is related to
+	BoardID *string `json:"board_id,omitempty" codec:"board_id,omitempty" bson:"board_id" yaml:"board_id,omitempty" faker:"-"`
+	// Columns the columns for the board in the order that they are displayed and the issue ids for each
+	Columns []SprintColumns `json:"columns" codec:"columns" bson:"columns" yaml:"columns" faker:"-"`
 	// CompletedDate the date that the sprint was completed
 	CompletedDate SprintCompletedDate `json:"completed_date" codec:"completed_date" bson:"completed_date" yaml:"completed_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Deleted indicates that this board was deleted by the user and shouldn't be shown in the app
+	Deleted bool `json:"deleted" codec:"deleted" bson:"deleted" yaml:"deleted" faker:"-"`
 	// EndedDate the date that the sprint was ended
 	EndedDate SprintEndedDate `json:"ended_date" codec:"ended_date" bson:"ended_date" yaml:"ended_date" faker:"-"`
 	// Goal the goal for the sprint
@@ -536,6 +663,13 @@ func toSprintObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *Sprint:
 		return v.ToMap()
+
+	case []SprintColumns:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 
 	case SprintCompletedDate:
 		return v.ToMap()
@@ -585,8 +719,8 @@ func NewSprintID(customerID string, refID string, refType string) string {
 }
 
 func (o *Sprint) setDefaults(frommap bool) {
-	if o.BacklogIssueIds == nil {
-		o.BacklogIssueIds = make([]string, 0)
+	if o.Columns == nil {
+		o.Columns = make([]SprintColumns, 0)
 	}
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
@@ -767,9 +901,11 @@ func (o *Sprint) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"active":                  toSprintObject(o.Active, false),
-		"backlog_issue_ids":       toSprintObject(o.BacklogIssueIds, false),
+		"board_id":                toSprintObject(o.BoardID, true),
+		"columns":                 toSprintObject(o.Columns, false),
 		"completed_date":          toSprintObject(o.CompletedDate, false),
 		"customer_id":             toSprintObject(o.CustomerID, false),
+		"deleted":                 toSprintObject(o.Deleted, false),
 		"ended_date":              toSprintObject(o.EndedDate, false),
 		"goal":                    toSprintObject(o.Goal, false),
 		"id":                      toSprintObject(o.ID, false),
@@ -808,55 +944,85 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["backlog_issue_ids"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
+	if val, ok := kv["board_id"].(*string); ok {
+		o.BoardID = val
+	} else if val, ok := kv["board_id"].(string); ok {
+		o.BoardID = &val
+	} else {
+		if val, ok := kv["board_id"]; ok {
+			if val == nil {
+				o.BoardID = pstrings.Pointer("")
 			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for backlog_issue_ids field")
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
+				o.BoardID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.BacklogIssueIds = na
 		}
 	}
-	if o.BacklogIssueIds == nil {
-		o.BacklogIssueIds = make([]string, 0)
+
+	if o == nil {
+
+		o.Columns = make([]SprintColumns, 0)
+
+	}
+	if val, ok := kv["columns"]; ok {
+		if sv, ok := val.([]SprintColumns); ok {
+			o.Columns = sv
+		} else if sp, ok := val.([]*SprintColumns); ok {
+			o.Columns = o.Columns[:0]
+			for _, e := range sp {
+				o.Columns = append(o.Columns, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(SprintColumns); ok {
+					o.Columns = append(o.Columns, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm SprintColumns
+					fm.FromMap(av)
+					o.Columns = append(o.Columns, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av SprintColumns
+					av.FromMap(bkv)
+					o.Columns = append(o.Columns, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(SprintColumns); ok {
+					o.Columns = append(o.Columns, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm SprintColumns
+					fm.FromMap(r)
+					o.Columns = append(o.Columns, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := SprintColumns{}
+					fm.FromMap(r)
+					o.Columns = append(o.Columns, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm SprintColumns
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Columns = append(o.Columns, fm)
+						}
+					}
+				}
+			}
+		}
 	}
 
 	if val, ok := kv["completed_date"]; ok {
@@ -908,6 +1074,17 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["deleted"].(bool); ok {
+		o.Deleted = val
+	} else {
+		if val, ok := kv["deleted"]; ok {
+			if val == nil {
+				o.Deleted = false
+			} else {
+				o.Deleted = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -1257,9 +1434,11 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 func (o *Sprint) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Active)
-	args = append(args, o.BacklogIssueIds)
+	args = append(args, o.BoardID)
+	args = append(args, o.Columns)
 	args = append(args, o.CompletedDate)
 	args = append(args, o.CustomerID)
+	args = append(args, o.Deleted)
 	args = append(args, o.EndedDate)
 	args = append(args, o.Goal)
 	args = append(args, o.ID)
@@ -1281,10 +1460,14 @@ func (o *Sprint) Hash() string {
 type SprintPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
 	Active *bool `json:"active,omitempty"`
-	// BacklogIssueIds ids of the all issues in the sprint backlog in rank order
-	BacklogIssueIds []string `json:"backlog_issue_ids,omitempty"`
+	// BoardID the board that this kanban board is related to
+	BoardID *string `json:"board_id,omitempty"`
+	// Columns the columns for the board in the order that they are displayed and the issue ids for each
+	Columns []SprintColumns `json:"columns,omitempty"`
 	// CompletedDate the date that the sprint was completed
 	CompletedDate *SprintCompletedDate `json:"completed_date,omitempty"`
+	// Deleted indicates that this board was deleted by the user and shouldn't be shown in the app
+	Deleted *bool `json:"deleted,omitempty"`
 	// EndedDate the date that the sprint was ended
 	EndedDate *SprintEndedDate `json:"ended_date,omitempty"`
 	// Goal the goal for the sprint
@@ -1313,15 +1496,17 @@ func (o *SprintPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *SprintPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"active":            toSprintObject(o.Active, true),
-		"backlog_issue_ids": toSprintObject(o.BacklogIssueIds, true),
-		"completed_date":    toSprintObject(o.CompletedDate, true),
-		"ended_date":        toSprintObject(o.EndedDate, true),
-		"goal":              toSprintObject(o.Goal, true),
-		"issue_ids":         toSprintObject(o.IssueIds, true),
-		"name":              toSprintObject(o.Name, true),
-		"project_ids":       toSprintObject(o.ProjectIds, true),
-		"started_date":      toSprintObject(o.StartedDate, true),
+		"active":         toSprintObject(o.Active, true),
+		"board_id":       toSprintObject(o.BoardID, true),
+		"columns":        toSprintObject(o.Columns, true),
+		"completed_date": toSprintObject(o.CompletedDate, true),
+		"deleted":        toSprintObject(o.Deleted, true),
+		"ended_date":     toSprintObject(o.EndedDate, true),
+		"goal":           toSprintObject(o.Goal, true),
+		"issue_ids":      toSprintObject(o.IssueIds, true),
+		"name":           toSprintObject(o.Name, true),
+		"project_ids":    toSprintObject(o.ProjectIds, true),
+		"started_date":   toSprintObject(o.StartedDate, true),
 
 		"status": toSprintStatusEnum(o.Status),
 		"url":    toSprintObject(o.URL, true),
@@ -1331,8 +1516,8 @@ func (o *SprintPartial) ToMap() map[string]interface{} {
 			delete(kv, k)
 		} else {
 
-			if k == "backlog_issue_ids" {
-				if arr, ok := v.([]string); ok {
+			if k == "columns" {
+				if arr, ok := v.([]SprintColumns); ok {
 					if len(arr) == 0 {
 						delete(kv, k)
 					}
@@ -1422,55 +1607,85 @@ func (o *SprintPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["backlog_issue_ids"]; ok {
-		if val != nil {
-			na := make([]string, 0)
-			if a, ok := val.([]string); ok {
-				na = append(na, a...)
+	if val, ok := kv["board_id"].(*string); ok {
+		o.BoardID = val
+	} else if val, ok := kv["board_id"].(string); ok {
+		o.BoardID = &val
+	} else {
+		if val, ok := kv["board_id"]; ok {
+			if val == nil {
+				o.BoardID = pstrings.Pointer("")
 			} else {
-				if a, ok := val.([]interface{}); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							if badMap, ok := ae.(map[interface{}]interface{}); ok {
-								ae = slice.ConvertToStringToInterface(badMap)
-							}
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else if s, ok := val.(string); ok {
-					for _, sv := range strings.Split(s, ",") {
-						na = append(na, strings.TrimSpace(sv))
-					}
-				} else if a, ok := val.(primitive.A); ok {
-					for _, ae := range a {
-						if av, ok := ae.(string); ok {
-							na = append(na, av)
-						} else {
-							b, _ := json.Marshal(ae)
-							var av string
-							if err := json.Unmarshal(b, &av); err != nil {
-								panic("unsupported type for backlog_issue_ids field entry: " + reflect.TypeOf(ae).String())
-							}
-							na = append(na, av)
-						}
-					}
-				} else {
-					fmt.Println(reflect.TypeOf(val).String())
-					panic("unsupported type for backlog_issue_ids field")
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
+				o.BoardID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
-			o.BacklogIssueIds = na
 		}
 	}
-	if o.BacklogIssueIds == nil {
-		o.BacklogIssueIds = make([]string, 0)
+
+	if o == nil {
+
+		o.Columns = make([]SprintColumns, 0)
+
+	}
+	if val, ok := kv["columns"]; ok {
+		if sv, ok := val.([]SprintColumns); ok {
+			o.Columns = sv
+		} else if sp, ok := val.([]*SprintColumns); ok {
+			o.Columns = o.Columns[:0]
+			for _, e := range sp {
+				o.Columns = append(o.Columns, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(SprintColumns); ok {
+					o.Columns = append(o.Columns, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm SprintColumns
+					fm.FromMap(av)
+					o.Columns = append(o.Columns, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av SprintColumns
+					av.FromMap(bkv)
+					o.Columns = append(o.Columns, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(SprintColumns); ok {
+					o.Columns = append(o.Columns, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm SprintColumns
+					fm.FromMap(r)
+					o.Columns = append(o.Columns, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := SprintColumns{}
+					fm.FromMap(r)
+					o.Columns = append(o.Columns, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm SprintColumns
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Columns = append(o.Columns, fm)
+						}
+					}
+				}
+			}
+		}
 	}
 
 	if o.CompletedDate == nil {
@@ -1508,6 +1723,24 @@ func (o *SprintPartial) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.CompletedDate.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["deleted"].(*bool); ok {
+		o.Deleted = val
+	} else if val, ok := kv["deleted"].(bool); ok {
+		o.Deleted = &val
+	} else {
+		if val, ok := kv["deleted"]; ok {
+			if val == nil {
+				o.Deleted = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Deleted = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
 	}
 
 	if o.EndedDate == nil {
