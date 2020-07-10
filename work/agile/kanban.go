@@ -41,6 +41,8 @@ const (
 	KanbanModelColumnsColumn = "columns"
 	// KanbanModelColumnsIssueIdsColumn is the column json value issue_ids
 	KanbanModelColumnsIssueIdsColumn = "issue_ids"
+	// KanbanModelColumnsNameColumn is the column json value name
+	KanbanModelColumnsNameColumn = "name"
 	// KanbanModelCustomerIDColumn is the column json value customer_id
 	KanbanModelCustomerIDColumn = "customer_id"
 	// KanbanModelDeletedColumn is the column json value deleted
@@ -63,8 +65,10 @@ const (
 
 // KanbanColumns represents the object structure for columns
 type KanbanColumns struct {
-	// IssueIds the name of the column
+	// IssueIds the issue ids for the column
 	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
+	// Name the name of the column
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 }
 
 func toKanbanColumnsObject(o interface{}, isoptional bool) interface{} {
@@ -81,8 +85,10 @@ func toKanbanColumnsObject(o interface{}, isoptional bool) interface{} {
 func (o *KanbanColumns) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// IssueIds the name of the column
+		// IssueIds the issue ids for the column
 		"issue_ids": toKanbanColumnsObject(o.IssueIds, false),
+		// Name the name of the column
+		"name": toKanbanColumnsObject(o.Name, false),
 	}
 }
 
@@ -149,6 +155,25 @@ func (o *KanbanColumns) FromMap(kv map[string]interface{}) {
 	}
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -232,8 +257,8 @@ func (o *Kanban) GetModelName() datamodel.ModelNameType {
 }
 
 // NewKanbanID provides a template for generating an ID field for Kanban
-func NewKanbanID(customerID string, refID string, refType string, BoardID string) string {
-	return hash.Values(customerID, refID, refType, BoardID)
+func NewKanbanID(customerID string, refID string, refType string) string {
+	return hash.Values(customerID, refID, refType)
 }
 
 func (o *Kanban) setDefaults(frommap bool) {
@@ -245,7 +270,7 @@ func (o *Kanban) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.BoardID)
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
 	}
 
 	if frommap {

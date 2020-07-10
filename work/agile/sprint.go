@@ -51,6 +51,8 @@ const (
 	SprintModelColumnsColumn = "columns"
 	// SprintModelColumnsIssueIdsColumn is the column json value issue_ids
 	SprintModelColumnsIssueIdsColumn = "issue_ids"
+	// SprintModelColumnsNameColumn is the column json value name
+	SprintModelColumnsNameColumn = "name"
 	// SprintModelCustomerIDColumn is the column json value customer_id
 	SprintModelCustomerIDColumn = "customer_id"
 	// SprintModelDeletedColumn is the column json value deleted
@@ -192,8 +194,10 @@ func (o *SprintClosedDate) FromMap(kv map[string]interface{}) {
 
 // SprintColumns represents the object structure for columns
 type SprintColumns struct {
-	// IssueIds the name of the column
+	// IssueIds the issue ids for the column
 	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
+	// Name the name of the column
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 }
 
 func toSprintColumnsObject(o interface{}, isoptional bool) interface{} {
@@ -210,8 +214,10 @@ func toSprintColumnsObject(o interface{}, isoptional bool) interface{} {
 func (o *SprintColumns) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// IssueIds the name of the column
+		// IssueIds the issue ids for the column
 		"issue_ids": toSprintColumnsObject(o.IssueIds, false),
+		// Name the name of the column
+		"name": toSprintColumnsObject(o.Name, false),
 	}
 }
 
@@ -278,6 +284,25 @@ func (o *SprintColumns) FromMap(kv map[string]interface{}) {
 	}
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	o.setDefaults(false)
 }
@@ -685,8 +710,8 @@ func (o *Sprint) GetModelName() datamodel.ModelNameType {
 }
 
 // NewSprintID provides a template for generating an ID field for Sprint
-func NewSprintID(customerID string, refID string, refType string, BoardID string) string {
-	return hash.Values(customerID, refID, refType, BoardID)
+func NewSprintID(customerID string, refID string, refType string) string {
+	return hash.Values(customerID, refID, refType)
 }
 
 func (o *Sprint) setDefaults(frommap bool) {
@@ -698,7 +723,7 @@ func (o *Sprint) setDefaults(frommap bool) {
 	}
 
 	if o.ID == "" {
-		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.BoardID)
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
 	}
 
 	if frommap {
