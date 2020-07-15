@@ -21,6 +21,14 @@
   version = "v2.0.0"
 
 [[projects]]
+  digest = "1:586ea76dbd0374d6fb649a91d70d652b7fe0ccffb8910a77468e7702e7901f3d"
+  name = "github.com/go-stack/stack"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2fee6af1a9795aafbe0253a0cfbdf668e1fb8a9a"
+  version = "v1.8.0"
+
+[[projects]]
   digest = "1:582b704bebaa06b48c29b0cec224a6058a09c86883aaddabde889cd1a5f73e1b"
   name = "github.com/google/uuid"
   packages = ["."]
@@ -37,30 +45,57 @@
   revision = "2e52cf6e685269ed8aefec6390f3cac3ef74e730"
 
 [[projects]]
-  digest = "1:bfaa13665daca0304ea5e2162c166875ebe577cc6816d35ce2063f4ad69e7520"
+  branch = "depv10"
+  digest = "1:62c188b7e04d8c22716bf50542d352b103218bf875c9ae76b9473b7ddd09b0f2"
   name = "github.com/pinpt/go-common"
   packages = [
+    "api",
+    "auth",
     "datamodel",
     "datetime",
     "eventing",
     "fileutil",
+    "graphql",
     "hash",
+    "httpdefaults",
     "json",
     "number",
     "slice",
     "strings",
   ]
   pruneopts = "UT"
-  revision = "25f54b8263598bb1a15260e42ee1a5aa077f9368"
-  version = "9.1.0"
+  revision = "62d250de9521bf31119d7788ed4ddf9fa437b171"
 
 [[projects]]
-  digest = "1:1cabe44fb226a08664539c7ff79f25940284d9e2116187a74c90472a51c257ca"
+  digest = "1:8c09da94886da379812bbb4975d21978f57fa161f711f60a5f3946328fbff2ca"
+  name = "github.com/pinpt/httpclient"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "d374c2f15648faf3e361ba0cddfa02e238ba1f67"
+  version = "2.0.1"
+
+[[projects]]
+  digest = "1:549a140c6c3742fe0df432e860fbf636f71d7589ba1e75acdc33a36346010ddc"
   name = "go.mongodb.org/mongo-driver"
-  packages = ["bson/primitive"]
+  packages = [
+    "bson",
+    "bson/bsoncodec",
+    "bson/bsonrw",
+    "bson/bsontype",
+    "bson/primitive",
+    "x/bsonx/bsoncore",
+  ]
   pruneopts = "UT"
   revision = "0d1270edf53072da4da781b76d2e1db58831152f"
   version = "v1.0.4"
+
+[[projects]]
+  branch = "master"
+  digest = "1:f92f6956e4059f6a3efc14924d2dd58ba90da25cc57fe07ae3779ef2f5e0c5f2"
+  name = "golang.org/x/crypto"
+  packages = ["pbkdf2"]
+  pruneopts = "UT"
+  revision = "948cd5f35899cbf089c620b3caeac9b60fa08704"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -69,11 +104,14 @@
     "github.com/bxcodec/faker",
     "github.com/pinpt/go-common/datamodel",
     "github.com/pinpt/go-common/datetime",
+    "github.com/pinpt/go-common/graphql",
     "github.com/pinpt/go-common/hash",
     "github.com/pinpt/go-common/json",
     "github.com/pinpt/go-common/number",
     "github.com/pinpt/go-common/slice",
     "github.com/pinpt/go-common/strings",
+    "go.mongodb.org/mongo-driver/bson",
+    "go.mongodb.org/mongo-driver/bson/bsontype",
     "go.mongodb.org/mongo-driver/bson/primitive",
   ]
   solver-name = "gps-cdcl"
