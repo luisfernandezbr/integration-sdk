@@ -53,6 +53,8 @@ const (
 	KanbanModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// KanbanModelIssueIdsColumn is the column json value issue_ids
 	KanbanModelIssueIdsColumn = "issue_ids"
+	// KanbanModelProjectIdsColumn is the column json value project_ids
+	KanbanModelProjectIdsColumn = "project_ids"
 	// KanbanModelRefIDColumn is the column json value ref_id
 	KanbanModelRefIDColumn = "ref_id"
 	// KanbanModelRefTypeColumn is the column json value ref_type
@@ -196,6 +198,8 @@ type Kanban struct {
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// IssueIds the issue ids for the board regardless of their column location
 	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
+	// ProjectIds ids of the projects used in this board
+	ProjectIds []string `json:"project_ids" codec:"project_ids" bson:"project_ids" yaml:"project_ids" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -267,6 +271,9 @@ func (o *Kanban) setDefaults(frommap bool) {
 	}
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
 	}
 
 	if o.ID == "" {
@@ -446,6 +453,7 @@ func (o *Kanban) ToMap() map[string]interface{} {
 		"id":                      toKanbanObject(o.ID, false),
 		"integration_instance_id": toKanbanObject(o.IntegrationInstanceID, true),
 		"issue_ids":               toKanbanObject(o.IssueIds, false),
+		"project_ids":             toKanbanObject(o.ProjectIds, false),
 		"ref_id":                  toKanbanObject(o.RefID, false),
 		"ref_type":                toKanbanObject(o.RefType, false),
 		"updated_ts":              toKanbanObject(o.UpdatedAt, false),
@@ -673,6 +681,56 @@ func (o *Kanban) FromMap(kv map[string]interface{}) {
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
 	}
+	if val, ok := kv["project_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for project_ids field")
+				}
+			}
+			o.ProjectIds = na
+		}
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -758,6 +816,7 @@ func (o *Kanban) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.IssueIds)
+	args = append(args, o.ProjectIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.UpdatedAt)
@@ -778,6 +837,8 @@ type KanbanPartial struct {
 	Deleted *bool `json:"deleted,omitempty"`
 	// IssueIds the issue ids for the board regardless of their column location
 	IssueIds []string `json:"issue_ids,omitempty"`
+	// ProjectIds ids of the projects used in this board
+	ProjectIds []string `json:"project_ids,omitempty"`
 	// URL the url to the board
 	URL *string `json:"url,omitempty"`
 }
@@ -792,12 +853,13 @@ func (o *KanbanPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *KanbanPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"active":    toKanbanObject(o.Active, true),
-		"board_id":  toKanbanObject(o.BoardID, true),
-		"columns":   toKanbanObject(o.Columns, true),
-		"deleted":   toKanbanObject(o.Deleted, true),
-		"issue_ids": toKanbanObject(o.IssueIds, true),
-		"url":       toKanbanObject(o.URL, true),
+		"active":      toKanbanObject(o.Active, true),
+		"board_id":    toKanbanObject(o.BoardID, true),
+		"columns":     toKanbanObject(o.Columns, true),
+		"deleted":     toKanbanObject(o.Deleted, true),
+		"issue_ids":   toKanbanObject(o.IssueIds, true),
+		"project_ids": toKanbanObject(o.ProjectIds, true),
+		"url":         toKanbanObject(o.URL, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -813,6 +875,14 @@ func (o *KanbanPartial) ToMap() map[string]interface{} {
 			}
 
 			if k == "issue_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "project_ids" {
 				if arr, ok := v.([]string); ok {
 					if len(arr) == 0 {
 						delete(kv, k)
@@ -1013,6 +1083,56 @@ func (o *KanbanPartial) FromMap(kv map[string]interface{}) {
 	}
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
+	}
+	if val, ok := kv["project_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for project_ids field")
+				}
+			}
+			o.ProjectIds = na
+		}
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
 	}
 	if val, ok := kv["url"].(*string); ok {
 		o.URL = val
