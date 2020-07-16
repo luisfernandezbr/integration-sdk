@@ -55,14 +55,18 @@ const (
 	ExportModelIntegrationCreatedDateRfc3339Column = "rfc3339"
 	// ExportModelIntegrationCustomerIDColumn is the column json value customer_id
 	ExportModelIntegrationCustomerIDColumn = "customer_id"
-	// ExportModelIntegrationEntityErrorsColumn is the column json value entity_errors
-	ExportModelIntegrationEntityErrorsColumn = "entity_errors"
-	// ExportModelIntegrationEntityErrorsIDColumn is the column json value id
-	ExportModelIntegrationEntityErrorsIDColumn = "id"
-	// ExportModelIntegrationEntityErrorsRefIDColumn is the column json value ref_id
-	ExportModelIntegrationEntityErrorsRefIDColumn = "ref_id"
-	// ExportModelIntegrationEntityErrorsErrorColumn is the column json value error
-	ExportModelIntegrationEntityErrorsErrorColumn = "error"
+	// ExportModelIntegrationDeletedByProfileIDColumn is the column json value deleted_by_profile_id
+	ExportModelIntegrationDeletedByProfileIDColumn = "deleted_by_profile_id"
+	// ExportModelIntegrationDeletedByUserIDColumn is the column json value deleted_by_user_id
+	ExportModelIntegrationDeletedByUserIDColumn = "deleted_by_user_id"
+	// ExportModelIntegrationDeletedDateColumn is the column json value deleted_date
+	ExportModelIntegrationDeletedDateColumn = "deleted_date"
+	// ExportModelIntegrationDeletedDateEpochColumn is the column json value epoch
+	ExportModelIntegrationDeletedDateEpochColumn = "epoch"
+	// ExportModelIntegrationDeletedDateOffsetColumn is the column json value offset
+	ExportModelIntegrationDeletedDateOffsetColumn = "offset"
+	// ExportModelIntegrationDeletedDateRfc3339Column is the column json value rfc3339
+	ExportModelIntegrationDeletedDateRfc3339Column = "rfc3339"
 	// ExportModelIntegrationErrorMessageColumn is the column json value error_message
 	ExportModelIntegrationErrorMessageColumn = "error_message"
 	// ExportModelIntegrationErroredColumn is the column json value errored
@@ -250,19 +254,19 @@ func (o *ExportIntegrationCreatedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// ExportIntegrationEntityErrors represents the object structure for entity_errors
-type ExportIntegrationEntityErrors struct {
-	// ID entity id
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// RefID entity ref_id
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// Error error message if set integration failed when trying to export
-	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
+// ExportIntegrationDeletedDate represents the object structure for deleted_date
+type ExportIntegrationDeletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toExportIntegrationEntityErrorsObject(o interface{}, isoptional bool) interface{} {
+func toExportIntegrationDeletedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *ExportIntegrationEntityErrors:
+	case *ExportIntegrationDeletedDate:
 		return v.ToMap()
 
 	default:
@@ -271,19 +275,19 @@ func toExportIntegrationEntityErrorsObject(o interface{}, isoptional bool) inter
 }
 
 // ToMap returns the object as a map
-func (o *ExportIntegrationEntityErrors) ToMap() map[string]interface{} {
+func (o *ExportIntegrationDeletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// ID entity id
-		"id": toExportIntegrationEntityErrorsObject(o.ID, false),
-		// RefID entity ref_id
-		"ref_id": toExportIntegrationEntityErrorsObject(o.RefID, false),
-		// Error error message if set integration failed when trying to export
-		"error": toExportIntegrationEntityErrorsObject(o.Error, false),
+		// Epoch the date in epoch format
+		"epoch": toExportIntegrationDeletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toExportIntegrationDeletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toExportIntegrationDeletedDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *ExportIntegrationEntityErrors) setDefaults(frommap bool) {
+func (o *ExportIntegrationDeletedDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -291,56 +295,46 @@ func (o *ExportIntegrationEntityErrors) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *ExportIntegrationEntityErrors) FromMap(kv map[string]interface{}) {
+func (o *ExportIntegrationDeletedDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
 	} else {
-		if val, ok := kv["id"]; ok {
+		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.ID = ""
+				o.Epoch = 0
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
 				}
-				o.ID = fmt.Sprintf("%v", val)
+				o.Epoch = number.ToInt64Any(val)
 			}
 		}
 	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
 	} else {
-		if val, ok := kv["ref_id"]; ok {
+		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.RefID = ""
+				o.Offset = 0
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
 				}
-				o.RefID = fmt.Sprintf("%v", val)
+				o.Offset = number.ToInt64Any(val)
 			}
 		}
 	}
-	if val, ok := kv["error"].(string); ok {
-		o.Error = val
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
 	} else {
-		if val, ok := kv["error"]; ok {
+		if val, ok := kv["rfc3339"]; ok {
 			if val == nil {
-				o.Error = ""
+				o.Rfc3339 = ""
 			} else {
 				v := pstrings.Value(val)
 				if v != "" {
@@ -350,7 +344,7 @@ func (o *ExportIntegrationEntityErrors) FromMap(kv map[string]interface{}) {
 				} else {
 					val = v
 				}
-				o.Error = fmt.Sprintf("%v", val)
+				o.Rfc3339 = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1078,8 +1072,12 @@ type ExportIntegration struct {
 	CreatedDate ExportIntegrationCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// EntityErrors export status and error per entity in the integration
-	EntityErrors []ExportIntegrationEntityErrors `json:"entity_errors" codec:"entity_errors" bson:"entity_errors" yaml:"entity_errors" faker:"-"`
+	// DeletedByProfileID The id of the profile for the user that deleted the integration
+	DeletedByProfileID *string `json:"deleted_by_profile_id,omitempty" codec:"deleted_by_profile_id,omitempty" bson:"deleted_by_profile_id" yaml:"deleted_by_profile_id,omitempty" faker:"-"`
+	// DeletedByUserID The id of the user that deleted the integration
+	DeletedByUserID *string `json:"deleted_by_user_id,omitempty" codec:"deleted_by_user_id,omitempty" bson:"deleted_by_user_id" yaml:"deleted_by_user_id,omitempty" faker:"-"`
+	// DeletedDate when the integration was deleted
+	DeletedDate ExportIntegrationDeletedDate `json:"deleted_date" codec:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent or any other error
@@ -1134,12 +1132,8 @@ func toExportIntegrationObject(o interface{}, isoptional bool) interface{} {
 	case ExportIntegrationCreatedDate:
 		return v.ToMap()
 
-	case []ExportIntegrationEntityErrors:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
+	case ExportIntegrationDeletedDate:
+		return v.ToMap()
 
 	case ExportIntegrationLastExportCompletedDate:
 		return v.ToMap()
@@ -1187,8 +1181,12 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"created_date": toExportIntegrationObject(o.CreatedDate, false),
 		// CustomerID the customer id for the model instance
 		"customer_id": toExportIntegrationObject(o.CustomerID, false),
-		// EntityErrors export status and error per entity in the integration
-		"entity_errors": toExportIntegrationObject(o.EntityErrors, false),
+		// DeletedByProfileID The id of the profile for the user that deleted the integration
+		"deleted_by_profile_id": toExportIntegrationObject(o.DeletedByProfileID, true),
+		// DeletedByUserID The id of the user that deleted the integration
+		"deleted_by_user_id": toExportIntegrationObject(o.DeletedByUserID, true),
+		// DeletedDate when the integration was deleted
+		"deleted_date": toExportIntegrationObject(o.DeletedDate, false),
 		// ErrorMessage The error message from an export run
 		"error_message": toExportIntegrationObject(o.ErrorMessage, true),
 		// Errored If authorization failed by the agent or any other error
@@ -1385,68 +1383,72 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if o == nil {
-
-		o.EntityErrors = make([]ExportIntegrationEntityErrors, 0)
-
-	}
-	if val, ok := kv["entity_errors"]; ok {
-		if sv, ok := val.([]ExportIntegrationEntityErrors); ok {
-			o.EntityErrors = sv
-		} else if sp, ok := val.([]*ExportIntegrationEntityErrors); ok {
-			o.EntityErrors = o.EntityErrors[:0]
-			for _, e := range sp {
-				o.EntityErrors = append(o.EntityErrors, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(ExportIntegrationEntityErrors); ok {
-					o.EntityErrors = append(o.EntityErrors, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm ExportIntegrationEntityErrors
-					fm.FromMap(av)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					bkv := make(map[string]interface{})
-					json.Unmarshal(b, &bkv)
-					var av ExportIntegrationEntityErrors
-					av.FromMap(bkv)
-					o.EntityErrors = append(o.EntityErrors, av)
+	if val, ok := kv["deleted_by_profile_id"].(*string); ok {
+		o.DeletedByProfileID = val
+	} else if val, ok := kv["deleted_by_profile_id"].(string); ok {
+		o.DeletedByProfileID = &val
+	} else {
+		if val, ok := kv["deleted_by_profile_id"]; ok {
+			if val == nil {
+				o.DeletedByProfileID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(ExportIntegrationEntityErrors); ok {
-					o.EntityErrors = append(o.EntityErrors, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm ExportIntegrationEntityErrors
-					fm.FromMap(r)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := ExportIntegrationEntityErrors{}
-					fm.FromMap(r)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm ExportIntegrationEntityErrors
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.EntityErrors = append(o.EntityErrors, fm)
-						}
-					}
-				}
+				o.DeletedByProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["deleted_by_user_id"].(*string); ok {
+		o.DeletedByUserID = val
+	} else if val, ok := kv["deleted_by_user_id"].(string); ok {
+		o.DeletedByUserID = &val
+	} else {
+		if val, ok := kv["deleted_by_user_id"]; ok {
+			if val == nil {
+				o.DeletedByUserID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.DeletedByUserID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["deleted_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.DeletedDate.FromMap(kv)
+		} else if sv, ok := val.(ExportIntegrationDeletedDate); ok {
+			// struct
+			o.DeletedDate = sv
+		} else if sp, ok := val.(*ExportIntegrationDeletedDate); ok {
+			// struct pointer
+			o.DeletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.DeletedDate.Epoch = dt.Epoch
+				o.DeletedDate.Rfc3339 = dt.Rfc3339
+				o.DeletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["error_message"].(*string); ok {
@@ -2019,9 +2021,6 @@ func NewExportID(customerID string, refType string, refID string) string {
 }
 
 func (o *Export) setDefaults(frommap bool) {
-	if o.Integration.EntityErrors == nil {
-		o.Integration.EntityErrors = make([]ExportIntegrationEntityErrors, 0)
-	}
 	if o.Integration.ThrottledUntil == nil {
 		o.Integration.ThrottledUntil = &ExportIntegrationThrottledUntil{}
 	}

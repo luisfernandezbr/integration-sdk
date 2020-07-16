@@ -53,14 +53,18 @@ const (
 	IntegrationInstanceModelCreatedAtColumn = "created_ts"
 	// IntegrationInstanceModelCustomerIDColumn is the column json value customer_id
 	IntegrationInstanceModelCustomerIDColumn = "customer_id"
-	// IntegrationInstanceModelEntityErrorsColumn is the column json value entity_errors
-	IntegrationInstanceModelEntityErrorsColumn = "entity_errors"
-	// IntegrationInstanceModelEntityErrorsErrorColumn is the column json value error
-	IntegrationInstanceModelEntityErrorsErrorColumn = "error"
-	// IntegrationInstanceModelEntityErrorsIDColumn is the column json value id
-	IntegrationInstanceModelEntityErrorsIDColumn = "id"
-	// IntegrationInstanceModelEntityErrorsRefIDColumn is the column json value ref_id
-	IntegrationInstanceModelEntityErrorsRefIDColumn = "ref_id"
+	// IntegrationInstanceModelDeletedByProfileIDColumn is the column json value deleted_by_profile_id
+	IntegrationInstanceModelDeletedByProfileIDColumn = "deleted_by_profile_id"
+	// IntegrationInstanceModelDeletedByUserIDColumn is the column json value deleted_by_user_id
+	IntegrationInstanceModelDeletedByUserIDColumn = "deleted_by_user_id"
+	// IntegrationInstanceModelDeletedDateColumn is the column json value deleted_date
+	IntegrationInstanceModelDeletedDateColumn = "deleted_date"
+	// IntegrationInstanceModelDeletedDateEpochColumn is the column json value epoch
+	IntegrationInstanceModelDeletedDateEpochColumn = "epoch"
+	// IntegrationInstanceModelDeletedDateOffsetColumn is the column json value offset
+	IntegrationInstanceModelDeletedDateOffsetColumn = "offset"
+	// IntegrationInstanceModelDeletedDateRfc3339Column is the column json value rfc3339
+	IntegrationInstanceModelDeletedDateRfc3339Column = "rfc3339"
 	// IntegrationInstanceModelErrorMessageColumn is the column json value error_message
 	IntegrationInstanceModelErrorMessageColumn = "error_message"
 	// IntegrationInstanceModelErroredColumn is the column json value errored
@@ -240,19 +244,19 @@ func (o *IntegrationInstanceCreatedDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// IntegrationInstanceEntityErrors represents the object structure for entity_errors
-type IntegrationInstanceEntityErrors struct {
-	// Error error message if set integration failed when trying to export
-	Error string `json:"error" codec:"error" bson:"error" yaml:"error" faker:"-"`
-	// ID entity id
-	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// RefID entity ref_id
-	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+// IntegrationInstanceDeletedDate represents the object structure for deleted_date
+type IntegrationInstanceDeletedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
 }
 
-func toIntegrationInstanceEntityErrorsObject(o interface{}, isoptional bool) interface{} {
+func toIntegrationInstanceDeletedDateObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
-	case *IntegrationInstanceEntityErrors:
+	case *IntegrationInstanceDeletedDate:
 		return v.ToMap()
 
 	default:
@@ -261,19 +265,19 @@ func toIntegrationInstanceEntityErrorsObject(o interface{}, isoptional bool) int
 }
 
 // ToMap returns the object as a map
-func (o *IntegrationInstanceEntityErrors) ToMap() map[string]interface{} {
+func (o *IntegrationInstanceDeletedDate) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
-		// Error error message if set integration failed when trying to export
-		"error": toIntegrationInstanceEntityErrorsObject(o.Error, false),
-		// ID entity id
-		"id": toIntegrationInstanceEntityErrorsObject(o.ID, false),
-		// RefID entity ref_id
-		"ref_id": toIntegrationInstanceEntityErrorsObject(o.RefID, false),
+		// Epoch the date in epoch format
+		"epoch": toIntegrationInstanceDeletedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toIntegrationInstanceDeletedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toIntegrationInstanceDeletedDateObject(o.Rfc3339, false),
 	}
 }
 
-func (o *IntegrationInstanceEntityErrors) setDefaults(frommap bool) {
+func (o *IntegrationInstanceDeletedDate) setDefaults(frommap bool) {
 
 	if frommap {
 		o.FromMap(map[string]interface{}{})
@@ -281,56 +285,46 @@ func (o *IntegrationInstanceEntityErrors) setDefaults(frommap bool) {
 }
 
 // FromMap attempts to load data into object from a map
-func (o *IntegrationInstanceEntityErrors) FromMap(kv map[string]interface{}) {
+func (o *IntegrationInstanceDeletedDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
 	}
-	if val, ok := kv["error"].(string); ok {
-		o.Error = val
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
 	} else {
-		if val, ok := kv["error"]; ok {
+		if val, ok := kv["epoch"]; ok {
 			if val == nil {
-				o.Error = ""
+				o.Epoch = 0
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
 				}
-				o.Error = fmt.Sprintf("%v", val)
+				o.Epoch = number.ToInt64Any(val)
 			}
 		}
 	}
-	if val, ok := kv["id"].(string); ok {
-		o.ID = val
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
 	} else {
-		if val, ok := kv["id"]; ok {
+		if val, ok := kv["offset"]; ok {
 			if val == nil {
-				o.ID = ""
+				o.Offset = 0
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
 				}
-				o.ID = fmt.Sprintf("%v", val)
+				o.Offset = number.ToInt64Any(val)
 			}
 		}
 	}
-	if val, ok := kv["ref_id"].(string); ok {
-		o.RefID = val
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
 	} else {
-		if val, ok := kv["ref_id"]; ok {
+		if val, ok := kv["rfc3339"]; ok {
 			if val == nil {
-				o.RefID = ""
+				o.Rfc3339 = ""
 			} else {
 				v := pstrings.Value(val)
 				if v != "" {
@@ -340,7 +334,7 @@ func (o *IntegrationInstanceEntityErrors) FromMap(kv map[string]interface{}) {
 				} else {
 					val = v
 				}
-				o.RefID = fmt.Sprintf("%v", val)
+				o.Rfc3339 = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1070,10 +1064,12 @@ type IntegrationInstance struct {
 	CreatedAt int64 `json:"created_ts" codec:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
-	// EntityErrors export status and error per entity in the integration
-	//
-	// Deprecated: no longer used, used error on project or repo
-	EntityErrors []IntegrationInstanceEntityErrors `json:"entity_errors" codec:"entity_errors" bson:"entity_errors" yaml:"entity_errors" faker:"-"`
+	// DeletedByProfileID The id of the profile for the user that deleted the integration
+	DeletedByProfileID *string `json:"deleted_by_profile_id,omitempty" codec:"deleted_by_profile_id,omitempty" bson:"deleted_by_profile_id" yaml:"deleted_by_profile_id,omitempty" faker:"-"`
+	// DeletedByUserID The id of the user that deleted the integration
+	DeletedByUserID *string `json:"deleted_by_user_id,omitempty" codec:"deleted_by_user_id,omitempty" bson:"deleted_by_user_id" yaml:"deleted_by_user_id,omitempty" faker:"-"`
+	// DeletedDate when the integration was deleted
+	DeletedDate IntegrationInstanceDeletedDate `json:"deleted_date" codec:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent or any other error
@@ -1138,12 +1134,8 @@ func toIntegrationInstanceObject(o interface{}, isoptional bool) interface{} {
 	case IntegrationInstanceCreatedDate:
 		return v.ToMap()
 
-	case []IntegrationInstanceEntityErrors:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
+	case IntegrationInstanceDeletedDate:
+		return v.ToMap()
 
 	case IntegrationInstanceLastExportCompletedDate:
 		return v.ToMap()
@@ -1206,9 +1198,6 @@ func NewIntegrationInstanceID(customerID string) string {
 }
 
 func (o *IntegrationInstance) setDefaults(frommap bool) {
-	if o.EntityErrors == nil {
-		o.EntityErrors = make([]IntegrationInstanceEntityErrors, 0)
-	}
 	if o.ThrottledUntil == nil {
 		o.ThrottledUntil = &IntegrationInstanceThrottledUntil{}
 	}
@@ -1379,7 +1368,9 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 		"created_date":               toIntegrationInstanceObject(o.CreatedDate, false),
 		"created_ts":                 toIntegrationInstanceObject(o.CreatedAt, false),
 		"customer_id":                toIntegrationInstanceObject(o.CustomerID, false),
-		"entity_errors":              toIntegrationInstanceObject(o.EntityErrors, false),
+		"deleted_by_profile_id":      toIntegrationInstanceObject(o.DeletedByProfileID, true),
+		"deleted_by_user_id":         toIntegrationInstanceObject(o.DeletedByUserID, true),
+		"deleted_date":               toIntegrationInstanceObject(o.DeletedDate, false),
 		"error_message":              toIntegrationInstanceObject(o.ErrorMessage, true),
 		"errored":                    toIntegrationInstanceObject(o.Errored, true),
 		"export_acknowledged":        toIntegrationInstanceObject(o.ExportAcknowledged, true),
@@ -1547,69 +1538,72 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	// Deprecated
-
-	if o == nil {
-
-		o.EntityErrors = make([]IntegrationInstanceEntityErrors, 0)
-
-	}
-	if val, ok := kv["entity_errors"]; ok {
-		if sv, ok := val.([]IntegrationInstanceEntityErrors); ok {
-			o.EntityErrors = sv
-		} else if sp, ok := val.([]*IntegrationInstanceEntityErrors); ok {
-			o.EntityErrors = o.EntityErrors[:0]
-			for _, e := range sp {
-				o.EntityErrors = append(o.EntityErrors, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(IntegrationInstanceEntityErrors); ok {
-					o.EntityErrors = append(o.EntityErrors, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm IntegrationInstanceEntityErrors
-					fm.FromMap(av)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					bkv := make(map[string]interface{})
-					json.Unmarshal(b, &bkv)
-					var av IntegrationInstanceEntityErrors
-					av.FromMap(bkv)
-					o.EntityErrors = append(o.EntityErrors, av)
+	if val, ok := kv["deleted_by_profile_id"].(*string); ok {
+		o.DeletedByProfileID = val
+	} else if val, ok := kv["deleted_by_profile_id"].(string); ok {
+		o.DeletedByProfileID = &val
+	} else {
+		if val, ok := kv["deleted_by_profile_id"]; ok {
+			if val == nil {
+				o.DeletedByProfileID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(IntegrationInstanceEntityErrors); ok {
-					o.EntityErrors = append(o.EntityErrors, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm IntegrationInstanceEntityErrors
-					fm.FromMap(r)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := IntegrationInstanceEntityErrors{}
-					fm.FromMap(r)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm IntegrationInstanceEntityErrors
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.EntityErrors = append(o.EntityErrors, fm)
-						}
-					}
-				}
+				o.DeletedByProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["deleted_by_user_id"].(*string); ok {
+		o.DeletedByUserID = val
+	} else if val, ok := kv["deleted_by_user_id"].(string); ok {
+		o.DeletedByUserID = &val
+	} else {
+		if val, ok := kv["deleted_by_user_id"]; ok {
+			if val == nil {
+				o.DeletedByUserID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.DeletedByUserID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if val, ok := kv["deleted_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.DeletedDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceDeletedDate); ok {
+			// struct
+			o.DeletedDate = sv
+		} else if sp, ok := val.(*IntegrationInstanceDeletedDate); ok {
+			// struct pointer
+			o.DeletedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.DeletedDate.Epoch = dt.Epoch
+				o.DeletedDate.Rfc3339 = dt.Rfc3339
+				o.DeletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["error_message"].(*string); ok {
@@ -2135,7 +2129,9 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
-	args = append(args, o.EntityErrors)
+	args = append(args, o.DeletedByProfileID)
+	args = append(args, o.DeletedByUserID)
+	args = append(args, o.DeletedDate)
 	args = append(args, o.ErrorMessage)
 	args = append(args, o.Errored)
 	args = append(args, o.ExportAcknowledged)
@@ -2188,15 +2184,19 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\tcreated_ts\n")
 	// scalar
 	sb.WriteString("\t\t\tcustomer_id\n")
+	// scalar
+	sb.WriteString("\t\t\tdeleted_by_profile_id\n")
+	// scalar
+	sb.WriteString("\t\t\tdeleted_by_user_id\n")
 	// object with fields
-	sb.WriteString("\t\t\tentity_errors {\n")
+	sb.WriteString("\t\t\tdeleted_date {\n")
 
 	// scalar
-	sb.WriteString("\t\t\terror\n")
+	sb.WriteString("\t\t\tepoch\n")
 	// scalar
-	sb.WriteString("\t\t\tid\n")
+	sb.WriteString("\t\t\toffset\n")
 	// scalar
-	sb.WriteString("\t\t\tref_id\n")
+	sb.WriteString("\t\t\trfc3339\n")
 	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\terror_message\n")
@@ -2574,8 +2574,12 @@ type IntegrationInstancePartial struct {
 	CreatedByUserID *string `json:"created_by_user_id,omitempty"`
 	// CreatedDate when the integration was created
 	CreatedDate *IntegrationInstanceCreatedDate `json:"created_date,omitempty"`
-	// EntityErrors export status and error per entity in the integration
-	EntityErrors []IntegrationInstanceEntityErrors `json:"entity_errors,omitempty"`
+	// DeletedByProfileID The id of the profile for the user that deleted the integration
+	DeletedByProfileID *string `json:"deleted_by_profile_id,omitempty"`
+	// DeletedByUserID The id of the user that deleted the integration
+	DeletedByUserID *string `json:"deleted_by_user_id,omitempty"`
+	// DeletedDate when the integration was deleted
+	DeletedDate *IntegrationInstanceDeletedDate `json:"deleted_date,omitempty"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty"`
 	// Errored If authorization failed by the agent or any other error
@@ -2629,7 +2633,9 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 		"created_by_profile_id":      toIntegrationInstanceObject(o.CreatedByProfileID, true),
 		"created_by_user_id":         toIntegrationInstanceObject(o.CreatedByUserID, true),
 		"created_date":               toIntegrationInstanceObject(o.CreatedDate, true),
-		"entity_errors":              toIntegrationInstanceObject(o.EntityErrors, true),
+		"deleted_by_profile_id":      toIntegrationInstanceObject(o.DeletedByProfileID, true),
+		"deleted_by_user_id":         toIntegrationInstanceObject(o.DeletedByUserID, true),
+		"deleted_date":               toIntegrationInstanceObject(o.DeletedDate, true),
 		"error_message":              toIntegrationInstanceObject(o.ErrorMessage, true),
 		"errored":                    toIntegrationInstanceObject(o.Errored, true),
 		"export_acknowledged":        toIntegrationInstanceObject(o.ExportAcknowledged, true),
@@ -2662,10 +2668,9 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 					}
 				}
 			}
-
-			if k == "entity_errors" {
-				if arr, ok := v.([]IntegrationInstanceEntityErrors); ok {
-					if len(arr) == 0 {
+			if k == "deleted_date" {
+				if dt, ok := v.(*IntegrationInstanceDeletedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
 						delete(kv, k)
 					}
 				}
@@ -2842,67 +2847,76 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 		o.CreatedDate.FromMap(map[string]interface{}{})
 	}
 
-	if o == nil {
-
-		o.EntityErrors = make([]IntegrationInstanceEntityErrors, 0)
-
-	}
-	if val, ok := kv["entity_errors"]; ok {
-		if sv, ok := val.([]IntegrationInstanceEntityErrors); ok {
-			o.EntityErrors = sv
-		} else if sp, ok := val.([]*IntegrationInstanceEntityErrors); ok {
-			o.EntityErrors = o.EntityErrors[:0]
-			for _, e := range sp {
-				o.EntityErrors = append(o.EntityErrors, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(IntegrationInstanceEntityErrors); ok {
-					o.EntityErrors = append(o.EntityErrors, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm IntegrationInstanceEntityErrors
-					fm.FromMap(av)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					bkv := make(map[string]interface{})
-					json.Unmarshal(b, &bkv)
-					var av IntegrationInstanceEntityErrors
-					av.FromMap(bkv)
-					o.EntityErrors = append(o.EntityErrors, av)
+	if val, ok := kv["deleted_by_profile_id"].(*string); ok {
+		o.DeletedByProfileID = val
+	} else if val, ok := kv["deleted_by_profile_id"].(string); ok {
+		o.DeletedByProfileID = &val
+	} else {
+		if val, ok := kv["deleted_by_profile_id"]; ok {
+			if val == nil {
+				o.DeletedByProfileID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(IntegrationInstanceEntityErrors); ok {
-					o.EntityErrors = append(o.EntityErrors, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm IntegrationInstanceEntityErrors
-					fm.FromMap(r)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := IntegrationInstanceEntityErrors{}
-					fm.FromMap(r)
-					o.EntityErrors = append(o.EntityErrors, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm IntegrationInstanceEntityErrors
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.EntityErrors = append(o.EntityErrors, fm)
-						}
-					}
-				}
+				o.DeletedByProfileID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["deleted_by_user_id"].(*string); ok {
+		o.DeletedByUserID = val
+	} else if val, ok := kv["deleted_by_user_id"].(string); ok {
+		o.DeletedByUserID = &val
+	} else {
+		if val, ok := kv["deleted_by_user_id"]; ok {
+			if val == nil {
+				o.DeletedByUserID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.DeletedByUserID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+
+	if o.DeletedDate == nil {
+		o.DeletedDate = &IntegrationInstanceDeletedDate{}
+	}
+
+	if val, ok := kv["deleted_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.DeletedDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceDeletedDate); ok {
+			// struct
+			o.DeletedDate = &sv
+		} else if sp, ok := val.(*IntegrationInstanceDeletedDate); ok {
+			// struct pointer
+			o.DeletedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.DeletedDate.Epoch = dt.Epoch
+			o.DeletedDate.Rfc3339 = dt.Rfc3339
+			o.DeletedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.DeletedDate.Epoch = dt.Epoch
+				o.DeletedDate.Rfc3339 = dt.Rfc3339
+				o.DeletedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
 	if val, ok := kv["error_message"].(*string); ok {
