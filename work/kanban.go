@@ -53,6 +53,8 @@ const (
 	KanbanModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// KanbanModelIssueIdsColumn is the column json value issue_ids
 	KanbanModelIssueIdsColumn = "issue_ids"
+	// KanbanModelNameColumn is the column json value name
+	KanbanModelNameColumn = "name"
 	// KanbanModelProjectIdsColumn is the column json value project_ids
 	KanbanModelProjectIdsColumn = "project_ids"
 	// KanbanModelRefIDColumn is the column json value ref_id
@@ -198,6 +200,8 @@ type Kanban struct {
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
 	// IssueIds the issue ids for the board regardless of their column location
 	IssueIds []string `json:"issue_ids" codec:"issue_ids" bson:"issue_ids" yaml:"issue_ids" faker:"-"`
+	// Name the name of the board
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// ProjectIds ids of the projects used in this board
 	ProjectIds []string `json:"project_ids" codec:"project_ids" bson:"project_ids" yaml:"project_ids" faker:"-"`
 	// RefID the source system id for the model instance
@@ -453,6 +457,7 @@ func (o *Kanban) ToMap() map[string]interface{} {
 		"id":                      toKanbanObject(o.ID, false),
 		"integration_instance_id": toKanbanObject(o.IntegrationInstanceID, true),
 		"issue_ids":               toKanbanObject(o.IssueIds, false),
+		"name":                    toKanbanObject(o.Name, false),
 		"project_ids":             toKanbanObject(o.ProjectIds, false),
 		"ref_id":                  toKanbanObject(o.RefID, false),
 		"ref_type":                toKanbanObject(o.RefType, false),
@@ -681,6 +686,25 @@ func (o *Kanban) FromMap(kv map[string]interface{}) {
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
 	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	if val, ok := kv["project_ids"]; ok {
 		if val != nil {
 			na := make([]string, 0)
@@ -816,6 +840,7 @@ func (o *Kanban) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.IssueIds)
+	args = append(args, o.Name)
 	args = append(args, o.ProjectIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
@@ -837,6 +862,8 @@ type KanbanPartial struct {
 	Deleted *bool `json:"deleted,omitempty"`
 	// IssueIds the issue ids for the board regardless of their column location
 	IssueIds []string `json:"issue_ids,omitempty"`
+	// Name the name of the board
+	Name *string `json:"name,omitempty"`
 	// ProjectIds ids of the projects used in this board
 	ProjectIds []string `json:"project_ids,omitempty"`
 	// URL the url to the board
@@ -858,6 +885,7 @@ func (o *KanbanPartial) ToMap() map[string]interface{} {
 		"columns":     toKanbanObject(o.Columns, true),
 		"deleted":     toKanbanObject(o.Deleted, true),
 		"issue_ids":   toKanbanObject(o.IssueIds, true),
+		"name":        toKanbanObject(o.Name, true),
 		"project_ids": toKanbanObject(o.ProjectIds, true),
 		"url":         toKanbanObject(o.URL, true),
 	}
@@ -1083,6 +1111,23 @@ func (o *KanbanPartial) FromMap(kv map[string]interface{}) {
 	}
 	if o.IssueIds == nil {
 		o.IssueIds = make([]string, 0)
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
 	}
 	if val, ok := kv["project_ids"]; ok {
 		if val != nil {
