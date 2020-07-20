@@ -30,6 +30,8 @@ const (
 )
 
 const (
+	// ProjectCapabilityModelActiveColumn is the column json value active
+	ProjectCapabilityModelActiveColumn = "active"
 	// ProjectCapabilityModelAttachmentsColumn is the column json value attachments
 	ProjectCapabilityModelAttachmentsColumn = "attachments"
 	// ProjectCapabilityModelChangeLogsColumn is the column json value change_logs
@@ -72,6 +74,8 @@ const (
 
 // ProjectCapability the project capabilities for a given integration
 type ProjectCapability struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Attachments if the project supports issue attachments
 	Attachments bool `json:"attachments" codec:"attachments" bson:"attachments" yaml:"attachments" faker:"-"`
 	// ChangeLogs if the project supports issue change logs for issue state transitions
@@ -331,6 +335,7 @@ func (o *ProjectCapability) IsEqual(other *ProjectCapability) bool {
 func (o *ProjectCapability) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":                  toProjectCapabilityObject(o.Active, false),
 		"attachments":             toProjectCapabilityObject(o.Attachments, false),
 		"change_logs":             toProjectCapabilityObject(o.ChangeLogs, false),
 		"customer_id":             toProjectCapabilityObject(o.CustomerID, false),
@@ -362,6 +367,17 @@ func (o *ProjectCapability) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["attachments"].(bool); ok {
 		o.Attachments = val
@@ -627,6 +643,7 @@ func (o *ProjectCapability) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *ProjectCapability) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.Attachments)
 	args = append(args, o.ChangeLogs)
 	args = append(args, o.CustomerID)
@@ -652,6 +669,8 @@ func (o *ProjectCapability) Hash() string {
 
 // ProjectCapabilityPartial is a partial struct for upsert mutations for ProjectCapability
 type ProjectCapabilityPartial struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active *bool `json:"active,omitempty"`
 	// Attachments if the project supports issue attachments
 	Attachments *bool `json:"attachments,omitempty"`
 	// ChangeLogs if the project supports issue change logs for issue state transitions
@@ -690,6 +709,7 @@ func (o *ProjectCapabilityPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *ProjectCapabilityPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"active":             toProjectCapabilityObject(o.Active, true),
 		"attachments":        toProjectCapabilityObject(o.Attachments, true),
 		"change_logs":        toProjectCapabilityObject(o.ChangeLogs, true),
 		"due_dates":          toProjectCapabilityObject(o.DueDates, true),
@@ -738,6 +758,23 @@ func (o *ProjectCapabilityPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ProjectCapabilityPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["active"].(*bool); ok {
+		o.Active = val
+	} else if val, ok := kv["active"].(bool); ok {
+		o.Active = &val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["attachments"].(*bool); ok {
 		o.Attachments = val
 	} else if val, ok := kv["attachments"].(bool); ok {
