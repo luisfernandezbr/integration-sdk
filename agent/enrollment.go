@@ -1198,6 +1198,176 @@ func (o *Enrollment) Hash() string {
 	return o.Hashcode
 }
 
+// GetHydrationQuery returns a query for all fields, and one level deep of relations.
+func (o *Enrollment) GetHydrationQuery() string {
+	return `query EnrollmentQuery($id: ID) {
+	agent {
+		Enrollment(_id: $id) {
+			agent_version
+			architecture
+			created_date {
+			epoch
+			offset
+			rfc3339
+			}
+			created_ts
+			customer_id
+			customer {
+			_id
+			customer_id
+			created_date
+			updated_date
+			name
+			active
+			apikey_id
+			work_ids
+			codequality_ids
+			sourcecode_ids
+			auth {
+			provider
+			}
+			customer_information_id
+			crm_id
+			}
+			go_version
+			hostname
+			_id
+			integration_instance_id
+			integration_instance {
+			active
+			config
+			created_by_profile_id
+			created_by_user_id
+			created_date {
+			epoch
+			offset
+			rfc3339
+			}
+			created_ts
+			customer_id
+			deleted_by_profile_id
+			deleted_by_user_id
+			deleted_date {
+			epoch
+			offset
+			rfc3339
+			}
+			error_message
+			errored
+			export_acknowledged
+			_id
+			integration_id
+			integration_instance_id
+			interval
+			job_id
+			last_export_completed_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_export_requested_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_historical_completed_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_historical_requested_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_processing_date {
+			epoch
+			offset
+			rfc3339
+			}
+			location
+			name
+			paused
+			processed
+			ref_id
+			ref_type
+			requires_historical
+			state
+			throttled
+			throttled_until {
+			epoch
+			offset
+			rfc3339
+			}
+			updated_ts
+			webhooks {
+			enabled
+			error_message
+			errored
+			ref_id
+			url
+			}
+			}
+			last_ping_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_shutdown_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_startup_date {
+			epoch
+			offset
+			rfc3339
+			}
+			num_cpu
+			os
+			ref_id
+			ref_type
+			running
+			system_id
+			updated_ts
+			user_id
+			user {
+			name
+			email
+			title
+			location
+			avatar_url
+			manager_id
+			hired_date
+			terminated_date
+			cost_center_id
+			primary_team_id
+			owner
+			active
+			trackable
+			origin
+			team_ids
+			role_ids
+			deleted
+			deleted_date
+			support
+			manager_id
+			auth {
+			provider
+			auth_code
+			auth_code_created_date
+			}
+			invitation_id
+			last_login_date
+			profile_id
+			ref_ids
+			}
+		}
+	}
+}
+`
+}
+
 func getEnrollmentQueryFields() string {
 	var sb strings.Builder
 
@@ -1453,174 +1623,6 @@ func FindEnrollmentsPaginated(client graphql.Client, query *EnrollmentQuery, pag
 	}
 	return nil
 }
-
-// HydratedQuery returns all fields, and one level deep of relations.
-const EnrollmentHydratedQuery = `query EnrollmentQuery($id: ID) {
-	agent {
-		Enrollment(_id: $id) {
-			agent_version
-			architecture
-			created_date {
-			epoch
-			offset
-			rfc3339
-			}
-			created_ts
-			customer_id
-			customer {
-			_id
-			customer_id
-			created_date
-			updated_date
-			name
-			active
-			apikey_id
-			work_ids
-			codequality_ids
-			sourcecode_ids
-			auth {
-			provider
-			}
-			customer_information_id
-			crm_id
-			}
-			go_version
-			hostname
-			_id
-			integration_instance_id
-			integration_instance {
-			active
-			config
-			created_by_profile_id
-			created_by_user_id
-			created_date {
-			epoch
-			offset
-			rfc3339
-			}
-			created_ts
-			customer_id
-			deleted_by_profile_id
-			deleted_by_user_id
-			deleted_date {
-			epoch
-			offset
-			rfc3339
-			}
-			error_message
-			errored
-			export_acknowledged
-			_id
-			integration_id
-			integration_instance_id
-			interval
-			job_id
-			last_export_completed_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_export_requested_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_historical_completed_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_historical_requested_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_processing_date {
-			epoch
-			offset
-			rfc3339
-			}
-			location
-			name
-			paused
-			processed
-			ref_id
-			ref_type
-			requires_historical
-			state
-			throttled
-			throttled_until {
-			epoch
-			offset
-			rfc3339
-			}
-			updated_ts
-			webhooks {
-			enabled
-			error_message
-			errored
-			ref_id
-			url
-			}
-			}
-			last_ping_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_shutdown_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_startup_date {
-			epoch
-			offset
-			rfc3339
-			}
-			num_cpu
-			os
-			ref_id
-			ref_type
-			running
-			system_id
-			updated_ts
-			user_id
-			user {
-			name
-			email
-			title
-			location
-			avatar_url
-			manager_id
-			hired_date
-			terminated_date
-			cost_center_id
-			primary_team_id
-			owner
-			active
-			trackable
-			origin
-			team_ids
-			role_ids
-			deleted
-			deleted_date
-			support
-			manager_id
-			auth {
-			provider
-			auth_code
-			auth_code_created_date
-			}
-			invitation_id
-			last_login_date
-			profile_id
-			ref_ids
-			}
-		}
-	}
-}
-`
 
 // UpdateEnrollmentNode is a grapqhl update node
 type UpdateEnrollmentNode struct {

@@ -509,6 +509,126 @@ func (o *RepoError) Hash() string {
 	return o.Hashcode
 }
 
+// GetHydrationQuery returns a query for all fields, and one level deep of relations.
+func (o *RepoError) GetHydrationQuery() string {
+	return `query RepoErrorQuery($id: ID) {
+	sourcecode {
+		RepoError(_id: $id) {
+			created_ts
+			customer_id
+			customer {
+			_id
+			customer_id
+			created_date
+			updated_date
+			name
+			active
+			apikey_id
+			work_ids
+			codequality_ids
+			sourcecode_ids
+			auth {
+			provider
+			}
+			customer_information_id
+			crm_id
+			}
+			error_message
+			errored
+			_id
+			integration_instance_id
+			integration_instance {
+			active
+			config
+			created_by_profile_id
+			created_by_user_id
+			created_date {
+			epoch
+			offset
+			rfc3339
+			}
+			created_ts
+			customer_id
+			deleted_by_profile_id
+			deleted_by_user_id
+			deleted_date {
+			epoch
+			offset
+			rfc3339
+			}
+			error_message
+			errored
+			export_acknowledged
+			_id
+			integration_id
+			integration_instance_id
+			interval
+			job_id
+			last_export_completed_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_export_requested_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_historical_completed_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_historical_requested_date {
+			epoch
+			offset
+			rfc3339
+			}
+			last_processing_date {
+			epoch
+			offset
+			rfc3339
+			}
+			location
+			name
+			paused
+			processed
+			ref_id
+			ref_type
+			requires_historical
+			state
+			throttled
+			throttled_until {
+			epoch
+			offset
+			rfc3339
+			}
+			updated_ts
+			webhooks {
+			enabled
+			error_message
+			errored
+			ref_id
+			url
+			}
+			}
+			ref_id
+			ref_type
+			repo_id
+			repo {
+			committers {
+			user
+			commit_count
+			latest_commit_date
+			}
+			}
+			updated_ts
+		}
+	}
+}
+`
+}
+
 func getRepoErrorQueryFields() string {
 	var sb strings.Builder
 
@@ -712,124 +832,6 @@ func FindRepoErrorsPaginated(client graphql.Client, query *RepoErrorQuery, pageS
 	}
 	return nil
 }
-
-// HydratedQuery returns all fields, and one level deep of relations.
-const RepoErrorHydratedQuery = `query RepoErrorQuery($id: ID) {
-	sourcecode {
-		RepoError(_id: $id) {
-			created_ts
-			customer_id
-			customer {
-			_id
-			customer_id
-			created_date
-			updated_date
-			name
-			active
-			apikey_id
-			work_ids
-			codequality_ids
-			sourcecode_ids
-			auth {
-			provider
-			}
-			customer_information_id
-			crm_id
-			}
-			error_message
-			errored
-			_id
-			integration_instance_id
-			integration_instance {
-			active
-			config
-			created_by_profile_id
-			created_by_user_id
-			created_date {
-			epoch
-			offset
-			rfc3339
-			}
-			created_ts
-			customer_id
-			deleted_by_profile_id
-			deleted_by_user_id
-			deleted_date {
-			epoch
-			offset
-			rfc3339
-			}
-			error_message
-			errored
-			export_acknowledged
-			_id
-			integration_id
-			integration_instance_id
-			interval
-			job_id
-			last_export_completed_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_export_requested_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_historical_completed_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_historical_requested_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_processing_date {
-			epoch
-			offset
-			rfc3339
-			}
-			location
-			name
-			paused
-			processed
-			ref_id
-			ref_type
-			requires_historical
-			state
-			throttled
-			throttled_until {
-			epoch
-			offset
-			rfc3339
-			}
-			updated_ts
-			webhooks {
-			enabled
-			error_message
-			errored
-			ref_id
-			url
-			}
-			}
-			ref_id
-			ref_type
-			repo_id
-			repo {
-			committers {
-			user
-			commit_count
-			latest_commit_date
-			}
-			}
-			updated_ts
-		}
-	}
-}
-`
 
 // UpdateRepoErrorNode is a grapqhl update node
 type UpdateRepoErrorNode struct {
