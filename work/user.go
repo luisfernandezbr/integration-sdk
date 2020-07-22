@@ -592,6 +592,8 @@ type UserPartial struct {
 	// Email the email for the user
 	Email *string `json:"email,omitempty"`
 	// Member if the user is a member of organization
+	//
+	// Deprecated: no longer used
 	Member *bool `json:"member,omitempty"`
 	// Name the name of the user
 	Name *string `json:"name,omitempty"`
@@ -704,6 +706,7 @@ func (o *UserPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["member"].(*bool); ok {
 		o.Member = val
 	} else if val, ok := kv["member"].(bool); ok {
