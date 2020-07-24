@@ -688,6 +688,7 @@ func (o *Config) Hash() string {
 }
 
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
+// This query requires "id" to be in the query variables.
 func (o *Config) GetHydrationQuery() string {
 	return `query ConfigQuery($id: ID) {
 	work {

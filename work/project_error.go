@@ -510,6 +510,7 @@ func (o *ProjectError) Hash() string {
 }
 
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
+// This query requires "id" to be in the query variables.
 func (o *ProjectError) GetHydrationQuery() string {
 	return `query ProjectErrorQuery($id: ID) {
 	work {

@@ -510,6 +510,7 @@ func (o *RepoError) Hash() string {
 }
 
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
+// This query requires "id" to be in the query variables.
 func (o *RepoError) GetHydrationQuery() string {
 	return `query RepoErrorQuery($id: ID) {
 	sourcecode {

@@ -890,6 +890,7 @@ func (o *Team) Hash() string {
 }
 
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
+// This query requires "id" to be in the query variables.
 func (o *Team) GetHydrationQuery() string {
 	return `query TeamQuery($id: ID) {
 	customer {

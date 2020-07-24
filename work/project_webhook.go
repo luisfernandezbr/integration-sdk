@@ -550,6 +550,7 @@ func (o *ProjectWebhook) Hash() string {
 }
 
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
+// This query requires "id" to be in the query variables.
 func (o *ProjectWebhook) GetHydrationQuery() string {
 	return `query ProjectWebhookQuery($id: ID) {
 	work {

@@ -2450,6 +2450,7 @@ func (o *IntegrationInstance) Hash() string {
 }
 
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
+// This query requires "id" to be in the query variables.
 func (o *IntegrationInstance) GetHydrationQuery() string {
 	return `query IntegrationInstanceQuery($id: ID) {
 	agent {

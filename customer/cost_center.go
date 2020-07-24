@@ -489,6 +489,7 @@ func (o *CostCenter) Hash() string {
 }
 
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
+// This query requires "id" to be in the query variables.
 func (o *CostCenter) GetHydrationQuery() string {
 	return `query CostCenterQuery($id: ID) {
 	customer {
