@@ -211,7 +211,7 @@ type Kanban struct {
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the board
-	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -462,7 +462,7 @@ func (o *Kanban) ToMap() map[string]interface{} {
 		"ref_id":                  toKanbanObject(o.RefID, false),
 		"ref_type":                toKanbanObject(o.RefType, false),
 		"updated_ts":              toKanbanObject(o.UpdatedAt, false),
-		"url":                     toKanbanObject(o.URL, false),
+		"url":                     toKanbanObject(o.URL, true),
 		"hashcode":                toKanbanObject(o.Hashcode, false),
 	}
 }
@@ -807,22 +807,20 @@ func (o *Kanban) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["url"].(string); ok {
+	if val, ok := kv["url"].(*string); ok {
 		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
 	} else {
 		if val, ok := kv["url"]; ok {
 			if val == nil {
-				o.URL = ""
+				o.URL = pstrings.Pointer("")
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				o.URL = fmt.Sprintf("%v", val)
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
