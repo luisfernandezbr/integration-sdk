@@ -3,8 +3,6 @@
 package datamodel
 
 import (
-	"fmt"
-
 	"github.com/pinpt/go-common/v10/datamodel"
 
 	dm_agent "github.com/pinpt/integration-sdk/agent"
