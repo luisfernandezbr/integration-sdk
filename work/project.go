@@ -67,6 +67,14 @@ const (
 	ProjectModelRefIDColumn = "ref_id"
 	// ProjectModelRefTypeColumn is the column json value ref_type
 	ProjectModelRefTypeColumn = "ref_type"
+	// ProjectModelUpdatedDateColumn is the column json value updated_date
+	ProjectModelUpdatedDateColumn = "updated_date"
+	// ProjectModelUpdatedDateEpochColumn is the column json value epoch
+	ProjectModelUpdatedDateEpochColumn = "epoch"
+	// ProjectModelUpdatedDateOffsetColumn is the column json value offset
+	ProjectModelUpdatedDateOffsetColumn = "offset"
+	// ProjectModelUpdatedDateRfc3339Column is the column json value rfc3339
+	ProjectModelUpdatedDateRfc3339Column = "rfc3339"
 	// ProjectModelUpdatedAtColumn is the column json value updated_ts
 	ProjectModelUpdatedAtColumn = "updated_ts"
 	// ProjectModelURLColumn is the column json value url
@@ -349,6 +357,103 @@ func (o *ProjectIssueTypes) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// ProjectUpdatedDate represents the object structure for updated_date
+type ProjectUpdatedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toProjectUpdatedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectUpdatedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *ProjectUpdatedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toProjectUpdatedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toProjectUpdatedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toProjectUpdatedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *ProjectUpdatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectUpdatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // ProjectVisibility is the enumeration type for visibility
 type ProjectVisibility int32
 
@@ -471,6 +576,8 @@ type Project struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// UpdatedDate the timestamp that the project was updated
+	UpdatedDate ProjectUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the project home page
@@ -508,6 +615,9 @@ func toProjectObject(o interface{}, isoptional bool) interface{} {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
+
+	case ProjectUpdatedDate:
+		return v.ToMap()
 
 	case ProjectVisibility:
 		return v.String()
@@ -737,6 +847,7 @@ func (o *Project) ToMap() map[string]interface{} {
 		"name":                    toProjectObject(o.Name, false),
 		"ref_id":                  toProjectObject(o.RefID, false),
 		"ref_type":                toProjectObject(o.RefType, false),
+		"updated_date":            toProjectObject(o.UpdatedDate, false),
 		"updated_ts":              toProjectObject(o.UpdatedAt, false),
 		"url":                     toProjectObject(o.URL, false),
 
@@ -1083,6 +1194,40 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["updated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.UpdatedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectUpdatedDate); ok {
+			// struct
+			o.UpdatedDate = sv
+		} else if sp, ok := val.(*ProjectUpdatedDate); ok {
+			// struct pointer
+			o.UpdatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.UpdatedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -1157,6 +1302,7 @@ func (o *Project) Hash() string {
 	args = append(args, o.Name)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.UpdatedDate)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	args = append(args, o.Visibility)
@@ -1182,6 +1328,8 @@ type ProjectPartial struct {
 	IssueTypes []ProjectIssueTypes `json:"issue_types,omitempty"`
 	// Name the name of the project
 	Name *string `json:"name,omitempty"`
+	// UpdatedDate the timestamp that the project was updated
+	UpdatedDate *ProjectUpdatedDate `json:"updated_date,omitempty"`
 	// URL the url to the project home page
 	URL *string `json:"url,omitempty"`
 	// Visibility the visibility of the project
@@ -1207,6 +1355,7 @@ func (o *ProjectPartial) ToMap() map[string]interface{} {
 		"issue_resolutions": toProjectObject(o.IssueResolutions, true),
 		"issue_types":       toProjectObject(o.IssueTypes, true),
 		"name":              toProjectObject(o.Name, true),
+		"updated_date":      toProjectObject(o.UpdatedDate, true),
 		"url":               toProjectObject(o.URL, true),
 
 		"visibility": toProjectVisibilityEnum(o.Visibility),
@@ -1227,6 +1376,13 @@ func (o *ProjectPartial) ToMap() map[string]interface{} {
 			if k == "issue_types" {
 				if arr, ok := v.([]ProjectIssueTypes); ok {
 					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "updated_date" {
+				if dt, ok := v.(*ProjectUpdatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
 						delete(kv, k)
 					}
 				}
@@ -1500,6 +1656,44 @@ func (o *ProjectPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o.UpdatedDate == nil {
+		o.UpdatedDate = &ProjectUpdatedDate{}
+	}
+
+	if val, ok := kv["updated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.UpdatedDate.FromMap(kv)
+		} else if sv, ok := val.(ProjectUpdatedDate); ok {
+			// struct
+			o.UpdatedDate = &sv
+		} else if sp, ok := val.(*ProjectUpdatedDate); ok {
+			// struct pointer
+			o.UpdatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.UpdatedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["url"].(*string); ok {
 		o.URL = val
 	} else if val, ok := kv["url"].(string); ok {

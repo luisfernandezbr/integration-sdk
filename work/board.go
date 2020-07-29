@@ -59,6 +59,14 @@ const (
 	BoardModelRefTypeColumn = "ref_type"
 	// BoardModelTypeColumn is the column json value type
 	BoardModelTypeColumn = "type"
+	// BoardModelUpdatedDateColumn is the column json value updated_date
+	BoardModelUpdatedDateColumn = "updated_date"
+	// BoardModelUpdatedDateEpochColumn is the column json value epoch
+	BoardModelUpdatedDateEpochColumn = "epoch"
+	// BoardModelUpdatedDateOffsetColumn is the column json value offset
+	BoardModelUpdatedDateOffsetColumn = "offset"
+	// BoardModelUpdatedDateRfc3339Column is the column json value rfc3339
+	BoardModelUpdatedDateRfc3339Column = "rfc3339"
 	// BoardModelUpdatedAtColumn is the column json value updated_ts
 	BoardModelUpdatedAtColumn = "updated_ts"
 )
@@ -230,6 +238,103 @@ const (
 	BoardTypeOther BoardType = 2
 )
 
+// BoardUpdatedDate represents the object structure for updated_date
+type BoardUpdatedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toBoardUpdatedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *BoardUpdatedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *BoardUpdatedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toBoardUpdatedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toBoardUpdatedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toBoardUpdatedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *BoardUpdatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *BoardUpdatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // Board details about an agile board
 type Board struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
@@ -254,6 +359,8 @@ type Board struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Type the type of board
 	Type BoardType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	// UpdatedDate the timestamp that the board was updated
+	UpdatedDate BoardUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -280,6 +387,9 @@ func toBoardObject(o interface{}, isoptional bool) interface{} {
 
 	case BoardType:
 		return v.String()
+
+	case BoardUpdatedDate:
+		return v.ToMap()
 
 	default:
 		return o
@@ -504,9 +614,10 @@ func (o *Board) ToMap() map[string]interface{} {
 		"ref_id":                  toBoardObject(o.RefID, false),
 		"ref_type":                toBoardObject(o.RefType, false),
 
-		"type":       o.Type.String(),
-		"updated_ts": toBoardObject(o.UpdatedAt, false),
-		"hashcode":   toBoardObject(o.Hashcode, false),
+		"type":         o.Type.String(),
+		"updated_date": toBoardObject(o.UpdatedDate, false),
+		"updated_ts":   toBoardObject(o.UpdatedAt, false),
+		"hashcode":     toBoardObject(o.Hashcode, false),
 	}
 }
 
@@ -793,6 +904,40 @@ func (o *Board) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["updated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.UpdatedDate.FromMap(kv)
+		} else if sv, ok := val.(BoardUpdatedDate); ok {
+			// struct
+			o.UpdatedDate = sv
+		} else if sp, ok := val.(*BoardUpdatedDate); ok {
+			// struct pointer
+			o.UpdatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.UpdatedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -824,6 +969,7 @@ func (o *Board) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.Type)
+	args = append(args, o.UpdatedDate)
 	args = append(args, o.UpdatedAt)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -843,6 +989,8 @@ type BoardPartial struct {
 	Name *string `json:"name,omitempty"`
 	// Type the type of board
 	Type *BoardType `json:"type,omitempty"`
+	// UpdatedDate the timestamp that the board was updated
+	UpdatedDate *BoardUpdatedDate `json:"updated_date,omitempty"`
 }
 
 var _ datamodel.PartialModel = (*BoardPartial)(nil)
@@ -861,7 +1009,8 @@ func (o *BoardPartial) ToMap() map[string]interface{} {
 		"deleted":           toBoardObject(o.Deleted, true),
 		"name":              toBoardObject(o.Name, true),
 
-		"type": toBoardTypeEnum(o.Type),
+		"type":         toBoardTypeEnum(o.Type),
+		"updated_date": toBoardObject(o.UpdatedDate, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -879,6 +1028,13 @@ func (o *BoardPartial) ToMap() map[string]interface{} {
 			if k == "columns" {
 				if arr, ok := v.([]BoardColumns); ok {
 					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "updated_date" {
+				if dt, ok := v.(*BoardUpdatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
 						delete(kv, k)
 					}
 				}
@@ -1105,5 +1261,43 @@ func (o *BoardPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o.UpdatedDate == nil {
+		o.UpdatedDate = &BoardUpdatedDate{}
+	}
+
+	if val, ok := kv["updated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.UpdatedDate.FromMap(kv)
+		} else if sv, ok := val.(BoardUpdatedDate); ok {
+			// struct
+			o.UpdatedDate = &sv
+		} else if sp, ok := val.(*BoardUpdatedDate); ok {
+			// struct pointer
+			o.UpdatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.UpdatedDate.FromMap(map[string]interface{}{})
+	}
+
 	o.setDefaults(false)
 }

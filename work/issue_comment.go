@@ -268,7 +268,7 @@ type IssueComment struct {
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// Body the body of the comment
 	Body string `json:"body" codec:"body" bson:"body" yaml:"body" faker:"commit_message"`
-	// CreatedDate the timestamp in UTC that the comment was created
+	// CreatedDate the timestamp that the comment was created
 	CreatedDate IssueCommentCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -284,7 +284,7 @@ type IssueComment struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// UpdatedDate the timestamp in UTC that the comment was closed
+	// UpdatedDate the timestamp that the comment was updated
 	UpdatedDate IssueCommentUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// URL the URL to the source system for this comment
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"url"`
@@ -801,13 +801,13 @@ type IssueCommentPartial struct {
 	Active *bool `json:"active,omitempty"`
 	// Body the body of the comment
 	Body *string `json:"body,omitempty"`
-	// CreatedDate the timestamp in UTC that the comment was created
+	// CreatedDate the timestamp that the comment was created
 	CreatedDate *IssueCommentCreatedDate `json:"created_date,omitempty"`
 	// IssueID the issue this comment is associated with
 	IssueID *string `json:"issue_id,omitempty"`
 	// ProjectID unique project id
 	ProjectID *string `json:"project_id,omitempty"`
-	// UpdatedDate the timestamp in UTC that the comment was closed
+	// UpdatedDate the timestamp that the comment was updated
 	UpdatedDate *IssueCommentUpdatedDate `json:"updated_date,omitempty"`
 	// URL the URL to the source system for this comment
 	URL *string `json:"url,omitempty"`

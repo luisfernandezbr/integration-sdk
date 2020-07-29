@@ -61,6 +61,14 @@ const (
 	KanbanModelRefIDColumn = "ref_id"
 	// KanbanModelRefTypeColumn is the column json value ref_type
 	KanbanModelRefTypeColumn = "ref_type"
+	// KanbanModelUpdatedDateColumn is the column json value updated_date
+	KanbanModelUpdatedDateColumn = "updated_date"
+	// KanbanModelUpdatedDateEpochColumn is the column json value epoch
+	KanbanModelUpdatedDateEpochColumn = "epoch"
+	// KanbanModelUpdatedDateOffsetColumn is the column json value offset
+	KanbanModelUpdatedDateOffsetColumn = "offset"
+	// KanbanModelUpdatedDateRfc3339Column is the column json value rfc3339
+	KanbanModelUpdatedDateRfc3339Column = "rfc3339"
 	// KanbanModelUpdatedAtColumn is the column json value updated_ts
 	KanbanModelUpdatedAtColumn = "updated_ts"
 	// KanbanModelURLColumn is the column json value url
@@ -182,6 +190,103 @@ func (o *KanbanColumns) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// KanbanUpdatedDate represents the object structure for updated_date
+type KanbanUpdatedDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toKanbanUpdatedDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *KanbanUpdatedDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *KanbanUpdatedDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toKanbanUpdatedDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toKanbanUpdatedDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toKanbanUpdatedDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *KanbanUpdatedDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *KanbanUpdatedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
 // Kanban a kanban specific board
 type Kanban struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
@@ -208,6 +313,8 @@ type Kanban struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
+	// UpdatedDate the timestamp that the kanban was updated
+	UpdatedDate KanbanUpdatedDate `json:"updated_date" codec:"updated_date" bson:"updated_date" yaml:"updated_date" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// URL the url to the board
@@ -233,6 +340,9 @@ func toKanbanObject(o interface{}, isoptional bool) interface{} {
 			arr = append(arr, i.ToMap())
 		}
 		return arr
+
+	case KanbanUpdatedDate:
+		return v.ToMap()
 
 	default:
 		return o
@@ -461,6 +571,7 @@ func (o *Kanban) ToMap() map[string]interface{} {
 		"project_ids":             toKanbanObject(o.ProjectIds, false),
 		"ref_id":                  toKanbanObject(o.RefID, false),
 		"ref_type":                toKanbanObject(o.RefType, false),
+		"updated_date":            toKanbanObject(o.UpdatedDate, false),
 		"updated_ts":              toKanbanObject(o.UpdatedAt, false),
 		"url":                     toKanbanObject(o.URL, true),
 		"hashcode":                toKanbanObject(o.Hashcode, false),
@@ -793,6 +904,40 @@ func (o *Kanban) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if val, ok := kv["updated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.UpdatedDate.FromMap(kv)
+		} else if sv, ok := val.(KanbanUpdatedDate); ok {
+			// struct
+			o.UpdatedDate = sv
+		} else if sp, ok := val.(*KanbanUpdatedDate); ok {
+			// struct pointer
+			o.UpdatedDate = *sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.UpdatedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["updated_ts"].(int64); ok {
 		o.UpdatedAt = val
 	} else {
@@ -842,6 +987,7 @@ func (o *Kanban) Hash() string {
 	args = append(args, o.ProjectIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
+	args = append(args, o.UpdatedDate)
 	args = append(args, o.UpdatedAt)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
@@ -864,6 +1010,8 @@ type KanbanPartial struct {
 	Name *string `json:"name,omitempty"`
 	// ProjectIds ids of the projects used in this board
 	ProjectIds []string `json:"project_ids,omitempty"`
+	// UpdatedDate the timestamp that the kanban was updated
+	UpdatedDate *KanbanUpdatedDate `json:"updated_date,omitempty"`
 	// URL the url to the board
 	URL *string `json:"url,omitempty"`
 }
@@ -878,14 +1026,15 @@ func (o *KanbanPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *KanbanPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"active":      toKanbanObject(o.Active, true),
-		"board_id":    toKanbanObject(o.BoardID, true),
-		"columns":     toKanbanObject(o.Columns, true),
-		"deleted":     toKanbanObject(o.Deleted, true),
-		"issue_ids":   toKanbanObject(o.IssueIds, true),
-		"name":        toKanbanObject(o.Name, true),
-		"project_ids": toKanbanObject(o.ProjectIds, true),
-		"url":         toKanbanObject(o.URL, true),
+		"active":       toKanbanObject(o.Active, true),
+		"board_id":     toKanbanObject(o.BoardID, true),
+		"columns":      toKanbanObject(o.Columns, true),
+		"deleted":      toKanbanObject(o.Deleted, true),
+		"issue_ids":    toKanbanObject(o.IssueIds, true),
+		"name":         toKanbanObject(o.Name, true),
+		"project_ids":  toKanbanObject(o.ProjectIds, true),
+		"updated_date": toKanbanObject(o.UpdatedDate, true),
+		"url":          toKanbanObject(o.URL, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -911,6 +1060,13 @@ func (o *KanbanPartial) ToMap() map[string]interface{} {
 			if k == "project_ids" {
 				if arr, ok := v.([]string); ok {
 					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "updated_date" {
+				if dt, ok := v.(*KanbanUpdatedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
 						delete(kv, k)
 					}
 				}
@@ -1177,6 +1333,44 @@ func (o *KanbanPartial) FromMap(kv map[string]interface{}) {
 	if o.ProjectIds == nil {
 		o.ProjectIds = make([]string, 0)
 	}
+
+	if o.UpdatedDate == nil {
+		o.UpdatedDate = &KanbanUpdatedDate{}
+	}
+
+	if val, ok := kv["updated_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.UpdatedDate.FromMap(kv)
+		} else if sv, ok := val.(KanbanUpdatedDate); ok {
+			// struct
+			o.UpdatedDate = &sv
+		} else if sp, ok := val.(*KanbanUpdatedDate); ok {
+			// struct pointer
+			o.UpdatedDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt, err := datetime.NewDateWithTime(tv)
+			if err != nil {
+				panic(err)
+			}
+			o.UpdatedDate.Epoch = dt.Epoch
+			o.UpdatedDate.Rfc3339 = dt.Rfc3339
+			o.UpdatedDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.UpdatedDate.Epoch = dt.Epoch
+				o.UpdatedDate.Rfc3339 = dt.Rfc3339
+				o.UpdatedDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.UpdatedDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["url"].(*string); ok {
 		o.URL = val
 	} else if val, ok := kv["url"].(string); ok {
