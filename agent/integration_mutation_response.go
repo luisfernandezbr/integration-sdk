@@ -1423,10 +1423,7 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 			o.AgentReceivedRequestDate.Rfc3339 = dt.Rfc3339
 			o.AgentReceivedRequestDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentReceivedRequestDate.Epoch = dt.Epoch
 			o.AgentReceivedRequestDate.Rfc3339 = dt.Rfc3339
 			o.AgentReceivedRequestDate.Offset = dt.Offset
@@ -1456,10 +1453,7 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 			o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentRequestSentDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentRequestSentDate.Epoch = dt.Epoch
 			o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentRequestSentDate.Offset = dt.Offset
@@ -1489,10 +1483,7 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 			o.AgentResponseSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentResponseSentDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentResponseSentDate.Epoch = dt.Epoch
 			o.AgentResponseSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentResponseSentDate.Offset = dt.Offset
@@ -1640,10 +1631,7 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 			o.EventDate.Rfc3339 = dt.Rfc3339
 			o.EventDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.EventDate.Epoch = dt.Epoch
 			o.EventDate.Rfc3339 = dt.Rfc3339
 			o.EventDate.Offset = dt.Offset
@@ -1781,10 +1769,7 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 			o.LastExportDate.Rfc3339 = dt.Rfc3339
 			o.LastExportDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastExportDate.Epoch = dt.Epoch
 			o.LastExportDate.Rfc3339 = dt.Rfc3339
 			o.LastExportDate.Offset = dt.Offset
@@ -2117,10 +2102,7 @@ func (o *IntegrationMutationResponse) FromMap(kv map[string]interface{}) {
 			o.WebappRequestDate.Rfc3339 = dt.Rfc3339
 			o.WebappRequestDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.WebappRequestDate.Epoch = dt.Epoch
 			o.WebappRequestDate.Rfc3339 = dt.Rfc3339
 			o.WebappRequestDate.Offset = dt.Offset
@@ -2394,10 +2376,7 @@ func (o *IntegrationMutationResponsePartial) FromMap(kv map[string]interface{}) 
 			o.AgentReceivedRequestDate.Rfc3339 = dt.Rfc3339
 			o.AgentReceivedRequestDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentReceivedRequestDate.Epoch = dt.Epoch
 			o.AgentReceivedRequestDate.Rfc3339 = dt.Rfc3339
 			o.AgentReceivedRequestDate.Offset = dt.Offset
@@ -2431,10 +2410,7 @@ func (o *IntegrationMutationResponsePartial) FromMap(kv map[string]interface{}) 
 			o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentRequestSentDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentRequestSentDate.Epoch = dt.Epoch
 			o.AgentRequestSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentRequestSentDate.Offset = dt.Offset
@@ -2468,10 +2444,7 @@ func (o *IntegrationMutationResponsePartial) FromMap(kv map[string]interface{}) 
 			o.AgentResponseSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentResponseSentDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentResponseSentDate.Epoch = dt.Epoch
 			o.AgentResponseSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentResponseSentDate.Offset = dt.Offset
@@ -2601,10 +2574,7 @@ func (o *IntegrationMutationResponsePartial) FromMap(kv map[string]interface{}) 
 			o.EventDate.Rfc3339 = dt.Rfc3339
 			o.EventDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.EventDate.Epoch = dt.Epoch
 			o.EventDate.Rfc3339 = dt.Rfc3339
 			o.EventDate.Offset = dt.Offset
@@ -2707,10 +2677,7 @@ func (o *IntegrationMutationResponsePartial) FromMap(kv map[string]interface{}) 
 			o.LastExportDate.Rfc3339 = dt.Rfc3339
 			o.LastExportDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastExportDate.Epoch = dt.Epoch
 			o.LastExportDate.Rfc3339 = dt.Rfc3339
 			o.LastExportDate.Offset = dt.Offset
@@ -2985,10 +2952,7 @@ func (o *IntegrationMutationResponsePartial) FromMap(kv map[string]interface{}) 
 			o.WebappRequestDate.Rfc3339 = dt.Rfc3339
 			o.WebappRequestDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.WebappRequestDate.Epoch = dt.Epoch
 			o.WebappRequestDate.Rfc3339 = dt.Rfc3339
 			o.WebappRequestDate.Offset = dt.Offset

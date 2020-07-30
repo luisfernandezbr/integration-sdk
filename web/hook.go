@@ -426,10 +426,7 @@ func (o *Hook) FromMap(kv map[string]interface{}) {
 			o.ReceivedDate.Rfc3339 = dt.Rfc3339
 			o.ReceivedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ReceivedDate.Epoch = dt.Epoch
 			o.ReceivedDate.Rfc3339 = dt.Rfc3339
 			o.ReceivedDate.Offset = dt.Offset
@@ -640,10 +637,7 @@ func (o *HookPartial) FromMap(kv map[string]interface{}) {
 			o.ReceivedDate.Rfc3339 = dt.Rfc3339
 			o.ReceivedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ReceivedDate.Epoch = dt.Epoch
 			o.ReceivedDate.Rfc3339 = dt.Rfc3339
 			o.ReceivedDate.Offset = dt.Offset

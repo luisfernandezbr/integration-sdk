@@ -473,10 +473,7 @@ func (o *Commit) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -872,10 +869,7 @@ func (o *CommitPartial) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset

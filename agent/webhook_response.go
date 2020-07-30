@@ -1303,10 +1303,7 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			o.AgentReceivedDate.Rfc3339 = dt.Rfc3339
 			o.AgentReceivedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentReceivedDate.Epoch = dt.Epoch
 			o.AgentReceivedDate.Rfc3339 = dt.Rfc3339
 			o.AgentReceivedDate.Offset = dt.Offset
@@ -1336,10 +1333,7 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			o.AgentResponseSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentResponseSentDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentResponseSentDate.Epoch = dt.Epoch
 			o.AgentResponseSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentResponseSentDate.Offset = dt.Offset
@@ -1461,10 +1455,7 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			o.EventAPIReceivedDate.Rfc3339 = dt.Rfc3339
 			o.EventAPIReceivedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.EventAPIReceivedDate.Epoch = dt.Epoch
 			o.EventAPIReceivedDate.Rfc3339 = dt.Rfc3339
 			o.EventAPIReceivedDate.Offset = dt.Offset
@@ -1494,10 +1485,7 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			o.EventDate.Rfc3339 = dt.Rfc3339
 			o.EventDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.EventDate.Epoch = dt.Epoch
 			o.EventDate.Rfc3339 = dt.Rfc3339
 			o.EventDate.Offset = dt.Offset
@@ -1635,10 +1623,7 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			o.LastExportDate.Rfc3339 = dt.Rfc3339
 			o.LastExportDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastExportDate.Epoch = dt.Epoch
 			o.LastExportDate.Rfc3339 = dt.Rfc3339
 			o.LastExportDate.Offset = dt.Offset
@@ -1716,10 +1701,7 @@ func (o *WebhookResponse) FromMap(kv map[string]interface{}) {
 			o.OperatorReceivedDate.Rfc3339 = dt.Rfc3339
 			o.OperatorReceivedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.OperatorReceivedDate.Epoch = dt.Epoch
 			o.OperatorReceivedDate.Rfc3339 = dt.Rfc3339
 			o.OperatorReceivedDate.Offset = dt.Offset
@@ -2220,10 +2202,7 @@ func (o *WebhookResponsePartial) FromMap(kv map[string]interface{}) {
 			o.AgentReceivedDate.Rfc3339 = dt.Rfc3339
 			o.AgentReceivedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentReceivedDate.Epoch = dt.Epoch
 			o.AgentReceivedDate.Rfc3339 = dt.Rfc3339
 			o.AgentReceivedDate.Offset = dt.Offset
@@ -2257,10 +2236,7 @@ func (o *WebhookResponsePartial) FromMap(kv map[string]interface{}) {
 			o.AgentResponseSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentResponseSentDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.AgentResponseSentDate.Epoch = dt.Epoch
 			o.AgentResponseSentDate.Rfc3339 = dt.Rfc3339
 			o.AgentResponseSentDate.Offset = dt.Offset
@@ -2363,10 +2339,7 @@ func (o *WebhookResponsePartial) FromMap(kv map[string]interface{}) {
 			o.EventAPIReceivedDate.Rfc3339 = dt.Rfc3339
 			o.EventAPIReceivedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.EventAPIReceivedDate.Epoch = dt.Epoch
 			o.EventAPIReceivedDate.Rfc3339 = dt.Rfc3339
 			o.EventAPIReceivedDate.Offset = dt.Offset
@@ -2400,10 +2373,7 @@ func (o *WebhookResponsePartial) FromMap(kv map[string]interface{}) {
 			o.EventDate.Rfc3339 = dt.Rfc3339
 			o.EventDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.EventDate.Epoch = dt.Epoch
 			o.EventDate.Rfc3339 = dt.Rfc3339
 			o.EventDate.Offset = dt.Offset
@@ -2506,10 +2476,7 @@ func (o *WebhookResponsePartial) FromMap(kv map[string]interface{}) {
 			o.LastExportDate.Rfc3339 = dt.Rfc3339
 			o.LastExportDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastExportDate.Epoch = dt.Epoch
 			o.LastExportDate.Rfc3339 = dt.Rfc3339
 			o.LastExportDate.Offset = dt.Offset
@@ -2595,10 +2562,7 @@ func (o *WebhookResponsePartial) FromMap(kv map[string]interface{}) {
 			o.OperatorReceivedDate.Rfc3339 = dt.Rfc3339
 			o.OperatorReceivedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.OperatorReceivedDate.Epoch = dt.Epoch
 			o.OperatorReceivedDate.Rfc3339 = dt.Rfc3339
 			o.OperatorReceivedDate.Offset = dt.Offset

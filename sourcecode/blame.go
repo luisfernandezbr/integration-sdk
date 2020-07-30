@@ -759,10 +759,7 @@ func (o *Blame) FromMap(kv map[string]interface{}) {
 			o.ChangeDate.Rfc3339 = dt.Rfc3339
 			o.ChangeDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ChangeDate.Epoch = dt.Epoch
 			o.ChangeDate.Rfc3339 = dt.Rfc3339
 			o.ChangeDate.Offset = dt.Offset
@@ -1357,10 +1354,7 @@ func (o *BlamePartial) FromMap(kv map[string]interface{}) {
 			o.ChangeDate.Rfc3339 = dt.Rfc3339
 			o.ChangeDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ChangeDate.Epoch = dt.Epoch
 			o.ChangeDate.Rfc3339 = dt.Rfc3339
 			o.ChangeDate.Offset = dt.Offset

@@ -389,10 +389,7 @@ func (o *EnrollRequest) FromMap(kv map[string]interface{}) {
 			o.RequestDate.Rfc3339 = dt.Rfc3339
 			o.RequestDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.RequestDate.Epoch = dt.Epoch
 			o.RequestDate.Rfc3339 = dt.Rfc3339
 			o.RequestDate.Offset = dt.Offset
@@ -551,10 +548,7 @@ func (o *EnrollRequestPartial) FromMap(kv map[string]interface{}) {
 			o.RequestDate.Rfc3339 = dt.Rfc3339
 			o.RequestDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.RequestDate.Epoch = dt.Epoch
 			o.RequestDate.Rfc3339 = dt.Rfc3339
 			o.RequestDate.Offset = dt.Offset

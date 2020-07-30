@@ -556,10 +556,7 @@ func (o *Team) FromMap(kv map[string]interface{}) {
 			o.DeletedDate.Rfc3339 = dt.Rfc3339
 			o.DeletedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.DeletedDate.Epoch = dt.Epoch
 			o.DeletedDate.Rfc3339 = dt.Rfc3339
 			o.DeletedDate.Offset = dt.Offset
@@ -1440,10 +1437,7 @@ func (o *TeamPartial) FromMap(kv map[string]interface{}) {
 			o.DeletedDate.Rfc3339 = dt.Rfc3339
 			o.DeletedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.DeletedDate.Epoch = dt.Epoch
 			o.DeletedDate.Rfc3339 = dt.Rfc3339
 			o.DeletedDate.Offset = dt.Offset
