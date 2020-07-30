@@ -379,10 +379,7 @@ func (o *IssueAttachments) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -956,10 +953,7 @@ func (o *IssueChangeLog) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -2596,10 +2590,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -2687,10 +2678,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.DueDate.Rfc3339 = dt.Rfc3339
 			o.DueDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.DueDate.Epoch = dt.Epoch
 			o.DueDate.Rfc3339 = dt.Rfc3339
 			o.DueDate.Offset = dt.Offset
@@ -2876,10 +2864,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.PlannedEndDate.Rfc3339 = dt.Rfc3339
 			o.PlannedEndDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.PlannedEndDate.Epoch = dt.Epoch
 			o.PlannedEndDate.Rfc3339 = dt.Rfc3339
 			o.PlannedEndDate.Offset = dt.Offset
@@ -2909,10 +2894,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.PlannedStartDate.Rfc3339 = dt.Rfc3339
 			o.PlannedStartDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.PlannedStartDate.Epoch = dt.Epoch
 			o.PlannedStartDate.Rfc3339 = dt.Rfc3339
 			o.PlannedStartDate.Offset = dt.Offset
@@ -3352,10 +3334,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.UpdatedDate.Epoch = dt.Epoch
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
@@ -3826,10 +3805,7 @@ func (o *IssuePartial) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -4013,10 +3989,7 @@ func (o *IssuePartial) FromMap(kv map[string]interface{}) {
 			o.PlannedEndDate.Rfc3339 = dt.Rfc3339
 			o.PlannedEndDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.PlannedEndDate.Epoch = dt.Epoch
 			o.PlannedEndDate.Rfc3339 = dt.Rfc3339
 			o.PlannedEndDate.Offset = dt.Offset
@@ -4050,10 +4023,7 @@ func (o *IssuePartial) FromMap(kv map[string]interface{}) {
 			o.PlannedStartDate.Rfc3339 = dt.Rfc3339
 			o.PlannedStartDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.PlannedStartDate.Epoch = dt.Epoch
 			o.PlannedStartDate.Rfc3339 = dt.Rfc3339
 			o.PlannedStartDate.Offset = dt.Offset
@@ -4439,10 +4409,7 @@ func (o *IssuePartial) FromMap(kv map[string]interface{}) {
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.UpdatedDate.Epoch = dt.Epoch
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset

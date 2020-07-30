@@ -1209,10 +1209,7 @@ func (o *Project) FromMap(kv map[string]interface{}) {
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.UpdatedDate.Epoch = dt.Epoch
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
@@ -1675,10 +1672,7 @@ func (o *ProjectPartial) FromMap(kv map[string]interface{}) {
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.UpdatedDate.Epoch = dt.Epoch
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset

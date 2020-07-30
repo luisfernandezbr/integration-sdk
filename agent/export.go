@@ -1569,10 +1569,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -1656,10 +1653,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			o.DeletedDate.Rfc3339 = dt.Rfc3339
 			o.DeletedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.DeletedDate.Epoch = dt.Epoch
 			o.DeletedDate.Rfc3339 = dt.Rfc3339
 			o.DeletedDate.Offset = dt.Offset
@@ -1827,10 +1821,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
 			o.LastExportCompletedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastExportCompletedDate.Epoch = dt.Epoch
 			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
 			o.LastExportCompletedDate.Offset = dt.Offset
@@ -1860,10 +1851,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
 			o.LastExportRequestedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastExportRequestedDate.Epoch = dt.Epoch
 			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
 			o.LastExportRequestedDate.Offset = dt.Offset
@@ -1893,10 +1881,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			o.LastHistoricalCompletedDate.Rfc3339 = dt.Rfc3339
 			o.LastHistoricalCompletedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastHistoricalCompletedDate.Epoch = dt.Epoch
 			o.LastHistoricalCompletedDate.Rfc3339 = dt.Rfc3339
 			o.LastHistoricalCompletedDate.Offset = dt.Offset
@@ -1926,10 +1911,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			o.LastHistoricalRequestedDate.Rfc3339 = dt.Rfc3339
 			o.LastHistoricalRequestedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastHistoricalRequestedDate.Epoch = dt.Epoch
 			o.LastHistoricalRequestedDate.Rfc3339 = dt.Rfc3339
 			o.LastHistoricalRequestedDate.Offset = dt.Offset
@@ -1959,10 +1941,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
 			o.LastProcessingDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastProcessingDate.Epoch = dt.Epoch
 			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
 			o.LastProcessingDate.Offset = dt.Offset
@@ -2154,10 +2133,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
 			o.ThrottledUntil.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ThrottledUntil.Epoch = dt.Epoch
 			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
 			o.ThrottledUntil.Offset = dt.Offset

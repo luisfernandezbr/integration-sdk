@@ -1010,10 +1010,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.ClosedDate.Rfc3339 = dt.Rfc3339
 			o.ClosedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ClosedDate.Epoch = dt.Epoch
 			o.ClosedDate.Rfc3339 = dt.Rfc3339
 			o.ClosedDate.Offset = dt.Offset
@@ -1163,10 +1160,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -1358,10 +1352,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.MergedDate.Rfc3339 = dt.Rfc3339
 			o.MergedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.MergedDate.Epoch = dt.Epoch
 			o.MergedDate.Rfc3339 = dt.Rfc3339
 			o.MergedDate.Offset = dt.Offset
@@ -1502,10 +1493,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.UpdatedDate.Epoch = dt.Epoch
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
@@ -1820,10 +1808,7 @@ func (o *PullRequestPartial) FromMap(kv map[string]interface{}) {
 			o.ClosedDate.Rfc3339 = dt.Rfc3339
 			o.ClosedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ClosedDate.Epoch = dt.Epoch
 			o.ClosedDate.Rfc3339 = dt.Rfc3339
 			o.ClosedDate.Offset = dt.Offset
@@ -1975,10 +1960,7 @@ func (o *PullRequestPartial) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -2115,10 +2097,7 @@ func (o *PullRequestPartial) FromMap(kv map[string]interface{}) {
 			o.MergedDate.Rfc3339 = dt.Rfc3339
 			o.MergedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.MergedDate.Epoch = dt.Epoch
 			o.MergedDate.Rfc3339 = dt.Rfc3339
 			o.MergedDate.Offset = dt.Offset
@@ -2218,10 +2197,7 @@ func (o *PullRequestPartial) FromMap(kv map[string]interface{}) {
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.UpdatedDate.Epoch = dt.Epoch
 			o.UpdatedDate.Rfc3339 = dt.Rfc3339
 			o.UpdatedDate.Offset = dt.Offset

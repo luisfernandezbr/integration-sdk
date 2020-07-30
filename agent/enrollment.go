@@ -808,10 +808,7 @@ func (o *Enrollment) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -949,10 +946,7 @@ func (o *Enrollment) FromMap(kv map[string]interface{}) {
 			o.LastPingDate.Rfc3339 = dt.Rfc3339
 			o.LastPingDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastPingDate.Epoch = dt.Epoch
 			o.LastPingDate.Rfc3339 = dt.Rfc3339
 			o.LastPingDate.Offset = dt.Offset
@@ -982,10 +976,7 @@ func (o *Enrollment) FromMap(kv map[string]interface{}) {
 			o.LastShutdownDate.Rfc3339 = dt.Rfc3339
 			o.LastShutdownDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastShutdownDate.Epoch = dt.Epoch
 			o.LastShutdownDate.Rfc3339 = dt.Rfc3339
 			o.LastShutdownDate.Offset = dt.Offset
@@ -1015,10 +1006,7 @@ func (o *Enrollment) FromMap(kv map[string]interface{}) {
 			o.LastStartupDate.Rfc3339 = dt.Rfc3339
 			o.LastStartupDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastStartupDate.Epoch = dt.Epoch
 			o.LastStartupDate.Rfc3339 = dt.Rfc3339
 			o.LastStartupDate.Offset = dt.Offset
@@ -1764,10 +1752,7 @@ func (o *EnrollmentPartial) FromMap(kv map[string]interface{}) {
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.CreatedDate.Epoch = dt.Epoch
 			o.CreatedDate.Rfc3339 = dt.Rfc3339
 			o.CreatedDate.Offset = dt.Offset
@@ -1836,10 +1821,7 @@ func (o *EnrollmentPartial) FromMap(kv map[string]interface{}) {
 			o.LastPingDate.Rfc3339 = dt.Rfc3339
 			o.LastPingDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastPingDate.Epoch = dt.Epoch
 			o.LastPingDate.Rfc3339 = dt.Rfc3339
 			o.LastPingDate.Offset = dt.Offset
@@ -1873,10 +1855,7 @@ func (o *EnrollmentPartial) FromMap(kv map[string]interface{}) {
 			o.LastShutdownDate.Rfc3339 = dt.Rfc3339
 			o.LastShutdownDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastShutdownDate.Epoch = dt.Epoch
 			o.LastShutdownDate.Rfc3339 = dt.Rfc3339
 			o.LastShutdownDate.Offset = dt.Offset
@@ -1910,10 +1889,7 @@ func (o *EnrollmentPartial) FromMap(kv map[string]interface{}) {
 			o.LastStartupDate.Rfc3339 = dt.Rfc3339
 			o.LastStartupDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastStartupDate.Epoch = dt.Epoch
 			o.LastStartupDate.Rfc3339 = dt.Rfc3339
 			o.LastStartupDate.Offset = dt.Offset

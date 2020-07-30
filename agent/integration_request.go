@@ -2334,10 +2334,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
 			o.LastExportCompletedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastExportCompletedDate.Epoch = dt.Epoch
 			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
 			o.LastExportCompletedDate.Offset = dt.Offset
@@ -2367,10 +2364,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
 			o.LastExportRequestedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastExportRequestedDate.Epoch = dt.Epoch
 			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
 			o.LastExportRequestedDate.Offset = dt.Offset
@@ -2400,10 +2394,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
 			o.LastProcessingCompletedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastProcessingCompletedDate.Epoch = dt.Epoch
 			o.LastProcessingCompletedDate.Rfc3339 = dt.Rfc3339
 			o.LastProcessingCompletedDate.Offset = dt.Offset
@@ -2433,10 +2424,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
 			o.LastProcessingStartedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.LastProcessingStartedDate.Epoch = dt.Epoch
 			o.LastProcessingStartedDate.Rfc3339 = dt.Rfc3339
 			o.LastProcessingStartedDate.Offset = dt.Offset
@@ -2508,10 +2496,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.OnboardCompletedDate.Rfc3339 = dt.Rfc3339
 			o.OnboardCompletedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.OnboardCompletedDate.Epoch = dt.Epoch
 			o.OnboardCompletedDate.Rfc3339 = dt.Rfc3339
 			o.OnboardCompletedDate.Offset = dt.Offset
@@ -2541,10 +2526,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.OnboardRequestedDate.Rfc3339 = dt.Rfc3339
 			o.OnboardRequestedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.OnboardRequestedDate.Epoch = dt.Epoch
 			o.OnboardRequestedDate.Rfc3339 = dt.Rfc3339
 			o.OnboardRequestedDate.Offset = dt.Offset
@@ -2784,10 +2766,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
 			o.ThrottledUntil.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ThrottledUntil.Epoch = dt.Epoch
 			o.ThrottledUntil.Rfc3339 = dt.Rfc3339
 			o.ThrottledUntil.Offset = dt.Offset
@@ -2835,10 +2814,7 @@ func (o *IntegrationRequestIntegration) FromMap(kv map[string]interface{}) {
 			o.ValidatedDate.Rfc3339 = dt.Rfc3339
 			o.ValidatedDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.ValidatedDate.Epoch = dt.Epoch
 			o.ValidatedDate.Rfc3339 = dt.Rfc3339
 			o.ValidatedDate.Offset = dt.Offset
@@ -3335,10 +3311,7 @@ func (o *IntegrationRequest) FromMap(kv map[string]interface{}) {
 			o.RequestDate.Rfc3339 = dt.Rfc3339
 			o.RequestDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.RequestDate.Epoch = dt.Epoch
 			o.RequestDate.Rfc3339 = dt.Rfc3339
 			o.RequestDate.Offset = dt.Offset
@@ -3493,10 +3466,7 @@ func (o *IntegrationRequestPartial) FromMap(kv map[string]interface{}) {
 			o.RequestDate.Rfc3339 = dt.Rfc3339
 			o.RequestDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.RequestDate.Epoch = dt.Epoch
 			o.RequestDate.Rfc3339 = dt.Rfc3339
 			o.RequestDate.Offset = dt.Offset

@@ -828,10 +828,7 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 			o.EndDate.Rfc3339 = dt.Rfc3339
 			o.EndDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.EndDate.Epoch = dt.Epoch
 			o.EndDate.Rfc3339 = dt.Rfc3339
 			o.EndDate.Offset = dt.Offset
@@ -993,10 +990,7 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 			o.StartDate.Rfc3339 = dt.Rfc3339
 			o.StartDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.StartDate.Epoch = dt.Epoch
 			o.StartDate.Rfc3339 = dt.Rfc3339
 			o.StartDate.Offset = dt.Offset
@@ -1220,10 +1214,7 @@ func (o *BuildPartial) FromMap(kv map[string]interface{}) {
 			o.EndDate.Rfc3339 = dt.Rfc3339
 			o.EndDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.EndDate.Epoch = dt.Epoch
 			o.EndDate.Rfc3339 = dt.Rfc3339
 			o.EndDate.Offset = dt.Offset
@@ -1308,10 +1299,7 @@ func (o *BuildPartial) FromMap(kv map[string]interface{}) {
 			o.StartDate.Rfc3339 = dt.Rfc3339
 			o.StartDate.Offset = dt.Offset
 		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt, err := datetime.NewDateWithTime(tv)
-			if err != nil {
-				panic(err)
-			}
+			dt := datetime.NewDateWithTime(tv)
 			o.StartDate.Epoch = dt.Epoch
 			o.StartDate.Rfc3339 = dt.Rfc3339
 			o.StartDate.Offset = dt.Offset
