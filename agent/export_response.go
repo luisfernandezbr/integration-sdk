@@ -502,12 +502,16 @@ func (v *ExportResponseIntegrationsExportType) UnmarshalBSONValue(t bsontype.Typ
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v ExportResponseIntegrationsExportType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *ExportResponseIntegrationsExportType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "HISTORICAL":
-		v = 0
+		*v = 0
 	case "INCREMENTAL":
-		v = 1
+		*v = 1
 	}
 	return nil
 }
@@ -600,16 +604,20 @@ func (v *ExportResponseIntegrationsSystemType) UnmarshalBSONValue(t bsontype.Typ
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v ExportResponseIntegrationsSystemType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *ExportResponseIntegrationsSystemType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "WORK":
-		v = 0
+		*v = 0
 	case "SOURCECODE":
-		v = 1
+		*v = 1
 	case "CODEQUALITY":
-		v = 2
+		*v = 2
 	case "USER":
-		v = 3
+		*v = 3
 	}
 	return nil
 }
@@ -1157,14 +1165,18 @@ func (v *ExportResponseState) UnmarshalBSONValue(t bsontype.Type, data []byte) e
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v ExportResponseState) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *ExportResponseState) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "STARTING":
-		v = 0
+		*v = 0
 	case "PROGRESS":
-		v = 1
+		*v = 1
 	case "COMPLETED":
-		v = 2
+		*v = 2
 	}
 	return nil
 }
@@ -1289,40 +1301,44 @@ func (v *ExportResponseType) UnmarshalBSONValue(t bsontype.Type, data []byte) er
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v ExportResponseType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *ExportResponseType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "ENROLL":
-		v = 0
+		*v = 0
 	case "PING":
-		v = 1
+		*v = 1
 	case "CRASH":
-		v = 2
+		*v = 2
 	case "LOG":
-		v = 3
+		*v = 3
 	case "INTEGRATION":
-		v = 4
+		*v = 4
 	case "EXPORT":
-		v = 5
+		*v = 5
 	case "PROJECT":
-		v = 6
+		*v = 6
 	case "REPO":
-		v = 7
+		*v = 7
 	case "USER":
-		v = 8
+		*v = 8
 	case "CALENDAR":
-		v = 9
+		*v = 9
 	case "UNINSTALL":
-		v = 10
+		*v = 10
 	case "UPGRADE":
-		v = 11
+		*v = 11
 	case "START":
-		v = 12
+		*v = 12
 	case "STOP":
-		v = 13
+		*v = 13
 	case "PAUSE":
-		v = 14
+		*v = 14
 	case "RESUME":
-		v = 15
+		*v = 15
 	}
 	return nil
 }

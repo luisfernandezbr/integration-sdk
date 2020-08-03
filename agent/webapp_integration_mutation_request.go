@@ -107,24 +107,28 @@ func (v *WebappIntegrationMutationRequestAction) UnmarshalBSONValue(t bsontype.T
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v WebappIntegrationMutationRequestAction) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *WebappIntegrationMutationRequestAction) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "ISSUE_ADD_COMMENT":
-		v = 0
+		*v = 0
 	case "ISSUE_SET_TITLE":
-		v = 1
+		*v = 1
 	case "ISSUE_SET_STATUS":
-		v = 2
+		*v = 2
 	case "ISSUE_SET_PRIORITY":
-		v = 3
+		*v = 3
 	case "ISSUE_SET_ASSIGNEE":
-		v = 4
+		*v = 4
 	case "ISSUE_GET_TRANSITIONS":
-		v = 5
+		*v = 5
 	case "PR_SET_TITLE":
-		v = 6
+		*v = 6
 	case "PR_SET_DESCRIPTION":
-		v = 7
+		*v = 7
 	}
 	return nil
 }
@@ -362,16 +366,20 @@ func (v *WebappIntegrationMutationRequestSystemType) UnmarshalBSONValue(t bsonty
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v WebappIntegrationMutationRequestSystemType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *WebappIntegrationMutationRequestSystemType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "WORK":
-		v = 0
+		*v = 0
 	case "SOURCECODE":
-		v = 1
+		*v = 1
 	case "CODEQUALITY":
-		v = 2
+		*v = 2
 	case "USER":
-		v = 3
+		*v = 3
 	}
 	return nil
 }

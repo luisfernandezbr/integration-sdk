@@ -334,16 +334,20 @@ func (v *EventParticipantsStatus) UnmarshalBSONValue(t bsontype.Type, data []byt
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v EventParticipantsStatus) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *EventParticipantsStatus) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "UNKNOWN":
-		v = 0
+		*v = 0
 	case "MAYBE":
-		v = 1
+		*v = 1
 	case "GOING":
-		v = 2
+		*v = 2
 	case "NOT_GOING":
-		v = 3
+		*v = 3
 	}
 	return nil
 }
@@ -645,14 +649,18 @@ func (v *EventStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v EventStatus) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *EventStatus) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "CONFIRMED":
-		v = 0
+		*v = 0
 	case "TENTATIVE":
-		v = 1
+		*v = 1
 	case "CANCELLED":
-		v = 2
+		*v = 2
 	}
 	return nil
 }

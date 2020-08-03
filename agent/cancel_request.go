@@ -91,14 +91,18 @@ func (v *CancelRequestCommand) UnmarshalBSONValue(t bsontype.Type, data []byte) 
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v CancelRequestCommand) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *CancelRequestCommand) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "EXPORT":
-		v = 0
+		*v = 0
 	case "ONBOARD":
-		v = 1
+		*v = 1
 	case "INTEGRATION":
-		v = 2
+		*v = 2
 	}
 	return nil
 }

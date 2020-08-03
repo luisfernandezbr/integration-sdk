@@ -351,40 +351,44 @@ func (v *UninstallType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v UninstallType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *UninstallType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "ENROLL":
-		v = 0
+		*v = 0
 	case "PING":
-		v = 1
+		*v = 1
 	case "CRASH":
-		v = 2
+		*v = 2
 	case "LOG":
-		v = 3
+		*v = 3
 	case "INTEGRATION":
-		v = 4
+		*v = 4
 	case "EXPORT":
-		v = 5
+		*v = 5
 	case "PROJECT":
-		v = 6
+		*v = 6
 	case "REPO":
-		v = 7
+		*v = 7
 	case "USER":
-		v = 8
+		*v = 8
 	case "CALENDAR":
-		v = 9
+		*v = 9
 	case "UNINSTALL":
-		v = 10
+		*v = 10
 	case "UPGRADE":
-		v = 11
+		*v = 11
 	case "START":
-		v = 12
+		*v = 12
 	case "STOP":
-		v = 13
+		*v = 13
 	case "PAUSE":
-		v = 14
+		*v = 14
 	case "RESUME":
-		v = 15
+		*v = 15
 	}
 	return nil
 }

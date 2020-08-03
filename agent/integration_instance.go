@@ -877,12 +877,16 @@ func (v *IntegrationInstanceLocation) UnmarshalBSONValue(t bsontype.Type, data [
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v IntegrationInstanceLocation) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *IntegrationInstanceLocation) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "PRIVATE":
-		v = 0
+		*v = 0
 	case "CLOUD":
-		v = 1
+		*v = 1
 	}
 	return nil
 }
@@ -971,12 +975,16 @@ func (v *IntegrationInstanceState) UnmarshalBSONValue(t bsontype.Type, data []by
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v IntegrationInstanceState) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *IntegrationInstanceState) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "IDLE":
-		v = 0
+		*v = 0
 	case "EXPORTING":
-		v = 1
+		*v = 1
 	}
 	return nil
 }

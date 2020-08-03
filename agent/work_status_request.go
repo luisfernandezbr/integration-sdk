@@ -1031,12 +1031,16 @@ func (v *WorkStatusRequestIntegrationLocation) UnmarshalBSONValue(t bsontype.Typ
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v WorkStatusRequestIntegrationLocation) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *WorkStatusRequestIntegrationLocation) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "PRIVATE":
-		v = 0
+		*v = 0
 	case "CLOUD":
-		v = 1
+		*v = 1
 	}
 	return nil
 }
@@ -1321,14 +1325,18 @@ func (v *WorkStatusRequestIntegrationState) UnmarshalBSONValue(t bsontype.Type, 
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v WorkStatusRequestIntegrationState) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *WorkStatusRequestIntegrationState) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "IDLE":
-		v = 0
+		*v = 0
 	case "EXPORTING":
-		v = 1
+		*v = 1
 	case "PROCESSING":
-		v = 2
+		*v = 2
 	}
 	return nil
 }
@@ -1431,18 +1439,22 @@ func (v *WorkStatusRequestIntegrationSystemType) UnmarshalBSONValue(t bsontype.T
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v WorkStatusRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *WorkStatusRequestIntegrationSystemType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "WORK":
-		v = 0
+		*v = 0
 	case "SOURCECODE":
-		v = 1
+		*v = 1
 	case "CODEQUALITY":
-		v = 2
+		*v = 2
 	case "CALENDAR":
-		v = 3
+		*v = 3
 	case "USER":
-		v = 4
+		*v = 4
 	}
 	return nil
 }

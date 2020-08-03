@@ -204,14 +204,18 @@ func (v *MetricStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v MetricStatus) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *MetricStatus) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "UNSUPPORTED":
-		v = 0
+		*v = 0
 	case "NOT_ANALYSED":
-		v = 1
+		*v = 1
 	case "ANALYSED":
-		v = 2
+		*v = 2
 	}
 	return nil
 }

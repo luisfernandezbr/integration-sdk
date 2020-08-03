@@ -443,18 +443,22 @@ func (v *PullRequestStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) err
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v PullRequestStatus) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *PullRequestStatus) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "OPEN":
-		v = 0
+		*v = 0
 	case "CLOSED":
-		v = 1
+		*v = 1
 	case "MERGED":
-		v = 2
+		*v = 2
 	case "SUPERSEDED":
-		v = 3
+		*v = 3
 	case "LOCKED":
-		v = 4
+		*v = 4
 	}
 	return nil
 }

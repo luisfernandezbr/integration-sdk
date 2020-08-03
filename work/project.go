@@ -120,14 +120,18 @@ func (v *ProjectAffiliation) UnmarshalBSONValue(t bsontype.Type, data []byte) er
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v ProjectAffiliation) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *ProjectAffiliation) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "ORGANIZATION":
-		v = 0
+		*v = 0
 	case "USER":
-		v = 1
+		*v = 1
 	case "THIRDPARTY":
-		v = 2
+		*v = 2
 	}
 	return nil
 }
@@ -489,12 +493,16 @@ func (v *ProjectVisibility) UnmarshalBSONValue(t bsontype.Type, data []byte) err
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v ProjectVisibility) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *ProjectVisibility) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "PRIVATE":
-		v = 0
+		*v = 0
 	case "PUBLIC":
-		v = 1
+		*v = 1
 	}
 	return nil
 }

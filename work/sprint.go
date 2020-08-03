@@ -548,14 +548,18 @@ func (v *SprintStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v SprintStatus) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *SprintStatus) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "ACTIVE":
-		v = 0
+		*v = 0
 	case "FUTURE":
-		v = 1
+		*v = 1
 	case "CLOSED":
-		v = 2
+		*v = 2
 	}
 	return nil
 }

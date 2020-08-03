@@ -682,36 +682,40 @@ func (v *IssueChangeLogField) UnmarshalBSONValue(t bsontype.Type, data []byte) e
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v IssueChangeLogField) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *IssueChangeLogField) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "ASSIGNEE_REF_ID":
-		v = 0
+		*v = 0
 	case "DUE_DATE":
-		v = 1
+		*v = 1
 	case "EPIC_ID":
-		v = 2
+		*v = 2
 	case "IDENTIFIER":
-		v = 3
+		*v = 3
 	case "PARENT_ID":
-		v = 4
+		*v = 4
 	case "PRIORITY":
-		v = 5
+		*v = 5
 	case "PROJECT_ID":
-		v = 6
+		*v = 6
 	case "REPORTER_REF_ID":
-		v = 7
+		*v = 7
 	case "RESOLUTION":
-		v = 8
+		*v = 8
 	case "SPRINT_IDS":
-		v = 9
+		*v = 9
 	case "STATUS":
-		v = 10
+		*v = 10
 	case "TAGS":
-		v = 11
+		*v = 11
 	case "TITLE":
-		v = 12
+		*v = 12
 	case "TYPE":
-		v = 13
+		*v = 13
 	}
 	return nil
 }
@@ -1405,18 +1409,22 @@ func (v *IssueLinkedIssuesLinkType) UnmarshalBSONValue(t bsontype.Type, data []b
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v IssueLinkedIssuesLinkType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *IssueLinkedIssuesLinkType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "BLOCKS":
-		v = 0
+		*v = 0
 	case "CLONES":
-		v = 1
+		*v = 1
 	case "DUPLICATES":
-		v = 2
+		*v = 2
 	case "CAUSES":
-		v = 3
+		*v = 3
 	case "RELATES":
-		v = 4
+		*v = 4
 	}
 	return nil
 }

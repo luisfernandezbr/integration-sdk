@@ -210,20 +210,24 @@ func (v *BuildEnvironment) UnmarshalBSONValue(t bsontype.Type, data []byte) erro
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v BuildEnvironment) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *BuildEnvironment) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "PRODUCTION":
-		v = 0
+		*v = 0
 	case "DEVELOPMENT":
-		v = 1
+		*v = 1
 	case "BETA":
-		v = 2
+		*v = 2
 	case "STAGING":
-		v = 3
+		*v = 3
 	case "TEST":
-		v = 4
+		*v = 4
 	case "OTHER":
-		v = 5
+		*v = 5
 	}
 	return nil
 }
@@ -443,14 +447,18 @@ func (v *BuildStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v BuildStatus) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *BuildStatus) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "PASS":
-		v = 0
+		*v = 0
 	case "FAIL":
-		v = 1
+		*v = 1
 	case "CANCEL":
-		v = 2
+		*v = 2
 	}
 	return nil
 }

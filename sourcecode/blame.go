@@ -381,14 +381,18 @@ func (v *BlameStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v BlameStatus) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *BlameStatus) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "ADDED":
-		v = 0
+		*v = 0
 	case "MODIFIED":
-		v = 1
+		*v = 1
 	case "REMOVED":
-		v = 2
+		*v = 2
 	}
 	return nil
 }

@@ -208,26 +208,30 @@ func (v *PullRequestReviewState) UnmarshalBSONValue(t bsontype.Type, data []byte
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v PullRequestReviewState) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *PullRequestReviewState) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "APPROVED":
-		v = 0
+		*v = 0
 	case "COMMENTED":
-		v = 1
+		*v = 1
 	case "CHANGES_REQUESTED":
-		v = 2
+		*v = 2
 	case "PENDING":
-		v = 3
+		*v = 3
 	case "DISMISSED":
-		v = 4
+		*v = 4
 	case "REQUESTED":
-		v = 5
+		*v = 5
 	case "REQUEST_REMOVED":
-		v = 6
+		*v = 6
 	case "ASSIGNED":
-		v = 7
+		*v = 7
 	case "UNASSIGNED":
-		v = 8
+		*v = 8
 	}
 	return nil
 }

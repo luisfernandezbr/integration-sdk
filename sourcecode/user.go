@@ -99,14 +99,18 @@ func (v *UserType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v UserType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *UserType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "HUMAN":
-		v = 0
+		*v = 0
 	case "BOT":
-		v = 1
+		*v = 1
 	case "DELETED_SPECIAL_USER":
-		v = 2
+		*v = 2
 	}
 	return nil
 }

@@ -410,16 +410,20 @@ func (v *WebhookRequestSystemType) UnmarshalBSONValue(t bsontype.Type, data []by
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v WebhookRequestSystemType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *WebhookRequestSystemType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "WORK":
-		v = 0
+		*v = 0
 	case "SOURCECODE":
-		v = 1
+		*v = 1
 	case "CODEQUALITY":
-		v = 2
+		*v = 2
 	case "USER":
-		v = 3
+		*v = 3
 	}
 	return nil
 }

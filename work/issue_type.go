@@ -95,24 +95,28 @@ func (v *IssueTypeMappedType) UnmarshalBSONValue(t bsontype.Type, data []byte) e
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v IssueTypeMappedType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *IssueTypeMappedType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "UNKNOWN":
-		v = 0
+		*v = 0
 	case "FEATURE":
-		v = 1
+		*v = 1
 	case "BUG":
-		v = 2
+		*v = 2
 	case "ENHANCEMENT":
-		v = 3
+		*v = 3
 	case "EPIC":
-		v = 4
+		*v = 4
 	case "STORY":
-		v = 5
+		*v = 5
 	case "TASK":
-		v = 6
+		*v = 6
 	case "SUBTASK":
-		v = 7
+		*v = 7
 	}
 	return nil
 }

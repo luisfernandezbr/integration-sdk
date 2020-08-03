@@ -169,14 +169,18 @@ func (v *BoardType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 }
 
 // UnmarshalJSON unmarshals the enum value
-func (v BoardType) UnmarshalJSON(buf []byte) error {
-	switch string(buf) {
+func (v *BoardType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
 	case "SCRUM":
-		v = 0
+		*v = 0
 	case "KANBAN":
-		v = 1
+		*v = 1
 	case "OTHER":
-		v = 2
+		*v = 2
 	}
 	return nil
 }
