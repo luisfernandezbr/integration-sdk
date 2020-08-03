@@ -154,6 +154,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.RepoTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.RestartTrigger":
+		o := new(dm_agent.RestartTrigger)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Resume":
 		o := new(dm_agent.Resume)
 		o.FromMap(map[string]interface{}{})
@@ -437,6 +441,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_agent.RepoResponsePartial)
 	case "agent.RepoTrigger":
 		return new(dm_agent.RepoTriggerPartial)
+	case "agent.RestartTrigger":
+		return new(dm_agent.RestartTriggerPartial)
 	case "agent.Resume":
 		return new(dm_agent.ResumePartial)
 	case "agent.Start":
@@ -685,6 +691,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.RepoRequest"),
 		datamodel.ModelNameType("agent.RepoResponse"),
 		datamodel.ModelNameType("agent.RepoTrigger"),
+		datamodel.ModelNameType("agent.RestartTrigger"),
 		datamodel.ModelNameType("agent.Resume"),
 		datamodel.ModelNameType("agent.Start"),
 		datamodel.ModelNameType("agent.Stop"),
