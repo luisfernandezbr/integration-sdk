@@ -198,6 +198,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.UpdateTrigger)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.ValidateRequest":
+		o := new(dm_agent.ValidateRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.ValidateResponse":
+		o := new(dm_agent.ValidateResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.WebappIntegrationMutationRequest":
 		o := new(dm_agent.WebappIntegrationMutationRequest)
 		o.FromMap(map[string]interface{}{})
@@ -463,6 +471,10 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_agent.UpdateResponsePartial)
 	case "agent.UpdateTrigger":
 		return new(dm_agent.UpdateTriggerPartial)
+	case "agent.ValidateRequest":
+		return new(dm_agent.ValidateRequestPartial)
+	case "agent.ValidateResponse":
+		return new(dm_agent.ValidateResponsePartial)
 	case "agent.WebappIntegrationMutationRequest":
 		return new(dm_agent.WebappIntegrationMutationRequestPartial)
 	case "agent.WebhookRequest":
@@ -702,6 +714,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.UpdateRequest"),
 		datamodel.ModelNameType("agent.UpdateResponse"),
 		datamodel.ModelNameType("agent.UpdateTrigger"),
+		datamodel.ModelNameType("agent.ValidateRequest"),
+		datamodel.ModelNameType("agent.ValidateResponse"),
 		datamodel.ModelNameType("agent.WebappIntegrationMutationRequest"),
 		datamodel.ModelNameType("agent.WebhookRequest"),
 		datamodel.ModelNameType("agent.WebhookResponse"),
