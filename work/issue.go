@@ -1583,6 +1583,7 @@ func (o *IssueLinkedIssues) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["issue_identifier"].(string); ok {
 		o.IssueIdentifier = val
 	} else {
@@ -1602,6 +1603,7 @@ func (o *IssueLinkedIssues) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["issue_ref_id"].(string); ok {
 		o.IssueRefID = val
 	} else {
