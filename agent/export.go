@@ -55,6 +55,8 @@ const (
 	ExportModelIntegrationCreatedDateRfc3339Column = "rfc3339"
 	// ExportModelIntegrationCustomerIDColumn is the column json value customer_id
 	ExportModelIntegrationCustomerIDColumn = "customer_id"
+	// ExportModelIntegrationDeletedColumn is the column json value deleted
+	ExportModelIntegrationDeletedColumn = "deleted"
 	// ExportModelIntegrationDeletedByProfileIDColumn is the column json value deleted_by_profile_id
 	ExportModelIntegrationDeletedByProfileIDColumn = "deleted_by_profile_id"
 	// ExportModelIntegrationDeletedByUserIDColumn is the column json value deleted_by_user_id
@@ -141,6 +143,8 @@ const (
 	ExportModelIntegrationRefTypeColumn = "ref_type"
 	// ExportModelIntegrationRequiresHistoricalColumn is the column json value requires_historical
 	ExportModelIntegrationRequiresHistoricalColumn = "requires_historical"
+	// ExportModelIntegrationSetupColumn is the column json value setup
+	ExportModelIntegrationSetupColumn = "setup"
 	// ExportModelIntegrationStateColumn is the column json value state
 	ExportModelIntegrationStateColumn = "state"
 	// ExportModelIntegrationThrottledColumn is the column json value throttled
@@ -954,6 +958,116 @@ const (
 	ExportIntegrationLocationCloud ExportIntegrationLocation = 1
 )
 
+// ExportIntegrationSetup is the enumeration type for setup
+type ExportIntegrationSetup int32
+
+// toExportIntegrationSetupPointer is the enumeration pointer type for setup
+func toExportIntegrationSetupPointer(v int32) *ExportIntegrationSetup {
+	nv := ExportIntegrationSetup(v)
+	return &nv
+}
+
+// toExportIntegrationSetupEnum is the enumeration pointer wrapper for setup
+func toExportIntegrationSetupEnum(v *ExportIntegrationSetup) string {
+	if v == nil {
+		return toExportIntegrationSetupPointer(0).String()
+	}
+	return v.String()
+}
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ExportIntegrationSetup) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = ExportIntegrationSetup(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "CONFIG":
+			*v = ExportIntegrationSetup(0)
+		case "READY":
+			*v = ExportIntegrationSetup(1)
+		case "RUNNING":
+			*v = ExportIntegrationSetup(2)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v *ExportIntegrationSetup) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
+	case "CONFIG":
+		*v = 0
+	case "READY":
+		*v = 1
+	case "RUNNING":
+		*v = 2
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v ExportIntegrationSetup) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("CONFIG")
+	case 1:
+		return json.Marshal("READY")
+	case 2:
+		return json.Marshal("RUNNING")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for IntegrationSetup
+func (v ExportIntegrationSetup) String() string {
+	switch int32(v) {
+	case 0:
+		return "CONFIG"
+	case 1:
+		return "READY"
+	case 2:
+		return "RUNNING"
+	}
+	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *ExportIntegrationSetup) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case ExportIntegrationSetup:
+		*v = val
+	case int32:
+		*v = ExportIntegrationSetup(int32(val))
+	case int:
+		*v = ExportIntegrationSetup(int32(val))
+	case string:
+		switch val {
+		case "CONFIG":
+			*v = ExportIntegrationSetup(0)
+		case "READY":
+			*v = ExportIntegrationSetup(1)
+		case "RUNNING":
+			*v = ExportIntegrationSetup(2)
+		}
+	}
+	return nil
+}
+
+const (
+	// ExportIntegrationSetupConfig is the enumeration value for config
+	ExportIntegrationSetupConfig ExportIntegrationSetup = 0
+	// ExportIntegrationSetupReady is the enumeration value for ready
+	ExportIntegrationSetupReady ExportIntegrationSetup = 1
+	// ExportIntegrationSetupRunning is the enumeration value for running
+	ExportIntegrationSetupRunning ExportIntegrationSetup = 2
+)
+
 // ExportIntegrationState is the enumeration type for state
 type ExportIntegrationState int32
 
@@ -1294,6 +1408,8 @@ type ExportIntegration struct {
 	CreatedDate ExportIntegrationCreatedDate `json:"created_date" codec:"created_date" bson:"created_date" yaml:"created_date" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Deleted If true, the integration has been deleted
+	Deleted bool `json:"deleted" codec:"deleted" bson:"deleted" yaml:"deleted" faker:"-"`
 	// DeletedByProfileID The id of the profile for the user that deleted the integration
 	DeletedByProfileID *string `json:"deleted_by_profile_id,omitempty" codec:"deleted_by_profile_id,omitempty" bson:"deleted_by_profile_id" yaml:"deleted_by_profile_id,omitempty" faker:"-"`
 	// DeletedByUserID The id of the user that deleted the integration
@@ -1344,6 +1460,8 @@ type ExportIntegration struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequiresHistorical flag which can be set to trigger a historical on the next scheduler visit
 	RequiresHistorical bool `json:"requires_historical" codec:"requires_historical" bson:"requires_historical" yaml:"requires_historical" faker:"-"`
+	// Setup the setup state of the integration
+	Setup ExportIntegrationSetup `json:"setup" codec:"setup" bson:"setup" yaml:"setup" faker:"-"`
 	// State the current state of the integration
 	State ExportIntegrationState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// Throttled Set to true when integration is throttled.
@@ -1383,6 +1501,9 @@ func toExportIntegrationObject(o interface{}, isoptional bool) interface{} {
 	case ExportIntegrationLocation:
 		return v.String()
 
+	case ExportIntegrationSetup:
+		return v.String()
+
 	case ExportIntegrationState:
 		return v.String()
 
@@ -1417,6 +1538,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"created_date": toExportIntegrationObject(o.CreatedDate, false),
 		// CustomerID the customer id for the model instance
 		"customer_id": toExportIntegrationObject(o.CustomerID, false),
+		// Deleted If true, the integration has been deleted
+		"deleted": toExportIntegrationObject(o.Deleted, false),
 		// DeletedByProfileID The id of the profile for the user that deleted the integration
 		"deleted_by_profile_id": toExportIntegrationObject(o.DeletedByProfileID, true),
 		// DeletedByUserID The id of the user that deleted the integration
@@ -1467,6 +1590,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"ref_type": toExportIntegrationObject(o.RefType, false),
 		// RequiresHistorical flag which can be set to trigger a historical on the next scheduler visit
 		"requires_historical": toExportIntegrationObject(o.RequiresHistorical, false),
+		// Setup the setup state of the integration
+		"setup": toExportIntegrationObject(o.Setup, false),
 		// State the current state of the integration
 		"state": toExportIntegrationObject(o.State, false),
 		// Throttled Set to true when integration is throttled.
@@ -1621,6 +1746,17 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["deleted"].(bool); ok {
+		o.Deleted = val
+	} else {
+		if val, ok := kv["deleted"]; ok {
+			if val == nil {
+				o.Deleted = false
+			} else {
+				o.Deleted = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -2126,6 +2262,32 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 				o.RequiresHistorical = false
 			} else {
 				o.RequiresHistorical = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["setup"].(ExportIntegrationSetup); ok {
+		o.Setup = val
+	} else {
+		if em, ok := kv["setup"].(map[string]interface{}); ok {
+
+			ev := em["agent.setup"].(string)
+			switch ev {
+			case "config", "CONFIG":
+				o.Setup = 0
+			case "ready", "READY":
+				o.Setup = 1
+			case "running", "RUNNING":
+				o.Setup = 2
+			}
+		}
+		if em, ok := kv["setup"].(string); ok {
+			switch em {
+			case "config", "CONFIG":
+				o.Setup = 0
+			case "ready", "READY":
+				o.Setup = 1
+			case "running", "RUNNING":
+				o.Setup = 2
 			}
 		}
 	}

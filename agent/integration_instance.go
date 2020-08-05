@@ -53,6 +53,8 @@ const (
 	IntegrationInstanceModelCreatedAtColumn = "created_ts"
 	// IntegrationInstanceModelCustomerIDColumn is the column json value customer_id
 	IntegrationInstanceModelCustomerIDColumn = "customer_id"
+	// IntegrationInstanceModelDeletedColumn is the column json value deleted
+	IntegrationInstanceModelDeletedColumn = "deleted"
 	// IntegrationInstanceModelDeletedByProfileIDColumn is the column json value deleted_by_profile_id
 	IntegrationInstanceModelDeletedByProfileIDColumn = "deleted_by_profile_id"
 	// IntegrationInstanceModelDeletedByUserIDColumn is the column json value deleted_by_user_id
@@ -139,6 +141,8 @@ const (
 	IntegrationInstanceModelRefTypeColumn = "ref_type"
 	// IntegrationInstanceModelRequiresHistoricalColumn is the column json value requires_historical
 	IntegrationInstanceModelRequiresHistoricalColumn = "requires_historical"
+	// IntegrationInstanceModelSetupColumn is the column json value setup
+	IntegrationInstanceModelSetupColumn = "setup"
 	// IntegrationInstanceModelStateColumn is the column json value state
 	IntegrationInstanceModelStateColumn = "state"
 	// IntegrationInstanceModelThrottledColumn is the column json value throttled
@@ -944,6 +948,116 @@ const (
 	IntegrationInstanceLocationCloud IntegrationInstanceLocation = 1
 )
 
+// IntegrationInstanceSetup is the enumeration type for setup
+type IntegrationInstanceSetup int32
+
+// toIntegrationInstanceSetupPointer is the enumeration pointer type for setup
+func toIntegrationInstanceSetupPointer(v int32) *IntegrationInstanceSetup {
+	nv := IntegrationInstanceSetup(v)
+	return &nv
+}
+
+// toIntegrationInstanceSetupEnum is the enumeration pointer wrapper for setup
+func toIntegrationInstanceSetupEnum(v *IntegrationInstanceSetup) string {
+	if v == nil {
+		return toIntegrationInstanceSetupPointer(0).String()
+	}
+	return v.String()
+}
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *IntegrationInstanceSetup) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = IntegrationInstanceSetup(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "CONFIG":
+			*v = IntegrationInstanceSetup(0)
+		case "READY":
+			*v = IntegrationInstanceSetup(1)
+		case "RUNNING":
+			*v = IntegrationInstanceSetup(2)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v *IntegrationInstanceSetup) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
+	case "CONFIG":
+		*v = 0
+	case "READY":
+		*v = 1
+	case "RUNNING":
+		*v = 2
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v IntegrationInstanceSetup) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("CONFIG")
+	case 1:
+		return json.Marshal("READY")
+	case 2:
+		return json.Marshal("RUNNING")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for Setup
+func (v IntegrationInstanceSetup) String() string {
+	switch int32(v) {
+	case 0:
+		return "CONFIG"
+	case 1:
+		return "READY"
+	case 2:
+		return "RUNNING"
+	}
+	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *IntegrationInstanceSetup) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case IntegrationInstanceSetup:
+		*v = val
+	case int32:
+		*v = IntegrationInstanceSetup(int32(val))
+	case int:
+		*v = IntegrationInstanceSetup(int32(val))
+	case string:
+		switch val {
+		case "CONFIG":
+			*v = IntegrationInstanceSetup(0)
+		case "READY":
+			*v = IntegrationInstanceSetup(1)
+		case "RUNNING":
+			*v = IntegrationInstanceSetup(2)
+		}
+	}
+	return nil
+}
+
+const (
+	// IntegrationInstanceSetupConfig is the enumeration value for config
+	IntegrationInstanceSetupConfig IntegrationInstanceSetup = 0
+	// IntegrationInstanceSetupReady is the enumeration value for ready
+	IntegrationInstanceSetupReady IntegrationInstanceSetup = 1
+	// IntegrationInstanceSetupRunning is the enumeration value for running
+	IntegrationInstanceSetupRunning IntegrationInstanceSetup = 2
+)
+
 // IntegrationInstanceState is the enumeration type for state
 type IntegrationInstanceState int32
 
@@ -1286,6 +1400,8 @@ type IntegrationInstance struct {
 	CreatedAt int64 `json:"created_ts" codec:"created_ts" bson:"created_ts" yaml:"created_ts" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// Deleted If true, the integration has been deleted
+	Deleted bool `json:"deleted" codec:"deleted" bson:"deleted" yaml:"deleted" faker:"-"`
 	// DeletedByProfileID The id of the profile for the user that deleted the integration
 	DeletedByProfileID *string `json:"deleted_by_profile_id,omitempty" codec:"deleted_by_profile_id,omitempty" bson:"deleted_by_profile_id" yaml:"deleted_by_profile_id,omitempty" faker:"-"`
 	// DeletedByUserID The id of the user that deleted the integration
@@ -1336,6 +1452,8 @@ type IntegrationInstance struct {
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// RequiresHistorical flag which can be set to trigger a historical on the next scheduler visit
 	RequiresHistorical bool `json:"requires_historical" codec:"requires_historical" bson:"requires_historical" yaml:"requires_historical" faker:"-"`
+	// Setup the setup state of the integration
+	Setup IntegrationInstanceSetup `json:"setup" codec:"setup" bson:"setup" yaml:"setup" faker:"-"`
 	// State the current state of the integration
 	State IntegrationInstanceState `json:"state" codec:"state" bson:"state" yaml:"state" faker:"-"`
 	// Throttled Set to true when integration is throttled.
@@ -1383,6 +1501,9 @@ func toIntegrationInstanceObject(o interface{}, isoptional bool) interface{} {
 		return v.ToMap()
 
 	case IntegrationInstanceLocation:
+		return v.String()
+
+	case IntegrationInstanceSetup:
 		return v.String()
 
 	case IntegrationInstanceState:
@@ -1604,6 +1725,7 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 		"created_date":                   toIntegrationInstanceObject(o.CreatedDate, false),
 		"created_ts":                     toIntegrationInstanceObject(o.CreatedAt, false),
 		"customer_id":                    toIntegrationInstanceObject(o.CustomerID, false),
+		"deleted":                        toIntegrationInstanceObject(o.Deleted, false),
 		"deleted_by_profile_id":          toIntegrationInstanceObject(o.DeletedByProfileID, true),
 		"deleted_by_user_id":             toIntegrationInstanceObject(o.DeletedByUserID, true),
 		"deleted_date":                   toIntegrationInstanceObject(o.DeletedDate, false),
@@ -1630,6 +1752,8 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 		"ref_id":              toIntegrationInstanceObject(o.RefID, false),
 		"ref_type":            toIntegrationInstanceObject(o.RefType, false),
 		"requires_historical": toIntegrationInstanceObject(o.RequiresHistorical, false),
+
+		"setup": o.Setup.String(),
 
 		"state":           o.State.String(),
 		"throttled":       toIntegrationInstanceObject(o.Throttled, true),
@@ -1772,6 +1896,17 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["deleted"].(bool); ok {
+		o.Deleted = val
+	} else {
+		if val, ok := kv["deleted"]; ok {
+			if val == nil {
+				o.Deleted = false
+			} else {
+				o.Deleted = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -2280,6 +2415,32 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["setup"].(IntegrationInstanceSetup); ok {
+		o.Setup = val
+	} else {
+		if em, ok := kv["setup"].(map[string]interface{}); ok {
+
+			ev := em["agent.setup"].(string)
+			switch ev {
+			case "config", "CONFIG":
+				o.Setup = 0
+			case "ready", "READY":
+				o.Setup = 1
+			case "running", "RUNNING":
+				o.Setup = 2
+			}
+		}
+		if em, ok := kv["setup"].(string); ok {
+			switch em {
+			case "config", "CONFIG":
+				o.Setup = 0
+			case "ready", "READY":
+				o.Setup = 1
+			case "running", "RUNNING":
+				o.Setup = 2
+			}
+		}
+	}
 	if val, ok := kv["state"].(IntegrationInstanceState); ok {
 		o.State = val
 	} else {
@@ -2445,6 +2606,7 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.CreatedDate)
 	args = append(args, o.CreatedAt)
 	args = append(args, o.CustomerID)
+	args = append(args, o.Deleted)
 	args = append(args, o.DeletedByProfileID)
 	args = append(args, o.DeletedByUserID)
 	args = append(args, o.DeletedDate)
@@ -2470,6 +2632,7 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.RequiresHistorical)
+	args = append(args, o.Setup)
 	args = append(args, o.State)
 	args = append(args, o.Throttled)
 	args = append(args, o.ThrottledUntil)
@@ -2496,6 +2659,7 @@ func (o *IntegrationInstance) GetHydrationQuery() string {
 			}
 			created_ts
 			customer_id
+			deleted
 			deleted_by_profile_id
 			deleted_by_user_id
 			deleted_date {
@@ -2545,6 +2709,7 @@ func (o *IntegrationInstance) GetHydrationQuery() string {
 			ref_id
 			ref_type
 			requires_historical
+			setup
 			state
 			throttled
 			throttled_until {
@@ -2591,6 +2756,8 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\tcreated_ts\n")
 	// scalar
 	sb.WriteString("\t\t\tcustomer_id\n")
+	// scalar
+	sb.WriteString("\t\t\tdeleted\n")
 	// scalar
 	sb.WriteString("\t\t\tdeleted_by_profile_id\n")
 	// scalar
@@ -2689,6 +2856,8 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\tref_type\n")
 	// scalar
 	sb.WriteString("\t\t\trequires_historical\n")
+	// scalar
+	sb.WriteString("\t\t\tsetup\n")
 	// scalar
 	sb.WriteString("\t\t\tstate\n")
 	// scalar
@@ -3005,6 +3174,8 @@ type IntegrationInstancePartial struct {
 	CreatedByUserID *string `json:"created_by_user_id,omitempty"`
 	// CreatedDate when the integration was created
 	CreatedDate *IntegrationInstanceCreatedDate `json:"created_date,omitempty"`
+	// Deleted If true, the integration has been deleted
+	Deleted *bool `json:"deleted,omitempty"`
 	// DeletedByProfileID The id of the profile for the user that deleted the integration
 	DeletedByProfileID *string `json:"deleted_by_profile_id,omitempty"`
 	// DeletedByUserID The id of the user that deleted the integration
@@ -3047,6 +3218,8 @@ type IntegrationInstancePartial struct {
 	Processed *bool `json:"processed,omitempty"`
 	// RequiresHistorical flag which can be set to trigger a historical on the next scheduler visit
 	RequiresHistorical *bool `json:"requires_historical,omitempty"`
+	// Setup the setup state of the integration
+	Setup *IntegrationInstanceSetup `json:"setup,omitempty"`
 	// State the current state of the integration
 	State *IntegrationInstanceState `json:"state,omitempty"`
 	// Throttled Set to true when integration is throttled.
@@ -3072,6 +3245,7 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 		"created_by_profile_id":          toIntegrationInstanceObject(o.CreatedByProfileID, true),
 		"created_by_user_id":             toIntegrationInstanceObject(o.CreatedByUserID, true),
 		"created_date":                   toIntegrationInstanceObject(o.CreatedDate, true),
+		"deleted":                        toIntegrationInstanceObject(o.Deleted, true),
 		"deleted_by_profile_id":          toIntegrationInstanceObject(o.DeletedByProfileID, true),
 		"deleted_by_user_id":             toIntegrationInstanceObject(o.DeletedByUserID, true),
 		"deleted_date":                   toIntegrationInstanceObject(o.DeletedDate, true),
@@ -3094,6 +3268,8 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 		"private_key":         toIntegrationInstanceObject(o.PrivateKey, true),
 		"processed":           toIntegrationInstanceObject(o.Processed, true),
 		"requires_historical": toIntegrationInstanceObject(o.RequiresHistorical, true),
+
+		"setup": toIntegrationInstanceSetupEnum(o.Setup),
 
 		"state":           toIntegrationInstanceStateEnum(o.State),
 		"throttled":       toIntegrationInstanceObject(o.Throttled, true),
@@ -3301,6 +3477,23 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 		o.CreatedDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["deleted"].(*bool); ok {
+		o.Deleted = val
+	} else if val, ok := kv["deleted"].(bool); ok {
+		o.Deleted = &val
+	} else {
+		if val, ok := kv["deleted"]; ok {
+			if val == nil {
+				o.Deleted = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.Deleted = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
 	if val, ok := kv["deleted_by_profile_id"].(*string); ok {
 		o.DeletedByProfileID = val
 	} else if val, ok := kv["deleted_by_profile_id"].(string); ok {
@@ -3767,6 +3960,33 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 					val = kv["bool"]
 				}
 				o.RequiresHistorical = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["setup"].(*IntegrationInstanceSetup); ok {
+		o.Setup = val
+	} else if val, ok := kv["setup"].(IntegrationInstanceSetup); ok {
+		o.Setup = &val
+	} else {
+		if val, ok := kv["setup"]; ok {
+			if val == nil {
+				o.Setup = toIntegrationInstanceSetupPointer(0)
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["IntegrationInstanceSetup"]
+				}
+				// this is an enum pointer
+				if em, ok := val.(string); ok {
+					switch em {
+					case "config", "CONFIG":
+						o.Setup = toIntegrationInstanceSetupPointer(0)
+					case "ready", "READY":
+						o.Setup = toIntegrationInstanceSetupPointer(1)
+					case "running", "RUNNING":
+						o.Setup = toIntegrationInstanceSetupPointer(2)
+					}
+				}
 			}
 		}
 	}
