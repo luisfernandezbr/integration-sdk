@@ -26,6 +26,8 @@ const (
 )
 
 const (
+	// Oauth1RequestModelCallbackURLColumn is the column json value callback_url
+	Oauth1RequestModelCallbackURLColumn = "callback_url"
 	// Oauth1RequestModelConsumerKeyColumn is the column json value consumer_key
 	Oauth1RequestModelConsumerKeyColumn = "consumer_key"
 	// Oauth1RequestModelConsumerSecretColumn is the column json value consumer_secret
@@ -52,6 +54,8 @@ const (
 
 // Oauth1Request An OAuth1 request sent to the agent to fetch temporary credentials
 type Oauth1Request struct {
+	// CallbackURL The callback url to use.
+	CallbackURL string `json:"callback_url" codec:"callback_url" bson:"callback_url" yaml:"callback_url" faker:"-"`
 	// ConsumerKey The Consumer Key
 	ConsumerKey string `json:"consumer_key" codec:"consumer_key" bson:"consumer_key" yaml:"consumer_key" faker:"-"`
 	// ConsumerSecret The Consumer Secret
@@ -258,6 +262,7 @@ func (o *Oauth1Request) IsEqual(other *Oauth1Request) bool {
 func (o *Oauth1Request) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"callback_url":            toOauth1RequestObject(o.CallbackURL, false),
 		"consumer_key":            toOauth1RequestObject(o.ConsumerKey, false),
 		"consumer_secret":         toOauth1RequestObject(o.ConsumerSecret, false),
 		"customer_id":             toOauth1RequestObject(o.CustomerID, false),
@@ -281,6 +286,25 @@ func (o *Oauth1Request) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["callback_url"].(string); ok {
+		o.CallbackURL = val
+	} else {
+		if val, ok := kv["callback_url"]; ok {
+			if val == nil {
+				o.CallbackURL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.CallbackURL = fmt.Sprintf("%v", val)
+			}
+		}
 	}
 	if val, ok := kv["consumer_key"].(string); ok {
 		o.ConsumerKey = val
@@ -493,6 +517,7 @@ func (o *Oauth1Request) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *Oauth1Request) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.CallbackURL)
 	args = append(args, o.ConsumerKey)
 	args = append(args, o.ConsumerSecret)
 	args = append(args, o.CustomerID)
@@ -510,6 +535,8 @@ func (o *Oauth1Request) Hash() string {
 
 // Oauth1RequestPartial is a partial struct for upsert mutations for Oauth1Request
 type Oauth1RequestPartial struct {
+	// CallbackURL The callback url to use.
+	CallbackURL *string `json:"callback_url,omitempty"`
 	// ConsumerKey The Consumer Key
 	ConsumerKey *string `json:"consumer_key,omitempty"`
 	// ConsumerSecret The Consumer Secret
@@ -534,6 +561,7 @@ func (o *Oauth1RequestPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *Oauth1RequestPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
+		"callback_url":    toOauth1RequestObject(o.CallbackURL, true),
 		"consumer_key":    toOauth1RequestObject(o.ConsumerKey, true),
 		"consumer_secret": toOauth1RequestObject(o.ConsumerSecret, true),
 		"enrollment_id":   toOauth1RequestObject(o.EnrollmentID, true),
@@ -575,6 +603,23 @@ func (o *Oauth1RequestPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *Oauth1RequestPartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["callback_url"].(*string); ok {
+		o.CallbackURL = val
+	} else if val, ok := kv["callback_url"].(string); ok {
+		o.CallbackURL = &val
+	} else {
+		if val, ok := kv["callback_url"]; ok {
+			if val == nil {
+				o.CallbackURL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.CallbackURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["consumer_key"].(*string); ok {
 		o.ConsumerKey = val
 	} else if val, ok := kv["consumer_key"].(string); ok {
