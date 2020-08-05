@@ -131,6 +131,8 @@ const (
 	ExportModelIntegrationNameColumn = "name"
 	// ExportModelIntegrationPausedColumn is the column json value paused
 	ExportModelIntegrationPausedColumn = "paused"
+	// ExportModelIntegrationPrivateKeyColumn is the column json value private_key
+	ExportModelIntegrationPrivateKeyColumn = "private_key"
 	// ExportModelIntegrationProcessedColumn is the column json value processed
 	ExportModelIntegrationProcessedColumn = "processed"
 	// ExportModelIntegrationRefIDColumn is the column json value ref_id
@@ -1332,6 +1334,8 @@ type ExportIntegration struct {
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// Paused true if the agent is paused and should not start new scheduled jobs
 	Paused bool `json:"paused" codec:"paused" bson:"paused" yaml:"paused" faker:"-"`
+	// PrivateKey the private key for the instance if needed by an integration
+	PrivateKey *string `json:"private_key,omitempty" codec:"private_key,omitempty" bson:"private_key" yaml:"private_key,omitempty" faker:"-"`
 	// Processed If the integration has been processed at least once
 	Processed *bool `json:"processed,omitempty" codec:"processed,omitempty" bson:"processed" yaml:"processed,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
@@ -1453,6 +1457,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"name": toExportIntegrationObject(o.Name, false),
 		// Paused true if the agent is paused and should not start new scheduled jobs
 		"paused": toExportIntegrationObject(o.Paused, false),
+		// PrivateKey the private key for the instance if needed by an integration
+		"private_key": toExportIntegrationObject(o.PrivateKey, true),
 		// Processed If the integration has been processed at least once
 		"processed": toExportIntegrationObject(o.Processed, true),
 		// RefID the source system id for the model instance
@@ -2037,6 +2043,23 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 				o.Paused = false
 			} else {
 				o.Paused = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["private_key"].(*string); ok {
+		o.PrivateKey = val
+	} else if val, ok := kv["private_key"].(string); ok {
+		o.PrivateKey = &val
+	} else {
+		if val, ok := kv["private_key"]; ok {
+			if val == nil {
+				o.PrivateKey = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PrivateKey = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
