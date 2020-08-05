@@ -65,6 +65,8 @@ const (
 	IntegrationInstanceModelDeletedDateOffsetColumn = "offset"
 	// IntegrationInstanceModelDeletedDateRfc3339Column is the column json value rfc3339
 	IntegrationInstanceModelDeletedDateRfc3339Column = "rfc3339"
+	// IntegrationInstanceModelEnrollmentIDColumn is the column json value enrollment_id
+	IntegrationInstanceModelEnrollmentIDColumn = "enrollment_id"
 	// IntegrationInstanceModelErrorMessageColumn is the column json value error_message
 	IntegrationInstanceModelErrorMessageColumn = "error_message"
 	// IntegrationInstanceModelErroredColumn is the column json value errored
@@ -1288,6 +1290,8 @@ type IntegrationInstance struct {
 	DeletedByUserID *string `json:"deleted_by_user_id,omitempty" codec:"deleted_by_user_id,omitempty" bson:"deleted_by_user_id" yaml:"deleted_by_user_id,omitempty" faker:"-"`
 	// DeletedDate when the integration was deleted
 	DeletedDate IntegrationInstanceDeletedDate `json:"deleted_date" codec:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
+	// EnrollmentID if the integration is linked to a self-managed agent, it will have the enrollment_id set otherwise will be null
+	EnrollmentID *string `json:"enrollment_id,omitempty" codec:"enrollment_id,omitempty" bson:"enrollment_id" yaml:"enrollment_id,omitempty" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent or any other error
@@ -1599,6 +1603,7 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 		"deleted_by_profile_id":          toIntegrationInstanceObject(o.DeletedByProfileID, true),
 		"deleted_by_user_id":             toIntegrationInstanceObject(o.DeletedByUserID, true),
 		"deleted_date":                   toIntegrationInstanceObject(o.DeletedDate, false),
+		"enrollment_id":                  toIntegrationInstanceObject(o.EnrollmentID, true),
 		"error_message":                  toIntegrationInstanceObject(o.ErrorMessage, true),
 		"errored":                        toIntegrationInstanceObject(o.Errored, true),
 		"export_acknowledged":            toIntegrationInstanceObject(o.ExportAcknowledged, true),
@@ -1830,6 +1835,23 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["enrollment_id"].(*string); ok {
+		o.EnrollmentID = val
+	} else if val, ok := kv["enrollment_id"].(string); ok {
+		o.EnrollmentID = &val
+	} else {
+		if val, ok := kv["enrollment_id"]; ok {
+			if val == nil {
+				o.EnrollmentID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EnrollmentID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["error_message"].(*string); ok {
 		o.ErrorMessage = val
 	} else if val, ok := kv["error_message"].(string); ok {
@@ -2404,6 +2426,7 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.DeletedByProfileID)
 	args = append(args, o.DeletedByUserID)
 	args = append(args, o.DeletedDate)
+	args = append(args, o.EnrollmentID)
 	args = append(args, o.ErrorMessage)
 	args = append(args, o.Errored)
 	args = append(args, o.ExportAcknowledged)
@@ -2457,6 +2480,7 @@ func (o *IntegrationInstance) GetHydrationQuery() string {
 			offset
 			rfc3339
 			}
+			enrollment_id
 			error_message
 			errored
 			export_acknowledged
@@ -2557,6 +2581,8 @@ func getIntegrationInstanceQueryFields() string {
 	// scalar
 	sb.WriteString("\t\t\trfc3339\n")
 	sb.WriteString("\t\t\t}\n")
+	// scalar
+	sb.WriteString("\t\t\tenrollment_id\n")
 	// scalar
 	sb.WriteString("\t\t\terror_message\n")
 	// scalar
@@ -2959,6 +2985,8 @@ type IntegrationInstancePartial struct {
 	DeletedByUserID *string `json:"deleted_by_user_id,omitempty"`
 	// DeletedDate when the integration was deleted
 	DeletedDate *IntegrationInstanceDeletedDate `json:"deleted_date,omitempty"`
+	// EnrollmentID if the integration is linked to a self-managed agent, it will have the enrollment_id set otherwise will be null
+	EnrollmentID *string `json:"enrollment_id,omitempty"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty"`
 	// Errored If authorization failed by the agent or any other error
@@ -3019,6 +3047,7 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 		"deleted_by_profile_id":          toIntegrationInstanceObject(o.DeletedByProfileID, true),
 		"deleted_by_user_id":             toIntegrationInstanceObject(o.DeletedByUserID, true),
 		"deleted_date":                   toIntegrationInstanceObject(o.DeletedDate, true),
+		"enrollment_id":                  toIntegrationInstanceObject(o.EnrollmentID, true),
 		"error_message":                  toIntegrationInstanceObject(o.ErrorMessage, true),
 		"errored":                        toIntegrationInstanceObject(o.Errored, true),
 		"export_acknowledged":            toIntegrationInstanceObject(o.ExportAcknowledged, true),
@@ -3312,6 +3341,23 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["enrollment_id"].(*string); ok {
+		o.EnrollmentID = val
+	} else if val, ok := kv["enrollment_id"].(string); ok {
+		o.EnrollmentID = &val
+	} else {
+		if val, ok := kv["enrollment_id"]; ok {
+			if val == nil {
+				o.EnrollmentID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EnrollmentID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["error_message"].(*string); ok {
 		o.ErrorMessage = val
 	} else if val, ok := kv["error_message"].(string); ok {

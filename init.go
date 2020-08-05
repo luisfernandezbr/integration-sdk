@@ -122,6 +122,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.Log)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.Oauth1Request":
+		o := new(dm_agent.Oauth1Request)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Oauth1Response":
+		o := new(dm_agent.Oauth1Response)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Pause":
 		o := new(dm_agent.Pause)
 		o.FromMap(map[string]interface{}{})
@@ -433,6 +441,10 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_agent.IntegrationResponsePartial)
 	case "agent.Log":
 		return new(dm_agent.LogPartial)
+	case "agent.Oauth1Request":
+		return new(dm_agent.Oauth1RequestPartial)
+	case "agent.Oauth1Response":
+		return new(dm_agent.Oauth1ResponsePartial)
 	case "agent.Pause":
 		return new(dm_agent.PausePartial)
 	case "agent.Ping":
@@ -695,6 +707,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.IntegrationRequest"),
 		datamodel.ModelNameType("agent.IntegrationResponse"),
 		datamodel.ModelNameType("agent.Log"),
+		datamodel.ModelNameType("agent.Oauth1Request"),
+		datamodel.ModelNameType("agent.Oauth1Response"),
 		datamodel.ModelNameType("agent.Pause"),
 		datamodel.ModelNameType("agent.Ping"),
 		datamodel.ModelNameType("agent.ProjectRequest"),

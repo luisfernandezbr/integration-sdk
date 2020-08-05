@@ -67,6 +67,8 @@ const (
 	ExportModelIntegrationDeletedDateOffsetColumn = "offset"
 	// ExportModelIntegrationDeletedDateRfc3339Column is the column json value rfc3339
 	ExportModelIntegrationDeletedDateRfc3339Column = "rfc3339"
+	// ExportModelIntegrationEnrollmentIDColumn is the column json value enrollment_id
+	ExportModelIntegrationEnrollmentIDColumn = "enrollment_id"
 	// ExportModelIntegrationErrorMessageColumn is the column json value error_message
 	ExportModelIntegrationErrorMessageColumn = "error_message"
 	// ExportModelIntegrationErroredColumn is the column json value errored
@@ -1296,6 +1298,8 @@ type ExportIntegration struct {
 	DeletedByUserID *string `json:"deleted_by_user_id,omitempty" codec:"deleted_by_user_id,omitempty" bson:"deleted_by_user_id" yaml:"deleted_by_user_id,omitempty" faker:"-"`
 	// DeletedDate when the integration was deleted
 	DeletedDate ExportIntegrationDeletedDate `json:"deleted_date" codec:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
+	// EnrollmentID if the integration is linked to a self-managed agent, it will have the enrollment_id set otherwise will be null
+	EnrollmentID *string `json:"enrollment_id,omitempty" codec:"enrollment_id,omitempty" bson:"enrollment_id" yaml:"enrollment_id,omitempty" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent or any other error
@@ -1415,6 +1419,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"deleted_by_user_id": toExportIntegrationObject(o.DeletedByUserID, true),
 		// DeletedDate when the integration was deleted
 		"deleted_date": toExportIntegrationObject(o.DeletedDate, false),
+		// EnrollmentID if the integration is linked to a self-managed agent, it will have the enrollment_id set otherwise will be null
+		"enrollment_id": toExportIntegrationObject(o.EnrollmentID, true),
 		// ErrorMessage The error message from an export run
 		"error_message": toExportIntegrationObject(o.ErrorMessage, true),
 		// Errored If authorization failed by the agent or any other error
@@ -1677,6 +1683,23 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		o.DeletedDate.FromMap(map[string]interface{}{})
 	}
 
+	if val, ok := kv["enrollment_id"].(*string); ok {
+		o.EnrollmentID = val
+	} else if val, ok := kv["enrollment_id"].(string); ok {
+		o.EnrollmentID = &val
+	} else {
+		if val, ok := kv["enrollment_id"]; ok {
+			if val == nil {
+				o.EnrollmentID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EnrollmentID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["error_message"].(*string); ok {
 		o.ErrorMessage = val
 	} else if val, ok := kv["error_message"].(string); ok {
