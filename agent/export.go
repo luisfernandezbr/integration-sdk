@@ -157,6 +157,14 @@ const (
 	ExportModelIntegrationThrottledUntilOffsetColumn = "offset"
 	// ExportModelIntegrationThrottledUntilRfc3339Column is the column json value rfc3339
 	ExportModelIntegrationThrottledUntilRfc3339Column = "rfc3339"
+	// ExportModelIntegrationUpgradeDateAtColumn is the column json value upgrade_date_ts
+	ExportModelIntegrationUpgradeDateAtColumn = "upgrade_date_ts"
+	// ExportModelIntegrationUpgradeExpiresDateAtColumn is the column json value upgrade_expires_date_ts
+	ExportModelIntegrationUpgradeExpiresDateAtColumn = "upgrade_expires_date_ts"
+	// ExportModelIntegrationUpgradeMessageColumn is the column json value upgrade_message
+	ExportModelIntegrationUpgradeMessageColumn = "upgrade_message"
+	// ExportModelIntegrationUpgradeRequiredColumn is the column json value upgrade_required
+	ExportModelIntegrationUpgradeRequiredColumn = "upgrade_required"
 	// ExportModelIntegrationWebhooksColumn is the column json value webhooks
 	ExportModelIntegrationWebhooksColumn = "webhooks"
 	// ExportModelIntegrationWebhooksEnabledColumn is the column json value enabled
@@ -1468,6 +1476,14 @@ type ExportIntegration struct {
 	Throttled *bool `json:"throttled,omitempty" codec:"throttled,omitempty" bson:"throttled" yaml:"throttled,omitempty" faker:"-"`
 	// ThrottledUntil After throttling integration, we set this field for estimated resume date.
 	ThrottledUntil *ExportIntegrationThrottledUntil `json:"throttled_until,omitempty" codec:"throttled_until,omitempty" bson:"throttled_until" yaml:"throttled_until,omitempty" faker:"-"`
+	// UpgradeDateAt If upgrade is required, the date when the upgrade was set
+	UpgradeDateAt *int64 `json:"upgrade_date_ts,omitempty" codec:"upgrade_date_ts,omitempty" bson:"upgrade_date_ts" yaml:"upgrade_date_ts,omitempty" faker:"-"`
+	// UpgradeExpiresDateAt If upgrade is required and there's a due date this will be set
+	UpgradeExpiresDateAt *int64 `json:"upgrade_expires_date_ts,omitempty" codec:"upgrade_expires_date_ts,omitempty" bson:"upgrade_expires_date_ts" yaml:"upgrade_expires_date_ts,omitempty" faker:"-"`
+	// UpgradeMessage If upgrade is required, the message to display to the user
+	UpgradeMessage *string `json:"upgrade_message,omitempty" codec:"upgrade_message,omitempty" bson:"upgrade_message" yaml:"upgrade_message,omitempty" faker:"-"`
+	// UpgradeRequired If true, the integration requires a manual upgrade
+	UpgradeRequired bool `json:"upgrade_required" codec:"upgrade_required" bson:"upgrade_required" yaml:"upgrade_required" faker:"-"`
 	// Webhooks for any webhooks installed at the integration instance
 	Webhooks []ExportIntegrationWebhooks `json:"webhooks" codec:"webhooks" bson:"webhooks" yaml:"webhooks" faker:"-"`
 }
@@ -1598,6 +1614,14 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 		"throttled": toExportIntegrationObject(o.Throttled, true),
 		// ThrottledUntil After throttling integration, we set this field for estimated resume date.
 		"throttled_until": toExportIntegrationObject(o.ThrottledUntil, true),
+		// UpgradeDateAt If upgrade is required, the date when the upgrade was set
+		"upgrade_date_ts": toExportIntegrationObject(o.UpgradeDateAt, true),
+		// UpgradeExpiresDateAt If upgrade is required and there's a due date this will be set
+		"upgrade_expires_date_ts": toExportIntegrationObject(o.UpgradeExpiresDateAt, true),
+		// UpgradeMessage If upgrade is required, the message to display to the user
+		"upgrade_message": toExportIntegrationObject(o.UpgradeMessage, true),
+		// UpgradeRequired If true, the integration requires a manual upgrade
+		"upgrade_required": toExportIntegrationObject(o.UpgradeRequired, false),
 		// Webhooks for any webhooks installed at the integration instance
 		"webhooks": toExportIntegrationObject(o.Webhooks, false),
 	}
@@ -2363,6 +2387,69 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.ThrottledUntil.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["upgrade_date_ts"].(*int64); ok {
+		o.UpgradeDateAt = val
+	} else if val, ok := kv["upgrade_date_ts"].(int64); ok {
+		o.UpgradeDateAt = &val
+	} else {
+		if val, ok := kv["upgrade_date_ts"]; ok {
+			if val == nil {
+				o.UpgradeDateAt = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.UpgradeDateAt = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_expires_date_ts"].(*int64); ok {
+		o.UpgradeExpiresDateAt = val
+	} else if val, ok := kv["upgrade_expires_date_ts"].(int64); ok {
+		o.UpgradeExpiresDateAt = &val
+	} else {
+		if val, ok := kv["upgrade_expires_date_ts"]; ok {
+			if val == nil {
+				o.UpgradeExpiresDateAt = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.UpgradeExpiresDateAt = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_message"].(*string); ok {
+		o.UpgradeMessage = val
+	} else if val, ok := kv["upgrade_message"].(string); ok {
+		o.UpgradeMessage = &val
+	} else {
+		if val, ok := kv["upgrade_message"]; ok {
+			if val == nil {
+				o.UpgradeMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UpgradeMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_required"].(bool); ok {
+		o.UpgradeRequired = val
+	} else {
+		if val, ok := kv["upgrade_required"]; ok {
+			if val == nil {
+				o.UpgradeRequired = false
+			} else {
+				o.UpgradeRequired = number.ToBoolAny(val)
+			}
+		}
 	}
 
 	if o == nil {

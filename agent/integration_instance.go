@@ -157,6 +157,14 @@ const (
 	IntegrationInstanceModelThrottledUntilRfc3339Column = "rfc3339"
 	// IntegrationInstanceModelUpdatedAtColumn is the column json value updated_ts
 	IntegrationInstanceModelUpdatedAtColumn = "updated_ts"
+	// IntegrationInstanceModelUpgradeDateAtColumn is the column json value upgrade_date_ts
+	IntegrationInstanceModelUpgradeDateAtColumn = "upgrade_date_ts"
+	// IntegrationInstanceModelUpgradeExpiresDateAtColumn is the column json value upgrade_expires_date_ts
+	IntegrationInstanceModelUpgradeExpiresDateAtColumn = "upgrade_expires_date_ts"
+	// IntegrationInstanceModelUpgradeMessageColumn is the column json value upgrade_message
+	IntegrationInstanceModelUpgradeMessageColumn = "upgrade_message"
+	// IntegrationInstanceModelUpgradeRequiredColumn is the column json value upgrade_required
+	IntegrationInstanceModelUpgradeRequiredColumn = "upgrade_required"
 	// IntegrationInstanceModelWebhooksColumn is the column json value webhooks
 	IntegrationInstanceModelWebhooksColumn = "webhooks"
 	// IntegrationInstanceModelWebhooksEnabledColumn is the column json value enabled
@@ -1462,6 +1470,14 @@ type IntegrationInstance struct {
 	ThrottledUntil *IntegrationInstanceThrottledUntil `json:"throttled_until,omitempty" codec:"throttled_until,omitempty" bson:"throttled_until" yaml:"throttled_until,omitempty" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// UpgradeDateAt If upgrade is required, the date when the upgrade was set
+	UpgradeDateAt *int64 `json:"upgrade_date_ts,omitempty" codec:"upgrade_date_ts,omitempty" bson:"upgrade_date_ts" yaml:"upgrade_date_ts,omitempty" faker:"-"`
+	// UpgradeExpiresDateAt If upgrade is required and there's a due date this will be set
+	UpgradeExpiresDateAt *int64 `json:"upgrade_expires_date_ts,omitempty" codec:"upgrade_expires_date_ts,omitempty" bson:"upgrade_expires_date_ts" yaml:"upgrade_expires_date_ts,omitempty" faker:"-"`
+	// UpgradeMessage If upgrade is required, the message to display to the user
+	UpgradeMessage *string `json:"upgrade_message,omitempty" codec:"upgrade_message,omitempty" bson:"upgrade_message" yaml:"upgrade_message,omitempty" faker:"-"`
+	// UpgradeRequired If true, the integration requires a manual upgrade
+	UpgradeRequired bool `json:"upgrade_required" codec:"upgrade_required" bson:"upgrade_required" yaml:"upgrade_required" faker:"-"`
 	// Webhooks for any webhooks installed at the integration instance
 	Webhooks []IntegrationInstanceWebhooks `json:"webhooks" codec:"webhooks" bson:"webhooks" yaml:"webhooks" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -1755,12 +1771,16 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 
 		"setup": o.Setup.String(),
 
-		"state":           o.State.String(),
-		"throttled":       toIntegrationInstanceObject(o.Throttled, true),
-		"throttled_until": toIntegrationInstanceObject(o.ThrottledUntil, true),
-		"updated_ts":      toIntegrationInstanceObject(o.UpdatedAt, false),
-		"webhooks":        toIntegrationInstanceObject(o.Webhooks, false),
-		"hashcode":        toIntegrationInstanceObject(o.Hashcode, false),
+		"state":                   o.State.String(),
+		"throttled":               toIntegrationInstanceObject(o.Throttled, true),
+		"throttled_until":         toIntegrationInstanceObject(o.ThrottledUntil, true),
+		"updated_ts":              toIntegrationInstanceObject(o.UpdatedAt, false),
+		"upgrade_date_ts":         toIntegrationInstanceObject(o.UpgradeDateAt, true),
+		"upgrade_expires_date_ts": toIntegrationInstanceObject(o.UpgradeExpiresDateAt, true),
+		"upgrade_message":         toIntegrationInstanceObject(o.UpgradeMessage, true),
+		"upgrade_required":        toIntegrationInstanceObject(o.UpgradeRequired, false),
+		"webhooks":                toIntegrationInstanceObject(o.Webhooks, false),
+		"hashcode":                toIntegrationInstanceObject(o.Hashcode, false),
 	}
 }
 
@@ -2529,6 +2549,68 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["upgrade_date_ts"].(*int64); ok {
+		o.UpgradeDateAt = val
+	} else if val, ok := kv["upgrade_date_ts"].(int64); ok {
+		o.UpgradeDateAt = &val
+	} else {
+		if val, ok := kv["upgrade_date_ts"]; ok {
+			if val == nil {
+				o.UpgradeDateAt = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.UpgradeDateAt = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_expires_date_ts"].(*int64); ok {
+		o.UpgradeExpiresDateAt = val
+	} else if val, ok := kv["upgrade_expires_date_ts"].(int64); ok {
+		o.UpgradeExpiresDateAt = &val
+	} else {
+		if val, ok := kv["upgrade_expires_date_ts"]; ok {
+			if val == nil {
+				o.UpgradeExpiresDateAt = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.UpgradeExpiresDateAt = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_message"].(*string); ok {
+		o.UpgradeMessage = val
+	} else if val, ok := kv["upgrade_message"].(string); ok {
+		o.UpgradeMessage = &val
+	} else {
+		if val, ok := kv["upgrade_message"]; ok {
+			if val == nil {
+				o.UpgradeMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UpgradeMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_required"].(bool); ok {
+		o.UpgradeRequired = val
+	} else {
+		if val, ok := kv["upgrade_required"]; ok {
+			if val == nil {
+				o.UpgradeRequired = false
+			} else {
+				o.UpgradeRequired = number.ToBoolAny(val)
+			}
+		}
+	}
 
 	if o == nil {
 
@@ -2637,6 +2719,10 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.Throttled)
 	args = append(args, o.ThrottledUntil)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.UpgradeDateAt)
+	args = append(args, o.UpgradeExpiresDateAt)
+	args = append(args, o.UpgradeMessage)
+	args = append(args, o.UpgradeRequired)
 	args = append(args, o.Webhooks)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -2718,6 +2804,10 @@ func (o *IntegrationInstance) GetHydrationQuery() string {
 			rfc3339
 			}
 			updated_ts
+			upgrade_date_ts
+			upgrade_expires_date_ts
+			upgrade_message
+			upgrade_required
 			webhooks {
 			enabled
 			error_message
@@ -2874,6 +2964,14 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\tupdated_ts\n")
+	// scalar
+	sb.WriteString("\t\t\tupgrade_date_ts\n")
+	// scalar
+	sb.WriteString("\t\t\tupgrade_expires_date_ts\n")
+	// scalar
+	sb.WriteString("\t\t\tupgrade_message\n")
+	// scalar
+	sb.WriteString("\t\t\tupgrade_required\n")
 	// object with fields
 	sb.WriteString("\t\t\twebhooks {\n")
 
@@ -3226,6 +3324,14 @@ type IntegrationInstancePartial struct {
 	Throttled *bool `json:"throttled,omitempty"`
 	// ThrottledUntil After throttling integration, we set this field for estimated resume date.
 	ThrottledUntil *IntegrationInstanceThrottledUntil `json:"throttled_until,omitempty"`
+	// UpgradeDateAt If upgrade is required, the date when the upgrade was set
+	UpgradeDateAt *int64 `json:"upgrade_date_ts,omitempty"`
+	// UpgradeExpiresDateAt If upgrade is required and there's a due date this will be set
+	UpgradeExpiresDateAt *int64 `json:"upgrade_expires_date_ts,omitempty"`
+	// UpgradeMessage If upgrade is required, the message to display to the user
+	UpgradeMessage *string `json:"upgrade_message,omitempty"`
+	// UpgradeRequired If true, the integration requires a manual upgrade
+	UpgradeRequired *bool `json:"upgrade_required,omitempty"`
 	// Webhooks for any webhooks installed at the integration instance
 	Webhooks []IntegrationInstanceWebhooks `json:"webhooks,omitempty"`
 }
@@ -3271,10 +3377,14 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 
 		"setup": toIntegrationInstanceSetupEnum(o.Setup),
 
-		"state":           toIntegrationInstanceStateEnum(o.State),
-		"throttled":       toIntegrationInstanceObject(o.Throttled, true),
-		"throttled_until": toIntegrationInstanceObject(o.ThrottledUntil, true),
-		"webhooks":        toIntegrationInstanceObject(o.Webhooks, true),
+		"state":                   toIntegrationInstanceStateEnum(o.State),
+		"throttled":               toIntegrationInstanceObject(o.Throttled, true),
+		"throttled_until":         toIntegrationInstanceObject(o.ThrottledUntil, true),
+		"upgrade_date_ts":         toIntegrationInstanceObject(o.UpgradeDateAt, true),
+		"upgrade_expires_date_ts": toIntegrationInstanceObject(o.UpgradeExpiresDateAt, true),
+		"upgrade_message":         toIntegrationInstanceObject(o.UpgradeMessage, true),
+		"upgrade_required":        toIntegrationInstanceObject(o.UpgradeRequired, true),
+		"webhooks":                toIntegrationInstanceObject(o.Webhooks, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -4065,6 +4175,75 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 		}
 	} else {
 		o.ThrottledUntil.FromMap(map[string]interface{}{})
+	}
+
+	if val, ok := kv["upgrade_date_ts"].(*int64); ok {
+		o.UpgradeDateAt = val
+	} else if val, ok := kv["upgrade_date_ts"].(int64); ok {
+		o.UpgradeDateAt = &val
+	} else {
+		if val, ok := kv["upgrade_date_ts"]; ok {
+			if val == nil {
+				o.UpgradeDateAt = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.UpgradeDateAt = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_expires_date_ts"].(*int64); ok {
+		o.UpgradeExpiresDateAt = val
+	} else if val, ok := kv["upgrade_expires_date_ts"].(int64); ok {
+		o.UpgradeExpiresDateAt = &val
+	} else {
+		if val, ok := kv["upgrade_expires_date_ts"]; ok {
+			if val == nil {
+				o.UpgradeExpiresDateAt = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["long"]
+				}
+				o.UpgradeExpiresDateAt = number.Int64Pointer(number.ToInt64Any(val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_message"].(*string); ok {
+		o.UpgradeMessage = val
+	} else if val, ok := kv["upgrade_message"].(string); ok {
+		o.UpgradeMessage = &val
+	} else {
+		if val, ok := kv["upgrade_message"]; ok {
+			if val == nil {
+				o.UpgradeMessage = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.UpgradeMessage = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["upgrade_required"].(*bool); ok {
+		o.UpgradeRequired = val
+	} else if val, ok := kv["upgrade_required"].(bool); ok {
+		o.UpgradeRequired = &val
+	} else {
+		if val, ok := kv["upgrade_required"]; ok {
+			if val == nil {
+				o.UpgradeRequired = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.UpgradeRequired = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
 	}
 
 	if o == nil {
