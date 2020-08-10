@@ -75,6 +75,8 @@ const (
 	PullRequestModelIdentifierColumn = "identifier"
 	// PullRequestModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	PullRequestModelIntegrationInstanceIDColumn = "integration_instance_id"
+	// PullRequestModelLabelsColumn is the column json value labels
+	PullRequestModelLabelsColumn = "labels"
 	// PullRequestModelMergeCommitIDColumn is the column json value merge_commit_id
 	PullRequestModelMergeCommitIDColumn = "merge_commit_id"
 	// PullRequestModelMergeShaColumn is the column json value merge_sha
@@ -665,6 +667,8 @@ type PullRequest struct {
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// Labels the labels for the pull request
+	Labels []string `json:"labels" codec:"labels" bson:"labels" yaml:"labels" faker:"-"`
 	// MergeCommitID the id of the merge commit
 	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeSha the sha of the merge commit
@@ -758,6 +762,9 @@ func (o *PullRequest) setDefaults(frommap bool) {
 	}
 	if o.CommitShas == nil {
 		o.CommitShas = make([]string, 0)
+	}
+	if o.Labels == nil {
+		o.Labels = make([]string, 0)
 	}
 
 	if o.ID == "" {
@@ -906,6 +913,7 @@ func (o *PullRequest) ToMap() map[string]interface{} {
 		"id":                      toPullRequestObject(o.ID, false),
 		"identifier":              toPullRequestObject(o.Identifier, false),
 		"integration_instance_id": toPullRequestObject(o.IntegrationInstanceID, true),
+		"labels":                  toPullRequestObject(o.Labels, false),
 		"merge_commit_id":         toPullRequestObject(o.MergeCommitID, false),
 		"merge_sha":               toPullRequestObject(o.MergeSha, false),
 		"merged_by_ref_id":        toPullRequestObject(o.MergedByRefID, false),
@@ -1284,6 +1292,56 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["labels"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for labels field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for labels field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for labels field")
+				}
+			}
+			o.Labels = na
+		}
+	}
+	if o.Labels == nil {
+		o.Labels = make([]string, 0)
+	}
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -1553,6 +1611,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
 	args = append(args, o.IntegrationInstanceID)
+	args = append(args, o.Labels)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeSha)
 	args = append(args, o.MergedByRefID)
@@ -1594,6 +1653,8 @@ type PullRequestPartial struct {
 	Draft *bool `json:"draft,omitempty"`
 	// Identifier a human friendly identifier when displaying this pull request
 	Identifier *string `json:"identifier,omitempty"`
+	// Labels the labels for the pull request
+	Labels []string `json:"labels,omitempty"`
 	// MergeCommitID the id of the merge commit
 	MergeCommitID *string `json:"merge_commit_id,omitempty"`
 	// MergeSha the sha of the merge commit
@@ -1636,6 +1697,7 @@ func (o *PullRequestPartial) ToMap() map[string]interface{} {
 		"description":       toPullRequestObject(o.Description, true),
 		"draft":             toPullRequestObject(o.Draft, true),
 		"identifier":        toPullRequestObject(o.Identifier, true),
+		"labels":            toPullRequestObject(o.Labels, true),
 		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, true),
 		"merge_sha":         toPullRequestObject(o.MergeSha, true),
 		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, true),
@@ -1677,6 +1739,14 @@ func (o *PullRequestPartial) ToMap() map[string]interface{} {
 			if k == "created_date" {
 				if dt, ok := v.(*PullRequestCreatedDate); ok {
 					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "labels" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
 						delete(kv, k)
 					}
 				}
@@ -2030,6 +2100,56 @@ func (o *PullRequestPartial) FromMap(kv map[string]interface{}) {
 				o.Identifier = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["labels"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for labels field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for labels field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for labels field")
+				}
+			}
+			o.Labels = na
+		}
+	}
+	if o.Labels == nil {
+		o.Labels = make([]string, 0)
 	}
 	if val, ok := kv["merge_commit_id"].(*string); ok {
 		o.MergeCommitID = val
