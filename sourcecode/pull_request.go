@@ -33,6 +33,8 @@ const (
 )
 
 const (
+	// PullRequestModelActiveColumn is the column json value active
+	PullRequestModelActiveColumn = "active"
 	// PullRequestModelBranchIDColumn is the column json value branch_id
 	PullRequestModelBranchIDColumn = "branch_id"
 	// PullRequestModelBranchNameColumn is the column json value branch_name
@@ -71,6 +73,8 @@ const (
 	PullRequestModelIDColumn = "id"
 	// PullRequestModelIdentifierColumn is the column json value identifier
 	PullRequestModelIdentifierColumn = "identifier"
+	// PullRequestModelLabelsColumn is the column json value labels
+	PullRequestModelLabelsColumn = "labels"
 	// PullRequestModelMergeCommitIDColumn is the column json value merge_commit_id
 	PullRequestModelMergeCommitIDColumn = "merge_commit_id"
 	// PullRequestModelMergeShaColumn is the column json value merge_sha
@@ -613,6 +617,8 @@ func (o *PullRequestUpdatedDate) FromMap(kv map[string]interface{}) {
 
 // PullRequest the pull request for a given repo
 type PullRequest struct {
+	// Active indicates that this model is displayed in a source system, false if the model is deleted
+	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// BranchID id for the branch based on branch_name, could be already deleted
 	BranchID string `json:"branch_id" codec:"branch_id" bson:"branch_id" yaml:"branch_id" faker:"-"`
 	// BranchName branch name of the pull request
@@ -639,6 +645,8 @@ type PullRequest struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier a human friendly identifier when displaying this pull request
 	Identifier string `json:"identifier" codec:"identifier" bson:"identifier" yaml:"identifier" faker:"-"`
+	// Labels the labels for the pull request
+	Labels []string `json:"labels" codec:"labels" bson:"labels" yaml:"labels" faker:"-"`
 	// MergeCommitID the id of the merge commit
 	MergeCommitID string `json:"merge_commit_id" codec:"merge_commit_id" bson:"merge_commit_id" yaml:"merge_commit_id" faker:"-"`
 	// MergeSha the sha of the merge commit
@@ -733,6 +741,9 @@ func (o *PullRequest) setDefaults(frommap bool) {
 	if o.CommitShas == nil {
 		o.CommitShas = make([]string, 0)
 	}
+	if o.Labels == nil {
+		o.Labels = make([]string, 0)
+	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.RepoID)
@@ -783,12 +794,6 @@ func (o *PullRequest) GetModelMaterializeConfig() *datamodel.ModelMaterializeCon
 // IsEvented returns true if the model supports eventing and implements ModelEventProvider
 func (o *PullRequest) IsEvented() bool {
 	return false
-}
-
-// SetEventHeaders will set any event headers for the object instance
-func (o *PullRequest) SetEventHeaders(kv map[string]string) {
-	kv["customer_id"] = o.CustomerID
-	kv["model"] = PullRequestModelName.String()
 }
 
 // GetTopicConfig returns the topic config object
@@ -865,6 +870,7 @@ func (o *PullRequest) IsEqual(other *PullRequest) bool {
 func (o *PullRequest) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
+		"active":            toPullRequestObject(o.Active, false),
 		"branch_id":         toPullRequestObject(o.BranchID, false),
 		"branch_name":       toPullRequestObject(o.BranchName, false),
 		"closed_by_ref_id":  toPullRequestObject(o.ClosedByRefID, false),
@@ -878,6 +884,7 @@ func (o *PullRequest) ToMap() map[string]interface{} {
 		"draft":             toPullRequestObject(o.Draft, false),
 		"id":                toPullRequestObject(o.ID, false),
 		"identifier":        toPullRequestObject(o.Identifier, false),
+		"labels":            toPullRequestObject(o.Labels, false),
 		"merge_commit_id":   toPullRequestObject(o.MergeCommitID, false),
 		"merge_sha":         toPullRequestObject(o.MergeSha, false),
 		"merged_by_ref_id":  toPullRequestObject(o.MergedByRefID, false),
@@ -902,6 +909,17 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["active"].(bool); ok {
+		o.Active = val
+	} else {
+		if val, ok := kv["active"]; ok {
+			if val == nil {
+				o.Active = false
+			} else {
+				o.Active = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["branch_id"].(string); ok {
 		o.BranchID = val
@@ -1234,6 +1252,56 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["labels"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for labels field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for labels field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for labels field")
+				}
+			}
+			o.Labels = na
+		}
+	}
+	if o.Labels == nil {
+		o.Labels = make([]string, 0)
+	}
 	if val, ok := kv["merge_commit_id"].(string); ok {
 		o.MergeCommitID = val
 	} else {
@@ -1494,6 +1562,7 @@ func (o *PullRequest) FromMap(kv map[string]interface{}) {
 // Hash will return a hashcode for the object
 func (o *PullRequest) Hash() string {
 	args := make([]interface{}, 0)
+	args = append(args, o.Active)
 	args = append(args, o.BranchID)
 	args = append(args, o.BranchName)
 	args = append(args, o.ClosedByRefID)
@@ -1507,6 +1576,7 @@ func (o *PullRequest) Hash() string {
 	args = append(args, o.Draft)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
+	args = append(args, o.Labels)
 	args = append(args, o.MergeCommitID)
 	args = append(args, o.MergeSha)
 	args = append(args, o.MergedByRefID)
