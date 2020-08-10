@@ -56,6 +56,8 @@ const (
 	Oauth1RequestModelStageColumn = "stage"
 	// Oauth1RequestModelTokenColumn is the column json value token
 	Oauth1RequestModelTokenColumn = "token"
+	// Oauth1RequestModelTokenSecretColumn is the column json value token_secret
+	Oauth1RequestModelTokenSecretColumn = "token_secret"
 	// Oauth1RequestModelURLColumn is the column json value url
 	Oauth1RequestModelURLColumn = "url"
 )
@@ -188,6 +190,8 @@ type Oauth1Request struct {
 	Stage Oauth1RequestStage `json:"stage" codec:"stage" bson:"stage" yaml:"stage" faker:"-"`
 	// Token the token if stage is access_token
 	Token *string `json:"token,omitempty" codec:"token,omitempty" bson:"token" yaml:"token,omitempty" faker:"-"`
+	// TokenSecret the token secret if stage is access_token
+	TokenSecret *string `json:"token_secret,omitempty" codec:"token_secret,omitempty" bson:"token_secret" yaml:"token_secret,omitempty" faker:"-"`
 	// URL The URL to the endpoint for fetching the temporary token
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -390,10 +394,11 @@ func (o *Oauth1Request) ToMap() map[string]interface{} {
 		"ref_type":                toOauth1RequestObject(o.RefType, false),
 		"session_id":              toOauth1RequestObject(o.SessionID, false),
 
-		"stage":    o.Stage.String(),
-		"token":    toOauth1RequestObject(o.Token, true),
-		"url":      toOauth1RequestObject(o.URL, false),
-		"hashcode": toOauth1RequestObject(o.Hashcode, false),
+		"stage":        o.Stage.String(),
+		"token":        toOauth1RequestObject(o.Token, true),
+		"token_secret": toOauth1RequestObject(o.TokenSecret, true),
+		"url":          toOauth1RequestObject(o.URL, false),
+		"hashcode":     toOauth1RequestObject(o.Hashcode, false),
 	}
 }
 
@@ -667,6 +672,23 @@ func (o *Oauth1Request) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["token_secret"].(*string); ok {
+		o.TokenSecret = val
+	} else if val, ok := kv["token_secret"].(string); ok {
+		o.TokenSecret = &val
+	} else {
+		if val, ok := kv["token_secret"]; ok {
+			if val == nil {
+				o.TokenSecret = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.TokenSecret = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["url"].(string); ok {
 		o.URL = val
 	} else {
@@ -706,6 +728,7 @@ func (o *Oauth1Request) Hash() string {
 	args = append(args, o.SessionID)
 	args = append(args, o.Stage)
 	args = append(args, o.Token)
+	args = append(args, o.TokenSecret)
 	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
@@ -731,6 +754,8 @@ type Oauth1RequestPartial struct {
 	Stage *Oauth1RequestStage `json:"stage,omitempty"`
 	// Token the token if stage is access_token
 	Token *string `json:"token,omitempty"`
+	// TokenSecret the token secret if stage is access_token
+	TokenSecret *string `json:"token_secret,omitempty"`
 	// URL The URL to the endpoint for fetching the temporary token
 	URL *string `json:"url,omitempty"`
 }
@@ -753,9 +778,10 @@ func (o *Oauth1RequestPartial) ToMap() map[string]interface{} {
 		"private_key":     toOauth1RequestObject(o.PrivateKey, true),
 		"session_id":      toOauth1RequestObject(o.SessionID, true),
 
-		"stage": toOauth1RequestStageEnum(o.Stage),
-		"token": toOauth1RequestObject(o.Token, true),
-		"url":   toOauth1RequestObject(o.URL, true),
+		"stage":        toOauth1RequestStageEnum(o.Stage),
+		"token":        toOauth1RequestObject(o.Token, true),
+		"token_secret": toOauth1RequestObject(o.TokenSecret, true),
+		"url":          toOauth1RequestObject(o.URL, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -949,6 +975,23 @@ func (o *Oauth1RequestPartial) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.Token = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["token_secret"].(*string); ok {
+		o.TokenSecret = val
+	} else if val, ok := kv["token_secret"].(string); ok {
+		o.TokenSecret = &val
+	} else {
+		if val, ok := kv["token_secret"]; ok {
+			if val == nil {
+				o.TokenSecret = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.TokenSecret = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
