@@ -42,8 +42,6 @@ const (
 	ExportCompleteModelHistoricalColumn = "historical"
 	// ExportCompleteModelIDColumn is the column json value id
 	ExportCompleteModelIDColumn = "id"
-	// ExportCompleteModelInitialColumn is the column json value initial
-	ExportCompleteModelInitialColumn = "initial"
 	// ExportCompleteModelIntegrationIDColumn is the column json value integration_id
 	ExportCompleteModelIntegrationIDColumn = "integration_id"
 	// ExportCompleteModelIntegrationInstanceIDColumn is the column json value integration_instance_id
@@ -73,13 +71,11 @@ type ExportComplete struct {
 	// EndedAt the timestamp when the export finished
 	EndedAt int64 `json:"ended_ts" codec:"ended_ts" bson:"ended_ts" yaml:"ended_ts" faker:"-"`
 	// Error if not successfully, will be set to the error message from the integration
-	Error *bool `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
+	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// Historical true if historical
 	Historical bool `json:"historical" codec:"historical" bson:"historical" yaml:"historical" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// Initial true if the initial historical from an export
-	Initial bool `json:"initial" codec:"initial" bson:"initial" yaml:"initial" faker:"-"`
 	// IntegrationID The ID of the integration
 	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
 	// IntegrationInstanceID The ID of the integration instance
@@ -153,11 +149,6 @@ func (o *ExportComplete) setDefaults(frommap bool) {
 	if o.ID == "" {
 		// set the id from the spec provided in the model
 		o.ID = hash.Values(o.CustomerID, o.JobID, o.IntegrationID)
-	}
-
-	if o.Error == nil {
-		var v bool
-		o.Error = &v
 	}
 
 	if frommap {
@@ -293,7 +284,6 @@ func (o *ExportComplete) ToMap() map[string]interface{} {
 		"error":                   toExportCompleteObject(o.Error, true),
 		"historical":              toExportCompleteObject(o.Historical, false),
 		"id":                      toExportCompleteObject(o.ID, false),
-		"initial":                 toExportCompleteObject(o.Initial, false),
 		"integration_id":          toExportCompleteObject(o.IntegrationID, false),
 		"integration_instance_id": toExportCompleteObject(o.IntegrationInstanceID, false),
 		"job_id":                  toExportCompleteObject(o.JobID, false),
@@ -363,20 +353,20 @@ func (o *ExportComplete) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["error"].(*bool); ok {
+	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
-	} else if val, ok := kv["error"].(bool); ok {
+	} else if val, ok := kv["error"].(string); ok {
 		o.Error = &val
 	} else {
 		if val, ok := kv["error"]; ok {
 			if val == nil {
-				o.Error = nil
+				o.Error = pstrings.Pointer("")
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["bool"]
+					val = kv["string"]
 				}
-				o.Error = number.BoolPointer(number.ToBoolAny(val))
+				o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -407,17 +397,6 @@ func (o *ExportComplete) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.ID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	if val, ok := kv["initial"].(bool); ok {
-		o.Initial = val
-	} else {
-		if val, ok := kv["initial"]; ok {
-			if val == nil {
-				o.Initial = false
-			} else {
-				o.Initial = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -584,7 +563,6 @@ func (o *ExportComplete) Hash() string {
 	args = append(args, o.Error)
 	args = append(args, o.Historical)
 	args = append(args, o.ID)
-	args = append(args, o.Initial)
 	args = append(args, o.IntegrationID)
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.JobID)
@@ -610,7 +588,6 @@ func (o *ExportComplete) GetHydrationQuery() string {
 			error
 			historical
 			_id
-			initial
 			integration_id
 			integration_instance_id
 			job_id
@@ -641,8 +618,6 @@ func getExportCompleteQueryFields() string {
 	sb.WriteString("\t\t\thistorical\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")
-	// scalar
-	sb.WriteString("\t\t\tinitial\n")
 	// scalar
 	sb.WriteString("\t\t\tintegration_id\n")
 	// scalar
@@ -940,11 +915,9 @@ type ExportCompletePartial struct {
 	// EndedAt the timestamp when the export finished
 	EndedAt *int64 `json:"ended_ts,omitempty"`
 	// Error if not successfully, will be set to the error message from the integration
-	Error *bool `json:"error,omitempty"`
+	Error *string `json:"error,omitempty"`
 	// Historical true if historical
 	Historical *bool `json:"historical,omitempty"`
-	// Initial true if the initial historical from an export
-	Initial *bool `json:"initial,omitempty"`
 	// IntegrationID The ID of the integration
 	IntegrationID *string `json:"integration_id,omitempty"`
 	// JobID The job ID
@@ -970,7 +943,6 @@ func (o *ExportCompletePartial) ToMap() map[string]interface{} {
 		"ended_ts":       toExportCompleteObject(o.EndedAt, true),
 		"error":          toExportCompleteObject(o.Error, true),
 		"historical":     toExportCompleteObject(o.Historical, true),
-		"initial":        toExportCompleteObject(o.Initial, true),
 		"integration_id": toExportCompleteObject(o.IntegrationID, true),
 		"job_id":         toExportCompleteObject(o.JobID, true),
 		"started_ts":     toExportCompleteObject(o.StartedAt, true),
@@ -1028,20 +1000,20 @@ func (o *ExportCompletePartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["error"].(*bool); ok {
+	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
-	} else if val, ok := kv["error"].(bool); ok {
+	} else if val, ok := kv["error"].(string); ok {
 		o.Error = &val
 	} else {
 		if val, ok := kv["error"]; ok {
 			if val == nil {
-				o.Error = nil
+				o.Error = pstrings.Pointer("")
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["bool"]
+					val = kv["string"]
 				}
-				o.Error = number.BoolPointer(number.ToBoolAny(val))
+				o.Error = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1059,23 +1031,6 @@ func (o *ExportCompletePartial) FromMap(kv map[string]interface{}) {
 					val = kv["bool"]
 				}
 				o.Historical = number.BoolPointer(number.ToBoolAny(val))
-			}
-		}
-	}
-	if val, ok := kv["initial"].(*bool); ok {
-		o.Initial = val
-	} else if val, ok := kv["initial"].(bool); ok {
-		o.Initial = &val
-	} else {
-		if val, ok := kv["initial"]; ok {
-			if val == nil {
-				o.Initial = nil
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["bool"]
-				}
-				o.Initial = number.BoolPointer(number.ToBoolAny(val))
 			}
 		}
 	}
