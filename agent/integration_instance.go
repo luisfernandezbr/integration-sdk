@@ -85,46 +85,6 @@ const (
 	IntegrationInstanceModelIntervalColumn = "interval"
 	// IntegrationInstanceModelJobIDColumn is the column json value job_id
 	IntegrationInstanceModelJobIDColumn = "job_id"
-	// IntegrationInstanceModelLastExportCompletedDateColumn is the column json value last_export_completed_date
-	IntegrationInstanceModelLastExportCompletedDateColumn = "last_export_completed_date"
-	// IntegrationInstanceModelLastExportCompletedDateEpochColumn is the column json value epoch
-	IntegrationInstanceModelLastExportCompletedDateEpochColumn = "epoch"
-	// IntegrationInstanceModelLastExportCompletedDateOffsetColumn is the column json value offset
-	IntegrationInstanceModelLastExportCompletedDateOffsetColumn = "offset"
-	// IntegrationInstanceModelLastExportCompletedDateRfc3339Column is the column json value rfc3339
-	IntegrationInstanceModelLastExportCompletedDateRfc3339Column = "rfc3339"
-	// IntegrationInstanceModelLastExportRequestedDateColumn is the column json value last_export_requested_date
-	IntegrationInstanceModelLastExportRequestedDateColumn = "last_export_requested_date"
-	// IntegrationInstanceModelLastExportRequestedDateEpochColumn is the column json value epoch
-	IntegrationInstanceModelLastExportRequestedDateEpochColumn = "epoch"
-	// IntegrationInstanceModelLastExportRequestedDateOffsetColumn is the column json value offset
-	IntegrationInstanceModelLastExportRequestedDateOffsetColumn = "offset"
-	// IntegrationInstanceModelLastExportRequestedDateRfc3339Column is the column json value rfc3339
-	IntegrationInstanceModelLastExportRequestedDateRfc3339Column = "rfc3339"
-	// IntegrationInstanceModelLastHistoricalCompletedDateColumn is the column json value last_historical_completed_date
-	IntegrationInstanceModelLastHistoricalCompletedDateColumn = "last_historical_completed_date"
-	// IntegrationInstanceModelLastHistoricalCompletedDateEpochColumn is the column json value epoch
-	IntegrationInstanceModelLastHistoricalCompletedDateEpochColumn = "epoch"
-	// IntegrationInstanceModelLastHistoricalCompletedDateOffsetColumn is the column json value offset
-	IntegrationInstanceModelLastHistoricalCompletedDateOffsetColumn = "offset"
-	// IntegrationInstanceModelLastHistoricalCompletedDateRfc3339Column is the column json value rfc3339
-	IntegrationInstanceModelLastHistoricalCompletedDateRfc3339Column = "rfc3339"
-	// IntegrationInstanceModelLastHistoricalRequestedDateColumn is the column json value last_historical_requested_date
-	IntegrationInstanceModelLastHistoricalRequestedDateColumn = "last_historical_requested_date"
-	// IntegrationInstanceModelLastHistoricalRequestedDateEpochColumn is the column json value epoch
-	IntegrationInstanceModelLastHistoricalRequestedDateEpochColumn = "epoch"
-	// IntegrationInstanceModelLastHistoricalRequestedDateOffsetColumn is the column json value offset
-	IntegrationInstanceModelLastHistoricalRequestedDateOffsetColumn = "offset"
-	// IntegrationInstanceModelLastHistoricalRequestedDateRfc3339Column is the column json value rfc3339
-	IntegrationInstanceModelLastHistoricalRequestedDateRfc3339Column = "rfc3339"
-	// IntegrationInstanceModelLastProcessingDateColumn is the column json value last_processing_date
-	IntegrationInstanceModelLastProcessingDateColumn = "last_processing_date"
-	// IntegrationInstanceModelLastProcessingDateEpochColumn is the column json value epoch
-	IntegrationInstanceModelLastProcessingDateEpochColumn = "epoch"
-	// IntegrationInstanceModelLastProcessingDateOffsetColumn is the column json value offset
-	IntegrationInstanceModelLastProcessingDateOffsetColumn = "offset"
-	// IntegrationInstanceModelLastProcessingDateRfc3339Column is the column json value rfc3339
-	IntegrationInstanceModelLastProcessingDateRfc3339Column = "rfc3339"
 	// IntegrationInstanceModelLocationColumn is the column json value location
 	IntegrationInstanceModelLocationColumn = "location"
 	// IntegrationInstanceModelNameColumn is the column json value name
@@ -318,491 +278,6 @@ func (o *IntegrationInstanceDeletedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *IntegrationInstanceDeletedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// IntegrationInstanceLastExportCompletedDate represents the object structure for last_export_completed_date
-type IntegrationInstanceLastExportCompletedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toIntegrationInstanceLastExportCompletedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *IntegrationInstanceLastExportCompletedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *IntegrationInstanceLastExportCompletedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toIntegrationInstanceLastExportCompletedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toIntegrationInstanceLastExportCompletedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIntegrationInstanceLastExportCompletedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *IntegrationInstanceLastExportCompletedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *IntegrationInstanceLastExportCompletedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// IntegrationInstanceLastExportRequestedDate represents the object structure for last_export_requested_date
-type IntegrationInstanceLastExportRequestedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toIntegrationInstanceLastExportRequestedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *IntegrationInstanceLastExportRequestedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *IntegrationInstanceLastExportRequestedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toIntegrationInstanceLastExportRequestedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toIntegrationInstanceLastExportRequestedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIntegrationInstanceLastExportRequestedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *IntegrationInstanceLastExportRequestedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *IntegrationInstanceLastExportRequestedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// IntegrationInstanceLastHistoricalCompletedDate represents the object structure for last_historical_completed_date
-type IntegrationInstanceLastHistoricalCompletedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toIntegrationInstanceLastHistoricalCompletedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *IntegrationInstanceLastHistoricalCompletedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *IntegrationInstanceLastHistoricalCompletedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toIntegrationInstanceLastHistoricalCompletedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toIntegrationInstanceLastHistoricalCompletedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIntegrationInstanceLastHistoricalCompletedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *IntegrationInstanceLastHistoricalCompletedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *IntegrationInstanceLastHistoricalCompletedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// IntegrationInstanceLastHistoricalRequestedDate represents the object structure for last_historical_requested_date
-type IntegrationInstanceLastHistoricalRequestedDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toIntegrationInstanceLastHistoricalRequestedDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *IntegrationInstanceLastHistoricalRequestedDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *IntegrationInstanceLastHistoricalRequestedDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toIntegrationInstanceLastHistoricalRequestedDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toIntegrationInstanceLastHistoricalRequestedDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIntegrationInstanceLastHistoricalRequestedDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *IntegrationInstanceLastHistoricalRequestedDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *IntegrationInstanceLastHistoricalRequestedDate) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-	if val, ok := kv["epoch"].(int64); ok {
-		o.Epoch = val
-	} else {
-		if val, ok := kv["epoch"]; ok {
-			if val == nil {
-				o.Epoch = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Epoch = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["offset"].(int64); ok {
-		o.Offset = val
-	} else {
-		if val, ok := kv["offset"]; ok {
-			if val == nil {
-				o.Offset = 0
-			} else {
-				if tv, ok := val.(time.Time); ok {
-					val = datetime.TimeToEpoch(tv)
-				}
-				o.Offset = number.ToInt64Any(val)
-			}
-		}
-	}
-	if val, ok := kv["rfc3339"].(string); ok {
-		o.Rfc3339 = val
-	} else {
-		if val, ok := kv["rfc3339"]; ok {
-			if val == nil {
-				o.Rfc3339 = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.Rfc3339 = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
-// IntegrationInstanceLastProcessingDate represents the object structure for last_processing_date
-type IntegrationInstanceLastProcessingDate struct {
-	// Epoch the date in epoch format
-	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
-	// Offset the timezone offset from GMT
-	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
-	// Rfc3339 the date in RFC3339 format
-	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
-}
-
-func toIntegrationInstanceLastProcessingDateObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *IntegrationInstanceLastProcessingDate:
-		return v.ToMap()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *IntegrationInstanceLastProcessingDate) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Epoch the date in epoch format
-		"epoch": toIntegrationInstanceLastProcessingDateObject(o.Epoch, false),
-		// Offset the timezone offset from GMT
-		"offset": toIntegrationInstanceLastProcessingDateObject(o.Offset, false),
-		// Rfc3339 the date in RFC3339 format
-		"rfc3339": toIntegrationInstanceLastProcessingDateObject(o.Rfc3339, false),
-	}
-}
-
-func (o *IntegrationInstanceLastProcessingDate) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *IntegrationInstanceLastProcessingDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -1434,16 +909,6 @@ type IntegrationInstance struct {
 	Interval int64 `json:"interval" codec:"interval" bson:"interval" yaml:"interval" faker:"-"`
 	// JobID the current (if EXPORTING) or previous (if IDLE) job id which is useful for debugging
 	JobID *string `json:"job_id,omitempty" codec:"job_id,omitempty" bson:"job_id" yaml:"job_id,omitempty" faker:"-"`
-	// LastExportCompletedDate when the export response was received
-	LastExportCompletedDate IntegrationInstanceLastExportCompletedDate `json:"last_export_completed_date" codec:"last_export_completed_date" bson:"last_export_completed_date" yaml:"last_export_completed_date" faker:"-"`
-	// LastExportRequestedDate when the export request was made
-	LastExportRequestedDate IntegrationInstanceLastExportRequestedDate `json:"last_export_requested_date" codec:"last_export_requested_date" bson:"last_export_requested_date" yaml:"last_export_requested_date" faker:"-"`
-	// LastHistoricalCompletedDate when the last hitorical export completed
-	LastHistoricalCompletedDate IntegrationInstanceLastHistoricalCompletedDate `json:"last_historical_completed_date" codec:"last_historical_completed_date" bson:"last_historical_completed_date" yaml:"last_historical_completed_date" faker:"-"`
-	// LastHistoricalRequestedDate when the last historical export was requested
-	LastHistoricalRequestedDate IntegrationInstanceLastHistoricalRequestedDate `json:"last_historical_requested_date" codec:"last_historical_requested_date" bson:"last_historical_requested_date" yaml:"last_historical_requested_date" faker:"-"`
-	// LastProcessingDate when the data was last processed
-	LastProcessingDate IntegrationInstanceLastProcessingDate `json:"last_processing_date" codec:"last_processing_date" bson:"last_processing_date" yaml:"last_processing_date" faker:"-"`
 	// Location The location of this integration (on-premise / private or cloud)
 	Location IntegrationInstanceLocation `json:"location" codec:"location" bson:"location" yaml:"location" faker:"-"`
 	// Name The user friendly name of the integration
@@ -1499,21 +964,6 @@ func toIntegrationInstanceObject(o interface{}, isoptional bool) interface{} {
 		return v.ToMap()
 
 	case IntegrationInstanceDeletedDate:
-		return v.ToMap()
-
-	case IntegrationInstanceLastExportCompletedDate:
-		return v.ToMap()
-
-	case IntegrationInstanceLastExportRequestedDate:
-		return v.ToMap()
-
-	case IntegrationInstanceLastHistoricalCompletedDate:
-		return v.ToMap()
-
-	case IntegrationInstanceLastHistoricalRequestedDate:
-		return v.ToMap()
-
-	case IntegrationInstanceLastProcessingDate:
 		return v.ToMap()
 
 	case IntegrationInstanceLocation:
@@ -1734,31 +1184,26 @@ func (o *IntegrationInstance) IsEqual(other *IntegrationInstance) bool {
 func (o *IntegrationInstance) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"active":                         toIntegrationInstanceObject(o.Active, false),
-		"config":                         toIntegrationInstanceObject(o.Config, true),
-		"created_by_profile_id":          toIntegrationInstanceObject(o.CreatedByProfileID, true),
-		"created_by_user_id":             toIntegrationInstanceObject(o.CreatedByUserID, true),
-		"created_date":                   toIntegrationInstanceObject(o.CreatedDate, false),
-		"created_ts":                     toIntegrationInstanceObject(o.CreatedAt, false),
-		"customer_id":                    toIntegrationInstanceObject(o.CustomerID, false),
-		"deleted":                        toIntegrationInstanceObject(o.Deleted, false),
-		"deleted_by_profile_id":          toIntegrationInstanceObject(o.DeletedByProfileID, true),
-		"deleted_by_user_id":             toIntegrationInstanceObject(o.DeletedByUserID, true),
-		"deleted_date":                   toIntegrationInstanceObject(o.DeletedDate, false),
-		"enrollment_id":                  toIntegrationInstanceObject(o.EnrollmentID, true),
-		"error_message":                  toIntegrationInstanceObject(o.ErrorMessage, true),
-		"errored":                        toIntegrationInstanceObject(o.Errored, true),
-		"export_acknowledged":            toIntegrationInstanceObject(o.ExportAcknowledged, true),
-		"id":                             toIntegrationInstanceObject(o.ID, false),
-		"integration_id":                 toIntegrationInstanceObject(o.IntegrationID, false),
-		"integration_instance_id":        toIntegrationInstanceObject(o.IntegrationInstanceID, true),
-		"interval":                       toIntegrationInstanceObject(o.Interval, false),
-		"job_id":                         toIntegrationInstanceObject(o.JobID, true),
-		"last_export_completed_date":     toIntegrationInstanceObject(o.LastExportCompletedDate, false),
-		"last_export_requested_date":     toIntegrationInstanceObject(o.LastExportRequestedDate, false),
-		"last_historical_completed_date": toIntegrationInstanceObject(o.LastHistoricalCompletedDate, false),
-		"last_historical_requested_date": toIntegrationInstanceObject(o.LastHistoricalRequestedDate, false),
-		"last_processing_date":           toIntegrationInstanceObject(o.LastProcessingDate, false),
+		"active":                  toIntegrationInstanceObject(o.Active, false),
+		"config":                  toIntegrationInstanceObject(o.Config, true),
+		"created_by_profile_id":   toIntegrationInstanceObject(o.CreatedByProfileID, true),
+		"created_by_user_id":      toIntegrationInstanceObject(o.CreatedByUserID, true),
+		"created_date":            toIntegrationInstanceObject(o.CreatedDate, false),
+		"created_ts":              toIntegrationInstanceObject(o.CreatedAt, false),
+		"customer_id":             toIntegrationInstanceObject(o.CustomerID, false),
+		"deleted":                 toIntegrationInstanceObject(o.Deleted, false),
+		"deleted_by_profile_id":   toIntegrationInstanceObject(o.DeletedByProfileID, true),
+		"deleted_by_user_id":      toIntegrationInstanceObject(o.DeletedByUserID, true),
+		"deleted_date":            toIntegrationInstanceObject(o.DeletedDate, false),
+		"enrollment_id":           toIntegrationInstanceObject(o.EnrollmentID, true),
+		"error_message":           toIntegrationInstanceObject(o.ErrorMessage, true),
+		"errored":                 toIntegrationInstanceObject(o.Errored, true),
+		"export_acknowledged":     toIntegrationInstanceObject(o.ExportAcknowledged, true),
+		"id":                      toIntegrationInstanceObject(o.ID, false),
+		"integration_id":          toIntegrationInstanceObject(o.IntegrationID, false),
+		"integration_instance_id": toIntegrationInstanceObject(o.IntegrationInstanceID, true),
+		"interval":                toIntegrationInstanceObject(o.Interval, false),
+		"job_id":                  toIntegrationInstanceObject(o.JobID, true),
 
 		"location":            o.Location.String(),
 		"name":                toIntegrationInstanceObject(o.Name, false),
@@ -2149,157 +1594,6 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if val, ok := kv["last_export_completed_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastExportCompletedDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastExportCompletedDate); ok {
-			// struct
-			o.LastExportCompletedDate = sv
-		} else if sp, ok := val.(*IntegrationInstanceLastExportCompletedDate); ok {
-			// struct pointer
-			o.LastExportCompletedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportCompletedDate.Epoch = dt.Epoch
-			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportCompletedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastExportCompletedDate.Epoch = dt.Epoch
-			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportCompletedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportCompletedDate.Epoch = dt.Epoch
-				o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-				o.LastExportCompletedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastExportCompletedDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["last_export_requested_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastExportRequestedDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastExportRequestedDate); ok {
-			// struct
-			o.LastExportRequestedDate = sv
-		} else if sp, ok := val.(*IntegrationInstanceLastExportRequestedDate); ok {
-			// struct pointer
-			o.LastExportRequestedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportRequestedDate.Epoch = dt.Epoch
-			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportRequestedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastExportRequestedDate.Epoch = dt.Epoch
-			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportRequestedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportRequestedDate.Epoch = dt.Epoch
-				o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-				o.LastExportRequestedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["last_historical_completed_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastHistoricalCompletedDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastHistoricalCompletedDate); ok {
-			// struct
-			o.LastHistoricalCompletedDate = sv
-		} else if sp, ok := val.(*IntegrationInstanceLastHistoricalCompletedDate); ok {
-			// struct pointer
-			o.LastHistoricalCompletedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastHistoricalCompletedDate.Epoch = dt.Epoch
-			o.LastHistoricalCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastHistoricalCompletedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastHistoricalCompletedDate.Epoch = dt.Epoch
-			o.LastHistoricalCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastHistoricalCompletedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastHistoricalCompletedDate.Epoch = dt.Epoch
-				o.LastHistoricalCompletedDate.Rfc3339 = dt.Rfc3339
-				o.LastHistoricalCompletedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastHistoricalCompletedDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["last_historical_requested_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastHistoricalRequestedDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastHistoricalRequestedDate); ok {
-			// struct
-			o.LastHistoricalRequestedDate = sv
-		} else if sp, ok := val.(*IntegrationInstanceLastHistoricalRequestedDate); ok {
-			// struct pointer
-			o.LastHistoricalRequestedDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastHistoricalRequestedDate.Epoch = dt.Epoch
-			o.LastHistoricalRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastHistoricalRequestedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastHistoricalRequestedDate.Epoch = dt.Epoch
-			o.LastHistoricalRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastHistoricalRequestedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastHistoricalRequestedDate.Epoch = dt.Epoch
-				o.LastHistoricalRequestedDate.Rfc3339 = dt.Rfc3339
-				o.LastHistoricalRequestedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastHistoricalRequestedDate.FromMap(map[string]interface{}{})
-	}
-
-	if val, ok := kv["last_processing_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastProcessingDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastProcessingDate); ok {
-			// struct
-			o.LastProcessingDate = sv
-		} else if sp, ok := val.(*IntegrationInstanceLastProcessingDate); ok {
-			// struct pointer
-			o.LastProcessingDate = *sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastProcessingDate.Epoch = dt.Epoch
-			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessingDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastProcessingDate.Epoch = dt.Epoch
-			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessingDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastProcessingDate.Epoch = dt.Epoch
-				o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-				o.LastProcessingDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastProcessingDate.FromMap(map[string]interface{}{})
-	}
-
 	if val, ok := kv["location"].(IntegrationInstanceLocation); ok {
 		o.Location = val
 	} else {
@@ -2701,11 +1995,6 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.Interval)
 	args = append(args, o.JobID)
-	args = append(args, o.LastExportCompletedDate)
-	args = append(args, o.LastExportRequestedDate)
-	args = append(args, o.LastHistoricalCompletedDate)
-	args = append(args, o.LastHistoricalRequestedDate)
-	args = append(args, o.LastProcessingDate)
 	args = append(args, o.Location)
 	args = append(args, o.Name)
 	args = append(args, o.Paused)
@@ -2762,31 +2051,6 @@ func (o *IntegrationInstance) GetHydrationQuery() string {
 			integration_instance_id
 			interval
 			job_id
-			last_export_completed_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_export_requested_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_historical_completed_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_historical_requested_date {
-			epoch
-			offset
-			rfc3339
-			}
-			last_processing_date {
-			epoch
-			offset
-			rfc3339
-			}
 			location
 			name
 			paused
@@ -2880,56 +2144,6 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\tinterval\n")
 	// scalar
 	sb.WriteString("\t\t\tjob_id\n")
-	// object with fields
-	sb.WriteString("\t\t\tlast_export_completed_date {\n")
-
-	// scalar
-	sb.WriteString("\t\t\tepoch\n")
-	// scalar
-	sb.WriteString("\t\t\toffset\n")
-	// scalar
-	sb.WriteString("\t\t\trfc3339\n")
-	sb.WriteString("\t\t\t}\n")
-	// object with fields
-	sb.WriteString("\t\t\tlast_export_requested_date {\n")
-
-	// scalar
-	sb.WriteString("\t\t\tepoch\n")
-	// scalar
-	sb.WriteString("\t\t\toffset\n")
-	// scalar
-	sb.WriteString("\t\t\trfc3339\n")
-	sb.WriteString("\t\t\t}\n")
-	// object with fields
-	sb.WriteString("\t\t\tlast_historical_completed_date {\n")
-
-	// scalar
-	sb.WriteString("\t\t\tepoch\n")
-	// scalar
-	sb.WriteString("\t\t\toffset\n")
-	// scalar
-	sb.WriteString("\t\t\trfc3339\n")
-	sb.WriteString("\t\t\t}\n")
-	// object with fields
-	sb.WriteString("\t\t\tlast_historical_requested_date {\n")
-
-	// scalar
-	sb.WriteString("\t\t\tepoch\n")
-	// scalar
-	sb.WriteString("\t\t\toffset\n")
-	// scalar
-	sb.WriteString("\t\t\trfc3339\n")
-	sb.WriteString("\t\t\t}\n")
-	// object with fields
-	sb.WriteString("\t\t\tlast_processing_date {\n")
-
-	// scalar
-	sb.WriteString("\t\t\tepoch\n")
-	// scalar
-	sb.WriteString("\t\t\toffset\n")
-	// scalar
-	sb.WriteString("\t\t\trfc3339\n")
-	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\tlocation\n")
 	// scalar
@@ -3300,16 +2514,6 @@ type IntegrationInstancePartial struct {
 	Interval *int64 `json:"interval,omitempty"`
 	// JobID the current (if EXPORTING) or previous (if IDLE) job id which is useful for debugging
 	JobID *string `json:"job_id,omitempty"`
-	// LastExportCompletedDate when the export response was received
-	LastExportCompletedDate *IntegrationInstanceLastExportCompletedDate `json:"last_export_completed_date,omitempty"`
-	// LastExportRequestedDate when the export request was made
-	LastExportRequestedDate *IntegrationInstanceLastExportRequestedDate `json:"last_export_requested_date,omitempty"`
-	// LastHistoricalCompletedDate when the last hitorical export completed
-	LastHistoricalCompletedDate *IntegrationInstanceLastHistoricalCompletedDate `json:"last_historical_completed_date,omitempty"`
-	// LastHistoricalRequestedDate when the last historical export was requested
-	LastHistoricalRequestedDate *IntegrationInstanceLastHistoricalRequestedDate `json:"last_historical_requested_date,omitempty"`
-	// LastProcessingDate when the data was last processed
-	LastProcessingDate *IntegrationInstanceLastProcessingDate `json:"last_processing_date,omitempty"`
 	// Location The location of this integration (on-premise / private or cloud)
 	Location *IntegrationInstanceLocation `json:"location,omitempty"`
 	// Name The user friendly name of the integration
@@ -3352,27 +2556,22 @@ func (o *IntegrationInstancePartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"active":                         toIntegrationInstanceObject(o.Active, true),
-		"config":                         toIntegrationInstanceObject(o.Config, true),
-		"created_by_profile_id":          toIntegrationInstanceObject(o.CreatedByProfileID, true),
-		"created_by_user_id":             toIntegrationInstanceObject(o.CreatedByUserID, true),
-		"created_date":                   toIntegrationInstanceObject(o.CreatedDate, true),
-		"deleted":                        toIntegrationInstanceObject(o.Deleted, true),
-		"deleted_by_profile_id":          toIntegrationInstanceObject(o.DeletedByProfileID, true),
-		"deleted_by_user_id":             toIntegrationInstanceObject(o.DeletedByUserID, true),
-		"deleted_date":                   toIntegrationInstanceObject(o.DeletedDate, true),
-		"enrollment_id":                  toIntegrationInstanceObject(o.EnrollmentID, true),
-		"error_message":                  toIntegrationInstanceObject(o.ErrorMessage, true),
-		"errored":                        toIntegrationInstanceObject(o.Errored, true),
-		"export_acknowledged":            toIntegrationInstanceObject(o.ExportAcknowledged, true),
-		"integration_id":                 toIntegrationInstanceObject(o.IntegrationID, true),
-		"interval":                       toIntegrationInstanceObject(o.Interval, true),
-		"job_id":                         toIntegrationInstanceObject(o.JobID, true),
-		"last_export_completed_date":     toIntegrationInstanceObject(o.LastExportCompletedDate, true),
-		"last_export_requested_date":     toIntegrationInstanceObject(o.LastExportRequestedDate, true),
-		"last_historical_completed_date": toIntegrationInstanceObject(o.LastHistoricalCompletedDate, true),
-		"last_historical_requested_date": toIntegrationInstanceObject(o.LastHistoricalRequestedDate, true),
-		"last_processing_date":           toIntegrationInstanceObject(o.LastProcessingDate, true),
+		"active":                toIntegrationInstanceObject(o.Active, true),
+		"config":                toIntegrationInstanceObject(o.Config, true),
+		"created_by_profile_id": toIntegrationInstanceObject(o.CreatedByProfileID, true),
+		"created_by_user_id":    toIntegrationInstanceObject(o.CreatedByUserID, true),
+		"created_date":          toIntegrationInstanceObject(o.CreatedDate, true),
+		"deleted":               toIntegrationInstanceObject(o.Deleted, true),
+		"deleted_by_profile_id": toIntegrationInstanceObject(o.DeletedByProfileID, true),
+		"deleted_by_user_id":    toIntegrationInstanceObject(o.DeletedByUserID, true),
+		"deleted_date":          toIntegrationInstanceObject(o.DeletedDate, true),
+		"enrollment_id":         toIntegrationInstanceObject(o.EnrollmentID, true),
+		"error_message":         toIntegrationInstanceObject(o.ErrorMessage, true),
+		"errored":               toIntegrationInstanceObject(o.Errored, true),
+		"export_acknowledged":   toIntegrationInstanceObject(o.ExportAcknowledged, true),
+		"integration_id":        toIntegrationInstanceObject(o.IntegrationID, true),
+		"interval":              toIntegrationInstanceObject(o.Interval, true),
+		"job_id":                toIntegrationInstanceObject(o.JobID, true),
 
 		"location":            toIntegrationInstanceLocationEnum(o.Location),
 		"name":                toIntegrationInstanceObject(o.Name, true),
@@ -3405,41 +2604,6 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 			}
 			if k == "deleted_date" {
 				if dt, ok := v.(*IntegrationInstanceDeletedDate); ok {
-					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
-						delete(kv, k)
-					}
-				}
-			}
-			if k == "last_export_completed_date" {
-				if dt, ok := v.(*IntegrationInstanceLastExportCompletedDate); ok {
-					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
-						delete(kv, k)
-					}
-				}
-			}
-			if k == "last_export_requested_date" {
-				if dt, ok := v.(*IntegrationInstanceLastExportRequestedDate); ok {
-					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
-						delete(kv, k)
-					}
-				}
-			}
-			if k == "last_historical_completed_date" {
-				if dt, ok := v.(*IntegrationInstanceLastHistoricalCompletedDate); ok {
-					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
-						delete(kv, k)
-					}
-				}
-			}
-			if k == "last_historical_requested_date" {
-				if dt, ok := v.(*IntegrationInstanceLastHistoricalRequestedDate); ok {
-					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
-						delete(kv, k)
-					}
-				}
-			}
-			if k == "last_processing_date" {
-				if dt, ok := v.(*IntegrationInstanceLastProcessingDate); ok {
 					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
 						delete(kv, k)
 					}
@@ -3798,177 +2962,6 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if o.LastExportCompletedDate == nil {
-		o.LastExportCompletedDate = &IntegrationInstanceLastExportCompletedDate{}
-	}
-
-	if val, ok := kv["last_export_completed_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastExportCompletedDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastExportCompletedDate); ok {
-			// struct
-			o.LastExportCompletedDate = &sv
-		} else if sp, ok := val.(*IntegrationInstanceLastExportCompletedDate); ok {
-			// struct pointer
-			o.LastExportCompletedDate = sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportCompletedDate.Epoch = dt.Epoch
-			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportCompletedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastExportCompletedDate.Epoch = dt.Epoch
-			o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportCompletedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportCompletedDate.Epoch = dt.Epoch
-				o.LastExportCompletedDate.Rfc3339 = dt.Rfc3339
-				o.LastExportCompletedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastExportCompletedDate.FromMap(map[string]interface{}{})
-	}
-
-	if o.LastExportRequestedDate == nil {
-		o.LastExportRequestedDate = &IntegrationInstanceLastExportRequestedDate{}
-	}
-
-	if val, ok := kv["last_export_requested_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastExportRequestedDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastExportRequestedDate); ok {
-			// struct
-			o.LastExportRequestedDate = &sv
-		} else if sp, ok := val.(*IntegrationInstanceLastExportRequestedDate); ok {
-			// struct pointer
-			o.LastExportRequestedDate = sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastExportRequestedDate.Epoch = dt.Epoch
-			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportRequestedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastExportRequestedDate.Epoch = dt.Epoch
-			o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastExportRequestedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastExportRequestedDate.Epoch = dt.Epoch
-				o.LastExportRequestedDate.Rfc3339 = dt.Rfc3339
-				o.LastExportRequestedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastExportRequestedDate.FromMap(map[string]interface{}{})
-	}
-
-	if o.LastHistoricalCompletedDate == nil {
-		o.LastHistoricalCompletedDate = &IntegrationInstanceLastHistoricalCompletedDate{}
-	}
-
-	if val, ok := kv["last_historical_completed_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastHistoricalCompletedDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastHistoricalCompletedDate); ok {
-			// struct
-			o.LastHistoricalCompletedDate = &sv
-		} else if sp, ok := val.(*IntegrationInstanceLastHistoricalCompletedDate); ok {
-			// struct pointer
-			o.LastHistoricalCompletedDate = sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastHistoricalCompletedDate.Epoch = dt.Epoch
-			o.LastHistoricalCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastHistoricalCompletedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastHistoricalCompletedDate.Epoch = dt.Epoch
-			o.LastHistoricalCompletedDate.Rfc3339 = dt.Rfc3339
-			o.LastHistoricalCompletedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastHistoricalCompletedDate.Epoch = dt.Epoch
-				o.LastHistoricalCompletedDate.Rfc3339 = dt.Rfc3339
-				o.LastHistoricalCompletedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastHistoricalCompletedDate.FromMap(map[string]interface{}{})
-	}
-
-	if o.LastHistoricalRequestedDate == nil {
-		o.LastHistoricalRequestedDate = &IntegrationInstanceLastHistoricalRequestedDate{}
-	}
-
-	if val, ok := kv["last_historical_requested_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastHistoricalRequestedDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastHistoricalRequestedDate); ok {
-			// struct
-			o.LastHistoricalRequestedDate = &sv
-		} else if sp, ok := val.(*IntegrationInstanceLastHistoricalRequestedDate); ok {
-			// struct pointer
-			o.LastHistoricalRequestedDate = sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastHistoricalRequestedDate.Epoch = dt.Epoch
-			o.LastHistoricalRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastHistoricalRequestedDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastHistoricalRequestedDate.Epoch = dt.Epoch
-			o.LastHistoricalRequestedDate.Rfc3339 = dt.Rfc3339
-			o.LastHistoricalRequestedDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastHistoricalRequestedDate.Epoch = dt.Epoch
-				o.LastHistoricalRequestedDate.Rfc3339 = dt.Rfc3339
-				o.LastHistoricalRequestedDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastHistoricalRequestedDate.FromMap(map[string]interface{}{})
-	}
-
-	if o.LastProcessingDate == nil {
-		o.LastProcessingDate = &IntegrationInstanceLastProcessingDate{}
-	}
-
-	if val, ok := kv["last_processing_date"]; ok {
-		if kv, ok := val.(map[string]interface{}); ok {
-			o.LastProcessingDate.FromMap(kv)
-		} else if sv, ok := val.(IntegrationInstanceLastProcessingDate); ok {
-			// struct
-			o.LastProcessingDate = &sv
-		} else if sp, ok := val.(*IntegrationInstanceLastProcessingDate); ok {
-			// struct pointer
-			o.LastProcessingDate = sp
-		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
-			o.LastProcessingDate.Epoch = dt.Epoch
-			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessingDate.Offset = dt.Offset
-		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
-			dt := datetime.NewDateWithTime(tv)
-			o.LastProcessingDate.Epoch = dt.Epoch
-			o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-			o.LastProcessingDate.Offset = dt.Offset
-		} else if s, ok := val.(string); ok && s != "" {
-			dt, err := datetime.NewDate(s)
-			if err == nil {
-				o.LastProcessingDate.Epoch = dt.Epoch
-				o.LastProcessingDate.Rfc3339 = dt.Rfc3339
-				o.LastProcessingDate.Offset = dt.Offset
-			}
-		}
-	} else {
-		o.LastProcessingDate.FromMap(map[string]interface{}{})
-	}
-
 	if val, ok := kv["location"].(*IntegrationInstanceLocation); ok {
 		o.Location = val
 	} else if val, ok := kv["location"].(IntegrationInstanceLocation); ok {
