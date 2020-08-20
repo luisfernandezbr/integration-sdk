@@ -579,7 +579,7 @@ func (o *ExportComplete) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ExportComplete) GetHydrationQuery() string {
-	return `query ExportCompleteQuery($id: ID) {
+	return `query GoExportCompleteQuery($id: ID) {
 	agent {
 		ExportComplete(_id: $id) {
 			created_ts
@@ -729,7 +729,7 @@ func FindExportComplete(client graphql.Client, id string) (*ExportComplete, erro
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query ExportCompleteQuery($id: ID) {\n")
+	sb.WriteString("query GoExportCompleteQuery($id: ID) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tExportComplete(_id: $id) {\n")
 	sb.WriteString(getExportCompleteQueryFields())
@@ -763,7 +763,7 @@ func FindExportCompletes(client graphql.Client, input *ExportCompleteQueryInput)
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query ExportCompleteQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentExportCompleteColumnEnum) {\n")
+	sb.WriteString("query GoExportCompleteQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentExportCompleteColumnEnum) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tExportCompletes(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -834,7 +834,7 @@ func ExecExportCompleteUpdateMutation(client graphql.Client, id string, input gr
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation ExportCompleteUpdateMutation($id: String, $input: UpdateAgentExportCompleteInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoExportCompleteUpdateMutation($id: String, $input: UpdateAgentExportCompleteInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tupdateExportComplete(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getExportCompleteQueryFields())
@@ -855,7 +855,7 @@ func ExecExportCompleteSilentUpdateMutation(client graphql.Client, id string, in
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation ExportCompleteUpdateMutation($id: String, $input: UpdateAgentExportCompleteInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoExportCompleteUpdateMutation($id: String, $input: UpdateAgentExportCompleteInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tupdateExportComplete(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -874,7 +874,7 @@ func ExecExportCompleteDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation ExportCompleteDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoExportCompleteDeleteMutation($id: String!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tdeleteExportComplete(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -896,7 +896,7 @@ func CreateExportComplete(client graphql.Client, model ExportComplete) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateExportComplete($input: CreateAgentExportCompleteInput!) {\n")
+	sb.WriteString("mutation GoCreateExportComplete($input: CreateAgentExportCompleteInput!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tcreateExportComplete(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

@@ -491,7 +491,7 @@ func (o *CostCenter) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *CostCenter) GetHydrationQuery() string {
-	return `query CostCenterQuery($id: ID) {
+	return `query GoCostCenterQuery($id: ID) {
 	customer {
 		CostCenter(_id: $id) {
 			active
@@ -629,7 +629,7 @@ func FindCostCenter(client graphql.Client, id string) (*CostCenter, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query CostCenterQuery($id: ID) {\n")
+	sb.WriteString("query GoCostCenterQuery($id: ID) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tCostCenter(_id: $id) {\n")
 	sb.WriteString(getCostCenterQueryFields())
@@ -663,7 +663,7 @@ func FindCostCenters(client graphql.Client, input *CostCenterQueryInput) (*CostC
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query CostCenterQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerCostCenterColumnEnum) {\n")
+	sb.WriteString("query GoCostCenterQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerCostCenterColumnEnum) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tCostCenters(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -734,7 +734,7 @@ func ExecCostCenterUpdateMutation(client graphql.Client, id string, input graphq
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CostCenterUpdateMutation($id: String, $input: UpdateCustomerCostCenterInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoCostCenterUpdateMutation($id: String, $input: UpdateCustomerCostCenterInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tupdateCostCenter(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getCostCenterQueryFields())
@@ -755,7 +755,7 @@ func ExecCostCenterSilentUpdateMutation(client graphql.Client, id string, input 
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CostCenterUpdateMutation($id: String, $input: UpdateCustomerCostCenterInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoCostCenterUpdateMutation($id: String, $input: UpdateCustomerCostCenterInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tupdateCostCenter(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -774,7 +774,7 @@ func ExecCostCenterDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation CostCenterDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoCostCenterDeleteMutation($id: String!) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tdeleteCostCenter(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -796,7 +796,7 @@ func CreateCostCenter(client graphql.Client, model CostCenter) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateCostCenter($input: CreateCustomerCostCenterInput!) {\n")
+	sb.WriteString("mutation GoCreateCostCenter($input: CreateCustomerCostCenterInput!) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tcreateCostCenter(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

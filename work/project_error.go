@@ -512,7 +512,7 @@ func (o *ProjectError) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ProjectError) GetHydrationQuery() string {
-	return `query ProjectErrorQuery($id: ID) {
+	return `query GoProjectErrorQuery($id: ID) {
 	work {
 		ProjectError(_id: $id) {
 			created_ts
@@ -647,7 +647,7 @@ func FindProjectError(client graphql.Client, id string) (*ProjectError, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query ProjectErrorQuery($id: ID) {\n")
+	sb.WriteString("query GoProjectErrorQuery($id: ID) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectError(_id: $id) {\n")
 	sb.WriteString(getProjectErrorQueryFields())
@@ -681,7 +681,7 @@ func FindProjectErrors(client graphql.Client, input *ProjectErrorQueryInput) (*P
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query ProjectErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectErrorColumnEnum) {\n")
+	sb.WriteString("query GoProjectErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectErrorColumnEnum) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectErrors(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -752,7 +752,7 @@ func ExecProjectErrorUpdateMutation(client graphql.Client, id string, input grap
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation ProjectErrorUpdateMutation($id: String, $input: UpdateWorkProjectErrorInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoProjectErrorUpdateMutation($id: String, $input: UpdateWorkProjectErrorInput, $upsert: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tupdateProjectError(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getProjectErrorQueryFields())
@@ -773,7 +773,7 @@ func ExecProjectErrorSilentUpdateMutation(client graphql.Client, id string, inpu
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation ProjectErrorUpdateMutation($id: String, $input: UpdateWorkProjectErrorInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoProjectErrorUpdateMutation($id: String, $input: UpdateWorkProjectErrorInput, $upsert: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tupdateProjectError(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -792,7 +792,7 @@ func ExecProjectErrorDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation ProjectErrorDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoProjectErrorDeleteMutation($id: String!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tdeleteProjectError(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -814,7 +814,7 @@ func CreateProjectError(client graphql.Client, model ProjectError) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateProjectError($input: CreateWorkProjectErrorInput!) {\n")
+	sb.WriteString("mutation GoCreateProjectError($input: CreateWorkProjectErrorInput!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tcreateProjectError(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

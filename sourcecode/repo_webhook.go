@@ -552,7 +552,7 @@ func (o *RepoWebhook) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *RepoWebhook) GetHydrationQuery() string {
-	return `query RepoWebhookQuery($id: ID) {
+	return `query GoRepoWebhookQuery($id: ID) {
 	sourcecode {
 		RepoWebhook(_id: $id) {
 			created_ts
@@ -693,7 +693,7 @@ func FindRepoWebhook(client graphql.Client, id string) (*RepoWebhook, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query RepoWebhookQuery($id: ID) {\n")
+	sb.WriteString("query GoRepoWebhookQuery($id: ID) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoWebhook(_id: $id) {\n")
 	sb.WriteString(getRepoWebhookQueryFields())
@@ -727,7 +727,7 @@ func FindRepoWebhooks(client graphql.Client, input *RepoWebhookQueryInput) (*Rep
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query RepoWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoWebhookColumnEnum) {\n")
+	sb.WriteString("query GoRepoWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoWebhookColumnEnum) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoWebhooks(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -798,7 +798,7 @@ func ExecRepoWebhookUpdateMutation(client graphql.Client, id string, input graph
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation RepoWebhookUpdateMutation($id: String, $input: UpdateSourcecodeRepoWebhookInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoRepoWebhookUpdateMutation($id: String, $input: UpdateSourcecodeRepoWebhookInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tupdateRepoWebhook(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getRepoWebhookQueryFields())
@@ -819,7 +819,7 @@ func ExecRepoWebhookSilentUpdateMutation(client graphql.Client, id string, input
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation RepoWebhookUpdateMutation($id: String, $input: UpdateSourcecodeRepoWebhookInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoRepoWebhookUpdateMutation($id: String, $input: UpdateSourcecodeRepoWebhookInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tupdateRepoWebhook(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -838,7 +838,7 @@ func ExecRepoWebhookDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation RepoWebhookDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoRepoWebhookDeleteMutation($id: String!) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tdeleteRepoWebhook(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -860,7 +860,7 @@ func CreateRepoWebhook(client graphql.Client, model RepoWebhook) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateRepoWebhook($input: CreateSourcecodeRepoWebhookInput!) {\n")
+	sb.WriteString("mutation GoCreateRepoWebhook($input: CreateSourcecodeRepoWebhookInput!) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tcreateRepoWebhook(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

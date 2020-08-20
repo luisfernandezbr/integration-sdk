@@ -2731,7 +2731,7 @@ func (o *IntegrationInstance) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *IntegrationInstance) GetHydrationQuery() string {
-	return `query IntegrationInstanceQuery($id: ID) {
+	return `query GoIntegrationInstanceQuery($id: ID) {
 	agent {
 		IntegrationInstance(_id: $id) {
 			active
@@ -3079,7 +3079,7 @@ func FindIntegrationInstance(client graphql.Client, id string) (*IntegrationInst
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query IntegrationInstanceQuery($id: ID) {\n")
+	sb.WriteString("query GoIntegrationInstanceQuery($id: ID) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tIntegrationInstance(_id: $id) {\n")
 	sb.WriteString(getIntegrationInstanceQueryFields())
@@ -3113,7 +3113,7 @@ func FindIntegrationInstances(client graphql.Client, input *IntegrationInstanceQ
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query IntegrationInstanceQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentIntegrationInstanceColumnEnum) {\n")
+	sb.WriteString("query GoIntegrationInstanceQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentIntegrationInstanceColumnEnum) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tIntegrationInstances(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -3184,7 +3184,7 @@ func ExecIntegrationInstanceUpdateMutation(client graphql.Client, id string, inp
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation IntegrationInstanceUpdateMutation($id: String, $input: UpdateAgentIntegrationInstanceInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoIntegrationInstanceUpdateMutation($id: String, $input: UpdateAgentIntegrationInstanceInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tupdateIntegrationInstance(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getIntegrationInstanceQueryFields())
@@ -3205,7 +3205,7 @@ func ExecIntegrationInstanceSilentUpdateMutation(client graphql.Client, id strin
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation IntegrationInstanceUpdateMutation($id: String, $input: UpdateAgentIntegrationInstanceInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoIntegrationInstanceUpdateMutation($id: String, $input: UpdateAgentIntegrationInstanceInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tupdateIntegrationInstance(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -3224,7 +3224,7 @@ func ExecIntegrationInstanceDeleteMutation(client graphql.Client, id string) err
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation IntegrationInstanceDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoIntegrationInstanceDeleteMutation($id: String!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tdeleteIntegrationInstance(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -3246,7 +3246,7 @@ func CreateIntegrationInstance(client graphql.Client, model IntegrationInstance)
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateIntegrationInstance($input: CreateAgentIntegrationInstanceInput!) {\n")
+	sb.WriteString("mutation GoCreateIntegrationInstance($input: CreateAgentIntegrationInstanceInput!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tcreateIntegrationInstance(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

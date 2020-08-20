@@ -889,7 +889,7 @@ func (o *Team) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Team) GetHydrationQuery() string {
-	return `query TeamQuery($id: ID) {
+	return `query GoTeamQuery($id: ID) {
 	customer {
 		Team(_id: $id) {
 			active
@@ -1057,7 +1057,7 @@ func FindTeam(client graphql.Client, id string) (*Team, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query TeamQuery($id: ID) {\n")
+	sb.WriteString("query GoTeamQuery($id: ID) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tTeam(_id: $id) {\n")
 	sb.WriteString(getTeamQueryFields())
@@ -1091,7 +1091,7 @@ func FindTeams(client graphql.Client, input *TeamQueryInput) (*TeamConnection, e
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query TeamQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerTeamColumnEnum) {\n")
+	sb.WriteString("query GoTeamQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerTeamColumnEnum) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tTeams(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -1162,7 +1162,7 @@ func ExecTeamUpdateMutation(client graphql.Client, id string, input graphql.Vari
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation TeamUpdateMutation($id: String, $input: UpdateCustomerTeamInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoTeamUpdateMutation($id: String, $input: UpdateCustomerTeamInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tupdateTeam(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getTeamQueryFields())
@@ -1183,7 +1183,7 @@ func ExecTeamSilentUpdateMutation(client graphql.Client, id string, input graphq
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation TeamUpdateMutation($id: String, $input: UpdateCustomerTeamInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoTeamUpdateMutation($id: String, $input: UpdateCustomerTeamInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tupdateTeam(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -1202,7 +1202,7 @@ func ExecTeamDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation TeamDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoTeamDeleteMutation($id: String!) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tdeleteTeam(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -1224,7 +1224,7 @@ func CreateTeam(client graphql.Client, model Team) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateTeam($input: CreateCustomerTeamInput!) {\n")
+	sb.WriteString("mutation GoCreateTeam($input: CreateCustomerTeamInput!) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tcreateTeam(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

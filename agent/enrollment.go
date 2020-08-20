@@ -1189,7 +1189,7 @@ func (o *Enrollment) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Enrollment) GetHydrationQuery() string {
-	return `query EnrollmentQuery($id: ID) {
+	return `query GoEnrollmentQuery($id: ID) {
 	agent {
 		Enrollment(_id: $id) {
 			agent_version
@@ -1402,7 +1402,7 @@ func FindEnrollment(client graphql.Client, id string) (*Enrollment, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query EnrollmentQuery($id: ID) {\n")
+	sb.WriteString("query GoEnrollmentQuery($id: ID) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tEnrollment(_id: $id) {\n")
 	sb.WriteString(getEnrollmentQueryFields())
@@ -1436,7 +1436,7 @@ func FindEnrollments(client graphql.Client, input *EnrollmentQueryInput) (*Enrol
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query EnrollmentQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentEnrollmentColumnEnum) {\n")
+	sb.WriteString("query GoEnrollmentQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentEnrollmentColumnEnum) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tEnrollments(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -1507,7 +1507,7 @@ func ExecEnrollmentUpdateMutation(client graphql.Client, id string, input graphq
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation EnrollmentUpdateMutation($id: String, $input: UpdateAgentEnrollmentInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoEnrollmentUpdateMutation($id: String, $input: UpdateAgentEnrollmentInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tupdateEnrollment(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getEnrollmentQueryFields())
@@ -1528,7 +1528,7 @@ func ExecEnrollmentSilentUpdateMutation(client graphql.Client, id string, input 
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation EnrollmentUpdateMutation($id: String, $input: UpdateAgentEnrollmentInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoEnrollmentUpdateMutation($id: String, $input: UpdateAgentEnrollmentInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tupdateEnrollment(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -1547,7 +1547,7 @@ func ExecEnrollmentDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation EnrollmentDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoEnrollmentDeleteMutation($id: String!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tdeleteEnrollment(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -1569,7 +1569,7 @@ func CreateEnrollment(client graphql.Client, model Enrollment) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateEnrollment($input: CreateAgentEnrollmentInput!) {\n")
+	sb.WriteString("mutation GoCreateEnrollment($input: CreateAgentEnrollmentInput!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tcreateEnrollment(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

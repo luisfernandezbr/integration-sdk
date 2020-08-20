@@ -512,7 +512,7 @@ func (o *RepoError) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *RepoError) GetHydrationQuery() string {
-	return `query RepoErrorQuery($id: ID) {
+	return `query GoRepoErrorQuery($id: ID) {
 	sourcecode {
 		RepoError(_id: $id) {
 			created_ts
@@ -647,7 +647,7 @@ func FindRepoError(client graphql.Client, id string) (*RepoError, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query RepoErrorQuery($id: ID) {\n")
+	sb.WriteString("query GoRepoErrorQuery($id: ID) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoError(_id: $id) {\n")
 	sb.WriteString(getRepoErrorQueryFields())
@@ -681,7 +681,7 @@ func FindRepoErrors(client graphql.Client, input *RepoErrorQueryInput) (*RepoErr
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query RepoErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoErrorColumnEnum) {\n")
+	sb.WriteString("query GoRepoErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoErrorColumnEnum) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoErrors(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -752,7 +752,7 @@ func ExecRepoErrorUpdateMutation(client graphql.Client, id string, input graphql
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation RepoErrorUpdateMutation($id: String, $input: UpdateSourcecodeRepoErrorInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoRepoErrorUpdateMutation($id: String, $input: UpdateSourcecodeRepoErrorInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tupdateRepoError(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getRepoErrorQueryFields())
@@ -773,7 +773,7 @@ func ExecRepoErrorSilentUpdateMutation(client graphql.Client, id string, input g
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation RepoErrorUpdateMutation($id: String, $input: UpdateSourcecodeRepoErrorInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoRepoErrorUpdateMutation($id: String, $input: UpdateSourcecodeRepoErrorInput, $upsert: Boolean) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tupdateRepoError(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -792,7 +792,7 @@ func ExecRepoErrorDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation RepoErrorDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoRepoErrorDeleteMutation($id: String!) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tdeleteRepoError(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -814,7 +814,7 @@ func CreateRepoError(client graphql.Client, model RepoError) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateRepoError($input: CreateSourcecodeRepoErrorInput!) {\n")
+	sb.WriteString("mutation GoCreateRepoError($input: CreateSourcecodeRepoErrorInput!) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tcreateRepoError(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

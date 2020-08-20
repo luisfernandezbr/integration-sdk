@@ -552,7 +552,7 @@ func (o *ProjectWebhook) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ProjectWebhook) GetHydrationQuery() string {
-	return `query ProjectWebhookQuery($id: ID) {
+	return `query GoProjectWebhookQuery($id: ID) {
 	work {
 		ProjectWebhook(_id: $id) {
 			created_ts
@@ -693,7 +693,7 @@ func FindProjectWebhook(client graphql.Client, id string) (*ProjectWebhook, erro
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query ProjectWebhookQuery($id: ID) {\n")
+	sb.WriteString("query GoProjectWebhookQuery($id: ID) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectWebhook(_id: $id) {\n")
 	sb.WriteString(getProjectWebhookQueryFields())
@@ -727,7 +727,7 @@ func FindProjectWebhooks(client graphql.Client, input *ProjectWebhookQueryInput)
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query ProjectWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectWebhookColumnEnum) {\n")
+	sb.WriteString("query GoProjectWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectWebhookColumnEnum) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectWebhooks(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -798,7 +798,7 @@ func ExecProjectWebhookUpdateMutation(client graphql.Client, id string, input gr
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation ProjectWebhookUpdateMutation($id: String, $input: UpdateWorkProjectWebhookInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoProjectWebhookUpdateMutation($id: String, $input: UpdateWorkProjectWebhookInput, $upsert: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tupdateProjectWebhook(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getProjectWebhookQueryFields())
@@ -819,7 +819,7 @@ func ExecProjectWebhookSilentUpdateMutation(client graphql.Client, id string, in
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation ProjectWebhookUpdateMutation($id: String, $input: UpdateWorkProjectWebhookInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoProjectWebhookUpdateMutation($id: String, $input: UpdateWorkProjectWebhookInput, $upsert: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tupdateProjectWebhook(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -838,7 +838,7 @@ func ExecProjectWebhookDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation ProjectWebhookDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoProjectWebhookDeleteMutation($id: String!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tdeleteProjectWebhook(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -860,7 +860,7 @@ func CreateProjectWebhook(client graphql.Client, model ProjectWebhook) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateProjectWebhook($input: CreateWorkProjectWebhookInput!) {\n")
+	sb.WriteString("mutation GoCreateProjectWebhook($input: CreateWorkProjectWebhookInput!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tcreateProjectWebhook(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")

@@ -690,7 +690,7 @@ func (o *Config) Hash() string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Config) GetHydrationQuery() string {
-	return `query ConfigQuery($id: ID) {
+	return `query GoConfigQuery($id: ID) {
 	work {
 		Config(_id: $id) {
 			created_ts
@@ -831,7 +831,7 @@ func FindConfig(client graphql.Client, id string) (*Config, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query ConfigQuery($id: ID) {\n")
+	sb.WriteString("query GoConfigQuery($id: ID) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tConfig(_id: $id) {\n")
 	sb.WriteString(getConfigQueryFields())
@@ -865,7 +865,7 @@ func FindConfigs(client graphql.Client, input *ConfigQueryInput) (*ConfigConnect
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query ConfigQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkConfigColumnEnum) {\n")
+	sb.WriteString("query GoConfigQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkConfigColumnEnum) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tConfigs(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
@@ -936,7 +936,7 @@ func ExecConfigUpdateMutation(client graphql.Client, id string, input graphql.Va
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation ConfigUpdateMutation($id: String, $input: UpdateWorkConfigInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoConfigUpdateMutation($id: String, $input: UpdateWorkConfigInput, $upsert: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tupdateConfig(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString(getConfigQueryFields())
@@ -957,7 +957,7 @@ func ExecConfigSilentUpdateMutation(client graphql.Client, id string, input grap
 	variables["upsert"] = upsert
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation ConfigUpdateMutation($id: String, $input: UpdateWorkConfigInput, $upsert: Boolean) {\n")
+	sb.WriteString("mutation GoConfigUpdateMutation($id: String, $input: UpdateWorkConfigInput, $upsert: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tupdateConfig(_id: $id, input: $input, upsert: $upsert) {\n")
 	sb.WriteString("\t\t\t_id")
@@ -976,7 +976,7 @@ func ExecConfigDeleteMutation(client graphql.Client, id string) error {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("mutation ConfigDeleteMutation($id: String!) {\n")
+	sb.WriteString("mutation GoConfigDeleteMutation($id: String!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tdeleteConfig(_id: $id)\n")
 	sb.WriteString("\t}\n")
@@ -998,7 +998,7 @@ func CreateConfig(client graphql.Client, model Config) error {
 	input["_id"] = model.GetID()
 	variables["input"] = input
 	var sb strings.Builder
-	sb.WriteString("mutation CreateConfig($input: CreateWorkConfigInput!) {\n")
+	sb.WriteString("mutation GoCreateConfig($input: CreateWorkConfigInput!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tcreateConfig(input: $input) {\n")
 	sb.WriteString("\t\t\t_id")
