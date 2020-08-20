@@ -931,6 +931,9 @@ type UpdateConfigData struct {
 
 // ExecConfigUpdateMutation returns a graphql update mutation result for Config
 func ExecConfigUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*Config, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -952,6 +955,9 @@ func ExecConfigUpdateMutation(client graphql.Client, id string, input graphql.Va
 
 // ExecConfigSilentUpdateMutation returns a graphql update mutation result for Config
 func ExecConfigSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert

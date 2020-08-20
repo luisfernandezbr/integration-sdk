@@ -793,6 +793,9 @@ type UpdateRepoWebhookData struct {
 
 // ExecRepoWebhookUpdateMutation returns a graphql update mutation result for RepoWebhook
 func ExecRepoWebhookUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*RepoWebhook, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -814,6 +817,9 @@ func ExecRepoWebhookUpdateMutation(client graphql.Client, id string, input graph
 
 // ExecRepoWebhookSilentUpdateMutation returns a graphql update mutation result for RepoWebhook
 func ExecRepoWebhookSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert

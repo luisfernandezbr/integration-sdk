@@ -729,6 +729,9 @@ type UpdateCostCenterData struct {
 
 // ExecCostCenterUpdateMutation returns a graphql update mutation result for CostCenter
 func ExecCostCenterUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*CostCenter, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -750,6 +753,9 @@ func ExecCostCenterUpdateMutation(client graphql.Client, id string, input graphq
 
 // ExecCostCenterSilentUpdateMutation returns a graphql update mutation result for CostCenter
 func ExecCostCenterSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert

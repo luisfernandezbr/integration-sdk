@@ -1157,6 +1157,9 @@ type UpdateTeamData struct {
 
 // ExecTeamUpdateMutation returns a graphql update mutation result for Team
 func ExecTeamUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*Team, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -1178,6 +1181,9 @@ func ExecTeamUpdateMutation(client graphql.Client, id string, input graphql.Vari
 
 // ExecTeamSilentUpdateMutation returns a graphql update mutation result for Team
 func ExecTeamSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert

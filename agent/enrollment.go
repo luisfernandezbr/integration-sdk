@@ -1502,6 +1502,9 @@ type UpdateEnrollmentData struct {
 
 // ExecEnrollmentUpdateMutation returns a graphql update mutation result for Enrollment
 func ExecEnrollmentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*Enrollment, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -1523,6 +1526,9 @@ func ExecEnrollmentUpdateMutation(client graphql.Client, id string, input graphq
 
 // ExecEnrollmentSilentUpdateMutation returns a graphql update mutation result for Enrollment
 func ExecEnrollmentSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert

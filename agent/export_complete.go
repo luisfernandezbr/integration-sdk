@@ -829,6 +829,9 @@ type UpdateExportCompleteData struct {
 
 // ExecExportCompleteUpdateMutation returns a graphql update mutation result for ExportComplete
 func ExecExportCompleteUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*ExportComplete, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -850,6 +853,9 @@ func ExecExportCompleteUpdateMutation(client graphql.Client, id string, input gr
 
 // ExecExportCompleteSilentUpdateMutation returns a graphql update mutation result for ExportComplete
 func ExecExportCompleteSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert

@@ -3179,6 +3179,9 @@ type UpdateIntegrationInstanceData struct {
 
 // ExecIntegrationInstanceUpdateMutation returns a graphql update mutation result for IntegrationInstance
 func ExecIntegrationInstanceUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*IntegrationInstance, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -3200,6 +3203,9 @@ func ExecIntegrationInstanceUpdateMutation(client graphql.Client, id string, inp
 
 // ExecIntegrationInstanceSilentUpdateMutation returns a graphql update mutation result for IntegrationInstance
 func ExecIntegrationInstanceSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert

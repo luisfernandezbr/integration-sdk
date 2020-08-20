@@ -747,6 +747,9 @@ type UpdateProjectErrorData struct {
 
 // ExecProjectErrorUpdateMutation returns a graphql update mutation result for ProjectError
 func ExecProjectErrorUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*ProjectError, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -768,6 +771,9 @@ func ExecProjectErrorUpdateMutation(client graphql.Client, id string, input grap
 
 // ExecProjectErrorSilentUpdateMutation returns a graphql update mutation result for ProjectError
 func ExecProjectErrorSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert

@@ -747,6 +747,9 @@ type UpdateRepoErrorData struct {
 
 // ExecRepoErrorUpdateMutation returns a graphql update mutation result for RepoError
 func ExecRepoErrorUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) (*RepoError, error) {
+	if !upsert && id == "" {
+		return nil, fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
@@ -768,6 +771,9 @@ func ExecRepoErrorUpdateMutation(client graphql.Client, id string, input graphql
 
 // ExecRepoErrorSilentUpdateMutation returns a graphql update mutation result for RepoError
 func ExecRepoErrorSilentUpdateMutation(client graphql.Client, id string, input graphql.Variables, upsert bool) error {
+	if !upsert && id == "" {
+		return fmt.Errorf("id is required with upsert false")
+	}
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	variables["upsert"] = upsert
