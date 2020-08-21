@@ -35,6 +35,8 @@ const (
 const (
 	// IntegrationInstanceModelActiveColumn is the column json value active
 	IntegrationInstanceModelActiveColumn = "active"
+	// IntegrationInstanceModelAutoConfigureColumn is the column json value auto_configure
+	IntegrationInstanceModelAutoConfigureColumn = "auto_configure"
 	// IntegrationInstanceModelConfigColumn is the column json value config
 	IntegrationInstanceModelConfigColumn = "config"
 	// IntegrationInstanceModelCreatedByProfileIDColumn is the column json value created_by_profile_id
@@ -871,6 +873,8 @@ func (o *IntegrationInstanceWebhooks) FromMap(kv map[string]interface{}) {
 type IntegrationInstance struct {
 	// Active If true, the integration is still active
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
+	// AutoConfigure if this integration should be auto configured by the integration before activating
+	AutoConfigure bool `json:"auto_configure" codec:"auto_configure" bson:"auto_configure" yaml:"auto_configure" faker:"-"`
 	// Config the integration configuration controlled by the integration itself
 	Config *string `json:"config,omitempty" codec:"config,omitempty" bson:"config" yaml:"config,omitempty" faker:"-"`
 	// CreatedByProfileID The id of the profile for the user that created the integration
@@ -1185,6 +1189,7 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"active":                  toIntegrationInstanceObject(o.Active, false),
+		"auto_configure":          toIntegrationInstanceObject(o.AutoConfigure, false),
 		"config":                  toIntegrationInstanceObject(o.Config, true),
 		"created_by_profile_id":   toIntegrationInstanceObject(o.CreatedByProfileID, true),
 		"created_by_user_id":      toIntegrationInstanceObject(o.CreatedByUserID, true),
@@ -1246,6 +1251,17 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["auto_configure"].(bool); ok {
+		o.AutoConfigure = val
+	} else {
+		if val, ok := kv["auto_configure"]; ok {
+			if val == nil {
+				o.AutoConfigure = false
+			} else {
+				o.AutoConfigure = number.ToBoolAny(val)
 			}
 		}
 	}
@@ -1976,6 +1992,7 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 func (o *IntegrationInstance) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Active)
+	args = append(args, o.AutoConfigure)
 	args = append(args, o.Config)
 	args = append(args, o.CreatedByProfileID)
 	args = append(args, o.CreatedByUserID)
@@ -2024,6 +2041,7 @@ func (o *IntegrationInstance) GetHydrationQuery() string {
 	agent {
 		IntegrationInstance(_id: $id) {
 			active
+			auto_configure
 			config
 			created_by_profile_id
 			created_by_user_id
@@ -2090,6 +2108,8 @@ func getIntegrationInstanceQueryFields() string {
 
 	// scalar
 	sb.WriteString("\t\t\tactive\n")
+	// scalar
+	sb.WriteString("\t\t\tauto_configure\n")
 	// scalar
 	sb.WriteString("\t\t\tconfig\n")
 	// scalar
@@ -2484,6 +2504,8 @@ func CreateIntegrationInstance(client graphql.Client, model IntegrationInstance)
 type IntegrationInstancePartial struct {
 	// Active If true, the integration is still active
 	Active *bool `json:"active,omitempty"`
+	// AutoConfigure if this integration should be auto configured by the integration before activating
+	AutoConfigure *bool `json:"auto_configure,omitempty"`
 	// Config the integration configuration controlled by the integration itself
 	Config *string `json:"config,omitempty"`
 	// CreatedByProfileID The id of the profile for the user that created the integration
@@ -2557,6 +2579,7 @@ func (o *IntegrationInstancePartial) GetModelName() datamodel.ModelNameType {
 func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
 		"active":                toIntegrationInstanceObject(o.Active, true),
+		"auto_configure":        toIntegrationInstanceObject(o.AutoConfigure, true),
 		"config":                toIntegrationInstanceObject(o.Config, true),
 		"created_by_profile_id": toIntegrationInstanceObject(o.CreatedByProfileID, true),
 		"created_by_user_id":    toIntegrationInstanceObject(o.CreatedByUserID, true),
@@ -2668,6 +2691,23 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 					val = kv["bool"]
 				}
 				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["auto_configure"].(*bool); ok {
+		o.AutoConfigure = val
+	} else if val, ok := kv["auto_configure"].(bool); ok {
+		o.AutoConfigure = &val
+	} else {
+		if val, ok := kv["auto_configure"]; ok {
+			if val == nil {
+				o.AutoConfigure = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.AutoConfigure = number.BoolPointer(number.ToBoolAny(val))
 			}
 		}
 	}

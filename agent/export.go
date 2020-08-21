@@ -39,6 +39,8 @@ const (
 	ExportModelIntegrationColumn = "integration"
 	// ExportModelIntegrationActiveColumn is the column json value active
 	ExportModelIntegrationActiveColumn = "active"
+	// ExportModelIntegrationAutoConfigureColumn is the column json value auto_configure
+	ExportModelIntegrationAutoConfigureColumn = "auto_configure"
 	// ExportModelIntegrationConfigColumn is the column json value config
 	ExportModelIntegrationConfigColumn = "config"
 	// ExportModelIntegrationCreatedByProfileIDColumn is the column json value created_by_profile_id
@@ -881,6 +883,8 @@ func (o *ExportIntegrationWebhooks) FromMap(kv map[string]interface{}) {
 type ExportIntegration struct {
 	// Active If true, the integration is still active
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
+	// AutoConfigure if this integration should be auto configured by the integration before activating
+	AutoConfigure bool `json:"auto_configure" codec:"auto_configure" bson:"auto_configure" yaml:"auto_configure" faker:"-"`
 	// Config the integration configuration controlled by the integration itself
 	Config *string `json:"config,omitempty" codec:"config,omitempty" bson:"config" yaml:"config,omitempty" faker:"-"`
 	// CreatedByProfileID The id of the profile for the user that created the integration
@@ -994,6 +998,8 @@ func (o *ExportIntegration) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// Active If true, the integration is still active
 		"active": toExportIntegrationObject(o.Active, false),
+		// AutoConfigure if this integration should be auto configured by the integration before activating
+		"auto_configure": toExportIntegrationObject(o.AutoConfigure, false),
 		// Config the integration configuration controlled by the integration itself
 		"config": toExportIntegrationObject(o.Config, true),
 		// CreatedByProfileID The id of the profile for the user that created the integration
@@ -1109,6 +1115,17 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["auto_configure"].(bool); ok {
+		o.AutoConfigure = val
+	} else {
+		if val, ok := kv["auto_configure"]; ok {
+			if val == nil {
+				o.AutoConfigure = false
+			} else {
+				o.AutoConfigure = number.ToBoolAny(val)
 			}
 		}
 	}
