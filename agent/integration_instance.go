@@ -922,6 +922,8 @@ type IntegrationInstance struct {
 	// PrivateKey the private key for the instance if needed by an integration
 	PrivateKey *string `json:"private_key,omitempty" codec:"private_key,omitempty" bson:"private_key" yaml:"private_key,omitempty" faker:"-"`
 	// Processed If the integration has been processed at least once
+	//
+	// Deprecated: this field should not be used anymore. use stat to get details about processing
 	Processed *bool `json:"processed,omitempty" codec:"processed,omitempty" bson:"processed" yaml:"processed,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
@@ -1679,6 +1681,7 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["processed"].(*bool); ok {
 		o.Processed = val
 	} else if val, ok := kv["processed"].(bool); ok {
@@ -2545,6 +2548,8 @@ type IntegrationInstancePartial struct {
 	// PrivateKey the private key for the instance if needed by an integration
 	PrivateKey *string `json:"private_key,omitempty"`
 	// Processed If the integration has been processed at least once
+	//
+	// Deprecated: this field should not be used anymore. use stat to get details about processing
 	Processed *bool `json:"processed,omitempty"`
 	// RequiresHistorical flag which can be set to trigger a historical on the next scheduler visit
 	RequiresHistorical *bool `json:"requires_historical,omitempty"`
@@ -3078,6 +3083,7 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["processed"].(*bool); ok {
 		o.Processed = val
 	} else if val, ok := kv["processed"].(bool); ok {

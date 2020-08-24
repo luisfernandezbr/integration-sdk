@@ -1529,6 +1529,7 @@ func (o *ExportIntegration) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["processed"].(*bool); ok {
 		o.Processed = val
 	} else if val, ok := kv["processed"].(bool); ok {
