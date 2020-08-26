@@ -314,6 +314,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_sourcecode.PullRequestReview)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "sourcecode.PullRequestReviewRequest":
+		o := new(dm_sourcecode.PullRequestReviewRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.Repo":
 		o := new(dm_sourcecode.Repo)
 		o.FromMap(map[string]interface{}{})
@@ -545,6 +549,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_sourcecode.PullRequestCommitPartial)
 	case "sourcecode.PullRequestReview":
 		return new(dm_sourcecode.PullRequestReviewPartial)
+	case "sourcecode.PullRequestReviewRequest":
+		return new(dm_sourcecode.PullRequestReviewRequestPartial)
 	case "sourcecode.Repo":
 		return new(dm_sourcecode.RepoPartial)
 	case "sourcecode.RepoError":
@@ -767,6 +773,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("sourcecode.PullRequestComment"),
 		datamodel.ModelNameType("sourcecode.PullRequestCommit"),
 		datamodel.ModelNameType("sourcecode.PullRequestReview"),
+		datamodel.ModelNameType("sourcecode.PullRequestReviewRequest"),
 		datamodel.ModelNameType("sourcecode.Repo"),
 		datamodel.ModelNameType("sourcecode.RepoError"),
 		datamodel.ModelNameType("sourcecode.RepoWebhook"),

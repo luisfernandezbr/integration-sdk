@@ -772,8 +772,10 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 				o.State = 3
 			case "dismissed", "DISMISSED":
 				o.State = 4
+				// Deprecated
 			case "requested", "REQUESTED":
 				o.State = 5
+				// Deprecated
 			case "request_removed", "REQUEST_REMOVED":
 				o.State = 6
 			case "assigned", "ASSIGNED":
@@ -794,8 +796,10 @@ func (o *PullRequestReview) FromMap(kv map[string]interface{}) {
 				o.State = 3
 			case "dismissed", "DISMISSED":
 				o.State = 4
+				// Deprecated
 			case "requested", "REQUESTED":
 				o.State = 5
+				// Deprecated
 			case "request_removed", "REQUEST_REMOVED":
 				o.State = 6
 			case "assigned", "ASSIGNED":
@@ -1055,8 +1059,10 @@ func (o *PullRequestReviewPartial) FromMap(kv map[string]interface{}) {
 						o.State = toPullRequestReviewStatePointer(3)
 					case "dismissed", "DISMISSED":
 						o.State = toPullRequestReviewStatePointer(4)
+						// Deprecated
 					case "requested", "REQUESTED":
 						o.State = toPullRequestReviewStatePointer(5)
+						// Deprecated
 					case "request_removed", "REQUEST_REMOVED":
 						o.State = toPullRequestReviewStatePointer(6)
 					case "assigned", "ASSIGNED":
